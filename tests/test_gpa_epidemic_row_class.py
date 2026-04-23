@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import pandas as pd
 
-from bacotype.pl.epidemic_vs_mixed import epidemic_vs_mixed_strain_stats
+from bacotype.pl.epidemic_vs_mixed import (
+    _rest_sublineage_join_keys,
+    _row_sublineage_join_key,
+    epidemic_vs_mixed_strain_stats,
+)
 from bacotype.tl.gpa_epidemic_row_class import (
     EPIDEMIC_ROW_CLASS_COL,
     IS_EPIDEMIC_GPA_CLONAL_TARGET_COL,
@@ -13,6 +17,19 @@ from bacotype.tl.gpa_epidemic_row_class import (
     get_epidemic_row_class_series,
     structural_epidemic_row_class,
 )
+
+
+def test_sublineage_join_key_uses_strain_for_empty_sublineage_on_rest() -> None:
+    """Pooled 'other' rows can have empty Sublineage but strain=SL14 (see detail TSV)."""
+    rest = pd.DataFrame(
+        {
+            "Sublineage": [""],
+            "strain": ["SL14"],
+        }
+    )
+    assert _rest_sublineage_join_keys(rest).iloc[0] == "SL14"
+    target = pd.Series({"Sublineage": "SL14", "strain": "CG14"})
+    assert _row_sublineage_join_key(target) == "SL14"
 
 
 def test_structural_epidemic_row_class_labels() -> None:

@@ -56,7 +56,7 @@ REPORT_TIMES=false
 #     summaries for every slice. Distance columns emitted as NaN; reference
 #     counts preserved. Both true gives a pure stats-only batch.
 SKIP_CLUSTERING=true
-SKIP_JACCARD=true
+SKIP_JACCARD=false
 # Stage project .venv to node-local scratch before running Python. On a
 # congested RDS this can turn "imports hang for >1h" into "imports finish
 # in seconds", and the cost is paid once for all WORKERS. Disable with

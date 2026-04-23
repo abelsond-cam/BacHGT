@@ -27,7 +27,8 @@ Shared analysis:
   - produces post-filter GPA plots
   - runs Wilcoxon rank_genes_groups by GPA Leiden clusters
   - logs RefSeq-focused quality summary and reference-vs-all Jaccard distances
-  - computes per-group unique Sublineage / Clonal group / K_locus counts
+  - outputs ``n_Sublineage``, ``Sublineage``, ``n_Clonal_group``, ``Clonal_group``,
+    ``n_K_locus``, and ``K_locus`` (from :func:`_classify_run`) in the summary TSV
 """
 
 from __future__ import annotations
@@ -38,8 +39,18 @@ import os
 import sys
 import time
 
+print(
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: gpa_distances_single_group stdlib loaded",
+    flush=True,
+)
+
 import anndata as ad
 import matplotlib
+
+print(
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: gpa_distances_single_group anndata+matplotlib loaded",
+    flush=True,
+)
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -48,6 +59,11 @@ import pandas as pd
 from scipy.sparse import csr_matrix
 from scipy.spatial.distance import cdist
 
+print(
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: gpa_distances_single_group pyplot+numpy+pandas+scipy loaded",
+    flush=True,
+)
+
 from bacotype.tl.gpa_distances_cluster_metrics import (
     jaccard_to_shared,
     log_medoid_report,
@@ -55,6 +71,11 @@ from bacotype.tl.gpa_distances_cluster_metrics import (
 )
 from bacotype.tl.gpa_matrix_utils import (
     filter_by_prevalence,
+)
+
+print(
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: gpa_distances_single_group bacotype deps loaded",
+    flush=True,
 )
 
 PANAROO_RUN_ROOT = (
@@ -842,19 +863,58 @@ def _classify_run(
         )
 
     kpsc_meta = meta_df.loc[_series_to_bool(meta_df["kpsc_final_list"])].copy()
-    run_meta = kpsc_meta.reindex(sid)
-    run_meta = run_meta.dropna(subset=["Sublineage", "Clonal group"])
+    log(
+        "run classification debug: "
+        f"n_gpa_samples_total={len(sid_all)} "
+        f"n_after_mgh_exclusion={len(sid)} "
+        f"n_metadata_rows={len(meta_df)} "
+        f"n_kpsc_rows={len(kpsc_meta)}"
+    )
+
+    # Classification should only consider samples present in the kpsc subset.
+    sid_kpsc = sid.intersection(kpsc_meta.index)
+    n_sid_not_kpsc = int(len(sid) - len(sid_kpsc))
+    if n_sid_not_kpsc > 0:
+        not_kpsc_ids = sid.difference(kpsc_meta.index)
+        show = ", ".join(map(str, list(not_kpsc_ids[:10])))
+        log(
+            "run classification debug: "
+            f"samples missing from kpsc subset n={n_sid_not_kpsc} "
+            f"first10=[{show}]"
+        )
+
+    run_meta_pre = kpsc_meta.reindex(sid_kpsc)
+    na_sublineage = int(run_meta_pre["Sublineage"].isna().sum())
+    na_cg = int(run_meta_pre["Clonal group"].isna().sum())
+    log(
+        "run classification debug: "
+        f"n_sid_kpsc={len(sid_kpsc)} "
+        f"run_meta_pre_rows={len(run_meta_pre)} "
+        f"na_sublineage={na_sublineage} "
+        f"na_clonal_group={na_cg}"
+    )
+
+    run_meta = run_meta_pre.dropna(subset=["Sublineage", "Clonal group"])
+    dropped_for_na = int(len(run_meta_pre) - len(run_meta))
+    if dropped_for_na > 0:
+        log(
+            "run classification debug: "
+            f"dropped_by_dropna={dropped_for_na} "
+            f"run_meta_post_rows={len(run_meta)}"
+        )
     if run_meta.empty:
-        return {
-            "n_unique_sublineages": 0,
-            "sublineages_complete": False,
-            "n_unique_clonal_groups": 0,
-            "clonal_groups_complete": False,
-            "species": "",
-            "strain": "",
-            "samples_in_strain": 0,
-            "run_classification": "unknown",
-        }
+        raise ValueError(
+            "Run classification produced empty run_meta after kpsc intersection and "
+            "dropna(Sublineage, Clonal group). "
+            f"n_gpa_samples_total={len(sid_all)} "
+            f"n_after_mgh_exclusion={len(sid)} "
+            f"n_sid_kpsc={len(sid_kpsc)} "
+            f"n_sid_not_kpsc={n_sid_not_kpsc} "
+            f"n_run_meta_pre={len(run_meta_pre)} "
+            f"na_sublineage={na_sublineage} "
+            f"na_clonal_group={na_cg} "
+            f"n_run_meta_post={len(run_meta)}"
+        )
 
     run_subs = set(run_meta["Sublineage"].astype(str).unique())
     run_cgs = set(run_meta["Clonal group"].astype(str).unique())
@@ -924,6 +984,18 @@ def _classify_run(
         else:
             run_type = "unknown"
 
+    k_locus_n = 0
+    k_locus_name = ""
+    if "K_locus" in run_meta.columns:
+        kl_series = run_meta["K_locus"].dropna()
+        k_locus_uniques = [
+            str(v)
+            for v in kl_series.astype(str).unique()
+            if str(v) not in {"", "nan", "NaN", "None"}
+        ]
+        k_locus_n = int(len(k_locus_uniques))
+        k_locus_name = k_locus_uniques[0] if k_locus_n == 1 else ""
+
     out = {
         "n_unique_sublineages": int(len(run_subs)),
         "sublineages_complete": bool(sublineages_complete),
@@ -935,6 +1007,13 @@ def _classify_run(
         "strain": "",
         "samples_in_strain": 0,
         "run_classification": run_type,
+        # Legacy detail/summary TSV keys: same MGH- / kpsc- / dropna-filtered set as above.
+        "n_Sublineage": int(len(run_subs)),
+        "Sublineage": (sorted(run_subs)[0] if len(run_subs) == 1 else ""),
+        "n_Clonal_group": int(len(run_cgs)),
+        "Clonal_group": (sorted(run_cgs)[0] if len(run_cgs) == 1 else ""),
+        "n_K_locus": k_locus_n,
+        "K_locus": k_locus_name,
     }
 
     # strain selection precedence:
@@ -1285,46 +1364,6 @@ def _refseq_summary_and_distances(
     return ref_summary
 
 
-def _group_metadata_counts(
-    obs_df: pd.DataFrame,
-    member_sample_ids: pd.Index | None = None,
-) -> dict[str, object]:
-    """Count unique Sublineage/Clonal group/K_locus values in ``obs_df``.
-
-    ``obs_df`` is any per-sample DataFrame indexed by Sample id (typically
-    ``adata_gpa.obs`` in full/jaccard modes, or ``meta_df.reindex(member_ids)``
-    in stats-only mode where no AnnData is built).
-
-    If ``member_sample_ids`` is provided, counts are restricted to those
-    samples; non-belonging refs carried in the full frame for Jaccard/UMAP
-    purposes do not contribute to the unique-value counts.
-
-    If the column exists, return its unique count and the single unique value
-    (as a string) when the count is 1, else "". If the column is missing, the
-    count is 0 and the name is "".
-    """
-    obs = obs_df
-    if member_sample_ids is not None:
-        wanted = set(map(str, member_sample_ids))
-        mask = obs.index.astype(str).isin(wanted)
-        obs = obs.loc[mask]
-    out: dict[str, object] = {}
-    for col, count_key, name_key in [
-        ("Sublineage", "n_Sublineage", "Sublineage"),
-        ("Clonal group", "n_Clonal_group", "Clonal_group"),
-        ("K_locus", "n_K_locus", "K_locus"),
-    ]:
-        if col not in obs.columns:
-            out[count_key] = 0
-            out[name_key] = ""
-            continue
-        series = obs[col].dropna()
-        unique_vals = [str(v) for v in series.astype(str).unique() if str(v) not in {"", "nan", "NaN", "None"}]
-        out[count_key] = int(len(unique_vals))
-        out[name_key] = unique_vals[0] if len(unique_vals) == 1 else ""
-    return out
-
-
 def _norway_complete_summary_and_distances(
     adata_gpa: ad.AnnData,
     log,
@@ -1458,16 +1497,10 @@ def run_gpa_analysis(
             gpa_counts_df_filt = gpa_df
             n_gpa_samples_raw = int(gpa_counts_df_filt.shape[1])
             n_kpsc_samples = int(gpa_counts_df_filt.shape[1])
-            run_meta: dict[str, object] = {
-                "n_unique_sublineages": 0,
-                "sublineages_complete": False,
-                "n_unique_clonal_groups": 0,
-                "clonal_groups_complete": False,
-                "species": "",
-                "strain": run_label,
-                "samples_in_strain": int(gpa_counts_df_filt.shape[1]),
-                "run_classification": group_level,
-            }
+            # In DataFrame mode, classify later using member_ids (the samples
+            # that actually contribute to stats/counts). This keeps subgroup
+            # rows consistent with whole-set rows and avoids hardcoded zeros.
+            run_meta: dict[str, object] | None = None
             n_samples = int(gpa_counts_df_filt.shape[1])
             filter_cutoff = int(gpa_filter_cutoff) if gpa_filter_cutoff is not None else 0
             n_removed = 0
@@ -1573,6 +1606,20 @@ def run_gpa_analysis(
                 f"members: {len(member_ids)} / {n_all} samples used for pangenome stats/counts; "
                 f"non-belonging refs excluded from stats (still kept for Jaccard/UMAP): {n_drop}"
             )
+        if df_mode:
+            assert meta_df is not None
+            _log_section(log, "DATAFRAME-MODE RUN CLASSIFICATION")
+            # _classify_run is imported from gpa_distances_single_run.py
+            run_meta = _classify_run(pd.Index(member_ids.astype(str)), meta_df, log)
+            log(
+                "dataframe-mode run_meta: "
+                f"type={run_meta['run_classification']} "
+                f"n_sublineages={run_meta['n_unique_sublineages']} "
+                f"n_clonal_groups={run_meta['n_unique_clonal_groups']} "
+                f"strain={run_meta.get('strain', '')} "
+                f"samples_in_strain={run_meta.get('samples_in_strain', 0)}"
+            )
+        assert run_meta is not None
         gpa_counts_df_stats = gpa_counts_df_filt.loc[:, member_ids]
         gpa_df_filt = (gpa_counts_df_filt > 0).astype(np.uint8)
         gpa_df_stats = (gpa_counts_df_stats > 0).astype(np.uint8)
@@ -1810,12 +1857,6 @@ def run_gpa_analysis(
                 **_empty_cohort_flat_keys("norway"),
             }
 
-        if need_adata:
-            assert adata_gpa is not None
-            group_meta_counts = _group_metadata_counts(adata_gpa.obs, member_sample_ids=member_ids)
-        else:
-            group_meta_counts = _group_metadata_counts(meta_df, member_sample_ids=member_ids)
-
         summary_df = pd.DataFrame(
             [
                 {
@@ -1836,7 +1877,12 @@ def run_gpa_analysis(
                     "strain": str(run_meta.get("strain", "")),
                     "samples_in_strain": int(run_meta.get("samples_in_strain", 0)),
                     "run_classification": str(run_meta["run_classification"]),
-                    **group_meta_counts,
+                    "n_Sublineage": int(run_meta["n_Sublineage"]),
+                    "Sublineage": str(run_meta.get("Sublineage", "")),
+                    "n_Clonal_group": int(run_meta["n_Clonal_group"]),
+                    "Clonal_group": str(run_meta.get("Clonal_group", "")),
+                    "n_K_locus": int(run_meta["n_K_locus"]),
+                    "K_locus": str(run_meta.get("K_locus", "")),
                     **clustering_scalar_metrics,
                     **per_genome_category_stats,
                     **panaroo_size_stats,

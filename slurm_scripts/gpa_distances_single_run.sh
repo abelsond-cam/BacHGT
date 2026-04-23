@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH --job-name=icelake_gpa_distance_single_run
-#SBATCH --output=icelake_gpa_distance_single_run_%j.out
-#SBATCH --error=gpa_distance_single_run_%j.err
+#SBATCH --job-name=gpa_run_SL1
+#SBATCH --output=gpa_run_SL1_%j.out
+#SBATCH --error=gpa_run_SL1_%j.err
 #SBATCH --partition=icelake
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -12,7 +12,6 @@
 #
 # gpa_distances_single_run.sh
 # -----------------------------
-# Runs: src/bacotype/tl/gpa_distances_single_run.py
 #
 # What it does:
 #   Stratified post-Panaroo analysis on ONE directory that already contains
@@ -46,7 +45,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
 PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
-DIRECTORY_LEAF="SL258_part_0"  # Used when PANAROO_DIR is empty
+DIRECTORY_LEAF="SL1"  # Used when PANAROO_DIR is empty
 PANAROO_DIR=""                 # Full path override; leave empty to use DIRECTORY_LEAF
 
 METADATA_PATH="${DATA_ROOT}/final/metadata_final_curated_all_samples_and_columns.tsv"
@@ -66,8 +65,8 @@ REPORT_TIMES=false
 #     summaries. Distance columns emitted as NaN; refseq / norway / mgh counts
 #     are preserved. With SKIP_CLUSTERING=true too, this gives a pure
 #     presence/absence + feature-stats run (stats-only).
-SKIP_CLUSTERING=false
-SKIP_JACCARD=false
+SKIP_CLUSTERING=true
+SKIP_JACCARD=true
 # Stage project .venv to node-local scratch before running Python.
 # On a congested RDS this can turn "imports hang for >1h" into "imports
 # finish in seconds". Disable by setting STAGE_VENV=false if the rsync

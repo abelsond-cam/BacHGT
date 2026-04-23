@@ -150,6 +150,12 @@ def _inject_run_metadata(
     row["strain"] = str(run_meta.get("strain", ""))
     row["samples_in_strain"] = int(run_meta.get("samples_in_strain", 0))
     row["run_classification"] = str(run_meta["run_classification"])
+    row["n_Sublineage"] = int(run_meta["n_Sublineage"])
+    row["Sublineage"] = str(run_meta.get("Sublineage", ""))
+    row["n_Clonal_group"] = int(run_meta["n_Clonal_group"])
+    row["Clonal_group"] = str(run_meta.get("Clonal_group", ""))
+    row["n_K_locus"] = int(run_meta["n_K_locus"])
+    row["K_locus"] = str(run_meta.get("K_locus", ""))
     return row
 
 
@@ -240,7 +246,7 @@ def run_gpa_analysis(
                     "No kpsc_final_list=True samples remain after filtering."
                 )
             del gpa_counts_df_raw
-
+            # _classify_run is imported from gpa_distances_single_group.py
             run_meta = _classify_run(
                 pd.Index(gpa_counts_df_kpsc.columns.astype(str)), meta_df, _helper_log
             )

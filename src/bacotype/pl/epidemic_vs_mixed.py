@@ -23,7 +23,6 @@ from __future__ import annotations
 import os
 import time
 from math import erfc, sqrt
-from typing import Optional, Tuple
 
 print(
     f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: epidemic_vs_mixed stdlib loaded",
@@ -61,7 +60,7 @@ __all__ = [
 ]
 
 
-def resolve_mean_sd_columns(df: pd.DataFrame, metric: str) -> Tuple[str, str]:
+def resolve_mean_sd_columns(df: pd.DataFrame, metric: str) -> tuple[str, str]:
     """Resolve the (mean, sd) column names for ``metric`` in ``df``.
 
     Tries ``mean_<metric>`` / ``sd_<metric>`` first (genome-composition
@@ -76,10 +75,7 @@ def resolve_mean_sd_columns(df: pd.DataFrame, metric: str) -> Tuple[str, str]:
         if mean_col in df.columns and sd_col in df.columns:
             return mean_col, sd_col
     cols_list = ", ".join(f"({m!r}, {s!r})" for m, s in candidates)
-    raise KeyError(
-        f"Could not resolve mean/sd columns for metric={metric!r}. "
-        f"Tried: {cols_list}."
-    )
+    raise KeyError(f"Could not resolve mean/sd columns for metric={metric!r}. Tried: {cols_list}.")
 
 
 _mean_sd_columns = resolve_mean_sd_columns  # backward-compatible alias
@@ -96,7 +92,7 @@ def epidemic_vs_mixed_strain_stats(
     target_group_level: str = "clonal_group",
     target_min_samples: int = 250,
     other_label: str = "other",
-) -> Tuple[Optional[pd.DataFrame], Optional[float], Optional[float]]:
+) -> tuple[pd.DataFrame | None, float | None, float | None]:
     """Epidemic-clonal-group test vs pooled per-run ``other`` comparator.
 
     Structural class (species, group level, labels, counts) comes from
@@ -165,14 +161,10 @@ def epidemic_vs_mixed_strain_stats(
     c_comp = EpidemicRowClass.non_epidemic_comparator
     cand_mask = structural.astype(str).isin((str(c_ep), str(c_comp)))
     n_cand = int(cand_mask.sum())
-    print(
-        f"Structural rows ({c_ep!r} + {c_comp!r}): {n_cand} (from {n_in})."
-    )
+    print(f"Structural rows ({c_ep!r} + {c_comp!r}): {n_cand} (from {n_in}).")
 
     cand_df = df[cand_mask].copy()
-    work_df = cand_df.dropna(
-        subset=[mean_col, sd_col, weight_col, group_count_col]
-    ).copy()
+    work_df = cand_df.dropna(subset=[mean_col, sd_col, weight_col, group_count_col]).copy()
     work_df = work_df[(work_df[weight_col] > 1) & (work_df[sd_col] > 0)].copy()
     work_df["var_mean"] = (work_df[sd_col] ** 2) / work_df[weight_col]
 
@@ -182,9 +174,7 @@ def epidemic_vs_mixed_strain_stats(
         counts = rest["source_tsv"].value_counts()
         bad = counts[counts != 1]
         if not bad.empty:
-            bad_preview = ", ".join(
-                f"{src!r}:n={int(n)}" for src, n in bad.head(5).items()
-            )
+            bad_preview = ", ".join(f"{src!r}:n={int(n)}" for src, n in bad.head(5).items())
             raise ValueError(
                 f"Expected exactly one {other_label!r} row per sub-table; "
                 f"found {len(bad)} source_tsv(s) violating this. "
@@ -193,10 +183,7 @@ def epidemic_vs_mixed_strain_stats(
 
     targets = work_df[struct_on_work == str(c_ep)].copy()
 
-    print(
-        f"Metric-eligible targets (structural {c_ep!r} after weight/sd checks): "
-        f"{len(targets)} rows."
-    )
+    print(f"Metric-eligible targets (structural {c_ep!r} after weight/sd checks): {len(targets)} rows.")
     print(f"Global comparator {other_label!r} rows: {len(rest)}.")
 
     if targets.empty:
@@ -209,9 +196,7 @@ def epidemic_vs_mixed_strain_stats(
     rest_weights = rest[weight_col].to_numpy(dtype=float)
     rest_alpha = rest_weights / rest_weights.sum()
     rest_mean = float(np.sum(rest_alpha * rest[mean_col].to_numpy(dtype=float)))
-    rest_var = float(
-        np.sum((rest_alpha ** 2) * rest["var_mean"].to_numpy(dtype=float))
-    )
+    rest_var = float(np.sum((rest_alpha**2) * rest["var_mean"].to_numpy(dtype=float)))
 
     target_mean_key = f"target_mean_{metric}"
     rest_mean_key = f"rest_mean_{metric}"
@@ -239,22 +224,12 @@ def epidemic_vs_mixed_strain_stats(
         target_sl = str(row["Sublineage"])
         sl_rest = rest[rest["Sublineage"].astype(str) == target_sl]
         n_other = int(len(sl_rest))
-        sl_w_sum = (
-            float(sl_rest[weight_col].to_numpy(dtype=float).sum())
-            if n_other > 0
-            else 0.0
-        )
+        sl_w_sum = float(sl_rest[weight_col].to_numpy(dtype=float).sum()) if n_other > 0 else 0.0
         if n_other > 0 and sl_w_sum > 0:
             sl_w = sl_rest[weight_col].to_numpy(dtype=float)
             sl_alpha = sl_w / sl_w.sum()
-            rest_sl_mean = float(
-                np.sum(sl_alpha * sl_rest[mean_col].to_numpy(dtype=float))
-            )
-            rest_sl_var = float(
-                np.sum(
-                    (sl_alpha ** 2) * sl_rest["var_mean"].to_numpy(dtype=float)
-                )
-            )
+            rest_sl_mean = float(np.sum(sl_alpha * sl_rest[mean_col].to_numpy(dtype=float)))
+            rest_sl_var = float(np.sum((sl_alpha**2) * sl_rest["var_mean"].to_numpy(dtype=float)))
             diff_sl = target_mean - rest_sl_mean
             se_diff_sl = float(np.sqrt(target_var + rest_sl_var))
             if se_diff_sl <= 0 or np.isnan(se_diff_sl):
@@ -333,9 +308,7 @@ def epidemic_vs_mixed_strain_stats(
         "ci_high_SL",
     ]
     out_df = out_df[col_order]
-    out_df = out_df.sort_values(
-        "estimate_target_minus_rest", ascending=False
-    ).reset_index(drop=True)
+    out_df = out_df.sort_values("estimate_target_minus_rest", ascending=False).reset_index(drop=True)
 
     print(f"Number of tests (m): {m_tests}")
     print(f"Global comparator weighted mean ({mean_col}): {rest_mean:.2f}")
@@ -360,9 +333,9 @@ def epidemic_vs_mixed_strain_plot(
     group_count_col: str = "n_unique_clonal_groups",
     weight_col: str = "n_samples",
     ylabel: str = "Number of genes",
-    title: Optional[str] = None,
-    ylim: Optional[Tuple[float, float]] = None,
-    save_path: Optional[str] = None,
+    title: str | None = None,
+    ylim: tuple[float, float] | None = None,
+    save_path: str | None = None,
     single_label: str = "Epidemic targets (as in stats table)",
     mixed_label: str = "Non-target rows",
     mean_samples_group_label: str = "Clonal group",
@@ -370,7 +343,7 @@ def epidemic_vs_mixed_strain_plot(
     other_label: str = "other",
     target_min_samples: int = 250,
     species_filter: str = "Klebsiella pneumoniae",
-) -> Tuple[plt.Figure, plt.Axes]:
+) -> tuple[plt.Figure, plt.Axes]:
     """Bar chart of ``mean_<metric>`` per row with CI error bars.
 
     Bar colours use structural class from ``epidemic_vs_mixed_row_class`` (or
@@ -385,6 +358,11 @@ def epidemic_vs_mixed_strain_plot(
       group; axis label uses ``mean_samples_group_label``).
     - Horizontal dashed lines: mean ``mean_<metric>`` over epidemic target rows
       (blue) and the weighted global ``other`` mean ``rest_mean``.
+
+    Rows are ordered in two blocks: epidemic (blue) then non-epidemic (red),
+    each block sorted by decreasing ``weight_col / group_count_col`` (mean
+    samples per sub-group). The primary y-axis uses data limits plus 25% of
+    the span as padding, unless ``ylim`` is set explicitly.
     """
     mean_col, _ = resolve_mean_sd_columns(df, metric)
     target_mean_col = f"target_mean_{metric}"
@@ -432,27 +410,47 @@ def epidemic_vs_mixed_strain_plot(
     else:
         is_epidemic = plot_df[group_count_col] == 1
 
-    epidemic_df = plot_df[is_epidemic]
-    epidemic_mean = float(epidemic_df[mean_col].mean()) if not epidemic_df.empty else None
+    gc = plot_df[group_count_col].to_numpy(dtype=float)
+    safe_c = np.where(gc > 0, gc, np.nan)
+    w = plot_df[weight_col].to_numpy(dtype=float)
+    sort_ratio = w / safe_c
+    _sort = pd.Series(sort_ratio, index=plot_df.index)
+    plot_work = plot_df.assign(_sort_ratio=_sort)
+    epart = plot_work[is_epidemic].sort_values("_sort_ratio", ascending=False, kind="mergesort")
+    npart = plot_work[~is_epidemic].sort_values("_sort_ratio", ascending=False, kind="mergesort")
+    plot_df = pd.concat([epart, npart], axis=0, ignore_index=True)
+    plot_df = plot_df.drop(columns=["_sort_ratio"], errors="ignore")
+    n_ep = len(epart)
+    n_non = len(npart)
+    if n_ep == 0:
+        is_epidemic = np.zeros(len(plot_df), dtype=bool)
+    elif n_non == 0:
+        is_epidemic = np.ones(len(plot_df), dtype=bool)
+    else:
+        is_epidemic = np.concatenate([np.ones(n_ep, dtype=bool), np.zeros(n_non, dtype=bool)])
+
+    if n_ep:
+        epidemic_mean = float(plot_df.iloc[:n_ep][mean_col].mean())
+    else:
+        epidemic_mean = None
 
     lower_err = np.full(len(plot_df), np.nan, dtype=float)
     upper_err = np.full(len(plot_df), np.nan, dtype=float)
     ci_lookup = out_df.set_index("strain")[[target_mean_col, "ci_low", "ci_high"]]
 
-    for i, row in plot_df.iterrows():
+    for i in range(len(plot_df)):
+        row = plot_df.iloc[i]
         strain = row["strain"]
-        y = float(row[mean_col])
+        yv = float(row[mean_col])
         if strain in ci_lookup.index:
             ci_low_abs = float(rest_mean) + float(ci_lookup.loc[strain, "ci_low"])
             ci_high_abs = float(rest_mean) + float(ci_lookup.loc[strain, "ci_high"])
-            lower_err[i] = max(0.0, y - ci_low_abs)
-            upper_err[i] = max(0.0, ci_high_abs - y)
+            lower_err[i] = max(0.0, yv - ci_low_abs)
+            upper_err[i] = max(0.0, ci_high_abs - yv)
 
     fig, ax = plt.subplots(figsize=(12, 6))
 
-    bar_colors = np.where(
-        is_epidemic.to_numpy(), "lightblue", "#f4a3a3"
-    )
+    bar_colors = np.where(is_epidemic, "lightblue", "#f4a3a3")
     plot_df.plot(
         kind="bar",
         x="strain",
@@ -493,7 +491,7 @@ def epidemic_vs_mixed_strain_plot(
     )
     ax2.set_ylabel(mean_samples_ylabel)
 
-    n_epidemic = int(is_epidemic.sum())
+    n_epidemic = int(n_ep)
     if 0 < n_epidemic < len(plot_df):
         ax.axvline(
             x=n_epidemic - 0.5,
@@ -527,6 +525,24 @@ def epidemic_vs_mixed_strain_plot(
     ax.set_title(title)
     if ylim is not None:
         ax.set_ylim(*ylim)
+    else:
+        y_arr = plot_df[mean_col].to_numpy(dtype=float)
+        y_lo = y_arr - np.nan_to_num(lower_err, nan=0.0)
+        y_hi = y_arr + np.nan_to_num(upper_err, nan=0.0)
+        lo = float(np.nanmin(np.concatenate([y_lo, y_arr])))
+        hi = float(np.nanmax(np.concatenate([y_hi, y_arr])))
+        if epidemic_mean is not None:
+            lo = min(lo, float(epidemic_mean))
+            hi = max(hi, float(epidemic_mean))
+        if rest_mean is not None:
+            lo = min(lo, float(rest_mean))
+            hi = max(hi, float(rest_mean))
+        span = hi - lo
+        if not np.isfinite(span) or span <= 0:
+            pad = max(0.01 * (abs(lo) if lo else 1.0), 1.0)
+        else:
+            pad = 0.25 * span
+        ax.set_ylim(lo - pad, hi + pad)
 
     line_handles, line_labels = ax.get_legend_handles_labels()
     line_handles = [h for h, lbl in zip(line_handles, line_labels) if lbl != mean_col]
@@ -559,16 +575,16 @@ def epidemic_vs_mixed_strain_comparison(
     weight_col: str = "n_samples",
     show_table: bool = True,
     show_plot: bool = True,
-    out_dir: Optional[str] = None,
+    out_dir: str | None = None,
     ylabel: str = "Number of genes",
-    title: Optional[str] = None,
-    ylim: Optional[Tuple[float, float]] = None,
+    title: str | None = None,
+    ylim: tuple[float, float] | None = None,
     mean_samples_group_label: str = "Clonal group",
     species_filter: str = "Klebsiella pneumoniae",
     target_group_level: str = "clonal_group",
     target_min_samples: int = 250,
     other_label: str = "other",
-) -> Tuple[Optional[pd.DataFrame], Optional[float], Optional[float]]:
+) -> tuple[pd.DataFrame | None, float | None, float | None]:
     """Convenience wrapper: run stats + plot, and optionally write to disk.
 
     If ``out_dir`` is provided, writes:
@@ -601,16 +617,8 @@ def epidemic_vs_mixed_strain_comparison(
         print(f"wrote {stats_path}")
 
     if show_plot:
-        save_path = (
-            os.path.join(out_dir, f"epidemic_vs_mixed_{metric}.png")
-            if out_dir is not None
-            else None
-        )
-        plot_df = (
-            df[df["species"].astype(str) == str(species_filter)].copy()
-            if "species" in df.columns
-            else df
-        )
+        save_path = os.path.join(out_dir, f"epidemic_vs_mixed_{metric}.png") if out_dir is not None else None
+        plot_df = df[df["species"].astype(str) == str(species_filter)].copy() if "species" in df.columns else df
         fig, _ = epidemic_vs_mixed_strain_plot(
             plot_df,
             out_df,
