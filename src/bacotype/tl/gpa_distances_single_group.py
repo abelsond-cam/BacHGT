@@ -814,19 +814,30 @@ def _filter_gpa_to_kpsc(gpa_df: pd.DataFrame, meta_df: pd.DataFrame, log) -> tup
     if "kpsc_final_list" not in meta_df.columns:
         raise ValueError("Metadata missing required column 'kpsc_final_list'")
     sample_ids = pd.Index(gpa_df.columns.astype(str))
-    missing_in_meta = sample_ids.difference(meta_df.index)
+    meta_ix = pd.Index(meta_df.index.astype(str))
+    missing_in_meta = sample_ids.difference(meta_ix)
+    n_csv = int(len(sample_ids))
     if len(missing_in_meta):
         show = ", ".join(map(str, list(missing_in_meta[:5])))
-        raise ValueError(
-            f"Metadata missing GPA samples before kpsc filter. missing_count={len(missing_in_meta)} first5=[{show}]"
+        log(
+            f"kpsc filter: dropping {len(missing_in_meta)} GPA column(s) with no metadata row "
+            f"(first5=[{show}]); panaroo n={n_csv} -> n_with_meta={n_csv - len(missing_in_meta)}"
         )
-    kpsc_mask = _series_to_bool(meta_df.reindex(sample_ids)["kpsc_final_list"])
-    keep_ids = sample_ids[kpsc_mask.to_numpy()]
-    n_raw = int(len(sample_ids))
+    meta_ix_set = set(meta_ix.tolist())
+    present_ids = pd.Index([c for c in sample_ids if c in meta_ix_set])
+    if len(present_ids) == 0:
+        raise ValueError(
+            "No GPA sample columns remain after intersecting with metadata index. "
+            f"n_csv_columns={n_csv}"
+        )
+    gpa_present = gpa_df.loc[:, list(present_ids)].copy()
+    kpsc_mask = _series_to_bool(meta_df.reindex(present_ids)["kpsc_final_list"])
+    keep_ids = present_ids[kpsc_mask.to_numpy()]
+    n_raw = int(len(present_ids))
     n_kpsc = int(len(keep_ids))
     n_drop = n_raw - n_kpsc
     log(f"kpsc filter: raw GPA samples={n_raw} kept={n_kpsc} dropped={n_drop}")
-    return gpa_df.loc[:, keep_ids].copy(), n_raw, n_kpsc
+    return gpa_present.loc[:, keep_ids].copy(), n_raw, n_kpsc
 
 
 def _species_is_klebsiella_pneumoniae(species_val: object) -> bool:
@@ -845,13 +856,13 @@ def _classify_run(
         raise ValueError(f"Metadata missing required columns for run classification: {missing}")
 
     sid_all = pd.Index(gpa_sample_ids.astype(str))
-    # Exclude the global reference (MGH78578) from classification so a single
-    # reference genome in a different CG/Sublineage does not inflate unique
-    # Sublineage/Clonal group counts or change the strain label.
-    mgh_id = _mgh78578_sample_in_gpa(meta_df, sid_all)
-    if mgh_id is not None:
-        sid = sid_all.drop(mgh_id)
-        log(f"run classification: excluding global reference {mgh_id} from counts")
+    # Exclude all reference genomes (MGH78578, RefSeq, complete Norway) from
+    # classification so they do not inflate unique Sublineage/Clonal group counts
+    # or change the strain label.
+    ref_ids = _reference_sample_ids_in_gpa(meta_df, sid_all)
+    if ref_ids:
+        sid = sid_all.drop(list(ref_ids), errors="ignore")
+        log(f"run classification: excluding {len(ref_ids)} reference genome(s) from counts: {sorted(ref_ids)[:5]}{'...' if len(ref_ids) > 5 else ''}")
     else:
         sid = sid_all
     sid_set = set(sid.astype(str))
@@ -866,7 +877,7 @@ def _classify_run(
     log(
         "run classification debug: "
         f"n_gpa_samples_total={len(sid_all)} "
-        f"n_after_mgh_exclusion={len(sid)} "
+        f"n_after_ref_exclusion={len(sid)} "
         f"n_metadata_rows={len(meta_df)} "
         f"n_kpsc_rows={len(kpsc_meta)}"
     )
@@ -907,7 +918,7 @@ def _classify_run(
             "Run classification produced empty run_meta after kpsc intersection and "
             "dropna(Sublineage, Clonal group). "
             f"n_gpa_samples_total={len(sid_all)} "
-            f"n_after_mgh_exclusion={len(sid)} "
+            f"n_after_ref_exclusion={len(sid)} "
             f"n_sid_kpsc={len(sid_kpsc)} "
             f"n_sid_not_kpsc={n_sid_not_kpsc} "
             f"n_run_meta_pre={len(run_meta_pre)} "
@@ -1069,6 +1080,30 @@ def _mgh78578_sample_in_gpa(meta_df: pd.DataFrame, gpa_columns: pd.Index) -> str
     if len(hits) == 0:
         return None
     return str(hits[0])
+
+
+def _reference_sample_ids_in_gpa(meta_df: pd.DataFrame, gpa_columns: pd.Index) -> set[str]:
+    """Return sample IDs in ``gpa_columns`` that are reference genomes.
+
+    A sample counts as a reference if any of ``is_mgh78578``, ``is_refseq``,
+    or ``is_complete_norway_genome`` is True in metadata. These are excluded
+    from classification counts so a reference genome in a different CG/Sublineage
+    does not inflate unique counts.
+    """
+    ref_cols = ("is_mgh78578", "is_refseq", "is_complete_norway_genome")
+    gpa_str = gpa_columns.astype(str)
+    reindexed = meta_df.reindex(gpa_str)
+    result: set[str] = set()
+    for col in ref_cols:
+        if col not in reindexed.columns:
+            continue
+        series = reindexed[col]
+        if pd.api.types.is_bool_dtype(series):
+            mask = series.fillna(False).to_numpy(dtype=bool)
+        else:
+            mask = _series_to_bool(series).to_numpy()
+        result.update(gpa_str.to_numpy()[mask].astype(str).tolist())
+    return result
 
 
 def _empty_cohort_flat_keys(key_prefix: str) -> dict[str, object]:

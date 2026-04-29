@@ -13,18 +13,23 @@ from :mod:`bacotype.pl.epidemic_vs_mixed` over one or more metrics.
 Three modes:
 
 * ``combined`` - concatenate across all runs and analyse the combined
-  (sliced + deduped) table; outputs under ``<data_dir>/genome_stats/``.
+  (sliced + deduped) table; outputs under ``<data_dir>/genome_stats/`` and
+  per-metric under ``<data_dir>/genome_stats/<metric>/``.
 * ``per-run`` - analyse each run's own detail TSV in isolation; outputs
-  under ``<data_dir>/<run>/genome_stats/``.
+  under ``<data_dir>/<run>/genome_stats/`` and per-metric in subfolders as above.
 * ``both`` - run both of the above.
 
 By default, if ``<data_dir>/genome_stats/gpa_distances_detail.tsv`` already
 exists, it is **not** rebuilt from per-run TSVs; the existing file is loaded.
 Pass ``--recompile`` to re-concatenate all subfolders and overwrite that table.
 
-Default metric is ``panaroo_genes`` (resolved to ``mean_panaroo_genes`` /
-``sd_panaroo_genes``). Additional metrics can be passed with ``--metrics``;
-both naming conventions (``mean_<m>/sd_<m>`` and ``<m>_mean/<m>_sd``) are
+By default, every metric with both mean and SD columns in the sliced+deduped
+table is analysed (or pass ``--metrics`` to restrict). Outputs are written per
+metric under ``<out_dir>/<metric_name>/`` (e.g. ``epidemic_vs_mixed_panaroo_genes_stats.tsv``).
+A run summary table ``epidemic_vs_mixed_metric_summary.tsv`` at the top of
+``out_dir`` ranks metrics by the count of rows with ``p_bonferroni_m < 0.01``.
+
+Both naming conventions (``mean_<m>/sd_<m>`` and ``<m>_mean/<m>_sd``) are
 recognised by :func:`bacotype.pl.epidemic_vs_mixed.resolve_mean_sd_columns`.
 """
 
@@ -69,8 +74,10 @@ print(
 )
 
 DEFAULT_DATA_DIR = PANAROO_RUN_ROOT
-DEFAULT_METRICS: tuple[str, ...] = ("panaroo_genes",)
+# CLI default for metrics: None = use every metric with a valid mean/SD pair.
 DEFAULT_GROUP_LEVEL = "clonal_group"
+SIGNIFICANCE_THRESHOLD = 0.01
+SUMMARY_TSV_NAME = "epidemic_vs_mixed_metric_summary.tsv"
 DEFAULT_GROUP_COUNT_COL = "n_unique_clonal_groups"
 DETAIL_GLOB = os.path.join(
     "*", "analysis", "GPA_reference_genome", "gpa_distances_detail_*.tsv"
@@ -271,14 +278,19 @@ def run_analysis_for_detail_file(
     group_level: str = DEFAULT_GROUP_LEVEL,
     group_count_col: str = DEFAULT_GROUP_COUNT_COL,
     weight_col: str = "n_samples",
-    metrics: Sequence[str] = DEFAULT_METRICS,
+    metrics: Sequence[str] | None = None,
     show_plot: bool = True,
     show_table: bool = True,
 ) -> tuple[dict[str, pd.DataFrame | None], list[str]]:
     """Reusable unit: slice + dedup + per-metric epidemic-vs-mixed comparison.
 
     ``detail`` can be a path to a single per-run detail TSV or an already-loaded
-    DataFrame (e.g. the combined one). Outputs are written under ``out_dir``.
+    DataFrame (e.g. the combined one). Per-metric stats and plots are written
+    under ``out_dir/<metric>/``. A summary TSV is written at ``out_dir``.
+
+    If ``metrics`` is ``None`` (default), all bases returned by
+    :func:`_available_metric_bases` on the deduped table are analysed.
+
     Returns
     -------
     results
@@ -312,7 +324,7 @@ def run_analysis_for_detail_file(
 
     if deduped.empty:
         _tslog(f"No rows after slice/dedup for out_dir={out_dir}; skipping.")
-        return dict.fromkeys(metrics), []
+        return {}, []
 
     if group_count_col in deduped.columns:
         vc_post = deduped[group_count_col].value_counts(dropna=False).sort_index()
@@ -343,7 +355,21 @@ def run_analysis_for_detail_file(
         "Detected metric bases from mean/sd columns: "
         + (", ".join(available_metrics) if available_metrics else "<none>")
     )
-    _tslog(f"Input metrics requested: {', '.join(metrics)}")
+    if metrics is None:
+        metrics = tuple(available_metrics)
+        _tslog(
+            f"Using all detected metrics (none requested explicitly): n={len(metrics)}"
+        )
+    else:
+        metrics = tuple(metrics)
+        if not metrics:
+            _tslog("Empty metrics list requested; skipping per-metric outputs.")
+            return {}, []
+        _tslog(f"Input metrics requested: {', '.join(metrics)}")
+
+    if not metrics:
+        _tslog("No detectable mean/sd metrics; skipping per-metric outputs.")
+        return {}, []
 
     os.makedirs(out_dir, exist_ok=True)
     _tslog(f"Ensured output directory exists: {out_dir}")
@@ -351,7 +377,9 @@ def run_analysis_for_detail_file(
     results: dict[str, pd.DataFrame | None] = {}
     saved_outputs: list[str] = []
     for metric in metrics:
-        _tslog(f"Starting metric analysis: {metric!r}")
+        metric_out_dir = os.path.join(out_dir, metric)
+        os.makedirs(metric_out_dir, exist_ok=True)
+        _tslog(f"Starting metric analysis: {metric!r} -> {metric_out_dir}")
         try:
             out_df, _rest_mean, _rest_var = epidemic_vs_mixed_strain_comparison(
                 deduped,
@@ -360,7 +388,7 @@ def run_analysis_for_detail_file(
                 weight_col=weight_col,
                 show_table=show_table,
                 show_plot=show_plot,
-                out_dir=out_dir,
+                out_dir=metric_out_dir,
             )
             _tslog(f"Finished metric analysis: {metric!r}")
         except KeyError as exc:
@@ -368,8 +396,12 @@ def run_analysis_for_detail_file(
             out_df = None
         results[metric] = out_df
 
-        stats_path = os.path.join(out_dir, f"epidemic_vs_mixed_{metric}_stats.tsv")
-        plot_path = os.path.join(out_dir, f"epidemic_vs_mixed_{metric}.png")
+        stats_path = os.path.join(
+            metric_out_dir, f"epidemic_vs_mixed_{metric}_stats.tsv"
+        )
+        plot_path = os.path.join(
+            metric_out_dir, f"epidemic_vs_mixed_{metric}.png"
+        )
         if os.path.isfile(stats_path):
             saved_outputs.append(stats_path)
             _tslog(f"Output saved: {stats_path}")
@@ -380,6 +412,33 @@ def run_analysis_for_detail_file(
             _tslog(f"Output saved: {plot_path}")
         else:
             _tslog(f"Output missing: {plot_path}")
+
+    summary_rows: list[dict[str, object]] = []
+    for metric, out_df in results.items():
+        n_sig = 0
+        if out_df is not None and "p_bonferroni_m" in out_df.columns:
+            n_sig = int(
+                (out_df["p_bonferroni_m"] < SIGNIFICANCE_THRESHOLD).sum()
+            )
+        summary_rows.append({"metric": metric, "n_significant": n_sig})
+    if summary_rows:
+        summary_df = (
+            pd.DataFrame(summary_rows)
+            .sort_values(
+                ["n_significant", "metric"],
+                ascending=[False, True],
+                kind="mergesort",
+            )
+            .reset_index(drop=True)
+        )
+        summary_path = os.path.join(out_dir, SUMMARY_TSV_NAME)
+        summary_df.to_csv(summary_path, sep="\t", index=False)
+        saved_outputs.append(summary_path)
+        _tslog(
+            f"Metric summary (p_bonferroni_m < {SIGNIFICANCE_THRESHOLD}):"
+        )
+        print(summary_df.to_string(index=False), flush=True)
+        _tslog(f"Wrote summary: {summary_path}")
 
     if saved_outputs:
         _tslog("Saved outputs for this analysis:")
@@ -397,7 +456,7 @@ def run_combined(
     group_level: str = DEFAULT_GROUP_LEVEL,
     group_count_col: str = DEFAULT_GROUP_COUNT_COL,
     weight_col: str = "n_samples",
-    metrics: Sequence[str] = DEFAULT_METRICS,
+    metrics: Sequence[str] | None = None,
     recompile: bool = False,
 ) -> None:
     """Load or build the combined detail TSV and analyse the combined set.
@@ -438,7 +497,7 @@ def run_per_run(
     group_level: str = DEFAULT_GROUP_LEVEL,
     group_count_col: str = DEFAULT_GROUP_COUNT_COL,
     weight_col: str = "n_samples",
-    metrics: Sequence[str] = DEFAULT_METRICS,
+    metrics: Sequence[str] | None = None,
 ) -> None:
     """Run the analysis on each panaroo-run detail TSV individually."""
     _tslog("=== run_per_run: start ===")
@@ -515,12 +574,14 @@ def _parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--metrics",
-        nargs="+",
-        default=list(DEFAULT_METRICS),
+        nargs="*",
+        default=None,
+        metavar="METRIC",
         help=(
-            "Metric base names to analyse (e.g. panaroo_genes core_genes "
-            "total_size). Both mean_<m>/sd_<m> and <m>_mean/<m>_sd naming "
-            f"conventions are recognised. Default: {list(DEFAULT_METRICS)}."
+            "Metric base names to analyse (e.g. panaroo_genes core_genes). "
+            "Omit the flag, or pass no values, to run every metric that has a "
+            "valid mean/SD column pair. Both mean_<m>/sd_<m> and <m>_mean/<m>_sd "
+            "naming conventions are recognised."
         ),
     )
     parser.add_argument(
@@ -540,11 +601,16 @@ def main(argv: Iterable[str] | None = None) -> int:
     """Parse CLI args and run combined/per-run analysis workflows."""
     _tslog("gpa_distances_combined.py main() start")
     args = _parse_args(argv)
+    metrics_kw: tuple[str, ...] | None
+    if args.metrics:
+        metrics_kw = tuple(args.metrics)
+    else:
+        metrics_kw = None
     _tslog(
         "Parsed args: "
         f"mode={args.mode}, data_dir={args.data_dir}, "
         f"group_level={args.group_level}, group_count_col={args.group_count_col}, "
-        f"weight_col={args.weight_col}, metrics={args.metrics}, "
+        f"weight_col={args.weight_col}, metrics={metrics_kw}, "
         f"recompile={args.recompile}"
     )
 
@@ -552,7 +618,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         "group_level": args.group_level,
         "group_count_col": args.group_count_col,
         "weight_col": args.weight_col,
-        "metrics": tuple(args.metrics),
+        "metrics": metrics_kw,
     }
 
     if args.mode in ("combined", "both"):

@@ -9,6 +9,7 @@ files with: bash slurm_scripts/build_assemblies_and_gff_file_list.sh
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -35,12 +36,18 @@ KLEBSIELLA_GFF_LIST_F = Path(
 ASSEMBLY_TSV_F = ASSEMBLY_LIST_F.with_suffix(".tsv")
 NCBI_GFF_TSV_F = NCBI_GFF_LIST_F.with_suffix(".tsv")
 KLEBSIELLA_GFF_TSV_F = KLEBSIELLA_GFF_LIST_F.with_suffix(".tsv")
+ISESCAN_LIST_F = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/isescan_csv.txt"
+)
+ISESCAN_TSV_F = ISESCAN_LIST_F.with_suffix(".tsv")
 
 
 def _normalize_sample_for_lookup(s: str) -> str:
     """If Sample starts with GC, return first two underscore-separated parts; else return as-is."""
     if not isinstance(s, str):
         s = str(s)
+    if s.startswith("GCA_") or s.startswith("GCF_"):
+        return s.split(".", 1)[0]
     if s.startswith("GC"):
         parts = s.split("_")
         return "_".join(parts[:2]) if len(parts) >= 2 else s
@@ -49,10 +56,15 @@ def _normalize_sample_for_lookup(s: str) -> str:
 
 def _gc_normalize_series(s: pd.Series) -> pd.Series:
     """Vectorised GC normalization: if starts with GC, take first two parts."""
-    mask = s.astype(str).str.startswith("GC")
-    parts = s.astype(str).str.split("_")
+    s_str = s.astype(str)
+    refseq_mask = s_str.str.startswith("GCA_") | s_str.str.startswith("GCF_")
+    refseq_first = s_str.str.split(".", n=1).str[0]
+    s_norm = s_str.where(~refseq_mask, refseq_first)
+
+    mask = s_norm.str.startswith("GC")
+    parts = s_norm.str.split("_")
     first_two = parts.apply(lambda x: "_".join(x[:2]) if len(x) >= 2 else (x[0] if x else ""))
-    return s.where(~mask, first_two)
+    return s_norm.where(~mask, first_two)
 
 
 def _parse_assemblies(path_series: pd.Series) -> pd.Series:
@@ -84,6 +96,13 @@ def _parse_ncbi_gff(path_series: pd.Series) -> pd.Series:
     basename = path_series.str.rsplit("/", n=1).str[-1]
     sample = basename.str.split(".gff").str[0]
     # Return all extensions, but normalise by GC starting names while doing so
+    return _gc_normalize_series(sample)
+
+
+def _parse_isescan_csv(path_series: pd.Series) -> pd.Series:
+    """Sample = basename with assembly+csv suffix removed."""
+    basename = path_series.str.rsplit("/", n=1).str[-1]
+    sample = basename.str.replace(r"_[0-9]+\.fa\.csv$", "", regex=True)
     return _gc_normalize_series(sample)
 
 
@@ -131,8 +150,22 @@ def _summarise_matches(total_files: int, used_count: int, label: str) -> None:
     )
 
 
+def _apply_path_column(
+    df: pd.DataFrame,
+    *,
+    sample_key_col: str,
+    out_col: str,
+    lookup_dict: dict[str, str],
+) -> tuple[pd.DataFrame, int, int]:
+    """Set ``out_col`` from ``sample_key_col`` lookup; return (df, n_found, n_used_files)."""
+    df[out_col] = df[sample_key_col].map(lookup_dict)  # type: ignore[arg-type]
+    n_found = int(df[out_col].notna().sum())
+    n_used_files = int(df[out_col].dropna().nunique())
+    return df, n_found, n_used_files
+
+
 def run(metadata_path: Path | None = None) -> None:
-    """Load .txt path lists, parse Sample, write TSVs, add paths to metadata, overwrite file."""
+    """Default mode: add assembly_file and gff_file columns to metadata."""
     meta_path = Path(metadata_path) if metadata_path is not None else METADATA_F
 
     print(f"Metadata file: {meta_path}")
@@ -166,12 +199,14 @@ def run(metadata_path: Path | None = None) -> None:
     print(f"Loaded {len(df)} samples from metadata\n")
 
     df["sample_key"] = df["Sample"].apply(_normalize_sample_for_lookup)
-    df["assembly_file"] = df["sample_key"].map(assembly_dict)  # type: ignore[arg-type]
-
     total_samples = len(df)
-    n_assembly_found = df["assembly_file"].notna().sum()
+    df, n_assembly_found, used_assembly = _apply_path_column(
+        df,
+        sample_key_col="sample_key",
+        out_col="assembly_file",
+        lookup_dict=assembly_dict,
+    )
     n_assembly_not_found = total_samples - n_assembly_found
-    used_assembly = int(df["assembly_file"].dropna().nunique())
 
     print("Assembly files:")
     print(f"  Samples in metadata: {total_samples}")
@@ -212,16 +247,92 @@ def run(metadata_path: Path | None = None) -> None:
     print("Done!")
 
 
+def run_add_single_path_column(
+    *,
+    metadata_path: Path | None = None,
+    path_list: Path,
+    output_tsv: Path,
+    out_col: str,
+    label: str,
+    parse_fn,
+) -> None:
+    """Generic mode: add one path column by Sample lookup from a single path list file."""
+    meta_path = Path(metadata_path) if metadata_path is not None else METADATA_F
+    print(f"Metadata file: {meta_path}")
+    if not meta_path.exists():
+        raise FileNotFoundError(f"Metadata file does not exist: {meta_path}")
+    print("  File exists: Yes")
+
+    print("\nParsing path list and writing TSV...")
+    _, lookup_dict = _load_and_parse_txt(path_list, parse_fn, label, output_tsv)
+
+    print("\n" + "=" * 80)
+    print("Loading metadata...")
+    df = pd.read_csv(meta_path, sep="\t", low_memory=False)
+    print(f"Loaded {len(df)} samples from metadata\n")
+
+    df["sample_key"] = df["Sample"].apply(_normalize_sample_for_lookup)
+    total_samples = len(df)
+    df, n_found, used_files = _apply_path_column(
+        df,
+        sample_key_col="sample_key",
+        out_col=out_col,
+        lookup_dict=lookup_dict,
+    )
+    n_not_found = total_samples - n_found
+
+    print(f"{label} files:")
+    print(f"  Samples in metadata: {total_samples}")
+    print(f"  Samples with {out_col}: {n_found}")
+    print(f"  Samples without {out_col}: {n_not_found}")
+    _summarise_matches(len(lookup_dict), used_files, f"  {label} list coverage")
+
+    df = df.drop(columns=["sample_key"])
+    df.to_csv(meta_path, sep="\t", index=False)
+
+    print("\n" + "=" * 80)
+    print(f"Writing updated metadata to: {meta_path}")
+    print("Done!")
+
+
 def main(argv: list[str] | None = None) -> None:
-    """CLI entry point. Usage: python -m bacotype.pp.add_paths_gff_fna_to_metadata [optional_metadata_tsv]."""
+    """CLI entry point with default and generic single-column modes."""
     if argv is None:
         argv = sys.argv[1:]
-    if len(argv) > 1:
-        raise SystemExit(
-            "Usage: python -m bacotype.pp.add_paths_gff_fna_to_metadata [optional_metadata_tsv]"
-        )
-    metadata_path = Path(argv[0]) if argv else None
-    run(metadata_path)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "metadata",
+        nargs="?",
+        default=None,
+        help="Optional metadata TSV path (default: curated slimmed metadata).",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=["default", "isescan"],
+        default="default",
+        help="Run default assembly+gff mode or single-column isescan mode.",
+    )
+    parser.add_argument(
+        "--isescan-list",
+        default=str(ISESCAN_LIST_F),
+        help="Path to newline-delimited full paths of ISEScan CSV files.",
+    )
+    args = parser.parse_args(argv)
+
+    metadata_path = Path(args.metadata) if args.metadata else None
+
+    if args.mode == "default":
+        run(metadata_path)
+        return
+
+    run_add_single_path_column(
+        metadata_path=metadata_path,
+        path_list=Path(args.isescan_list),
+        output_tsv=Path(args.isescan_list).with_suffix(".tsv"),
+        out_col="isescan_file",
+        label="ISEScan CSV",
+        parse_fn=_parse_isescan_csv,
+    )
 
 
 if __name__ == "__main__":
