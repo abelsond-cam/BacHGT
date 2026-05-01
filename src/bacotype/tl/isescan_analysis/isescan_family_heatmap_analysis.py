@@ -27,6 +27,10 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from bacotype.tl.define_epidemic_cgs import (
+    group_mean_sd_for_columns,
+    reorder_cg_rows_by_total_sample_count,
+)
 from bacotype.tl.isescan_analysis.isescan_constants import CANONICAL_IS_FAMILY_COLUMNS
 
 # Older notebooks imported `parse_bool` from this module — keep re-export.
@@ -41,52 +45,6 @@ def _coerce_bool_series(s: pd.Series) -> pd.Series:
     return s.astype(str).str.strip().str.lower().isin(("true", "1", "t", "yes", "y"))
 
 
-def group_mean_sd_for_cohort(
-    df: pd.DataFrame,
-    *,
-    fam_cols: list[str],
-    top_n: int,
-    rare_k: int,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Return (mean, sd) DataFrames indexed by CG label then ``rare_CGs``."""
-    sub = df.dropna(subset=["Clonal group"]).copy()
-    if sub.empty:
-        empty = pd.DataFrame(columns=fam_cols)
-        return empty, empty
-
-    cg_counts = sub.groupby("Clonal group", dropna=False)["Sample"].nunique()
-
-    top_labels = list(cg_counts.sort_values(ascending=False).head(top_n).index)
-
-    # Rarest groups: exclude top labels so we do not duplicate CG rows in one table.
-    remaining = cg_counts.drop(labels=top_labels, errors="ignore")
-    rare_k_eff = min(rare_k, len(remaining))
-    rare_labels = list(remaining.sort_values(ascending=True).head(rare_k_eff).index)
-
-    row_names: list[str] = []
-    mean_rows: list[pd.Series] = []
-    sd_rows: list[pd.Series] = []
-
-    for lab in top_labels:
-        part = sub[sub["Clonal group"] == lab]
-        row_names.append(str(lab))
-        mean_rows.append(part[fam_cols].mean())
-        sd_rows.append(part[fam_cols].std(ddof=1))
-
-    row_names.append("Rare CGs")
-    if not rare_labels:
-        mean_rows.append(pd.Series(np.nan, index=fam_cols))
-        sd_rows.append(pd.Series(np.nan, index=fam_cols))
-    else:
-        rare_sub = sub[sub["Clonal group"].isin(rare_labels)]
-        mean_rows.append(rare_sub[fam_cols].mean())
-        sd_rows.append(rare_sub[fam_cols].std(ddof=1))
-
-    mean_df = pd.DataFrame(mean_rows, index=row_names, columns=fam_cols)
-    sd_df = pd.DataFrame(sd_rows, index=row_names, columns=fam_cols)
-    return mean_df, sd_df
-
-
 def _shared_vlim(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
     stacked = np.concatenate([a.reshape(-1), b.reshape(-1)])
     stacked = stacked[np.isfinite(stacked)]
@@ -95,26 +53,8 @@ def _shared_vlim(a: np.ndarray, b: np.ndarray) -> tuple[float, float]:
     return float(np.min(stacked)), float(np.max(stacked))
 
 
-RARE_CGS_ROW = "Rare CGs"
-
 # Omit from heatmap X-axis only (downstream CSVs still include these if present).
 _HEATMAP_EXCLUDE_FAMILIES: frozenset[str] = frozenset({"ISNCY", "raw"})
-
-
-def reorder_cg_rows_by_total_sample_count(
-    summary: pd.DataFrame,
-    cg_total_unique_samples: pd.Series,
-) -> pd.DataFrame:
-    """Reindex rows: CG labels by descending global unique-sample count; pooled row last."""
-    if summary.empty:
-        return summary
-    idx = [str(i) for i in summary.index]
-    rare_here = RARE_CGS_ROW in idx
-    cg_labels = [lab for lab in idx if lab != RARE_CGS_ROW]
-    counts = cg_total_unique_samples.reindex(cg_labels).fillna(0).astype(int)
-    cg_sorted = sorted(cg_labels, key=lambda lab: (-int(counts.loc[lab]), lab))
-    new_order = cg_sorted + ([RARE_CGS_ROW] if rare_here else [])
-    return summary.reindex(new_order)
 
 
 def plot_side_by_side_heatmap(
@@ -223,11 +163,17 @@ def main() -> None:
     whole["_cg_key"] = whole["Clonal group"].astype(str)
     cg_counts_total = whole.groupby("_cg_key", dropna=False)["Sample"].nunique()
 
-    mean_refseq, sd_refseq = group_mean_sd_for_cohort(
-        refseq, fam_cols=fam_cols, top_n=args.top_clonal_groups, rare_k=args.rare_cg_n
+    mean_refseq, sd_refseq = group_mean_sd_for_columns(
+        refseq,
+        value_cols=fam_cols,
+        top_n=args.top_clonal_groups,
+        rare_k=args.rare_cg_n,
     )
-    mean_sr, sd_sr = group_mean_sd_for_cohort(
-        short_read, fam_cols=fam_cols, top_n=args.top_clonal_groups, rare_k=args.rare_cg_n
+    mean_sr, sd_sr = group_mean_sd_for_columns(
+        short_read,
+        value_cols=fam_cols,
+        top_n=args.top_clonal_groups,
+        rare_k=args.rare_cg_n,
     )
 
     mean_refseq = reorder_cg_rows_by_total_sample_count(mean_refseq, cg_counts_total)
