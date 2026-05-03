@@ -5,15 +5,20 @@ Joins curated metadata with ISEScan per-sample counts, then for each epidemic CG
 pooled Rare_CGs, and all_samples, outputs p-value-sorted tables comparing cohorts.
 
 Kleborate columns are handled by category:
-  - Acquired AMR (*_acquired): semicolon-delimited token counts (existing behaviour).
-  - Virulence module outputs (ybt/clb/iuc/iro/rmp/rmpA2 alleles, lineage strings,
-    STs, spurious hits): presence/absence (1/0) per Kleborate cell.
+  - Virulence biosynthetic clusters (ybt/clb/iuc/iro/rmp/rmpA2): reported as
+    '{Lineage}_bsc' — the number of alleles detected per sample across the
+    whole biosynthetic cluster (BSC). The locus_concordance column reports the
+    fraction of samples where all BSC genes are either fully present or fully absent,
+    indicating whether the cluster is acquired and lost as a unit. Use
+    --full-virulence-output to also report individual alleles, STs, lineage strings,
+    and spurious-hit columns.
   - Chromosomal MLST 7-locus alleles (gapA, infB, mdh, pgi, phoE, rpoB, tonB)
     and chromosomal ST: presence/absence. (Mean comparisons of allele IDs are
     biologically meaningless; the IDs are arbitrary labels.)
+  - Acquired AMR (*_acquired): semicolon-delimited token counts.
   - ISEScan IS-family columns: numeric per-sample counts.
-  - Curated stats (total_size, contig_count, N50, virulence_score,
-    resistance_score, num_resistance_genes): numeric.
+  - Curated stats (total_size, contig_count, N50, num_resistance_genes): numeric.
+    virulence_score and resistance_score are excluded (composite/derived).
 
 For Kleborate typing cells, "absent" means the cell is one of {'-', '0', '',
 'NA', 'nan', 'None'}; any other content (allele integer, optionally annotated
@@ -63,6 +68,9 @@ EXPLICIT_NUMERIC = (
     "N50",
     "num_resistance_genes",
 )
+
+# Kleborate summary scores — excluded from analysis (composite/derived, not raw features).
+EXCLUDE_NUMERIC: frozenset[str] = frozenset({"virulence_score", "resistance_score"})
 
 # ---------------------------------------------------------------------------
 # Kleborate virulence module schema
@@ -145,6 +153,18 @@ OUTPUT_COLS = (
     "n_sr",
     "complete_sd",
     "sr_sd",
+    "p_val",
+)
+
+PENETRANCE_OUTPUT_COLS = (
+    "feature",
+    "p_val_corr",
+    "penetrance_ratio",
+    "complete_penetrance",
+    "sr_penetrance",
+    "locus_concordance",
+    "n_complete",
+    "n_sr",
     "p_val",
 )
 
@@ -340,16 +360,21 @@ def compute_row_stats(feature_name: str, feature_vals: pd.Series, is_refseq: pd.
 def build_feature_data(
     merged: pd.DataFrame,
     ise_cols: list[str],
+    full_virulence_output: bool = False,
 ) -> tuple[dict[str, pd.Series], dict[str, list[pd.Series]], list[str]]:
     """Build feature dict, locus_gene_map for concordance, and skipped list.
 
-    locus_gene_map maps each '{locus}_gene_count' feature name to the list of
-    constituent gene presence Series so concordance can be computed per group.
+    Each virulence BSC is reported as '{Lineage}_bsc': presence/absence of the
+    lineage column (0/1), so the mean equals the BSC detection rate. locus_gene_map
+    maps each BSC feature to its per-allele presence Series so concordance (fraction
+    of samples where all BSC alleles are co-present or co-absent) can be computed.
 
     Processing order:
       1. Explicit numeric scalars
       2. Kleborate virulence module columns -> presence/absence (1/0)
-      3. Kleborate virulence locus gene counts (sum of allele presence per locus)
+         [only when full_virulence_output=True]
+      3. Kleborate virulence BSC features ('{Lineage}_bsc' by default,
+         '{locus}_gene_count' when full_virulence_output=True)
       4. Kleborate chromosomal MLST columns -> presence/absence (1/0)
       5. Gene-range fallback (gapA -> virulence_score) -> safe_numeric
       6. *_acquired AMR columns -> token counts
@@ -374,39 +399,62 @@ def build_feature_data(
             skipped.append(col)
 
     # 2. Kleborate virulence module columns -> presence/absence
-    print(f"\nKleborate virulence columns: {len(KLEBORATE_VIRULENCE_COLS)} expected")
-    v_added = v_missing = 0
-    for col in KLEBORATE_VIRULENCE_COLS:
-        if col in features:
-            continue
-        if col in merged.columns:
-            features[col] = kleborate_column_to_presence(merged[col])
-            v_added += 1
-        else:
-            v_missing += 1
-            skipped.append(col)
-    print(f"  Added (presence/absence): {v_added}, missing from metadata: {v_missing}")
-    if v_added:
-        for example in KLEBORATE_VIRULENCE_COLS:
-            if example in merged.columns:
-                non_absent = int((features[example] == 1).sum())
-                absent = int((features[example] == 0).sum())
-                print(f"  Example '{example}': {non_absent} present, {absent} absent")
-                break
+    # Skipped in default mode; use --full-virulence-output to include individual
+    # alleles, STs, lineage strings, and spurious-hit columns.
+    if full_virulence_output:
+        print(f"\nKleborate virulence columns: {len(KLEBORATE_VIRULENCE_COLS)} expected")
+        v_added = v_missing = 0
+        for col in KLEBORATE_VIRULENCE_COLS:
+            if col in features:
+                continue
+            if col in merged.columns:
+                features[col] = kleborate_column_to_presence(merged[col])
+                v_added += 1
+            else:
+                v_missing += 1
+                skipped.append(col)
+        print(f"  Added (presence/absence): {v_added}, missing from metadata: {v_missing}")
+        if v_added:
+            for example in KLEBORATE_VIRULENCE_COLS:
+                if example in merged.columns:
+                    non_absent = int((features[example] == 1).sum())
+                    absent = int((features[example] == 0).sum())
+                    print(f"  Example '{example}': {non_absent} present, {absent} absent")
+                    break
+    else:
+        print("\nKleborate virulence columns: collapsed to BSC presence "
+              "(use --full-virulence-output for individual alleles, STs, and spurious hits)")
 
-    # 3. Kleborate virulence locus gene counts (sum across alleles per locus)
-    print("\nKleborate locus gene counts:")
+    # 3. Kleborate virulence BSC presence per locus.
+    # Default: '{Lineage}_bsc' — presence/absence of the lineage column (0/1),
+    #   representing whether the whole BSC was detected. Mean = detection rate.
+    # Full mode: '{locus}_gene_count' — sum of allele presence/absence per sample.
+    # Loci without a lineage column (rmpA2) use presence of the allele itself.
+    # locus_gene_map always holds allele-level series for concordance.
+    print("\nKleborate virulence BSC features:")
     for locus, info in KLEBORATE_VIRULENCE_LOCI.items():
-        gene_series_list = [features[g] for g in info["alleles"] if g in features]
+        gene_series_list = [
+            kleborate_column_to_presence(merged[g])
+            for g in info["alleles"]
+            if g in merged.columns
+        ]
         if not gene_series_list:
             print(f"  - {locus}: no allele columns found, skipping")
             continue
-        count_name = f"{locus}_gene_count"
-        features[count_name] = sum(gene_series_list).astype(float)
-        locus_gene_map[count_name] = gene_series_list
-        print(f"  + {count_name}: sum of {len(gene_series_list)} genes "
-              f"(max={int(features[count_name].max())}, "
-              f"mean={features[count_name].mean():.2f})")
+        lineage = info.get("lineage")
+        if full_virulence_output:
+            feat_name = f"{locus}_gene_count"
+            feat_series = sum(gene_series_list).astype(float)
+        elif lineage and lineage in merged.columns:
+            feat_name = f"{lineage}_bsc"
+            feat_series = kleborate_column_to_presence(merged[lineage])
+        else:
+            feat_name = f"{locus}_bsc"
+            feat_series = gene_series_list[0] if len(gene_series_list) == 1 else (sum(gene_series_list) > 0).astype(float)
+        features[feat_name] = feat_series
+        locus_gene_map[feat_name] = gene_series_list
+        print(f"  + {feat_name}: mean={feat_series.mean():.3f}, "
+              f"n_alleles_for_concordance={len(gene_series_list)}")
 
     # 4. Kleborate chromosomal MLST -> presence/absence
     print(f"\nKleborate chromosomal MLST columns: {len(KLEBORATE_CHROMOSOMAL_MLST_COLS)} expected")
@@ -422,12 +470,15 @@ def build_feature_data(
     print(f"  Added (presence/absence): {m_added}, missing: {m_missing}")
 
     # 5. Gene-range fallback
+    # Exclude all Kleborate virulence schema columns: they are either already in
+    # features (full mode) or intentionally collapsed to gene counts (default mode).
+    _virulence_schema_cols: frozenset[str] = frozenset(KLEBORATE_VIRULENCE_COLS)
     gene_range = column_range_inclusive(all_cols, GAPA_START, VIRULENCE_END)
     print(f"\nGene-range fallback ({GAPA_START} to {VIRULENCE_END}): {len(gene_range)} columns")
     fb_added_cols: list[str] = []
     fb_skipped = 0
     for col in gene_range:
-        if col in features:
+        if col in features or col in _virulence_schema_cols or col in EXCLUDE_NUMERIC:
             continue
         numeric = safe_numeric_column(merged[col], col)
         if numeric is not None:
@@ -534,6 +585,79 @@ def build_comparison_table(
     return df[list(OUTPUT_COLS)]
 
 
+def compute_penetrance_stats(feature_name: str, feature_vals: pd.Series, is_refseq: pd.Series) -> dict:
+    """Return Fisher exact p-value and penetrance (0-1) for each cohort."""
+    binary = (feature_vals > 0).astype(float)
+    complete = binary[is_refseq].dropna()
+    short = binary[~is_refseq].dropna()
+
+    n_complete = len(complete)
+    n_sr = len(short)
+    c_present = int((complete > 0).sum())
+    s_present = int((short > 0).sum())
+
+    if n_complete < 2 or n_sr < 2:
+        p_val = np.nan
+    else:
+        _, p_val = stats.fisher_exact(
+            [[c_present, n_complete - c_present],
+             [s_present, n_sr - s_present]]
+        )
+
+    return {
+        "feature": feature_name,
+        "p_val": p_val,
+        "complete_penetrance": c_present / n_complete if n_complete > 0 else np.nan,
+        "sr_penetrance": s_present / n_sr if n_sr > 0 else np.nan,
+        "n_complete": n_complete,
+        "n_sr": n_sr,
+    }
+
+
+def build_penetrance_table(
+    subset: pd.DataFrame,
+    features: dict[str, pd.Series],
+    locus_gene_map: dict[str, list[pd.Series]],
+    is_refseq_col: str = "is_refseq",
+) -> pd.DataFrame:
+    """Build penetrance table for a subset of samples using Fisher's exact test."""
+    is_refseq = subset[is_refseq_col].astype(bool)
+    rows = []
+
+    for feature_name, full_series in features.items():
+        feature_vals = full_series.loc[subset.index]
+        row = compute_penetrance_stats(feature_name, feature_vals, is_refseq)
+        row["locus_concordance"] = (
+            compute_locus_concordance(locus_gene_map[feature_name], subset.index)
+            if feature_name in locus_gene_map else np.nan
+        )
+        rows.append(row)
+
+    df = pd.DataFrame(rows)
+    if df.empty:
+        return df.reindex(columns=list(PENETRANCE_OUTPUT_COLS))
+
+    n_tests = int(df["p_val"].notna().sum())
+    df["p_val_corr"] = (df["p_val"] * n_tests).clip(upper=1.0) if n_tests > 0 else np.nan
+
+    df["penetrance_ratio"] = [
+        _ratio(c, s)
+        for c, s in zip(df["complete_penetrance"], df["sr_penetrance"])
+    ]
+
+    df = df.sort_values("p_val_corr", ascending=True, na_position="last")
+
+    df["p_val_corr"] = df["p_val_corr"].map(_fmt_sci_1dp)
+    df["p_val"] = df["p_val"].map(_fmt_sci_1dp)
+    df["locus_concordance"] = df["locus_concordance"].map(
+        lambda x: _round_3sig(x) if not pd.isna(x) else ""
+    )
+    for col in ("complete_penetrance", "sr_penetrance"):
+        df[col] = df[col].map(_round_3sig)
+
+    return df[list(PENETRANCE_OUTPUT_COLS)]
+
+
 def sluggify(group_name: str) -> str:
     """Convert group name to safe filename."""
     if group_name == RARE_CGS_ROW:
@@ -581,6 +705,13 @@ def main() -> None:
         default=DEFAULT_OUTPUT_DIR,
         help="Output directory",
     )
+    parser.add_argument(
+        "--full-virulence-output",
+        action="store_true",
+        default=False,
+        help="Report all individual alleles, STs, lineage strings, and spurious hits "
+             "for each virulence locus. Default: one '{Lineage}_gene_count' row per locus.",
+    )
     parser.add_argument("--top-clonal-groups", type=int, default=15)
     parser.add_argument("--rare-cg-n", type=int, default=1000)
     parser.add_argument(
@@ -598,7 +729,11 @@ def main() -> None:
     args = parser.parse_args()
 
     output_dir = args.output_dir
+    counts_dir = output_dir / "counts"
+    penetrance_dir = output_dir / "penetrance"
     output_dir.mkdir(parents=True, exist_ok=True)
+    counts_dir.mkdir(exist_ok=True)
+    penetrance_dir.mkdir(exist_ok=True)
     log_path = output_dir / "cg_feature_cohort_analysis.log"
     with log_path.open("w", encoding="utf-8") as log_fh:
         orig_stdout, orig_stderr = sys.stdout, sys.stderr
@@ -621,7 +756,9 @@ def main() -> None:
             print(f"After merge: {len(merged)} samples")
 
             # Build feature data
-            features, locus_gene_map, skipped = build_feature_data(merged, ise_internal_cols)
+            features, locus_gene_map, skipped = build_feature_data(
+                merged, ise_internal_cols, full_virulence_output=args.full_virulence_output
+            )
 
             # Identify CG groups
             whole = merged.dropna(subset=["Clonal group"]).copy()
@@ -664,12 +801,17 @@ def main() -> None:
 
                 report_project_breakdown(gdf, args.project_col, args.project_threshold)
 
-                tbl = build_comparison_table(gdf, features, locus_gene_map)
-
                 fname = f"{sluggify(group_name)}.csv"
-                out_path = output_dir / fname
+
+                tbl = build_comparison_table(gdf, features, locus_gene_map)
+                out_path = counts_dir / fname
                 tbl.to_csv(out_path, index=False)
-                print(f"Wrote: {out_path} ({len(tbl)} features)")
+                print(f"Wrote counts:      {out_path} ({len(tbl)} features)")
+
+                pen_tbl = build_penetrance_table(gdf, features, locus_gene_map)
+                pen_path = penetrance_dir / fname
+                pen_tbl.to_csv(pen_path, index=False)
+                print(f"Wrote penetrance:  {pen_path} ({len(pen_tbl)} features)")
 
             print("\n=== Done ===")
             print(f"Output directory: {output_dir}")
