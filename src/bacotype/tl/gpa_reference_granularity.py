@@ -310,11 +310,71 @@ def compute_granularity_table(
         result["shared_genes_b"] + 1e-9
     )
 
+    # Step 4: Aggregate split-run parts → one row per unique CG
+    _tslog("Step 4: Aggregating split-run parts...")
+    pre_agg_rows = len(result)
+
+    def _agg_cg(grp: pd.DataFrame) -> pd.Series:
+        """Aggregate rows for same CG across multiple run parts."""
+        w = grp["n_samples"]
+        total = w.sum()
+        row = {}
+        row["n_samples"] = total
+        row["n_parts"] = len(grp)
+        row["directory_leaf"] = ";".join(sorted(grp["directory_leaf"].unique()))
+
+        # Weight-average RefSeq counts
+        for col in ["n_refseq_genomes", "n_refseq_genomes_sublineage"]:
+            if col in grp.columns:
+                row[col] = (grp[col] * w).sum() / total
+
+        # Level d is constant across parts
+        row["shared_genes_d"] = grp["shared_genes_d"].iloc[0]
+
+        # Weight-average shared genes for levels c, b, a
+        for col in ["shared_genes_c", "shared_genes_b", "shared_genes_a"]:
+            valid = grp[col].notna()
+            if valid.any():
+                row[col] = (grp.loc[valid, col] * w[valid]).sum() / w[valid].sum()
+            else:
+                row[col] = float("nan")
+
+        # Fallback flags: True if any part used fallback
+        row["fallback_c"] = grp["fallback_c"].any()
+        row["fallback_b"] = grp["fallback_b"].any()
+
+        return pd.Series(row)
+
+    result = (
+        result.groupby(["group_label", "Sublineage"], sort=False)
+        .apply(_agg_cg, include_groups=False)
+        .reset_index()
+        .rename(columns={"group_label": "strain"})
+    )
+
+    # Recompute gain columns from aggregated values
+    result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
+    result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
+    result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
+
+    result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (
+        result["shared_genes_d"] + 1e-9
+    )
+    result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (
+        result["shared_genes_c"] + 1e-9
+    )
+    result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (
+        result["shared_genes_b"] + 1e-9
+    )
+
+    _tslog(f"After aggregation: {len(result)} unique CGs (was {pre_agg_rows} rows)")
+
     # Select output columns
     output_cols = [
         "strain",
         "Sublineage",
         "directory_leaf",
+        "n_parts",
         "n_samples",
         "n_refseq_genomes",
         "n_refseq_genomes_sublineage",
