@@ -11,6 +11,11 @@ reference-genome assignment granularity:
 
 Produces: granularity_table.tsv, granularity_summary.tsv, run_inventory.md,
 and delegates lollipop plotting to bacotype.pl.granularity_lollipop.
+
+Row types in the output table:
+  kp_epidemic — KP major clonal groups (≥ min_samples_per_cg, single CG, KP)
+  kp_rare     — KP rare-lineage batch runs (kp_rare_sublineage_batch_*)
+  kp_species  — Non-KP Klebsiella species runs (species_*)
 """
 
 from __future__ import annotations
@@ -25,9 +30,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import cdist
 
-from bacotype.tl.gpa_distances_cluster_metrics import jaccard_to_shared
 from bacotype.tl.gpa_distances_combined import (
     DEFAULT_GROUP_LEVEL,
     load_and_concat_detail_tsvs,
@@ -90,18 +93,48 @@ def generate_run_inventory(
     _tslog(f"Wrote inventory: {out_path}")
 
 
-def compute_per_sample_min_jaccard(
+def compute_levels_abc_from_rtab(
     run_dir: str,
     metadata_df: pd.DataFrame,
-) -> pd.Series | None:
+    target_cgs: list[str] | None = None,
+    whole_run: bool = False,
+    use_kpsc_filter: bool = True,
+) -> dict[str, dict[str, float]] | None:
     """
-    Compute per-sample min Jaccard to any is_refseq genome per CG.
+    Compute levels a, b, c from .Rtab using exact dot-product shared gene counts.
 
-    Returns Series {cg_name: shared_genes_level_a}. Fully vectorized: cdist
-    gives (n_refseq, n_kpsc) distance matrix; .min(axis=0) gives per-sample min;
-    pandas groupby aggregates to CG level.
+    All three levels use the same computation:
+      shared_matrix[i, j] = |genes(ref_i) ∩ genes(sample_j)|  (BLAS SGEMM, float32)
 
-    Returns None if run not found or failed.
+    This guarantees level_c ≤ level_b ≤ level_a for every CG because each step
+    gives each sample more degrees of freedom to find a better reference.
+
+    Level c: mean shared genes between CG samples and the ONE BEST REFERENCE
+             for the WHOLE RUN (reference chosen by maximising mean over all run samples)
+    Level b: mean shared genes between CG samples and the ONE BEST REFERENCE
+             for the SPECIFIC CG (reference chosen by maximising mean over CG samples)
+    Level a: mean of PER-SAMPLE max shared genes (each sample picks its own best)
+
+    Parameters
+    ----------
+    run_dir
+        Path to Panaroo run folder containing gene_presence_absence.Rtab.
+    metadata_df
+        Full metadata DataFrame.
+    target_cgs
+        CG names to compute results for (None = all CGs found in run).
+    whole_run
+        If True, skip per-CG grouping and return a single whole-run mean
+        (used for rare-lineage batches and non-KP species runs).
+    use_kpsc_filter
+        If True, restrict query samples to kpsc_final_list == True.
+        Set False for non-KP species runs where kpsc_final_list may be False.
+
+    Returns
+    -------
+    dict {cg_name: {"level_a": float, "level_b": float, "level_c": float}}
+    or {"__whole_run__": {"level_a": float, "level_c": float}} when whole_run=True,
+    or None if the run cannot be processed.
     """
     try:
         rtab_path = os.path.join(run_dir, "gene_presence_absence.Rtab")
@@ -109,61 +142,116 @@ def compute_per_sample_min_jaccard(
             _tslog(f"WARNING: Rtab not found: {rtab_path}")
             return None
 
-        # Load .Rtab: (n_genes, n_samples), index=gene_names, columns=sample_ids
+        # Load .Rtab: (n_genes, n_samples)
         gpa = pd.read_csv(rtab_path, sep="\t", index_col=0)
 
-        # Align metadata to .Rtab columns; detect sample column
+        # Detect sample ID column
         sample_id_col = None
         for col in ["Sample", "sample_id", "Sample ID", "SampleID", "sampleid"]:
             if col in metadata_df.columns:
                 sample_id_col = col
                 break
         if not sample_id_col:
-            _tslog(f"WARNING: No sample column found in metadata; trying first column")
             sample_id_col = metadata_df.columns[0]
 
         meta = metadata_df.set_index(sample_id_col).reindex(gpa.columns)
         is_refseq = meta["is_refseq"].fillna(False).astype(bool).values
-        is_kpsc = meta["kpsc_final_list"].fillna(False).astype(bool).values
+
+        if use_kpsc_filter:
+            is_query = meta["kpsc_final_list"].fillna(False).astype(bool).values & ~is_refseq
+        else:
+            is_query = ~is_refseq
 
         if not is_refseq.any():
-            _tslog(
-                f"WARNING: No is_refseq samples in {run_dir} (pipeline guarantees ≥1)"
-            )
+            _tslog(f"WARNING: No RefSeq samples in {run_dir}")
+            return None
+        if not is_query.any():
+            _tslog(f"WARNING: No query samples in {run_dir}")
             return None
 
-        # Binarize and transpose → (n_samples, n_genes)
+        # Binarize: (n_samples, n_genes)
         X = (gpa.values > 0).astype(np.uint8).T
-
-        kpsc_only = is_kpsc & ~is_refseq
         X_refseq = X[is_refseq]  # (n_refseq, n_genes)
-        X_kpsc = X[kpsc_only]  # (n_kpsc,   n_genes)
+        X_query = X[is_query]    # (n_query, n_genes)
 
-        if len(X_kpsc) == 0:
-            _tslog(f"WARNING: No KPSC non-refseq samples in {run_dir}")
-            return None
+        # Single BLAS SGEMM call — fully vectorised, no Python loops.
+        # float32 preserves 0/1 binary values exactly.
+        shared = X_refseq.astype(np.float32) @ X_query.astype(np.float32).T  # (n_refseq, n_query)
 
-        # Fully vectorized: cdist → (n_refseq, n_kpsc)
-        dist = cdist(X_refseq, X_kpsc, metric="jaccard")
-        per_sample_min = dist.min(axis=0)  # (n_kpsc,)
+        # Level c reference: best single ref maximising mean shared genes over ALL query samples
+        best_run_ref = int(shared.mean(axis=1).argmax())
+        per_sample_c = shared[best_run_ref, :]  # (n_query,)
 
-        mean_features = X_kpsc.sum(axis=1).mean()  # scalar
+        # Level a: per-sample best reference
+        per_sample_a = shared.max(axis=0)  # (n_query,)
 
-        # Vectorized groupby: mean per-sample min Jaccard per CG
-        kpsc_sample_ids = gpa.columns[kpsc_only]
-        # Try both underscore and space variants
+        if whole_run:
+            return {
+                "__whole_run__": {
+                    "level_a": float(per_sample_a.mean()),
+                    "level_c": float(per_sample_c.mean()),
+                }
+            }
+
+        # Per-CG: levels a, b, c
+        query_ids = gpa.columns[is_query]
         cg_col = "Clonal_group" if "Clonal_group" in meta.columns else "Clonal group"
-        cg_labels = meta.loc[kpsc_sample_ids, cg_col]
-        min_j_series = pd.Series(per_sample_min, index=kpsc_sample_ids)
-        cg_mean_min_j = min_j_series.groupby(cg_labels.values).mean()
+        if cg_col not in meta.columns:
+            # No CG column: return whole-run mean for all requested CGs
+            whole_a = float(per_sample_a.mean())
+            whole_c = float(per_sample_c.mean())
+            return {cg: {"level_a": whole_a, "level_b": whole_c, "level_c": whole_c}
+                    for cg in (target_cgs or [])}
 
-        # Convert to shared genes
-        result = cg_mean_min_j.apply(lambda j: jaccard_to_shared(j, mean_features))
-        return result
+        cg_labels = meta.loc[query_ids, cg_col].values
+        results: dict[str, dict[str, float]] = {}
+
+        for cg_name in (target_cgs if target_cgs is not None else list(pd.unique(cg_labels))):
+            cg_mask = cg_labels == cg_name
+            if not cg_mask.any():
+                continue
+
+            # Level b reference: best single ref maximising mean shared genes over CG samples
+            best_cg_ref = int(shared[:, cg_mask].mean(axis=1).argmax())
+
+            results[cg_name] = {
+                "level_a": float(per_sample_a[cg_mask].mean()),
+                "level_b": float(shared[best_cg_ref, cg_mask].mean()),
+                "level_c": float(per_sample_c[cg_mask].mean()),
+            }
+
+        return results
 
     except Exception as e:
-        _tslog(f"ERROR computing level_a for {run_dir}: {e}")
+        _tslog(f"ERROR computing levels from .Rtab for {run_dir}: {e}")
         return None
+
+
+def _build_whole_run_rows(
+    ws_subset: pd.DataFrame,
+    row_type: str,
+    label_fn,
+    global_mgh_shared_genes: float,
+) -> pd.DataFrame:
+    """Build per-run analysis rows for rare-batch or species whole-run entries."""
+    rows = ws_subset.copy().reset_index(drop=True)
+    rows["group_label"] = rows["directory_leaf"].apply(label_fn)
+    rows["Sublineage"] = rows["group_label"]
+    rows["row_type"] = row_type
+    rows["n_refseq_genomes_sublineage"] = rows["n_refseq_genomes"]
+    rows["ref_min_shared_genes_sublineage"] = rows["ref_min_shared_genes"]
+    rows["shared_genes_d"] = global_mgh_shared_genes
+    rows["fallback_c"] = False
+    rows["fallback_b"] = True  # no per-CG RefSeq; level b always equals level c
+
+    has_refseq_c = rows["n_refseq_genomes_sublineage"] > 0
+    rows.loc[has_refseq_c, "shared_genes_c"] = rows.loc[
+        has_refseq_c, "ref_min_shared_genes_sublineage"
+    ]
+    rows.loc[~has_refseq_c, "shared_genes_c"] = global_mgh_shared_genes
+    rows.loc[~has_refseq_c, "fallback_c"] = True
+    rows["shared_genes_b"] = rows["shared_genes_c"]
+    return rows
 
 
 def compute_granularity_table(
@@ -176,22 +264,24 @@ def compute_granularity_table(
     """
     Compute granularity levels b, c, d from detail TSV and level a from .Rtab files.
 
-    Returns DataFrame with one row per target CG (n_samples >= min_samples_per_cg,
-    single CG, Klebsiella pneumoniae, group_label != "other").
+    Returns one row per:
+      - KP epidemic clonal group (kp_epidemic)
+      - KP rare-lineage batch run (kp_rare)
+      - Non-KP Klebsiella species run (kp_species)
     """
     _tslog("=== Computing granularity table ===")
 
     # Step 1: Extract levels b, c, d from detail TSV
     _tslog("Step 1: Extracting levels b, c, d from combined detail TSV...")
 
-    # Compute global mgh78578 baseline
-    ws_all = combined_df[combined_df["group_level"] == "whole_set"]
-    weights = ws_all["n_samples"]
-    values = ws_all["global_ref_mean_shared_genes"]
-    global_mgh_shared_genes = (weights * values).sum() / weights.sum()
+    ws_all = combined_df[combined_df["group_level"] == "whole_set"].copy()
+    global_mgh_shared_genes = (
+        (ws_all["n_samples"] * ws_all["global_ref_mean_shared_genes"]).sum()
+        / ws_all["n_samples"].sum()
+    )
     _tslog(f"Global mgh78578 baseline (level d): {global_mgh_shared_genes:.2f}")
 
-    # Filter target CGs
+    # --- 1a. KP epidemic clonal groups ---
     target_rows = combined_df[
         (combined_df["group_level"] == "clonal_group")
         & (combined_df["group_label"] != "other")
@@ -199,64 +289,115 @@ def compute_granularity_table(
         & (combined_df["n_samples"] >= min_samples_per_cg)
         & (combined_df["species"] == "Klebsiella pneumoniae")
     ].copy()
+    target_rows["row_type"] = "kp_epidemic"
+    _tslog(f"Target epidemic CGs: {len(target_rows)}")
 
-    _tslog(f"Target CGs: {len(target_rows)}")
+    result_epidemic = pd.DataFrame()
+    if not target_rows.empty:
+        ws_for_cgs = ws_all[
+            ws_all["directory_leaf"].isin(target_rows["directory_leaf"].unique())
+        ][["directory_leaf", "ref_min_shared_genes", "n_refseq_genomes"]].rename(
+            columns={
+                "ref_min_shared_genes": "ref_min_shared_genes_sublineage",
+                "n_refseq_genomes": "n_refseq_genomes_sublineage",
+            }
+        )
+        result_epidemic = target_rows.merge(ws_for_cgs, on="directory_leaf", how="left")
+        result_epidemic["shared_genes_d"] = global_mgh_shared_genes
+        result_epidemic["fallback_c"] = False
+        result_epidemic["fallback_b"] = False
 
-    if target_rows.empty:
-        _tslog("No target CGs found. Returning empty DataFrame.")
+        has_refseq_c = result_epidemic["n_refseq_genomes_sublineage"] > 0
+        result_epidemic.loc[has_refseq_c, "shared_genes_c"] = result_epidemic.loc[
+            has_refseq_c, "ref_min_shared_genes_sublineage"
+        ]
+        result_epidemic.loc[~has_refseq_c, "shared_genes_c"] = global_mgh_shared_genes
+        result_epidemic.loc[~has_refseq_c, "fallback_c"] = True
+
+        has_refseq_b = result_epidemic["n_refseq_genomes"] > 0
+        result_epidemic.loc[has_refseq_b, "shared_genes_b"] = result_epidemic.loc[
+            has_refseq_b, "ref_min_shared_genes"
+        ]
+        result_epidemic.loc[~has_refseq_b, "shared_genes_b"] = result_epidemic.loc[
+            ~has_refseq_b, "shared_genes_c"
+        ]
+        result_epidemic.loc[~has_refseq_b, "fallback_b"] = True
+
+    # --- 1b. KP rare lineage batch runs ---
+    rare_ws = ws_all[ws_all["directory_leaf"].str.startswith("kp_rare_sublineage_batch")]
+    result_rare = pd.DataFrame()
+    if not rare_ws.empty:
+        result_rare = _build_whole_run_rows(
+            rare_ws,
+            "kp_rare",
+            lambda d: d.replace("kp_rare_sublineage_batch_", "rare_batch_"),
+            global_mgh_shared_genes,
+        )
+        _tslog(f"Rare lineage batch runs: {len(result_rare)}")
+
+    # --- 1c. Non-KP Klebsiella species runs ---
+    species_ws = ws_all[ws_all["directory_leaf"].str.startswith("species_")]
+    result_species = pd.DataFrame()
+    if not species_ws.empty:
+        def _species_name(d: str) -> str:
+            return (
+                d.replace("species_Klebsiella_", "K. ")
+                .replace("_subsp._", " ssp. ")
+                .replace("_", " ")
+            )
+        result_species = _build_whole_run_rows(
+            species_ws, "kp_species", _species_name, global_mgh_shared_genes
+        )
+        _tslog(f"Non-KP species runs: {len(result_species)}")
+
+    # Concatenate all row types
+    frames = [f for f in [result_epidemic, result_rare, result_species] if len(f) > 0]
+    if not frames:
+        _tslog("No target rows found. Returning empty DataFrame.")
         return pd.DataFrame()
+    result = pd.concat(frames, ignore_index=True)
 
-    # Join to whole_set rows for sublineage-level data
-    ws_for_cgs = ws_all[
-        ws_all["directory_leaf"].isin(target_rows["directory_leaf"].unique())
-    ][
-        ["directory_leaf", "ref_min_shared_genes", "n_refseq_genomes"]
-    ].rename(
-        columns={
-            "ref_min_shared_genes": "ref_min_shared_genes_sublineage",
-            "n_refseq_genomes": "n_refseq_genomes_sublineage",
+    # Step 2: Compute levels a, b, c from .Rtab files (exact dot product, guarantees monotonicity)
+    _tslog("Step 2: Computing levels a/b/c from .Rtab files...")
+
+    # Per-run compute parameters: {run_dir: {target_cgs, whole_run, use_kpsc_filter}}
+    run_params: dict[str, dict] = {}
+    for run in (result_epidemic["directory_leaf"].unique() if len(result_epidemic) > 0 else []):
+        cg_list = result_epidemic[result_epidemic["directory_leaf"] == run]["group_label"].tolist()
+        run_params[os.path.join(data_dir, run)] = {
+            "target_cgs": cg_list,
+            "whole_run": False,
+            "use_kpsc_filter": True,
         }
-    )
+    for run in (result_rare["directory_leaf"].unique() if len(result_rare) > 0 else []):
+        run_params[os.path.join(data_dir, run)] = {
+            "target_cgs": None,
+            "whole_run": True,
+            "use_kpsc_filter": True,
+        }
+    for run in (result_species["directory_leaf"].unique() if len(result_species) > 0 else []):
+        # Non-KP species: all non-RefSeq samples (kpsc_final_list may be False)
+        run_params[os.path.join(data_dir, run)] = {
+            "target_cgs": None,
+            "whole_run": True,
+            "use_kpsc_filter": False,
+        }
 
-    result = target_rows.merge(
-        ws_for_cgs, on="directory_leaf", how="left"
-    ).copy()
+    run_dirs = list(run_params.keys())
+    level_a_results: dict[str, dict[str, dict[str, float]]] = {}
 
-    # Compute levels b, c, d
-    result["shared_genes_d"] = global_mgh_shared_genes
-    result["fallback_c"] = False
-    result["fallback_b"] = False
-
-    # Level c: use whole_set ref_min_shared_genes if available
-    has_refseq_c = result["n_refseq_genomes_sublineage"] > 0
-    result.loc[has_refseq_c, "shared_genes_c"] = result.loc[
-        has_refseq_c, "ref_min_shared_genes_sublineage"
-    ]
-    result.loc[~has_refseq_c, "shared_genes_c"] = global_mgh_shared_genes
-    result.loc[~has_refseq_c, "fallback_c"] = True
-
-    # Level b: use CG ref_min_shared_genes if available; else fall back to c
-    has_refseq_b = result["n_refseq_genomes"] > 0
-    result.loc[has_refseq_b, "shared_genes_b"] = result.loc[
-        has_refseq_b, "ref_min_shared_genes"
-    ]
-    result.loc[~has_refseq_b, "shared_genes_b"] = result.loc[
-        ~has_refseq_b, "shared_genes_c"
-    ]
-    result.loc[~has_refseq_b, "fallback_b"] = True
-
-    # Step 2: Compute level a from .Rtab files
-    _tslog("Step 2: Computing level a from .Rtab files...")
-
-    unique_runs = result["directory_leaf"].unique()
-    run_dirs = [os.path.join(data_dir, run) for run in unique_runs]
-
-    level_a_results = {}
     if workers > 1:
         _tslog(f"Processing {len(run_dirs)} runs in parallel (workers={workers})...")
         with ProcessPoolExecutor(max_workers=workers) as executor:
             futures = {
-                executor.submit(compute_per_sample_min_jaccard, rd, metadata_df): rd
+                executor.submit(
+                    compute_levels_abc_from_rtab,
+                    rd,
+                    metadata_df,
+                    run_params[rd]["target_cgs"],
+                    run_params[rd]["whole_run"],
+                    run_params[rd]["use_kpsc_filter"],
+                ): rd
                 for rd in run_dirs
             }
             for future in futures:
@@ -269,81 +410,82 @@ def compute_granularity_table(
                     _tslog(f"ERROR: {e}")
     else:
         for rd in run_dirs:
-            res = compute_per_sample_min_jaccard(rd, metadata_df)
+            res = compute_levels_abc_from_rtab(
+                rd,
+                metadata_df,
+                run_params[rd]["target_cgs"],
+                run_params[rd]["whole_run"],
+                run_params[rd]["use_kpsc_filter"],
+            )
             if res is not None:
                 level_a_results[os.path.basename(rd)] = res
 
-    _tslog(f"Computed level a for {len(level_a_results)} runs")
+    _tslog(f"Computed levels a/b/c from .Rtab for {len(level_a_results)} runs")
 
-    # Lookup level a for each target CG
+    # Populate levels a, b, c from .Rtab results; fall back to detail-TSV values on failure
     result["shared_genes_a"] = np.nan
     for idx, row in result.iterrows():
         run_name = row["directory_leaf"]
-        cg_name = row["group_label"]
-        if run_name in level_a_results and cg_name in level_a_results[run_name]:
-            result.at[idx, "shared_genes_a"] = level_a_results[run_name][cg_name]
+        lookup_key = (
+            "__whole_run__"
+            if row["row_type"] in ("kp_rare", "kp_species")
+            else row["group_label"]
+        )
+        if run_name in level_a_results and lookup_key in level_a_results[run_name]:
+            rtab_res = level_a_results[run_name][lookup_key]
+            result.at[idx, "shared_genes_a"] = rtab_res["level_a"]
+            result.at[idx, "shared_genes_c"] = rtab_res["level_c"]
+            result.at[idx, "fallback_c"] = False
+            if "level_b" in rtab_res:
+                result.at[idx, "shared_genes_b"] = rtab_res["level_b"]
+                result.at[idx, "fallback_b"] = False
+            else:
+                # whole_run mode: no per-CG reference → level_b = level_c
+                result.at[idx, "shared_genes_b"] = rtab_res["level_c"]
+                # fallback_b stays True (already set by _build_whole_run_rows)
         else:
             if run_name not in level_a_results:
-                _tslog(
-                    f"WARNING: No level_a computed for run {run_name}; "
-                    f"CG {cg_name} will have NaN"
-                )
+                _tslog(f"WARNING: No .Rtab results for run {run_name}")
             else:
-                _tslog(
-                    f"WARNING: CG {cg_name} in {run_name} not in level_a results"
-                )
+                _tslog(f"WARNING: key '{lookup_key}' not in .Rtab results for {run_name}")
 
     # Step 3: Compute gain columns
     _tslog("Step 3: Computing gain columns...")
-
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
     result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
+    result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + 1e-9)
+    result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (result["shared_genes_c"] + 1e-9)
+    result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (result["shared_genes_b"] + 1e-9)
 
-    result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (
-        result["shared_genes_d"] + 1e-9
-    )
-    result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (
-        result["shared_genes_c"] + 1e-9
-    )
-    result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (
-        result["shared_genes_b"] + 1e-9
-    )
-
-    # Step 4: Aggregate split-run parts → one row per unique CG
+    # Step 4: Aggregate split-run parts → one row per unique strain
+    # (Only epidemic CGs can span multiple parts; rare/species are always single-run)
     _tslog("Step 4: Aggregating split-run parts...")
     pre_agg_rows = len(result)
 
     def _agg_cg(grp: pd.DataFrame) -> pd.Series:
-        """Aggregate rows for same CG across multiple run parts."""
+        """Collapse multiple run-parts for the same strain into one weighted row."""
         w = grp["n_samples"]
         total = w.sum()
-        row = {}
-        row["n_samples"] = total
-        row["n_parts"] = len(grp)
-        row["directory_leaf"] = ";".join(sorted(grp["directory_leaf"].unique()))
-
-        # Weight-average RefSeq counts
+        out: dict = {}
+        out["n_samples"] = total
+        out["n_parts"] = len(grp)
+        out["directory_leaf"] = ";".join(sorted(grp["directory_leaf"].unique()))
         for col in ["n_refseq_genomes", "n_refseq_genomes_sublineage"]:
             if col in grp.columns:
-                row[col] = (grp[col] * w).sum() / total
-
-        # Level d is constant across parts
-        row["shared_genes_d"] = grp["shared_genes_d"].iloc[0]
-
-        # Weight-average shared genes for levels c, b, a
+                out[col] = (grp[col] * w).sum() / total
+        out["shared_genes_d"] = grp["shared_genes_d"].iloc[0]
         for col in ["shared_genes_c", "shared_genes_b", "shared_genes_a"]:
             valid = grp[col].notna()
-            if valid.any():
-                row[col] = (grp.loc[valid, col] * w[valid]).sum() / w[valid].sum()
-            else:
-                row[col] = float("nan")
-
-        # Fallback flags: True if any part used fallback
-        row["fallback_c"] = grp["fallback_c"].any()
-        row["fallback_b"] = grp["fallback_b"].any()
-
-        return pd.Series(row)
+            out[col] = (
+                (grp.loc[valid, col] * w[valid]).sum() / w[valid].sum()
+                if valid.any()
+                else float("nan")
+            )
+        out["fallback_c"] = grp["fallback_c"].any()
+        out["fallback_b"] = grp["fallback_b"].any()
+        out["row_type"] = grp["row_type"].iloc[0]
+        return pd.Series(out)
 
     result = (
         result.groupby(["group_label", "Sublineage"], sort=False)
@@ -356,23 +498,17 @@ def compute_granularity_table(
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
     result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
+    result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + 1e-9)
+    result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (result["shared_genes_c"] + 1e-9)
+    result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (result["shared_genes_b"] + 1e-9)
 
-    result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (
-        result["shared_genes_d"] + 1e-9
-    )
-    result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (
-        result["shared_genes_c"] + 1e-9
-    )
-    result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (
-        result["shared_genes_b"] + 1e-9
-    )
-
-    _tslog(f"After aggregation: {len(result)} unique CGs (was {pre_agg_rows} rows)")
+    _tslog(f"After aggregation: {len(result)} rows (was {pre_agg_rows})")
 
     # Select output columns
     output_cols = [
         "strain",
         "Sublineage",
+        "row_type",
         "directory_leaf",
         "n_parts",
         "n_samples",
@@ -391,9 +527,7 @@ def compute_granularity_table(
         "pct_gain_c_to_b",
         "pct_gain_b_to_a",
     ]
-
     result = result[[c for c in output_cols if c in result.columns]]
-
     _tslog(f"Granularity table: {len(result)} rows")
     return result
 
@@ -466,7 +600,7 @@ def main(argv: Iterable[str] | None = None) -> int:
         "--min-samples-per-cg",
         type=int,
         default=100,
-        help="Min n_samples per target CG (default 100)",
+        help="Min n_samples per target KP epidemic CG (default 100)",
     )
     parser.add_argument(
         "--workers",
@@ -489,7 +623,6 @@ def main(argv: Iterable[str] | None = None) -> int:
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     if args.out_dir is None:
-        # Default to granularity_to_ref directory (sibling of data_dir)
         args.out_dir = os.path.join(os.path.dirname(args.data_dir), "granularity_to_ref")
 
     os.makedirs(args.out_dir, exist_ok=True)
@@ -519,11 +652,9 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     # Granularity mode
     if args.mode in ("granularity", "both"):
-        # Load metadata
         _tslog(f"Loading metadata: {args.metadata}")
         metadata_df = pd.read_csv(args.metadata, sep="\t")
 
-        # Compute granularity table
         granularity_df = compute_granularity_table(
             combined_df,
             metadata_df,
@@ -533,36 +664,27 @@ def main(argv: Iterable[str] | None = None) -> int:
         )
 
         if not granularity_df.empty:
-            # Write table
             table_path = os.path.join(args.out_dir, "granularity_table.tsv")
             granularity_df.to_csv(table_path, sep="\t", index=False)
             _tslog(f"Wrote granularity table: {table_path}")
 
-            # Compute and write summary
             summary_stats = compute_summary_stats(granularity_df)
             summary_df = pd.DataFrame(
-                [
-                    {"metric": k, "value": v}
-                    for k, v in sorted(summary_stats.items())
-                ]
+                [{"metric": k, "value": v} for k, v in sorted(summary_stats.items())]
             )
             summary_path = os.path.join(args.out_dir, "granularity_summary.tsv")
             summary_df.to_csv(summary_path, sep="\t", index=False)
             _tslog(f"Wrote summary: {summary_path}")
 
-            # Call lollipop plot
             try:
                 from bacotype.pl.granularity_lollipop import plot_granularity_lollipop
 
                 _tslog("Generating lollipop plot...")
                 plot_granularity_lollipop(granularity_df, args.out_dir)
             except ImportError:
-                _tslog(
-                    "WARNING: granularity_lollipop module not found; "
-                    "skipping plot generation"
-                )
+                _tslog("WARNING: granularity_lollipop not found; skipping plot")
         else:
-            _tslog("No target CGs found; skipping granularity outputs")
+            _tslog("No target rows found; skipping granularity outputs")
 
     _tslog("=== gpa_reference_granularity.py end ===")
     return 0
