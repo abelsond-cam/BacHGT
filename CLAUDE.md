@@ -81,20 +81,22 @@ Key tunables (set at top of `.sh` or passed as CLI flags): `MIN_GROUP_SIZE` (def
 #### Post-distance analysis
 
 - **3d** `tl/gpa_distances_combined.py` — load + concatenate all per-run detail TSVs into one combined table; optionally run epidemic-vs-mixed comparison per metric
-- **3e** `tl/gpa_reference_granularity.py` — compute reference-genome assignment granularity improvement across 4 plotted levels (`d` → `c` → `b` → `a`) per strain; generates run inventory markdown, `granularity_table.tsv`, and a suite of lollipop plots (via `pl/granularity_lollipop.py`).
+- **3e** `tl/gpa_reference_granularity.py` — compute reference-genome assignment granularity improvement across 5 plotted levels (`d` → `c` → `b.i` → `b.ii` → `a`) per strain; generates run inventory markdown, `granularity_table.tsv`, and a suite of lollipop plots (via `pl/granularity_lollipop.py`).
+  - **Self-contained**: walks Panaroo run dirs directly (`tl/panaroo_groups.find_panaroo_runs`), splits each run hierarchically by `Clonal group` then `K_locus` (`tl/panaroo_groups.hierarchical_split`), and computes every level from the run's `gene_presence_absence.Rtab` via a single BLAS SGEMM (`X_refseq @ X_query.T`). No dependence on the heavy `gpa_distances_batch_runs.sh` job.
   - **Levels** (mean shared genes between query samples and chosen RefSeq):
-    - `e` — global mgh78578 mean across all KP runs (column kept in TSV; not plotted)
+    - `e` — global mgh78578 mean across all runs (column kept in TSV; not plotted)
     - `d` — best mgh78578 vs run's KP samples ("Ref mgh78578")
     - `c` — best single RefSeq across all non-RefSeq samples in the Panaroo run ("Best RefSeq in SL / Subspecies Batch")
-    - `b` — best single RefSeq scoped to one CG ("Best RefSeq in CG"); for whole-run rows (`kp_rare`, `kp_species`) `b = c` by construction (`fallback_b = True`)
+    - `b.i` — best single RefSeq scoped to one CG ("Best RefSeq in CG"). For SL/run summary rows this is the n_samples-weighted mean across **all** CG-level subgroups in the run including the `other` bucket — so the SL row is not biased toward big CGs.
+    - `b.ii` — best single RefSeq scoped to one CG/K-locus subgroup ("Best RefSeq in CG / K-locus"). Per-CG rows take a weighted mean across their own K-locus subgroups (incl. `other`); SL/run rows take a weighted mean across each CG's `b.ii` plus the run-level `other` bucket.
     - `a` — per-sample max-shared-genes RefSeq ("Best RefSeq Per-Sample")
-  - **Row types** (`row_type` column): `kp_epidemic` (per-CG within an SL Panaroo run), `kp_epidemic_sl` (per-Sublineage weighted-mean over its CGs, added in Step 5), `kp_rare` (per rare-batch run), `kp_species` (per non-KP species run). Set `min_samples_per_cg` (default 100) to gate epidemic CG inclusion — but the binding constraint upstream is `MIN_GROUP_SIZE` in `gpa_distances_batch_runs.sh` (default 250), which decides which CGs ever get their own slice in the per-run detail TSVs.
-  - **Modes**: `inventory` (run metadata summary), `granularity` (full level analysis), `both` (default).
-  - **Parallelisation**: levels a/b/c computed via single BLAS SGEMM per run (`X_refseq @ X_query.T`) inside a `ProcessPoolExecutor`.
+  - **Row types** (`row_type` column): `kp_epidemic` (per major CG in a KP sublineage run, `n ≥ min_group_size`), `kp_epidemic_sl` (one per KP sublineage run, weighted mean over all CG-level subgroups incl. `other`), `kp_rare` (one per `kp_rare_sublineage_batch_*` run, same SL-style aggregation), `kp_species` (one per `species_*` run, same).
+  - **Modes**: `inventory` (run metadata summary; still uses combined detail TSVs from batch_runs), `granularity` (full level analysis; standalone), `both` (default).
+  - `--min-group-size` (default 50) is now the **only** CG-size knob — both for the kp_epidemic CG cutoff and for the recursive K-locus split inside each major CG. The previous `--min-samples-per-cg` flag is gone.
   - **Outputs** (under `<DATA_ROOT>/processed/pangenome_analysis/granularity/`):
     - `granularity_table.tsv`, `granularity_summary.tsv`, `run_inventory.md`, `granularity_notes.log`
-    - `plots_png/` and `plots_pdf/` subfolders containing the SL-level lollipop (base + 4 highlight variants: species / epidemic SL / epidemic SL with c→b > 20 genes / rare batches) plus the `granularity_gain_histogram` showing CG-level c→b distribution
-  - Submit via `sbatch slurm_scripts/gpa_reference_granularity.sh` — fast enough to run on the login node directly.
+    - `plots_png/` and `plots_pdf/` subfolders containing the SL-level lollipop (base + 4 highlight variants: species / epidemic SL / epidemic SL with c→b.i > 20 genes / rare batches) plus the `granularity_gain_histogram` showing CG-level c→b.i distribution
+  - Submit via `sbatch slurm_scripts/gpa_reference_granularity.sh` — fast enough to run on the login node directly (`MIN_GROUP_SIZE` knob at the top of the script).
 
 ## Code style
 

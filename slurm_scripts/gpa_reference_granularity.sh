@@ -34,7 +34,7 @@ PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
 METADATA_PATH="${DATA_ROOT}/final/metadata_final_curated_all_samples_and_columns.tsv"
 OUTPUT_DIR="${DATA_ROOT}/processed/pangenome_analysis/granularity"
 WORKERS=8
-MIN_SAMPLES_PER_CG=100
+MIN_GROUP_SIZE=50           # Min CG / K-locus size to be its own slice (default 50)
 MODE="both"                 # inventory | granularity | both
 TEST_N_RUNS=""              # e.g. 2 for smoke test; empty for all runs
 RECOMPILE=false             # true to rebuild combined detail TSV
@@ -88,7 +88,7 @@ CMD=(
   --metadata "${METADATA_PATH}"
   --out-dir "${OUTPUT_DIR}"
   --mode "${MODE}"
-  --min-samples-per-cg "${MIN_SAMPLES_PER_CG}"
+  --min-group-size "${MIN_GROUP_SIZE}"
   --workers "${WORKERS}"
 )
 

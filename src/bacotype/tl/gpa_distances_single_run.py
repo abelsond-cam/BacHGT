@@ -48,6 +48,7 @@ from bacotype.tl.gpa_distances_single_group import (
     run_gpa_analysis as run_single_group_analysis,
 )
 from bacotype.tl.gpa_matrix_utils import filter_by_prevalence
+from bacotype.tl.panaroo_groups import split_samples
 
 DEFAULT_MIN_GROUP_SIZE = 250
 DEFAULT_GFF_FEATURE_COUNTS_PATH = (
@@ -74,42 +75,6 @@ def _identify_reference_sample_ids(
         mask = _series_to_bool(reindexed[col]).to_numpy()
         result.update(sid[mask].astype(str).tolist())
     return result
-
-
-def _split_groups(
-    meta_for_samples: pd.DataFrame,
-    col: str,
-    min_group_size: int,
-    other_label: str = "other",
-) -> list[tuple[str, list[str]]]:
-    """Split samples by metadata column value.
-
-    Groups with count >= ``min_group_size`` keep their own entry. All other
-    samples (including those with missing/empty values) are pooled into a
-    single ``(other_label, combined_ids)`` tuple. Major groups are ordered
-    by descending size; ``other`` comes last.
-    """
-    series = meta_for_samples[col]
-    series_str = series.astype(str)
-    missing_mask = series.isna() | series_str.isin({"", "nan", "None", "NaN"})
-    value_counts = series_str[~missing_mask].value_counts()
-
-    major_vals = value_counts[value_counts >= min_group_size].index.tolist()
-    minor_set = set(value_counts[value_counts < min_group_size].index.tolist())
-
-    groups: list[tuple[str, list[str]]] = []
-    for val in major_vals:
-        ids = (
-            meta_for_samples.index[(~missing_mask) & (series_str == val)]
-            .astype(str)
-            .tolist()
-        )
-        groups.append((str(val), ids))
-    other_mask = missing_mask | series_str.isin(minor_set)
-    other_ids = meta_for_samples.index[other_mask].astype(str).tolist()
-    if other_ids:
-        groups.append((other_label, other_ids))
-    return groups
 
 
 def _build_group_gpa_df(
@@ -315,7 +280,7 @@ def run_gpa_analysis(
 
             cg_groups: list[tuple[str, list[str]]] = []
             if "Clonal group" in meta_for_samples.columns:
-                cg_groups = _split_groups(
+                cg_groups = split_samples(
                     meta_for_samples,
                     "Clonal group",
                     min_group_size,
@@ -385,7 +350,7 @@ def run_gpa_analysis(
                     if cg_name == "other":
                         continue
                     cg_meta = meta_for_samples.reindex(cg_ids)
-                    kl_groups = _split_groups(
+                    kl_groups = split_samples(
                         cg_meta,
                         "K_locus",
                         min_group_size,

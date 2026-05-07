@@ -147,31 +147,32 @@ plots_pdf/  (mirror of plots_png/)
 
 ### Levels (granularity nodes)
 
-The lollipop plots each strain as a connected line across four nodes; values are the mean number of genes shared between the run's query samples and the chosen RefSeq.
+The lollipop plots each strain as a connected line across **five** nodes; values are the mean number of genes shared between the run's query samples and the chosen RefSeq.
 
 | Node | Label on plot | Definition | Notes |
 |---|---|---|---|
-| `e` | (column only, not plotted) | Global mgh78578 weighted mean across all KP runs | Single scalar; identical for every row |
-| `d` | **Ref mgh78578** | Best mgh78578 vs the run's KP samples (per-Panaroo-run baseline) | |
+| `e` | (column only, not plotted) | Global mgh78578 weighted mean across all runs | Single scalar; identical for every row |
+| `d` | **Ref mgh78578** | mgh78578 mean shared genes vs the run's KP samples (per-Panaroo-run baseline) | NaN for runs that don't include mgh78578 |
 | `c` | **Best RefSeq in SL / Subspecies Batch** | Single RefSeq maximising mean shared genes across ALL non-RefSeq samples in the Panaroo run | For SL runs ⇒ "best Sublineage RefSeq". For `kp_rare` and `kp_species` whole-run rows this is **batch-wide** (e.g. K. variicola subsp. variicola = best RefSeq across 632 sublineages / 1,019 CGs). |
-| `b` | **Best RefSeq in CG** | Single RefSeq maximising mean shared genes across that CG's samples | For whole-run rows (`kp_rare`, `kp_species`) `b = c` by construction (`fallback_b = True`). |
+| `b.i` | **Best RefSeq in CG** | Per-CG row: best RefSeq for that CG's samples. SL/run summary row: n_samples-weighted mean across **all** CG-level subgroups in the run, **including the `other` bucket** of small CGs — eliminates the prior bias toward big CGs. | |
+| `b.ii` | **Best RefSeq in CG / K-locus** | Per-CG row: weighted mean across the CG's K-locus subgroups (incl. its `other`). SL/run row: weighted mean across each CG's `b.ii` plus the run-level `other` bucket's `best_shared`. | |
 | `a` | **Best RefSeq Per-Sample** | Mean over per-sample max shared genes across all RefSeqs in that run | |
 
-`level_c ≤ level_b ≤ level_a` is guaranteed for epidemic CG rows because each step relaxes the choice constraint.
+`level_c ≤ level_b.i ≤ level_b.ii ≤ level_a` is guaranteed because each step gives the assignment more degrees of freedom.
 
 ### Row types (`row_type` column)
 
 | Value | Source | Description |
 |---|---|---|
-| `kp_epidemic` | One row per CG with `n_samples ≥ min_samples_per_cg` (default 100) within a KP-pneumoniae sublineage Panaroo run, `n_unique_clonal_groups == 1`. Levels d/c/b/a all per-CG-within-SL. |
-| `kp_epidemic_sl` | Aggregated over `kp_epidemic` rows by Sublineage; `n_samples`-weighted mean of all `shared_genes_*` and `gain_*` columns. One row per epidemic sublineage. |
-| `kp_rare` | One row per `kp_rare_sublineage_batch_*` Panaroo run (whole-run mean; many SLs and CGs pooled). |
-| `kp_species` | One row per `species_*` Panaroo run (whole-run mean across the species/subspecies; many SLs and CGs pooled). |
+| `kp_epidemic` | One row per major CG (`n_samples ≥ --min-group-size`) within a KP sublineage Panaroo run. `b.i` is the CG's own best RefSeq; `b.ii` is its K-locus subgroup mean. |
+| `kp_epidemic_sl` | One row per KP sublineage Panaroo run. `b.i` and `b.ii` are weighted means across **all** top-level CG subgroups in the run, including the `other` bucket of small CGs (so the SL row truly represents the whole sublineage, not just its big CGs). |
+| `kp_rare` | One row per `kp_rare_sublineage_batch_*` Panaroo run; same SL-style aggregation as `kp_epidemic_sl`. |
+| `kp_species` | One row per `species_*` Panaroo run; same SL-style aggregation. |
 
-The binding constraint on which CGs become `kp_epidemic` rows is upstream — set by `MIN_GROUP_SIZE` (default 250) in `slurm_scripts/gpa_distances_batch_runs.sh`, which controls whether each CG within a Panaroo run gets its own slice in the per-run detail TSV. Lowering `min_samples_per_cg` in the granularity script alone has no effect unless `MIN_GROUP_SIZE` is also lowered and the batch-runs job is re-submitted first.
+The CG-size threshold is now controlled solely by the granularity script's own `--min-group-size` (default 50). The script walks Panaroo runs directly via `gene_presence_absence.Rtab` and does its own splitting via `bacotype.tl.panaroo_groups.hierarchical_split` — no dependence on `gpa_distances_batch_runs.sh` having pre-computed per-CG slices.
 
 ### Key columns of `granularity_table.tsv`
 
-`strain`, `Sublineage`, `row_type`, `directory_leaf`, `n_parts`, `n_samples`, `n_refseq_genomes`, `n_refseq_genomes_sublineage`, `shared_genes_e/d/c/b/a`, `fallback_c`, `fallback_b`, `gain_e_to_d`, `gain_d_to_c`, `gain_c_to_b`, `gain_b_to_a`, `pct_gain_*`.
+`strain`, `Sublineage`, `row_type`, `directory_leaf`, `n_parts`, `n_samples`, `n_refseq_genomes`, `shared_genes_e/d/c/b_i/b_ii/a`, `fallback_b_i`, `fallback_b_ii`, `gain_e_to_d`, `gain_d_to_c`, `gain_c_to_b_i`, `gain_b_i_to_b_ii`, `gain_b_ii_to_a`, `pct_gain_*`.
 
-`fallback_c = True` when no sublineage-level RefSeq exists (level c falls back to d). `fallback_b = True` whenever level b falls back to c — always for `kp_rare` / `kp_species` / `kp_epidemic_sl` whole-run-derived rows.
+`fallback_b_i = True` when no top-level CG-split was possible (e.g. a Panaroo run with no Clonal_group column or no major CG); `fallback_b_ii = True` when no second-level (K-locus) split was possible.

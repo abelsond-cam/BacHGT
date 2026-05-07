@@ -42,11 +42,12 @@ _LINE_COLORS = {
 }
 
 _DOT_COLORS = {
-    "e": "gray",
-    "d": "gray",
-    "c": "gray",
-    "b": "gray",
-    "a": "gray",
+    "e":    "gray",
+    "d":    "gray",
+    "c":    "gray",
+    "b_i":  "gray",
+    "b_ii": "gray",
+    "a":    "gray",
 }
 
 
@@ -83,13 +84,13 @@ def _plot_gain_histogram(
     out_dir: str,
     threshold: float,
 ) -> list[str]:
-    """Histogram of gain_c_to_b (absolute shared genes) for epidemic CGs (5-gene bins).
+    """Histogram of gain_c_to_b_i (absolute shared genes) for epidemic CGs (5-gene bins).
 
     Bars above `threshold` genes are coloured red. Rare-lineage batches and
     non-KP species are excluded because level_b = level_c by construction
     for those rows (whole-run mode has no per-CG reference).
     """
-    gain_col = "gain_c_to_b"
+    gain_col = "gain_c_to_b_i"
 
     n_rare = int((df.get("row_type", pd.Series()) == "kp_rare").sum())
     n_species = int((df.get("row_type", pd.Series()) == "kp_species").sum())
@@ -139,14 +140,14 @@ def _plot_gain_histogram(
             )
 
     ax.set_xlabel(
-        "Sublineage RefSeq → CG RefSeq shared-gene gain  (absolute genes)",
+        "c → b.i shared-gene gain  (absolute genes; SL/Subspecies RefSeq → CG RefSeq)",
         fontsize=11,
     )
     ax.set_ylabel("Number of epidemic CGs", fontsize=11)
     ax.set_title(
-        f"Distribution of c→b gain  (KP epidemic CGs, n={len(epi)})\n"
+        f"Distribution of c→b.i gain  (KP epidemic CGs, n={len(epi)})\n"
         f"kp_rare (n={n_rare}) and kp_species (n={n_species}) excluded: "
-        "level_b = level_c by construction for whole-run rows",
+        "b.i = c by construction for whole-run rows",
         fontsize=10,
     )
     ax.legend(fontsize=9)
@@ -196,7 +197,7 @@ def plot_granularity_lollipop(
     sort_by
         Column to sort strains by (default "shared_genes_d").
     highlight_cg_gain_genes
-        If not None, restrict the highlight set to rows with ``gain_c_to_b``
+        If not None, restrict the highlight set to rows with ``gain_c_to_b_i``
         above this many genes (default 20). Pass None to disable the gain
         criterion (highlight purely by ``highlight_row_types``).
     filename_stem
@@ -224,16 +225,16 @@ def plot_granularity_lollipop(
     if row_type_filter is not None and "row_type" in df.columns:
         df = df[df["row_type"].isin(row_type_filter)].copy()
 
-    # Keep only rows with the four plotted level values (e is intentionally omitted)
+    # Keep only rows with the five plotted level values (e is intentionally omitted)
     df = df[
         df[["shared_genes_d", "shared_genes_c",
-            "shared_genes_b", "shared_genes_a"]]
+            "shared_genes_b_i", "shared_genes_b_ii", "shared_genes_a"]]
         .notna()
         .all(axis=1)
     ].copy()
 
     if df.empty:
-        raise ValueError("No complete rows after filtering for d/c/b/a levels")
+        raise ValueError("No complete rows after filtering for d/c/b_i/b_ii/a levels")
 
     if top_n:
         df = df.nlargest(top_n, "gain_b_to_a")
@@ -251,7 +252,7 @@ def plot_granularity_lollipop(
             if rt not in highlight_row_types:
                 return False
         if highlight_cg_gain_genes is not None:
-            gain = getattr(row, "gain_c_to_b", None)
+            gain = getattr(row, "gain_c_to_b_i", None)
             if gain is None or pd.isna(gain) or float(gain) <= highlight_cg_gain_genes:
                 return False
         return highlight_row_types is not None or highlight_cg_gain_genes is not None
@@ -259,12 +260,21 @@ def plot_granularity_lollipop(
     fig, ax = plt.subplots(figsize=(16, 9))
 
     for row in df.itertuples():
-        levels = ["d", "c", "b", "a"]
+        levels = ["d", "c", "b_i", "b_ii", "a"]
         values = [
             row.shared_genes_d,
-            row.shared_genes_c, row.shared_genes_b, row.shared_genes_a,
+            row.shared_genes_c,
+            row.shared_genes_b_i,
+            row.shared_genes_b_ii,
+            row.shared_genes_a,
         ]
-        fallback = [False, row.fallback_c, row.fallback_b, False]
+        fallback = [
+            False,
+            False,
+            getattr(row, "fallback_b_i", False),
+            getattr(row, "fallback_b_ii", False),
+            False,
+        ]
 
         row_type = getattr(row, "row_type", "kp_epidemic") or "kp_epidemic"
         is_highlight = _is_highlight_row(row)
@@ -315,15 +325,16 @@ def plot_granularity_lollipop(
         y_adj = _spread_labels(y_orig, min_gap)
         for (y_o, lbl, col, alp), y_a in zip(_annots, y_adj):
             if abs(y_a - y_o) > min_gap * 0.15:
-                ax.plot([3.05, 3.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
-            ax.text(3.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
+                ax.plot([4.05, 4.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
+            ax.text(4.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
 
     ax.set_ylabel("Shared genes with reference genome", fontsize=11, fontweight="bold")
-    ax.set_xticks(range(4))
+    ax.set_xticks(range(5))
     ax.set_xticklabels(
         ["d: Ref mgh78578",
          "c: Best RefSeq in SL / Subspecies Batch",
-         "b: Best RefSeq in CG",
+         "b.i: Best RefSeq in CG",
+         "b.ii: Best RefSeq in CG / K-locus",
          "a: Best RefSeq Per-Sample"],
         fontsize=10,
     )
@@ -372,15 +383,15 @@ def plot_granularity_lollipop(
 
 def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
     """Write c→b gain statistics to a plain-text log file."""
-    abs_col = "gain_c_to_b"
-    pct_col = "pct_gain_c_to_b"
+    abs_col = "gain_c_to_b_i"
+    pct_col = "pct_gain_c_to_b_i"
     has_abs = abs_col in df.columns
     has_pct = pct_col in df.columns
 
     lines = [
         "GPA Reference Granularity — CG-level gain highlights",
         f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S %Z')}",
-        f"Threshold: gain_c_to_b > {threshold:.0f} genes",
+        f"Threshold: gain_c_to_b_i > {threshold:.0f} genes",
         f"Total rows: {len(df)}",
         "",
     ]
@@ -399,7 +410,7 @@ def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
             col_w = max(len(str(s)) for s in hi.get("strain", hi.index)) + 2
             sl_w = max(len(str(s)) for s in hi.get("Sublineage", hi.index)) + 2
             header = (f"  {'strain':<{col_w}} {'Sublineage':<{sl_w}} {'row_type':<15}"
-                      f"  {'gain_c_to_b':>12}  {'pct_gain_c_to_b':>16}")
+                      f"  {'gain_c_to_b_i':>12}  {'pct_gain_c_to_b_i':>16}")
             lines.append(header)
             lines.append("  " + "-" * (len(header) - 2))
             for _, r in hi.sort_values(abs_col, ascending=False).iterrows():
@@ -442,7 +453,7 @@ def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
                         f"median={v.median():.1f} genes"
                     )
     else:
-        lines.append("(gain_c_to_b column not found — gain stats unavailable)")
+        lines.append("(gain_c_to_b_i column not found — gain stats unavailable)")
 
     with open(log_path, "w") as fh:
         fh.write("\n".join(lines) + "\n")
