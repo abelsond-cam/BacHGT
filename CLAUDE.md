@@ -31,6 +31,14 @@ hatch run docs:open
 
 All production scripts are submitted to a Slurm HPC cluster via `slurm_scripts/*.sh`. Edit the variables at the top of the relevant `.sh` before submitting with `sbatch`.
 
+## HPC connection
+
+- Host: `login.hpc.cam.ac.uk` (CSD3, user `dca36`).
+- An 8-hour SSH ControlMaster multiplex is configured in `~/.ssh/config`, so any `ssh login.hpc.cam.ac.uk "<cmd>"` reuses the existing socket — no fresh login per call. If a command hangs, the master may have expired; opening any interactive `ssh login.hpc.cam.ac.uk` reseeds it.
+- Code lives at `/home/dca36/workspace/Bacotype` (sibling projects under `/home/dca36/workspace/`). Data lives under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` (the `DATA_ROOT` baked into `pp/panaroo_run_strain.py`).
+- The Panaroo fork (https://github.com/abelsond-cam/panaroo) lives at `/home/dca36/workspace/panaroo` as a sibling of `Bacotype`; `pp/panaroo_run_strain.py` loads `convert_bakta_to_prokka_gff.py` from it via file-path import (see `Convert_Bakta_to_Prokka.MD`).
+- Sync local changes with `rsync -av --exclude .venv --exclude .git src/ login.hpc.cam.ac.uk:/home/dca36/workspace/Bacotype/src/` (or target individual files).
+
 ## Package layout
 
 The package follows a [scanpy](https://scanpy.readthedocs.io)-style module convention:
@@ -38,8 +46,8 @@ The package follows a [scanpy](https://scanpy.readthedocs.io)-style module conve
 | Module | Purpose |
 |--------|---------|
 | `src/bacotype/pp/` | Preprocessing: resolve assembly/GFF paths, QC feature counts, build metadata TSV, prepare Panaroo inputs |
-| `src/bacotype/tl/` | Tools/analysis: Jaccard distances, reference-genome scoring, clustering metrics, pangenome stats |
-| `src/bacotype/pl/` | Plotting: GPA matrix figures, epidemic vs mixed visualisations |
+| `src/bacotype/tl/` | Tools/analysis: Jaccard distances, reference-genome scoring, clustering metrics, pangenome stats; `gpa_reference_granularity.py` for granularity analysis |
+| `src/bacotype/pl/` | Plotting: GPA matrix figures, epidemic vs mixed visualisations, `granularity_lollipop.py` for reference-level improvement plots |
 | `src/bacotype/data_paths.py` | Centralised hard-coded paths to RDS cluster storage — always check this before running on a new machine |
 
 ## Three-task workflow
@@ -61,12 +69,32 @@ Three modes sharing `pp/panaroo_run_strain.py`:
 
 ### Task 3 — Analyse GPA & distances
 
+#### Distance analysis (per-run Jaccard computations)
+
 Three entrypoints, narrowest to broadest:
 - **3a** `tl/gpa_distances_single_group.py` — one sample set; usually called by 3b, not directly
 - **3b** `tl/gpa_distances_single_run.py` — whole set + stratified subsets for one Panaroo run → detail TSV per run
 - **3c** `tl/gpa_distances_batch_runs.py` — walks all Panaroo run directories in parallel → compiled summary TSV
 
 Key tunables (set at top of `.sh` or passed as CLI flags): `MIN_GROUP_SIZE` (default 250), `REFERENCE_TOP_N` (default 10), `GPA_FILTER_CUTOFF`, `CORE_SHELL_CUTOFF`, `SHELL_CLOUD_CUTOFF`, `WORKERS`.
+
+#### Post-distance analysis
+
+- **3d** `tl/gpa_distances_combined.py` — load + concatenate all per-run detail TSVs into one combined table; optionally run epidemic-vs-mixed comparison per metric
+- **3e** `tl/gpa_reference_granularity.py` — compute reference-genome assignment granularity improvement across 4 plotted levels (`d` → `c` → `b` → `a`) per strain; generates run inventory markdown, `granularity_table.tsv`, and a suite of lollipop plots (via `pl/granularity_lollipop.py`).
+  - **Levels** (mean shared genes between query samples and chosen RefSeq):
+    - `e` — global mgh78578 mean across all KP runs (column kept in TSV; not plotted)
+    - `d` — best mgh78578 vs run's KP samples ("Ref mgh78578")
+    - `c` — best single RefSeq across all non-RefSeq samples in the Panaroo run ("Best RefSeq in SL / Subspecies Batch")
+    - `b` — best single RefSeq scoped to one CG ("Best RefSeq in CG"); for whole-run rows (`kp_rare`, `kp_species`) `b = c` by construction (`fallback_b = True`)
+    - `a` — per-sample max-shared-genes RefSeq ("Best RefSeq Per-Sample")
+  - **Row types** (`row_type` column): `kp_epidemic` (per-CG within an SL Panaroo run), `kp_epidemic_sl` (per-Sublineage weighted-mean over its CGs, added in Step 5), `kp_rare` (per rare-batch run), `kp_species` (per non-KP species run). Set `min_samples_per_cg` (default 100) to gate epidemic CG inclusion — but the binding constraint upstream is `MIN_GROUP_SIZE` in `gpa_distances_batch_runs.sh` (default 250), which decides which CGs ever get their own slice in the per-run detail TSVs.
+  - **Modes**: `inventory` (run metadata summary), `granularity` (full level analysis), `both` (default).
+  - **Parallelisation**: levels a/b/c computed via single BLAS SGEMM per run (`X_refseq @ X_query.T`) inside a `ProcessPoolExecutor`.
+  - **Outputs** (under `<DATA_ROOT>/processed/pangenome_analysis/granularity/`):
+    - `granularity_table.tsv`, `granularity_summary.tsv`, `run_inventory.md`, `granularity_notes.log`
+    - `plots_png/` and `plots_pdf/` subfolders containing the SL-level lollipop (base + 4 highlight variants: species / epidemic SL / epidemic SL with c→b > 20 genes / rare batches) plus the `granularity_gain_histogram` showing CG-level c→b distribution
+  - Submit via `sbatch slurm_scripts/gpa_reference_granularity.sh` — fast enough to run on the login node directly.
 
 ## Code style
 

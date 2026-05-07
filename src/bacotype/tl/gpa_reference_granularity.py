@@ -501,7 +501,44 @@ def compute_granularity_table(
         .rename(columns={"group_label": "strain"})
     )
 
-    # Recompute gain columns from aggregated values
+    _tslog(f"After aggregation: {len(result)} rows (was {pre_agg_rows})")
+
+    # Step 5: Build sublineage-level rows (weighted mean across CGs in each Sublineage)
+    _tslog("Step 5: Building sublineage-level rows...")
+    epi = result[result["row_type"] == "kp_epidemic"].copy()
+    epi = epi[epi["Sublineage"].notna() & (epi["Sublineage"].astype(str) != "")]
+
+    sl_rows = []
+    for sl_label, grp in epi.groupby("Sublineage", sort=False):
+        w = grp["n_samples"]
+        total = float(w.sum())
+        row = {
+            "strain": sl_label,
+            "Sublineage": sl_label,
+            "row_type": "kp_epidemic_sl",
+            "directory_leaf": ";".join(sorted({
+                d for ds in grp["directory_leaf"] for d in str(ds).split(";")
+            })),
+            "n_parts": int(grp["n_parts"].sum()),
+            "n_samples": total,
+            "fallback_c": bool(grp["fallback_c"].any()),
+            "fallback_b": bool(grp["fallback_b"].any()),
+        }
+        for col in ["n_refseq_genomes", "n_refseq_genomes_sublineage",
+                    "shared_genes_e", "shared_genes_d",
+                    "shared_genes_c", "shared_genes_b", "shared_genes_a"]:
+            valid = grp[col].notna()
+            row[col] = (
+                (grp.loc[valid, col] * w[valid]).sum() / w[valid].sum()
+                if valid.any() else float("nan")
+            )
+        sl_rows.append(row)
+
+    if sl_rows:
+        result = pd.concat([result, pd.DataFrame(sl_rows)], ignore_index=True)
+    _tslog(f"Sublineage-level rows: {len(sl_rows)}")
+
+    # Recompute gain columns to cover both per-CG and per-Sublineage rows
     result["gain_e_to_d"] = result["shared_genes_d"] - result["shared_genes_e"]
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
@@ -510,8 +547,6 @@ def compute_granularity_table(
     result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + 1e-9)
     result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (result["shared_genes_c"] + 1e-9)
     result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (result["shared_genes_b"] + 1e-9)
-
-    _tslog(f"After aggregation: {len(result)} rows (was {pre_agg_rows})")
 
     # Select output columns
     output_cols = [
@@ -691,8 +726,59 @@ def main(argv: Iterable[str] | None = None) -> int:
             try:
                 from bacotype.pl.granularity_lollipop import plot_granularity_lollipop
 
-                _tslog("Generating lollipop plot...")
-                plot_granularity_lollipop(granularity_df, args.out_dir)
+                sl_filter = ["kp_epidemic_sl", "kp_rare", "kp_species"]
+                dark_blue = "#003d82"
+
+                _tslog("Generating Sublineage-level lollipop (base, with histogram)...")
+                plot_granularity_lollipop(
+                    granularity_df, args.out_dir,
+                    filename_stem="granularity_lollipop_sl",
+                    row_type_filter=sl_filter,
+                )
+
+                _tslog("Generating SL lollipop: highlight non-KP species...")
+                plot_granularity_lollipop(
+                    granularity_df, args.out_dir,
+                    filename_stem="granularity_lollipop_sl_highlight_species",
+                    row_type_filter=sl_filter,
+                    highlight_color=dark_blue,
+                    highlight_row_types=["kp_species"],
+                    highlight_cg_gain_genes=None,
+                    make_histogram=False,
+                )
+
+                _tslog("Generating SL lollipop: highlight epidemic sublineages...")
+                plot_granularity_lollipop(
+                    granularity_df, args.out_dir,
+                    filename_stem="granularity_lollipop_sl_highlight_epidemic",
+                    row_type_filter=sl_filter,
+                    highlight_color=dark_blue,
+                    highlight_row_types=["kp_epidemic_sl"],
+                    highlight_cg_gain_genes=None,
+                    make_histogram=False,
+                )
+
+                _tslog("Generating SL lollipop: highlight epidemic SLs with c→b gain > 20...")
+                plot_granularity_lollipop(
+                    granularity_df, args.out_dir,
+                    filename_stem="granularity_lollipop_sl_highlight_epidemic_high_gain",
+                    row_type_filter=sl_filter,
+                    highlight_color=dark_blue,
+                    highlight_row_types=["kp_epidemic_sl"],
+                    highlight_cg_gain_genes=20.0,
+                    make_histogram=False,
+                )
+
+                _tslog("Generating SL lollipop: highlight rare lineage batches...")
+                plot_granularity_lollipop(
+                    granularity_df, args.out_dir,
+                    filename_stem="granularity_lollipop_sl_highlight_rare",
+                    row_type_filter=sl_filter,
+                    highlight_color=dark_blue,
+                    highlight_row_types=["kp_rare"],
+                    highlight_cg_gain_genes=None,
+                    make_histogram=False,
+                )
             except ImportError:
                 _tslog("WARNING: granularity_lollipop not found; skipping plot")
         else:
