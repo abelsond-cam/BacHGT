@@ -85,19 +85,19 @@ _HIST_BAR_COLOR = "#4682B4"  # steel blue
 _HISTOGRAM_TRANSITIONS: list[tuple[str, str, str, str]] = [
     (
         "gain_c_to_b_i",
-        "c → b.i  (SL → CG)",
+        "Increase in shared genes using best reference at CG level vs SL",
         "Shared-gene gain (genes)",
         "granularity_gain_histogram_c_to_b_i",
     ),
     (
         "gain_b_i_to_b_ii",
-        "b.i → b.ii  (CG → CG/K-locus)",
+        "Increase in shared genes using best reference at CG/K-locus level vs CG",
         "Shared-gene gain (genes)",
         "granularity_gain_histogram_b_i_to_b_ii",
     ),
     (
         "gain_b_ii_to_a",
-        "b.ii → a  (CG/K-locus → per-sample)",
+        "Increase in shared genes using best reference per-sample vs CG/K-locus",
         "Shared-gene gain (genes)",
         "granularity_gain_histogram_b_ii_to_a",
     ),
@@ -105,20 +105,21 @@ _HISTOGRAM_TRANSITIONS: list[tuple[str, str, str, str]] = [
 
 
 def _plot_one_gain_histogram(
-    epi: pd.DataFrame,
+    df: pd.DataFrame,
     out_dir: str,
     gain_col: str,
     title: str,
     x_label: str,
     file_stem: str,
 ) -> list[str]:
-    """Single-color histogram of one gain column over kp_epidemic CGs (5-gene bins).
+    """Single-color histogram of one gain column over all granularity rows
+    (kp_epidemic / kp_epidemic_sl / kp_rare / kp_species), 5-gene bins.
 
     No per-bar annotation, no threshold colouring — uniform steel-blue bars.
     """
-    if gain_col not in epi.columns:
+    if gain_col not in df.columns:
         return []
-    vals = epi[gain_col].dropna().values
+    vals = df[gain_col].dropna().values
     if len(vals) == 0:
         return []
 
@@ -131,8 +132,8 @@ def _plot_one_gain_histogram(
     ax.hist(vals, bins=bins, color=_HIST_BAR_COLOR, edgecolor="white", linewidth=0.5)
 
     ax.set_xlabel(x_label, fontsize=11)
-    ax.set_ylabel("Number of epidemic CGs", fontsize=11)
-    ax.set_title(f"{title}  (n={len(epi)} epidemic CGs)", fontsize=11)
+    ax.set_ylabel("Number of strains", fontsize=11)
+    ax.set_title(title, fontsize=11)
     ax.yaxis.get_major_locator().set_params(integer=True)
     plt.tight_layout()
 
@@ -149,21 +150,18 @@ def _plot_one_gain_histogram(
 
 
 def _plot_gain_histograms(df: pd.DataFrame, out_dir: str) -> list[str]:
-    """Generate one histogram per granularity transition over kp_epidemic CGs.
+    """Generate one histogram per granularity transition over all rows.
 
-    Rare-lineage batches and non-KP species are excluded because for those rows
-    b.i = c, b.ii = b.i (= c), and the gain columns are zero by construction.
+    Includes every row type (kp_epidemic, kp_epidemic_sl, kp_rare, kp_species)
+    — now that the SL split makes c→b.i and b.i→b.ii meaningful for the
+    summary rows too.
     """
-    if "row_type" in df.columns:
-        epi = df[df["row_type"] == "kp_epidemic"].copy()
-    else:
-        epi = df.copy()
-    if epi.empty:
+    if df.empty:
         return []
 
     out: list[str] = []
     for gain_col, title, x_label, file_stem in _HISTOGRAM_TRANSITIONS:
-        out += _plot_one_gain_histogram(epi, out_dir, gain_col, title, x_label, file_stem)
+        out += _plot_one_gain_histogram(df, out_dir, gain_col, title, x_label, file_stem)
     return out
 
 
