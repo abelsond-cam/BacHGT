@@ -229,12 +229,16 @@ def process_panaroo_run(
         query_ids = list(gpa.columns[is_query])
         id_to_idx = {sid: i for i, sid in enumerate(query_ids)}
 
-        # Build hierarchical split of query samples by (Clonal group, K_locus)
+        # Build hierarchical split of query samples by (Sublineage, Clonal
+        # group, K_locus). For KP sublineage runs the SL split is trivial
+        # (one major SL, no 'other_SL' bucket) so kp_epidemic / kp_epidemic_sl
+        # rows are unchanged. For kp_rare and kp_species runs the SL split
+        # adds real resolution: each batch contains many SLs.
         meta_for_queries = meta_curated.set_index(sample_id_col).reindex(query_ids)
         tree = hierarchical_split(
             meta_for_queries,
             sample_ids=query_ids,
-            levels=["Clonal group", "K_locus"],
+            levels=["Sublineage", "Clonal group", "K_locus"],
             min_group_size=min_group_size,
         )
 
@@ -326,6 +330,62 @@ def _weighted_mean(pairs: list[tuple[float, float]]) -> float:
     return total_wv / total_w if total_w > 0 else float("nan")
 
 
+def _aggregate_best_shared(
+    node: dict,
+    node_metrics: dict[tuple[str, ...], dict[str, float]],
+    target_depth: int,
+    path: tuple[str, ...] = (),
+    depth: int = 0,
+) -> tuple[float, float]:
+    """Walk a hierarchical_split subtree and weighted-average ``best_shared``
+    over the subtree's children at ``target_depth`` (relative to ``node``).
+
+    "Other" buckets and any node that has no further subgroups contribute
+    their own ``best_shared`` regardless of depth, matching the convention
+    that 'other' is a single non-recursive bucket.
+
+    Parameters
+    ----------
+    node
+        Current tree node (output of ``hierarchical_split``).
+    node_metrics
+        Per-node metric dict keyed by absolute path tuple (the path from the
+        whole-run root, not from ``node``).
+    target_depth
+        Aggregate down to children at this depth below ``node`` (1 = direct
+        children, 2 = grandchildren, etc.). Children that bottom out earlier
+        (no subgroups) contribute their own ``best_shared``.
+    path
+        Absolute path of ``node`` from the whole-run root (used to look up
+        ``node_metrics``); pass the empty tuple at the root.
+    depth
+        Recursion depth tracker (do not pass).
+
+    Returns
+    -------
+    (n_samples, weighted_best_shared) tuple. NaN value if no contributing
+    children carry valid metrics.
+    """
+    if path not in node_metrics:
+        return (0.0, float("nan"))
+    n_node = float(node_metrics[path]["n"])
+
+    # If we've reached target depth or this node can't recurse further,
+    # contribute the node's own best_shared as a leaf.
+    if depth >= target_depth or not node.get("subgroups"):
+        return (n_node, float(node_metrics[path]["best_shared"]))
+
+    pairs: list[tuple[float, float]] = []
+    for child in node["subgroups"]:
+        child_path = path + (child["label"],)
+        n_child, val_child = _aggregate_best_shared(
+            child, node_metrics, target_depth, child_path, depth + 1
+        )
+        if n_child > 0 and not np.isnan(val_child):
+            pairs.append((n_child, val_child))
+    return (n_node, _weighted_mean(pairs))
+
+
 def _build_run_summary_row(
     run: dict,
     row_type: str,
@@ -334,52 +394,60 @@ def _build_run_summary_row(
 ) -> dict:
     """Construct an SL-style row (kp_epidemic_sl / kp_rare / kp_species).
 
-    SL-style rows aggregate ALL top-level subgroups in the run, including the
-    'other' bucket of small CGs. This is the bias-fix the user requested: the
-    SL row truly represents the whole run, not just its big CGs.
+    The hierarchical split tree has three levels — Sublineage, Clonal group,
+    K-locus — so this row's values come from progressively-deeper aggregations:
+
+      * level c     = weighted mean of best_shared across SL-level children
+                       (depth 1 from root); 'other_SL' contributes its own
+                       best_shared as a single non-recursive bucket
+      * level b.i  = same but at depth 2 (CGs within each SL + each SL's
+                       'other_CG' + run's 'other_SL')
+      * level b.ii = depth 3 (CG/K-locus leaves); nodes that bottom out
+                       earlier contribute their own best_shared
+
+    This is the bias-fix: rare-batch and species runs no longer treat the
+    whole heterogeneous run as one group when computing level c, and SL row
+    values aren't biased toward big children at any level.
     """
     nm = run["node_metrics"]
     tree = run["tree"]
-    top_subgroups = tree["subgroups"] or [{"label": "__no_split__"}]
 
-    # b.i: weighted mean across top-level subgroups (CGs + 'other') of best_shared
-    bi_pairs: list[tuple[float, float]] = []
-    bii_pairs: list[tuple[float, float]] = []
-    for child in tree["subgroups"]:
-        path = (child["label"],)
-        if path not in nm:
-            continue
-        n_child = nm[path]["n"]
-        bi_child = nm[path]["best_shared"]
-        bi_pairs.append((n_child, bi_child))
+    if not tree.get("subgroups"):
+        # No splittable structure (run has no Sublineage column or no rows
+        # past filters): fall back to whole-run scalars at every level.
+        return {
+            "strain": strain,
+            "Sublineage": sublineage,
+            "row_type": row_type,
+            "directory_leaf": run["run_name"],
+            "n_parts": 1,
+            "n_samples": run["n_query"],
+            "n_refseq_genomes": run["n_refseq"],
+            "shared_genes_d": run["level_d"],
+            "shared_genes_c": run["level_c"],
+            "shared_genes_b_i": run["level_c"],
+            "shared_genes_b_ii": run["level_c"],
+            "shared_genes_a": run["level_a"],
+            "fallback_b_i": True,
+            "fallback_b_ii": True,
+        }
 
-        # b.ii for this child: weighted mean across its grandchildren if any,
-        # else fall back to its own best_shared (e.g. 'other' bucket).
-        if child["subgroups"]:
-            grandchild_pairs = [
-                (nm[path + (gc["label"],)]["n"], nm[path + (gc["label"],)]["best_shared"])
-                for gc in child["subgroups"]
-                if path + (gc["label"],) in nm
-            ]
-            bii_child = _weighted_mean(grandchild_pairs)
-        else:
-            bii_child = bi_child
-        bii_pairs.append((n_child, bii_child))
+    _, c_value = _aggregate_best_shared(tree, nm, target_depth=1)
+    _, bi_value = _aggregate_best_shared(tree, nm, target_depth=2)
+    _, bii_value = _aggregate_best_shared(tree, nm, target_depth=3)
 
-    # If no top-level split happened (no CG column or all in one bucket), fall
-    # back to whole-run level_c for b.i and b.ii.
-    if not bi_pairs:
-        bi_value = run["level_c"]
-        bii_value = run["level_c"]
-        fallback_b_i = True
-        fallback_b_ii = True
-    else:
-        bi_value = _weighted_mean(bi_pairs)
-        bii_value = _weighted_mean(bii_pairs)
-        fallback_b_i = False
-        # b.ii falls back to b.i for runs where no second-level split happened
-        any_second_level = any(child["subgroups"] for child in tree["subgroups"])
-        fallback_b_ii = not any_second_level
+    # fallback flags: b.i falls back when no SL has any CG-level children;
+    # b.ii falls back when no CG has any KL-level children.
+    any_cg_split = any(
+        sl.get("subgroups") for sl in tree["subgroups"] if sl["label"] != "other"
+    )
+    any_kl_split = any(
+        cg.get("subgroups")
+        for sl in tree["subgroups"]
+        if sl["label"] != "other"
+        for cg in sl.get("subgroups", [])
+        if cg["label"] != "other"
+    )
 
     return {
         "strain": strain,
@@ -390,12 +458,12 @@ def _build_run_summary_row(
         "n_samples": run["n_query"],
         "n_refseq_genomes": run["n_refseq"],
         "shared_genes_d": run["level_d"],
-        "shared_genes_c": run["level_c"],
-        "shared_genes_b_i": bi_value,
-        "shared_genes_b_ii": bii_value,
+        "shared_genes_c": c_value if not np.isnan(c_value) else run["level_c"],
+        "shared_genes_b_i": bi_value if not np.isnan(bi_value) else run["level_c"],
+        "shared_genes_b_ii": bii_value if not np.isnan(bii_value) else run["level_c"],
         "shared_genes_a": run["level_a"],
-        "fallback_b_i": fallback_b_i,
-        "fallback_b_ii": fallback_b_ii,
+        "fallback_b_i": not any_cg_split,
+        "fallback_b_ii": not any_kl_split,
     }
 
 
@@ -428,54 +496,65 @@ def _build_cg_rows(
     else:
         meta_idx = metadata_df.set_index(sample_id_col)
 
-    for cg_node in tree["subgroups"]:
-        if cg_node["label"] == "other":
-            continue  # 'other' bucket isn't its own kp_epidemic row
-        path = (cg_node["label"],)
-        if path not in nm:
-            continue
+    # Tree structure: root → SL children → CG children → KL children. For KP
+    # sublineage runs there is normally one major SL child (the run's own
+    # sublineage). For correctness in split runs and edge cases we walk
+    # whichever major SL children exist.
+    for sl_node in tree["subgroups"]:
+        if sl_node["label"] == "other":
+            continue  # 'other_SL' bucket isn't a kp_epidemic source
+        sl_label = sl_node["label"]
+        for cg_node in sl_node.get("subgroups", []):
+            if cg_node["label"] == "other":
+                continue  # 'other_CG' within an SL isn't a kp_epidemic row
+            path = (sl_label, cg_node["label"])
+            if path not in nm:
+                continue
 
-        # b.ii for this CG: weighted mean across its CG/KL grandchildren incl. 'other'
-        if cg_node["subgroups"]:
-            grandchild_pairs = [
-                (nm[path + (gc["label"],)]["n"], nm[path + (gc["label"],)]["best_shared"])
-                for gc in cg_node["subgroups"]
-                if path + (gc["label"],) in nm
-            ]
-            bii_value = _weighted_mean(grandchild_pairs)
-            fallback_b_ii = False
-        else:
-            bii_value = nm[path]["best_shared"]
-            fallback_b_ii = True
+            # b.ii for this CG: weighted mean across its CG/KL grandchildren
+            # (incl. 'other_KL'); fall back to the CG's own best_shared if no
+            # K-locus split was possible.
+            if cg_node.get("subgroups"):
+                grandchild_pairs = [
+                    (nm[path + (gc["label"],)]["n"], nm[path + (gc["label"],)]["best_shared"])
+                    for gc in cg_node["subgroups"]
+                    if path + (gc["label"],) in nm
+                ]
+                bii_value = _weighted_mean(grandchild_pairs)
+                fallback_b_ii = False
+            else:
+                bii_value = nm[path]["best_shared"]
+                fallback_b_ii = True
 
-        # Resolve a per-CG Sublineage label: most common Sublineage among the
-        # CG's members (handles split runs where a CG can carry its parent SL).
-        cg_members = cg_node["members"]
-        sub_meta = meta_idx.reindex(cg_members)
-        if "Sublineage" in sub_meta.columns:
-            sl_vc = sub_meta["Sublineage"].dropna().astype(str).value_counts()
-            cg_sublineage = sl_vc.index[0] if len(sl_vc) else sublineage
-        else:
-            cg_sublineage = sublineage
+            # Resolve a per-CG Sublineage label: most common Sublineage among
+            # the CG's members (handles split runs where a CG can carry its
+            # parent SL). Falls back to the run's sublineage label if missing.
+            cg_members = cg_node["members"]
+            sub_meta = meta_idx.reindex(cg_members)
+            if "Sublineage" in sub_meta.columns:
+                sl_vc = sub_meta["Sublineage"].dropna().astype(str).value_counts()
+                cg_sublineage = sl_vc.index[0] if len(sl_vc) else sublineage
+            else:
+                cg_sublineage = sublineage
 
-        rows.append(
-            {
-                "strain": cg_node["label"],
-                "Sublineage": cg_sublineage,
-                "row_type": "kp_epidemic",
-                "directory_leaf": run["run_name"],
-                "n_parts": 1,
-                "n_samples": nm[path]["n"],
-                "n_refseq_genomes": run["n_refseq"],
-                "shared_genes_d": nm[path]["level_d"],
-                "shared_genes_c": nm[path]["level_c"],
-                "shared_genes_b_i": nm[path]["best_shared"],
-                "shared_genes_b_ii": bii_value,
-                "shared_genes_a": nm[path]["level_a"],
-                "fallback_b_i": False,
-                "fallback_b_ii": fallback_b_ii,
-            }
-        )
+            rows.append(
+                {
+                    "strain": cg_node["label"],
+                    "Sublineage": cg_sublineage,
+                    "row_type": "kp_epidemic",
+                    "directory_leaf": run["run_name"],
+                    "n_parts": 1,
+                    "n_samples": nm[path]["n"],
+                    "n_refseq_genomes": run["n_refseq"],
+                    "shared_genes_d": nm[path]["level_d"],
+                    "shared_genes_c": nm[path]["level_c"],
+                    "shared_genes_b_i": nm[path]["best_shared"],
+                    "shared_genes_b_ii": bii_value,
+                    "shared_genes_a": nm[path]["level_a"],
+                    "fallback_b_i": False,
+                    "fallback_b_ii": fallback_b_ii,
+                }
+            )
     return rows
 
 

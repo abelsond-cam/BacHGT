@@ -153,9 +153,9 @@ The lollipop plots each strain as a connected line across **five** nodes; values
 |---|---|---|---|
 | `e` | (column only, not plotted) | Global mgh78578 weighted mean across all runs | Single scalar; identical for every row |
 | `d` | **Ref mgh78578** | mgh78578 mean shared genes vs the run's KP samples (per-Panaroo-run baseline) | NaN for runs that don't include mgh78578 |
-| `c` | **Best RefSeq in SL / Subspecies Batch** | Single RefSeq maximising mean shared genes across ALL non-RefSeq samples in the Panaroo run | For SL runs ⇒ "best Sublineage RefSeq". For `kp_rare` and `kp_species` whole-run rows this is **batch-wide** (e.g. K. variicola subsp. variicola = best RefSeq across 632 sublineages / 1,019 CGs). |
-| `b.i` | **Best RefSeq in CG** | Per-CG row: best RefSeq for that CG's samples. SL/run summary row: n_samples-weighted mean across **all** CG-level subgroups in the run, **including the `other` bucket** of small CGs — eliminates the prior bias toward big CGs. | |
-| `b.ii` | **Best RefSeq in CG / K-locus** | Per-CG row: weighted mean across the CG's K-locus subgroups (incl. its `other`). SL/run row: weighted mean across each CG's `b.ii` plus the run-level `other` bucket's `best_shared`. | |
+| `c` | **Best RefSeq in SL / Subspecies Batch** | Per-CG row: run-wide best RefSeq applied to that CG's samples. SL/run summary row: n_samples-weighted mean across all SL-level subgroups in the run (major SLs + `other_SL` bucket) of each SL's `best_shared`. For KP sublineage runs the SL split is degenerate so this collapses to the run-wide best RefSeq. For `kp_rare` and `kp_species` runs the SL split is non-trivial — c reflects per-SL personalisation rather than one ref for the whole heterogeneous run. |
+| `b.i` | **Best RefSeq in CG** | Per-CG row: best RefSeq for that CG's samples. SL/run summary row: weighted mean across **all** CG-level subgroups (CGs within each major SL + each SL's `other_CG` bucket + the run's `other_SL` bucket as a single non-recursive contribution) — eliminates bias toward big children at any level. |
+| `b.ii` | **Best RefSeq in CG / K-locus** | Per-CG row: weighted mean across the CG's K-locus subgroups (incl. `other_KL`). SL/run row: weighted mean across all KL-level leaves; nodes that bottom out earlier (no K-locus split) contribute their own `best_shared`. |
 | `a` | **Best RefSeq Per-Sample** | Mean over per-sample max shared genes across all RefSeqs in that run | |
 
 `level_c ≤ level_b.i ≤ level_b.ii ≤ level_a` is guaranteed because each step gives the assignment more degrees of freedom.
@@ -169,10 +169,10 @@ The lollipop plots each strain as a connected line across **five** nodes; values
 | `kp_rare` | One row per `kp_rare_sublineage_batch_*` Panaroo run; same SL-style aggregation as `kp_epidemic_sl`. |
 | `kp_species` | One row per `species_*` Panaroo run; same SL-style aggregation. |
 
-The CG-size threshold is now controlled solely by the granularity script's own `--min-group-size` (default 50). The script walks Panaroo runs directly via `gene_presence_absence.Rtab` and does its own splitting via `bacotype.tl.panaroo_groups.hierarchical_split` — no dependence on `gpa_distances_batch_runs.sh` having pre-computed per-CG slices.
+The CG-size threshold is now controlled solely by the granularity script's own `--min-group-size` (default 50), and the same threshold is applied uniformly to the SL split, the CG split, and the K-locus split. The script walks Panaroo runs directly via `gene_presence_absence.Rtab` and does its own three-level splitting (`Sublineage` → `Clonal group` → `K_locus`) via `bacotype.tl.panaroo_groups.hierarchical_split` — no dependence on `gpa_distances_batch_runs.sh` having pre-computed per-CG slices.
 
 ### Key columns of `granularity_table.tsv`
 
 `strain`, `Sublineage`, `row_type`, `directory_leaf`, `n_parts`, `n_samples`, `n_refseq_genomes`, `shared_genes_e/d/c/b_i/b_ii/a`, `fallback_b_i`, `fallback_b_ii`, `gain_e_to_d`, `gain_d_to_c`, `gain_c_to_b_i`, `gain_b_i_to_b_ii`, `gain_b_ii_to_a`, `pct_gain_*`.
 
-`fallback_b_i = True` when no top-level CG-split was possible (e.g. a Panaroo run with no Clonal_group column or no major CG); `fallback_b_ii = True` when no second-level (K-locus) split was possible.
+`fallback_b_i = True` when no major CG-level subgroup exists in any major SL (a Panaroo run whose SLs are all in the `other_SL` bucket has b.i = c by construction). `fallback_b_ii = True` when no major K-locus subgroup exists in any major CG. Both flags are typical for the smallest rare-batch and species runs whose SLs and CGs are too small to clear `--min-group-size`.
