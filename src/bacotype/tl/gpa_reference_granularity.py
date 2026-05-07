@@ -240,7 +240,8 @@ def _build_whole_run_rows(
     rows["row_type"] = row_type
     rows["n_refseq_genomes_sublineage"] = rows["n_refseq_genomes"]
     rows["ref_min_shared_genes_sublineage"] = rows["ref_min_shared_genes"]
-    rows["shared_genes_d"] = global_mgh_shared_genes
+    rows["shared_genes_e"] = global_mgh_shared_genes        # global weighted mean
+    rows["shared_genes_d"] = rows["global_ref_mean_shared_genes"]  # per-run mgh78578
     rows["fallback_c"] = False
     rows["fallback_b"] = True  # no per-CG RefSeq; level b always equals level c
 
@@ -248,7 +249,7 @@ def _build_whole_run_rows(
     rows.loc[has_refseq_c, "shared_genes_c"] = rows.loc[
         has_refseq_c, "ref_min_shared_genes_sublineage"
     ]
-    rows.loc[~has_refseq_c, "shared_genes_c"] = global_mgh_shared_genes
+    rows.loc[~has_refseq_c, "shared_genes_c"] = rows.loc[~has_refseq_c, "shared_genes_d"]
     rows.loc[~has_refseq_c, "fallback_c"] = True
     rows["shared_genes_b"] = rows["shared_genes_c"]
     return rows
@@ -279,7 +280,7 @@ def compute_granularity_table(
         (ws_all["n_samples"] * ws_all["global_ref_mean_shared_genes"]).sum()
         / ws_all["n_samples"].sum()
     )
-    _tslog(f"Global mgh78578 baseline (level d): {global_mgh_shared_genes:.2f}")
+    _tslog(f"Global mgh78578 baseline (level e): {global_mgh_shared_genes:.2f}")
 
     # --- 1a. KP epidemic clonal groups ---
     target_rows = combined_df[
@@ -296,14 +297,16 @@ def compute_granularity_table(
     if not target_rows.empty:
         ws_for_cgs = ws_all[
             ws_all["directory_leaf"].isin(target_rows["directory_leaf"].unique())
-        ][["directory_leaf", "ref_min_shared_genes", "n_refseq_genomes"]].rename(
+        ][["directory_leaf", "ref_min_shared_genes", "n_refseq_genomes",
+           "global_ref_mean_shared_genes"]].rename(
             columns={
                 "ref_min_shared_genes": "ref_min_shared_genes_sublineage",
                 "n_refseq_genomes": "n_refseq_genomes_sublineage",
+                "global_ref_mean_shared_genes": "shared_genes_d",
             }
         )
         result_epidemic = target_rows.merge(ws_for_cgs, on="directory_leaf", how="left")
-        result_epidemic["shared_genes_d"] = global_mgh_shared_genes
+        result_epidemic["shared_genes_e"] = global_mgh_shared_genes  # global weighted mean
         result_epidemic["fallback_c"] = False
         result_epidemic["fallback_b"] = False
 
@@ -311,7 +314,9 @@ def compute_granularity_table(
         result_epidemic.loc[has_refseq_c, "shared_genes_c"] = result_epidemic.loc[
             has_refseq_c, "ref_min_shared_genes_sublineage"
         ]
-        result_epidemic.loc[~has_refseq_c, "shared_genes_c"] = global_mgh_shared_genes
+        result_epidemic.loc[~has_refseq_c, "shared_genes_c"] = result_epidemic.loc[
+            ~has_refseq_c, "shared_genes_d"
+        ]
         result_epidemic.loc[~has_refseq_c, "fallback_c"] = True
 
         has_refseq_b = result_epidemic["n_refseq_genomes"] > 0
@@ -451,9 +456,11 @@ def compute_granularity_table(
 
     # Step 3: Compute gain columns
     _tslog("Step 3: Computing gain columns...")
+    result["gain_e_to_d"] = result["shared_genes_d"] - result["shared_genes_e"]
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
     result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
+    result["pct_gain_e_to_d"] = 100 * result["gain_e_to_d"] / (result["shared_genes_e"] + 1e-9)
     result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + 1e-9)
     result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (result["shared_genes_c"] + 1e-9)
     result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (result["shared_genes_b"] + 1e-9)
@@ -474,8 +481,8 @@ def compute_granularity_table(
         for col in ["n_refseq_genomes", "n_refseq_genomes_sublineage"]:
             if col in grp.columns:
                 out[col] = (grp[col] * w).sum() / total
-        out["shared_genes_d"] = grp["shared_genes_d"].iloc[0]
-        for col in ["shared_genes_c", "shared_genes_b", "shared_genes_a"]:
+        out["shared_genes_e"] = grp["shared_genes_e"].iloc[0]  # global constant, same in all parts
+        for col in ["shared_genes_d", "shared_genes_c", "shared_genes_b", "shared_genes_a"]:
             valid = grp[col].notna()
             out[col] = (
                 (grp.loc[valid, col] * w[valid]).sum() / w[valid].sum()
@@ -495,9 +502,11 @@ def compute_granularity_table(
     )
 
     # Recompute gain columns from aggregated values
+    result["gain_e_to_d"] = result["shared_genes_d"] - result["shared_genes_e"]
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
     result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
+    result["pct_gain_e_to_d"] = 100 * result["gain_e_to_d"] / (result["shared_genes_e"] + 1e-9)
     result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + 1e-9)
     result["pct_gain_c_to_b"] = 100 * result["gain_c_to_b"] / (result["shared_genes_c"] + 1e-9)
     result["pct_gain_b_to_a"] = 100 * result["gain_b_to_a"] / (result["shared_genes_b"] + 1e-9)
@@ -514,15 +523,18 @@ def compute_granularity_table(
         "n_samples",
         "n_refseq_genomes",
         "n_refseq_genomes_sublineage",
+        "shared_genes_e",
         "shared_genes_d",
         "shared_genes_c",
         "shared_genes_b",
         "shared_genes_a",
         "fallback_c",
         "fallback_b",
+        "gain_e_to_d",
         "gain_d_to_c",
         "gain_c_to_b",
         "gain_b_to_a",
+        "pct_gain_e_to_d",
         "pct_gain_d_to_c",
         "pct_gain_c_to_b",
         "pct_gain_b_to_a",
@@ -536,7 +548,7 @@ def compute_summary_stats(granularity_df: pd.DataFrame) -> dict[str, float]:
     """Compute aggregate summary statistics."""
     stats = {}
 
-    for level in ["d", "c", "b", "a"]:
+    for level in ["e", "d", "c", "b", "a"]:
         col = f"shared_genes_{level}"
         if col in granularity_df.columns:
             valid = granularity_df[col].dropna()
