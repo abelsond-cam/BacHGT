@@ -11,7 +11,7 @@ Connecting-line color indicates row type:
 
 Sublineage labels are spread vertically to avoid overlap.
 Labels in red indicate CGs where the CG-level RefSeq gain over sublineage-level
-exceeds `highlight_cg_gain_pct` (default 2 %).
+exceeds `highlight_cg_gain_pct` (default 1 %).
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ import sys
 import time
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
@@ -68,13 +69,96 @@ def _spread_labels(ys: list[float], min_gap: float) -> list[float]:
     return final
 
 
+def _plot_gain_histogram(
+    df: pd.DataFrame,
+    out_dir: str,
+    threshold: float,
+) -> list[str]:
+    """Histogram of pct_gain_c_to_b for epidemic CGs (0.1 % bins).
+
+    Bars above `threshold` are coloured red. Rare-lineage batches and
+    non-KP species are excluded because level_b = level_c by construction
+    for those rows (whole-run mode has no per-CG reference).
+    """
+    gain_col = "pct_gain_c_to_b"
+
+    n_rare = int((df.get("row_type", pd.Series()) == "kp_rare").sum())
+    n_species = int((df.get("row_type", pd.Series()) == "kp_species").sum())
+
+    if "row_type" in df.columns:
+        epi = df[df["row_type"] == "kp_epidemic"].copy()
+    else:
+        epi = df.copy()
+
+    vals = epi[gain_col].dropna().values if gain_col in epi.columns else np.array([])
+    if len(vals) == 0:
+        return []
+
+    max_val = float(vals.max())
+    bins = np.arange(0.0, max_val + 0.15, 0.1)
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+    n_arr, bin_edges, patches = ax.hist(
+        vals, bins=bins, color="#9ecae1", edgecolor="white", linewidth=0.5,
+    )
+
+    for patch, left in zip(patches, bin_edges[:-1]):
+        if left >= threshold - 1e-9:
+            patch.set_facecolor("#d62728")
+
+    ax.axvline(
+        threshold, color="black", linestyle="--", linewidth=1.2, alpha=0.8,
+        label=f"Threshold: {threshold:.1f}%",
+    )
+
+    # Annotate highlighted CGs by name
+    if "strain" in epi.columns and gain_col in epi.columns:
+        for _, row in epi[epi[gain_col] > threshold].iterrows():
+            pct = float(row[gain_col])
+            strain = str(row["strain"])
+            bin_idx = int(np.searchsorted(bin_edges, pct, side="right") - 1)
+            bin_idx = max(0, min(bin_idx, len(n_arr) - 1))
+            bar_h = int(n_arr[bin_idx])
+            bin_centre = bin_edges[bin_idx] + 0.05
+            ax.annotate(
+                strain,
+                xy=(bin_centre, bar_h),
+                xytext=(bin_centre, bar_h + 0.35),
+                ha="center", fontsize=8, color="#d62728",
+                arrowprops=dict(arrowstyle="-", color="#d62728", lw=0.6),
+            )
+
+    ax.set_xlabel(
+        "Sublineage RefSeq → CG RefSeq shared-gene gain  (% relative to level c)",
+        fontsize=11,
+    )
+    ax.set_ylabel("Number of epidemic CGs", fontsize=11)
+    ax.set_title(
+        f"Distribution of c→b gain  (KP epidemic CGs, n={len(epi)})\n"
+        f"kp_rare (n={n_rare}) and kp_species (n={n_species}) excluded: "
+        "level_b = level_c by construction for whole-run rows",
+        fontsize=10,
+    )
+    ax.legend(fontsize=9)
+    ax.yaxis.get_major_locator().set_params(integer=True)
+    plt.tight_layout()
+
+    os.makedirs(out_dir, exist_ok=True)
+    png = os.path.join(out_dir, "granularity_gain_histogram.png")
+    pdf = os.path.join(out_dir, "granularity_gain_histogram.pdf")
+    fig.savefig(png, dpi=300, bbox_inches="tight")
+    fig.savefig(pdf, bbox_inches="tight")
+    plt.close(fig)
+    return [png, pdf]
+
+
 def plot_granularity_lollipop(
     df: pd.DataFrame | str,
     out_dir: str,
     *,
     top_n: int | None = None,
     sort_by: str = "shared_genes_d",
-    highlight_cg_gain_pct: float = 2.0,
+    highlight_cg_gain_pct: float = 1.0,
 ) -> list[str]:
     """
     Generate lollipop plot of granularity level improvement per strain.
@@ -91,11 +175,11 @@ def plot_granularity_lollipop(
         Column to sort strains by (default "shared_genes_d").
     highlight_cg_gain_pct
         Strains with pct_gain_c_to_b above this threshold get red labels
-        (default 2.0 %).
+        (default 1.0 %).
 
     Returns
     -------
-    list of output file paths (PNG, PDF, log)
+    list of output file paths (lollipop PNG/PDF, histogram PNG/PDF, log)
     """
     if isinstance(df, str):
         df = pd.read_csv(df, sep="\t")
@@ -156,11 +240,10 @@ def plot_granularity_lollipop(
 
     if _annots:
         y_orig = [a[0] for a in _annots]
-        # Estimate min gap: fontsize in data-coordinate units
         y_lim = ax.get_ylim()
         y_span = y_lim[1] - y_lim[0]
         fig_h_in = fig.get_size_inches()[1]
-        units_per_pt = y_span / (fig_h_in * 72 * 0.82)  # 82% of height is axis
+        units_per_pt = y_span / (fig_h_in * 72 * 0.82)
         min_gap = ann_fontsize * units_per_pt * 1.4
 
         y_adj = _spread_labels(y_orig, min_gap)
@@ -227,11 +310,14 @@ def plot_granularity_lollipop(
     fig.savefig(pdf_path, bbox_inches="tight")
     plt.close(fig)
 
-    # --- Write gain log ---
+    # --- Gain histogram ---
+    hist_paths = _plot_gain_histogram(df, out_dir, highlight_cg_gain_pct)
+
+    # --- Gain log ---
     log_path = os.path.join(out_dir, "granularity_notes.log")
     _write_gain_log(df, log_path, highlight_cg_gain_pct)
 
-    return [png_path, pdf_path, log_path]
+    return [png_path, pdf_path] + hist_paths + [log_path]
 
 
 def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
@@ -292,7 +378,6 @@ def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
                 f"median={lo[gain_col].median():.2f}%  "
                 f"range=[{lo[gain_col].min():.2f}%, {lo[gain_col].max():.2f}%]"
             )
-        # Per row_type breakdown
         if "row_type" in df.columns:
             lines.append("")
             lines.append("  Per row_type (all rows):")
@@ -322,8 +407,8 @@ def main(argv=None):
                         help="Keep only top_n strains by gain_b_to_a")
     parser.add_argument("--sort-by", default="shared_genes_d",
                         help="Column to sort by (default: shared_genes_d)")
-    parser.add_argument("--highlight-cg-gain-pct", type=float, default=2.0,
-                        help="Highlight CGs with c→b gain above this %% (default 2.0)")
+    parser.add_argument("--highlight-cg-gain-pct", type=float, default=1.0,
+                        help="Highlight CGs with c→b gain above this %% (default 1.0)")
 
     args = parser.parse_args(argv)
 
