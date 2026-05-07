@@ -79,78 +79,60 @@ def _spread_labels(ys: list[float], min_gap: float) -> list[float]:
     return final
 
 
-def _plot_gain_histogram(
-    df: pd.DataFrame,
+_HIST_BAR_COLOR = "#4682B4"  # steel blue
+
+# (gain_col, plot_title, x_label, file_stem) for each granularity transition
+_HISTOGRAM_TRANSITIONS: list[tuple[str, str, str, str]] = [
+    (
+        "gain_c_to_b_i",
+        "c → b.i  (SL → CG)",
+        "Shared-gene gain (genes)",
+        "granularity_gain_histogram_c_to_b_i",
+    ),
+    (
+        "gain_b_i_to_b_ii",
+        "b.i → b.ii  (CG → CG/K-locus)",
+        "Shared-gene gain (genes)",
+        "granularity_gain_histogram_b_i_to_b_ii",
+    ),
+    (
+        "gain_b_ii_to_a",
+        "b.ii → a  (CG/K-locus → per-sample)",
+        "Shared-gene gain (genes)",
+        "granularity_gain_histogram_b_ii_to_a",
+    ),
+]
+
+
+def _plot_one_gain_histogram(
+    epi: pd.DataFrame,
     out_dir: str,
-    threshold: float,
+    gain_col: str,
+    title: str,
+    x_label: str,
+    file_stem: str,
 ) -> list[str]:
-    """Histogram of gain_c_to_b_i (absolute shared genes) for epidemic CGs (5-gene bins).
+    """Single-color histogram of one gain column over kp_epidemic CGs (5-gene bins).
 
-    Bars above `threshold` genes are coloured red. Rare-lineage batches and
-    non-KP species are excluded because level_b = level_c by construction
-    for those rows (whole-run mode has no per-CG reference).
+    No per-bar annotation, no threshold colouring — uniform steel-blue bars.
     """
-    gain_col = "gain_c_to_b_i"
-
-    n_rare = int((df.get("row_type", pd.Series()) == "kp_rare").sum())
-    n_species = int((df.get("row_type", pd.Series()) == "kp_species").sum())
-
-    if "row_type" in df.columns:
-        epi = df[df["row_type"] == "kp_epidemic"].copy()
-    else:
-        epi = df.copy()
-
-    vals = epi[gain_col].dropna().values if gain_col in epi.columns else np.array([])
+    if gain_col not in epi.columns:
+        return []
+    vals = epi[gain_col].dropna().values
     if len(vals) == 0:
         return []
 
     max_val = float(vals.max())
-    bins = np.arange(0.0, max_val + 6, 5)
+    min_val = float(vals.min())
+    lo = min(0.0, np.floor(min_val / 5) * 5)
+    bins = np.arange(lo, max_val + 6, 5)
 
     fig, ax = plt.subplots(figsize=(10, 5))
-    n_arr, bin_edges, patches = ax.hist(
-        vals, bins=bins, color="#9ecae1", edgecolor="white", linewidth=0.5,
-    )
+    ax.hist(vals, bins=bins, color=_HIST_BAR_COLOR, edgecolor="white", linewidth=0.5)
 
-    highlight_color = "#66B2FF"  # light blue
-    for patch, left in zip(patches, bin_edges[:-1]):
-        if left >= threshold - 1e-9:
-            patch.set_facecolor(highlight_color)
-
-    ax.axvline(
-        threshold, color="black", linestyle="--", linewidth=1.2, alpha=0.8,
-        label=f"Threshold: {threshold:.0f} genes",
-    )
-
-    # Annotate highlighted CGs by name
-    if "strain" in epi.columns and gain_col in epi.columns:
-        for _, row in epi[epi[gain_col] > threshold].iterrows():
-            gain = float(row[gain_col])
-            strain = str(row["strain"])
-            bin_idx = int(np.searchsorted(bin_edges, gain, side="right") - 1)
-            bin_idx = max(0, min(bin_idx, len(n_arr) - 1))
-            bar_h = int(n_arr[bin_idx])
-            bin_centre = bin_edges[bin_idx] + 2.5
-            ax.annotate(
-                strain,
-                xy=(bin_centre, bar_h),
-                xytext=(bin_centre, bar_h + 0.35),
-                ha="center", fontsize=8, color=highlight_color,
-                arrowprops=dict(arrowstyle="-", color=highlight_color, lw=0.6),
-            )
-
-    ax.set_xlabel(
-        "c → b.i shared-gene gain  (absolute genes; SL/Subspecies RefSeq → CG RefSeq)",
-        fontsize=11,
-    )
+    ax.set_xlabel(x_label, fontsize=11)
     ax.set_ylabel("Number of epidemic CGs", fontsize=11)
-    ax.set_title(
-        f"Distribution of c→b.i gain  (KP epidemic CGs, n={len(epi)})\n"
-        f"kp_rare (n={n_rare}) and kp_species (n={n_species}) excluded: "
-        "b.i = c by construction for whole-run rows",
-        fontsize=10,
-    )
-    ax.legend(fontsize=9)
+    ax.set_title(f"{title}  (n={len(epi)} epidemic CGs)", fontsize=11)
     ax.yaxis.get_major_locator().set_params(integer=True)
     plt.tight_layout()
 
@@ -158,12 +140,31 @@ def _plot_gain_histogram(
     pdf_dir = os.path.join(out_dir, "plots_pdf")
     os.makedirs(png_dir, exist_ok=True)
     os.makedirs(pdf_dir, exist_ok=True)
-    png = os.path.join(png_dir, "granularity_gain_histogram.png")
-    pdf = os.path.join(pdf_dir, "granularity_gain_histogram.pdf")
+    png = os.path.join(png_dir, f"{file_stem}.png")
+    pdf = os.path.join(pdf_dir, f"{file_stem}.pdf")
     fig.savefig(png, dpi=300, bbox_inches="tight")
     fig.savefig(pdf, bbox_inches="tight")
     plt.close(fig)
     return [png, pdf]
+
+
+def _plot_gain_histograms(df: pd.DataFrame, out_dir: str) -> list[str]:
+    """Generate one histogram per granularity transition over kp_epidemic CGs.
+
+    Rare-lineage batches and non-KP species are excluded because for those rows
+    b.i = c, b.ii = b.i (= c), and the gain columns are zero by construction.
+    """
+    if "row_type" in df.columns:
+        epi = df[df["row_type"] == "kp_epidemic"].copy()
+    else:
+        epi = df.copy()
+    if epi.empty:
+        return []
+
+    out: list[str] = []
+    for gain_col, title, x_label, file_stem in _HISTOGRAM_TRANSITIONS:
+        out += _plot_one_gain_histogram(epi, out_dir, gain_col, title, x_label, file_stem)
+    return out
 
 
 def plot_granularity_lollipop(
@@ -373,87 +374,88 @@ def plot_granularity_lollipop(
 
     outputs = [png_path, pdf_path]
     if make_histogram:
-        gain_threshold = highlight_cg_gain_genes if highlight_cg_gain_genes is not None else 20.0
-        hist_paths = _plot_gain_histogram(df_full, out_dir, gain_threshold)
+        hist_paths = _plot_gain_histograms(df_full, out_dir)
         log_path = os.path.join(out_dir, "granularity_notes.log")
-        _write_gain_log(df_full, log_path, gain_threshold)
+        _write_gain_log(df_full, log_path)
         outputs += hist_paths + [log_path]
     return outputs
 
 
-def _write_gain_log(df: pd.DataFrame, log_path: str, threshold: float) -> None:
-    """Write c→b gain statistics to a plain-text log file."""
-    abs_col = "gain_c_to_b_i"
-    pct_col = "pct_gain_c_to_b_i"
-    has_abs = abs_col in df.columns
-    has_pct = pct_col in df.columns
+def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
+    """Write per-CG gains and a 4-line summary of mean+range across transitions.
+
+    Per-CG table is sorted by ``gain_c_to_b_i`` descending and reports absolute
+    gene gains for c→b.i, b.i→b.ii, b.ii→a, plus the total c→a gain. The
+    summary block reports mean + range across kp_epidemic CGs for each of the
+    four transitions (mgh→SL, SL→CG, CG→CG/KL, CG/KL→per-sample).
+    """
+    epi = df[df["row_type"] == "kp_epidemic"].copy() if "row_type" in df.columns else df.copy()
 
     lines = [
-        "GPA Reference Granularity — CG-level gain highlights",
+        "GPA Reference Granularity — CG-level gains",
         f"Generated: {time.strftime('%Y-%m-%d %H:%M:%S %Z')}",
-        f"Threshold: gain_c_to_b_i > {threshold:.0f} genes",
-        f"Total rows: {len(df)}",
+        f"Total epidemic CGs: {len(epi)}",
         "",
     ]
 
-    if has_abs:
-        hi = df[df[abs_col] > threshold].copy()
-        lo = df[df[abs_col] <= threshold].copy()
+    abs_col = "gain_c_to_b_i"
+    if abs_col not in epi.columns or epi.empty:
+        lines.append("(gain_c_to_b_i column not found or no epidemic CGs — log empty)")
+        with open(log_path, "w") as fh:
+            fh.write("\n".join(lines) + "\n")
+        return
 
+    # ---- Per-CG table ----
+    epi = epi.sort_values(abs_col, ascending=False).reset_index(drop=True)
+    # total_gain_c_to_a may not be present as a column; compute on the fly.
+    total = (
+        epi.get("gain_c_to_b_i", 0)
+        + epi.get("gain_b_i_to_b_ii", 0)
+        + epi.get("gain_b_ii_to_a", 0)
+    )
+
+    col_w = max(len(str(s)) for s in epi["strain"]) + 2 if "strain" in epi.columns else 8
+    sl_w = (
+        max(len(str(s)) for s in epi["Sublineage"]) + 2 if "Sublineage" in epi.columns else 6
+    )
+    header = (
+        f"  {'strain':<{col_w}} {'Sublineage':<{sl_w}} {'n_samples':>10}"
+        f"  {'gain_c_to_b_i':>13}  {'gain_b_i_to_b_ii':>16}"
+        f"  {'gain_b_ii_to_a':>14}  {'total_gain_c_to_a':>17}"
+    )
+    lines += [
+        "=== Per-CG gains (sorted by gain_c_to_b_i descending) ===",
+        header,
+        "  " + "-" * (len(header) - 2),
+    ]
+    for i, r in epi.iterrows():
         lines.append(
-            f"=== Highlighted CGs: sublineage→CG RefSeq gain > {threshold:.0f} genes "
-            f"(n={len(hi)}) ==="
+            f"  {str(r.get('strain','')):<{col_w}} "
+            f"{str(r.get('Sublineage','')):<{sl_w}} "
+            f"{int(r.get('n_samples', 0)):>10d}  "
+            f"{r.get('gain_c_to_b_i', float('nan')):>13.1f}  "
+            f"{r.get('gain_b_i_to_b_ii', float('nan')):>16.1f}  "
+            f"{r.get('gain_b_ii_to_a', float('nan')):>14.1f}  "
+            f"{float(total.iloc[i]):>17.1f}"
         )
-        if hi.empty:
-            lines.append("  (none)")
-        else:
-            col_w = max(len(str(s)) for s in hi.get("strain", hi.index)) + 2
-            sl_w = max(len(str(s)) for s in hi.get("Sublineage", hi.index)) + 2
-            header = (f"  {'strain':<{col_w}} {'Sublineage':<{sl_w}} {'row_type':<15}"
-                      f"  {'gain_c_to_b_i':>12}  {'pct_gain_c_to_b_i':>16}")
-            lines.append(header)
-            lines.append("  " + "-" * (len(header) - 2))
-            for _, r in hi.sort_values(abs_col, ascending=False).iterrows():
-                pct_str = f"{r[pct_col]:>15.2f}%" if has_pct else "        N/A"
-                lines.append(
-                    f"  {str(r.get('strain','')):<{col_w}} "
-                    f"{str(r.get('Sublineage','')):<{sl_w}} "
-                    f"{str(r.get('row_type','')):<15}  "
-                    f"{r[abs_col]:>12.1f}  "
-                    f"{pct_str}"
-                )
 
-        lines += [
-            "",
-            "=== Summary statistics (c→b gain, absolute genes) ===",
-        ]
-        if not hi.empty:
-            lines.append(
-                f"  Highlighted  (n={len(hi):2d}):  "
-                f"mean={hi[abs_col].mean():.1f}  "
-                f"median={hi[abs_col].median():.1f}  "
-                f"range=[{hi[abs_col].min():.1f}, {hi[abs_col].max():.1f}] genes"
-            )
-        if not lo.empty:
-            lines.append(
-                f"  Other        (n={len(lo):2d}):  "
-                f"mean={lo[abs_col].mean():.1f}  "
-                f"median={lo[abs_col].median():.1f}  "
-                f"range=[{lo[abs_col].min():.1f}, {lo[abs_col].max():.1f}] genes"
-            )
-        if "row_type" in df.columns:
-            lines.append("")
-            lines.append("  Per row_type (all rows):")
-            for rt, grp in df.groupby("row_type"):
-                v = grp[abs_col].dropna()
-                if not v.empty:
-                    lines.append(
-                        f"    {rt:<20}  n={len(grp):3d}  "
-                        f"mean={v.mean():.1f}  "
-                        f"median={v.median():.1f} genes"
-                    )
-    else:
-        lines.append("(gain_c_to_b_i column not found — gain stats unavailable)")
+    # ---- Summary of gains across all kp_epidemic CGs ----
+    transitions = [
+        ("Reference mgh → SL / Subspecies (d → c)", "gain_d_to_c"),
+        ("SL → CG                       (c → b.i)", "gain_c_to_b_i"),
+        ("CG → CG/K-locus            (b.i → b.ii)", "gain_b_i_to_b_ii"),
+        ("CG/K-locus → Individual    (b.ii → a)  ", "gain_b_ii_to_a"),
+    ]
+    lines += ["", f"=== Summary of gains across kp_epidemic CGs (n={len(epi)}) ==="]
+    for label, col in transitions:
+        if col not in epi.columns:
+            continue
+        v = epi[col].dropna()
+        if v.empty:
+            continue
+        lines.append(
+            f"  {label}:  mean={v.mean():>7.1f}  range=[{v.min():>7.1f}, {v.max():>7.1f}]  genes"
+        )
 
     with open(log_path, "w") as fh:
         fh.write("\n".join(lines) + "\n")
