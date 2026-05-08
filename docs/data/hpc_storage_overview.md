@@ -38,7 +38,7 @@ Top-level subfolders inside `~/rds/rds-floto-bacterial-4k08a2yyQLw/`:
 Inside `project_k/david/`:
 
 - `final/` — curated metadata and reference bucket TSVs (e.g. `metadata_final_curated_slimmed.tsv`, `reference_bucket.tsv`). Stable inputs to downstream analyses.
-- `processed/` — pipeline outputs: Panaroo runs (`panaroo_with_reference_genome/`, see [`panaroo_run_inventory.md`](../panaroo_run_inventory.md)), pangenome analysis, ESM/Bacformer embeddings, AnnData objects, MGEFinder outputs.
+- `processed/` — pipeline outputs: Panaroo runs (`panaroo_with_reference_genome/`, see [`panaroo_run_inventory.md`](panaroo_run_inventory.md)), pangenome analysis, ESM/Bacformer embeddings, AnnData objects, MGEFinder outputs.
 - `raw/` — assemblies, GFFs, gbff (Bakta annotation outputs), fastq.
 
 ## Cold storage layout (`cold_storage/`)
@@ -57,7 +57,7 @@ Inside `~/rcs/rcs-vgm23-lcms/David/`:
 
 When a question needs more detail than this overview covers, read one of:
 
-- [`panaroo_run_inventory.md`](../panaroo_run_inventory.md) — full Panaroo run-by-run inventory under `project_k/david/processed/panaroo_with_reference_genome/`. Already exists.
+- [`panaroo_run_inventory.md`](panaroo_run_inventory.md) — full Panaroo run-by-run inventory under `project_k/david/processed/panaroo_with_reference_genome/`. Already exists.
 - *(placeholders, written when concrete questions surface)*
   - `project_k_david_layout.md` — granular listing of every subfolder under `project_k/david/{final, processed, raw}`.
   - `cold_storage_layout.md` — granular listing of every cold-storage tree.
