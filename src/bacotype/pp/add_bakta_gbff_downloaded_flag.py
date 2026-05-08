@@ -12,7 +12,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacotype.data_paths import data
+# Storage paths — see docs/data/hpc_storage_overview.md for vocabulary.
+# project_k/david/raw/klebsiella_gbff = Bakta GBFF downloads
+_DEFAULT_GBFF_DIR = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff"
+)
 
 
 def collect_gbff_samples(gbff_dir: Path) -> set[str]:
@@ -104,8 +108,8 @@ def main():
     parser.add_argument(
         "--gbff-dir",
         type=Path,
-        default=data.klebsiella_gbff_dir,
-        help=f"Directory to search for .bakta.gbff.gz files (default: {data.klebsiella_gbff_dir})",
+        default=_DEFAULT_GBFF_DIR,
+        help=f"Directory to search for .bakta.gbff.gz files (default: {_DEFAULT_GBFF_DIR})",
     )
     parser.add_argument(
         "--output",

@@ -26,13 +26,14 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacotype.data_paths import data
-
-
-BASE_DIR: Path = data.warm.parent  # /home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-METADATA_F: Path = data.klebsiella_metadata_file
-SIDECAR_F: Path = data.final / "gff_feature_counts.tsv"
-ERRORS_F: Path = data.final / "gff_feature_counts.errors.tsv"
+# Storage paths — see docs/data/hpc_storage_overview.md for vocabulary.
+# project_k = /home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
+# project_k/david/final/* = curated metadata + sidecars
+BASE_DIR: Path = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
+_FINAL: Path = BASE_DIR / "david/final"
+METADATA_F: Path = _FINAL / "metadata_final_curated_slimmed.tsv"
+SIDECAR_F: Path = _FINAL / "gff_feature_counts.tsv"
+ERRORS_F: Path = _FINAL / "gff_feature_counts.errors.tsv"
 
 
 def count_features(

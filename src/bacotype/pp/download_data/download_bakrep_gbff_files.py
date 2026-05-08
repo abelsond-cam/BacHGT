@@ -37,7 +37,14 @@ from pathlib import Path
 
 import pandas as pd
 
-from bacotype.data_paths import data
+# Storage paths — see docs/data/hpc_storage_overview.md for vocabulary.
+# project_k/david/final/* = curated metadata; project_k/david/raw/klebsiella_gbff = Bakta GBFF downloads
+_DEFAULT_METADATA = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
+)
+_DEFAULT_GBFF_DIR = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff"
+)
 
 
 def _downloaded_column(filetype: str) -> str:
@@ -259,7 +266,7 @@ def main() -> None:
     parser.add_argument(
         "--metadata",
         type=Path,
-        default=data.klebsiella_metadata_file,
+        default=_DEFAULT_METADATA,
         help="Path to metadata TSV",
     )
     parser.add_argument(
@@ -301,7 +308,7 @@ def main() -> None:
     parser.add_argument(
         "--output-dir",
         type=Path,
-        default=data.klebsiella_gbff_dir,
+        default=_DEFAULT_GBFF_DIR,
         help="Directory containing .bakta.gbff.gz or .bakta.gff3.gz files (for flag updates)",
     )
     parser.add_argument(
