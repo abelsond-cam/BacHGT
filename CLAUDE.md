@@ -6,6 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Bacotype uses [Panaroo](https://github.com/gtonkinhill/panaroo) to define "bacotypes" by analysing gene presence/absence (GPA) in bacterial sublineages, clonal groups, and clusters. The primary organism is *Klebsiella pneumoniae* subsp. *rhinoscleromatis* (KPSC). The workflow covers three task areas: data preprocessing → running Panaroo on HPC → analysing GPA distances to reference genomes.
 
+## Project arms & sibling workspaces
+
+The user runs two parallel project arms, both executed from `~/workspace/` on the HPC:
+
+- **Klebsiella genomics** — pangenome / GPA / mobile-element analysis of KPSC. Spans this repo + the panaroo fork + Pangenome-merge + Klebsiella_Mobile_Elements.
+- **Bacformer-based prediction** — uses the [Bacformer](https://github.com/macwiatrak/Bacformer) genome-embedding model to predict AMR + isolation source (proxy for virulence) from genomes; downstream goal is uncovering phenotype-associated genes. Lives in `predict_kleb_by_bacformer`.
+
+Sibling workspaces under `~/workspace/`:
+
+- `Bacotype` — this repo. Pangenome workflow with Panaroo.
+- `panaroo` — forked Panaroo (https://github.com/abelsond-cam/panaroo). Imported by file path from `pp/panaroo_run_strain.py` (see `Convert_Bakta_to_Prokka.MD`).
+- `Pangenome-merge` — forked tool to merge Panaroo runs across batches.
+- `Klebsiella_Mobile_Elements` — MGEFinder analysis of mobile genetic elements.
+- `predict_kleb_by_bacformer` — Bacformer phenotype prediction (AMR + isolation source).
+
 ## Commands
 
 ```bash
@@ -35,9 +50,10 @@ All production scripts are submitted to a Slurm HPC cluster via `slurm_scripts/*
 
 - Host: `login.hpc.cam.ac.uk` (CSD3, user `dca36`).
 - An 8-hour SSH ControlMaster multiplex is configured in `~/.ssh/config`, so any `ssh login.hpc.cam.ac.uk "<cmd>"` reuses the existing socket — no fresh login per call. If a command hangs, the master may have expired; opening any interactive `ssh login.hpc.cam.ac.uk` reseeds it.
-- Code lives at `/home/dca36/workspace/Bacotype` (sibling projects under `/home/dca36/workspace/`). Data lives under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` (the `DATA_ROOT` baked into `pp/panaroo_run_strain.py`).
+- Code lives at `/home/dca36/workspace/Bacotype` (sibling projects under `/home/dca36/workspace/`). Data lives under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` — see [`docs/data/hpc_storage_overview.md`](docs/data/hpc_storage_overview.md) for the full map of the four storage roots (`project_k`, `personal_rds`, `bacformer_rds`, `cold_storage`) and the shorthand vocabulary used across the repo.
 - The Panaroo fork (https://github.com/abelsond-cam/panaroo) lives at `/home/dca36/workspace/panaroo` as a sibling of `Bacotype`; `pp/panaroo_run_strain.py` loads `convert_bakta_to_prokka_gff.py` from it via file-path import (see `Convert_Bakta_to_Prokka.MD`).
-- Sync local changes with `rsync -av --exclude .venv --exclude .git src/ login.hpc.cam.ac.uk:/home/dca36/workspace/Bacotype/src/` (or target individual files).
+- For code changes, prefer `git commit` → `git push` → `git pull` on HPC over rsync (avoids desync between working tree and branch HEAD). Reserve rsync for data files not in git.
+- Hard-coded `/home/dca36/rds/...` paths in `slurm_scripts/*.sh` and across Python scripts in `src/bacotype/` are deliberately not centralised. RDS mount paths are stable; if they ever change, `grep -rl '/home/dca36' . | xargs sed -i ...` fixes everything in one pass. The literal paths use the same vocabulary documented in `docs/data/hpc_storage_overview.md`, which is the documentation-side source of truth.
 
 ## Package layout
 
@@ -48,7 +64,6 @@ The package follows a [scanpy](https://scanpy.readthedocs.io)-style module conve
 | `src/bacotype/pp/` | Preprocessing: resolve assembly/GFF paths, QC feature counts, build metadata TSV, prepare Panaroo inputs |
 | `src/bacotype/tl/` | Tools/analysis: Jaccard distances, reference-genome scoring, clustering metrics, pangenome stats; `gpa_reference_granularity.py` for granularity analysis |
 | `src/bacotype/pl/` | Plotting: GPA matrix figures, epidemic vs mixed visualisations, `granularity_lollipop.py` for reference-level improvement plots |
-| `src/bacotype/data_paths.py` | Centralised hard-coded paths to RDS cluster storage — always check this before running on a new machine |
 
 ## Three-task workflow
 
