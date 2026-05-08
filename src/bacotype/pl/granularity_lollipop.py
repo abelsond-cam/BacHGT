@@ -1,24 +1,22 @@
 #!/usr/bin/env python3
 """Lollipop/connected-dot plot for granularity level comparisons.
 
-Shows improvement in shared genes at each granularity level (e → d → c → b → a)
-per strain on a connected-dot lollipop chart.
+Shows improvement in shared genes at each granularity level
+(f → e → d → c → b → a) per strain on a connected-dot lollipop chart:
 
-Connecting-line color indicates row type:
-  gray     — KP epidemic clonal group (kp_epidemic)
-  dark blue — KP rare-lineage batch (kp_rare)
-  purple   — Non-KP Klebsiella species (kp_species)
+  f: per-run mgh78578
+  e: best RefSeq in Subspecies (run-wide; same-species ref filter)
+  d: best RefSeq in SL (best ref across the whole run)
+  c: best RefSeq in CG
+  b: best RefSeq in CG / K-locus
+  a: best RefSeq per-sample
 
-Node colors by level (light-to-dark continuum):
-  e: gray (global mgh78578 mean)
-  d: light yellow-orange (per-run mgh78578)
-  c: medium orange (sublineage RefSeq)
-  b: dark orange (CG RefSeq)
-  a: very dark orange (per-sample RefSeq)
+All dots and connecting lines are gray. The histograms below show the per-row
+gain at each transition (f→e, e→d, d→c, c→b, b→a).
 
 Strain labels are spread vertically to avoid overlap.
-Labels and connector lines in light blue indicate CGs where the CG-level
-RefSeq gain over sublineage-level exceeds `highlight_cg_gain_genes`
+Labels and connector lines in the highlight colour indicate CGs where the
+CG-level RefSeq gain over SL-level exceeds ``highlight_cg_gain_genes``
 (default 20 genes).
 """
 
@@ -42,12 +40,12 @@ _LINE_COLORS = {
 }
 
 _DOT_COLORS = {
-    "e":    "gray",
-    "d":    "gray",
-    "c":    "gray",
-    "b_i":  "gray",
-    "b_ii": "gray",
-    "a":    "gray",
+    "f": "gray",
+    "e": "gray",
+    "d": "gray",
+    "c": "gray",
+    "b": "gray",
+    "a": "gray",
 }
 
 
@@ -84,22 +82,34 @@ _HIST_BAR_COLOR = "#4682B4"  # steel blue
 # (gain_col, plot_title, x_label, file_stem) for each granularity transition
 _HISTOGRAM_TRANSITIONS: list[tuple[str, str, str, str]] = [
     (
-        "gain_c_to_b_i",
+        "gain_f_to_e",
+        "Increase in shared genes using best reference at Subspecies vs mgh78578",
+        "Shared-gene gain (genes)",
+        "granularity_gain_histogram_f_to_e",
+    ),
+    (
+        "gain_e_to_d",
+        "Increase in shared genes using best reference at SL vs Subspecies",
+        "Shared-gene gain (genes)",
+        "granularity_gain_histogram_e_to_d",
+    ),
+    (
+        "gain_d_to_c",
         "Increase in shared genes using best reference at CG level vs SL",
         "Shared-gene gain (genes)",
-        "granularity_gain_histogram_c_to_b_i",
+        "granularity_gain_histogram_d_to_c",
     ),
     (
-        "gain_b_i_to_b_ii",
+        "gain_c_to_b",
         "Increase in shared genes using best reference at CG/K-locus level vs CG",
         "Shared-gene gain (genes)",
-        "granularity_gain_histogram_b_i_to_b_ii",
+        "granularity_gain_histogram_c_to_b",
     ),
     (
-        "gain_b_ii_to_a",
+        "gain_b_to_a",
         "Increase in shared genes using best reference per-sample vs CG/K-locus",
         "Shared-gene gain (genes)",
-        "granularity_gain_histogram_b_ii_to_a",
+        "granularity_gain_histogram_b_to_a",
     ),
 ]
 
@@ -170,7 +180,7 @@ def plot_granularity_lollipop(
     out_dir: str,
     *,
     top_n: int | None = None,
-    sort_by: str = "shared_genes_d",
+    sort_by: str = "shared_genes_f",
     highlight_cg_gain_genes: float | None = 20.0,
     filename_stem: str = "granularity_lollipop_sl",
     highlight_color: str | None = None,
@@ -194,9 +204,9 @@ def plot_granularity_lollipop(
     top_n
         If set, keep only the top_n strains with highest gain_b_to_a.
     sort_by
-        Column to sort strains by (default "shared_genes_d").
+        Column to sort strains by (default "shared_genes_f").
     highlight_cg_gain_genes
-        If not None, restrict the highlight set to rows with ``gain_c_to_b_i``
+        If not None, restrict the highlight set to rows with ``gain_d_to_c``
         above this many genes (default 20). Pass None to disable the gain
         criterion (highlight purely by ``highlight_row_types``).
     filename_stem
@@ -224,16 +234,16 @@ def plot_granularity_lollipop(
     if row_type_filter is not None and "row_type" in df.columns:
         df = df[df["row_type"].isin(row_type_filter)].copy()
 
-    # Keep only rows with the five plotted level values (e is intentionally omitted)
+    # Keep only rows with all six plotted level values present.
     df = df[
-        df[["shared_genes_d", "shared_genes_c",
-            "shared_genes_b_i", "shared_genes_b_ii", "shared_genes_a"]]
+        df[["shared_genes_f", "shared_genes_e", "shared_genes_d",
+            "shared_genes_c", "shared_genes_b", "shared_genes_a"]]
         .notna()
         .all(axis=1)
     ].copy()
 
     if df.empty:
-        raise ValueError("No complete rows after filtering for d/c/b_i/b_ii/a levels")
+        raise ValueError("No complete rows after filtering for f/e/d/c/b/a levels")
 
     if top_n:
         df = df.nlargest(top_n, "gain_b_to_a")
@@ -251,7 +261,7 @@ def plot_granularity_lollipop(
             if rt not in highlight_row_types:
                 return False
         if highlight_cg_gain_genes is not None:
-            gain = getattr(row, "gain_c_to_b_i", None)
+            gain = getattr(row, "gain_d_to_c", None)
             if gain is None or pd.isna(gain) or float(gain) <= highlight_cg_gain_genes:
                 return False
         return highlight_row_types is not None or highlight_cg_gain_genes is not None
@@ -259,19 +269,21 @@ def plot_granularity_lollipop(
     fig, ax = plt.subplots(figsize=(16, 9))
 
     for row in df.itertuples():
-        levels = ["d", "c", "b_i", "b_ii", "a"]
+        levels = ["f", "e", "d", "c", "b", "a"]
         values = [
+            row.shared_genes_f,
+            row.shared_genes_e,
             row.shared_genes_d,
             row.shared_genes_c,
-            row.shared_genes_b_i,
-            row.shared_genes_b_ii,
+            row.shared_genes_b,
             row.shared_genes_a,
         ]
         fallback = [
             False,
+            getattr(row, "fallback_e", False),
             False,
-            getattr(row, "fallback_b_i", False),
-            getattr(row, "fallback_b_ii", False),
+            getattr(row, "fallback_c", False),
+            getattr(row, "fallback_b", False),
             False,
         ]
 
@@ -324,16 +336,17 @@ def plot_granularity_lollipop(
         y_adj = _spread_labels(y_orig, min_gap)
         for (y_o, lbl, col, alp), y_a in zip(_annots, y_adj):
             if abs(y_a - y_o) > min_gap * 0.15:
-                ax.plot([4.05, 4.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
-            ax.text(4.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
+                ax.plot([5.05, 5.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
+            ax.text(5.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
 
     ax.set_ylabel("Shared genes with reference genome", fontsize=11, fontweight="bold")
-    ax.set_xticks(range(5))
+    ax.set_xticks(range(6))
     ax.set_xticklabels(
-        ["d: Ref mgh78578",
-         "c: Best RefSeq in SL / Subspecies Batch",
-         "b.i: Best RefSeq in CG",
-         "b.ii: Best RefSeq in CG / K-locus",
+        ["f: Ref mgh78578",
+         "e: Best RefSeq in Subspecies",
+         "d: Best RefSeq in SL",
+         "c: Best RefSeq in CG",
+         "b: Best RefSeq in CG / K-locus",
          "a: Best RefSeq Per-Sample"],
         fontsize=10,
     )
@@ -380,12 +393,13 @@ def plot_granularity_lollipop(
 
 
 def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
-    """Write per-CG gains and a 4-line summary of mean+range across transitions.
+    """Write per-CG gains and a summary of mean+range across all transitions.
 
-    Per-CG table is sorted by ``gain_c_to_b_i`` descending and reports absolute
-    gene gains for c→b.i, b.i→b.ii, b.ii→a, plus the total c→a gain. The
-    summary block reports mean + range across kp_epidemic CGs for each of the
-    four transitions (mgh→SL, SL→CG, CG→CG/KL, CG/KL→per-sample).
+    Per-CG table is sorted by ``gain_d_to_c`` descending and reports absolute
+    gene gains for d→c, c→b, b→a, plus the total d→a gain. The summary block
+    reports mean + range across kp_epidemic CGs for each of the five
+    consecutive transitions: mgh→Subspecies, Subspecies→SL, SL→CG, CG→CG/KL,
+    CG/KL→per-sample.
     """
     epi = df[df["row_type"] == "kp_epidemic"].copy() if "row_type" in df.columns else df.copy()
 
@@ -396,20 +410,20 @@ def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
         "",
     ]
 
-    abs_col = "gain_c_to_b_i"
+    abs_col = "gain_d_to_c"
     if abs_col not in epi.columns or epi.empty:
-        lines.append("(gain_c_to_b_i column not found or no epidemic CGs — log empty)")
+        lines.append("(gain_d_to_c column not found or no epidemic CGs — log empty)")
         with open(log_path, "w") as fh:
             fh.write("\n".join(lines) + "\n")
         return
 
     # ---- Per-CG table ----
     epi = epi.sort_values(abs_col, ascending=False).reset_index(drop=True)
-    # total_gain_c_to_a may not be present as a column; compute on the fly.
+    # total_gain_d_to_a: sum of d→c, c→b, b→a (not present as a column).
     total = (
-        epi.get("gain_c_to_b_i", 0)
-        + epi.get("gain_b_i_to_b_ii", 0)
-        + epi.get("gain_b_ii_to_a", 0)
+        epi.get("gain_d_to_c", 0)
+        + epi.get("gain_c_to_b", 0)
+        + epi.get("gain_b_to_a", 0)
     )
 
     col_w = max(len(str(s)) for s in epi["strain"]) + 2 if "strain" in epi.columns else 8
@@ -418,11 +432,11 @@ def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
     )
     header = (
         f"  {'strain':<{col_w}} {'Sublineage':<{sl_w}} {'n_samples':>10}"
-        f"  {'gain_c_to_b_i':>13}  {'gain_b_i_to_b_ii':>16}"
-        f"  {'gain_b_ii_to_a':>14}  {'total_gain_c_to_a':>17}"
+        f"  {'gain_d_to_c':>13}  {'gain_c_to_b':>11}"
+        f"  {'gain_b_to_a':>11}  {'total_gain_d_to_a':>17}"
     )
     lines += [
-        "=== Per-CG gains (sorted by gain_c_to_b_i descending) ===",
+        "=== Per-CG gains (sorted by gain_d_to_c descending) ===",
         header,
         "  " + "-" * (len(header) - 2),
     ]
@@ -431,18 +445,19 @@ def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
             f"  {str(r.get('strain','')):<{col_w}} "
             f"{str(r.get('Sublineage','')):<{sl_w}} "
             f"{int(r.get('n_samples', 0)):>10d}  "
-            f"{r.get('gain_c_to_b_i', float('nan')):>13.1f}  "
-            f"{r.get('gain_b_i_to_b_ii', float('nan')):>16.1f}  "
-            f"{r.get('gain_b_ii_to_a', float('nan')):>14.1f}  "
+            f"{r.get('gain_d_to_c', float('nan')):>13.1f}  "
+            f"{r.get('gain_c_to_b', float('nan')):>11.1f}  "
+            f"{r.get('gain_b_to_a', float('nan')):>11.1f}  "
             f"{float(total.iloc[i]):>17.1f}"
         )
 
     # ---- Summary of gains across all kp_epidemic CGs ----
     transitions = [
-        ("Reference mgh → SL / Subspecies (d → c)", "gain_d_to_c"),
-        ("SL → CG                       (c → b.i)", "gain_c_to_b_i"),
-        ("CG → CG/K-locus            (b.i → b.ii)", "gain_b_i_to_b_ii"),
-        ("CG/K-locus → Individual    (b.ii → a)  ", "gain_b_ii_to_a"),
+        ("mgh → Subspecies         (f → e)", "gain_f_to_e"),
+        ("Subspecies → SL          (e → d)", "gain_e_to_d"),
+        ("SL → CG                  (d → c)", "gain_d_to_c"),
+        ("CG → CG/K-locus          (c → b)", "gain_c_to_b"),
+        ("CG/K-locus → Per-Sample  (b → a)", "gain_b_to_a"),
     ]
     lines += ["", f"=== Summary of gains across kp_epidemic CGs (n={len(epi)}) ==="]
     for label, col in transitions:
@@ -468,8 +483,8 @@ def main(argv=None):
     parser.add_argument("--out-dir", required=True, help="Output directory for PNG/PDF/log")
     parser.add_argument("--top-n", type=int, default=None,
                         help="Keep only top_n strains by gain_b_to_a")
-    parser.add_argument("--sort-by", default="shared_genes_d",
-                        help="Column to sort by (default: shared_genes_d)")
+    parser.add_argument("--sort-by", default="shared_genes_f",
+                        help="Column to sort by (default: shared_genes_f)")
     parser.add_argument("--highlight-cg-gain-genes", default="20",
                         help="Threshold for c→b gain to qualify as 'highlighted'; pass 'none' to disable (default 20)")
     parser.add_argument("--filename-stem", default="granularity_lollipop_sl",

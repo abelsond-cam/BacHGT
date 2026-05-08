@@ -1,8 +1,14 @@
 """Split curated sample metadata into Panaroo-sized TSV batches.
 
 Sublineage splits, species batches, and rare Klebsiella pneumoniae packs with
-deterministic shuffles and reference-genome handling. Writes batch TSVs and
-panaroo_batching.log under ``<output_dir>/batches/`` (see BATCHES_SUBDIR).
+deterministic shuffles. Every batch TSV has the **reference bucket** attached:
+a curated TSV (default: ``<DATA_ROOT>/final/reference_bucket.tsv``, produced by
+``build_reference_bucket.py``) of Sample IDs to ride along on every Panaroo run
+so the same fixed pool of references is available cross-batch. If the bucket
+TSV is missing, falls back to ``is_mgh78578`` alone (matches pre-bucket
+behaviour). Bucket rows carry ``is_reference_bucket=True`` in the output.
+
+Writes batch TSVs and ``panaroo_batching.log`` under ``<output_dir>/batches/``.
 
 Run: uv run python src/bacotype/pp/panaroo_metadata_batching.py
 """
@@ -27,6 +33,9 @@ DEFAULT_METADATA = Path(
 )
 DEFAULT_OUTPUT_DIR = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome"
+)
+DEFAULT_REFERENCE_BUCKET_TSV = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/reference_bucket.tsv"
 )
 LOG_FILENAME = "panaroo_batching.log"
 # Batch TSVs and panaroo_batching.log live under output_dir / BATCHES_SUBDIR.
@@ -85,24 +94,45 @@ def write_tsv(
     df: pd.DataFrame,
     log: RunLog,
     written_counts: Counter[str],
+    bucket_ids: set[str],
 ) -> None:
     _strip_for_csv(df).to_csv(path, sep="\t", index=False)
     n = len(df)
     n_g, n_n = count_refs(df)
+    sample_ids = set(df["Sample"].astype(str))
+    n_bucket_refs = len(sample_ids & bucket_ids)
     warn = ""
-    if n_g > 1:
-        warn = "  WARNING: n_global > 1"
-    elif n_g == 0:
-        warn = "  NOTE: n_global == 0"
+    if n_g != 1:
+        warn += f"  WARNING: n_global={n_g} (expected 1)"
+    if n_bucket_refs != len(bucket_ids):
+        warn += (
+            f"  WARNING: reference bucket incomplete "
+            f"({n_bucket_refs}/{len(bucket_ids)} present)"
+        )
     log.line(f"  WROTE {path}")
-    log.line(f"    rows={n}  n_global={n_g}  n_norway={n_n}{warn}")
+    log.line(
+        f"    rows={n}  n_bucket_refs={n_bucket_refs}  "
+        f"n_global={n_g}  n_norway={n_n}{warn}"
+    )
     for sid in df["Sample"].astype(str):
         written_counts[sid] += 1
 
 
-def append_global_dedupe(df: pd.DataFrame, global_row: pd.DataFrame) -> pd.DataFrame:
-    out = pd.concat([df, global_row], ignore_index=True)
-    return out.drop_duplicates(subset=["Sample"], keep="first")
+def _attach_reference_bucket(df: pd.DataFrame, bucket: pd.DataFrame) -> pd.DataFrame:
+    """Attach the reference bucket to a batch core.
+
+    Strips only rows whose ``Sample`` ID overlaps with the bucket — non-bucket
+    RefSeqs that organically sit in the core (e.g. K. variicola RefSeqs that
+    aren't Norway-completes) are preserved and continue to participate in the
+    Panaroo pangenome at level d/c/b/a. NO ``drop_duplicates`` anywhere.
+
+    The bucket itself is expected to already carry ``is_reference_bucket=True``
+    on every row (stamped once at construction time in ``main``).
+    """
+    bucket_sample_ids = set(bucket["Sample"].astype(str))
+    if "Sample" in df.columns:
+        df = df.loc[~df["Sample"].astype(str).isin(bucket_sample_ids)]
+    return pd.concat([df, bucket], ignore_index=True)
 
 
 def shuffle_two_parts(core: pd.DataFrame, seed: int) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -130,15 +160,6 @@ def shuffle_n_parts(core: pd.DataFrame, n_parts: int, seed: int) -> list[pd.Data
     return [shuffled.iloc[g].copy() for g in idx_groups]
 
 
-def add_refs_to_batch(
-    core_batch: pd.DataFrame,
-    global_row: pd.DataFrame,
-    norway_in_sl: pd.DataFrame,
-) -> pd.DataFrame:
-    out = pd.concat([core_batch, global_row, norway_in_sl], ignore_index=True)
-    return out.drop_duplicates(subset=["Sample"], keep="first")
-
-
 def species_to_basename(species: str) -> str:
     safe = re.sub(r"[^\w\-. ]+", "_", str(species))
     safe = re.sub(r"\s+", "_", safe.strip())
@@ -158,6 +179,14 @@ def main(argv: list[str] | None = None) -> None:
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
         help=f"Project root; batch TSVs and {LOG_FILENAME} are written under <dir>/{BATCHES_SUBDIR}/",
+    )
+    p.add_argument(
+        "--reference-bucket-tsv",
+        type=Path,
+        default=DEFAULT_REFERENCE_BUCKET_TSV,
+        help="TSV listing Sample IDs to attach to every batch as references "
+        "(produced by build_reference_bucket.py). Falls back to is_mgh78578 "
+        "alone if the file is missing.",
     )
     p.add_argument("--min-sublineage", type=int, default=250)
     p.add_argument(
@@ -209,6 +238,49 @@ def main(argv: list[str] | None = None) -> None:
         global_row = global_rows.iloc[:1].copy()
         gid = str(global_row["Sample"].iloc[0])
         log.line(f"Global reference Sample: {gid}")
+
+        # Reference bucket — attached to every batch so each Panaroo run sees
+        # the same curated set of comparison references. Loaded from a TSV
+        # (one Sample ID per line under header "Sample") at args.reference_bucket_tsv.
+        # If the file is missing, fall back to is_mgh78578 alone (matches the
+        # pre-bucket behaviour). The bucket members carry an is_reference_bucket=True
+        # column in every output batch TSV.
+        bucket_path = args.reference_bucket_tsv.resolve()
+        if bucket_path.is_file():
+            bucket_ids_from_tsv = set(
+                pd.read_csv(bucket_path, sep="\t")["Sample"].astype(str)
+            )
+            bucket_refs = kpsc.loc[
+                kpsc["Sample"].astype(str).isin(bucket_ids_from_tsv)
+            ].copy()
+            log.line(
+                f"Reference bucket from {bucket_path}: "
+                f"n={len(bucket_refs)} of {len(bucket_ids_from_tsv)} listed IDs"
+            )
+            missing_from_kpsc = bucket_ids_from_tsv - set(
+                bucket_refs["Sample"].astype(str)
+            )
+            if missing_from_kpsc:
+                log.line(
+                    f"WARNING: {len(missing_from_kpsc)} bucket Sample IDs not "
+                    f"found in kpsc_final_list metadata (showing up to 20): "
+                    f"{sorted(missing_from_kpsc)[:20]}"
+                )
+        else:
+            log.line(
+                f"Reference bucket: {bucket_path} not found; "
+                f"falling back to is_mgh78578 only."
+            )
+            bucket_refs = kpsc.loc[as_bool(kpsc["is_mgh78578"])].copy()
+
+        if gid not in set(bucket_refs["Sample"].astype(str)):
+            log.line(f"ERROR: mgh78578 ({gid}) is not in the reference bucket")
+            sys.exit(1)
+        # Stamp the bucket-membership flag once; every output batch TSV inherits
+        # this column on the bucket rows (and missing/False on non-bucket rows).
+        bucket_refs["is_reference_bucket"] = True
+        bucket_ids = set(bucket_refs["Sample"].astype(str))
+        log.line(f"Reference bucket size: {len(bucket_refs)} (incl. mgh {gid})")
         log.line("")
 
         has_sl = kpsc["Sublineage"].notna()
@@ -229,17 +301,19 @@ def main(argv: list[str] | None = None) -> None:
             sl_df = kpsc[has_sl & (kpsc["_sl_norm"] == sl_norm)].copy()
             label = str(sl_df["Sublineage"].iloc[0]).strip()
             n = len(sl_df)
-            norway_in_sl = sl_df.loc[as_bool(sl_df["is_complete_norway_genome"])].copy()
-            ref_b = as_bool(sl_df["is_mgh78578"]) | as_bool(sl_df["is_complete_norway_genome"])
-            core = sl_df.loc[~ref_b].copy()
+            # The reference bucket is attached at write time. Bucket members
+            # already in sl_df (e.g. an sl_df-resident Norway-complete) are
+            # stripped by Sample-ID overlap inside _attach_reference_bucket;
+            # other refseqs in sl_df (none expected here, but defensive) stay.
+            core = sl_df.copy()
 
             if sl_norm == sl258_norm:
                 log.line(f"  {label}: n={n} -> SL258 path ({args.sl258_parts} parts)")
                 parts = shuffle_n_parts(core, args.sl258_parts, args.seed)
                 for i, part_core in enumerate(parts):
-                    batch = add_refs_to_batch(part_core, global_row, norway_in_sl)
+                    batch = _attach_reference_bucket(part_core, bucket_refs)
                     out_path = batches_dir / f"{label}_part_{i}.tsv"
-                    write_tsv(out_path, batch, log, written_counts)
+                    write_tsv(out_path, batch, log, written_counts, bucket_ids)
                 continue
 
             if n >= args.split_high and sl_norm != sl258_norm:
@@ -253,16 +327,16 @@ def main(argv: list[str] | None = None) -> None:
                 log.line(f"  {label}: n={n} -> 2-way split (core n={len(core)})")
                 p0, p1 = shuffle_two_parts(core, args.seed)
                 for i, part_core in enumerate((p0, p1)):
-                    batch = add_refs_to_batch(part_core, global_row, norway_in_sl)
+                    batch = _attach_reference_bucket(part_core, bucket_refs)
                     out_path = batches_dir / f"{label}_part_{i}.tsv"
-                    write_tsv(out_path, batch, log, written_counts)
+                    write_tsv(out_path, batch, log, written_counts, bucket_ids)
                 continue
 
             if min_sl <= n <= args.split_low:
-                log.line(f"  {label}: n={n} -> single file (+ global if missing)")
-                batch = append_global_dedupe(sl_df, global_row)
+                log.line(f"  {label}: n={n} -> single file (+ reference bucket)")
+                batch = _attach_reference_bucket(sl_df, bucket_refs)
                 out_path = batches_dir / f"{label}.tsv"
-                write_tsv(out_path, batch, log, written_counts)
+                write_tsv(out_path, batch, log, written_counts, bucket_ids)
                 continue
 
             log.line(f"ERROR: uncategorized large sublineage {label!r} n={n}")
@@ -279,11 +353,11 @@ def main(argv: list[str] | None = None) -> None:
         log.line(f"Non–{kp_name} species groups: {non_kp['species'].nunique()}")
 
         for species, grp in non_kp.groupby("species", sort=False):
-            batch = append_global_dedupe(grp, global_row)
+            batch = _attach_reference_bucket(grp, bucket_refs)
             base = species_to_basename(species)
             out_path = batches_dir / f"species_{base}.tsv"
             log.line(f"  species batch: {species!r} -> {out_path.name}")
-            write_tsv(out_path, batch, log, written_counts)
+            write_tsv(out_path, batch, log, written_counts, bucket_ids)
 
         kp_rem = remaining.loc[remaining["species"] == kp_name].copy()
         log.line("")
@@ -306,48 +380,65 @@ def main(argv: list[str] | None = None) -> None:
                 current_count += len(sl_part)
                 if current_count > args.kp_batch_min:
                     batch_df = pd.concat(current_parts, ignore_index=True)
-                    batch_df = append_global_dedupe(batch_df, global_row)
+                    batch_df = _attach_reference_bucket(batch_df, bucket_refs)
                     out_path = batches_dir / f"kp_rare_sublineage_batch_{batch_i}.tsv"
                     log.line(
                         f"  flush batch {batch_i}: {current_count} rows "
                         f"across {len(current_parts)} sublineage keys"
                     )
-                    write_tsv(out_path, batch_df, log, written_counts)
+                    write_tsv(out_path, batch_df, log, written_counts, bucket_ids)
                     batch_i += 1
                     current_parts = []
                     current_count = 0
 
             if current_parts:
                 batch_df = pd.concat(current_parts, ignore_index=True)
-                batch_df = append_global_dedupe(batch_df, global_row)
+                batch_df = _attach_reference_bucket(batch_df, bucket_refs)
                 out_path = batches_dir / f"kp_rare_sublineage_batch_{batch_i}.tsv"
                 log.line(
                     f"  final batch {batch_i}: {len(batch_df)} rows "
                     f"across {len(current_parts)} sublineage keys"
                 )
-                write_tsv(out_path, batch_df, log, written_counts)
+                write_tsv(out_path, batch_df, log, written_counts, bucket_ids)
 
         log.line("")
         log.line("--- Coverage check (kpsc_final_list samples vs written) ---")
         all_ids = set(kpsc["Sample"].astype(str))
-        missing_non_global = sorted(s for s in all_ids if s != gid and written_counts[s] == 0)
-        dup_non_global = sorted(s for s in all_ids if s != gid and written_counts[s] > 1)
-        if written_counts[gid] < 1:
-            log.line("WARNING: global reference sample never written to any output file.")
-        if missing_non_global:
+        # Bucket samples are intentionally written to every batch — exclude them
+        # from the missing/dup checks (they're expected to appear N times each).
+        non_bucket_ids = all_ids - bucket_ids
+        missing_non_bucket = sorted(
+            s for s in non_bucket_ids if written_counts[s] == 0
+        )
+        dup_non_bucket = sorted(
+            s for s in non_bucket_ids if written_counts[s] > 1
+        )
+        if missing_non_bucket:
             log.line(
-                f"WARNING: {len(missing_non_global)} non-global samples never written "
-                f"(showing up to 20): {missing_non_global[:20]}"
+                f"WARNING: {len(missing_non_bucket)} non-bucket samples never written "
+                f"(showing up to 20): {missing_non_bucket[:20]}"
             )
-        if dup_non_global:
+        if dup_non_bucket:
             log.line(
-                f"WARNING: {len(dup_non_global)} non-global samples appear in multiple "
-                f"outputs (showing up to 20): {dup_non_global[:20]}"
+                f"WARNING: {len(dup_non_bucket)} non-bucket samples appear in multiple "
+                f"outputs (showing up to 20): {dup_non_bucket[:20]}"
             )
-        if not missing_non_global and not dup_non_global:
+        # Bucket ref appearance: each bucket sample should be in *every* batch.
+        ref_counts = sorted(
+            (sid, written_counts[sid]) for sid in bucket_ids
+        )
+        ref_count_set = {c for _, c in ref_counts}
+        if len(ref_count_set) != 1:
             log.line(
-                "Each non-global kpsc_final_list sample appears in exactly one output file; "
-                f"global reference appears in {written_counts[gid]} files (expected >1)."
+                f"WARNING: bucket samples appear in inconsistent batch counts: "
+                f"{sorted(ref_count_set)}"
+            )
+        if not missing_non_bucket and not dup_non_bucket and len(ref_count_set) == 1:
+            n_batches = next(iter(ref_count_set))
+            log.line(
+                "Each non-bucket kpsc_final_list sample appears in exactly one "
+                f"output file; each of the {len(bucket_ids)} bucket samples "
+                f"appears in all {n_batches} output files."
             )
         log.line("")
         log.line(f"Done. Log: {log_path}")
