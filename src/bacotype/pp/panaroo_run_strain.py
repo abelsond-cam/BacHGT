@@ -63,9 +63,12 @@ def _load_convert_from_panaroo_fork():
 convert = _load_convert_from_panaroo_fork()
 
 
-DATA_ROOT = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
+# BASE_DIR is project_k root — paths in metadata (e.g. seb/..., david/raw/...)
+# are stored relative to it. DATA_ROOT is our personal subtree under it.
+PROJECT_K_ROOT = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw"
+DATA_ROOT = f"{PROJECT_K_ROOT}/david"
 METADATA_FILE = Path(f"{DATA_ROOT}/final/metadata_final_curated_slimmed.tsv")
-BASE_DIR = Path(DATA_ROOT)
+BASE_DIR = Path(PROJECT_K_ROOT)
 DEFAULT_OUTDIR = Path(f"{DATA_ROOT}/processed/panaroo_run")
 PANAROO_INPUT_FILENAME = "panaroo_input.txt"
 SAMPLE_METADATA_PART_FILENAME = "sample_metadata.tsv"
