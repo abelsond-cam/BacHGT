@@ -44,7 +44,7 @@ export PYTHONDONTWRITEBYTECODE=1
 
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
-PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
+PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome_v2"
 DIRECTORY_LEAF="SL1"  # Used when PANAROO_DIR is empty
 PANAROO_DIR=""                 # Full path override; leave empty to use DIRECTORY_LEAF
 

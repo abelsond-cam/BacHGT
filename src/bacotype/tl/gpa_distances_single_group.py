@@ -79,7 +79,7 @@ print(
 )
 
 PANAROO_RUN_ROOT = (
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2"
 )
 DEFAULT_METADATA_PATH = (
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_all_samples_and_columns.tsv"

@@ -32,7 +32,7 @@ DEFAULT_METADATA = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
 )
 DEFAULT_OUTPUT_DIR = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2"
 )
 DEFAULT_REFERENCE_BUCKET_TSV = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/reference_bucket.tsv"

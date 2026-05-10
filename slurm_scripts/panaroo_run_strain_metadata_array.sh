@@ -31,7 +31,7 @@
 #
 # Pipeline (details and fallback find commands at bottom of file):
 #   (i)   Generate batch TSVs with panaroo_metadata_batching.py under
-#         .../panaroo_with_reference_genome/batches/ (log + TSVs).
+#         .../panaroo_with_reference_genome_v2/batches/ (log + TSVs).
 #   (ii)  Build .list files with generate_panaroo_ref_tsv_lists.sh pointing at
 #         that batches/ directory (five phased lists + panaroo_ref_tsvs_all.list).
 #   (iii) Submit with sbatch --array=1-$(wc -l < list)%M ...
@@ -70,10 +70,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-: "${LIST_FILE:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome/batches/panaroo_ref_tsvs_all.list}"
+: "${LIST_FILE:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2/batches/panaroo_ref_tsvs_all.list}"
 : "${CLEAN_MODE:=strict}"
 : "${N_SAMPLES:=-1}"
-: "${OUTDIR:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome}"
+: "${OUTDIR:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2}"
 
 if [[ -z "${SLURM_ARRAY_TASK_ID:-}" ]]; then
   echo "ERROR: This script is for Slurm array jobs. Submit with sbatch --array=1-N%M ..." >&2
@@ -131,7 +131,7 @@ exec bash "$STRAIN_SCRIPT" \
 
 # -----------------------------------------------------------------------------
 # Layout after runs:
-#   ROOT/                                     (= OUTDIR, default panaroo_with_reference_genome)
+#   ROOT/                                     (= OUTDIR, default panaroo_with_reference_genome_v2)
 #     batches/                                (generated TSVs + log + .list files, untouched by runs)
 #       SL101.tsv  SL258_part_0.tsv  ...
 #       panaroo_batching.log
@@ -143,7 +143,7 @@ exec bash "$STRAIN_SCRIPT" \
 #       ...
 #
 # Paths for copy-paste:
-#   ROOT=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome
+#   ROOT=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2
 #   BATCHES=$ROOT/batches
 #   REPO=/home/dca36/workspace/Bacotype
 #

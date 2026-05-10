@@ -31,7 +31,7 @@
 
 set -euo pipefail
 
-DEFAULT_BATCH_DIR="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome/batches"
+DEFAULT_BATCH_DIR="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2/batches"
 SL258_PREFIX="${SL258_PREFIX:-SL258}"
 
 usage() {
