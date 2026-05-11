@@ -110,6 +110,17 @@ def plot_cg_virulence_penetrance(
     elif "complete_ci_high" not in plot_df.columns:
         print("CI filter: skipped -- 'complete_ci_high' not in df.")
 
+    # Drop both-zero edge points: both cohorts observe zero -> nothing to compare.
+    if {"complete_count", "sr_count"}.issubset(plot_df.columns):
+        edge_mask = (plot_df["complete_count"] == 0) & (plot_df["sr_count"] == 0)
+        n_edge = int(edge_mask.sum())
+        if n_edge:
+            plot_df = plot_df.loc[~edge_mask].copy()
+            print(
+                f"Edge filter: dropped {n_edge} (CG, BSC) points with both "
+                f"complete_count == 0 AND sr_count == 0 (no signal to compare)."
+            )
+
     n_hi = max(ALPHA_N_RELIABLE, min_complete + 1)
 
     fig, ax = plt.subplots(figsize=figsize)
@@ -134,6 +145,16 @@ def plot_cg_virulence_penetrance(
         scale_note = f" (symlog, linthresh={linthresh:g})"
         ax.set_xlim(-linthresh / 2, 1.1)
         ax.set_ylim(-linthresh / 2, 1.1)
+        # Pin major + minor ticks so no decade label lands inside the linear region.
+        log_decades = [10.0**k for k in range(-3, 1) if 10.0**k > linthresh]
+        major_ticks = [0.0, *log_decades]
+        minor_ticks = sorted({round(m * d, 6) for d in log_decades for m in range(2, 10) if m * d <= 1.0})
+        for setter_major, setter_minor in (
+            (ax.set_xticks, ax.set_xticks),
+            (ax.set_yticks, ax.set_yticks),
+        ):
+            setter_major(major_ticks)
+            setter_minor(minor_ticks, minor=True)
     else:
         scale_note = ""
         ax.set_xlim(-0.02, 1.02)
