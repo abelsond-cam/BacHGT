@@ -31,7 +31,7 @@ Usage
 ─────
     uv run python src/bacotype/pp/download_data/gca_to_gcf_lookup.py
         [--input PATH]    # default: <DATA_ROOT>/processed/ena_sample_assembly_lookup.tsv
-        [--output PATH]   # default: <DATA_ROOT>/processed/ena_sample_assembly_lookup_with_gcf.tsv
+        [--output PATH]   # default: <DATA_ROOT>/processed/refseq_lr_assembly_lookup.tsv
         [--batch N]       # default: 100
 
 The output TSV is the input TSV plus these new columns:
@@ -43,6 +43,24 @@ The output TSV is the input TSV plus these new columns:
   ncbi_assembly_method     submitter-reported assembler (e.g. "Unicycler v. 0.4.8")
   ncbi_refseq_category     "reference genome" / "representative genome" / NaN
   ncbi_genome_notes        e.g. "superseded by newer assembly for species"
+
+  Assembly stats (from assembly_stats sub-dict):
+    ncbi_genome_size        total_sequence_length (bp)
+    ncbi_n_scaffolds        number_of_scaffolds
+    ncbi_scaffold_n50       scaffold_n50
+    ncbi_scaffold_l50       scaffold_l50
+    ncbi_n_contigs          number_of_contigs
+    ncbi_contig_n50         contig_n50
+    ncbi_contig_l50         contig_l50
+    ncbi_genome_coverage    genome_coverage (string, e.g. "240")
+    ncbi_gc_percent         gc_percent
+    ncbi_n_chromosomes      total_number_of_chromosomes
+
+  Why-might-RefSeq-have-skipped-it signals:
+    ncbi_completeness       checkm_info.completeness (RefSeq usually needs ≥ 95)
+    ncbi_contamination      checkm_info.contamination (RefSeq usually needs ≤ 5)
+    ncbi_taxonomy_check     average_nucleotide_identity.taxonomy_check_status
+    ncbi_ani_match_status   average_nucleotide_identity.match_status (e.g. species_match)
 """
 
 from __future__ import annotations
@@ -58,7 +76,7 @@ import requests
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david")
 DEFAULT_INPUT = DATA_ROOT / "processed" / "ena_sample_assembly_lookup.tsv"
-DEFAULT_OUTPUT = DATA_ROOT / "processed" / "ena_sample_assembly_lookup_with_gcf.tsv"
+DEFAULT_OUTPUT = DATA_ROOT / "processed" / "refseq_lr_assembly_lookup.tsv"
 
 NCBI_DATASETS = "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession"
 DEFAULT_BATCH = 100
@@ -142,9 +160,23 @@ def query_ncbi(accessions: list[str], headers: dict[str, str]) -> list[dict]:
     return []
 
 
+def _to_int(v: object) -> int | None:
+    """assembly_stats stores some numeric fields as strings (e.g. '6013171').
+    Convert to int when possible; preserve None / empty as None."""
+    if v is None or v == "":
+        return None
+    try:
+        return int(v)
+    except (TypeError, ValueError):
+        return None
+
+
 def extract_row(report: dict) -> dict:
     """Pull the fields we care about out of one NCBI report dict."""
     ai = report.get("assembly_info", {}) or {}
+    stats = report.get("assembly_stats", {}) or {}
+    checkm = report.get("checkm_info", {}) or {}
+    ani = report.get("average_nucleotide_identity", {}) or {}
     notes = ai.get("genome_notes")
     if isinstance(notes, list):
         notes = "; ".join(str(n) for n in notes)
@@ -157,6 +189,22 @@ def extract_row(report: dict) -> dict:
         "ncbi_assembly_method": ai.get("assembly_method"),
         "ncbi_refseq_category": ai.get("refseq_category"),
         "ncbi_genome_notes": notes,
+        # assembly_stats — user-requested + GC + chromosome count
+        "ncbi_genome_size": _to_int(stats.get("total_sequence_length")),
+        "ncbi_n_scaffolds": stats.get("number_of_scaffolds"),
+        "ncbi_scaffold_n50": stats.get("scaffold_n50"),
+        "ncbi_scaffold_l50": stats.get("scaffold_l50"),
+        "ncbi_n_contigs": stats.get("number_of_contigs"),
+        "ncbi_contig_n50": stats.get("contig_n50"),
+        "ncbi_contig_l50": stats.get("contig_l50"),
+        "ncbi_genome_coverage": stats.get("genome_coverage"),
+        "ncbi_gc_percent": stats.get("gc_percent"),
+        "ncbi_n_chromosomes": stats.get("total_number_of_chromosomes"),
+        # Why might RefSeq have skipped this
+        "ncbi_completeness": checkm.get("completeness"),
+        "ncbi_contamination": checkm.get("contamination"),
+        "ncbi_taxonomy_check": ani.get("taxonomy_check_status"),
+        "ncbi_ani_match_status": ani.get("match_status"),
     }
 
 
@@ -309,6 +357,74 @@ def print_summary(merged: pd.DataFrame) -> None:
             .replace("\n", "\n  "),
             flush=True,
         )
+
+    # Why-rejected comparison: GCF-paired vs GCA-only assembly stats.
+    only_gca = has_gca & ~has_gcf
+    qstats = [
+        "ncbi_genome_size",
+        "ncbi_n_contigs",
+        "ncbi_contig_n50",
+        "ncbi_n_scaffolds",
+        "ncbi_completeness",
+        "ncbi_contamination",
+    ]
+    print("\nAssembly-stat medians (GCF-paired vs GCA-only):", flush=True)
+    rows = []
+    for col in qstats:
+        if col not in merged.columns:
+            continue
+        med_p = pd.to_numeric(merged.loc[has_gcf, col], errors="coerce").median()
+        med_o = pd.to_numeric(merged.loc[only_gca, col], errors="coerce").median()
+        rows.append(
+            {
+                "metric": col,
+                "median_gcf_paired": med_p,
+                "median_gca_only": med_o,
+            }
+        )
+    if rows:
+        print(pd.DataFrame(rows).to_string(index=False), flush=True)
+
+    print("\nTaxonomy / ANI status (GCA-only — possible RefSeq-reject reasons):", flush=True)
+    if only_gca.any():
+        print("  taxonomy_check_status:", flush=True)
+        print(
+            "    "
+            + merged.loc[only_gca, "ncbi_taxonomy_check"]
+            .fillna("(blank)")
+            .value_counts()
+            .head(10)
+            .to_string()
+            .replace("\n", "\n    "),
+            flush=True,
+        )
+        print("  ani_match_status:", flush=True)
+        print(
+            "    "
+            + merged.loc[only_gca, "ncbi_ani_match_status"]
+            .fillna("(blank)")
+            .value_counts()
+            .head(10)
+            .to_string()
+            .replace("\n", "\n    "),
+            flush=True,
+        )
+
+    print("\nGCA-only — fraction failing common RefSeq thresholds:", flush=True)
+    if only_gca.any():
+        sub = merged.loc[only_gca].copy()
+        comp = pd.to_numeric(sub["ncbi_completeness"], errors="coerce")
+        cont = pd.to_numeric(sub["ncbi_contamination"], errors="coerce")
+        n_eval = comp.notna().sum()
+        print(f"  with checkm reported: {n_eval} of {len(sub)}", flush=True)
+        if n_eval:
+            print(f"  completeness  < 95: {(comp < 95).sum()}  ({100 * (comp < 95).sum() / n_eval:.1f}%)", flush=True)
+            print(f"  contamination > 5:  {(cont > 5).sum()}  ({100 * (cont > 5).sum() / n_eval:.1f}%)", flush=True)
+            print(f"  EITHER threshold failed:  {((comp < 95) | (cont > 5)).sum()}  ({100 * ((comp < 95) | (cont > 5)).sum() / n_eval:.1f}%)", flush=True)
+        bad_tax = (
+            sub["ncbi_taxonomy_check"].fillna("").astype(str).str.lower() != "ok"
+        ) & sub["ncbi_taxonomy_check"].notna()
+        print(f"  taxonomy_check_status not OK:  {bad_tax.sum()}", flush=True)
 
 
 def main(argv: list[str] | None = None) -> int:
