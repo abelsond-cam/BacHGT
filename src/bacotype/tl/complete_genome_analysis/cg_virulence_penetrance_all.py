@@ -17,6 +17,7 @@ scatter PNG of complete-vs-SR penetrance produced by
 from __future__ import annotations
 
 import argparse
+from math import sqrt
 from pathlib import Path
 
 import pandas as pd
@@ -48,6 +49,20 @@ def bsc_presence_features(meta: pd.DataFrame) -> dict[str, pd.Series]:
     return out
 
 
+def wilson_ci(count: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval (default 95%) for a binomial proportion ``count / n``.
+
+    Returns ``(nan, nan)`` if ``n == 0``. Bounds are clipped to ``[0, 1]``.
+    """
+    if n == 0:
+        return float("nan"), float("nan")
+    p = count / n
+    denom = 1.0 + z * z / n
+    center = (p + z * z / (2 * n)) / denom
+    half = z * sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, center - half), min(1.0, center + half)
+
+
 def per_cg_bsc_penetrance(
     meta: pd.DataFrame,
     bsc_features: dict[str, pd.Series],
@@ -58,8 +73,10 @@ def per_cg_bsc_penetrance(
 ) -> pd.DataFrame:
     """Long-format penetrance table for every CG with ``n_complete >= min_complete``.
 
-    Columns: ``clonal_group, bsc, n_complete, n_sr, complete_penetrance, sr_penetrance``.
-    ``sr_penetrance`` is NaN for CGs with no short-read samples.
+    Columns: ``clonal_group, bsc, n_complete, n_sr, complete_count, sr_count,
+    complete_penetrance, sr_penetrance, complete_ci_low, complete_ci_high,
+    sr_ci_low, sr_ci_high``. CIs are Wilson 95%. SR fields are NaN when the CG
+    has no short-read samples.
     """
     df = meta.dropna(subset=[cg_col]).copy()
     df["_cg_str"] = df[cg_col].astype(str)
@@ -74,16 +91,26 @@ def per_cg_bsc_penetrance(
         n_sr = int(len(sub) - n_complete)
         for bsc, series in bsc_features.items():
             vals = series.loc[sub.index]
-            c_mean = float(vals[sub_refseq].mean()) if n_complete > 0 else float("nan")
-            s_mean = float(vals[~sub_refseq].mean()) if n_sr > 0 else float("nan")
+            c_count = int(vals[sub_refseq].sum()) if n_complete > 0 else 0
+            s_count = int(vals[~sub_refseq].sum()) if n_sr > 0 else 0
+            c_mean = c_count / n_complete if n_complete > 0 else float("nan")
+            s_mean = s_count / n_sr if n_sr > 0 else float("nan")
+            c_lo, c_hi = wilson_ci(c_count, n_complete)
+            s_lo, s_hi = wilson_ci(s_count, n_sr)
             rows.append(
                 {
                     "clonal_group": cg,
                     "bsc": bsc,
                     "n_complete": n_complete,
                     "n_sr": n_sr,
+                    "complete_count": c_count,
+                    "sr_count": s_count,
                     "complete_penetrance": c_mean,
                     "sr_penetrance": s_mean,
+                    "complete_ci_low": c_lo,
+                    "complete_ci_high": c_hi,
+                    "sr_ci_low": s_lo,
+                    "sr_ci_high": s_hi,
                 }
             )
 
@@ -111,6 +138,19 @@ def main() -> None:
         help="Minimum is_refseq=True genomes per CG (default: 20).",
     )
     parser.add_argument("--no-plot", action="store_true", help="Skip the scatter plot.")
+    parser.add_argument(
+        "--low-region-cutoff",
+        type=float,
+        default=0.25,
+        help="Penetrance below which a point is subject to the CI filter (default: 0.25).",
+    )
+    parser.add_argument(
+        "--max-complete-upper-ci",
+        type=float,
+        default=0.01,
+        help="In the low region, drop points whose Wilson 95%% upper CI on complete_penetrance "
+        "exceeds this value (default: 0.01). Set to 1.0 to disable.",
+    )
     args = parser.parse_args()
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -141,7 +181,13 @@ def main() -> None:
     from bacotype.pl.cg_virulence_penetrance_scatter import plot_cg_virulence_penetrance
 
     png_path = args.output_dir / f"{stem}.png"
-    plot_cg_virulence_penetrance(df, save_path=png_path, min_complete=args.min_complete)
+    plot_cg_virulence_penetrance(
+        df,
+        save_path=png_path,
+        min_complete=args.min_complete,
+        low_region_cutoff=args.low_region_cutoff,
+        max_complete_upper_ci=args.max_complete_upper_ci,
+    )
     print(f"Wrote {png_path}")
 
 

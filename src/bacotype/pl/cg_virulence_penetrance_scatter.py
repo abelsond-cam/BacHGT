@@ -50,6 +50,8 @@ def plot_cg_virulence_penetrance(
     min_complete: int = 20,
     log_scale: bool = True,
     linthresh: float = 0.01,
+    low_region_cutoff: float = 0.25,
+    max_complete_upper_ci: float = 0.01,
     figsize: tuple[float, float] = (8.0, 7.5),
 ) -> tuple[plt.Figure, plt.Axes]:
     """Scatter of complete-genome vs short-read penetrance, one point per (CG, BSC).
@@ -58,7 +60,8 @@ def plot_cg_virulence_penetrance(
     ----------
     df
         Long-format table with columns ``clonal_group, bsc, n_complete, n_sr,
-        complete_penetrance, sr_penetrance``.
+        complete_penetrance, sr_penetrance`` and (for the CI filter)
+        ``complete_ci_high``.
     save_path
         If given, save PNG to this path (parents created as needed).
     min_complete
@@ -70,6 +73,14 @@ def plot_cg_virulence_penetrance(
         plot at the corner while the low-penetrance region (~0-0.25) is expanded.
     linthresh
         Linear region of the symlog scale around zero. Default 0.01.
+    low_region_cutoff
+        Penetrance below which a point is considered "in the low region" subject
+        to the CI filter. Default 0.25.
+    max_complete_upper_ci
+        For low-region points, drop those whose Wilson 95% upper CI on
+        ``complete_penetrance`` exceeds this value -- they can't be placed
+        precisely enough at log scale to interpret. Default 0.01 (= ``linthresh``).
+        Set to 1.0 to disable the filter.
     figsize
         Figure size in inches.
     """
@@ -79,6 +90,22 @@ def plot_cg_virulence_penetrance(
         raise KeyError(f"df missing columns: {sorted(missing)}")
 
     plot_df = df.dropna(subset=["complete_penetrance", "sr_penetrance"]).copy()
+    if "complete_ci_high" in plot_df.columns and max_complete_upper_ci < 1.0:
+        n_before = len(plot_df)
+        drop_mask = (plot_df["complete_penetrance"] < low_region_cutoff) & (
+            plot_df["complete_ci_high"] > max_complete_upper_ci
+        )
+        n_dropped = int(drop_mask.sum())
+        plot_df = plot_df.loc[~drop_mask].copy()
+        print(
+            f"CI filter: dropped {n_dropped}/{n_before} points "
+            f"(complete_penetrance < {low_region_cutoff} AND "
+            f"complete_ci_high > {max_complete_upper_ci}); "
+            f"kept {len(plot_df)}."
+        )
+    elif "complete_ci_high" not in plot_df.columns:
+        print("CI filter: skipped -- 'complete_ci_high' not in df.")
+
     n_hi = max(ALPHA_N_RELIABLE, min_complete + 1)
 
     fig, ax = plt.subplots(figsize=figsize)
