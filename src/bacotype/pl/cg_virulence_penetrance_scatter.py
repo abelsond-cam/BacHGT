@@ -3,8 +3,10 @@
 Inputs the long-format table produced by
 ``bacotype.tl.complete_genome_analysis.cg_virulence_penetrance_all`` (one row
 per (CG, BSC)). Each point is one (CG, BSC). Color encodes the BSC; per-point
-alpha encodes ``n_complete`` -- pale at the inclusion threshold (default 10),
-opaque once the estimate is reliable (n >= 30).
+alpha encodes ``n_complete`` -- pale at the inclusion threshold, opaque once
+the estimate is reliable (n >= 30). Axes default to symlog so zero-penetrance
+points still render while the 0-0.25 region (where most signal lives) gets
+the bulk of the canvas.
 """
 
 from __future__ import annotations
@@ -30,14 +32,14 @@ BSC_COLORS: dict[str, str] = {
 
 ALPHA_MIN = 0.2
 ALPHA_MAX = 1.0
-ALPHA_N_LO = 10  # pale at this n_complete
-ALPHA_N_HI = 30  # opaque at and above this n_complete
+ALPHA_N_RELIABLE = 30  # n_complete at/above which estimate is treated as reliable -> alpha=1
 
 
-def _alpha_from_n(n) -> np.ndarray:
-    """Linear ramp from (n=10, alpha=0.2) to (n=30, alpha=1.0); clipped outside."""
+def _alpha_from_n(n, n_lo: int, n_hi: int = ALPHA_N_RELIABLE) -> np.ndarray:
+    """Linear ramp from (n=n_lo, alpha=0.2) to (n=n_hi, alpha=1.0); clipped outside."""
     n_arr = np.asarray(n, dtype=float)
-    frac = (n_arr - ALPHA_N_LO) / (ALPHA_N_HI - ALPHA_N_LO)
+    span = max(n_hi - n_lo, 1)
+    frac = (n_arr - n_lo) / span
     return np.clip(ALPHA_MIN + frac * (ALPHA_MAX - ALPHA_MIN), ALPHA_MIN, ALPHA_MAX)
 
 
@@ -45,7 +47,9 @@ def plot_cg_virulence_penetrance(
     df: pd.DataFrame,
     *,
     save_path: str | Path | None = None,
-    min_complete: int = 10,
+    min_complete: int = 20,
+    log_scale: bool = True,
+    linthresh: float = 0.01,
     figsize: tuple[float, float] = (8.0, 7.5),
 ) -> tuple[plt.Figure, plt.Axes]:
     """Scatter of complete-genome vs short-read penetrance, one point per (CG, BSC).
@@ -58,7 +62,14 @@ def plot_cg_virulence_penetrance(
     save_path
         If given, save PNG to this path (parents created as needed).
     min_complete
-        Used only for the x-axis label / title.
+        Inclusion threshold; also sets the low end of the alpha ramp so points
+        at the threshold render pale and reach full opacity at n >= 30.
+    log_scale
+        If True (default), use ``symlog`` on both axes with ``linthresh`` so the
+        zero-penetrance points (very common: most BSCs absent in most CGs) still
+        plot at the corner while the low-penetrance region (~0-0.25) is expanded.
+    linthresh
+        Linear region of the symlog scale around zero. Default 0.01.
     figsize
         Figure size in inches.
     """
@@ -68,9 +79,11 @@ def plot_cg_virulence_penetrance(
         raise KeyError(f"df missing columns: {sorted(missing)}")
 
     plot_df = df.dropna(subset=["complete_penetrance", "sr_penetrance"]).copy()
+    n_hi = max(ALPHA_N_RELIABLE, min_complete + 1)
 
     fig, ax = plt.subplots(figsize=figsize)
-    ax.plot([0, 1], [0, 1], linestyle="--", linewidth=1, color="grey", alpha=0.6, zorder=1, label=None)
+    diag = np.linspace(0.0, 1.0, 50)
+    ax.plot(diag, diag, linestyle="--", linewidth=1, color="grey", alpha=0.6, zorder=1, label=None)
 
     for bsc, sub in plot_df.groupby("bsc"):
         color = BSC_COLORS.get(bsc, "black")
@@ -78,17 +91,25 @@ def plot_cg_virulence_penetrance(
             sub["complete_penetrance"].to_numpy(dtype=float),
             sub["sr_penetrance"].to_numpy(dtype=float),
             c=color,
-            alpha=_alpha_from_n(sub["n_complete"].to_numpy()),
+            alpha=_alpha_from_n(sub["n_complete"].to_numpy(), n_lo=min_complete, n_hi=n_hi),
             s=42,
             edgecolors="none",
             zorder=3,
         )
 
-    ax.set_xlim(-0.02, 1.02)
-    ax.set_ylim(-0.02, 1.02)
+    if log_scale:
+        ax.set_xscale("symlog", linthresh=linthresh, linscale=0.5)
+        ax.set_yscale("symlog", linthresh=linthresh, linscale=0.5)
+        scale_note = f" (symlog, linthresh={linthresh:g})"
+        ax.set_xlim(-linthresh / 2, 1.1)
+        ax.set_ylim(-linthresh / 2, 1.1)
+    else:
+        scale_note = ""
+        ax.set_xlim(-0.02, 1.02)
+        ax.set_ylim(-0.02, 1.02)
     ax.set_aspect("equal", adjustable="box")
-    ax.set_xlabel(f"Penetrance in complete genomes  (n_complete >= {min_complete})")
-    ax.set_ylabel("Penetrance in short-read MAGs")
+    ax.set_xlabel(f"Penetrance in complete genomes{scale_note}  (n_complete >= {min_complete})")
+    ax.set_ylabel(f"Penetrance in short-read MAGs{scale_note}")
     n_cgs = plot_df["clonal_group"].nunique()
     ax.set_title(f"Per-CG virulence-BSC penetrance: complete vs short-read  ({n_cgs} CGs)")
 
@@ -97,24 +118,30 @@ def plot_cg_virulence_penetrance(
         for name, color in BSC_COLORS.items()
         if name in set(plot_df["bsc"])
     ]
-    alpha_labels = [
-        (ALPHA_N_LO, f"n={ALPHA_N_LO}  (threshold)"),
-        (20, "n=20"),
-        (ALPHA_N_HI, f"n>={ALPHA_N_HI}  (reliable)"),
+    mid_n = (min_complete + n_hi) // 2 if n_hi > min_complete + 1 else min_complete
+    alpha_legend_points = [
+        (min_complete, f"n={min_complete}  (threshold)"),
+        (mid_n, f"n={mid_n}"),
+        (n_hi, f"n>={n_hi}  (reliable)"),
     ]
-    alpha_handles = [
-        Line2D(
-            [0],
-            [0],
-            marker="o",
-            linestyle="",
-            color="black",
-            markersize=8,
-            alpha=float(_alpha_from_n(np.array([n]))[0]),
-            label=label,
+    seen: set[int] = set()
+    alpha_handles = []
+    for n, label in alpha_legend_points:
+        if n in seen:
+            continue
+        seen.add(n)
+        alpha_handles.append(
+            Line2D(
+                [0],
+                [0],
+                marker="o",
+                linestyle="",
+                color="black",
+                markersize=8,
+                alpha=float(_alpha_from_n(np.array([n]), n_lo=min_complete, n_hi=n_hi)[0]),
+                label=label,
+            )
         )
-        for n, label in alpha_labels
-    ]
 
     leg_bsc = ax.legend(handles=bsc_handles, title="Virulence BSC", loc="upper left", frameon=True)
     ax.add_artist(leg_bsc)

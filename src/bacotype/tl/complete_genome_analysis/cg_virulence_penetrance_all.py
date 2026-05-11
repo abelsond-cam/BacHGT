@@ -107,8 +107,8 @@ def main() -> None:
     parser.add_argument(
         "--min-complete",
         type=int,
-        default=10,
-        help="Minimum is_refseq=True genomes per CG (default: 10).",
+        default=20,
+        help="Minimum is_refseq=True genomes per CG (default: 20).",
     )
     parser.add_argument("--no-plot", action="store_true", help="Skip the scatter plot.")
     args = parser.parse_args()
