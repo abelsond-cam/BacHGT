@@ -145,11 +145,11 @@ def main() -> None:
         help="Penetrance below which a point is subject to the CI filter (default: 0.25).",
     )
     parser.add_argument(
-        "--max-complete-upper-ci",
+        "--max-ci-excess",
         type=float,
-        default=0.01,
-        help="In the low region, drop points whose Wilson 95%% upper CI on complete_penetrance "
-        "exceeds this value (default: 0.01). Set to 1.0 to disable.",
+        default=0.10,
+        help="In the low region, drop points whose Wilson 95%% upper CI extends more than "
+        "this far above the point estimate (default: 0.10). Set to 1.0 to disable.",
     )
     args = parser.parse_args()
 
@@ -186,7 +186,7 @@ def main() -> None:
         save_path=png_path,
         min_complete=args.min_complete,
         low_region_cutoff=args.low_region_cutoff,
-        max_complete_upper_ci=args.max_complete_upper_ci,
+        max_ci_excess=args.max_ci_excess,
     )
     print(f"Wrote {png_path}")
 
