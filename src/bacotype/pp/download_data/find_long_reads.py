@@ -32,12 +32,14 @@ Primary outputs:
   2. **Two side-CSV files** are written with the full run-level details. They
      are keyed by `run_accession` and contain one row per discovered run that
      was NOT already captured in the metadata's
-     `related_sr_accession` / `related_lr_accession` columns.
+     `related_sr_accession` / `related_lr_accession` columns. Both files
+     live in the same folder as the curated metadata (``DATA_DIR``) so the
+     "one source of truth" property holds.
 
-     - RELATED_SR_CSV → ``<OUTPUT_DIR>/related_sr_accessions.csv``
+     - RELATED_SR_CSV → ``<DATA_DIR>/related_sr_accessions.csv``
          Short-read runs found for existing RefSeq long-read genomes
          (section i below).
-     - RELATED_LR_CSV → ``<OUTPUT_DIR>/related_lr_accessions.csv``
+     - RELATED_LR_CSV → ``<DATA_DIR>/related_lr_accessions.csv``
          Long-read runs found for existing non-RefSeq short-read samples
          (section ii) **and** for ATB-increment BioSamples not in our
          metadata (section iii). The ``source_section`` column
@@ -99,6 +101,7 @@ for backwards compatibility.
 Folders that can be safely deleted (no longer written by this script):
   data/final/long_reads/
   data/final/short_reads_from_refseq/
+  data/final/metadata/processed/long_reads/   (legacy CSV location, pre-2026-05)
 """
 
 import os
@@ -142,12 +145,13 @@ METADATA_FILE_FULL = DATA_DIR + "metadata_final_curated_all_samples_and_columns.
 # Both files receive the new run-related columns on every run (slimmed first → CG summary)
 METADATA_FILES_TO_UPDATE = [METADATA_FILE, METADATA_FILE_FULL]
 
-OUTPUT_DIR    = DATA_DIR + "processed/long_reads/"
+OUTPUT_DIR    = DATA_DIR + "processed/long_reads/"  # legacy — kept only for historical / pre-refactor scripts
 # Side-file CSVs of discovered runs (this script no longer appends rows to the
 # curated metadata; instead it writes one CSV per role, keyed by run_accession,
 # deduped against run accessions already captured in metadata).
-RELATED_SR_CSV = OUTPUT_DIR + "related_sr_accessions.csv"
-RELATED_LR_CSV = OUTPUT_DIR + "related_lr_accessions.csv"
+# Both CSVs live next to the curated metadata so there's one folder per source-of-truth.
+RELATED_SR_CSV = DATA_DIR + "related_sr_accessions.csv"
+RELATED_LR_CSV = DATA_DIR + "related_lr_accessions.csv"
 LONG_READS_OUTPUT_DIR = (
     "/Users/davidabelson/Library/CloudStorage/"
     "OneDrive-UniversityofCambridge/"

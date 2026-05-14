@@ -32,14 +32,17 @@ Usage
 ─────
     uv run python src/bacotype/pp/download_data/clean_find_long_reads_appended.py
 
-Inputs (hard-coded — both local copies in this repo):
-    docs/data/metadata_final_curated_all_samples_and_columns.tsv
-    docs/data/metadata_final_curated_slimmed.tsv
+Inputs (the canonical metadata files in Aaron's OneDrive):
+    <DATA_DIR>/metadata_final_curated_all_samples_and_columns.tsv
+    <DATA_DIR>/metadata_final_curated_slimmed.tsv
 
 Output:
-    docs/data/clean_find_long_reads_appended.log
+    <DATA_DIR>/clean_find_long_reads_appended.log
 
 The user keeps backups elsewhere, so this script overwrites the TSVs in place.
+
+This is a one-off — the refactored ``find_long_reads.py`` no longer appends
+rows, so future runs cannot reintroduce the pollution this script targets.
 """
 
 from __future__ import annotations
@@ -52,13 +55,16 @@ from pathlib import Path
 
 import pandas as pd
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
-DOCS_DATA = REPO_ROOT / "docs" / "data"
+# Canonical metadata folder (same as DATA_DIR in find_long_reads.py).
+DATA_DIR = Path(
+    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
+    "Aaron Weimann's files - project_k/data/final/metadata"
+)
 FILES = [
-    DOCS_DATA / "metadata_final_curated_all_samples_and_columns.tsv",
-    DOCS_DATA / "metadata_final_curated_slimmed.tsv",
+    DATA_DIR / "metadata_final_curated_all_samples_and_columns.tsv",
+    DATA_DIR / "metadata_final_curated_slimmed.tsv",
 ]
-LOG_FILE = DOCS_DATA / "clean_find_long_reads_appended.log"
+LOG_FILE = DATA_DIR / "clean_find_long_reads_appended.log"
 
 USER_INDEX_THRESHOLD = 86472
 
@@ -82,7 +88,7 @@ def build_masks(meta: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
 
 def clean_file(path: Path) -> None:
     """Clean one metadata file in place using the union of both masks."""
-    print(f"\n══ {path.relative_to(REPO_ROOT)} ══", flush=True)
+    print(f"\n══ {path.name} ══", flush=True)
     if not path.exists():
         print(f"  SKIP — file not found", flush=True)
         return
