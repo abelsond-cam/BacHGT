@@ -20,6 +20,9 @@
 #   <OUTPUT_DIR>/run_inventory.md — run summary
 #   <OUTPUT_DIR>/granularity_table.tsv — per-CG granularity metrics
 #   <OUTPUT_DIR>/granularity_summary.tsv — aggregate stats
+#   <OUTPUT_DIR>/best_e_ref_per_species.tsv — best level-e ref per species
+#   <OUTPUT_DIR>/best_reference_per_sample.csv — per-sample best ref +
+#       shared-gene count at every level (f/e/d/c/b/a)
 #   <OUTPUT_DIR>/granularity_lollipop.png/pdf — connected-dot plot
 #
 
