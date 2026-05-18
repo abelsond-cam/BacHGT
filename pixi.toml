@@ -1,0 +1,28 @@
+# Standalone pixi environment for the genome-QC / comparative tools
+# (Kleborate + ISEScan) used in the related-long-read SR-vs-complete
+# discrepancy analysis. Kept separate from the package's uv/hatch
+# pyproject so the bioconda toolchain does not perturb library deps.
+#
+#   pixi install                       # solve + fetch the toolchain
+#   pixi run kleborate --version
+#   pixi run isescan.py --help
+#   pixi run qc-batch --help           # the batch runner over local files
+#
+# Apple Silicon note: bioconda's broad coverage is osx-64, so the
+# platform is pinned to osx-64 and runs under Rosetta 2 (verified
+# available on this M1). linux-64 is kept for reproducibility on HPC
+# once it is back (Fri 22 May 2026).
+
+[workspace]
+name = "bacotype-bioqc"
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-64", "linux-64"]
+
+[dependencies]
+python = ">=3.10,<3.13"
+kleborate = ">=3.1"
+isescan = ">=1.7.2"
+pandas = ">=2.0"
+
+[tasks]
+qc-batch = "python scripts/run_qc_batch.py"

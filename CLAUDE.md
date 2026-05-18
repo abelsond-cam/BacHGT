@@ -36,6 +36,18 @@ Production scripts run on Slurm: edit knobs at the top of the relevant `slurm_sc
 
 ## HPC connection
 
+> **⚠️ HPC DOWN until Friday morning, 22 May 2026.** CSD3 is offline for
+> maintenance — do not attempt `ssh`/`rsync`/`sbatch` against
+> `login.hpc.cam.ac.uk` until then. Work locally in the meantime.
+>
+> **Local data mirror:** the related-long-read working set is fully
+> staged at
+> `~/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/raw/related_lr/`:
+> `sr_originals/` (short-read assemblies `*.fa.gz` + GFFs `*.gff3.gz`),
+> `assemblies/` (downloaded GCA/GCF genomes `*.fna.gz`), `gff/`
+> (`*.gff`), plus `related_lr_*` audit/manifest TSVs. Analysis during
+> the downtime runs against this local tree, not `project_k`.
+
 - Host: `login.hpc.cam.ac.uk` (CSD3, user `dca36`). 8-hour SSH ControlMaster configured in `~/.ssh/config`; if a command hangs, reseed by opening an interactive `ssh login.hpc.cam.ac.uk`.
 - Code at `/home/dca36/workspace/Bacotype` (siblings under `/home/dca36/workspace/`). Data under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` — full storage map (four roots: `project_k`, `personal_rds`, `bacformer_rds`, `cold_storage`) in [`docs/data/hpc_storage_overview.md`](docs/data/hpc_storage_overview.md).
 - For code changes prefer `git commit` → `push` → `pull` on HPC over rsync (rsync desyncs the working tree from branch HEAD). Reserve rsync for data files not in git.
