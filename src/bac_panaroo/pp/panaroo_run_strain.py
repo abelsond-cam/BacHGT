@@ -36,9 +36,10 @@ import pandas as pd
 def _load_convert_from_panaroo_fork():
     """Load ``convert`` from the sibling ``panaroo`` fork checkout.
 
-    Layout: ``Code_repos/BacHGT`` and ``Code_repos/panaroo`` are siblings;
-    the script lives in ``panaroo/scripts/`` (not in the importable package),
-    so we load by file path.
+    Layout: the ``BacHGT`` repo and the ``panaroo`` fork are sibling
+    directories (``~/developer/`` locally, ``~/workspace/`` on HPC). The
+    ``convert`` script lives in ``panaroo/scripts/`` (not in panaroo's
+    importable package), so it is loaded directly by file path.
     """
     script_path = (
         Path(__file__).resolve().parents[4]
@@ -49,8 +50,8 @@ def _load_convert_from_panaroo_fork():
     if not script_path.is_file():
         raise FileNotFoundError(
             f"Expected Bakta convert script at {script_path}. "
-            "Clone the panaroo fork next to BacHGT "
-            "(see Convert_Bakta_to_Prokka.MD)."
+            "Clone the panaroo fork (abelsond-cam/panaroo) as a sibling "
+            "directory next to the BacHGT repo."
         )
     spec = importlib.util.spec_from_file_location(
         "panaroo_fork_convert_bakta_to_prokka_gff", script_path
