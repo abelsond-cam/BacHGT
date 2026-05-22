@@ -22,7 +22,7 @@ resolved_via, unresolved``.
 
 Usage
 ─────
-    uv run python -m bac_panaroo.pp.download_data.resolve_sr_partner_biosamples
+    uv run python -m bac_data.resolve_sr_partner_biosamples
         [--metadata PATH] [--out-dir PATH] [--batch 50] [--limit N]
 """
 
@@ -108,7 +108,7 @@ def internal_join(rows: pd.DataFrame, meta: pd.DataFrame) -> dict[str, str]:
 def _ena_session() -> requests.Session:
     """Return a session with a descriptive User-Agent."""
     s = requests.Session()
-    s.headers.update({"User-Agent": "bac_panaroo-resolve-sr-partners/1.0"})
+    s.headers.update({"User-Agent": "bac_data-resolve-sr-partners/1.0"})
     return s
 
 

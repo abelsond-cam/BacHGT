@@ -28,7 +28,7 @@ decide which to download vs. re-assemble from raw long reads.
 
 Usage
 ─────
-    uv run python src/bac_panaroo/pp/download_data/find_sample_assemblies.py
+    uv run python src/bac_data/find_sample_assemblies.py
         [--metadata PATH] [--output PATH] [--batch N] [--limit N]
 
 Defaults assume the standard project_k metadata path.

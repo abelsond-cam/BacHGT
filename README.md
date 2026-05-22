@@ -31,10 +31,11 @@ Main scripts:
   counts GFF feature types per sample (QC on annotations).
 - [`src/bacotype/pp/merge_gff_feature_counts_into_metadata.py`](src/bacotype/pp/merge_gff_feature_counts_into_metadata.py):
   merges those counts back into the curated metadata TSV.
-- Supporting utilities: `download_bakrep_gbff_files.py`,
-  `add_bakta_gbff_downloaded_flag.py`, `add_poppunk_clusters_to_metadata.py`,
-  `update_biosample_accessions.py`, `convert_ast_data.py`,
-  `select_genomes_reference_comparison.py`.
+- Supporting utilities: `add_poppunk_clusters_to_metadata.py`,
+  `convert_ast_data.py`, `select_genomes_reference_comparison.py`. Data
+  acquisition utilities (`download_bakrep_gbff_files.py`,
+  `add_bakta_gbff_downloaded_flag.py`, `update_biosample_accessions.py`) now
+  live in the `bac_data` subpackage — see `src/bac_data/CLAUDE.md`.
 
 Important settings to check before running:
 - Assembly / GFF root directories in the preprocessing scripts (hard-coded or

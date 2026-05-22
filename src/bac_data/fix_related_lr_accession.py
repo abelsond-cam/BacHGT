@@ -14,7 +14,7 @@ full and slimmed curated metadata. A timestamped ``.bak`` is written
 beside each file first.
 
 Run from ~/workspace/BacHGT:
-    uv run python src/bac_panaroo/pp/download_data/fix_related_lr_accession.py
+    uv run python src/bac_data/fix_related_lr_accession.py
 """
 
 from __future__ import annotations

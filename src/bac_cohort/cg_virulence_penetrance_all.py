@@ -11,7 +11,7 @@ two sample counts.
 
 Output: long-format TSV (one row per (CG, BSC)) and, unless ``--no-plot``, a
 scatter PNG of complete-vs-SR penetrance produced by
-:mod:`bac_panaroo.pl.cg_virulence_penetrance_scatter`.
+:mod:`bac_cohort.cg_virulence_penetrance_scatter`.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_panaroo.tl.complete_genome_analysis.cg_feature_cohort_analysis import (
+from bac_cohort.cg_feature_cohort_analysis import (
     DEFAULT_METADATA,
     DEFAULT_OUTPUT_DIR,
     KLEBORATE_VIRULENCE_LOCI,
@@ -178,7 +178,7 @@ def main() -> None:
     if args.no_plot or df.empty:
         return
 
-    from bac_panaroo.pl.cg_virulence_penetrance_scatter import plot_cg_virulence_penetrance
+    from bac_cohort.cg_virulence_penetrance_scatter import plot_cg_virulence_penetrance
 
     png_path = args.output_dir / f"{stem}.png"
     plot_cg_virulence_penetrance(

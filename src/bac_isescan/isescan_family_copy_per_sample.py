@@ -13,12 +13,12 @@ from typing import Any, cast
 import pandas as pd
 from tqdm import tqdm
 
-from bac_panaroo.tl.isescan_analysis.isescan_constants import (
+from bac_isescan.isescan_constants import (
     CANONICAL_IS_FAMILY_COLUMNS,
     META_COLUMNS,
     cluster_csv_column,
 )
-from bac_panaroo.tl.isescan_analysis.isescan_utils import is_missing_value, parse_bool
+from bac_isescan.isescan_utils import is_missing_value, parse_bool
 
 
 def resolve_family_column(df: pd.DataFrame) -> str:

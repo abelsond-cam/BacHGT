@@ -80,7 +80,7 @@ fi
 
 mkdir -p "${ASSEMBLIES_DIR}" "${GFF_DIR}"
 
-uv run python -u -m bac_panaroo.pp.download_data.norway_tables1_integrate \
+uv run python -u -m bac_data.norway_tables1_integrate \
   --table-s1 "${TABLE_S1}" \
   --metadata "${FULL_METADATA}" \
   --workers "${WORKERS}" \

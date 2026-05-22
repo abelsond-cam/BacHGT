@@ -41,7 +41,7 @@ req/s (the per-strain ``elink``/``esummary`` calls dominate runtime).
 
 Usage
 ─────
-    uv run python src/bac_panaroo/pp/download_data/norway_tables1_integrate.py
+    uv run python src/bac_data/norway_tables1_integrate.py
         [--table-s1 PATH]      # default: the Norway_Complete_Genomes_Fig1.xlsx
         [--metadata PATH]      # default: curated slimmed TSV
         [--out-dir PATH]       # default: <metadata dir>/processed
@@ -84,7 +84,7 @@ import pandas as pd
 import requests
 
 # Reuse the Norway audit module's auth + PRJEB74192 helpers.
-from bac_panaroo.pp.download_data.norway_cohort_audit import (
+from bac_data.norway_cohort_audit import (
     DEFAULT_METADATA,
     UMBRELLA_PROJECT,
     _gca_primaries,
@@ -107,7 +107,7 @@ RELATED_LR_CSV = "related_lr_run_accessions.csv"
 # ─── E-UTILITIES ──────────────────────────────────────────────────────────────
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-EUTILS_TOOL = "bac_panaroo-norway-tables1"
+EUTILS_TOOL = "bac_data-norway-tables1"
 EUTILS_EMAIL = "abelsond@cam.ac.uk"
 
 DEFAULT_TIMEOUT = 60

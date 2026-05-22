@@ -15,7 +15,7 @@ in the curated slimmed metadata. Rows with ``in_metadata == False`` have
 no short-read sample in our metadata and are reported, not symlinked.
 
 Run from ~/workspace/BacHGT:
-    uv run python src/bac_panaroo/pp/download_data/stage_sr_for_related_lr.py
+    uv run python src/bac_data/stage_sr_for_related_lr.py
 """
 
 from __future__ import annotations

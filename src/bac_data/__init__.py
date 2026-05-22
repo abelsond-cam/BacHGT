@@ -1,6 +1,6 @@
-"""bac_data: data download and staging for the BacHGT ecosystem.
+"""bac_data: data acquisition and staging for the BacHGT ecosystem.
 
-Placeholder subpackage — intended future home for genome/assembly download,
-NCBI datasets retrieval, related-long-read staging, and other data-acquisition
-code. No modules yet.
+Flat subpackage of standalone CLI scripts that discover, audit, integrate, and
+download genome assemblies and sequencing runs (ENA Portal API, NCBI Datasets),
+and that maintain data-presence flags on the curated metadata TSV.
 """

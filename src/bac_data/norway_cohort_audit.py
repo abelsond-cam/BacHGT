@@ -43,7 +43,7 @@ Set ``NCBI_API_KEY`` to raise the NCBI rate limit from 3 to 10 req/s.
 
 Modes
 ─────
-    uv run python src/bac_panaroo/pp/download_data/norway_cohort_audit.py
+    uv run python src/bac_data/norway_cohort_audit.py
         [--mode projects|prjeb74192|norkab|all]   # default: all
         [--metadata PATH]                          # default: curated slimmed TSV
         [--out-dir PATH]                           # default: <metadata dir>/processed

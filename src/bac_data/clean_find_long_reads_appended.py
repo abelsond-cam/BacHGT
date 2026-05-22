@@ -30,7 +30,7 @@ is reproducible / auditable.
 
 Usage
 ─────
-    uv run python src/bac_panaroo/pp/download_data/clean_find_long_reads_appended.py
+    uv run python src/bac_data/clean_find_long_reads_appended.py
 
 Inputs (the canonical metadata files in Aaron's OneDrive):
     <DATA_DIR>/metadata_final_curated_all_samples_and_columns.tsv

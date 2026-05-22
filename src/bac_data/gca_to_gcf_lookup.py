@@ -29,7 +29,7 @@ Use ``NCBI_API_KEY`` env var to raise the rate limit from 3 req/sec to
 
 Usage
 ─────
-    uv run python src/bac_panaroo/pp/download_data/gca_to_gcf_lookup.py
+    uv run python src/bac_data/gca_to_gcf_lookup.py
         [--input PATH]    # default: <DATA_ROOT>/processed/ena_sample_assembly_lookup.tsv
         [--output PATH]   # default: <DATA_ROOT>/processed/refseq_lr_assembly_lookup.tsv
         [--batch N]       # default: 100

@@ -37,7 +37,7 @@ Set ``NCBI_API_KEY`` to raise the NCBI rate limit from 3 to 10 req/s.
 
 Modes / usage
 ─────────────
-    uv run python src/bac_panaroo/pp/download_data/related_lr_complete_assembly_audit.py
+    uv run python src/bac_data/related_lr_complete_assembly_audit.py
         [--metadata PATH]      # default: project_k/david/final full TSV
         [--out-dir PATH]       # default: <DATA_ROOT>/processed
         [--limit N]            # cap BioSample probes (smoke-test)
@@ -58,7 +58,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_panaroo.pp.download_data.norway_cohort_audit import (
+from bac_data.norway_cohort_audit import (
     _gca_primaries,
     ncbi_biosample_records,
     ncbi_headers,

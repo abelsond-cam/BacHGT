@@ -180,4 +180,4 @@ skip = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = [ "src/bac_panaroo", "src/bac_ariba", "src/bac_metadata", "src/bac_data" ]
+packages = [ "src/bac_panaroo", "src/bac_ariba", "src/bac_metadata", "src/bac_data", "src/bac_isescan", "src/bac_cohort" ]

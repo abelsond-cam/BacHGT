@@ -25,7 +25,7 @@ Set ``NCBI_API_KEY`` to raise the NCBI rate limit from 3 to 10 req/s.
 
 Usage
 ─────
-    uv run python src/bac_panaroo/pp/download_data/download_related_lr_complete_genomes.py
+    uv run python src/bac_data/download_related_lr_complete_genomes.py
         [--cg-tsv PATH]    # default: <out-dir>/related_lr_complete_genomes.tsv
         [--out-dir PATH]   # default: <DATA_ROOT>/raw/related_lr
         [--which both]     # both | gca | gcf
@@ -53,7 +53,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-from bac_panaroo.pp.download_data.norway_cohort_audit import ncbi_headers
+from bac_data.norway_cohort_audit import ncbi_headers
 
 # ─── PATHS ────────────────────────────────────────────────────────────────────
 
