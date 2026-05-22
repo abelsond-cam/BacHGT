@@ -1366,13 +1366,13 @@ def main():
     parser.add_argument(
         '--input',
         type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/final/metadata/metadata_final_curated_slimmed.tsv",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv",
         help='Path to parsed_metadata.tsv file'
     )
     parser.add_argument(
         '--output-dir',
         type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/visualisations/metadata_analysis/",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata_analysis",
         help='Directory to save output PNG files'
     )
     parser.add_argument(
