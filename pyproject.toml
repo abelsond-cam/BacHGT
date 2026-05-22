@@ -39,6 +39,18 @@ dependencies = [
   "scipy>=1.12.0",
   "seaborn>=0.13.2",
   "tqdm>=4.66.0",
+  "geopandas>=1.0",
+  "google-api-python-client>=2.150",
+  "google-auth>=2.40",
+  "google-auth-httplib2>=0.2",
+  "google-auth-oauthlib>=1.2",
+  "gspread>=6.0",
+  "kaleido>=1.0",
+  "pdfplumber>=0.11",
+  "plotly>=6.0",
+  "pycountry>=24.0",
+  "pygwalker>=0.4",
+  "reverse-geocoder>=1.5",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://BacHGT.readthedocs.io/"
@@ -168,4 +180,4 @@ skip = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = [ "src/bac_panaroo" ]
+packages = [ "src/bac_panaroo", "src/bac_ariba", "src/bac_metadata", "src/bac_data" ]
