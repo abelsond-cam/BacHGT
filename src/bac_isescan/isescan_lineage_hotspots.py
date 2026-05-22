@@ -15,6 +15,11 @@ distinct lineage genomes with >=1 IS flanked by that cluster.
 
 The null is deliberately uniform over clusters (ignores cluster length and
 core/accessory status); reported ``enrichment`` is relative to that.
+
+Each IS carries an ``is_partial`` flag (ISEScan ``type='p'`` — a degraded IS
+remnant, i.e. a "scar" of a former full-length element). Partial IS rows are
+kept in the annotated TSV and summarised per cluster in the hotspot table as
+``n_partial_events``, ``n_genomes_partial`` and ``frac_partial``.
 """
 
 from __future__ import annotations
@@ -54,7 +59,8 @@ except ImportError:  # pragma: no cover - scipy expected in env
 
 # Columns from is_gene_context.tsv.gz needed for the flanking analysis.
 USE_COLS = [
-    "sample", "is_family", "is_len", "relationship", "hit_product",
+    "sample", "is_family", "is_len", "is_type", "ncopy", "ov",
+    "relationship", "hit_product",
     "upstream_locus_tag", "upstream_distance_bp",
     "downstream_locus_tag", "downstream_distance_bp",
 ]
@@ -103,7 +109,7 @@ def _filter_is_rows(path: Path, lineage_samples: set[str]) -> pd.DataFrame:
         _log(f"  filter chunk {i}: scanned={scanned:,} kept={kept:,} "
              f"({scanned / dt:,.0f} rows/s)")
     df = pd.concat(keep, ignore_index=True) if keep else pd.DataFrame(columns=USE_COLS)
-    for c in ("is_len", "upstream_distance_bp", "downstream_distance_bp"):
+    for c in ("is_len", "ncopy", "ov", "upstream_distance_bp", "downstream_distance_bp"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
     return df
 
@@ -192,6 +198,8 @@ def run(
     df["self_transposase"] = df["relationship"].eq("within") & df["hit_product"].str.contains(
         SELF_TPASE_RE, case=False, na=False, regex=True
     )
+    # ISEScan type='p' marks a partial IS — a degraded remnant ("scar").
+    df["is_partial"] = df["is_type"].astype(str).str.strip().str.lower().eq("p")
     igr_len = df["upstream_distance_bp"] + df["is_len"] + df["downstream_distance_bp"]
     intergenic_ok = (
         df["relationship"].eq("intergenic") & has_u & has_d & (igr_len > 0)
@@ -207,11 +215,11 @@ def run(
 
     # Long form: one row per (IS, resolved flank side). Vectorised concat.
     up = df.loc[df["upstream_cluster"].notna(),
-                ["sample", "is_family", "upstream_cluster"]].rename(
+                ["sample", "is_family", "is_partial", "upstream_cluster"]].rename(
         columns={"upstream_cluster": "cluster"})
     up["side"] = "upstream"
     dn = df.loc[df["downstream_cluster"].notna(),
-                ["sample", "is_family", "downstream_cluster"]].rename(
+                ["sample", "is_family", "is_partial", "downstream_cluster"]].rename(
         columns={"downstream_cluster": "cluster"})
     dn["side"] = "downstream"
     long = pd.concat([up, dn], ignore_index=True)
@@ -223,7 +231,11 @@ def run(
         "n_is_events": grp.size(),
         "n_as_upstream": long[long["side"].eq("upstream")].groupby("cluster").size(),
         "n_as_downstream": long[long["side"].eq("downstream")].groupby("cluster").size(),
-    }).fillna({"n_as_upstream": 0, "n_as_downstream": 0})
+        "n_partial_events": grp["is_partial"].sum(),
+        "n_genomes_partial": long[long["is_partial"]].groupby("cluster")["sample"].nunique(),
+    }).fillna({"n_as_upstream": 0, "n_as_downstream": 0,
+               "n_partial_events": 0, "n_genomes_partial": 0})
+    hot["frac_partial"] = hot["n_partial_events"] / hot["n_is_events"]
     fam = (long.groupby(["cluster", "is_family"]).size()
            .sort_values(ascending=False)
            .groupby(level=0).apply(
@@ -247,6 +259,7 @@ def run(
                           ascending=[True, False]).reset_index(drop=True)
     cols = ["cluster", "annotation", "n_genomes_flanked", "n_is_events",
             "is_family_breakdown", "n_as_upstream", "n_as_downstream",
+            "n_partial_events", "n_genomes_partial", "frac_partial",
             "expected_genomes", "enrichment", "p_value", "q_value", "hotspot"]
     hotspots = out_dir / f"{lineage}_is_flank_hotspots.tsv"
     with open(hotspots, "w") as fh:
