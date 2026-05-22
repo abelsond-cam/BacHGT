@@ -126,7 +126,7 @@ Other Klebsiella species runs (not K. pneumoniae). Each run contains all samples
 
 ## GPA Reference Granularity Analysis
 
-Produced by `src/bacotype/tl/gpa_reference_granularity.py` (delegates plotting to `src/bacotype/pl/granularity_lollipop.py`). Quantifies how mean shared-gene count between a query sample and its assigned RefSeq grows as the RefSeq becomes more granular: from a single global anchor (mgh78578), to a per-Panaroo-run RefSeq, to a per-CG RefSeq, to a per-sample RefSeq.
+Produced by `src/bac_panaroo/tl/gpa_reference_granularity.py` (delegates plotting to `src/bac_panaroo/pl/granularity_lollipop.py`). Quantifies how mean shared-gene count between a query sample and its assigned RefSeq grows as the RefSeq becomes more granular: from a single global anchor (mgh78578), to a per-Panaroo-run RefSeq, to a per-CG RefSeq, to a per-sample RefSeq.
 
 **Output location:** `<DATA_ROOT>/processed/pangenome_analysis/granularity/`
 

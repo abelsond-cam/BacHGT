@@ -1,6 +1,12 @@
-# CLAUDE.md
+# CLAUDE.md — bac_ariba
 
-Guidance for Claude Code when working in this repository.
+The `bac_ariba` subpackage of the BacHGT monorepo, absorbed from the former
+standalone `mag-rescue` repo. Monorepo and global guidance: `BacHGT/CLAUDE.md`
+and `~/.claude/CLAUDE.md`. ARIBA runs from its own pixi/apptainer environment
+(see below), not the shared uv env. Where the text below refers to `mag-rescue`
+or to `Bacotype` as *separate repos*, that predates the monorepo absorption —
+the current layout is authoritative in `BacHGT/CLAUDE.md` (`bac_panaroo` is now
+a sibling subpackage; `bac_metadata` produces the curated metadata TSV).
 
 ## Project purpose
 
@@ -17,11 +23,11 @@ pixi run -e dev lint            # ruff check + format --check
 pixi run -e dev fmt             # ruff format
 
 # Build a reference DB (one-off; uses a separate `refbuild` env that has kleborate).
-pixi run -e refbuild python -m mag_rescue.pp.build_ariba_ref \
+pixi run -e refbuild python -m bac_ariba.pp.build_ariba_ref \
     --kleb-virulence --ariba-sif <RDS>/.../containers/ariba_213.sif
 
 # Extract a cohort accession list (HPC only — reads Bacotype's metadata).
-pixi run -e dev python -m mag_rescue.pp.extract_accessions \
+pixi run -e dev python -m bac_ariba.pp.extract_accessions \
     --metadata <RDS>/.../final/metadata_final_curated_all_samples_and_columns.tsv \
     --outdir   <RDS>/.../processed/mag_rescue/kleb_virulence/<cohort>/accessions \
     --version v1 [--sublineage SL23 | --clonal-group CG39]
@@ -31,14 +37,14 @@ pixi run -e dev python -m mag_rescue.pp.extract_accessions \
 # blips) up to --max-retries times (default 3). Run under tmux or nohup
 # when invoking via ssh so the loop survives a disconnect. Add --no-auto-retry
 # for one-shot submission, or --dry-run to print the sbatch command only.
-pixi run -e dev python -m mag_rescue.pp.parallel_ariba submit \
+pixi run -e dev python -m bac_ariba.pp.parallel_ariba submit \
     --db kleb_virulence --run-name <cohort> \
     --mag-rescue-root <RDS>/.../processed/mag_rescue \
     --repo-dir ~/workspace/mag-rescue \
     --ariba-sif <RDS>/.../containers/ariba_213.sif
 
 # After completion: tally + compare to Bacotype's penetrance.
-pixi run -e dev python -m mag_rescue.tl.assess_recovery \
+pixi run -e dev python -m bac_ariba.tl.assess_recovery \
     --ariba-run-dir <RDS>/.../mag_rescue/kleb_virulence/<cohort> \
     --cohort <cohort> \
     --bacotype-dir <RDS>/.../complete_vs_sr_genomes
@@ -57,9 +63,9 @@ scanpy-style modules:
 
 | Module | Purpose |
 |--------|---------|
-| `src/mag_rescue/pp/` | Preprocessing — accession loading, reference DB build (`ariba prepareref`), fastq fetch (`prefetch`/`fasterq-dump`) |
-| `src/mag_rescue/tl/` | Tools/analysis — parse ARIBA per-sample reports, collate into wide tables |
-| `src/mag_rescue/pl/` | Plotting — virulence cluster heatmaps |
+| `src/bac_ariba/pp/` | Preprocessing — accession loading, reference DB build (`ariba prepareref`), fastq fetch (`prefetch`/`fasterq-dump`) |
+| `src/bac_ariba/tl/` | Tools/analysis — parse ARIBA per-sample reports, collate into wide tables |
+| `src/bac_ariba/pl/` | Plotting — virulence cluster heatmaps |
 
 ## Reference DBs
 

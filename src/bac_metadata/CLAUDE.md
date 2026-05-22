@@ -1,6 +1,11 @@
-# CLAUDE.md
+# CLAUDE.md — bac_metadata
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The `bac_metadata` subpackage of the BacHGT monorepo, absorbed from the former
+standalone metadata-curation repo. Monorepo and global guidance:
+`BacHGT/CLAUDE.md` and `~/.claude/CLAUDE.md`. The package is now `bac_metadata`
+(was `Klebsiella`) and runs on the shared uv environment. Where the text below
+refers to OneDrive-synced paths, that predates the migration — code now lives
+under `~/developer` (local) / `~/workspace` (HPC).
 
 ## Project Overview
 
@@ -12,7 +17,7 @@ This project uses **uv**. Run scripts with `uv run <script>` or activate the env
 
 ```bash
 uv sync                          # Install dependencies
-uv run Klebsiella/pp/<script>.py # Run a script
+uv run python src/bac_metadata/pp/<script>.py # Run a script
 ```
 
 ## Pipeline Execution Order
@@ -21,7 +26,7 @@ The three main scripts must be run in sequence:
 
 **Step 1 — Collate ENA metadata:**
 ```bash
-uv run Klebsiella/pp/metadata_collation.py \
+uv run python src/bac_metadata/pp/metadata_collation.py \
   --metadata-file1 <ENA_TSV_1> \
   --metadata-file2 <ENA_TSV_2> \
   --metadata-file3 <ENA_TSV_3> \
@@ -31,7 +36,7 @@ Output: `intermediate_collated_metadata_wo_qc_or_kleborate.tsv`
 
 **Step 2 — Integrate QC data:**
 ```bash
-uv run Klebsiella/pp/qc_add_metadata.py \
+uv run python src/bac_metadata/pp/qc_add_metadata.py \
   --input-file <COLLATED_METADATA> \
   --qc-excel-path <QC_EXCEL> \
   --output-dir <OUTPUT_DIR>
@@ -40,7 +45,7 @@ Output: `qc_final_with_metadata.tsv`
 
 **Step 3 — Curate metadata fields:**
 ```bash
-uv run Klebsiella/pp/metadata_curation.py \
+uv run python src/bac_metadata/pp/metadata_curation.py \
   --metadata-dir <METADATA_DIR> \
   --metadata-file qc_final_with_metadata.tsv \
   --output-file metadata_final_curated_all_samples_and_columns.tsv \
@@ -50,13 +55,13 @@ Output: two TSVs + `parsed_metadata.log`
 
 **Optional — Find long-read sequences:**
 ```bash
-uv run Klebsiella/pp/find_long_reads.py [--dry-run] [--limit N]
+uv run python src/bac_metadata/pp/find_long_reads.py [--dry-run] [--limit N]
 ```
 Queries ENA Portal API and NCBI Datasets API for ONT/PacBio runs.
 
 **Optional — Generate analysis plots:**
 ```bash
-uv run Klebsiella/pp/metadata_analysis.py [--metadata-file FILE]
+uv run python src/bac_metadata/pp/metadata_analysis.py [--metadata-file FILE]
 ```
 
 ## Architecture
@@ -74,7 +79,7 @@ metadata_final_curated_all_samples_and_columns.tsv
 metadata_final_curated_slimmed.tsv
 ```
 
-### Key Modules (`Klebsiella/pp/`)
+### Key Modules (`src/bac_metadata/pp/`)
 
 - **`metadata_collation.py`** — Merges ENA TSV exports; applies row-level patches from "ready_to_merge" files (one per ENA project)
 - **`qc_add_metadata.py`** — Builds unified QC dataframe from multiple Excel sheets; left-joins metadata onto QC rows; applies KPSC final-list filtering
@@ -100,9 +105,9 @@ These functions emit verbose output to support iterative rule refinement when EN
 
 **Google Sheets/Drive authentication:**
 - OAuth2 flow; credentials file at `~/.../client_secret_*.json`
-- Token cached at `Klebsiella/pp/token.json` after first run
+- Token cached at `src/bac_metadata/pp/token.json` after first run
 - Study-level metadata Google Sheet ID: `1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk`
-- Run `uv run Klebsiella/pp/test_google_auth.py` to verify auth
+- Run `uv run python src/bac_metadata/pp/test_google_auth.py` to verify auth
 
 **External APIs (no auth required):**
 - ENA Portal API: `https://www.ebi.ac.uk/ena/portal/api/search`
@@ -110,9 +115,9 @@ These functions emit verbose output to support iterative rule refinement when EN
 
 ## Validation & Debugging
 
-No test framework. Debug/validation scripts in `Klebsiella/pp/`:
+No test framework. Debug/validation scripts in `src/bac_metadata/pp/`:
 - `test_google_auth.py` — Verify Google OAuth
 - `test_city_geocoding.py` — Test reverse geocoding
 - `debug_kleborate_columns.py`, `debug_kleborate_qc.py`, `debug_klebnet.py` — Validate QC data
 
-Exploratory analysis in `Klebsiella/notebooks/` (11 notebooks, prefixed 00–11).
+Exploratory analysis in `src/bac_metadata/notebooks/` (11 notebooks, prefixed 00–11).

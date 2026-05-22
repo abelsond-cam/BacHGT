@@ -1,92 +1,64 @@
-# CLAUDE.md
+# CLAUDE.md — BacHGT
 
-Guidance for Claude Code when working in this repository.
+Guidance for Claude Code in the **BacHGT monorepo**. Global guidance — working
+preferences, the wider ecosystem, environment policy, HPC connection + storage
+map — is in `~/.claude/CLAUDE.md`. Each `src/bac_*` subpackage has its own
+`CLAUDE.md` with subpackage-specific detail.
 
-## Project purpose
+## What BacHGT is
 
-Bacotype uses [Panaroo](https://github.com/gtonkinhill/panaroo) to define "bacotypes" by analysing gene presence/absence (GPA) in bacterial sublineages, clonal groups, and clusters. Primary organism is the *Klebsiella pneumoniae species complex* (KPSC: K. pneumo (Kp), K. variicola, K. quasipneumoniae, africana, tropica). Three task areas: preprocess metadata → run Panaroo on HPC → analyse GPA distances to reference genomes.
+The Klebsiella-genomics monorepo: pangenome / gene-presence-absence (GPA) /
+mobile-element analysis of the *Klebsiella pneumoniae* species complex. One git
+repo, one shared uv environment, four subpackages under `src/`:
 
-## Project arms & sibling workspaces
+| Subpackage | Purpose | Detail |
+|---|---|---|
+| `bac_panaroo` | Panaroo pangenome analysis — defines "bacotypes" from GPA (the core) | `src/bac_panaroo/CLAUDE.md` |
+| `bac_ariba` | ARIBA virulence/AMR profiling from short reads | `src/bac_ariba/CLAUDE.md` |
+| `bac_metadata` | ENA metadata curation → the curated metadata TSV | `src/bac_metadata/CLAUDE.md` |
+| `bac_data` | data download / staging (placeholder) | — |
 
-Two parallel project arms, both run from `~/workspace/` on the HPC:
+## Sibling repos
 
-- **Klebsiella genomics** — pangenome / GPA / mobile-element analysis of KPSC. Uses this repo + the panaroo fork + Pangenome-merge + Klebsiella_Mobile_Elements.
-- **Bacformer-based prediction** — uses [Bacformer](https://github.com/macwiatrak/Bacformer) genome embeddings to predict AMR + isolation source (proxy for virulence); downstream goal is uncovering phenotype-associated genes. Lives in `predict_kleb_by_bacformer`.
+Separate checkouts beside BacHGT (`~/developer/` locally, `~/workspace/` on HPC) —
+**not** part of this monorepo:
 
-Sibling workspaces under `~/workspace/`:
+- `panaroo` — fork of [gtonkinhill/panaroo](https://github.com/gtonkinhill/panaroo).
+  `bac_panaroo` loads its `scripts/convert_bakta_to_prokka_gff.py` by file path
+  (the loader in `src/bac_panaroo/pp/panaroo_run_strain.py`); the fork must be
+  cloned as a sibling of this repo.
+- `pangenome_merge` — fork of an external tool that merges Panaroo runs across
+  batches. Run standalone; no code coupling to BacHGT.
+- `BacMGEfinder` — Snakemake workflow for mobile-element (MGEFinder) analysis.
 
-- `Bacotype` (this repo) — pangenome workflow with Panaroo.
-- `panaroo` — forked Panaroo (https://github.com/abelsond-cam/panaroo); imported by file path from `pp/panaroo_run_strain.py` (see `Convert_Bakta_to_Prokka.MD`).
-- `Pangenome-merge` — forked tool to merge Panaroo runs across batches.
-- `Klebsiella_Mobile_Elements` — MGEFinder analysis of mobile genetic elements.
-- `predict_kleb_by_bacformer` — Bacformer phenotype prediction.
+## Environment
 
-## Commands
+One shared uv environment for the whole monorepo:
 
 ```bash
-uv pip install -e .                                                # editable install
-uv run python src/bacotype/tl/gpa_distances_single_run.py --help   # always use uv run
-hatch test                                                         # full matrix (Python 3.10 + 3.14)
-pytest tests/                                                      # quick local run
-ruff check src/ && ruff format src/                                # lint + format
-hatch run docs:build                                               # docs
+uv sync                                                              # build / refresh the env
+uv run python src/bac_panaroo/tl/gpa_distances_single_run.py --help  # always use uv run
+uv run --group test pytest tests/ src/bac_ariba/tests/               # tests
+uvx ruff check src/                                                  # lint (ruff is not a project dep)
 ```
 
-Production scripts run on Slurm: edit knobs at the top of the relevant `slurm_scripts/*.sh`, then `sbatch`.
+Subpackages that need non-Python tool binaries keep their own `pixi`/`micromamba`
+environment — e.g. `bac_ariba` runs ARIBA from an apptainer container (see
+`src/bac_ariba/CLAUDE.md`).
 
-## HPC connection
+Production scripts run on Slurm: edit the knobs at the top of the relevant
+`slurm_scripts/*.sh`, then `sbatch`.
 
-> **⚠️ HPC DOWN until Friday morning, 22 May 2026.** CSD3 is offline for
-> maintenance — do not attempt `ssh`/`rsync`/`sbatch` against
-> `login.hpc.cam.ac.uk` until then. Work locally in the meantime.
->
-> **Local data mirror:** the related-long-read working set is fully
-> staged at
-> `~/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/raw/related_lr/`:
-> `sr_originals/` (short-read assemblies `*.fa.gz` + GFFs `*.gff3.gz`),
-> `assemblies/` (downloaded GCA/GCF genomes `*.fna.gz`), `gff/`
-> (`*.gff`), plus `related_lr_*` audit/manifest TSVs. Analysis during
-> the downtime runs against this local tree, not `project_k`.
+## HPC
 
-- Host: `login.hpc.cam.ac.uk` (CSD3, user `dca36`). 8-hour SSH ControlMaster configured in `~/.ssh/config`; if a command hangs, reseed by opening an interactive `ssh login.hpc.cam.ac.uk`.
-- Code at `/home/dca36/workspace/Bacotype` (siblings under `/home/dca36/workspace/`). Data under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` — full storage map (four roots: `project_k`, `personal_rds`, `bacformer_rds`, `cold_storage`) in [`docs/data/hpc_storage_overview.md`](docs/data/hpc_storage_overview.md).
-- For code changes prefer `git commit` → `push` → `pull` on HPC over rsync (rsync desyncs the working tree from branch HEAD). Reserve rsync for data files not in git.
-- Hard-coded `/home/dca36/rds/...` paths across `slurm_scripts/*.sh` and `src/bacotype/` are deliberately not centralised; their literal paths use the vocabulary in `docs/data/hpc_storage_overview.md`.
-
-## Package layout
-
-scanpy-style modules:
-
-| Module | Purpose |
-|--------|---------|
-| `src/bacotype/pp/` | Preprocessing — resolve assembly/GFF paths, QC features, build metadata TSV, prep Panaroo inputs |
-| `src/bacotype/tl/` | Tools/analysis — Jaccard distances, ref-genome scoring, clustering, pangenome stats |
-| `src/bacotype/pl/` | Plotting — GPA matrices, epidemic-vs-mixed, granularity lollipops |
-
-## Three-task workflow
-
-### Task 1 — Preprocessing
-
-Scans assembly/GFF dirs and populates `metadata_final_curated_all_samples_and_columns.tsv` (the single source of truth downstream). Key scripts: `pp/add_paths_gff_fna_to_metadata.py`, `pp/count_gff_features.py`, `pp/merge_gff_feature_counts_into_metadata.py`.
-
-### Task 2 — Run Panaroo
-
-Three modes sharing `pp/panaroo_run_strain.py`:
-
-- **2a** single CG: `sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11`
-- **2b** whole dataset as a Slurm array: `pp/panaroo_metadata_batching.py` → `panaroo_run_strain_metadata_array.sh`
-- **2c** arbitrary sample list: same script with `--sample-metadata-file`
-
-Each batch TSV carries a curated **reference bucket** (mgh78578 + Norway-completes + HS11286 by default, from `<DATA_ROOT>/final/reference_bucket.tsv`) so every run sees a fixed reference pool — that's what makes level `e` meaningful in Task 3e. `--n 10` caps sample count for smoke-tests.
-
-### Task 3 — Analyse GPA & distances
-
-- **3a–c** distance analysis (Jaccard) — `tl/gpa_distances_single_group.py` → `..._single_run.py` → `..._batch_runs.py` (narrowest → broadest). Tunables at top of `.sh`: `MIN_GROUP_SIZE`, `REFERENCE_TOP_N`, `GPA_FILTER_CUTOFF`, `CORE_SHELL_CUTOFF`, `SHELL_CLOUD_CUTOFF`, `WORKERS`.
-- **3d** combine — `tl/gpa_distances_combined.py` concatenates per-run detail TSVs; optional epidemic-vs-mixed comparison.
-- **3e** granularity — `tl/gpa_reference_granularity.py` (+ `pl/granularity_lollipop.py`) measures ref-assignment improvement across six levels (`f` → `e` → `d` → `c` → `b` → `a`) per strain. Self-contained: walks Panaroo run dirs, hierarchically splits `Sublineage` → `Clonal group` → `K_locus`, computes levels via a single BLAS SGEMM. **Level definitions, row types, and output schema:** [`docs/data/panaroo_run_inventory.md`](docs/data/panaroo_run_inventory.md). Submit via `sbatch slurm_scripts/gpa_reference_granularity.sh` (fast enough for the login node).
+See `~/.claude/CLAUDE.md` for the HPC connection and the four storage roots.
+Code at `/home/dca36/workspace/BacHGT`. Hard-coded `/home/dca36/rds/...` data
+paths across `slurm_scripts/*.sh` and `src/bac_*/` are deliberately not
+centralised; their literal paths use the vocabulary in
+`~/.claude/hpc_storage_overview.md`.
 
 ## Code style
 
-- Line length: 120; numpy docstrings (enforced by `ruff pydocstyle`).
+- Line length 120; numpy docstrings (enforced by `ruff pydocstyle`).
 - Ruff: B, BLE, C4, D, E, F, I, RUF100, TID, UP, W (see `pyproject.toml` for ignores).
-- Python 3.10–3.14 supported.
+- Python 3.10+.
