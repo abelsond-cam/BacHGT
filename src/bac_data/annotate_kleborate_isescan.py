@@ -10,8 +10,8 @@ discrepancies.
 Runs **inside the pixi env** (provides both tools + their blast/hmmer
 deps)::
 
-    pixi run qc-batch --groups sr,gca,gcf --tools kleborate,isescan
-    pixi run qc-batch --limit 3 --tools kleborate          # smoke-test
+    pixi run annotate --groups sr,gca,gcf --tools kleborate,isescan
+    pixi run annotate --limit 3 --tools kleborate          # smoke-test
 
 Genome sets (under ``--data-dir``, default the local related_lr mirror):
   * ``sr``   sr_originals/**/*.fa.gz      key = file stem (BioSample)
@@ -23,11 +23,11 @@ scratch dir for the run and removed afterwards. The run is **resumable**:
 a per-key sentinel / existing output is skipped, so re-invoking after an
 interruption only does the remaining work.
 
-Outputs (under ``--out-dir``, default ``<data-dir>/qc``):
-  kleborate/<group>_kleborate.txt   concatenated Kleborate table per set
+Outputs (under ``--out-dir``, default ``<data-dir>/annotations``):
+  kleborate/<group>__<module>.txt   per-module Kleborate tables, concatenated per set
   isescan/<group>/<key>/...         per-genome ISEScan result tree
   isescan/<group>_isescan.tsv       concatenated IS calls (key-tagged)
-  run_qc_batch_manifest.tsv         per-(group,key,tool) status
+  annotation_manifest.tsv           per-(group,key,tool) status
 """
 
 from __future__ import annotations
@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--limit", type=int, default=None, help="cap genomes/set (smoke-test)")
     args = p.parse_args(argv)
 
-    out_dir = args.out_dir or args.data_dir / "qc"
+    out_dir = args.out_dir or args.data_dir / "annotations"
     out_dir.mkdir(parents=True, exist_ok=True)
     groups = [g.strip() for g in args.groups.split(",") if g.strip()]
     tools = [t.strip() for t in args.tools.split(",") if t.strip()]
@@ -222,7 +222,7 @@ def main(argv: list[str] | None = None) -> int:
             manifest.extend(run_isescan(genomes, out_dir, group, args.workers, args.threads))
 
     mdf = pd.DataFrame(manifest)
-    mpath = out_dir / "run_qc_batch_manifest.tsv"
+    mpath = out_dir / "annotation_manifest.tsv"
     mdf.to_csv(mpath, sep="\t", index=False)
     print(f"\nManifest → {mpath}", flush=True)
     if len(mdf):
