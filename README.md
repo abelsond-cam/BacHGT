@@ -8,8 +8,8 @@ This repo combines three task areas. Each is briefly described below with the
 main scripts to run and the most important options to tweak.
 
 > Python entrypoints are always run with `uv run python ...` (the project
-> ships a `pyproject.toml`). Most are wrapped by a Slurm script under
-> `slurm_scripts/` for HPC execution.
+> ships a `pyproject.toml`). Most are wrapped by a Slurm script under the
+> owning subpackage's `src/bac_*/slurm_scripts/` for HPC execution.
 
 ---
 
@@ -22,7 +22,7 @@ GFF roots, resolves per-sample FASTA + GFF paths, counts GFF features for QC,
 adds typing columns (PopPUNK clusters), and projects the full curated TSV down
 to the slimmed form that the steps below read.
 
-Main scripts (under `src/bac_metadata/pp/`, Slurm wrappers under `slurm_scripts/`):
+Main scripts (under `src/bac_metadata/pp/`, Slurm wrappers under `src/bac_metadata/slurm_scripts/`):
 - `add_paths_gff_fna_to_metadata.py` — scan assembly / GFF roots, write the
   resolved per-sample paths into the metadata TSV.
 - `count_gff_features.py` + `merge_gff_feature_counts_into_metadata.py` — count
@@ -53,22 +53,22 @@ Run Panaroo on one clonal group, one sublineage, or one custom sample-list
 TSV as a single Slurm job.
 
 - Python: [`src/bacotype/pp/panaroo_run_strain.py`](src/bacotype/pp/panaroo_run_strain.py)
-- Slurm: [`slurm_scripts/panaroo_run_strain.sh`](slurm_scripts/panaroo_run_strain.sh)
+- Slurm: [`src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh`](src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh)
 
 Examples:
 ```bash
 # One clonal group:
-sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11
+sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11
 
 # One sublineage:
-sbatch slurm_scripts/panaroo_run_strain.sh --sublineage SL123
+sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --sublineage SL123
 
 # Custom sample list (overrides CG/SL filters):
-sbatch slurm_scripts/panaroo_run_strain.sh \
+sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh \
   --sample-metadata-file /path/to/samples.tsv
 
 # Quick test with N samples:
-sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11 --n 10
+sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11 --n 10
 ```
 
 Important options (CLI flags, see header of the `.sh` for the full list):
@@ -88,10 +88,10 @@ task calls the single-strain runner on one TSV.
 - Python: [`src/bacotype/pp/panaroo_metadata_batching.py`](src/bacotype/pp/panaroo_metadata_batching.py)
   generates per-lineage batch TSVs plus a log under
   `<PANAROO_RUN_ROOT>/batches/`.
-- Shell helper: [`slurm_scripts/generate_panaroo_ref_tsv_lists.sh`](slurm_scripts/generate_panaroo_ref_tsv_lists.sh)
+- Shell helper: [`src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh`](src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh)
   builds `.list` files (one path per line) grouping the generated TSVs into
   phased batches (`panaroo_ref_tsvs_*.list`).
-- Slurm: [`slurm_scripts/panaroo_run_strain_metadata_array.sh`](slurm_scripts/panaroo_run_strain_metadata_array.sh)
+- Slurm: [`src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh`](src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh)
   reads one TSV path per array index and execs `panaroo_run_strain.sh`.
 
 Typical pipeline:
@@ -101,11 +101,11 @@ BATCHES=$ROOT/batches
 
 # (i) Generate batch TSVs + .list files:
 uv run python src/bacotype/pp/panaroo_metadata_batching.py
-bash slurm_scripts/generate_panaroo_ref_tsv_lists.sh
+bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 
 # (ii) Submit one array per phased list (size N = line count of the list):
 sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_sl258_parts.list")%8 \
-  slurm_scripts/panaroo_run_strain_metadata_array.sh \
+  src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh \
   --list-file "$BATCHES/panaroo_ref_tsvs_sl258_parts.list"
 # (repeat for split_parts_other, large_single, species, kp_rare, or use
 #  panaroo_ref_tsvs_all.list)
@@ -157,11 +157,11 @@ each major K_locus within each major Clonal group (plus pooled `other`).
 Reference genomes are always included in every subset.
 
 - Python: [`src/bacotype/tl/gpa_distances_single_run.py`](src/bacotype/tl/gpa_distances_single_run.py)
-- Slurm: [`slurm_scripts/gpa_distances_single_run.sh`](slurm_scripts/gpa_distances_single_run.sh)
+- Slurm: [`src/bac_panaroo/slurm_scripts/gpa_distances_single_run.sh`](src/bac_panaroo/slurm_scripts/gpa_distances_single_run.sh)
 
 Run:
 ```bash
-sbatch slurm_scripts/gpa_distances_single_run.sh
+sbatch src/bac_panaroo/slurm_scripts/gpa_distances_single_run.sh
 ```
 
 Important settings (edit at the top of the `.sh`):
@@ -188,11 +188,11 @@ detail TSVs are still written by 3b inside each run directory. The batch
 itself compiles one summary TSV (one row per run = the whole-set row).
 
 - Python: [`src/bacotype/tl/gpa_distances_batch_runs.py`](src/bacotype/tl/gpa_distances_batch_runs.py)
-- Slurm: [`slurm_scripts/gpa_distances_batch_runs.sh`](slurm_scripts/gpa_distances_batch_runs.sh)
+- Slurm: [`src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh`](src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh)
 
 Run:
 ```bash
-sbatch slurm_scripts/gpa_distances_batch_runs.sh
+sbatch src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh
 ```
 
 Important settings (edit at the top of the `.sh`):

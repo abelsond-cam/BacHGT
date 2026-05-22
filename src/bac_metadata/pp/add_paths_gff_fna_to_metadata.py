@@ -4,7 +4,7 @@ Add assembly_file and gff_file columns to metadata TSV.
 Reads the three .txt path lists (assemblies, ncbi_gff, klebsiella_gff), parses
 Sample from each path with GC normalization, writes TSVs, then loads metadata
 and adds assembly_file / gff_file via dict lookup. Run after building the .txt
-files with: bash slurm_scripts/build_assemblies_and_gff_file_list.sh
+files with: bash src/bac_metadata/slurm_scripts/build_assemblies_and_gff_file_list.sh
 """
 
 from __future__ import annotations

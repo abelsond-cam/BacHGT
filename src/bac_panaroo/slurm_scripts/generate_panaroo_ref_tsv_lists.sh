@@ -18,7 +18,7 @@
 # panaroo_metadata_batching.py in panaroo_batching.log under the batch directory.
 #
 # Usage:
-#   bash slurm_scripts/generate_panaroo_ref_tsv_lists.sh [BATCH_DIR]
+#   bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh [BATCH_DIR]
 #
 # panaroo_metadata_batching.py writes TSVs + panaroo_batching.log under
 #   <output_dir>/batches/
@@ -27,7 +27,7 @@
 # regenerated after array jobs move each TSV into <batches>/<stem>/<stem>.tsv.
 #
 # Align SL258 filenames with --sl258-name (default SL258):
-#   SL258_PREFIX=SL258 bash slurm_scripts/generate_panaroo_ref_tsv_lists.sh
+#   SL258_PREFIX=SL258 bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 
 set -euo pipefail
 
@@ -136,6 +136,6 @@ cat <<EOF
 
 Done. Submit example (from repo root, adjust %concurrency):
   sbatch --array=1-\$(wc -l < ${out_sl258})%8 \\
-    slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file ${out_sl258}
+    src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file ${out_sl258}
   (repeat for split_parts_other, large_single, species, kp_rare, or use --list-file ${out_all} once)
 EOF

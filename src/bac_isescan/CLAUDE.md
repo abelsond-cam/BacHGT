@@ -31,4 +31,4 @@ Flat package — each module is a standalone CLI.
 `bac_cohort`). Works because the monorepo shares one uv environment.
 
 `isescan_family_copy_per_sample.py` runs on Slurm via
-`slurm_scripts/isescan_n_per_sample.sh`.
+`src/bac_isescan/slurm_scripts/isescan_n_per_sample.sh`.

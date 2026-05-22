@@ -42,8 +42,8 @@
 #     rate limit from 3 to 10 req/s (the script honours it automatically).
 #
 # Usage:
-#   sbatch slurm_scripts/norway_tables1_integrate.sh
-#   bash   slurm_scripts/norway_tables1_integrate.sh
+#   sbatch src/bac_data/slurm_scripts/norway_tables1_integrate.sh
+#   bash   src/bac_data/slurm_scripts/norway_tables1_integrate.sh
 #
 set -euo pipefail
 
@@ -91,5 +91,5 @@ uv run python -u -m bac_data.norway_tables1_integrate \
   --datasets-cmd "${DATASETS_CMD}"
 
 echo
-echo "Done. Next: run slurm_scripts/add_paths_gff_fna_to_metadata.sh to add"
+echo "Done. Next: run src/bac_metadata/slurm_scripts/add_paths_gff_fna_to_metadata.sh to add"
 echo "assembly_file/gff_file to the full TSV and regenerate the slimmed TSV."

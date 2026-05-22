@@ -38,5 +38,5 @@ genome+GFF via NCBI Datasets), `download_bakrep_gbff_files.py`,
 column from file presence), `update_biosample_accessions.py` (RefSeq/NCTC
 assembly accessions → BioSample accessions).
 
-Two of these run on Slurm: `slurm_scripts/norway_tables1_integrate.sh` and
-`slurm_scripts/related_lr_complete_assembly_audit.sh`.
+Two of these run on Slurm: `src/bac_data/slurm_scripts/norway_tables1_integrate.sh` and
+`src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh`.

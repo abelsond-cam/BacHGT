@@ -43,7 +43,7 @@ metadata TSV is the single source of truth for everything below. What remains in
 
 Three modes sharing `pp/panaroo_run_strain.py`:
 
-- **2a** single CG: `sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11`
+- **2a** single CG: `sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11`
 - **2b** whole dataset as a Slurm array: `pp/panaroo_metadata_batching.py` →
   `panaroo_run_strain_metadata_array.sh`
 - **2c** arbitrary sample list: same script with `--sample-metadata-file`
@@ -67,4 +67,4 @@ sees a fixed reference pool — that is what makes level `e` meaningful in Task 
   splits `Sublineage` → `Clonal group` → `K_locus`, computes levels via a single
   BLAS SGEMM. Level definitions, row types, and output schema:
   [`docs/panaroo_run_inventory.md`](docs/panaroo_run_inventory.md). Submit via
-  `sbatch slurm_scripts/gpa_reference_granularity.sh` (fast enough for the login node).
+  `sbatch src/bac_panaroo/slurm_scripts/gpa_reference_granularity.sh` (fast enough for the login node).

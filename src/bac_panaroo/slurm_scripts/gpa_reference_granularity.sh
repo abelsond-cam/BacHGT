@@ -117,7 +117,7 @@ echo "Job complete! (exit=${RC})"
 echo "========================================================================"
 exit "${RC}"
 
-# Run with: sbatch slurm_scripts/gpa_reference_granularity.sh
+# Run with: sbatch src/bac_panaroo/slurm_scripts/gpa_reference_granularity.sh
 # Check: squeue -u dca36
 # Cancel: scancel <jobid>
 # Smoke test (2 runs): edit TEST_N_RUNS=2 near the top, then sbatch

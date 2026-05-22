@@ -11,7 +11,7 @@ likewise decompressed into assembly_unzipped/. For each selected sample, a
 single Prokka-style combined GFF+FASTA file is created via Panaroo's convert
 logic in converted_gff/, and the input file lists only those combined GFF
 paths (one per line).
-Used by slurm_scripts/panaroo_run_strain.sh and panaroo_run_strain_split.sh.
+Used by src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh and panaroo_run_strain_split.sh.
 
 With --split 1 or --split 2 (and --clonal-group or --sublineage), writes
 ``{label}_all_part{N}/`` with ``sample_metadata.tsv``, symlinks combined GFFs

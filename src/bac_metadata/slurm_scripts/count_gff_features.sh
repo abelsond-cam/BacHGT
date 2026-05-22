@@ -23,7 +23,7 @@
 #   (ii) Locally (no sbatch needed), merge sidecar into metadata in place:
 #          uv run python -m bac_metadata.pp.merge_gff_feature_counts_into_metadata
 #
-# Submit with: sbatch slurm_scripts/count_gff_features.sh
+# Submit with: sbatch src/bac_metadata/slurm_scripts/count_gff_features.sh
 #
 # Resume: re-submitting after a partial run skips Samples already present in
 # the sidecar TSV, so no work is repeated.

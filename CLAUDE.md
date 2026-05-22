@@ -48,15 +48,16 @@ Subpackages that need non-Python tool binaries keep their own `pixi`/`micromamba
 environment — e.g. `bac_ariba` runs ARIBA from an apptainer container (see
 `src/bac_ariba/CLAUDE.md`).
 
-Production scripts run on Slurm: edit the knobs at the top of the relevant
-`slurm_scripts/*.sh`, then `sbatch`.
+Production scripts run on Slurm: each subpackage keeps its own
+`src/bac_*/slurm_scripts/` — edit the knobs at the top of the relevant
+`*.sh`, then `sbatch`.
 
 ## HPC
 
 See `~/.claude/CLAUDE.md` for the HPC connection and the four storage roots.
 Code at `/home/dca36/workspace/BacHGT`. Hard-coded `/home/dca36/rds/...` data
-paths across `slurm_scripts/*.sh` and `src/bac_*/` are deliberately not
-centralised; their literal paths use the vocabulary in
+paths across `src/bac_*/slurm_scripts/*.sh` and `src/bac_*/` are deliberately
+not centralised; their literal paths use the vocabulary in
 `~/.claude/hpc_storage_overview.md`.
 
 ## Code style

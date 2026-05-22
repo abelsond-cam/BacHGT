@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Parallel per-sample ISEScan family + cluster counts (KpSC only). Outputs one wide CSV.
-# Run: sbatch slurm_scripts/isescan_n_per_sample.sh
+# Run: sbatch src/bac_isescan/slurm_scripts/isescan_n_per_sample.sh
 # Progress: squeue -u "$USER"; cancel: scancel <jobid>
 
 #SBATCH --job-name=isescan_n_sample

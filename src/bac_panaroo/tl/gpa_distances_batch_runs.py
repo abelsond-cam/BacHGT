@@ -14,7 +14,7 @@ runner additionally compiles one combined summary TSV
 for each discovered run, under ``--output-dir``.
 
 Typical invocation is via the Slurm wrapper
-``slurm_scripts/gpa_distances_batch_runs.sh``.
+``src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh``.
 """
 from __future__ import annotations
 

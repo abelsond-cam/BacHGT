@@ -16,7 +16,7 @@
 # This script downloads bakta-annotated GBFF or GFF3 files from BakRep for all
 # samples in the metadata TSV that have sample_accession starting with "SAM".
 # It uses the bakrep CLI in parallel batches, and delegates collection/flag-update
-# logic to slurm_scripts/collect_bakrep_samples.py (standalone, pandas only).
+# logic to src/bac_data/slurm_scripts/collect_bakrep_samples.py (standalone, pandas only).
 #
 # File format: Default is filetype:gbff (.bakta.gbff.gz). Use --gff3 for
 # filetype:gff3 (.bakta.gff3.gz) per https://github.com/ag-computational-bio/bakrep-cli
@@ -114,7 +114,7 @@ SKIP_ARG=""
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Running Python collect (micromamba bakrep_download)..." >&2
 # Execute the python script inside micromamba environment named "bakrep_download", which has pandas installed.
 # It is equivilent to micromamba activate bakrep_download and then running the script.
-micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/slurm_scripts/collect_bakrep_samples.py \
+micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/src/bac_data/slurm_scripts/collect_bakrep_samples.py \
     --metadata "$TSV_FILE" \
     --n "$N" \
     --filetype "$FILE_TYPE" \
@@ -205,7 +205,7 @@ echo "============================================"
 
 MISSING_OUTPUT="${OUTPUT_DIR}/missing_samples_$(date +%Y%m%d_%H%M%S).txt"
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Running Python update-flags (micromamba bakrep_download)..." >&2
-micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/slurm_scripts/collect_bakrep_samples.py \
+micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/src/bac_data/slurm_scripts/collect_bakrep_samples.py \
     --metadata "$TSV_FILE" \
     --output-dir "$OUTPUT_DIR" \
     --filetype "$FILE_TYPE" \
@@ -226,7 +226,7 @@ if [ "$FILE_TYPE" = "gff3" ]; then
     echo "============================================"
     echo "Flattening klebsiella_gff3 directory (moving *.bakta.gff3.gz to top level)..."
     echo "============================================"
-    micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/slurm_scripts/flatten_klebsiella_gff3.py
+    micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/src/bac_data/slurm_scripts/flatten_klebsiella_gff3.py
 fi
 
 # Final summary

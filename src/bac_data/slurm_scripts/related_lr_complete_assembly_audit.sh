@@ -31,8 +31,8 @@
 #     limit from 3 to 10 req/s (the script honours it automatically).
 #
 # Usage:
-#   sbatch slurm_scripts/related_lr_complete_assembly_audit.sh
-#   bash   slurm_scripts/related_lr_complete_assembly_audit.sh
+#   sbatch src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh
+#   bash   src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh
 #
 set -euo pipefail
 

@@ -152,7 +152,7 @@ echo "Job complete! (exit=${RC})"
 echo "========================================================================"
 exit "${RC}"
 
-# Run with: sbatch slurm_scripts/gpa_distances_batch_runs.sh
+# Run with: sbatch src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh
 # Check:    squeue -u dca36
 # Cancel:   scancel <jobid>
 # Toggle venv staging off for a run: edit STAGE_VENV=false near the top.

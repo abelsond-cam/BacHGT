@@ -113,7 +113,7 @@ else
 fi
 
 REPO_DIR=/home/dca36/workspace/BacHGT
-STRAIN_SCRIPT="${REPO_DIR}/slurm_scripts/panaroo_run_strain.sh"
+STRAIN_SCRIPT="${REPO_DIR}/src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh"
 
 echo "========================================================================"
 echo "panaroo_run_strain_metadata_array: array_task=${SLURM_ARRAY_TASK_ID}  job=${SLURM_JOB_ID:-local}"
@@ -151,25 +151,25 @@ exec bash "$STRAIN_SCRIPT" \
 #
 #   cd "$REPO"
 #   uv run python src/bac_panaroo/pp/panaroo_metadata_batching.py
-#   bash slurm_scripts/generate_panaroo_ref_tsv_lists.sh
+#   bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 #
 # (ii) Submit: use --array=1-$(wc -l < FILE)%M so N matches the line count.
 #
 #   BATCHES=$ROOT/batches
 #   cd "$REPO"
 #   sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_sl258_parts.list")%8 \
-#     slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_sl258_parts.list"
+#     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_sl258_parts.list"
 #   sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_split_parts_other.list")%8 \
-#     slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_split_parts_other.list"
+#     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_split_parts_other.list"
 #   sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_large_single.list")%8 \
-#     slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_large_single.list"
+#     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_large_single.list"
 #   sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_species.list")%8 \
-#     slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_species.list"
+#     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_species.list"
 #   sbatch --array=1-$(wc -l < "$BATCHES/panaroo_ref_tsvs_kp_rare.list")%8 \
-#     slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_kp_rare.list"
+#     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file "$BATCHES/panaroo_ref_tsvs_kp_rare.list"
 #
 # Optional overrides (default list under $BATCHES/; default OUTDIR is $ROOT):
-#   ... slurm_scripts/panaroo_run_strain_metadata_array.sh \
+#   ... src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh \
 #       --list-file "$BATCHES/panaroo_ref_tsvs_all.list" \
 #       --outdir "$ROOT" --clean-mode strict
 #

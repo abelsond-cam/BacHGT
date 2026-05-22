@@ -48,6 +48,6 @@ echo "========================================================================"
 echo "Done"
 echo "========================================================================"
 
-# Run with: sbatch slurm_scripts/test_gpa_csv_load.sh
+# Run with: sbatch src/bac_panaroo/slurm_scripts/test_gpa_csv_load.sh
 # Check:    squeue -u dca36
 # Cancel:   scancel <jobid>

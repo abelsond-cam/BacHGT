@@ -90,4 +90,4 @@ echo ""
 echo "Optional cleanup (frees node-local space for other jobs on this node):"
 echo "  rm -rf ${DEST}"
 
-# Run with: sbatch slurm_scripts/test_import_timing.sh
+# Run with: sbatch src/bac_panaroo/slurm_scripts/test_import_timing.sh

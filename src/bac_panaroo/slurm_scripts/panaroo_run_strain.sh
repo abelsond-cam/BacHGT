@@ -220,8 +220,8 @@ echo "========================================================================"
 echo "Panaroo run finished."
 echo "========================================================================"
 
-# Run with clonal group:       sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11
-# Run with sublineage:         sbatch slurm_scripts/panaroo_run_strain.sh --sublineage SL123
-# Test run (10 samples):       sbatch slurm_scripts/panaroo_run_strain.sh --clonal-group CG11 --n 10
-# All samples (custom file):   sbatch slurm_scripts/panaroo_run_strain.sh --sample-metadata-file /path/to/samples.tsv
-# All samples (default meta):  sbatch slurm_scripts/panaroo_run_strain.sh
+# Run with clonal group:       sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11
+# Run with sublineage:         sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --sublineage SL123
+# Test run (10 samples):       sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11 --n 10
+# All samples (custom file):   sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --sample-metadata-file /path/to/samples.tsv
+# All samples (default meta):  sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh
