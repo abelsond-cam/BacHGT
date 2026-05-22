@@ -24,6 +24,7 @@ GENE_FEATURES = {"CDS", "tRNA", "rRNA", "tmRNA", "ncRNA"}
 
 OUT_COLUMNS = [
     "sample", "contig", "is_family", "is_cluster", "is_start", "is_end", "is_len",
+    "is_type", "ncopy", "ov",
     "relationship", "n_overlapping", "hit_locus_tag", "hit_gene", "hit_product",
     "upstream_locus_tag", "upstream_product", "upstream_distance_bp",
     "downstream_locus_tag", "downstream_product", "downstream_distance_bp",
@@ -105,11 +106,18 @@ def _process(sample: str, is_path: str, gff_path: str):
         with open(is_path, newline="") as fh:
             for r in csv.DictReader(fh):
                 contig = r.get("seqID", "")
+                # Use the documented IS element span isBegin/isEnd. The TIR
+                # coordinates start1/end1/start2/end2 are 0 when ISEScan does
+                # not resolve terminal inverted repeats (partial IS, type='p'),
+                # which would collapse the interval to [0, 0] and corrupt the
+                # intergenic/flank assignment.
                 try:
-                    s = int(r["start1"])
-                    e = int(r.get("end2") or r["end1"])
+                    s = int(r["isBegin"])
+                    e = int(r["isEnd"])
                 except (KeyError, ValueError, TypeError):
                     continue
+                if s > e:
+                    s, e = e, s
                 ov, up, dn = _context(genes.get(contig, []), s, e)
                 if ov:
                     rel = "within"
@@ -119,7 +127,9 @@ def _process(sample: str, is_path: str, gff_path: str):
                     hit_lt = hit_gene = hit_prod = ""
                 rows.append([
                     sample, contig, r.get("family", ""), r.get("cluster", ""),
-                    s, e, r.get("isLen", ""), rel, len(ov), hit_lt, hit_gene, hit_prod,
+                    s, e, r.get("isLen", ""),
+                    r.get("type", ""), r.get("ncopy4is", ""), r.get("ov", ""),
+                    rel, len(ov), hit_lt, hit_gene, hit_prod,
                     up[3] if up else "", up[5] if up else "", (s - up[1]) if up else "",
                     dn[3] if dn else "", dn[5] if dn else "", (dn[0] - e) if dn else "",
                 ])
