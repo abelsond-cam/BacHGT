@@ -26,7 +26,7 @@ echo "Wrote $(wc -l < "${ISESCAN_LIST_F}") paths to ${ISESCAN_LIST_F}"
 echo
 echo "Running add_paths_gff_fna_to_metadata.py in ISEScan mode..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "${SCRIPT_DIR}/.." && uv run python -m bac_panaroo.pp.add_paths_gff_fna_to_metadata \
+cd "${SCRIPT_DIR}/.." && uv run python -m bac_metadata.pp.add_paths_gff_fna_to_metadata \
   --mode isescan \
   --isescan-list "${ISESCAN_LIST_F}" \
   "${METADATA_F}"

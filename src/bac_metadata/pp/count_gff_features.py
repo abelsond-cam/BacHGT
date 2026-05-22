@@ -10,7 +10,7 @@ Designed to run as a single Slurm job on one icelake node using Python
 multiprocessing across all allocated cores. Supports resume: if the sidecar
 TSV already exists, already-processed samples are skipped.
 
-Run: ``uv run python -m bac_panaroo.pp.count_gff_features``.
+Run: ``uv run python -m bac_metadata.pp.count_gff_features``.
 """
 
 from __future__ import annotations

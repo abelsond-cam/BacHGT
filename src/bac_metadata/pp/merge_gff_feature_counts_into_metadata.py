@@ -6,7 +6,7 @@ merges its ``n_*`` columns onto ``metadata_final_curated_slimmed.tsv`` keyed on
 ``Sample``. Missing values are filled with 0 and cast to pandas nullable
 ``Int64``. The metadata file is overwritten atomically.
 
-Run: ``uv run python -m bac_panaroo.pp.merge_gff_feature_counts_into_metadata``.
+Run: ``uv run python -m bac_metadata.pp.merge_gff_feature_counts_into_metadata``.
 """
 
 from __future__ import annotations

@@ -21,7 +21,7 @@
 #          david/final/gff_feature_counts.tsv
 #          david/final/gff_feature_counts.errors.tsv   (only if any failures)
 #   (ii) Locally (no sbatch needed), merge sidecar into metadata in place:
-#          uv run python -m bac_panaroo.pp.merge_gff_feature_counts_into_metadata
+#          uv run python -m bac_metadata.pp.merge_gff_feature_counts_into_metadata
 #
 # Submit with: sbatch slurm_scripts/count_gff_features.sh
 #
@@ -41,10 +41,10 @@ echo "  node=$(hostname)  cpus_per_task=${SLURM_CPUS_PER_TASK:-?}"
 echo "  start=$(date -Iseconds)"
 echo "========================================================================"
 
-uv run python -m bac_panaroo.pp.count_gff_features
+uv run python -m bac_metadata.pp.count_gff_features
 
 echo "========================================================================"
 echo "count_gff_features: done=$(date -Iseconds)"
 echo "Next step (run locally):"
-echo "  uv run python -m bac_panaroo.pp.merge_gff_feature_counts_into_metadata"
+echo "  uv run python -m bac_metadata.pp.merge_gff_feature_counts_into_metadata"
 echo "========================================================================"

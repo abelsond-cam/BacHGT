@@ -17,7 +17,7 @@ scanpy-style modules under `src/bac_panaroo/`:
 
 | Module | Purpose |
 |---|---|
-| `pp/` | Preprocessing — resolve assembly/GFF paths, QC features, build metadata TSV, prep Panaroo inputs |
+| `pp/` | Preprocessing — build the reference bucket and Panaroo-sized input batches |
 | `tl/` | Tools/analysis — Jaccard distances, ref-genome scoring, clustering, pangenome stats |
 | `pl/` | Plotting — GPA matrices, epidemic-vs-mixed, granularity lollipops |
 
@@ -32,10 +32,12 @@ locally, `~/workspace/panaroo` on HPC). See `_load_convert_from_panaroo_fork()`.
 
 ### Task 1 — Preprocessing
 
-Scans assembly/GFF dirs and populates the curated metadata TSV (the single source
-of truth downstream — produced by the `bac_metadata` subpackage). Key scripts:
-`pp/add_paths_gff_fna_to_metadata.py`, `pp/count_gff_features.py`,
-`pp/merge_gff_feature_counts_into_metadata.py`.
+Metadata preprocessing — scanning assembly/GFF dirs, resolving per-sample paths,
+GFF-feature QC, PopPUNK clusters, slimming the curated TSV — is handled by the
+`bac_metadata` subpackage (see `src/bac_metadata/CLAUDE.md`); its curated
+metadata TSV is the single source of truth for everything below. What remains in
+`bac_panaroo/pp/` is Panaroo-input prep: `build_reference_bucket.py` and
+`panaroo_metadata_batching.py` (see Task 2).
 
 ### Task 2 — Run Panaroo
 

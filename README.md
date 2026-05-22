@@ -13,39 +13,31 @@ main scripts to run and the most important options to tweak.
 
 ---
 
-## 1. Data preprocessing
+## 1. Data preprocessing — `bac_metadata`
 
-Collect assemblies and annotations (GFF) and organise their file paths into
-the project metadata TSV so that downstream Panaroo and analysis steps can
-resolve every sample's FASTA + GFF.
+Collecting assemblies/annotations and curating the metadata TSV is the job of
+the `bac_metadata` subpackage — see
+[`src/bac_metadata/CLAUDE.md`](src/bac_metadata/CLAUDE.md). It scans assembly /
+GFF roots, resolves per-sample FASTA + GFF paths, counts GFF features for QC,
+adds typing columns (PopPUNK clusters), and projects the full curated TSV down
+to the slimmed form that the steps below read.
 
-Main scripts:
-- [`src/bacotype/pp/add_paths_gff_fna_to_metadata.py`](src/bacotype/pp/add_paths_gff_fna_to_metadata.py)
-  and Slurm wrapper
-  [`slurm_scripts/add_paths_gff_fna_to_metadata.sh`](slurm_scripts/add_paths_gff_fna_to_metadata.sh):
-  scans configured assembly / GFF roots and writes the resolved per-sample
-  paths into the metadata TSV.
-- [`src/bacotype/pp/count_gff_features.py`](src/bacotype/pp/count_gff_features.py)
-  and Slurm wrapper
-  [`slurm_scripts/count_gff_features.sh`](slurm_scripts/count_gff_features.sh):
-  counts GFF feature types per sample (QC on annotations).
-- [`src/bacotype/pp/merge_gff_feature_counts_into_metadata.py`](src/bacotype/pp/merge_gff_feature_counts_into_metadata.py):
-  merges those counts back into the curated metadata TSV.
-- Supporting utilities: `add_poppunk_clusters_to_metadata.py`,
-  `convert_ast_data.py`, `select_genomes_reference_comparison.py`. Data
-  acquisition utilities (`download_bakrep_gbff_files.py`,
-  `add_bakta_gbff_downloaded_flag.py`, `update_biosample_accessions.py`) now
-  live in the `bac_data` subpackage — see `src/bac_data/CLAUDE.md`.
+Main scripts (under `src/bac_metadata/pp/`, Slurm wrappers under `slurm_scripts/`):
+- `add_paths_gff_fna_to_metadata.py` — scan assembly / GFF roots, write the
+  resolved per-sample paths into the metadata TSV.
+- `count_gff_features.py` + `merge_gff_feature_counts_into_metadata.py` — count
+  GFF feature types per sample (annotation QC) and merge the counts in.
+- `add_poppunk_clusters_to_metadata.py` — add the PopPUNK cluster column.
+- `slim_metadata.py` — derive `metadata_final_curated_slimmed.tsv` as a column
+  subset of the full curated TSV.
 
-Important settings to check before running:
-- Assembly / GFF root directories in the preprocessing scripts (hard-coded or
-  CLI-flag) — must point at the current data layout.
-- Metadata TSV path — the curated `metadata_final_curated_*` file is the
-  single source of truth used by the Panaroo and GPA-distance steps below.
+Data-acquisition utilities (`download_bakrep_gbff_files.py`,
+`add_bakta_gbff_downloaded_flag.py`, `update_biosample_accessions.py`, …) live
+in the `bac_data` subpackage — see [`src/bac_data/CLAUDE.md`](src/bac_data/CLAUDE.md).
 
 Output: the curated metadata TSV at
-`<DATA_ROOT>/final/metadata_final_curated_all_samples_and_columns.tsv`, which
-all later steps read via a `--metadata` CLI flag.
+`<DATA_ROOT>/final/metadata_final_curated_all_samples_and_columns.tsv` — the
+single source of truth all later steps read via a `--metadata` CLI flag.
 
 ---
 

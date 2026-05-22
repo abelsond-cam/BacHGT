@@ -23,7 +23,7 @@ overwritten.
 
 Usage
 ─────
-    uv run python -m bac_panaroo.pp.slim_metadata
+    uv run python -m bac_metadata.pp.slim_metadata
         --full    PATH   # metadata_final_curated_all_samples_and_columns.tsv
         --slimmed PATH   # metadata_final_curated_slimmed.tsv (read for its
                          #   header, backed up, then overwritten)

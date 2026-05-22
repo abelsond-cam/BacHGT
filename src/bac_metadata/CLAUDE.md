@@ -88,6 +88,14 @@ metadata_final_curated_slimmed.tsv
 - **`metadata_analysis.py`** — Generates species/ST/geography/host/isolation-source plots as PNGs and interactive HTML
 - **`date_utils.py`** — Date normalization helpers used by `metadata_curation.py`
 
+Metadata-enrichment modules absorbed from `bac_panaroo` (run after curation, each overwrites the curated TSV in place):
+
+- **`add_paths_gff_fna_to_metadata.py`** — Scans assembly / GFF (and ISEScan) roots and writes resolved per-sample file-path columns into the metadata TSV
+- **`count_gff_features.py`** — Counts GFF feature types per sample (annotation QC) into a sidecar TSV
+- **`merge_gff_feature_counts_into_metadata.py`** — Merges those `n_*` feature counts into the metadata TSV
+- **`add_poppunk_clusters_to_metadata.py`** — Adds the `poppunk_cluster` typing column from a PopPUNK clusters CSV
+- **`slim_metadata.py`** — Derives `metadata_final_curated_slimmed.tsv` as a column subset of the full curated TSV
+
 ### Parsing & Categorization (in `metadata_curation.py`)
 
 The curation step normalizes four key ENA fields using regex substitution rules and lookup tables:
