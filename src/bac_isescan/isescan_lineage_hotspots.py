@@ -8,13 +8,16 @@ more often than a uniform-IS null predicts.
 
 Flanking-only by design: the hit gene is mostly the IS's own transposase
 (~59% of ``within`` rows), so it is carried through (plus a cheap
-``self_transposase`` flag) but not analysed. The recurrence unit is a single
-Panaroo cluster, unordered: each IS contributes a hit to ``cluster(upstream)``
-and to ``cluster(downstream)`` independently; recurrence is the number of
-distinct lineage genomes with >=1 IS flanked by that cluster.
+``self_transposase`` flag) but not analysed. The recurrence unit is a
+``(Panaroo cluster, IS family)`` pair, unordered: each IS contributes a hit to
+``cluster(upstream)`` and to ``cluster(downstream)`` independently; recurrence
+is the number of distinct lineage genomes with >=1 IS of that family flanked
+by that cluster.
 
-The null is deliberately uniform over clusters (ignores cluster length and
-core/accessory status); reported ``enrichment`` is relative to that.
+The null is uniform over clusters and conditioned on IS family: ``lambda_F``
+is driven by each genome's count of family-F IS only, so reported
+``enrichment`` is observed genome-recurrence relative to what that family's IS
+load predicts (ignores cluster length and core/accessory status).
 
 Each IS carries an ``is_partial`` flag (ISEScan ``type='p'`` — a degraded IS
 remnant, i.e. a "scar" of a former full-length element). Partial IS rows are
@@ -43,17 +46,17 @@ def _log(msg: str) -> None:
 try:
     from scipy.stats import poisson
 
-    def _poisson_sf(k: np.ndarray, lam: float) -> np.ndarray:
-        """Upper-tail P(X >= k) for a Poisson(lam)."""
+    def _poisson_sf(k: np.ndarray, lam: np.ndarray | float) -> np.ndarray:
+        """Upper-tail P(X >= k) for a Poisson(lam) (lam scalar or per-element)."""
         return poisson.sf(k - 1, lam)
 
 except ImportError:  # pragma: no cover - scipy expected in env
 
-    def _poisson_sf(k: np.ndarray, lam: float) -> np.ndarray:
+    def _poisson_sf(k: np.ndarray, lam: np.ndarray | float) -> np.ndarray:
         """Normal-approx upper tail P(X >= k) fallback when scipy is absent."""
         from math import erfc, sqrt
 
-        z = (k - 0.5 - lam) / sqrt(lam)
+        z = (k - 0.5 - lam) / np.sqrt(lam)
         return np.array([0.5 * erfc(v / sqrt(2.0)) for v in z])
 
 
@@ -225,29 +228,31 @@ def run(
     long = pd.concat([up, dn], ignore_index=True)
     _log(f"aggregating hotspots over {len(long):,} flank events...")
 
-    grp = long.groupby("cluster")
+    # Recurrence unit: a (Panaroo cluster, IS family) pair.
+    keys = ["cluster", "is_family"]
+    grp = long.groupby(keys)
     hot = pd.DataFrame({
         "n_genomes_flanked": grp["sample"].nunique(),
         "n_is_events": grp.size(),
-        "n_as_upstream": long[long["side"].eq("upstream")].groupby("cluster").size(),
-        "n_as_downstream": long[long["side"].eq("downstream")].groupby("cluster").size(),
+        "n_as_upstream": long[long["side"].eq("upstream")].groupby(keys).size(),
+        "n_as_downstream": long[long["side"].eq("downstream")].groupby(keys).size(),
         "n_partial_events": grp["is_partial"].sum(),
-        "n_genomes_partial": long[long["is_partial"]].groupby("cluster")["sample"].nunique(),
+        "n_genomes_partial": long[long["is_partial"]].groupby(keys)["sample"].nunique(),
     }).fillna({"n_as_upstream": 0, "n_as_downstream": 0,
                "n_partial_events": 0, "n_genomes_partial": 0})
     hot["frac_partial"] = hot["n_partial_events"] / hot["n_is_events"]
-    fam = (long.groupby(["cluster", "is_family"]).size()
-           .sort_values(ascending=False)
-           .groupby(level=0).apply(
-               lambda s: ";".join(f"{f}:{c}" for (_, f), c in s.items())))
-    hot["is_family_breakdown"] = fam
-    hot["annotation"] = pd.Series(ann)
-    hot = hot.reset_index().rename(columns={"index": "cluster"})
+    hot = hot.reset_index()
+    hot["annotation"] = hot["cluster"].map(ann)
 
-    # Uniform null: per-genome P(touch a given cluster) depends only on m_g, so
-    # expected genome-recurrence is a single scalar lambda for every cluster.
-    m_g = df.groupby("sample").size().to_numpy()
-    lam = float(np.sum(1.0 - (1.0 - 1.0 / n_clusters) ** (2 * m_g)))
+    # Family-conditioned uniform null: for IS family F the expected genome-
+    # recurrence of any cluster depends only on m_{g,F} (genome g's count of
+    # family-F IS), each contributing 2 flank events. lambda_F is one scalar
+    # per family; enrichment is observed genome-recurrence relative to it.
+    base = 1.0 - 1.0 / n_clusters
+    fam_counts = df.groupby(["sample", "is_family"]).size()
+    lam_by_fam = fam_counts.groupby("is_family").apply(
+        lambda c: float(np.sum(1.0 - base ** (2 * c.to_numpy()))))
+    lam = hot["is_family"].map(lam_by_fam).to_numpy()
     obs = hot["n_genomes_flanked"].to_numpy()
     hot["expected_genomes"] = lam
     hot["enrichment"] = obs / lam
@@ -255,19 +260,23 @@ def run(
     hot["q_value"] = _bh_qvalues(hot["p_value"].to_numpy())
     hot["hotspot"] = (hot["n_genomes_flanked"] >= min_recurrence) & (hot["q_value"] <= fdr)
 
-    hot = hot.sort_values(["q_value", "n_genomes_flanked"],
-                          ascending=[True, False]).reset_index(drop=True)
-    cols = ["cluster", "annotation", "n_genomes_flanked", "n_is_events",
-            "is_family_breakdown", "n_as_upstream", "n_as_downstream",
+    # Order: cluster's total IS events (desc), then IS family by n within cluster.
+    hot["cluster_n_is_events"] = hot.groupby("cluster")["n_is_events"].transform("sum")
+    hot = hot.sort_values(
+        ["cluster_n_is_events", "cluster", "n_is_events"],
+        ascending=[False, True, False]).reset_index(drop=True)
+    cols = ["cluster", "is_family", "annotation", "cluster_n_is_events",
+            "n_genomes_flanked", "n_is_events", "n_as_upstream", "n_as_downstream",
             "n_partial_events", "n_genomes_partial", "frac_partial",
             "expected_genomes", "enrichment", "p_value", "q_value", "hotspot"]
     hotspots = out_dir / f"{lineage}_is_flank_hotspots.tsv"
     with open(hotspots, "w") as fh:
         fh.write(f"# lineage={lineage} genomes={len(samples)} clusters_N={n_clusters} "
-                 f"lambda={lam:.4f}; null=uniform-over-clusters "
+                 f"unit=(cluster,is_family) lambda_F=[{lam.min():.3f},{lam.max():.3f}]; "
+                 f"null=uniform-over-clusters per IS family "
                  f"(ignores cluster length/core-accessory)\n")
         hot[cols].to_csv(fh, sep="\t", index=False)
-    _log(f"wrote {hotspots.name} ({len(hot):,} clusters, "
+    _log(f"wrote {hotspots.name} ({len(hot):,} cluster-family pairs, "
          f"{int(hot['hotspot'].sum())} flagged hotspots) — DONE")
 
 
