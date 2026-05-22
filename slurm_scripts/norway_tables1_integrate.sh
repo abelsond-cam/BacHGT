@@ -47,7 +47,7 @@
 #
 set -euo pipefail
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
@@ -80,7 +80,7 @@ fi
 
 mkdir -p "${ASSEMBLIES_DIR}" "${GFF_DIR}"
 
-uv run python -u -m bacotype.pp.download_data.norway_tables1_integrate \
+uv run python -u -m bac_panaroo.pp.download_data.norway_tables1_integrate \
   --table-s1 "${TABLE_S1}" \
   --metadata "${FULL_METADATA}" \
   --workers "${WORKERS}" \

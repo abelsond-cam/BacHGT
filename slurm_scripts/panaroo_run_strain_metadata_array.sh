@@ -112,7 +112,7 @@ else
   exit 1
 fi
 
-REPO_DIR=/home/dca36/workspace/Bacotype
+REPO_DIR=/home/dca36/workspace/BacHGT
 STRAIN_SCRIPT="${REPO_DIR}/slurm_scripts/panaroo_run_strain.sh"
 
 echo "========================================================================"
@@ -145,12 +145,12 @@ exec bash "$STRAIN_SCRIPT" \
 # Paths for copy-paste:
 #   ROOT=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2
 #   BATCHES=$ROOT/batches
-#   REPO=/home/dca36/workspace/Bacotype
+#   REPO=/home/dca36/workspace/BacHGT
 #
 # (i) Generate batch TSVs + panaroo_batching.log under $BATCHES/:
 #
 #   cd "$REPO"
-#   uv run python src/bacotype/pp/panaroo_metadata_batching.py
+#   uv run python src/bac_panaroo/pp/panaroo_metadata_batching.py
 #   bash slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 #
 # (ii) Submit: use --array=1-$(wc -l < FILE)%M so N matches the line count.

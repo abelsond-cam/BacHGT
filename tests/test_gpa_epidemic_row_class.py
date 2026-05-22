@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pandas as pd
 
-from bacotype.pl.epidemic_vs_mixed import (
+from bac_panaroo.pl.epidemic_vs_mixed import (
     _rest_sublineage_join_keys,
     _row_sublineage_join_key,
     epidemic_vs_mixed_strain_stats,
 )
-from bacotype.tl.gpa_epidemic_row_class import (
+from bac_panaroo.tl.gpa_epidemic_row_class import (
     EPIDEMIC_ROW_CLASS_COL,
     IS_EPIDEMIC_GPA_CLONAL_TARGET_COL,
     EpidemicRowClass,

@@ -3,7 +3,7 @@ build-backend = "hatchling.build"
 requires = [ "hatchling" ]
 
 [project]
-name = "Bacotype"
+name = "BacHGT"
 version = "0.0.1"
 description = "Use bacformer to define bacotypes to create embeddings of whole genomes, both core and accessory, and understand population structure from perspective of all genes in genomes"
 readme = "README.md"
@@ -41,9 +41,9 @@ dependencies = [
   "tqdm>=4.66.0",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
-urls.Documentation = "https://Bacotype.readthedocs.io/"
-urls.Homepage = "https://github.com/abelsond-cam/Bacotype"
-urls.Source = "https://github.com/abelsond-cam/Bacotype"
+urls.Documentation = "https://BacHGT.readthedocs.io/"
+urls.Homepage = "https://github.com/abelsond-cam/BacHGT"
+urls.Source = "https://github.com/abelsond-cam/BacHGT"
 
 [dependency-groups]
 dev = [
@@ -149,7 +149,7 @@ addopts = [
 ]
 
 [tool.coverage.run]
-source = [ "bacotype" ]
+source = [ "bac_panaroo" ]
 patch = [ "subprocess" ]
 omit = [
   "**/test_*.py",
@@ -166,3 +166,6 @@ skip = [
   "docs/references.md",
   "docs/notebooks/example.ipynb",
 ]
+
+[tool.hatch.build.targets.wheel]
+packages = [ "src/bac_panaroo" ]

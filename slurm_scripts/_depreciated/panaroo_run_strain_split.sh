@@ -94,7 +94,7 @@ PANAROO_INPUT="${RUN_SUBDIR}/panaroo_input.txt"
 CONVERTED_GFF_DIR="${RUN_SUBDIR}/converted_gff"
 GENE_PRESENCE_CSV="${RUN_SUBDIR}/gene_presence_absence.csv"
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 export PYTHONUNBUFFERED=1
 
 echo "========================================================================"
@@ -147,7 +147,7 @@ echo "Using TMPDIR: $TMPDIR"
 echo ""
 
 # Quoted argv array — do not use a single unquoted string for strain (preserves case/spaces).
-PY=(src/bacotype/pp/panaroo_run_strain.py)
+PY=(src/bac_panaroo/pp/panaroo_run_strain.py)
 if [[ -n "$CLONAL_GROUP" ]]; then
   PY+=(--clonal-group "$CLONAL_GROUP")
 elif [[ -n "$SUBLINEAGE" ]]; then

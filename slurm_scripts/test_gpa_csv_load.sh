@@ -12,7 +12,7 @@
 #
 # test_gpa_csv_load.sh
 # ---------------------
-# Runs: src/bacotype/tl/test_gpa_csv_load_standalone.py
+# Runs: src/bac_panaroo/tl/test_gpa_csv_load_standalone.py
 #
 # Minimal-imports sanity check for the streaming gene_presence_absence.csv
 # loader. Copies the CSV to node-local scratch ($TMPDIR) first, then streams
@@ -20,7 +20,7 @@
 # matrix size, and peak RSS.
 #
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 export PYTHONUNBUFFERED=1
 
@@ -39,7 +39,7 @@ echo "CSV: ${CSV}"
 echo "========================================================================"
 echo ""
 
-uv run python -u src/bacotype/tl/test_gpa_csv_load_standalone.py \
+uv run python -u src/bac_panaroo/tl/test_gpa_csv_load_standalone.py \
     --csv "${CSV}" \
     --progress-every "${PROGRESS_EVERY}"
 

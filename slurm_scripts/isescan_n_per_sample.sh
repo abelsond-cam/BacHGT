@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 export PYTHONUNBUFFERED=1
 
@@ -29,9 +29,9 @@ echo "Workers (--workers): ${WORKERS}"
 echo "========================================================================"
 
 echo ""
-echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] Starting bacotype.tl.isescan_analysis.isescan_family_copy_per_sample"
+echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] Starting bac_panaroo.tl.isescan_analysis.isescan_family_copy_per_sample"
 
-uv run python -m bacotype.tl.isescan_analysis.isescan_family_copy_per_sample \
+uv run python -m bac_panaroo.tl.isescan_analysis.isescan_family_copy_per_sample \
   --workers "${WORKERS}" \
   --imap-chunksize 10000
 

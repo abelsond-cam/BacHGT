@@ -11,7 +11,7 @@
 #
 # panaroo_run_strain.sh
 # ---------------------
-# Step 1 — Python: src/bacotype/pp/panaroo_run_strain.py
+# Step 1 — Python: src/bac_panaroo/pp/panaroo_run_strain.py
 #   Reads project metadata (default slimmed TSV or --sample-metadata-file),
 #   optionally filters to one --clonal-group or --sublineage (or uses all rows
 #   when neither is set), checks GFF/assembly paths, builds combined GFF+FASTA
@@ -105,7 +105,7 @@ PANAROO_INPUT="${RUN_SUBDIR}/panaroo_input.txt"
 CONVERTED_GFF_DIR="${RUN_SUBDIR}/converted_gff"
 GENE_PRESENCE_CSV="${RUN_SUBDIR}/gene_presence_absence.csv"
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 export PYTHONUNBUFFERED=1
 
 echo "========================================================================"
@@ -160,7 +160,7 @@ echo "Using TMPDIR: $TMPDIR"
 echo ""
 
 # Build Panaroo input file (single-column list of combined GFF+FASTA files) and run subdir
-uv run python src/bacotype/pp/panaroo_run_strain.py \
+uv run python src/bac_panaroo/pp/panaroo_run_strain.py \
   $PYTHON_STRAIN_ARGS \
   $PYTHON_METADATA_ARGS \
   --n "$N_SAMPLES" \

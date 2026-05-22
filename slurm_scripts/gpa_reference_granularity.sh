@@ -26,7 +26,7 @@
 #   <OUTPUT_DIR>/granularity_lollipop.png/pdf — connected-dot plot
 #
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
@@ -59,7 +59,7 @@ echo ""
 PYTHON_CMD=("uv" "run" "python" "-u")
 if [[ "${STAGE_VENV}" == "true" ]]; then
   SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
-  STAGED_VENV="${SCRATCH}/bacotype_venv_${SLURM_JOB_ID:-$$}"
+  STAGED_VENV="${SCRATCH}/bac_panaroo_venv_${SLURM_JOB_ID:-$$}"
   if [[ ! -L .venv && ! -d .venv ]]; then
     echo "WARNING: .venv not found; falling back to 'uv run'." >&2
   else
@@ -86,7 +86,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bacotype/tl/gpa_reference_granularity.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_reference_granularity.py
   --data-dir "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"
   --out-dir "${OUTPUT_DIR}"

@@ -27,13 +27,13 @@
 #
 
 set -euo pipefail
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 export PYTHONUNBUFFERED=1
 
 SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
-DEST="${SCRATCH}/bacotype_venv_import_probe"
-PROBE="src/bacotype/tl/test_import_timing_standalone.py"
+DEST="${SCRATCH}/bac_panaroo_venv_import_probe"
+PROBE="src/bac_panaroo/tl/test_import_timing_standalone.py"
 
 echo "========================================================================"
 echo "Import timing: IceLake-HiMem (uv) vs node-local venv copy"

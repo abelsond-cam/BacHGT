@@ -9,7 +9,7 @@
 #SBATCH --time=02:30:00
 #SBATCH --account=FLOTO-PROJECT-K-SL2-CPU  
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 # Force Python unbuffered output for real-time logging
 export PYTHONUNBUFFERED=1
@@ -23,9 +23,9 @@ echo "========================================================================"
 echo ""
 
 # ESM embeddings
-# uv run python src/bacotype/pp/prepare_esmc_embeddings_and_labels_to_finetune_amr.py --skip-existing
-echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] About to start: uv run python src/bacotype/tl/gpa_distances_combined.py --mode combined"
-uv run python src/bacotype/tl/gpa_distances_combined.py --mode combined
+# uv run python src/bac_panaroo/pp/prepare_esmc_embeddings_and_labels_to_finetune_amr.py --skip-existing
+echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] About to start: uv run python src/bac_panaroo/tl/gpa_distances_combined.py --mode combined"
+uv run python src/bac_panaroo/tl/gpa_distances_combined.py --mode combined
 
 echo ""
 echo "========================================================================"

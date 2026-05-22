@@ -11,7 +11,7 @@
 #
 # gpa_distances_batch_runs.sh
 # ---------------------------
-# Runs: src/bacotype/tl/gpa_distances_batch_runs.py
+# Runs: src/bac_panaroo/tl/gpa_distances_batch_runs.py
 #
 # What it does:
 #   Scans PANAROO_RUN_ROOT (set below) for each immediate subdirectory that
@@ -27,7 +27,7 @@
 # entrypoint. For a single folder only, use gpa_distances_single_run.sh instead.
 #
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 export PYTHONUNBUFFERED=1
 # Avoid writing .pyc back into the RDS-backed .venv when we execute its
 # bin/python directly (keeps RDS access read-only, avoids NFS write latency).
@@ -80,7 +80,7 @@ echo ""
 PYTHON_CMD=("uv" "run" "python" "-u")
 if [[ "${STAGE_VENV}" == "true" ]]; then
   SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
-  STAGED_VENV="${SCRATCH}/bacotype_venv_${SLURM_JOB_ID:-$$}"
+  STAGED_VENV="${SCRATCH}/bac_panaroo_venv_${SLURM_JOB_ID:-$$}"
   if [[ ! -L .venv && ! -d .venv ]]; then
     echo "WARNING: .venv not found; falling back to 'uv run'." >&2
   else
@@ -107,7 +107,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bacotype/tl/gpa_distances_batch_runs.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_distances_batch_runs.py
   --workers "${WORKERS}"
   --panaroo-run-root "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"

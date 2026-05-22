@@ -34,7 +34,7 @@
 # gpa_distances_batch_runs.sh instead.
 #
 
-cd /home/dca36/workspace/Bacotype
+cd /home/dca36/workspace/BacHGT
 
 # Force unbuffered Python output for real-time logging
 export PYTHONUNBUFFERED=1
@@ -101,7 +101,7 @@ fi
 PYTHON_CMD=("uv" "run" "python" "-u")
 if [[ "${STAGE_VENV}" == "true" ]]; then
   SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
-  STAGED_VENV="${SCRATCH}/bacotype_venv_${SLURM_JOB_ID:-$$}"
+  STAGED_VENV="${SCRATCH}/bac_panaroo_venv_${SLURM_JOB_ID:-$$}"
   if [[ ! -L .venv && ! -d .venv ]]; then
     echo "WARNING: .venv not found; falling back to 'uv run'." >&2
   else
@@ -128,7 +128,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bacotype/tl/gpa_distances_single_run.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_distances_single_run.py
   --panaroo-run-root "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"
   --min-group-size "${MIN_GROUP_SIZE}"

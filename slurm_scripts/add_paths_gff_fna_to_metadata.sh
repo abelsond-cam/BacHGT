@@ -75,14 +75,14 @@ echo "Running add_paths_gff_fna_to_metadata.py on the FULL TSV (parse path"
 echo "lists, write TSVs, add assembly_file/gff_file to the canonical metadata)..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}/.."
-uv run python -m bacotype.pp.add_paths_gff_fna_to_metadata --metadata "${FULL_METADATA}"
+uv run python -m bac_panaroo.pp.add_paths_gff_fna_to_metadata --metadata "${FULL_METADATA}"
 
 # The slimmed TSV is a column subset of the augmented full TSV: derive it
 # (kept = current slimmed header ∪ assembly_file,gff_file). Backs the
 # previous slimmed up to a timestamped <stem>.bak.<UTC>.tsv first.
 echo
 echo "Deriving slimmed TSV from full (slim_metadata)..."
-uv run python -m bacotype.pp.slim_metadata \
+uv run python -m bac_panaroo.pp.slim_metadata \
   --full "${FULL_METADATA}" \
   --slimmed "${SLIMMED_METADATA}"
 
