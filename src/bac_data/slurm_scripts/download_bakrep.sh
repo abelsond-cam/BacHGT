@@ -220,14 +220,8 @@ fi
 # Cleanup
 rm -rf "$BATCH_DIR"
 
-# Optionally flatten GFF3 downloads into top-level directory for easier access.
-if [ "$FILE_TYPE" = "gff3" ]; then
-    echo ""
-    echo "============================================"
-    echo "Flattening klebsiella_gff3 directory (moving *.bakta.gff3.gz to top level)..."
-    echo "============================================"
-    micromamba run -n bakrep_download python /home/dca36/workspace/BacHGT/src/bac_data/slurm_scripts/flatten_klebsiella_gff3.py
-fi
+# (The previous post-download flatten step — flatten_klebsiella_gff3.py — was
+# deliberately removed in commit 799983f; downloads are now consumed as-is.)
 
 # Final summary
 echo ""

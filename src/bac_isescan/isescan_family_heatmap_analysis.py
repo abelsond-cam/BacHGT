@@ -21,20 +21,20 @@ import argparse
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from matplotlib.colors import Normalize
-from matplotlib.cm import ScalarMappable
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.cm import ScalarMappable
+from matplotlib.colors import Normalize
 
-from bac_panaroo.tl.define_epidemic_cgs import (
-    group_mean_sd_for_columns,
-    reorder_cg_rows_by_total_sample_count,
-)
 from bac_isescan.isescan_constants import CANONICAL_IS_FAMILY_COLUMNS
 
 # Older notebooks imported `parse_bool` from this module — keep re-export.
 from bac_isescan.isescan_utils import parse_bool
+from bac_panaroo.tl.define_epidemic_cgs import (
+    group_mean_sd_for_columns,
+    reorder_cg_rows_by_total_sample_count,
+)
 
 __all__ = ["parse_bool"]
 
@@ -65,11 +65,7 @@ def plot_side_by_side_heatmap(
     """Two heatmaps (families on X, groups on Y) with one shared colour scale."""
     out_png.parent.mkdir(parents=True, exist_ok=True)
 
-    cols = [
-        c
-        for c in mean_refseq.columns
-        if c not in _HEATMAP_EXCLUDE_FAMILIES and c in mean_short.columns
-    ]
+    cols = [c for c in mean_refseq.columns if c not in _HEATMAP_EXCLUDE_FAMILIES and c in mean_short.columns]
     mean_refseq = mean_refseq.reindex(columns=cols)
     mean_short = mean_short.reindex(columns=cols)
 

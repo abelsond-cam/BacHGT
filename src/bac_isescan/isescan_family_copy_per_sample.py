@@ -22,6 +22,7 @@ from bac_isescan.isescan_utils import is_missing_value, parse_bool
 
 
 def resolve_family_column(df: pd.DataFrame) -> str:
+    """Return the case-insensitive ``family`` column name from an ISEScan CSV."""
     lower = {c.lower(): c for c in df.columns}
     if "family" in lower:
         return lower["family"]
@@ -44,6 +45,7 @@ def resolve_cluster_column(df: pd.DataFrame) -> str | None:
 def load_isescan_family_and_clusters(
     path: Path,
 ) -> tuple[dict[str, int], dict[str, int]]:
+    """Return ``(family_counts, cluster_counts)`` dicts parsed from one ISEScan CSV."""
     df = pd.read_csv(path)
     fam_col = resolve_family_column(df)
     canon = set(CANONICAL_IS_FAMILY_COLUMNS)
@@ -140,6 +142,7 @@ def _finalize_table(rows: list[dict[str, Any]]) -> pd.DataFrame:
 
 
 def main() -> None:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--metadata",

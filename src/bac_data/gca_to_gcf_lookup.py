@@ -92,7 +92,8 @@ SLEEP_WITH_KEY = 0.11  # ≤ 10 req/s
 
 def headers_with_key() -> tuple[dict[str, str], float]:
     """Return request headers (with NCBI key if NCBI_API_KEY is set) and the
-    matching per-request sleep that respects NCBI's rate limit."""
+    matching per-request sleep that respects NCBI's rate limit.
+    """
     key = os.environ.get("NCBI_API_KEY")
     if key:
         return {"api-key": key}, SLEEP_WITH_KEY
@@ -101,16 +102,15 @@ def headers_with_key() -> tuple[dict[str, str], float]:
 
 def query_ncbi(accessions: list[str], headers: dict[str, str]) -> list[dict]:
     """Fetch NCBI Datasets reports for one batch of GCAs. Returns the list of
-    report dicts (empty if all retries fail)."""
+    report dicts (empty if all retries fail).
+    """
     url = f"{NCBI_DATASETS}/{','.join(accessions)}/dataset_report"
     params = {"page_size": DEFAULT_PAGE_SIZE}
     for attempt in range(DEFAULT_RETRIES):
         try:
             r = requests.get(url, params=params, headers=headers, timeout=DEFAULT_TIMEOUT)
         except requests.RequestException as exc:
-            print(
-                f"  WARN attempt={attempt + 1}: {exc}", file=sys.stderr, flush=True
-            )
+            print(f"  WARN attempt={attempt + 1}: {exc}", file=sys.stderr, flush=True)
             time.sleep(2 * (attempt + 1))
             continue
         if r.status_code == 200:
@@ -131,8 +131,7 @@ def query_ncbi(accessions: list[str], headers: dict[str, str]) -> list[dict]:
             n_total = data.get("total_count", n_returned)
             if n_total > n_returned:
                 print(
-                    f"  WARN: NCBI returned {n_returned} of {n_total} reports "
-                    f"in batch (page truncation)",
+                    f"  WARN: NCBI returned {n_returned} of {n_total} reports in batch (page truncation)",
                     file=sys.stderr,
                     flush=True,
                 )
@@ -162,7 +161,8 @@ def query_ncbi(accessions: list[str], headers: dict[str, str]) -> list[dict]:
 
 def _to_int(v: object) -> int | None:
     """assembly_stats stores some numeric fields as strings (e.g. '6013171').
-    Convert to int when possible; preserve None / empty as None."""
+    Convert to int when possible; preserve None / empty as None.
+    """
     if v is None or v == "":
         return None
     try:
@@ -211,13 +211,23 @@ def extract_row(report: dict) -> dict:
 def normalise_gca(acc: str) -> str:
     """NCBI Datasets accepts versioned (GCA_*.*) and bare (GCA_*) accessions.
     We pass through whatever ENA gave us — they normally lack a version
-    suffix — and let NCBI resolve to the latest version."""
+    suffix — and let NCBI resolve to the latest version.
+    """
     return str(acc).strip()
 
 
-def lookup_all_gcas(gcas: list[str], batch_size: int) -> pd.DataFrame:
+def lookup_all_gcas(
+    gcas: list[str], batch_size: int, max_rounds: int = 3
+) -> pd.DataFrame:
     """Batch-query NCBI for all unique GCA accessions. Returns a DataFrame
-    with the columns produced by ``extract_row``."""
+    with the columns produced by ``extract_row``.
+
+    A convergence loop wraps the per-batch fetch: after one pass over all
+    accessions, anything that didn't come back is re-requested up to
+    ``max_rounds`` times. This absorbs transient API truncations / page
+    hiccups without hiding genuinely unknown accessions — when a round
+    adds nothing new we stop and report what's still unresolved.
+    """
     headers, sleep_s = headers_with_key()
     print(
         f"Auth mode: {'NCBI_API_KEY set (10 req/s budget)' if headers else 'anon (3 req/s budget)'}",
@@ -229,34 +239,63 @@ def lookup_all_gcas(gcas: list[str], batch_size: int) -> pd.DataFrame:
 
     rows: list[dict] = []
     seen_lookup_keys: set[str] = set()
-    total_batches = (len(unique_gcas) + batch_size - 1) // batch_size
-    for batch_idx, start in enumerate(range(0, len(unique_gcas), batch_size), start=1):
-        batch = unique_gcas[start : start + batch_size]
-        print(f"Batch {batch_idx}/{total_batches}  size={len(batch)}", flush=True)
-        reports = query_ncbi(batch, headers)
-        for r in reports:
-            row = extract_row(r)
-            # Keyed by the accession NCBI returned (versioned). Build a
-            # lookup column that strips the version so we can join back to
-            # the input TSV (which uses bare GCA_xxx accessions).
-            ncbi_acc = row["ncbi_accession"]
-            row["lookup_accession"] = (
-                str(ncbi_acc).split(".")[0] if ncbi_acc else None
+    # Inputs may be bare or versioned; match against the bare lookup key.
+    pending = list(unique_gcas)
+    for round_idx in range(1, max_rounds + 1):
+        if not pending:
+            break
+        print(
+            f"=== Round {round_idx}/{max_rounds} — querying {len(pending)} accessions ===",
+            flush=True,
+        )
+        seen_before = len(seen_lookup_keys)
+        total_batches = (len(pending) + batch_size - 1) // batch_size
+        for batch_idx, start in enumerate(range(0, len(pending), batch_size), start=1):
+            batch = pending[start : start + batch_size]
+            print(f"Batch {batch_idx}/{total_batches}  size={len(batch)}", flush=True)
+            reports = query_ncbi(batch, headers)
+            for r in reports:
+                row = extract_row(r)
+                # Keyed by the accession NCBI returned (versioned). Build a
+                # lookup column that strips the version so we can join back
+                # to the input TSV (which uses bare GCA_xxx accessions).
+                ncbi_acc = row["ncbi_accession"]
+                row["lookup_accession"] = (
+                    str(ncbi_acc).split(".")[0] if ncbi_acc else None
+                )
+                if row["lookup_accession"] in seen_lookup_keys:
+                    continue
+                seen_lookup_keys.add(row["lookup_accession"])
+                rows.append(row)
+            time.sleep(sleep_s)
+
+        progress = len(seen_lookup_keys) - seen_before
+        pending = [a for a in pending if str(a).split(".")[0] not in seen_lookup_keys]
+        print(
+            f"Round {round_idx}: +{progress} resolved; {len(pending)} still pending",
+            flush=True,
+        )
+        if progress == 0:
+            print(
+                f"No progress this round — stopping (NCBI does not recognise "
+                f"{len(pending)} accessions; first 5: {pending[:5]})",
+                flush=True,
             )
-            if row["lookup_accession"] in seen_lookup_keys:
-                continue
-            seen_lookup_keys.add(row["lookup_accession"])
-            rows.append(row)
-        time.sleep(sleep_s)
+            break
+
+    if pending:
+        print(
+            f"⚠  {len(pending)} accessions unresolved after {max_rounds} rounds",
+            flush=True,
+        )
 
     return pd.DataFrame(rows)
 
 
-def merge_and_summarise(
-    input_tsv: Path, ncbi_df: pd.DataFrame, output_tsv: Path
-) -> pd.DataFrame:
+def merge_and_summarise(input_tsv: Path, ncbi_df: pd.DataFrame, output_tsv: Path) -> pd.DataFrame:
     """Merge NCBI fields onto the input TSV (joining on the bare GCA) and
-    write the enriched TSV. Returns the merged DataFrame."""
+    write the enriched TSV. Returns the merged DataFrame.
+    """
     base = pd.read_csv(input_tsv, sep="\t", low_memory=False)
     base["_lookup_accession"] = (
         base["accession"]
@@ -291,8 +330,7 @@ def print_summary(merged: pd.DataFrame) -> None:
         flush=True,
     )
     print(
-        f"  Norway-complete & GCF-paired:             "
-        f"{(in_norway & has_gcf).sum()} of {in_norway.sum()}",
+        f"  Norway-complete & GCF-paired:             {(in_norway & has_gcf).sum()} of {in_norway.sum()}",
         flush=True,
     )
 
@@ -420,16 +458,20 @@ def print_summary(merged: pd.DataFrame) -> None:
         if n_eval:
             print(f"  completeness  < 95: {(comp < 95).sum()}  ({100 * (comp < 95).sum() / n_eval:.1f}%)", flush=True)
             print(f"  contamination > 5:  {(cont > 5).sum()}  ({100 * (cont > 5).sum() / n_eval:.1f}%)", flush=True)
-            print(f"  EITHER threshold failed:  {((comp < 95) | (cont > 5)).sum()}  ({100 * ((comp < 95) | (cont > 5)).sum() / n_eval:.1f}%)", flush=True)
-        bad_tax = (
-            sub["ncbi_taxonomy_check"].fillna("").astype(str).str.lower() != "ok"
-        ) & sub["ncbi_taxonomy_check"].notna()
+            print(
+                f"  EITHER threshold failed:  {((comp < 95) | (cont > 5)).sum()}  ({100 * ((comp < 95) | (cont > 5)).sum() / n_eval:.1f}%)",
+                flush=True,
+            )
+        bad_tax = (sub["ncbi_taxonomy_check"].fillna("").astype(str).str.lower() != "ok") & sub[
+            "ncbi_taxonomy_check"
+        ].notna()
         print(f"  taxonomy_check_status not OK:  {bad_tax.sum()}", flush=True)
 
 
 def main(argv: list[str] | None = None) -> int:
     """Parse args, fetch NCBI metadata for every GCA in the input TSV,
-    merge it on, write the enriched TSV, and print a summary."""
+    merge it on, write the enriched TSV, and print a summary.
+    """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[1])
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)

@@ -51,16 +51,13 @@ from bac_panaroo.tl.define_epidemic_cgs import (
 )
 
 DEFAULT_METADATA = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/"
-    "metadata_final_curated_all_samples_and_columns.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_all_samples_and_columns.tsv"
 )
 DEFAULT_ISESCAN = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/isescan_analysis/"
     "isescan_family_cluster_counts_per_sample.csv"
 )
-DEFAULT_OUTPUT_DIR = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes"
-)
+DEFAULT_OUTPUT_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes")
 
 EXPLICIT_NUMERIC = (
     "total_size",
@@ -81,15 +78,29 @@ KLEBORATE_VIRULENCE_LOCI: dict[str, dict] = {
     "ybt": {
         "st": "YbST",
         "lineage": "Yersiniabactin",
-        "alleles": ["ybtS", "ybtX", "ybtQ", "ybtP", "ybtA",
-                    "irp2", "irp1", "ybtU", "ybtT", "ybtE", "fyuA"],
+        "alleles": ["ybtS", "ybtX", "ybtQ", "ybtP", "ybtA", "irp2", "irp1", "ybtU", "ybtT", "ybtE", "fyuA"],
         "spurious": "spurious_ybt_hits",
     },
     "clb": {
         "st": "CbST",
         "lineage": "Colibactin",
-        "alleles": ["clbA", "clbB", "clbC", "clbD", "clbE", "clbF", "clbG",
-                    "clbH", "clbI", "clbL", "clbM", "clbN", "clbO", "clbP", "clbQ"],
+        "alleles": [
+            "clbA",
+            "clbB",
+            "clbC",
+            "clbD",
+            "clbE",
+            "clbF",
+            "clbG",
+            "clbH",
+            "clbI",
+            "clbL",
+            "clbM",
+            "clbN",
+            "clbO",
+            "clbP",
+            "clbQ",
+        ],
         "spurious": "spurious_clb_hits",
     },
     "iuc": {
@@ -130,14 +141,30 @@ for _info in KLEBORATE_VIRULENCE_LOCI.values():
 # Treated as presence/absence: mean of allele IDs is meaningless biologically,
 # but failure to detect a housekeeping gene is a meaningful assembly artefact.
 KLEBORATE_CHROMOSOMAL_MLST_COLS: list[str] = [
-    "gapA", "infB", "mdh", "pgi", "phoE", "rpoB", "tonB",
+    "gapA",
+    "infB",
+    "mdh",
+    "pgi",
+    "phoE",
+    "rpoB",
+    "tonB",
 ]
 
 # Strings that Kleborate uses to indicate "no detection". The multi_mlst
 # function converts NA -> 0 in ST columns so 0 is treated as absent.
-KLEBORATE_ABSENT_TOKENS: frozenset[str] = frozenset({
-    "-", "0", "0.0", "", "NA", "na", "nan", "None", "none",
-})
+KLEBORATE_ABSENT_TOKENS: frozenset[str] = frozenset(
+    {
+        "-",
+        "0",
+        "0.0",
+        "",
+        "NA",
+        "na",
+        "nan",
+        "None",
+        "none",
+    }
+)
 
 GAPA_START = "gapA"
 VIRULENCE_END = "virulence_score"
@@ -232,6 +259,7 @@ class _Tee:
 # Kleborate cell parsing helpers
 # ---------------------------------------------------------------------------
 
+
 def kleborate_cell_present(val) -> bool:
     """True if a Kleborate cell records a detection.
 
@@ -255,6 +283,7 @@ def kleborate_column_to_presence(series: pd.Series) -> pd.Series:
 # Existing helpers
 # ---------------------------------------------------------------------------
 
+
 def load_isescan_features(path: Path) -> tuple[pd.DataFrame, list[str]]:
     """Load ISEScan CSV; keep Sample + IS-family columns (names starting with 'IS')."""
     raw = pd.read_csv(path, low_memory=False)
@@ -266,8 +295,7 @@ def load_isescan_features(path: Path) -> tuple[pd.DataFrame, list[str]]:
     feature_cols = [c for c in candidate_cols if c.startswith("IS")]
     print("\n=== ISEScan Features ===")
     print(
-        f"Loaded {len(feature_cols)} IS-family columns "
-        f"(from {len(candidate_cols)} candidates) in {path.name}",
+        f"Loaded {len(feature_cols)} IS-family columns (from {len(candidate_cols)} candidates) in {path.name}",
     )
     return raw[["Sample"] + feature_cols].copy(), feature_cols
 
@@ -304,11 +332,13 @@ def acquired_column_names(columns: list[str]) -> list[str]:
 
 def count_acquired_tokens(series: pd.Series) -> pd.Series:
     """Split by ';', count non-empty tokens."""
+
     def count_tokens(x):
         if pd.isna(x):
             return 0
         tokens = [t.strip() for t in str(x).split(";") if t.strip()]
         return len(tokens)
+
     return series.apply(count_tokens)
 
 
@@ -422,8 +452,10 @@ def build_feature_data(
                     print(f"  Example '{example}': {non_absent} present, {absent} absent")
                     break
     else:
-        print("\nKleborate virulence columns: collapsed to BSC presence "
-              "(use --full-virulence-output for individual alleles, STs, and spurious hits)")
+        print(
+            "\nKleborate virulence columns: collapsed to BSC presence "
+            "(use --full-virulence-output for individual alleles, STs, and spurious hits)"
+        )
 
     # 3. Kleborate virulence BSC presence per locus.
     # Default: '{Lineage}_bsc' — presence/absence of the lineage column (0/1),
@@ -433,11 +465,7 @@ def build_feature_data(
     # locus_gene_map always holds allele-level series for concordance.
     print("\nKleborate virulence BSC features:")
     for locus, info in KLEBORATE_VIRULENCE_LOCI.items():
-        gene_series_list = [
-            kleborate_column_to_presence(merged[g])
-            for g in info["alleles"]
-            if g in merged.columns
-        ]
+        gene_series_list = [kleborate_column_to_presence(merged[g]) for g in info["alleles"] if g in merged.columns]
         if not gene_series_list:
             print(f"  - {locus}: no allele columns found, skipping")
             continue
@@ -450,11 +478,12 @@ def build_feature_data(
             feat_series = kleborate_column_to_presence(merged[lineage])
         else:
             feat_name = f"{locus}_bsc"
-            feat_series = gene_series_list[0] if len(gene_series_list) == 1 else (sum(gene_series_list) > 0).astype(float)
+            feat_series = (
+                gene_series_list[0] if len(gene_series_list) == 1 else (sum(gene_series_list) > 0).astype(float)
+            )
         features[feat_name] = feat_series
         locus_gene_map[feat_name] = gene_series_list
-        print(f"  + {feat_name}: mean={feat_series.mean():.3f}, "
-              f"n_alleles_for_concordance={len(gene_series_list)}")
+        print(f"  + {feat_name}: mean={feat_series.mean():.3f}, n_alleles_for_concordance={len(gene_series_list)}")
 
     # 4. Kleborate chromosomal MLST -> presence/absence
     print(f"\nKleborate chromosomal MLST columns: {len(KLEBORATE_CHROMOSOMAL_MLST_COLS)} expected")
@@ -546,9 +575,7 @@ def build_comparison_table(
         # Concordance: fraction of samples fully concordant within locus.
         # Only defined for locus gene-count features; NA for everything else.
         if feature_name in locus_gene_map:
-            row["locus_concordance"] = compute_locus_concordance(
-                locus_gene_map[feature_name], subset.index
-            )
+            row["locus_concordance"] = compute_locus_concordance(locus_gene_map[feature_name], subset.index)
         else:
             row["locus_concordance"] = np.nan
         rows.append(row)
@@ -565,10 +592,7 @@ def build_comparison_table(
         df["p_val_corr"] = np.nan
 
     # Ratio computed from raw means (before any rounding)
-    df["complete_vs_sr_ratio"] = [
-        _ratio(c, s)
-        for c, s in zip(df["complete_genome_mean"], df["short_read_mean"])
-    ]
+    df["complete_vs_sr_ratio"] = [_ratio(c, s) for c, s in zip(df["complete_genome_mean"], df["short_read_mean"], strict=False)]
 
     # Sort while p_val_corr is still numeric
     df = df.sort_values("p_val_corr", ascending=True, na_position="last")
@@ -576,9 +600,7 @@ def build_comparison_table(
     # String formatting for display
     df["p_val_corr"] = df["p_val_corr"].map(_fmt_sci_1dp)
     df["p_val"] = df["p_val"].map(_fmt_sci_1dp)
-    df["locus_concordance"] = df["locus_concordance"].map(
-        lambda x: _round_3sig(x) if not pd.isna(x) else ""
-    )
+    df["locus_concordance"] = df["locus_concordance"].map(lambda x: _round_3sig(x) if not pd.isna(x) else "")
     for col in ("complete_genome_mean", "short_read_mean", "complete_sd", "sr_sd"):
         df[col] = df[col].map(_round_3sig)
 
@@ -599,10 +621,7 @@ def compute_penetrance_stats(feature_name: str, feature_vals: pd.Series, is_refs
     if n_complete < 2 or n_sr < 2:
         p_val = np.nan
     else:
-        _, p_val = stats.fisher_exact(
-            [[c_present, n_complete - c_present],
-             [s_present, n_sr - s_present]]
-        )
+        _, p_val = stats.fisher_exact([[c_present, n_complete - c_present], [s_present, n_sr - s_present]])
 
     return {
         "feature": feature_name,
@@ -629,7 +648,8 @@ def build_penetrance_table(
         row = compute_penetrance_stats(feature_name, feature_vals, is_refseq)
         row["locus_concordance"] = (
             compute_locus_concordance(locus_gene_map[feature_name], subset.index)
-            if feature_name in locus_gene_map else np.nan
+            if feature_name in locus_gene_map
+            else np.nan
         )
         rows.append(row)
 
@@ -640,18 +660,13 @@ def build_penetrance_table(
     n_tests = int(df["p_val"].notna().sum())
     df["p_val_corr"] = (df["p_val"] * n_tests).clip(upper=1.0) if n_tests > 0 else np.nan
 
-    df["penetrance_ratio"] = [
-        _ratio(c, s)
-        for c, s in zip(df["complete_penetrance"], df["sr_penetrance"])
-    ]
+    df["penetrance_ratio"] = [_ratio(c, s) for c, s in zip(df["complete_penetrance"], df["sr_penetrance"], strict=False)]
 
     df = df.sort_values("p_val_corr", ascending=True, na_position="last")
 
     df["p_val_corr"] = df["p_val_corr"].map(_fmt_sci_1dp)
     df["p_val"] = df["p_val"].map(_fmt_sci_1dp)
-    df["locus_concordance"] = df["locus_concordance"].map(
-        lambda x: _round_3sig(x) if not pd.isna(x) else ""
-    )
+    df["locus_concordance"] = df["locus_concordance"].map(lambda x: _round_3sig(x) if not pd.isna(x) else "")
     for col in ("complete_penetrance", "sr_penetrance"):
         df[col] = df[col].map(_round_3sig)
 
@@ -665,8 +680,7 @@ def sluggify(group_name: str) -> str:
     return str(group_name).replace(" ", "_").replace("/", "_")
 
 
-def report_project_breakdown(gdf: pd.DataFrame, project_col: str,
-                             threshold: float = 0.10) -> None:
+def report_project_breakdown(gdf: pd.DataFrame, project_col: str, threshold: float = 0.10) -> None:
     """Print n_projects per stratum and any project >= threshold of stratum samples.
 
     Helps identify ascertainment bias: if one BioProject contributes >threshold
@@ -710,7 +724,7 @@ def main() -> None:
         action="store_true",
         default=False,
         help="Report all individual alleles, STs, lineage strings, and spurious hits "
-             "for each virulence locus. Default: one '{Lineage}_gene_count' row per locus.",
+        "for each virulence locus. Default: one '{Lineage}_gene_count' row per locus.",
     )
     parser.add_argument("--top-clonal-groups", type=int, default=15)
     parser.add_argument("--rare-cg-n", type=int, default=1000)
@@ -718,7 +732,7 @@ def main() -> None:
         "--project-col",
         default="study_accession",
         help="Metadata column holding BioProject (or equivalent) accession. "
-             "Used to print per-stratum project breakdown for ascertainment-bias review.",
+        "Used to print per-stratum project breakdown for ascertainment-bias review.",
     )
     parser.add_argument(
         "--project-threshold",

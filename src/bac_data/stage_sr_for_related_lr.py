@@ -66,12 +66,10 @@ def clear_symlinks(d: Path) -> int:
 
 
 def main() -> int:
+    """CLI entry point."""
     gca2bs = load_gca_to_biosample()
     sample2files = load_sample_files()
-    print(
-        f"Integration rows: {len(gca2bs)} resolved_gca | "
-        f"metadata samples: {len(sample2files)}\n"
-    )
+    print(f"Integration rows: {len(gca2bs)} resolved_gca | metadata samples: {len(sample2files)}\n")
 
     report: list[str] = []
     for kind, col_idx in (("assemblies", 0), ("gff", 1)):
@@ -104,7 +102,7 @@ def main() -> int:
             rel = rec[col_idx]
             if not rel:
                 no_path += 1
-                report.append(f"{kind}\tno_{['assembly','gff'][col_idx]}_file\t{f.name}\t{bs}")
+                report.append(f"{kind}\tno_{['assembly', 'gff'][col_idx]}_file\t{f.name}\t{bs}")
                 continue
             original = (RDS_BASE / rel).resolve()
             if not original.is_file():
@@ -115,9 +113,7 @@ def main() -> int:
             link = dst_dir / original.name
             if original.name in seen and seen[original.name] != bs:
                 collisions += 1
-                report.append(
-                    f"{kind}\tname_collision\t{original.name}\t{seen[original.name]}\t{bs}"
-                )
+                report.append(f"{kind}\tname_collision\t{original.name}\t{seen[original.name]}\t{bs}")
                 continue
             seen[original.name] = bs
             if link.is_symlink() or link.exists():
@@ -133,9 +129,7 @@ def main() -> int:
         )
 
     report_path = STAGING / "staging_report.tsv"
-    report_path.write_text(
-        "kind\tstatus\tdetail...\n" + "\n".join(report) + ("\n" if report else "")
-    )
+    report_path.write_text("kind\tstatus\tdetail...\n" + "\n".join(report) + ("\n" if report else ""))
     # The old report from the superseded matching approach is no longer valid.
     old = STAGING / "staging_report_unmatched_missing.tsv"
     if old.exists():

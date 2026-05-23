@@ -224,19 +224,8 @@ cat "$SUMMARY_FILE"
 # Cleanup
 rm -rf "$BATCH_DIR"
 
-# Optionally flatten NCBI GFF3 downloads into a top-level directory of .gff files.
-DEFAULT_NCBI_GFF_DIR="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff3"
-if [ "$OUTPUT_DIR" = "$DEFAULT_NCBI_GFF_DIR" ]; then
-    echo ""
-    echo "============================================"
-    echo "Flattening ncbi_gff3 directory (moving genomic.gff files to top level)..."
-    echo "============================================"
-    micromamba run -n ncbi-datasets python /home/dca36/workspace/BacHGT/src/bac_data/slurm_scripts/flatten_ncbi_gff3.py
-else
-    echo ""
-    echo "NOTE: Skipping automatic flattening because OUTPUT_DIR ($OUTPUT_DIR)"
-    echo "does not match the default ncbi_gff3 directory ($DEFAULT_NCBI_GFF_DIR)."
-fi
+# (The previous post-download flatten step — flatten_ncbi_gff3.py — was
+# deliberately removed in commit 799983f; downloads are now consumed as-is.)
 
 # Final summary
 echo ""

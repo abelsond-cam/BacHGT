@@ -73,9 +73,7 @@ def build_masks(meta: pd.DataFrame) -> tuple[pd.Series, pd.Series]:
     """Return (user_mask, script_prune_mask) — the two drop heuristics."""
     user_mask = pd.Series(False, index=meta.index)
     if "species_match" in meta.columns and len(meta) > USER_INDEX_THRESHOLD:
-        user_mask.iloc[USER_INDEX_THRESHOLD:] = meta.iloc[USER_INDEX_THRESHOLD:][
-            "species_match"
-        ].isna()
+        user_mask.iloc[USER_INDEX_THRESHOLD:] = meta.iloc[USER_INDEX_THRESHOLD:]["species_match"].isna()
 
     script_prune_mask = pd.Series(False, index=meta.index)
     if "est_coverage_5_5Mb" in meta.columns and "is_refseq" in meta.columns:
@@ -90,7 +88,7 @@ def clean_file(path: Path) -> None:
     """Clean one metadata file in place using the union of both masks."""
     print(f"\n══ {path.name} ══", flush=True)
     if not path.exists():
-        print(f"  SKIP — file not found", flush=True)
+        print("  SKIP — file not found", flush=True)
         return
 
     meta = pd.read_csv(path, sep="\t", low_memory=False)
@@ -120,7 +118,7 @@ def clean_file(path: Path) -> None:
     print(f"  UNION → will drop:                {n_drop:,}", flush=True)
 
     if n_drop == 0:
-        print(f"  no rows to drop — file is already clean", flush=True)
+        print("  no rows to drop — file is already clean", flush=True)
         return
 
     cleaned = meta.loc[~drop_mask].reset_index(drop=True)

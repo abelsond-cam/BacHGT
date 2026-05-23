@@ -65,9 +65,7 @@ def run(
 
     merged = meta.merge(counts, on="Sample", how="left")
     if len(merged) != n_meta:
-        raise RuntimeError(
-            f"Row count changed after merge: before={n_meta} after={len(merged)}"
-        )
+        raise RuntimeError(f"Row count changed after merge: before={n_meta} after={len(merged)}")
 
     for c in feature_cols:
         merged[c] = merged[c].fillna(0).astype("Int64")

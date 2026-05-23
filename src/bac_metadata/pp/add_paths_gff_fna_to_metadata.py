@@ -3,8 +3,9 @@ Add assembly_file and gff_file columns to metadata TSV.
 
 Reads the three .txt path lists (assemblies, ncbi_gff, klebsiella_gff), parses
 Sample from each path with GC normalization, writes TSVs, then loads metadata
-and adds assembly_file / gff_file via dict lookup. Run after building the .txt
-files with: bash src/bac_metadata/slurm_scripts/build_assemblies_and_gff_file_list.sh
+and adds assembly_file / gff_file via dict lookup. The .txt lists are simple
+one-path-per-line files — produce them with e.g.
+``find <ASSEMBLIES_DIR> -name "*.fna.gz" > assemblies_file_list.txt``.
 """
 
 from __future__ import annotations
@@ -16,29 +17,18 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-
 DATA_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/")
 
-METADATA_F = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
-)
+METADATA_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv")
 
-ASSEMBLY_LIST_F = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/assemblies_file_list.txt"
-)
-NCBI_GFF_LIST_F = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff.txt"
-)
-KLEBSIELLA_GFF_LIST_F = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gff.txt"
-)
+ASSEMBLY_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/assemblies_file_list.txt")
+NCBI_GFF_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff.txt")
+KLEBSIELLA_GFF_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gff.txt")
 
 ASSEMBLY_TSV_F = ASSEMBLY_LIST_F.with_suffix(".tsv")
 NCBI_GFF_TSV_F = NCBI_GFF_LIST_F.with_suffix(".tsv")
 KLEBSIELLA_GFF_TSV_F = KLEBSIELLA_GFF_LIST_F.with_suffix(".tsv")
-ISESCAN_LIST_F = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/isescan_csv.txt"
-)
+ISESCAN_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/isescan_csv.txt")
 ISESCAN_TSV_F = ISESCAN_LIST_F.with_suffix(".tsv")
 
 
@@ -76,9 +66,7 @@ def _parse_assemblies(path_series: pd.Series) -> pd.Series:
     back to stripping only the last extension.
     """
     basename = path_series.str.rsplit("/", n=1).str[-1]
-    sample = basename.str.replace(".fa.gz", "", regex=False).str.replace(
-        ".fna.gz", "", regex=False
-    )
+    sample = basename.str.replace(".fa.gz", "", regex=False).str.replace(".fna.gz", "", regex=False)
     # Return all extensions, but normalise by GC starting names while doing so
     return _gc_normalize_series(sample)
 
@@ -144,9 +132,7 @@ def _summarise_matches(total_files: int, used_count: int, label: str) -> None:
     else:
         all_matched_str = str(used_count == total_files)
     print(
-        f"{label}: total_files={total_files}, "
-        f"matched_at_least_once={used_count}, "
-        f"all_files_matched={all_matched_str}"
+        f"{label}: total_files={total_files}, matched_at_least_once={used_count}, all_files_matched={all_matched_str}"
     )
 
 
@@ -215,9 +201,7 @@ def run(metadata_path: Path | None = None) -> None:
     if "kpsc_final_list" in df.columns:
         kpsc_mask = df["kpsc_final_list"]
         n_kpsc_no_asm = int(df.loc[kpsc_mask, "assembly_file"].isna().sum())
-        print(
-            f"    Metadata samples in kpsc_final_list without assemblies: {n_kpsc_no_asm}"
-        )
+        print(f"    Metadata samples in kpsc_final_list without assemblies: {n_kpsc_no_asm}")
     _summarise_matches(len(assembly_dict), used_assembly, "  Assembly list coverage")
 
     search_ncbi = df["is_refseq"].astype(bool) | df["is_nctc"].astype(bool)

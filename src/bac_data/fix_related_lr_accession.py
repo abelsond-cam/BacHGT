@@ -34,7 +34,7 @@ COL = "related_lr_accession"
 
 
 def load_map() -> dict[str, str]:
-    """biosample -> resolved_gca (only rows with a non-empty resolved_gca)."""
+    """Biosample -> resolved_gca (only rows with a non-empty resolved_gca)."""
     out: dict[str, str] = {}
     with INTEGRATION.open(newline="") as fh:
         for row in csv.DictReader(fh, delimiter="\t"):
@@ -46,6 +46,7 @@ def load_map() -> dict[str, str]:
 
 
 def fix_file(path: Path, bs2gca: dict[str, str], stamp: str) -> None:
+    """Repair the ``related_lr_accession`` column of ``path`` in place using ``bs2gca``."""
     lines = path.read_text().splitlines()
     header = lines[0].split("\t")
     s_idx = header.index("Sample")
@@ -73,13 +74,11 @@ def fix_file(path: Path, bs2gca: dict[str, str], stamp: str) -> None:
     bak = path.with_suffix(path.suffix + f".{stamp}.bak")
     shutil.copy2(path, bak)
     path.write_text("\n".join(out) + "\n")
-    print(
-        f"{path.name}: rows={len(lines)-1} {COL}_set={changed} "
-        f"already_correct={unchanged_same}  backup={bak.name}"
-    )
+    print(f"{path.name}: rows={len(lines) - 1} {COL}_set={changed} already_correct={unchanged_same}  backup={bak.name}")
 
 
 def main() -> int:
+    """CLI entry point."""
     bs2gca = load_map()
     print(f"Integration map: {len(bs2gca)} biosample->resolved_gca\n")
     stamp = datetime.now().strftime("%Y%m%dT%H%M%S")

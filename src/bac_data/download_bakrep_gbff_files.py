@@ -42,9 +42,7 @@ import pandas as pd
 _DEFAULT_METADATA = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
 )
-_DEFAULT_GBFF_DIR = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff"
-)
+_DEFAULT_GBFF_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff")
 
 
 def _downloaded_column(filetype: str) -> str:
@@ -98,12 +96,7 @@ def collect_sample_ids(
     # Filter 1: Exclude already-downloaded (if skip_existing)
     if skip_existing:
         if col in df.columns:
-            df = df[
-                ~df[col]
-                .astype(str)
-                .str.lower()
-                .isin(["true", "1", "yes"])
-            ]
+            df = df[~df[col].astype(str).str.lower().isin(["true", "1", "yes"])]
             print(f"After {col} filter: {len(df):,} samples", file=sys.stderr)
         else:
             print(f"{col} column not found; skipping this filter", file=sys.stderr)
@@ -173,7 +166,7 @@ def update_metadata_flags(
     missing_output: Path | None = None,
 ) -> None:
     """Scan output dir, update metadata flags, and report missing samples.
-    
+
     Args:
         metadata_path: Path to metadata TSV
         output_dir: Directory containing downloaded files
@@ -201,9 +194,7 @@ def update_metadata_flags(
         sys.exit(1)
 
     # Expected samples (SAM-prefixed only, to match collect logic)
-    expected = set(
-        df[df["sample_accession"].astype(str).str.startswith("SAM")]["sample_accession"].astype(str)
-    )
+    expected = set(df[df["sample_accession"].astype(str).str.startswith("SAM")]["sample_accession"].astype(str))
     missing = expected - samples_with_files
 
     # Update flag
@@ -212,7 +203,9 @@ def update_metadata_flags(
     num_downloaded = int(df[col].sum())
     num_total = len(df)
     print("\nResults:")
-    print(f"  Samples with bakta.{filetype}.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded / num_total * 100:.1f}%)")
+    print(
+        f"  Samples with bakta.{filetype}.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded / num_total * 100:.1f}%)"
+    )
     print(f"  Samples without file: {num_total - num_downloaded:,}")
 
     if missing:
@@ -323,7 +316,7 @@ def main() -> None:
 
     # Determine if we should run collection
     run_collection = args.batch_dir is not None or args.output is not None
-    
+
     # Run collection if requested
     if run_collection:
         collect_cmd(args)

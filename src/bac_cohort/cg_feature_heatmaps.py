@@ -53,11 +53,10 @@ GROUP_VLIM: dict[str, tuple[float, float] | None] = {
 # Data loading
 # ---------------------------------------------------------------------------
 
+
 def _parse_ratio(series: pd.Series) -> pd.Series:
     """Parse complete_vs_sr_ratio strings: 'inf' → INF_CAP, empty/other → NaN."""
-    return pd.to_numeric(
-        series.replace({"inf": str(INF_CAP), "": np.nan}), errors="coerce"
-    ).clip(upper=INF_CAP)
+    return pd.to_numeric(series.replace({"inf": str(INF_CAP), "": np.nan}), errors="coerce").clip(upper=INF_CAP)
 
 
 def load_ratio_matrix(counts_dir: Path, p_threshold: float = DEFAULT_P_THRESHOLD) -> pd.DataFrame:
@@ -87,14 +86,12 @@ def load_ratio_matrix(counts_dir: Path, p_threshold: float = DEFAULT_P_THRESHOLD
 # Column groups and row ordering
 # ---------------------------------------------------------------------------
 
+
 def column_groups(all_cols: list[str]) -> dict[str, list[str]]:
     """Return the three feature column groups in display order."""
     is_cols = [c for c in all_cols if c.startswith("IS")]
     acquired_cols = [c for c in all_cols if c.endswith("_acquired")]
-    vir_cols = (
-        [c for c in all_cols if c.endswith("_bsc")]
-        + [c for c in MLST_ALLELE_COLS if c in all_cols]
-    )
+    vir_cols = [c for c in all_cols if c.endswith("_bsc")] + [c for c in MLST_ALLELE_COLS if c in all_cols]
     return {
         "IS Families": is_cols,
         "Acquired AMR": acquired_cols,
@@ -115,6 +112,7 @@ def hierarchical_row_order(matrix: pd.DataFrame) -> list[str]:
 # ---------------------------------------------------------------------------
 # Plotting helpers
 # ---------------------------------------------------------------------------
+
 
 def _vmin_vmax(
     mat: pd.DataFrame,
@@ -242,6 +240,7 @@ def plot_combined_heatmap(
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     """CLI entry point for CG feature enrichment heatmaps."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -279,10 +278,7 @@ def main() -> None:
 
     # Cluster on AMR + Virulence/MLST only — IS families can dominate variance
     # and obscure biologically relevant groupings in the other two feature sets.
-    clustering_cols = [
-        c for c in groups["Acquired AMR"] + groups["Virulence BSCs & MLST"]
-        if c in matrix.columns
-    ]
+    clustering_cols = [c for c in groups["Acquired AMR"] + groups["Virulence BSCs & MLST"] if c in matrix.columns]
     print("Computing hierarchical row order (AMR + Virulence/MLST columns)...")
     row_order = hierarchical_row_order(matrix[clustering_cols])
     print(f"  Order: {row_order}")
@@ -292,7 +288,10 @@ def main() -> None:
             print(f"Skipping '{name}': no matching columns found")
             continue
         plot_single_heatmap(
-            matrix, row_order, cols, name,
+            matrix,
+            row_order,
+            cols,
+            name,
             output_dir / f"{GROUP_FILE_STEMS[name]}.png",
             vlim=GROUP_VLIM.get(name),
         )

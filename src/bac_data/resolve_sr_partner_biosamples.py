@@ -43,10 +43,7 @@ DEFAULT_METADATA = Path(
     "Aaron Weimann's files - project_k/data/final/metadata/"
     "metadata_final_curated_all_samples_and_columns.tsv"
 )
-LOCAL_RAW = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "local_data/klebsiella/raw"
-)
+LOCAL_RAW = Path("/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/raw")
 DEFAULT_OUT_DIR = LOCAL_RAW / "related_sr"
 RESOLUTION_NAME = "sr_partner_resolution.tsv"
 
@@ -96,7 +93,7 @@ def internal_join(rows: pd.DataFrame, meta: pd.DataFrame) -> dict[str, str]:
     m["run_accession"] = m["run_accession"].map(_clean)
     m["Sample"] = m["Sample"].map(_clean)
     m = m[(m["run_accession"] != "") & (m["Sample"] != "")]
-    lut = dict(zip(m["run_accession"], m["Sample"]))
+    lut = dict(zip(m["run_accession"], m["Sample"], strict=False))
     wanted = set(rows["sr_run"])
     for run in wanted:
         bs = lut.get(run)

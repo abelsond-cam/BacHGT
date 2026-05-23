@@ -118,7 +118,8 @@ SLEEP_WITH_KEY = 0.11  # ≤ 10 req/s
 
 def ncbi_headers() -> tuple[dict[str, str], float]:
     """Return NCBI request headers (with API key if set) and the matching
-    per-request sleep that respects NCBI's rate limit."""
+    per-request sleep that respects NCBI's rate limit.
+    """
     key = os.environ.get("NCBI_API_KEY")
     if key:
         return {"api-key": key}, SLEEP_WITH_KEY
@@ -133,12 +134,12 @@ def ena_filereport(accession: str, result: str, fields: str, limit: int = 50000)
 
     Returns an empty DataFrame on any error or "no rows" response (ENA
     answers an unknown/empty query with a body that starts with
-    ``Accession``)."""
+    ``Accession``).
+    """
     try:
         r = requests.get(
             ENA_FILEREPORT,
-            params={"accession": accession, "result": result, "fields": fields,
-                    "format": "tsv", "limit": limit},
+            params={"accession": accession, "result": result, "fields": fields, "format": "tsv", "limit": limit},
             timeout=DEFAULT_TIMEOUT,
         )
     except requests.RequestException as exc:
@@ -162,7 +163,8 @@ def ncbi_bioproject_records(project: str, headers: dict[str, str], sleep_s: floa
     """Page through every NCBI Datasets assembly report for a BioProject.
 
     NCBI returns each GCA and its paired RefSeq GCF as separate report
-    dicts; callers should de-dupe to GCA primaries themselves."""
+    dicts; callers should de-dupe to GCA primaries themselves.
+    """
     url = NCBI_BIOPROJECT.format(project)
     records: list[dict] = []
     params: dict[str, object] = {"page_size": NCBI_PAGE_SIZE}
@@ -203,7 +205,8 @@ def ncbi_biosample_records(samea: str, headers: dict[str, str]) -> list[dict]:
 
 def _gca_primaries(records: list[dict]) -> pd.DataFrame:
     """Collapse raw NCBI reports to one row per GCA primary, carrying the
-    paired GCF, BioSample, assembly level and method."""
+    paired GCF, BioSample, assembly level and method.
+    """
     rows = []
     for rec in records:
         acc = rec.get("accession", "")
@@ -230,7 +233,8 @@ def _gca_primaries(records: list[dict]) -> pd.DataFrame:
 def audit_component_projects(headers: dict[str, str], sleep_s: float) -> pd.DataFrame:
     """For each component project, count ENA samples / Klebsiella reads and
     NCBI samples-with-GCF / complete-genome GCFs. This is the table in the
-    headline report."""
+    headline report.
+    """
     rows = []
     for pj in COMPONENT_PROJECTS:
         print(f"[{pj}] querying ENA + NCBI ...", flush=True)
@@ -238,9 +242,7 @@ def audit_component_projects(headers: dict[str, str], sleep_s: float) -> pd.Data
         if len(runs) and "sample_accession" in runs.columns:
             runs = runs.drop_duplicates(subset="sample_accession")
             n_samples = len(runs)
-            n_klebs = int(
-                runs["scientific_name"].astype(str).str.contains("Klebsiella", na=False).sum()
-            )
+            n_klebs = int(runs["scientific_name"].astype(str).str.contains("Klebsiella", na=False).sum())
         else:
             n_samples = n_klebs = 0
 
@@ -285,7 +287,8 @@ def audit_component_projects(headers: dict[str, str], sleep_s: float) -> pd.Data
 def audit_prjeb74192(metadata: pd.DataFrame, headers: dict[str, str], sleep_s: float) -> pd.DataFrame:
     """Pull every PRJEB74192 GCA, then cross-check the Complete-Genome GCFs
     against ``secondary_sample_accession`` in our metadata and report how
-    many are flagged is_refseq vs is_complete_norway_genome."""
+    many are flagged is_refseq vs is_complete_norway_genome.
+    """
     recs = ncbi_bioproject_records(UMBRELLA_PROJECT, headers, sleep_s)
     gca = _gca_primaries(recs)
     print(f"\nPRJEB74192 GCAs: {len(gca)}", flush=True)
@@ -327,7 +330,8 @@ def audit_prjeb74192(metadata: pd.DataFrame, headers: dict[str, str], sleep_s: f
 def audit_norkab(metadata: pd.DataFrame, headers: dict[str, str], limit: int | None) -> pd.DataFrame:
     """For every ``is_complete_norway_genome=True`` BioSample, ask NCBI
     Datasets what assemblies exist and at what level. Confirms the cohort
-    is Contig/SKESA drafts with no Complete-Genome assembly anywhere."""
+    is Contig/SKESA drafts with no Complete-Genome assembly anywhere.
+    """
     if NORWAY_FLAG_COL not in metadata.columns:
         print(f"  metadata has no '{NORWAY_FLAG_COL}' column — skipping NORKAB mode", flush=True)
         return pd.DataFrame()
@@ -379,8 +383,7 @@ def audit_norkab(metadata: pd.DataFrame, headers: dict[str, str], limit: int | N
         n_complete = int((gca["level"] == "Complete Genome").sum())
         print(f"** Complete-Genome assemblies: {n_complete} **", flush=True)
         print(
-            f"Top assembly methods: "
-            f"{dict(Counter(gca['method'].astype(str)).most_common(5))}",
+            f"Top assembly methods: {dict(Counter(gca['method'].astype(str)).most_common(5))}",
             flush=True,
         )
     return df
@@ -391,7 +394,8 @@ def audit_norkab(metadata: pd.DataFrame, headers: dict[str, str], limit: int | N
 
 def main(argv: list[str] | None = None) -> int:
     """Parse args and run the requested audit mode(s), writing TSVs to
-    ``--out-dir`` and printing the headline summary."""
+    ``--out-dir`` and printing the headline summary.
+    """
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[1])
     parser.add_argument(
         "--mode",

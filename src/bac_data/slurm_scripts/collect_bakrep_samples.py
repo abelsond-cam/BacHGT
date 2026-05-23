@@ -22,6 +22,7 @@ def collect_sample_ids(
     n: int = 10,
     filetype: str = "gbff",
 ) -> list[str]:
+    """Return up to ``n`` BakRep sample IDs to download for ``filetype`` (gbff/gff3)."""
     df = pd.read_csv(metadata_path, sep="\t", low_memory=False)
     initial_count = len(df)
     df_all = df.copy()
@@ -49,12 +50,7 @@ def collect_sample_ids(
 
     if skip_existing:
         if col in df.columns:
-            df = df[
-                ~df[col]
-                .astype(str)
-                .str.lower()
-                .isin(["true", "1", "yes"])
-            ]
+            df = df[~df[col].astype(str).str.lower().isin(["true", "1", "yes"])]
             print(f"After {col} filter: {len(df):,} samples", file=sys.stderr)
         else:
             print(f"{col} column not found; skipping this filter", file=sys.stderr)
@@ -73,6 +69,7 @@ def collect_sample_ids(
 
 
 def collect_cmd(args: argparse.Namespace) -> None:
+    """``collect`` subcommand: print pending sample IDs to stdout."""
     filetype = getattr(args, "filetype", "gbff")
     col = _downloaded_column(filetype)
     print("Filtering metadata with Python...", file=sys.stderr)
@@ -115,6 +112,7 @@ def collect_cmd(args: argparse.Namespace) -> None:
 
 
 def collect_sample_accessions_from_files(output_dir: Path, filetype: str = "gbff") -> set[str]:
+    """Return the set of sample accessions whose ``*.bakta.<filetype>.gz`` file is present under ``output_dir``."""
     pattern = f"*.bakta.{filetype}.gz"
     files = list(output_dir.rglob(pattern))
     return {f.parent.name for f in files}
@@ -126,6 +124,7 @@ def update_metadata_flags(
     filetype: str,
     missing_output: Path | None = None,
 ) -> None:
+    """Set the ``bakta_<filetype>_downloaded`` metadata column from on-disk file presence."""
     col = _downloaded_column(filetype)
     pattern = f"*.bakta.{filetype}.gz"
 
@@ -146,9 +145,7 @@ def update_metadata_flags(
         print("ERROR: 'sample_accession' column not found in metadata", file=sys.stderr)
         sys.exit(1)
 
-    expected = set(
-        df[df["sample_accession"].astype(str).str.startswith("SAM")]["sample_accession"].astype(str)
-    )
+    expected = set(df[df["sample_accession"].astype(str).str.startswith("SAM")]["sample_accession"].astype(str))
     missing = expected - samples_with_files
 
     df[col] = df["sample_accession"].isin(samples_with_files)
@@ -156,7 +153,9 @@ def update_metadata_flags(
     num_downloaded = int(df[col].sum())
     num_total = len(df)
     print("\nResults:")
-    print(f"  Samples with bakta.{filetype}.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded / num_total * 100:.1f}%)")
+    print(
+        f"  Samples with bakta.{filetype}.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded / num_total * 100:.1f}%)"
+    )
     print(f"  Samples without file: {num_total - num_downloaded:,}")
 
     if missing:
@@ -194,6 +193,7 @@ def update_metadata_flags(
 
 
 def main() -> None:
+    """CLI entry point."""
     parser = argparse.ArgumentParser(description="BakRep collect and update-flags (standalone, pandas only)")
     parser.add_argument("--metadata", type=Path, required=True, help="Path to metadata TSV")
     parser.add_argument("--n", type=int, default=10, help="Number of samples (10=test, -1=all)")

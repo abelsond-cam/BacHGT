@@ -50,14 +50,12 @@ def count_features(
                 f = line.split("\t", 4)
                 if len(f) >= 3:
                     counts[f[2]] += 1
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 — batch-resilience: capture any per-sample parse failure and continue
         return sample, None, f"{type(e).__name__}: {e}"
     return sample, dict(counts), None
 
 
-def _load_jobs(
-    metadata_path: Path, sidecar_path: Path
-) -> tuple[list[tuple[str, str]], pd.DataFrame | None, int, int]:
+def _load_jobs(metadata_path: Path, sidecar_path: Path) -> tuple[list[tuple[str, str]], pd.DataFrame | None, int, int]:
     """Return (jobs, existing_sidecar_df, n_total_with_gff, n_skipped_resume)."""
     df = pd.read_csv(
         metadata_path,
@@ -80,9 +78,7 @@ def _load_jobs(
     n_skipped = n_total - len(df)
 
     df["abs_path"] = df["gff_file"].map(lambda p: str(BASE_DIR / p))
-    jobs: list[tuple[str, str]] = list(
-        zip(df["Sample"].astype(str), df["abs_path"].astype(str))
-    )
+    jobs: list[tuple[str, str]] = list(zip(df["Sample"].astype(str), df["abs_path"].astype(str), strict=False))
     return jobs, existing_df, n_total, n_skipped
 
 
@@ -169,9 +165,7 @@ def run(
             combined = new_df
         _atomic_write_tsv(combined, side_path)
         if errors:
-            err_df = pd.DataFrame(
-                errors, columns=["Sample", "gff_file", "error"]
-            )
+            err_df = pd.DataFrame(errors, columns=["Sample", "gff_file", "error"])
             _atomic_write_tsv(err_df, err_path)
         if final:
             print(f"Wrote sidecar: {side_path} ({len(combined)} rows)")
@@ -180,9 +174,7 @@ def run(
 
     try:
         with mp.Pool(processes=workers) as pool:
-            for sample, counts, err in pool.imap_unordered(
-                count_features, jobs, chunksize=64
-            ):
+            for sample, counts, err in pool.imap_unordered(count_features, jobs, chunksize=64):
                 done += 1
                 if err is not None or counts is None:
                     errors.append((sample, sample_to_path.get(sample, ""), err or ""))
@@ -211,10 +203,7 @@ def run(
         _flush(final=True)
 
     elapsed = time.monotonic() - start
-    print(
-        f"Done. processed={done} successes={len(successes)} "
-        f"errors={len(errors)} elapsed={_format_eta(elapsed)}"
-    )
+    print(f"Done. processed={done} successes={len(successes)} errors={len(errors)} elapsed={_format_eta(elapsed)}")
 
 
 def main(argv: list[str] | None = None) -> None:

@@ -11,13 +11,8 @@ from pathlib import Path
 
 import pandas as pd
 
-
-POPPUNK_CLUSTERS = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/combined_clusters_poppunk.csv"
-)
-METADATA = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
-)
+POPPUNK_CLUSTERS = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/combined_clusters_poppunk.csv")
+METADATA = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv")
 
 
 def main() -> None:
@@ -26,9 +21,7 @@ def main() -> None:
     meta = pd.read_csv(METADATA, sep="\t", low_memory=False)
 
     # Join on Taxon (clusters) = Sample (metadata); add Cluster as poppunk_cluster, drop Taxon
-    meta = meta.merge(
-        clusters[["Taxon", "Cluster"]], left_on="Sample", right_on="Taxon", how="left"
-    )
+    meta = meta.merge(clusters[["Taxon", "Cluster"]], left_on="Sample", right_on="Taxon", how="left")
     meta = meta.rename(columns={"Cluster": "poppunk_cluster"}).drop(columns=["Taxon"])
 
     meta.to_csv(METADATA, sep="\t", index=False)

@@ -43,6 +43,7 @@ def _log(msg: str) -> None:
     """Print a timestamped, flushed progress line (tail-friendly)."""
     print(f"[{time.monotonic() - _T0:7.1f}s] {msg}", flush=True)
 
+
 try:
     from scipy.stats import poisson
 
@@ -62,10 +63,18 @@ except ImportError:  # pragma: no cover - scipy expected in env
 
 # Columns from is_gene_context.tsv.gz needed for the flanking analysis.
 USE_COLS = [
-    "sample", "is_family", "is_len", "is_type", "ncopy", "ov",
-    "relationship", "hit_product",
-    "upstream_locus_tag", "upstream_distance_bp",
-    "downstream_locus_tag", "downstream_distance_bp",
+    "sample",
+    "is_family",
+    "is_len",
+    "is_type",
+    "ncopy",
+    "ov",
+    "relationship",
+    "hit_product",
+    "upstream_locus_tag",
+    "upstream_distance_bp",
+    "downstream_locus_tag",
+    "downstream_distance_bp",
 ]
 
 # A sample is "reference bucket" if any of these run-TSV flags is True.
@@ -100,17 +109,23 @@ def _filter_is_rows(path: Path, lineage_samples: set[str]) -> pd.DataFrame:
     keep = []
     scanned = kept = 0
     t0 = time.monotonic()
-    for i, chunk in enumerate(pd.read_csv(
-        path, sep="\t", compression="gzip", usecols=USE_COLS,
-        dtype=str, chunksize=500_000,
-    ), start=1):
+    for i, chunk in enumerate(
+        pd.read_csv(
+            path,
+            sep="\t",
+            compression="gzip",
+            usecols=USE_COLS,
+            dtype=str,
+            chunksize=500_000,
+        ),
+        start=1,
+    ):
         sub = chunk[chunk["sample"].isin(lineage_samples)]
         keep.append(sub)
         scanned += len(chunk)
         kept += len(sub)
         dt = time.monotonic() - t0
-        _log(f"  filter chunk {i}: scanned={scanned:,} kept={kept:,} "
-             f"({scanned / dt:,.0f} rows/s)")
+        _log(f"  filter chunk {i}: scanned={scanned:,} kept={kept:,} ({scanned / dt:,.0f} rows/s)")
     df = pd.concat(keep, ignore_index=True) if keep else pd.DataFrame(columns=USE_COLS)
     for c in ("is_len", "ncopy", "ov", "upstream_distance_bp", "downstream_distance_bp"):
         df[c] = pd.to_numeric(df[c], errors="coerce")
@@ -167,8 +182,13 @@ def _bh_qvalues(p: np.ndarray) -> np.ndarray:
 
 
 def run(
-    is_gene_context: Path, panaroo_root: Path, lineage: str, out_dir: Path,
-    min_recurrence: int, fdr: float, include_ref_bucket: bool,
+    is_gene_context: Path,
+    panaroo_root: Path,
+    lineage: str,
+    out_dir: Path,
+    min_recurrence: int,
+    fdr: float,
+    include_ref_bucket: bool,
 ) -> None:
     """Execute the flanking-context hotspot analysis for one lineage."""
     run_dir = panaroo_root / lineage
@@ -176,8 +196,7 @@ def run(
         sys.exit(f"no gene_presence_absence.csv under {run_dir}")
 
     samples = _lineage_samples(run_dir, include_ref_bucket)
-    _log(f"lineage={lineage} samples={len(samples)} "
-         f"(ref_bucket {'kept' if include_ref_bucket else 'excluded'})")
+    _log(f"lineage={lineage} samples={len(samples)} (ref_bucket {'kept' if include_ref_bucket else 'excluded'})")
 
     _log(f"filtering {is_gene_context.name} (3.5M rows) to lineage samples...")
     df = _filter_is_rows(is_gene_context, set(samples))
@@ -204,9 +223,7 @@ def run(
     # ISEScan type='p' marks a partial IS — a degraded remnant ("scar").
     df["is_partial"] = df["is_type"].astype(str).str.strip().str.lower().eq("p")
     igr_len = df["upstream_distance_bp"] + df["is_len"] + df["downstream_distance_bp"]
-    intergenic_ok = (
-        df["relationship"].eq("intergenic") & has_u & has_d & (igr_len > 0)
-    )
+    intergenic_ok = df["relationship"].eq("intergenic") & has_u & has_d & (igr_len > 0)
     df["igr_len"] = np.where(intergenic_ok, igr_len, np.nan)
     df["igr_occupancy_frac"] = np.where(intergenic_ok, df["is_len"] / igr_len, np.nan)
 
@@ -217,13 +234,13 @@ def run(
     _log(f"wrote {annotated.name} ({len(df):,} rows)")
 
     # Long form: one row per (IS, resolved flank side). Vectorised concat.
-    up = df.loc[df["upstream_cluster"].notna(),
-                ["sample", "is_family", "is_partial", "upstream_cluster"]].rename(
-        columns={"upstream_cluster": "cluster"})
+    up = df.loc[df["upstream_cluster"].notna(), ["sample", "is_family", "is_partial", "upstream_cluster"]].rename(
+        columns={"upstream_cluster": "cluster"}
+    )
     up["side"] = "upstream"
-    dn = df.loc[df["downstream_cluster"].notna(),
-                ["sample", "is_family", "is_partial", "downstream_cluster"]].rename(
-        columns={"downstream_cluster": "cluster"})
+    dn = df.loc[df["downstream_cluster"].notna(), ["sample", "is_family", "is_partial", "downstream_cluster"]].rename(
+        columns={"downstream_cluster": "cluster"}
+    )
     dn["side"] = "downstream"
     long = pd.concat([up, dn], ignore_index=True)
     _log(f"aggregating hotspots over {len(long):,} flank events...")
@@ -231,15 +248,16 @@ def run(
     # Recurrence unit: a (Panaroo cluster, IS family) pair.
     keys = ["cluster", "is_family"]
     grp = long.groupby(keys)
-    hot = pd.DataFrame({
-        "n_genomes_flanked": grp["sample"].nunique(),
-        "n_is_events": grp.size(),
-        "n_as_upstream": long[long["side"].eq("upstream")].groupby(keys).size(),
-        "n_as_downstream": long[long["side"].eq("downstream")].groupby(keys).size(),
-        "n_partial_events": grp["is_partial"].sum(),
-        "n_genomes_partial": long[long["is_partial"]].groupby(keys)["sample"].nunique(),
-    }).fillna({"n_as_upstream": 0, "n_as_downstream": 0,
-               "n_partial_events": 0, "n_genomes_partial": 0})
+    hot = pd.DataFrame(
+        {
+            "n_genomes_flanked": grp["sample"].nunique(),
+            "n_is_events": grp.size(),
+            "n_as_upstream": long[long["side"].eq("upstream")].groupby(keys).size(),
+            "n_as_downstream": long[long["side"].eq("downstream")].groupby(keys).size(),
+            "n_partial_events": grp["is_partial"].sum(),
+            "n_genomes_partial": long[long["is_partial"]].groupby(keys)["sample"].nunique(),
+        }
+    ).fillna({"n_as_upstream": 0, "n_as_downstream": 0, "n_partial_events": 0, "n_genomes_partial": 0})
     hot["frac_partial"] = hot["n_partial_events"] / hot["n_is_events"]
     hot = hot.reset_index()
     hot["annotation"] = hot["cluster"].map(ann)
@@ -250,8 +268,7 @@ def run(
     # per family; enrichment is observed genome-recurrence relative to it.
     base = 1.0 - 1.0 / n_clusters
     fam_counts = df.groupby(["sample", "is_family"]).size()
-    lam_by_fam = fam_counts.groupby("is_family").apply(
-        lambda c: float(np.sum(1.0 - base ** (2 * c.to_numpy()))))
+    lam_by_fam = fam_counts.groupby("is_family").apply(lambda c: float(np.sum(1.0 - base ** (2 * c.to_numpy()))))
     lam = hot["is_family"].map(lam_by_fam).to_numpy()
     obs = hot["n_genomes_flanked"].to_numpy()
     hot["expected_genomes"] = lam
@@ -263,42 +280,64 @@ def run(
     # Order: cluster's total IS events (desc), then IS family by n within cluster.
     hot["cluster_n_is_events"] = hot.groupby("cluster")["n_is_events"].transform("sum")
     hot = hot.sort_values(
-        ["cluster_n_is_events", "cluster", "n_is_events"],
-        ascending=[False, True, False]).reset_index(drop=True)
-    cols = ["cluster", "is_family", "annotation", "cluster_n_is_events",
-            "n_genomes_flanked", "n_is_events", "n_as_upstream", "n_as_downstream",
-            "n_partial_events", "n_genomes_partial", "frac_partial",
-            "expected_genomes", "enrichment", "p_value", "q_value", "hotspot"]
+        ["cluster_n_is_events", "cluster", "n_is_events"], ascending=[False, True, False]
+    ).reset_index(drop=True)
+    cols = [
+        "cluster",
+        "is_family",
+        "annotation",
+        "cluster_n_is_events",
+        "n_genomes_flanked",
+        "n_is_events",
+        "n_as_upstream",
+        "n_as_downstream",
+        "n_partial_events",
+        "n_genomes_partial",
+        "frac_partial",
+        "expected_genomes",
+        "enrichment",
+        "p_value",
+        "q_value",
+        "hotspot",
+    ]
     hotspots = out_dir / f"{lineage}_is_flank_hotspots.tsv"
     with open(hotspots, "w") as fh:
-        fh.write(f"# lineage={lineage} genomes={len(samples)} clusters_N={n_clusters} "
-                 f"unit=(cluster,is_family) lambda_F=[{lam.min():.3f},{lam.max():.3f}]; "
-                 f"null=uniform-over-clusters per IS family "
-                 f"(ignores cluster length/core-accessory)\n")
+        fh.write(
+            f"# lineage={lineage} genomes={len(samples)} clusters_N={n_clusters} "
+            f"unit=(cluster,is_family) lambda_F=[{lam.min():.3f},{lam.max():.3f}]; "
+            f"null=uniform-over-clusters per IS family "
+            f"(ignores cluster length/core-accessory)\n"
+        )
         hot[cols].to_csv(fh, sep="\t", index=False)
-    _log(f"wrote {hotspots.name} ({len(hot):,} cluster-family pairs, "
-         f"{int(hot['hotspot'].sum())} flagged hotspots) — DONE")
+    _log(
+        f"wrote {hotspots.name} ({len(hot):,} cluster-family pairs, "
+        f"{int(hot['hotspot'].sum())} flagged hotspots) — DONE"
+    )
 
 
 def main() -> int:
     """CLI entry point."""
     base = Path(
-        "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge"
-        "/local_data/klebsiella/processed"
+        "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/processed"
     )
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--is-gene-context", type=Path,
-                    default=base / "isescan_analysis/is_gene_context.tsv.gz")
+    ap.add_argument("--is-gene-context", type=Path, default=base / "isescan_analysis/is_gene_context.tsv.gz")
     ap.add_argument("--panaroo-root", type=Path, default=base / "panaroo_min")
     ap.add_argument("--lineage", default="SL39")
-    ap.add_argument("--out-dir", type=Path,
-                    default=base / "isescan_analysis/lineage_hotspots")
+    ap.add_argument("--out-dir", type=Path, default=base / "isescan_analysis/lineage_hotspots")
     ap.add_argument("--min-recurrence", type=int, default=3)
     ap.add_argument("--fdr", type=float, default=0.05)
     ap.add_argument("--include-ref-bucket", action="store_true")
     args = ap.parse_args()
-    run(args.is_gene_context, args.panaroo_root, args.lineage, args.out_dir,
-        args.min_recurrence, args.fdr, args.include_ref_bucket)
+    run(
+        args.is_gene_context,
+        args.panaroo_root,
+        args.lineage,
+        args.out_dir,
+        args.min_recurrence,
+        args.fdr,
+        args.include_ref_bucket,
+    )
     return 0
 
 

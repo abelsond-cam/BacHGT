@@ -6,6 +6,7 @@ import pandas as pd
 
 
 def is_missing_value(rel: object) -> bool:
+    """Return True if ``rel`` is missing — None, ``pd.NA``, NaN, or an empty string."""
     if rel is None or rel is pd.NA:
         return True
     if isinstance(rel, bool):
@@ -32,5 +33,3 @@ def parse_bool(series: pd.Series) -> pd.Series:
         return s in ("true", "1", "t", "yes", "y")
 
     return series.map(_one).astype(bool)
-
-

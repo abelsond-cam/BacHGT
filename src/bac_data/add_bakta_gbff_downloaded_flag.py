@@ -14,9 +14,7 @@ import pandas as pd
 
 # Storage paths — see docs/data/hpc_storage_overview.md for vocabulary.
 # project_k/david/raw/klebsiella_gbff = Bakta GBFF downloads
-_DEFAULT_GBFF_DIR = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff"
-)
+_DEFAULT_GBFF_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_gbff")
 
 
 def collect_gbff_samples(gbff_dir: Path) -> set[str]:
@@ -30,15 +28,15 @@ def collect_gbff_samples(gbff_dir: Path) -> set[str]:
         Set of sample accessions that have .bakta.gbff.gz files
     """
     print(f"Scanning {gbff_dir} for *.bakta.gbff.gz files...")
-    
+
     gbff_files = list(gbff_dir.rglob("*.bakta.gbff.gz"))
     print(f"Found {len(gbff_files)} .bakta.gbff.gz files")
-    
+
     # Extract sample accessions from parent directory names
     # Assuming structure: gbff_dir/XXXX/SAMXXXXXXX/SAMXXXXXXX.bakta.gbff.gz
     sample_accessions = {filepath.parent.name for filepath in gbff_files}
     print(f"Extracted {len(sample_accessions)} unique sample accessions")
-    
+
     return sample_accessions
 
 
@@ -59,33 +57,33 @@ def add_flag_to_metadata(
     print(f"\nLoading metadata from {metadata_path}...")
     metadata = pd.read_csv(metadata_path, sep="\t", low_memory=False)
     print(f"Loaded {len(metadata)} rows, {len(metadata.columns)} columns")
-    
+
     # Check if sample_accession column exists
     if "sample_accession" not in metadata.columns:
         print("ERROR: 'sample_accession' column not found in metadata", file=sys.stderr)
         sys.exit(1)
-    
+
     # Add or overwrite bakta_gbff_downloaded column
     metadata["bakta_gbff_downloaded"] = metadata["sample_accession"].isin(samples_with_files)
-    
+
     # Print statistics
     num_downloaded = metadata["bakta_gbff_downloaded"].sum()
     num_total = len(metadata)
-    print(f"\nResults:")
-    print(f"  Samples with bakta.gbff.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded/num_total*100:.1f}%)")
+    print("\nResults:")
+    print(f"  Samples with bakta.gbff.gz: {num_downloaded:,} / {num_total:,} ({num_downloaded / num_total * 100:.1f}%)")
     print(f"  Samples without file: {num_total - num_downloaded:,}")
-    
+
     if dry_run:
         print("\n--dry-run specified; not writing output")
         return
-    
+
     # Determine output path
     if output_path is None:
         output_path = metadata_path
         print(f"\nOverwriting input file: {output_path}")
     else:
         print(f"\nWriting output to: {output_path}")
-    
+
     # Write output
     metadata.to_csv(output_path, sep="\t", index=False)
     print("Done!")
@@ -94,7 +92,7 @@ def add_flag_to_metadata(
 def main():
     """Main entry point."""
     print("Starting add_bakta_gbff_downloaded_flag.py")
-     
+
     parser = argparse.ArgumentParser(
         description="Add bakta_gbff_downloaded flag to metadata based on file presence",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -122,21 +120,21 @@ def main():
         action="store_true",
         help="Print counts only, do not write output",
     )
-    
+
     args = parser.parse_args()
-    
+
     # Validate inputs
     if not args.metadata.exists():
         print(f"ERROR: Metadata file not found: {args.metadata}", file=sys.stderr)
         sys.exit(1)
-    
+
     if not args.gbff_dir.exists():
         print(f"ERROR: GBFF directory not found: {args.gbff_dir}", file=sys.stderr)
         sys.exit(1)
-    
+
     # Collect sample IDs with gbff files
     samples_with_files = collect_gbff_samples(args.gbff_dir)
-    
+
     # Add flag to metadata
     add_flag_to_metadata(args.metadata, samples_with_files, args.output, args.dry_run)
 

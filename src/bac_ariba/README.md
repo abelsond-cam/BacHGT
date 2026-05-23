@@ -1,6 +1,8 @@
-# mag-rescue
+# bac_ariba
 
-ARIBA-driven virulence/AMR profiling on Klebsiella short-read genomes.
+ARIBA-driven virulence/AMR profiling on Klebsiella short-read genomes. The
+`bac_ariba` subpackage of the BacHGT monorepo (absorbed from the former
+`mag-rescue` standalone repo; on-disk data paths still use `mag_rescue/`).
 
 The pipeline runs ARIBA per sample against a vendored reference DB, with the DB selected by flag (e.g. `--kleb-virulence`). Short reads are streamed in from ENA per sample, processed, and discarded — no bulk pre-staging.
 
@@ -20,11 +22,11 @@ For implementation guidance, see [CLAUDE.md](CLAUDE.md).
 
 | Path | Purpose |
 |------|---------|
-| `src/mag_rescue/pp/` | Preprocessing: accession loading, ref DB build, fastq fetch |
-| `src/mag_rescue/tl/` | Tools: parse ARIBA outputs, build summary tables |
-| `src/mag_rescue/pl/` | Plotting: virulence cluster heatmaps |
+| `src/bac_ariba/pp/` | Preprocessing: accession loading, ref DB build, fastq fetch |
+| `src/bac_ariba/tl/` | Tools: parse ARIBA outputs, build summary tables |
+| `src/bac_ariba/pl/` | Plotting: virulence cluster heatmaps |
 | `refs/` | Vendored reference FASTAs and ARIBA metadata TSVs (one subdir per DB) |
-| `slurm_scripts/` | Slurm array job wrappers for the HPC runner |
+| `src/bac_ariba/slurm_scripts/` | Slurm array job wrappers for the HPC runner |
 | `tests/` | pytest |
 
 ## Reference DBs
@@ -60,8 +62,8 @@ Runs on HPC (Kleborate is linux-only):
 
 ```bash
 ssh login.hpc.cam.ac.uk
-cd ~/workspace/mag-rescue && git pull
-pixi run -e refbuild python -m mag_rescue.pp.build_ariba_ref \
+cd ~/workspace/BacHGT && git pull
+pixi run -e refbuild python -m bac_ariba.pp.build_ariba_ref \
     --kleb-virulence \
     --ariba-sif ~/rds/.../processed/mag_rescue/containers/ariba_213.sif \
     --threads 4 [--force]
@@ -84,7 +86,7 @@ git add pixi.lock && git commit -m "chore: bump kleborate" && git push
 
 # on HPC, rebuild
 git pull && pixi install -e refbuild
-pixi run -e refbuild python -m mag_rescue.pp.build_ariba_ref \
+pixi run -e refbuild python -m bac_ariba.pp.build_ariba_ref \
     --kleb-virulence \
     --ariba-sif ~/rds/.../containers/ariba_213.sif \
     --force

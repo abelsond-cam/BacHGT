@@ -60,8 +60,7 @@ ASSEMBLY_FIELDS = (
     "scientific_name,last_updated"
 )
 ANALYSIS_FIELDS = (
-    "analysis_accession,sample_accession,study_accession,analysis_type,description,"
-    "submitted_format,last_updated"
+    "analysis_accession,sample_accession,study_accession,analysis_type,description,submitted_format,last_updated"
 )
 
 LEVEL_RANK = {
@@ -104,14 +103,12 @@ def query_ena(result: str, fields: str, sample_ids: list[str]) -> pd.DataFrame:
                 return pd.DataFrame()
             return pd.read_csv(StringIO(text), sep="\t")
         print(
-            f"  WARN result={result} attempt={attempt + 1} "
-            f"status={r.status_code} body={r.text[:200]!r}",
+            f"  WARN result={result} attempt={attempt + 1} status={r.status_code} body={r.text[:200]!r}",
             file=sys.stderr,
         )
         time.sleep(2 * (attempt + 1))
     print(
-        f"FAIL result={result} batch first 3={sample_ids[:3]} after "
-        f"{DEFAULT_RETRIES} attempts",
+        f"FAIL result={result} batch first 3={sample_ids[:3]} after {DEFAULT_RETRIES} attempts",
         file=sys.stderr,
     )
     return pd.DataFrame()
@@ -119,7 +116,8 @@ def query_ena(result: str, fields: str, sample_ids: list[str]) -> pd.DataFrame:
 
 def load_subset(metadata_path: Path) -> pd.DataFrame:
     """Load curated metadata and return rows with related_lr_accession or
-    is_complete_norway_genome flagged (one row per unique Sample)."""
+    is_complete_norway_genome flagged (one row per unique Sample).
+    """
     print(f"Loading metadata: {metadata_path}", flush=True)
     meta = pd.read_csv(metadata_path, sep="\t", low_memory=False)
     md = meta.drop_duplicates(subset=["Sample"], keep="first").reset_index(drop=True)
@@ -129,8 +127,7 @@ def load_subset(metadata_path: Path) -> pd.DataFrame:
     keep["has_lr_accession"] = keep["related_lr_accession"].notna()
     keep["is_norway_complete"] = keep["is_complete_norway_genome"].fillna(False).astype(bool)
     print(
-        f"Subset rows: lr_populated={lr_mask.sum()}  "
-        f"is_norway_complete={nor_mask.sum()}  union={len(keep)}",
+        f"Subset rows: lr_populated={lr_mask.sum()}  is_norway_complete={nor_mask.sum()}  union={len(keep)}",
         flush=True,
     )
     return keep
@@ -138,13 +135,12 @@ def load_subset(metadata_path: Path) -> pd.DataFrame:
 
 def pick_best_assembly(asm: pd.DataFrame) -> pd.DataFrame:
     """Per sample_accession, keep the highest-assembly_level row (contig <
-    scaffold < chromosome < complete). Unknown/blank levels rank last."""
+    scaffold < chromosome < complete). Unknown/blank levels rank last.
+    """
     if asm.empty:
         return pd.DataFrame(columns=["sample_accession"])
     asm = asm.copy()
-    asm["level_rank"] = asm["assembly_level"].map(
-        lambda v: LEVEL_RANK.get(str(v).lower(), -1)
-    )
+    asm["level_rank"] = asm["assembly_level"].map(lambda v: LEVEL_RANK.get(str(v).lower(), -1))
     asm = asm.sort_values(["sample_accession", "level_rank"], ascending=[True, False])
     return asm.drop_duplicates(subset=["sample_accession"], keep="first")
 
@@ -183,9 +179,7 @@ def fetch_all(sample_ids: list[str], batch_size: int) -> tuple[pd.DataFrame, pd.
     return asm, anl
 
 
-def merge_results(
-    keep: pd.DataFrame, asm_best: pd.DataFrame, anl_first: pd.DataFrame
-) -> pd.DataFrame:
+def merge_results(keep: pd.DataFrame, asm_best: pd.DataFrame, anl_first: pd.DataFrame) -> pd.DataFrame:
     """Left-merge ENA results onto the metadata subset, one row per Sample."""
     base = keep[
         [
@@ -206,9 +200,7 @@ def merge_results(
         how="left",
     )
     base = base.merge(
-        anl_first[
-            ["sample_accession", "analysis_accession", "analysis_type", "submitted_format"]
-        ].rename(
+        anl_first[["sample_accession", "analysis_accession", "analysis_type", "submitted_format"]].rename(
             columns={
                 "sample_accession": "Sample",
                 "analysis_accession": "analysis_erz",
@@ -237,11 +229,7 @@ def print_summary(merged: pd.DataFrame) -> None:
         print("assembly_level breakdown (across samples with an assembly):", flush=True)
         print(
             "  "
-            + merged.loc[has_asm, "assembly_level"]
-            .fillna("(blank)")
-            .value_counts()
-            .to_string()
-            .replace("\n", "\n  "),
+            + merged.loc[has_asm, "assembly_level"].fillna("(blank)").value_counts().to_string().replace("\n", "\n  "),
             flush=True,
         )
         print()
@@ -276,11 +264,7 @@ def print_summary(merged: pd.DataFrame) -> None:
     print("Where the assemblies live (assembly-record study_accession, top 10):", flush=True)
     if has_asm.any():
         print(
-            merged.loc[has_asm, "study_accession"]
-            .fillna("(blank)")
-            .value_counts()
-            .head(10)
-            .to_string(),
+            merged.loc[has_asm, "study_accession"].fillna("(blank)").value_counts().head(10).to_string(),
             flush=True,
         )
 
@@ -309,9 +293,7 @@ def main(argv: list[str] | None = None) -> int:
     asm_best = pick_best_assembly(asm)
     anl_first = pick_first_seqasm_analysis(anl)
 
-    merged = merge_results(
-        keep[keep["Sample"].astype(str).isin(sample_ids)], asm_best, anl_first
-    )
+    merged = merge_results(keep[keep["Sample"].astype(str).isin(sample_ids)], asm_best, anl_first)
 
     args.output.parent.mkdir(parents=True, exist_ok=True)
     merged.to_csv(args.output, sep="\t", index=False)

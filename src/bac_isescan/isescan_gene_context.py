@@ -23,11 +23,27 @@ from pathlib import Path
 GENE_FEATURES = {"CDS", "tRNA", "rRNA", "tmRNA", "ncRNA"}
 
 OUT_COLUMNS = [
-    "sample", "contig", "is_family", "is_cluster", "is_start", "is_end", "is_len",
-    "is_type", "ncopy", "ov",
-    "relationship", "n_overlapping", "hit_locus_tag", "hit_gene", "hit_product",
-    "upstream_locus_tag", "upstream_product", "upstream_distance_bp",
-    "downstream_locus_tag", "downstream_product", "downstream_distance_bp",
+    "sample",
+    "contig",
+    "is_family",
+    "is_cluster",
+    "is_start",
+    "is_end",
+    "is_len",
+    "is_type",
+    "ncopy",
+    "ov",
+    "relationship",
+    "n_overlapping",
+    "hit_locus_tag",
+    "hit_gene",
+    "hit_product",
+    "upstream_locus_tag",
+    "upstream_product",
+    "upstream_distance_bp",
+    "downstream_locus_tag",
+    "downstream_product",
+    "downstream_distance_bp",
 ]
 
 
@@ -36,7 +52,7 @@ def _attr(attrs: str, key: str) -> str:
     needle = key + "="
     for field in attrs.split(";"):
         if field.startswith(needle):
-            return field[len(needle):]
+            return field[len(needle) :]
     return ""
 
 
@@ -69,9 +85,7 @@ def _parse_gff(gff_path: str) -> dict[str, list[tuple]]:
                 continue
             a = c[8]
             locus = _attr(a, "locus_tag") or _attr(a, "ID")
-            genes.setdefault(c[0], []).append(
-                (start, end, c[6], locus, _attr(a, "gene"), _attr(a, "product"))
-            )
+            genes.setdefault(c[0], []).append((start, end, c[6], locus, _attr(a, "gene"), _attr(a, "product")))
     for v in genes.values():
         v.sort()
     return genes
@@ -125,14 +139,31 @@ def _process(sample: str, is_path: str, gff_path: str):
                 else:
                     rel = "intergenic"
                     hit_lt = hit_gene = hit_prod = ""
-                rows.append([
-                    sample, contig, r.get("family", ""), r.get("cluster", ""),
-                    s, e, r.get("isLen", ""),
-                    r.get("type", ""), r.get("ncopy4is", ""), r.get("ov", ""),
-                    rel, len(ov), hit_lt, hit_gene, hit_prod,
-                    up[3] if up else "", up[5] if up else "", (s - up[1]) if up else "",
-                    dn[3] if dn else "", dn[5] if dn else "", (dn[0] - e) if dn else "",
-                ])
+                rows.append(
+                    [
+                        sample,
+                        contig,
+                        r.get("family", ""),
+                        r.get("cluster", ""),
+                        s,
+                        e,
+                        r.get("isLen", ""),
+                        r.get("type", ""),
+                        r.get("ncopy4is", ""),
+                        r.get("ov", ""),
+                        rel,
+                        len(ov),
+                        hit_lt,
+                        hit_gene,
+                        hit_prod,
+                        up[3] if up else "",
+                        up[5] if up else "",
+                        (s - up[1]) if up else "",
+                        dn[3] if dn else "",
+                        dn[5] if dn else "",
+                        (dn[0] - e) if dn else "",
+                    ]
+                )
     except Exception as exc:  # noqa: BLE001
         return sample, None, f"is_error:{exc}"
     return sample, rows, ""
@@ -183,8 +214,7 @@ def main() -> int:
         tasks = tasks[: args.limit]
 
     print(
-        f"samples={len(isescan)} matched={len(tasks)} unmatched={len(unmatched)} "
-        f"workers={args.workers}",
+        f"samples={len(isescan)} matched={len(tasks)} unmatched={len(unmatched)} workers={args.workers}",
         flush=True,
     )
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
@@ -210,13 +240,11 @@ def main() -> int:
                     w.writerows(rows)
                 if done % 2000 == 0:
                     print(
-                        f"{done}/{len(tasks)} done, {failed} failed, "
-                        f"{time.time() - t0:.0f}s",
+                        f"{done}/{len(tasks)} done, {failed} failed, {time.time() - t0:.0f}s",
                         flush=True,
                     )
     print(
-        f"DONE matched={len(tasks)} failed={failed} "
-        f"elapsed={time.time() - t0:.0f}s -> {args.out}",
+        f"DONE matched={len(tasks)} failed={failed} elapsed={time.time() - t0:.0f}s -> {args.out}",
         flush=True,
     )
     return 0

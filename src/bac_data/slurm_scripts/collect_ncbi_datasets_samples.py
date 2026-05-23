@@ -24,14 +24,11 @@ from pathlib import Path
 
 import pandas as pd
 
-
 DEFAULT_METADATA_PATH = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
 )
 
-NCBI_GFF_DIR = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff3"
-)
+NCBI_GFF_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff3")
 
 
 def collect_accessions(
@@ -62,12 +59,7 @@ def collect_accessions(
     # Determine which rows are already downloaded according to bakta_gff3_downloaded
     downloaded_col = "bakta_gff3_downloaded"
     if downloaded_col in df.columns:
-        downloaded_series = (
-            df[downloaded_col]
-            .astype(str)
-            .str.lower()
-            .isin(["true", "1", "yes"])
-        )
+        downloaded_series = df[downloaded_col].astype(str).str.lower().isin(["true", "1", "yes"])
     else:
         print(
             f"WARNING: '{downloaded_col}' column not found; treating all rows as not downloaded.",
@@ -95,8 +87,7 @@ def collect_accessions(
             gff_stems = {p.stem for p in NCBI_GFF_DIR.glob("*.gff")}
         else:
             print(
-                f"WARNING: NCBI_GFF_DIR does not exist ({NCBI_GFF_DIR}); "
-                "treating as if no .gff files are present.",
+                f"WARNING: NCBI_GFF_DIR does not exist ({NCBI_GFF_DIR}); treating as if no .gff files are present.",
                 file=sys.stderr,
             )
             gff_stems = set()
@@ -214,17 +205,13 @@ def write_batches(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Collect NCBI GCF/GCA genome accessions (for datasets CLI batching)."
-    )
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(description="Collect NCBI GCF/GCA genome accessions (for datasets CLI batching).")
     parser.add_argument(
         "--metadata",
         type=Path,
         default=DEFAULT_METADATA_PATH,
-        help=(
-            "Path to metadata TSV containing a 'Sample' column "
-            f"(default: {DEFAULT_METADATA_PATH})"
-        ),
+        help=(f"Path to metadata TSV containing a 'Sample' column (default: {DEFAULT_METADATA_PATH})"),
     )
     parser.add_argument(
         "--n",
@@ -276,4 +263,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
