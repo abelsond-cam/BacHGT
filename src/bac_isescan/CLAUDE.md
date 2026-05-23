@@ -13,7 +13,11 @@ clusters are recurrently flanked by IS ("hotspots").
 
 ## Layout
 
-Flat package — each module is a standalone CLI.
+Flat package — each module is a standalone CLI. Most run in the monorepo's
+shared `uv` env; `annotate_kleborate_isescan.py` is the exception — it needs
+bioconda tools (Kleborate + ISEScan binaries), so it runs in this
+subpackage's own pixi env (`src/bac_isescan/pixi.toml`); see **Genome
+annotation (bioconda pixi env)** below.
 
 | Module | Purpose |
 |---|---|
@@ -25,12 +29,51 @@ Flat package — each module is a standalone CLI.
 | `_lineage_hotspot_common.py` | Shared per-lineage prep (filter IS rows, map to Panaroo clusters, build long flank-event form, family-conditioned null) — imported by both hotspot modules |
 | `isescan_lineage_panaroo_hotspots.py` | Per-lineage hotspots grouped by **(Panaroo cluster, IS family)** — recurrence test against the family-conditioned uniform-over-clusters null + Kleborate left-join |
 | `isescan_lineage_kleborate_hotspots.py` | Pivot of the same flank events onto **(Kleborate label, IS family)** — virulence genes + AMR drug classes (descriptive; no enrichment test) |
+| `annotate_kleborate_isescan.py` | Batch-run Kleborate + ISEScan over staged genome sets (`sr`/`gca`/`gcf`) for the SR-vs-complete discrepancy analysis; **bioconda pixi env**, see below |
+
+## Genome annotation (bioconda pixi env)
+
+`annotate_kleborate_isescan.py` is the upstream batch annotator that produces
+the ISEScan / Kleborate result trees the rest of this subpackage consumes. It
+runs over the locally-staged related-LR genome sets that `bac_data` downloads
+(`sr_originals/`, `assemblies/GCA_*`, `assemblies/GCF_*`) and emits:
+
+- `kleborate/<group>__<module>.txt` — Kleborate per-module tables (KpSC
+  typing: species, ST, virulence loci, K/O loci, AMR), concatenated per set.
+- `isescan/<group>/<key>/...` — per-genome ISEScan result trees.
+- `isescan/<group>_isescan.tsv` — concatenated IS calls, sample-tagged.
+- `annotation_manifest.tsv` — per-(group, key, tool) status.
+
+Resumable: per-key sentinel files skip already-completed work.
+
+Because Kleborate + ISEScan need bioconda binaries (plus their blast / hmmer
+deps), this module is the only one in `bac_isescan` that doesn't run in the
+shared uv env. It uses a local pixi env at `src/bac_isescan/pixi.toml`:
+
+```bash
+cd src/bac_isescan
+pixi install                                 # first run only
+pixi run annotate --help
+pixi run annotate --groups sr --limit 3      # smoke-test
+pixi run annotate --groups sr,gca,gcf --tools kleborate,isescan
+```
+
+The pixi env pins `osx-64` for Apple Silicon (runs under Rosetta 2) and
+`linux-64` for HPC reproducibility. Upstream of the analysis modules in this
+subpackage — its outputs feed the per-sample IS-family counter
+(`isescan_family_copy_per_sample.py`), the gene-context mapper
+(`isescan_gene_context.py`), and downstream the lineage hotspots.
 
 ## Cross-package dependency
 
 `isescan_family_heatmap_analysis.py` imports the clonal-group selection helper
 `bac_panaroo.tl.define_epidemic_cgs` (kept in `bac_panaroo`; shared with
 `bac_cohort`). Works because the monorepo shares one uv environment.
+
+The two lineage-hotspot modules + `_lineage_hotspot_common.py` left-join
+Kleborate annotations from `bac_panaroo.tl.annotate_panaroo_nodes_minimap`'s
+output (`<panaroo_run>/<lineage>_panaroo_nodes_annotate_kleborate.tsv`), which
+in turn consumes the vendored references in `bac_kleborate`.
 
 `isescan_family_copy_per_sample.py` runs on Slurm via
 `src/bac_isescan/slurm_scripts/isescan_n_per_sample.sh`.

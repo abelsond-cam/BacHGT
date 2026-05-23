@@ -12,14 +12,16 @@ and maintains data-presence columns on the curated metadata TSV.
 
 ## Layout
 
-Flat package (no `pp/tl/pl` split). Most modules are standalone
-`uv run python -m bac_data.<name>` CLIs; the exception is
-`annotate_kleborate_isescan.py`, which runs in this subpackage's own bioconda
-pixi env (`pixi.toml`) — see **Genome annotation** below.
+Flat package (no `pp/tl/pl` split). Every module is a standalone
+`uv run python -m bac_data.<name>` CLI; no second environment.
 `norway_cohort_audit.py` is also a shared helper
 module: `norway_tables1_integrate.py`, `related_lr_complete_assembly_audit.py`,
 and `download_related_lr_complete_genomes.py` import its NCBI helpers
 (`ncbi_headers`, `ncbi_biosample_records`, `_gca_primaries`).
+
+The downstream **genome-annotation** step (batch-running Kleborate + ISEScan
+over the staged genome sets) lives in `bac_isescan` — see
+`src/bac_isescan/CLAUDE.md`.
 
 ## Modules by stage
 
@@ -40,13 +42,6 @@ genome+GFF via NCBI Datasets), `download_bakrep_gbff_files.py`,
 **Metadata flags** — `add_bakta_gbff_downloaded_flag.py` (`bakta_gbff_downloaded`
 column from file presence), `update_biosample_accessions.py` (RefSeq/NCTC
 assembly accessions → BioSample accessions).
-
-**Genome annotation** — `annotate_kleborate_isescan.py` batch-runs Kleborate
-(KpSC typing) and ISEScan (IS-element discovery) over the locally-staged
-related-LR genome sets (`sr`/`gca`/`gcf`), producing the annotation tables for
-the SR-vs-complete discrepancy analysis. It needs bioconda tools, so it runs in
-its own pixi env (`src/bac_data/pixi.toml`) rather than the shared uv env:
-`cd src/bac_data && pixi run annotate --help`.
 
 Two `uv`-env scripts run on Slurm: `src/bac_data/slurm_scripts/norway_tables1_integrate.sh`
 and `src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh`.
