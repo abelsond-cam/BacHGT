@@ -9,7 +9,7 @@ map — is in `~/.claude/CLAUDE.md`. Each `src/bac_*` subpackage has its own
 
 The Klebsiella-genomics monorepo: pangenome / gene-presence-absence (GPA) /
 mobile-element analysis of the *Klebsiella pneumoniae* species complex. One git
-repo, one shared uv environment, six subpackages under `src/`:
+repo, one shared uv environment, seven subpackages under `src/`:
 
 | Subpackage | Purpose | Detail |
 |---|---|---|
@@ -19,6 +19,7 @@ repo, one shared uv environment, six subpackages under `src/`:
 | `bac_data` | Data acquisition — discover, audit, download assemblies/runs | `src/bac_data/CLAUDE.md` |
 | `bac_isescan` | ISEScan IS-element analysis — copy number, gene context, hotspots | `src/bac_isescan/CLAUDE.md` |
 | `bac_cohort` | Complete-genome vs short-read cohort feature comparison | `src/bac_cohort/CLAUDE.md` |
+| `bac_kleborate` | Vendored Kleborate reference data (virulence + AMR FASTAs) — consumed by `bac_ariba` and `bac_panaroo` | `src/bac_kleborate/CLAUDE.md` |
 
 ## Sibling repos
 

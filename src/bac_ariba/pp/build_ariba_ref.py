@@ -44,7 +44,17 @@ DB_REGISTRY: dict[str, dict] = {
     },
 }
 
+# Paths:
+#  - REPO_ROOT — monorepo root, used only for nice ``relative_to`` log lines.
+#  - _BAC_ARIBA_ROOT — where ARIBA build artefacts land (refs/<db>/manifest.json,
+#    metadata.tsv, prepareref_out/).
+#  - _BAC_KLEBORATE_REFS_DIR — where the vendored source FASTAs live; canonical
+#    constants are defined in :mod:`bac_kleborate.refs.paths` for uv-side
+#    consumers (we recompute here because ``bac_ariba`` runs in its own pixi env
+#    and cannot reliably import sibling subpackages).
 REPO_ROOT = Path(__file__).resolve().parents[3]
+_BAC_ARIBA_ROOT = Path(__file__).resolve().parents[1]
+_BAC_KLEBORATE_REFS_DIR = REPO_ROOT / "src" / "bac_kleborate" / "refs"
 
 
 def _sha256(path: Path) -> str:
@@ -133,11 +143,15 @@ def _check_apptainer_on_path() -> None:
 def build(db_name: str, *, ariba_sif: Path, force: bool = False, threads: int = 1) -> None:
     """Vendor source FASTAs, write metadata + manifest, run ``ariba prepareref``."""
     spec = DB_REGISTRY[db_name]
-    db_root = REPO_ROOT / "refs" / db_name
-    inputs_root = db_root / "inputs"
+    # Inputs (vendored source FASTAs) live in the bac_kleborate subpackage;
+    # ARIBA build artefacts (metadata/manifest/prepareref_out) live here in
+    # bac_ariba. Mirror of bac_kleborate.refs.paths.* constants.
+    inputs_root = _BAC_KLEBORATE_REFS_DIR / db_name / "inputs"
+    db_root = _BAC_ARIBA_ROOT / "refs" / db_name
     metadata_path = db_root / "metadata.tsv"
     manifest_path = db_root / "manifest.json"
     prepareref_out = db_root / "prepareref_out"
+    db_root.mkdir(parents=True, exist_ok=True)
 
     _check_apptainer_on_path()
     if not ariba_sif.is_file():
@@ -198,7 +212,12 @@ def build(db_name: str, *, ariba_sif: Path, force: bool = False, threads: int = 
         str(threads),
         str(prepareref_out),
     ]
-    cmd = ["apptainer", "exec", "-B", f"{db_root}:{db_root}", str(ariba_sif), *inner_cmd]
+    cmd = [
+        "apptainer", "exec",
+        "-B", f"{db_root}:{db_root}",
+        "-B", f"{inputs_root}:{inputs_root}",
+        str(ariba_sif), *inner_cmd,
+    ]
     logger.info("Running ariba prepareref (containerised) → %s", prepareref_out.relative_to(REPO_ROOT))
     res = subprocess.run(cmd, check=False)
     if res.returncode != 0:

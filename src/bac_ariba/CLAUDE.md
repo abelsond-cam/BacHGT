@@ -10,9 +10,9 @@ a sibling subpackage; `bac_metadata` produces the curated metadata TSV).
 
 ## Project purpose
 
-mag-rescue runs [ARIBA](https://github.com/sanger-pathogens/ariba) on ~80,000 Klebsiella short-read genomes against curated allele dictionaries — recovering virulence (and later AMR/MLST) profiles directly from reads. The pipeline shape is parametrised by a `--<dbname>` flag; the first DB is `--kleb-virulence` (5 loci: ybt / clb / iuc / iro / rmp), seeded from [Kleborate](https://github.com/klebgenomics/Kleborate)'s reference alleles. ARIBA's `prepareref` step runs CD-HIT to cluster alleles — we use its defaults.
+`bac_ariba` runs [ARIBA](https://github.com/sanger-pathogens/ariba) on ~80,000 Klebsiella short-read genomes against curated allele dictionaries — recovering virulence (and later AMR/MLST) profiles directly from reads. The pipeline shape is parametrised by a `--<dbname>` flag; the first DB is `--kleb-virulence` (5 loci: ybt / clb / iuc / iro / rmp), seeded from [Kleborate](https://github.com/klebgenomics/Kleborate)'s reference alleles. ARIBA's `prepareref` step runs CD-HIT to cluster alleles — we use its defaults.
 
-Sibling repo: [Bacotype](https://github.com/abelsond-cam/Bacotype) — pangenome / GPA / mobile-element analysis. mag-rescue consumes Bacotype's `metadata_final_curated_all_samples_and_columns.tsv` to source accessions: filter rows where `is_refseq == False` AND `kpsc_final_list == True`, then take the `run_accession` column. (`related_sr_accession` is reserved for an on-hold long-vs-short-read comparison and is **not** the column to use.)
+Sister subpackages in this monorepo: `bac_panaroo` (pangenome / GPA / mobile-element analysis) and `bac_metadata` (the curated metadata TSV producer). `bac_ariba` consumes `metadata_final_curated_all_samples_and_columns.tsv` to source accessions: filter rows where `is_refseq == False` AND `kpsc_final_list == True`, then take the `run_accession` column. (`related_sr_accession` is reserved for an on-hold long-vs-short-read comparison and is **not** the column to use.)
 
 ## Commands
 
@@ -40,7 +40,7 @@ pixi run -e dev python -m bac_ariba.pp.extract_accessions \
 pixi run -e dev python -m bac_ariba.pp.parallel_ariba submit \
     --db kleb_virulence --run-name <cohort> \
     --mag-rescue-root <RDS>/.../processed/mag_rescue \
-    --repo-dir ~/workspace/mag-rescue \
+    --repo-dir ~/workspace/BacHGT \
     --ariba-sif <RDS>/.../containers/ariba_213.sif
 
 # After completion: tally + compare to Bacotype's penetrance.
@@ -53,8 +53,8 @@ pixi run -e dev python -m bac_ariba.tl.assess_recovery \
 ## HPC connection
 
 - Host: `login.hpc.cam.ac.uk` (CSD3, user `dca36`). 8-hour SSH ControlMaster configured in `~/.ssh/config`.
-- Code at `/home/dca36/workspace/mag-rescue` (siblings under `/home/dca36/workspace/`).
-- Data under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` — full storage map (four roots: `project_k`, `personal_rds`, `bacformer_rds`, `cold_storage`) in [`Bacotype/docs/data/hpc_storage_overview.md`](../Bacotype/docs/data/hpc_storage_overview.md). mag-rescue outputs land under `project_k/david/processed/mag_rescue/`.
+- Code at `/home/dca36/workspace/BacHGT` (siblings under `/home/dca36/workspace/`).
+- Data under `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david` — full storage map (four roots: `project_k`, `personal_rds`, `bacformer_rds`, `cold_storage`) in `~/.claude/hpc_storage_overview.md`. `bac_ariba` outputs land under `project_k/david/processed/mag_rescue/` (the on-disk directory still uses the original `mag_rescue/` name).
 - For code changes prefer `git commit` → `push` → `pull` on HPC over rsync.
 
 ## Package layout
@@ -69,31 +69,35 @@ scanpy-style modules:
 
 ## Reference DBs
 
-Each DB is a self-contained subdir under `refs/`:
+Source FASTAs are owned by the sibling `bac_kleborate` subpackage (one canonical
+home for vendored Kleborate data, also consumed by `bac_panaroo`'s minimap
+Panaroo-node annotator). `bac_ariba` only owns the build artefacts on top:
 
 ```
-refs/<db_name>/
-  inputs/           # vendored allele FASTAs (committed)
+src/bac_kleborate/refs/<db_name>/
+  inputs/           # vendored allele FASTAs (committed) — read by build_ariba_ref
+
+src/bac_ariba/refs/<db_name>/
   metadata.tsv      # ARIBA prepareref metadata: gene, cluster, seq_type, var
   manifest.json     # source pkg + version, build date, file checksums
   prepareref_out/   # built artefact (gitignored — rebuilt by `ariba prepareref`)
 ```
 
-Adding a new DB (`--amr`, `--mlst`, …): vendor FASTAs, write `metadata.tsv`, then register the DB name in two places:
+Adding a new DB (`--amr`, `--mlst`, …): vendor FASTAs **into `bac_kleborate/refs/<db>/inputs/`**, write `metadata.tsv` (under `bac_ariba/refs/<db>/`), then register the DB name in two places:
 - `pp/build_ariba_ref.py:DB_REGISTRY` (build-time module list)
-- `tl/assess_recovery.py:DB_LOCI` (per-locus tally + Bacotype-feature mapping)
+- `tl/assess_recovery.py:DB_LOCI` (per-locus tally + bac-cohort feature mapping)
 
-The runner (`pp/run_ariba.py`) is DB-agnostic — it just resolves `refs/<db>/prepareref_out/` from the `--db` flag.
+The runner (`pp/run_ariba.py`) is DB-agnostic — it just resolves `bac_ariba/refs/<db>/prepareref_out/` from the `--db` flag.
 
 ## Pipeline shape
 
 Four scripts wired by Slurm:
 
-1. **`pp/extract_accessions.py`** (one-shot) — filter Bacotype's metadata to a 5-col TSV (`run_accession, r1_url, r2_url, r1_md5, r2_md5`). Optional `--sublineage` / `--clonal-group` for cohort runs.
+1. **`pp/extract_accessions.py`** (one-shot) — filter `bac_metadata`'s curated metadata TSV to a 5-col TSV (`run_accession, r1_url, r2_url, r1_md5, r2_md5`). Optional `--sublineage` / `--clonal-group` for cohort runs.
 2. **`pp/parallel_ariba.py submit`** — compose + sbatch the array against that list. Subcommands: `submit`, `status`, `retry` (re-submits failed indices via sacct).
-3. **`slurm_scripts/ariba_array.sh`** — thin shim per array task; reads line N of the list, calls `pp/run_ariba.py`. icelake-himem partition, 4 cpus, 12 GB, 2 h.
+3. **`src/bac_ariba/slurm_scripts/ariba_array.sh`** — thin shim per array task; reads line N of the list, calls `pp/run_ariba.py`. icelake-himem partition, 4 cpus, 12 GB, 2 h.
 4. **`pp/run_ariba.py`** — per-sample worker: `curl` R1+R2 from ENA → md5 verify → `apptainer exec ariba_213.sif ariba run` → atomic copy `report.tsv` (and optionally `assembled_seqs.fa.gz` + `assemblies.fa.gz` with `--detailed`) to RDS → cleanup scratch. Idempotent on `report.tsv` presence.
-5. **`tl/assess_recovery.py`** — post-hoc: tally per-locus presence + gene completeness; if Bacotype's `complete_vs_sr_genomes/penetrance/<cohort>.csv` is around, emit comparison tables. Output: `<run-dir>/assessment/<cohort>_recovery.{md,tsv}`.
+5. **`tl/assess_recovery.py`** — post-hoc: tally per-locus presence + gene completeness; if `bac_cohort`'s `complete_vs_sr_genomes/penetrance/<cohort>.csv` is around, emit comparison tables. Output: `<run-dir>/assessment/<cohort>_recovery.{md,tsv}`.
 
 Outputs land at `<RDS>/processed/mag_rescue/<db>/<run-name>/{reports,sample_logs,assembled_seqs,assemblies,accessions,assessment}/`. Slurm stdout/stderr at `<RDS>/processed/mag_rescue/slurm_logs/`.
 
