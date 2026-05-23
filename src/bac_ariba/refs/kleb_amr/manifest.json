@@ -1,0 +1,20 @@
+{
+  "db_name": "kleb_amr",
+  "kind": "amr_card",
+  "built_utc": "2026-05-23T12:51:55+00:00",
+  "source_pkg": "kleborate",
+  "source_pkg_version": "3.2.4",
+  "source_pkg_path": "/home/dca36/.conda/envs/kleborate/lib/python3.14/site-packages/kleborate",
+  "file_sha256": {
+    "klebsiella_pneumo_complex__amr": {
+      "CARD_AMR_clustered.csv": "ada0d191d5092d3fe343a35146c9293f17a6a4d79e55fe20b64759871b03597d",
+      "CARD_v3.2.9.fasta": "0ddbdf2bce76591339160f17e98029f73a48e38ede7073c69d7ed015111482c8",
+      "Kleborate_classes.csv": "3c4984d913fed9dc833d080c03e2df8c71839bacfc7e7967b75b80b9e9c83bd0",
+      "MgrB_and_PmrB.fasta": "98f79f0bf7121d2376bdc44ae52fb1f2f9745030333cfd4382a053d9d033e4c0",
+      "OmpK.fasta": "518f313a5c2e29e372413487618184579eb3c635a34655ebaff7c56ff4291968",
+      "QRDR_120.fasta": "1deadb3b572b3c1a90cd9c8014c8103520b9bbfb391960484312a16ebe8d3c69"
+    }
+  },
+  "module": "klebsiella_pneumo_complex__amr",
+  "card_fasta": "CARD_v3.2.9.fasta"
+}
