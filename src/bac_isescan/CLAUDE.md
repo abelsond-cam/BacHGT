@@ -22,7 +22,9 @@ Flat package — each module is a standalone CLI.
 | `isescan_family_copy_per_sample.py` | ISEScan CSVs → one wide per-sample family+cluster count table |
 | `isescan_family_heatmap_analysis.py` | Per-clonal-group mean/SD IS-family heatmaps |
 | `isescan_gene_context.py` | Map IS coordinates to per-genome gene context (overlap + flanks) via GFFs |
-| `isescan_lineage_hotspots.py` | Per-lineage flanking-context → Panaroo-cluster hotspot enrichment test |
+| `_lineage_hotspot_common.py` | Shared per-lineage prep (filter IS rows, map to Panaroo clusters, build long flank-event form, family-conditioned null) — imported by both hotspot modules |
+| `isescan_lineage_panaroo_hotspots.py` | Per-lineage hotspots grouped by **(Panaroo cluster, IS family)** — recurrence test against the family-conditioned uniform-over-clusters null + Kleborate left-join |
+| `isescan_lineage_kleborate_hotspots.py` | Pivot of the same flank events onto **(Kleborate label, IS family)** — virulence genes + AMR drug classes (descriptive; no enrichment test) |
 
 ## Cross-package dependency
 
