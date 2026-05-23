@@ -23,6 +23,21 @@ Each IS carries an ``is_partial`` flag (ISEScan ``type='p'`` — a degraded IS
 remnant, i.e. a "scar" of a former full-length element). Partial IS rows are
 kept in the annotated TSV and summarised per cluster in the hotspot table as
 ``n_partial_events``, ``n_genomes_partial`` and ``frac_partial``.
+
+Reading the side counts: ``n_as_upstream`` / ``n_as_downstream`` are by
+**contig coordinate**, not biology. Draft assemblers (SPAdes/Unicycler/…) do
+not preserve a canonical contig orientation, so a single fixed IS adjacent to
+a gene appears as ``upstream`` in some genomes and ``downstream`` in others.
+A pair with ``n_as_upstream + n_as_downstream ≈ n_is_events ≈
+n_genomes_flanked`` is one ancestral adjacency seen from two orientations;
+the side split is noise. Strong one-sided uniformity is the informative
+signal; mixed two-sided counts conflate orientation flips, Panaroo paralog
+collapse and tandem-IS arrangements — don't treat them as event counts.
+
+If a sibling ``{lineage}_panaroo_nodes_annotate_kleborate.tsv`` (written by
+``bac_panaroo.tl.annotate_panaroo_nodes_minimap``) sits in the Panaroo run
+folder, its ``virulence_hits`` / ``amr_hits`` / ``amr_classes`` columns are
+left-joined onto the hotspot table. Missing file → empty columns.
 """
 
 from __future__ import annotations
@@ -262,6 +277,22 @@ def run(
     hot = hot.reset_index()
     hot["annotation"] = hot["cluster"].map(ann)
 
+    # Left-join Kleborate virulence + AMR labels from the Panaroo run folder
+    # (written by bac_panaroo.tl.annotate_panaroo_nodes_minimap). Missing file
+    # → empty columns, with a log line so the omission is visible.
+    kleb_tsv = run_dir / f"{lineage}_panaroo_nodes_annotate_kleborate.tsv"
+    if kleb_tsv.exists():
+        kleb = pd.read_csv(kleb_tsv, sep="\t", dtype=str).fillna("")
+        hot = hot.merge(kleb, on="cluster", how="left")
+        for c in ("virulence_hits", "amr_hits", "amr_classes"):
+            hot[c] = hot[c].fillna("")
+        n_lab = int((hot[["virulence_hits", "amr_hits"]].ne("").any(axis=1)).sum())
+        _log(f"joined {kleb_tsv.name}: {n_lab:,} of {len(hot):,} pair-rows have a virulence/AMR label")
+    else:
+        for c in ("virulence_hits", "amr_hits", "amr_classes"):
+            hot[c] = ""
+        _log(f"NOTE: {kleb_tsv.name} not found — virulence/amr columns will be empty")
+
     # Family-conditioned uniform null: for IS family F the expected genome-
     # recurrence of any cluster depends only on m_{g,F} (genome g's count of
     # family-F IS), each contributing 2 flank events. lambda_F is one scalar
@@ -279,6 +310,14 @@ def run(
 
     # Order: cluster's total IS events (desc), then IS family by n within cluster.
     hot["cluster_n_is_events"] = hot.groupby("cluster")["n_is_events"].transform("sum")
+    # Counts are float after fillna(); cast to int64 for clean output.
+    for c in (
+        "n_genomes_flanked", "n_is_events",
+        "n_as_upstream", "n_as_downstream",
+        "n_partial_events", "n_genomes_partial",
+        "cluster_n_is_events",
+    ):
+        hot[c] = hot[c].astype("int64")
     hot = hot.sort_values(
         ["cluster_n_is_events", "cluster", "n_is_events"], ascending=[False, True, False]
     ).reset_index(drop=True)
@@ -286,6 +325,9 @@ def run(
         "cluster",
         "is_family",
         "annotation",
+        "virulence_hits",
+        "amr_hits",
+        "amr_classes",
         "cluster_n_is_events",
         "n_genomes_flanked",
         "n_is_events",
