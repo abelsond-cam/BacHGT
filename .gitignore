@@ -33,3 +33,7 @@ __pycache__/
 # Saved images
 *.png
 
+# ARIBA prepareref outputs — large per-DB build artefact (CD-HIT clusters,
+# bowtie2 indexes); rebuilt by `bac_ariba.pp.build_ariba_ref`.
+src/bac_ariba/refs/*/prepareref_out/
+
