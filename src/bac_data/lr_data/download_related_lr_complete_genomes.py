@@ -53,7 +53,7 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-from bac_data.norway_cohort_audit import ncbi_headers
+from bac_data.lr_data.norway_cohort_audit import ncbi_headers
 
 # ─── PATHS ────────────────────────────────────────────────────────────────────
 

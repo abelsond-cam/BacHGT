@@ -21,7 +21,7 @@
 # light enough to run on the login node directly, exactly like
 # norway_cohort_audit.py:
 #
-#   uv run python -m bac_data.related_lr_complete_assembly_audit
+#   uv run python -m bac_data.lr_data.related_lr_complete_assembly_audit
 #
 # The Slurm wrapper just gives it a guaranteed NCBI_API_KEY-rate budget
 # and a clean log. ~3,000 probes ≈ a few minutes with a key.
@@ -31,8 +31,8 @@
 #     limit from 3 to 10 req/s (the script honours it automatically).
 #
 # Usage:
-#   sbatch src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh
-#   bash   src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh
+#   sbatch src/bac_data/lr_data/slurm_scripts/related_lr_complete_assembly_audit.sh
+#   bash   src/bac_data/lr_data/slurm_scripts/related_lr_complete_assembly_audit.sh
 #
 set -euo pipefail
 
@@ -62,7 +62,7 @@ fi
 
 mkdir -p "${OUT_DIR}"
 
-uv run python -u -m bac_data.related_lr_complete_assembly_audit \
+uv run python -u -m bac_data.lr_data.related_lr_complete_assembly_audit \
   --metadata "${METADATA}" \
   --out-dir "${OUT_DIR}"
 

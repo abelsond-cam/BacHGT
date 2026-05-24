@@ -84,7 +84,7 @@ import pandas as pd
 import requests
 
 # Reuse the Norway audit module's auth + PRJEB74192 helpers.
-from bac_data.norway_cohort_audit import (
+from bac_data.lr_data.norway_cohort_audit import (
     DEFAULT_METADATA,
     UMBRELLA_PROJECT,
     _gca_primaries,

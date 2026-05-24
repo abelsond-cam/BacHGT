@@ -22,7 +22,7 @@ resolved_via, unresolved``.
 
 Usage
 ─────
-    uv run python -m bac_data.resolve_sr_partner_biosamples
+    uv run python -m bac_data.lr_data.resolve_sr_partner_biosamples
         [--metadata PATH] [--out-dir PATH] [--batch 50] [--limit N]
 """
 

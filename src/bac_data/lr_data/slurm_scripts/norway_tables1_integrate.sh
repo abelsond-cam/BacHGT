@@ -42,8 +42,8 @@
 #     rate limit from 3 to 10 req/s (the script honours it automatically).
 #
 # Usage:
-#   sbatch src/bac_data/slurm_scripts/norway_tables1_integrate.sh
-#   bash   src/bac_data/slurm_scripts/norway_tables1_integrate.sh
+#   sbatch src/bac_data/lr_data/slurm_scripts/norway_tables1_integrate.sh
+#   bash   src/bac_data/lr_data/slurm_scripts/norway_tables1_integrate.sh
 #
 set -euo pipefail
 
@@ -80,7 +80,7 @@ fi
 
 mkdir -p "${ASSEMBLIES_DIR}" "${GFF_DIR}"
 
-uv run python -u -m bac_data.norway_tables1_integrate \
+uv run python -u -m bac_data.lr_data.norway_tables1_integrate \
   --table-s1 "${TABLE_S1}" \
   --metadata "${FULL_METADATA}" \
   --workers "${WORKERS}" \

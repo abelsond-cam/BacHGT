@@ -13,35 +13,44 @@ and maintains data-presence columns on the curated metadata TSV.
 ## Layout
 
 Flat package (no `pp/tl/pl` split). Every module is a standalone
-`uv run python -m bac_data.<name>` CLI; no second environment.
-`norway_cohort_audit.py` is also a shared helper
-module: `norway_tables1_integrate.py`, `related_lr_complete_assembly_audit.py`,
-and `download_related_lr_complete_genomes.py` import its NCBI helpers
-(`ncbi_headers`, `ncbi_biosample_records`, `_gca_primaries`).
+`uv run python -m bac_data.<name>` CLI; no second environment for the modules
+that live at this top level. Two cohesive sub-packages branch off:
+
+- [`lr_data/`](lr_data/) — long-read sub-pipeline (Norway integration,
+  `related_lr_*` audit/download chain, LRA selector, `metadata_v2`). See
+  [`lr_data/CLAUDE.md`](lr_data/CLAUDE.md).
+- [`checkm2/`](checkm2/) — dedicated `pixi` env + Slurm wrapper for
+  CheckM2-scoring any assembly cohort uniformly (currently called by the
+  LRA cohort; cohort-agnostic by design). See
+  [`checkm2/README.md`](checkm2/README.md).
 
 The downstream **genome-annotation** step (batch-running Kleborate + ISEScan
 over the staged genome sets) lives in `bac_isescan` — see
 `src/bac_isescan/CLAUDE.md`.
 
-## Modules by stage
+## Modules at this top level
 
-**Discovery & audit** — `find_sample_assemblies.py` (ENA assemblies for
-BioSamples), `gca_to_gcf_lookup.py` (pair GCA↔GCF + assembly metadata),
-`norway_cohort_audit.py` (locate the Norway KPSC completes in public repos),
-`related_lr_complete_assembly_audit.py` (Complete-Genome GCAs for related-LR
-samples), `find_related_run_accessions.py` (long-read + RefSeq SR runs),
-`resolve_sr_partner_biosamples.py` (RefSeq SR runs → INSDC BioSamples).
+Generic / non-LR data acquisition that stays out of `lr_data/`:
 
-**Integration & cleanup** — `norway_tables1_integrate.py` (Norway paper Table
-S1 → metadata), `fix_related_lr_accession.py`, `clean_find_long_reads_appended.py`.
+| Module | Purpose |
+|---|---|
+| `update_biosample_accessions.py` | Map assembly accessions (RefSeq/NCTC) → INSDC BioSample accessions on the curated metadata. |
+| `add_bakta_gbff_downloaded_flag.py` | Sets the `bakta_gbff_downloaded` column from file presence. |
+| `download_bakrep_gbff_files.py` | Pulls per-sample Bakta `.gbff` annotations from BakRep. |
 
-**Download & staging** — `download_related_lr_complete_genomes.py` (GCA/GCF
-genome+GFF via NCBI Datasets), `download_bakrep_gbff_files.py`,
-`stage_sr_for_related_lr.py` (symlink SR originals into staging).
+Slurm + helper scripts at [`slurm_scripts/`](slurm_scripts/):
 
-**Metadata flags** — `add_bakta_gbff_downloaded_flag.py` (`bakta_gbff_downloaded`
-column from file presence), `update_biosample_accessions.py` (RefSeq/NCTC
-assembly accessions → BioSample accessions).
+- `download_bakrep.sh`, `collect_bakrep_samples.py` — BakRep bulk download + collect.
+- `download_ncbi_datasets.sh`, `collect_ncbi_datasets_samples.py` — NCBI Datasets bulk download + collect.
 
-Two `uv`-env scripts run on Slurm: `src/bac_data/slurm_scripts/norway_tables1_integrate.sh`
-and `src/bac_data/slurm_scripts/related_lr_complete_assembly_audit.sh`.
+`sr_for_existing_refseq_review.csv` is a one-off review artefact (kept for
+reference; not pipeline input).
+
+## Long-read sub-pipeline → [`lr_data/`](lr_data/)
+
+Everything related to discovering, auditing, downloading and qualifying
+long-read assemblies (LR-GCAs + is_refseq RefSeq genomes) that form the LRA
+("long-read assembly") cohort moved into [`lr_data/`](lr_data/) in May 2026.
+That includes the Norway KPSC integration, the `related_lr_*` audit/download
+chain, CheckM2-on-HPC, and the upcoming LRA-selector / `metadata_v2` builders.
+See [`lr_data/CLAUDE.md`](lr_data/CLAUDE.md) for module-by-module detail.

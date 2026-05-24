@@ -58,7 +58,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_data.norway_cohort_audit import (
+from bac_data.lr_data.norway_cohort_audit import (
     _gca_primaries,
     ncbi_biosample_records,
     ncbi_headers,

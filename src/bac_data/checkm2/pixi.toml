@@ -1,0 +1,15 @@
+[workspace]
+name = "bac-checkm2"
+version = "0.1.0"
+description = "CheckM2 runner for the LRA cohort — LR-GCAs + is_refseq assemblies"
+authors = ["David Abelson <dca36@cam.ac.uk>"]
+channels = ["conda-forge", "bioconda"]
+# Linux-only — CheckM2 runs on HPC, not on the dev laptop.
+platforms = ["linux-64"]
+
+[dependencies]
+python  = ">=3.10,<3.12"
+checkm2 = ">=1.0.2"
+diamond = ">=2.1"
+# bac_data.checkm2.prep_checkm2_inputs imports pandas to build the input manifest.
+pandas  = ">=2.2"
