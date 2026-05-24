@@ -232,35 +232,55 @@ def merge_assemblies(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataF
 def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path) -> pd.DataFrame:
     """Add ``scoring_accession``, ``expected_fasta_path``, ``fasta_on_disk``, ``download_needed``.
 
-    Path-resolution order for each scoring target:
-      1. ``seb_path`` (metadata's ``assembly_file``, joined under ``project_k``) — already
-         present on disk under seb/ for the ~3,500 RefSeq GCFs we curated earlier.
-      2. ``lr_asm_dir/<scoring_accession>.fna.gz`` — the canonical pool the convergence-
-         loop downloader writes into for newly-fetched GCAs and GCFs.
+    Per-row resolution:
+      1. Prefer the GCF (RefSeq is the curated version) — try seb path first,
+         then ``lr_asm_dir/<GCF>.fna.gz``.
+      2. If the GCF FASTA isn't reachable on disk anywhere (typically because
+         RefSeq suppressed it), fall back to the paired GCA's FASTA. The
+         ``scoring_accession`` flips to the GCA accession in that case.
+      3. If neither has a FASTA on disk, ``scoring_accession`` is left at the
+         preferred (GCF if present, else GCA) and ``download_needed=True``.
+
+    This means a re-run after downloading the fallback GCA automatically
+    picks it up — no manual TSV edits needed for suppressed-GCF rows.
     """
     df = df.copy()
-    has_gcf = df["GCF"] != ""
-    df["scoring_accession"] = np.where(has_gcf, df["GCF"], df["GCA"])
 
-    def _resolve(row: pd.Series) -> tuple[str, str]:
-        acc = row["scoring_accession"]
-        seb = row.get("seb_path", "")
+    def _try_path(acc: str, seb_rel: str) -> str:
+        """Return the on-disk path for ``acc`` (seb first, then LR pool), or ''."""
         if not acc:
-            return "", ""
-        # Prefer seb path if present + exists on disk.
-        if seb:
-            seb_full = str(project_k / seb)
+            return ""
+        if seb_rel:
+            seb_full = str(project_k / seb_rel)
             if Path(seb_full).is_file() and Path(seb_full).stat().st_size > 0:
-                return seb_full, seb_full
-        # Fall back to the LR canonical pool. Even if missing on disk, this is the
-        # expected_fasta_path — the downloader will fetch into here.
-        expected = str(lr_asm_dir / f"{acc}.fna.gz")
-        on_disk = expected if (Path(expected).is_file() and Path(expected).stat().st_size > 0) else ""
-        return expected, on_disk
+                return seb_full
+        lr_full = str(lr_asm_dir / f"{acc}.fna.gz")
+        if Path(lr_full).is_file() and Path(lr_full).stat().st_size > 0:
+            return lr_full
+        return ""
+
+    def _resolve(row: pd.Series) -> tuple[str, str, str]:
+        gca, gcf, seb = row["GCA"], row["GCF"], row.get("seb_path", "")
+        # GCF preferred when present on disk anywhere.
+        if gcf:
+            on_disk = _try_path(gcf, seb)
+            if on_disk:
+                return gcf, on_disk, on_disk
+        # GCF missing on disk — fall back to GCA if it has a FASTA.
+        if gca:
+            on_disk = _try_path(gca, seb if not gcf else "")
+            if on_disk:
+                return gca, on_disk, on_disk
+        # Neither on disk: set scoring to preferred (GCF if present, else GCA)
+        # and expected_fasta_path under the LR pool, so the downloader queues it.
+        preferred = gcf or gca
+        expected = str(lr_asm_dir / f"{preferred}.fna.gz") if preferred else ""
+        return preferred, expected, ""
 
     resolved = df.apply(_resolve, axis=1, result_type="expand")
-    df["expected_fasta_path"] = resolved[0]
-    df["fasta_on_disk"]       = resolved[1]
+    df["scoring_accession"]   = resolved[0]
+    df["expected_fasta_path"] = resolved[1]
+    df["fasta_on_disk"]       = resolved[2]
     df["download_needed"]     = df["fasta_on_disk"] == ""
     return df
 
