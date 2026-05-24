@@ -216,6 +216,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--which", choices=["both", "gca", "gcf"], default="both")
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--limit", type=int, default=None, help="cap accessions (smoke-test)")
+    parser.add_argument(
+        "--max-rounds", type=int, default=5,
+        help="Batch-level convergence loop: re-queue any accession whose FASTA isn't on disk "
+             "after the round finishes; cap at this many rounds (default 5). Stops early when "
+             "all FASTAs present or when a round makes zero progress.",
+    )
     args = parser.parse_args(argv)
 
     cg_tsv = args.cg_tsv or args.out_dir / CG_TSV_NAME
@@ -241,39 +247,81 @@ def main(argv: list[str] | None = None) -> int:
     )
 
     limiter = RateLimiter(sleep_s)
-    results: list[dict] = []
-    done = 0
-    with ThreadPoolExecutor(max_workers=args.workers) as ex:
-        futs = [ex.submit(_one, j, headers, limiter, asm_dir, gff_dir) for j in jobs]
-        for fut in as_completed(futs):
-            results.append(fut.result())
-            done += 1
-            if done % 100 == 0:
-                ok = sum(1 for r in results if r["genome"])
-                print(f"  ... {done}/{len(jobs)} done; genomes ok: {ok}", flush=True)
 
+    def _on_disk(j: tuple[str, str, str]) -> bool:
+        """True iff this job's FASTA is already present + non-empty."""
+        fna = asm_dir / f"{j[0]}.fna.gz"
+        return fna.exists() and fna.stat().st_size > 0
+
+    # Batch-level convergence loop. NCBI downloads are flaky (transient HTTP
+    # errors, partial zips, server-side ghosts) and _fetch_zip's per-call
+    # retries don't catch everything — so we re-queue any job whose FASTA
+    # isn't on disk after a round and try again, up to --max-rounds.
+    results: list[dict] = []
+    pending = list(jobs)
+    for round_idx in range(1, args.max_rounds + 1):
+        # Source of truth: disk. Skip anything already fetched (in any earlier
+        # round, in a previous run, or via rsync).
+        pending = [j for j in pending if not _on_disk(j)]
+        if not pending:
+            print(f"[round {round_idx}] all {len(jobs)} FASTAs present — done", flush=True)
+            break
+        print(
+            f"[round {round_idx}/{args.max_rounds}] fetching {len(pending)} of {len(jobs)} (missing on disk)",
+            flush=True,
+        )
+        round_results: list[dict] = []
+        done = 0
+        with ThreadPoolExecutor(max_workers=args.workers) as ex:
+            futs = [ex.submit(_one, j, headers, limiter, asm_dir, gff_dir) for j in pending]
+            for fut in as_completed(futs):
+                round_results.append(fut.result())
+                done += 1
+                if done % 100 == 0:
+                    ok = sum(1 for r in round_results if r["genome"])
+                    print(f"  ... {done}/{len(pending)} done; genomes ok: {ok}", flush=True)
+        results.extend(round_results)
+        still_missing = [j for j in pending if not _on_disk(j)]
+        progress = len(pending) - len(still_missing)
+        print(
+            f"[round {round_idx}] +{progress} new; {len(still_missing)} still missing",
+            flush=True,
+        )
+        if progress == 0:
+            print(
+                f"[round {round_idx}] zero progress — NCBI doesn't have the remaining "
+                f"{len(still_missing)} accessions (or persistent transient failure); stopping",
+                flush=True,
+            )
+            break
+        pending = still_missing
+
+    # Convergence loop may produce >1 row per accession (failed then retried).
+    # Manifest keeps the per-attempt history; summary collapses to last attempt
+    # and grounds the truth in current disk state (what CheckM2 will see).
     res = pd.DataFrame(results)
     manifest = args.out_dir / "download_related_lr_complete_genomes_manifest.tsv"
     res.to_csv(manifest, sep="\t", index=False)
 
-    genome_ok = int(res["genome"].sum())
-    gff_ok = int(res["gff"].sum())
-    failed = res[~res["genome"]]
+    on_disk = {j[0] for j in jobs if _on_disk(j)}
+    still_missing = [j[0] for j in jobs if j[0] not in on_disk]
+    last = res.drop_duplicates("accession", keep="last") if not res.empty else res
+    gff_ok = int(last["gff"].sum()) if not last.empty else 0
     print("\n=== download summary ===", flush=True)
-    print(f"Accessions attempted : {len(res)}", flush=True)
-    print(f"  genomes ok         : {genome_ok}", flush=True)
-    print(f"  GFFs ok            : {gff_ok}", flush=True)
-    print(f"  skipped (existing) : {int((res['status'] == 'skipped_exists').sum())}", flush=True)
-    print(f"  no genome / failed : {len(failed)}", flush=True)
-    if len(failed):
+    print(f"Accessions requested : {len(jobs)}", flush=True)
+    print(f"  FASTAs on disk     : {len(on_disk)}", flush=True)
+    print(f"  GFFs on disk       : {gff_ok}", flush=True)
+    print(f"  still missing      : {len(still_missing)}", flush=True)
+    if still_missing:
+        head = still_missing[:20]
         print(
-            f"  failed accessions  : {failed['accession'].head(20).tolist()}{' ...' if len(failed) > 20 else ''}",
+            f"  missing accessions : {head}{' ...' if len(still_missing) > 20 else ''}",
             flush=True,
         )
     print(f"\nManifest → {manifest}", flush=True)
     print(f"Genomes  → {asm_dir}", flush=True)
     print(f"GFFs     → {gff_dir}", flush=True)
-    return 0
+    return 0 if not still_missing else 1
 
 
 if __name__ == "__main__":
