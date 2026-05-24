@@ -27,7 +27,8 @@ PIXI_DIR="$REPO_DIR/src/bac_data/checkm2"
 RDS=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
 INPUT_DIR="$RDS/david/processed/checkm2_lra/links"
 OUTPUT_DIR="$RDS/david/processed/checkm2_lra/checkm2_out"
-DB_PATH="$RDS/david/raw/CheckM2/Zenodo_db"
+# CheckM2 v1.x wants the .dmnd file itself, not the dir Zenodo extracts into.
+DB_PATH="$RDS/david/raw/CheckM2/Zenodo_db/CheckM2_database/uniref100.KO.1.dmnd"
 
 echo "[$(date -Is)] host=$(hostname)  cpus=${SLURM_CPUS_PER_TASK:-?}"
 echo "[$(date -Is)] inputs:  $INPUT_DIR"
