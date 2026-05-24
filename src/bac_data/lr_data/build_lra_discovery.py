@@ -309,14 +309,47 @@ def _print_counts(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataFram
     )
     print()
     print(f"merged_unique_assemblies : {len(out):>5}")
-    print(f"  with_GCF               : {(out['GCF'] != '').sum():>5}")
-    print(f"  with_GCA_only          : {((out['GCF'] == '') & (out['GCA'] != '')).sum():>5}")
-    print(f"  stale_refseq           : {int(out['stale_refseq'].sum()):>5}")
-    print(f"  download_needed        : {int(out['download_needed'].sum()):>5}")
+    print(f"  with_GCF (preferred for CheckM2)             : {(out['GCF'] != '').sum():>5}")
+    print(f"  with_GCA_only (no paired RefSeq)             : {((out['GCF'] == '') & (out['GCA'] != '')).sum():>5}")
+    print(f"  paired (both GCA AND GCF)                    : {((out['GCF'] != '') & (out['GCA'] != '')).sum():>5}")
+    print(f"  GCF-only (no paired GenBank GCA)             : {((out['GCF'] != '') & (out['GCA'] == '')).sum():>5}")
+    print(f"  stale_refseq (is_refseq=True but GCF blank)  : {int(out['stale_refseq'].sum()):>5}")
+    print(f"  download_needed                              : {int(out['download_needed'].sum()):>5}")
     print()
-    print("source provenance (multi-source rows counted in each):")
-    for col in PROVENANCE_COLS:
-        print(f"  {col:<24} : {int(out[col].sum()):>5}")
+
+    print("source provenance (per-source totals — multi-source rows counted in each):")
+    audit_n  = int(out["source_audit"].sum())
+    norway_n = int(out["source_norway"].sum())
+    refseq_n = int(out["source_refseq_metadata"].sum())
+    naive    = audit_n + norway_n + refseq_n
+    print(f"  source_audit             : {audit_n:>5}")
+    print(f"  source_norway            : {norway_n:>5}")
+    print(f"  source_refseq_metadata   : {refseq_n:>5}")
+    print(f"  naive sum                : {naive:>5}")
+    print(f"  merged unique rows       : {len(out):>5}")
+    print(f"  dedups removed           : {naive - len(out):>5}")
+    print()
+
+    # Membership cross-tab — the 7-way Venn over {audit, norway, refseq}.
+    # Single-counted (each row in exactly one bucket); columns sum to the
+    # merged total and the math (with multi-source rows pair-/triple-counted)
+    # explains where the dedups land.
+    print("provenance cross-tab (each row counted once):")
+    flags = out[["source_audit", "source_norway", "source_refseq_metadata"]].astype(bool)
+    labels = flags.apply(
+        lambda r: "+".join(t for t, v in zip(("audit", "norway", "refseq"), r, strict=True) if v) or "(none)",
+        axis=1,
+    )
+    vc = labels.value_counts()
+    # Ordering: solo sources first, then pairs, then triples — easier to eyeball.
+    order = [
+        "audit", "norway", "refseq",
+        "audit+norway", "audit+refseq", "norway+refseq",
+        "audit+norway+refseq", "(none)",
+    ]
+    for k in order:
+        if k in vc.index:
+            print(f"  {k:<24} : {int(vc[k]):>5}")
     print()
 
 

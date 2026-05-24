@@ -13,19 +13,78 @@ See `src/bac_data/CLAUDE.md` for the parent subpackage and
 
 The **LRA cohort** = every assembly we want to use as the long-read overlay for
 an SR sample. Three sources unioned into one row-per-biological-assembly table
-(`lra_discovery.tsv`):
+(`lra_discovery.tsv`); the union is what `build_lra_discovery.py` does in <60 s.
 
-- **LR-GCAs from the audit** — every Complete-Genome GCA/GCF NCBI knows for
-  our related-LR run accessions (`related_lr_complete_assembly_audit.py`).
-- **Norway KPSC Table S1** — 534 strains resolved to GenBank, of which 270
-  have a paired RefSeq GCF (`norway_tables1_integrate.py`).
-- **is_refseq metadata** — RefSeq assemblies already flagged in the curated
-  metadata; mostly GCFs, ~280 stale-GCAs flagged is_refseq=True without ever
-  being promoted to RefSeq (the `stale_refseq` column flags these).
+CheckM2 scores them uniformly so the per-assembly QC is comparable, and
+`build_lra_set.py` (Phase E) emits the accepted subset.
 
-Together ≈5,557 unique biological assemblies. CheckM2 scores them uniformly so
-the per-assembly QC is comparable, and `build_lra_set.py` (Phase E) emits the
-accepted subset.
+### Source accounting (numbers from the live `lra_discovery.tsv`, 2026-05-24)
+
+| Source                                     | Rows entering | with GCA | with GCF | paired GCA+GCF | GCA-only | GCF-only |
+| ------------------------------------------ | ------------- | -------- | -------- | -------------- | -------- | -------- |
+| `related_lr_complete_assembly_audit.tsv`   | 2,571         | 2,571    | 1,665    | 1,665          | 906      |        0 |
+| `norway_tables1_integration.tsv`           |   534         |   534    |   270    |   270          | 264      |        0 |
+| is_refseq=True curated-metadata rows       | 3,911         |   398    | 3,513    |     0          | 398      |    3,513 |
+
+The is_refseq rows are accession-only (Sample column holds either a GCF or a
+GCA, never both) — that's why their "paired" count is 0 here. Pairing happens
+in the merge step when an is_refseq GCF matches an audit-paired GCF.
+
+### Cross-source overlap (each row counted exactly once)
+
+Each merged row carries `source_audit` / `source_norway` / `source_refseq_metadata`
+booleans (OR'd at merge time). The 7-cell Venn over those three:
+
+| Provenance label       | Rows  | Notes                                                         |
+| ---------------------- | ----: | ------------------------------------------------------------- |
+| `refseq` alone         | 2,522 | RefSeq curated genomes never re-discovered by the audit       |
+| `audit` alone          | 1,639 | Audit-only LR-GCAs (no paired GCF, not in is_refseq metadata) |
+| `audit+refseq`         |   862 | Audit-paired GCFs that were already in is_refseq metadata     |
+| `norway+refseq`        |   457 | Norway-paired strains where the metadata already had the GCF  |
+| `audit+norway+refseq`  |    70 | Triple-overlap; rare                                          |
+| `norway` alone         |     7 | Norway resolutions not present in audit or refseq metadata    |
+| **Total**              | **5,557** |                                                           |
+
+Per-source totals reconcile to inputs (multi-source rows counted in each):
+- source_audit = 1,639 + 862 + 70 = **2,571** ✓
+- source_norway = 7 + 457 + 70 = **534** ✓
+- source_refseq_metadata = 2,522 + 862 + 457 + 70 = **3,911** ✓
+
+Naive sum (2,571 + 534 + 3,911) = **7,016**.
+Merged unique = **5,557**.
+Dedups removed = 7,016 − 5,557 = **1,459**, which is exactly:
+- 862 (audit+refseq pair-overlaps, each counted twice in the naive sum)
+- 457 (norway+refseq pair-overlaps)
+- 70 × 2 = 140 (audit+norway+refseq triple-overlaps, counted three times)
+
+= 862 + 457 + 140 = **1,459** ✓
+
+### Final GCA/GCF accounting (per biological assembly)
+
+| Category                             | Rows   |
+| ------------------------------------ | -----: |
+| with GCF (CheckM2 prefers the GCF)   |  4,365 |
+| with GCA-only (no paired RefSeq)     |  1,192 |
+| paired (both GCA AND GCF)            |  1,865 |
+| GCF-only (no paired GenBank GCA)     |  2,500 |
+| **Total unique biological assemblies** | **5,557** |
+
+(`paired` + `GCF-only` = with GCF = 4,365; `paired` + `GCA-only` = with GCA = 3,057.)
+
+### `stale_refseq` — what the flag really means
+
+281 rows have `stale_refseq=True` (is_refseq=True but no GCF on this row).
+Breakdown:
+
+| Provenance of stale_refseq row | Count | Reading                                                 |
+| ------------------------------ | ----: | ------------------------------------------------------- |
+| solely refseq metadata         |    22 | The "real" stale flags — no NCBI corroboration anywhere |
+| also in norway (no audit)      |   259 | Norway-resolved GCA-only strains that metadata had already flagged is_refseq |
+| also in audit                  |     0 | Audit excludes is_refseq inputs by design, so 0         |
+
+So the bulk of the 281 isn't broken metadata — it's GenBank-only Norway strains
+that were tagged is_refseq=True without actually existing in RefSeq. The 22
+solely-refseq rows are the genuinely-orphaned flags.
 
 ## Single source of truth: `lra_discovery.tsv`
 
