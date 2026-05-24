@@ -8,10 +8,10 @@ channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]
 
 [dependencies]
-python  = ">=3.10,<3.12"
-# CheckM2 1.0.2 / 1.1.0 pin diamond 2.0.4.* and pandas <=1.4.0 exactly — don't
-# add our own diamond / pandas pins here, the solver wires them in transitively.
+# CheckM2's bioconda recipe (1.0.2 / 1.1.0) is stuck on old transitive pins:
+# python >=3.6,<3.9, diamond 2.0.4.*, pandas <=1.4.0. Don't add our own pins
+# for any of them — let the solver wire in whatever CheckM2 requires.
 # This env runs only the `checkm2 predict` binary; the prep script
 # `bac_data.checkm2.prep_checkm2_inputs` runs from the shared uv env (modern
-# pandas), not from this pixi env.
+# pandas + Python), not from this pixi env.
 checkm2 = ">=1.0.2"
