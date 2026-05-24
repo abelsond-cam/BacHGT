@@ -35,13 +35,19 @@ DEFAULT_OUT_DIR   = DATA_ROOT / "david/processed"
 
 
 def _missing_subset(disc: pd.DataFrame, kind: str) -> pd.DataFrame:
-    """Rows where scoring_accession is of ``kind`` ('GCA' or 'GCF') AND FASTA is absent."""
+    """Rows where the scoring target is of ``kind`` ('GCA' or 'GCF') AND its FASTA is absent.
+
+    Gate on ``scoring_accession``'s prefix, not on which columns are populated:
+    a paired (GCA+GCF) row has both columns set, but the GCF is the scoring target
+    — we only want to fetch the GCF for it, not also the GCA.
+    """
     assert kind in {"GCA", "GCF"}
-    mask = disc["download_needed"].astype(bool) & disc[kind].astype(str).str.startswith(kind + "_")
+    mask = disc["download_needed"].astype(bool) & disc["scoring_accession"].astype(str).str.startswith(kind + "_")
     sub = disc.loc[mask].copy()
     # Downloader expects 'gca' / 'gcf' columns (lowercase) and a 'Sample' column.
-    sub["gca"] = sub["GCA"].astype(str)
-    sub["gcf"] = sub["GCF"].astype(str)
+    # Blank the non-scoring column so the downloader's _accessions() doesn't queue both.
+    sub["gca"] = sub["GCA"].astype(str) if kind == "GCA" else ""
+    sub["gcf"] = sub["GCF"].astype(str) if kind == "GCF" else ""
     return sub[["Sample", "gca", "gcf"]]
 
 
