@@ -11,7 +11,7 @@
 
 #SBATCH --job-name=checkm2_lra
 #SBATCH --partition=icelake-himem
-#SBATCH --account=FLOTO-SL3-CPU
+#SBATCH --account=FLOTO-PROJECT-K-SL2-CPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=64
