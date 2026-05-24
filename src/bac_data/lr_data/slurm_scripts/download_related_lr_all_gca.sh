@@ -61,7 +61,11 @@ echo "TSV          : ${TSV}"
 echo "Out dir      : ${OUT_DIR}"
 echo "Workers      : ${WORKERS}"
 echo "Max rounds   : ${MAX_ROUNDS}"
-echo "NCBI_API_KEY : ${NCBI_API_KEY:+set (10 req/s)}${NCBI_API_KEY:-unset (3 req/s)}"
+if [[ -n "${NCBI_API_KEY:-}" ]]; then
+  echo "NCBI_API_KEY : set (10 req/s)"
+else
+  echo "NCBI_API_KEY : unset (3 req/s)"
+fi
 echo "========================================================================"
 
 if [[ ! -f "${TSV}" ]]; then

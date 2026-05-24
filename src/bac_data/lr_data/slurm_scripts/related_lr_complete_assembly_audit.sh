@@ -52,7 +52,7 @@ echo "related-LR Complete-Genome assembly audit"
 echo "Job ID: ${SLURM_JOB_ID:-local}   Node: ${SLURMD_NODENAME:-$(hostname)}"
 echo "Metadata : ${METADATA}"
 echo "Out dir  : ${OUT_DIR}"
-echo "NCBI_API_KEY : ${NCBI_API_KEY:+set (10 req/s)}${NCBI_API_KEY:-unset (3 req/s)}"
+if [[ -n "${NCBI_API_KEY:-}" ]]; then echo "NCBI_API_KEY : set (10 req/s)"; else echo "NCBI_API_KEY : unset (3 req/s)"; fi
 echo "========================================================================"
 
 if [[ ! -f "${METADATA}" ]]; then

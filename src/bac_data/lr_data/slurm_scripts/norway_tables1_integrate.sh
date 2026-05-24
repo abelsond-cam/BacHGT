@@ -69,7 +69,7 @@ echo "Table S1     : ${TABLE_S1}"
 echo "Full metadata: ${FULL_METADATA}"
 echo "Assemblies → : ${ASSEMBLIES_DIR}"
 echo "GFFs       → : ${GFF_DIR}"
-echo "NCBI_API_KEY : ${NCBI_API_KEY:+set (10 req/s)}${NCBI_API_KEY:-unset (3 req/s)}"
+if [[ -n "${NCBI_API_KEY:-}" ]]; then echo "NCBI_API_KEY : set (10 req/s)"; else echo "NCBI_API_KEY : unset (3 req/s)"; fi
 echo "========================================================================"
 
 if [[ ! -f "${TABLE_S1}" ]]; then
