@@ -38,12 +38,13 @@ cd /home/dca36/workspace/BacHGT
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 
-# Pick up NCBI_API_KEY from interactive shell config. /etc/bashrc on CSD3
-# references unset vars (BASHRCSOURCED), so disable -u around the source.
-set +u
-# shellcheck disable=SC1090
-source ~/.bashrc
-set -u
+# Pick up NCBI_API_KEY from a private dot-file outside the repo (mode 600).
+# Avoids the CSD3 \`/etc/bashrc\` BASHRCSOURCED unbound-var pitfall under set -u,
+# and keeps the key out of git.
+if [[ -r ~/.ncbi_api_key ]]; then
+  NCBI_API_KEY="$(< ~/.ncbi_api_key)"
+  export NCBI_API_KEY
+fi
 
 # ---------------- User-editable settings ----------------
 BASE=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
