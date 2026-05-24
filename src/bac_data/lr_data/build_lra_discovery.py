@@ -110,6 +110,7 @@ def load_audit(audit_tsv: Path) -> pd.DataFrame:
         "Sample": df["Sample"],
         "related_lr_run_accession": df["related_lr_accession"],
         "level":  df["level"],
+        "seb_path": "",
         "source_audit": True,
         "source_norway": False,
         "source_refseq_metadata": False,
@@ -131,6 +132,7 @@ def load_norway(norway_tsv: Path) -> pd.DataFrame:
         "Sample": df["biosample"],
         "related_lr_run_accession": df["ont_in_run_accession"],
         "level":  df["assembly_level"],
+        "seb_path": "",
         "source_audit": False,
         "source_norway": True,
         "source_refseq_metadata": False,
@@ -141,11 +143,18 @@ def load_norway(norway_tsv: Path) -> pd.DataFrame:
 
 
 def load_refseq_metadata(metadata_tsv: Path) -> pd.DataFrame:
-    """One row per ``is_refseq=True`` metadata sample. Sample column holds GCF (mostly) or GCA."""
-    df = pd.read_csv(
-        metadata_tsv, sep="\t", low_memory=False,
-        usecols=["Sample", "is_refseq"], dtype=str,
-    ).fillna("")
+    """One row per ``is_refseq=True`` metadata sample. Sample column holds GCF (mostly) or GCA.
+
+    If the metadata carries an ``assembly_file`` column (populated by
+    ``bac_metadata.pp.add_paths_gff_fna_to_metadata`` — relative to project_k),
+    pass it through as ``seb_path`` so ``derive_scoring`` can prefer the
+    existing seb/ FASTA over re-downloading.
+    """
+    head = pd.read_csv(metadata_tsv, sep="\t", nrows=0).columns.tolist()
+    cols = ["Sample", "is_refseq"]
+    if "assembly_file" in head:
+        cols.append("assembly_file")
+    df = pd.read_csv(metadata_tsv, sep="\t", low_memory=False, usecols=cols, dtype=str).fillna("")
     rs = df[df["is_refseq"].str.lower().isin({"true", "1", "yes"})].copy()
     rs["acc"] = rs["Sample"].astype(str).str.extract(_ACC_RE, expand=False).fillna("")
     rs = rs[rs["acc"] != ""].copy()
@@ -156,6 +165,7 @@ def load_refseq_metadata(metadata_tsv: Path) -> pd.DataFrame:
         "Sample": rs["Sample"],
         "related_lr_run_accession": "",
         "level":  "",
+        "seb_path": rs["assembly_file"] if "assembly_file" in rs.columns else "",
         "source_audit": False,
         "source_norway": False,
         "source_refseq_metadata": True,
@@ -181,6 +191,7 @@ def _aggregate(rows: pd.DataFrame) -> pd.Series:
         "Sample": first_nonempty(rows["Sample"]),
         "related_lr_run_accession": first_nonempty(rows["related_lr_run_accession"]),
         "level":  first_nonempty(rows["level"]),
+        "seb_path": first_nonempty(rows["seb_path"]),
         "source_audit":          bool(rows["source_audit"].any()),
         "source_norway":         bool(rows["source_norway"].any()),
         "source_refseq_metadata": bool(rows["source_refseq_metadata"].any()),
@@ -218,20 +229,39 @@ def merge_assemblies(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataF
 
 # ─── DERIVED COLUMNS ──────────────────────────────────────────────────────────
 
-def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path) -> pd.DataFrame:
-    """Add ``scoring_accession``, ``expected_fasta_path``, ``fasta_on_disk``, ``download_needed``."""
+def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path) -> pd.DataFrame:
+    """Add ``scoring_accession``, ``expected_fasta_path``, ``fasta_on_disk``, ``download_needed``.
+
+    Path-resolution order for each scoring target:
+      1. ``seb_path`` (metadata's ``assembly_file``, joined under ``project_k``) — already
+         present on disk under seb/ for the ~3,500 RefSeq GCFs we curated earlier.
+      2. ``lr_asm_dir/<scoring_accession>.fna.gz`` — the canonical pool the convergence-
+         loop downloader writes into for newly-fetched GCAs and GCFs.
+    """
     df = df.copy()
     has_gcf = df["GCF"] != ""
     df["scoring_accession"] = np.where(has_gcf, df["GCF"], df["GCA"])
-    # We download every scoring target into the same related_lr/assemblies/ pool —
-    # GCFs land alongside GCAs in one canonical location, so prep + CheckM2 see one root.
-    df["expected_fasta_path"] = df["scoring_accession"].map(
-        lambda a: str(lr_asm_dir / f"{a}.fna.gz") if a else "",
-    )
-    df["fasta_on_disk"] = df["expected_fasta_path"].map(
-        lambda p: p if (p and Path(p).is_file() and Path(p).stat().st_size > 0) else "",
-    )
-    df["download_needed"] = df["fasta_on_disk"] == ""
+
+    def _resolve(row: pd.Series) -> tuple[str, str]:
+        acc = row["scoring_accession"]
+        seb = row.get("seb_path", "")
+        if not acc:
+            return "", ""
+        # Prefer seb path if present + exists on disk.
+        if seb:
+            seb_full = str(project_k / seb)
+            if Path(seb_full).is_file() and Path(seb_full).stat().st_size > 0:
+                return seb_full, seb_full
+        # Fall back to the LR canonical pool. Even if missing on disk, this is the
+        # expected_fasta_path — the downloader will fetch into here.
+        expected = str(lr_asm_dir / f"{acc}.fna.gz")
+        on_disk = expected if (Path(expected).is_file() and Path(expected).stat().st_size > 0) else ""
+        return expected, on_disk
+
+    resolved = df.apply(_resolve, axis=1, result_type="expand")
+    df["expected_fasta_path"] = resolved[0]
+    df["fasta_on_disk"]       = resolved[1]
+    df["download_needed"]     = df["fasta_on_disk"] == ""
     return df
 
 
@@ -278,6 +308,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--metadata",   type=Path, default=DEFAULT_METADATA)
     ap.add_argument("--lr-asm-dir", type=Path, default=DEFAULT_LR_ASM_DIR,
                     help="Canonical pool for downloaded GCA + GCF FASTAs.")
+    ap.add_argument("--project-k",  type=Path, default=DEFAULT_PROJECT_K,
+                    help="Root for resolving metadata.assembly_file (relative paths).")
     ap.add_argument("--out-tsv",    type=Path, default=DEFAULT_OUT_TSV)
     ap.add_argument("--dry-run",   action="store_true",
                     help="Print counts but don't write the output TSV.")
@@ -295,7 +327,7 @@ def main(argv: list[str] | None = None) -> int:
 
     merged = merge_assemblies(audit, norway, refseq)
     merged = derive_identity_cols(merged)
-    merged = derive_scoring(merged, args.lr_asm_dir)
+    merged = derive_scoring(merged, args.lr_asm_dir, args.project_k)
     merged = merged.sort_values("accession_bare_primary").reset_index(drop=True)
     merged = merged[OUTPUT_COLS]
 
