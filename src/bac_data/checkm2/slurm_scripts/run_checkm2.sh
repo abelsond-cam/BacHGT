@@ -47,6 +47,17 @@ mkdir -p "$OUTPUT_DIR"
 # Tell CheckM2 where the DB lives (checkm2 reads CHECKM2DB if --database_path is omitted).
 export CHECKM2DB="$DB_PATH"
 
+# Worker /tmp is tiny (~tens of MB after Slurm carves it up); CheckM2's prodigal +
+# DIAMOND phases collectively write ~tens of GB of intermediates across 64 threads
+# and run out of space mid-job. Point both TMPDIR (Python tempfile honours it) and
+# checkm2's own --tmpdir at a per-job dir on personal RDS (1 TB, 300+ GB free).
+JOB="${SLURM_JOB_ID:-local}"
+export TMPDIR="$HOME/rds/hpc-work/checkm2_tmp/$JOB"
+mkdir -p "$TMPDIR"
+echo "[$(date -Is)] TMPDIR:  $TMPDIR"
+# Clean up the job's tmp dir whether checkm2 succeeds or fails.
+trap 'rm -rf "$TMPDIR"' EXIT
+
 cd "$PIXI_DIR"
 pixi run checkm2 predict \
     --threads "${SLURM_CPUS_PER_TASK:-8}" \
@@ -54,6 +65,7 @@ pixi run checkm2 predict \
     -x fna.gz \
     --output-directory "$OUTPUT_DIR" \
     --database_path "$DB_PATH" \
+    --tmpdir "$TMPDIR" \
     --force        # overwrite previous run; CheckM2 is fast enough
 
 # Hoist the headline TSV to a stable name beside it.
