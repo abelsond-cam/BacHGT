@@ -38,9 +38,12 @@ cd /home/dca36/workspace/BacHGT
 export PYTHONUNBUFFERED=1
 export PYTHONDONTWRITEBYTECODE=1
 
-# Pick up NCBI_API_KEY (and anything else) from interactive shell config.
+# Pick up NCBI_API_KEY from interactive shell config. /etc/bashrc on CSD3
+# references unset vars (BASHRCSOURCED), so disable -u around the source.
+set +u
 # shellcheck disable=SC1090
 source ~/.bashrc
+set -u
 
 # ---------------- User-editable settings ----------------
 BASE=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
