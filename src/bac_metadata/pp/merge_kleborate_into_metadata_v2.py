@@ -162,21 +162,21 @@ def apply_cascade(
     stats["lra_rows_is_kpsc_true"]  = int(new_is_kpsc.sum())
     stats["lra_rows_is_kpsc_false"] = int(len(new_is_kpsc) - new_is_kpsc.sum())
 
-    # Recompute kpsc_final_list only where currently NaN (the 117 ingested
-    # orphans). Existing values are the curated whitelist — leave them alone.
+    # kpsc_final_list rule on the LRA cohort: kpsc_final_list = is_kpsc.
+    # This covers two cases (both per user spec):
+    #   1. Ingested orphans (kpsc_final_list was NaN) get set True/False per is_kpsc.
+    #   2. LRAs where v1's curated list disagrees with the LR-Kleborate is_kpsc
+    #      (e.g. a non-KPSC LRA wrongly on the v1 whitelist) flip to match.
+    # Non-LRA rows keep their v1 kpsc_final_list value untouched.
     if "kpsc_final_list" not in meta.columns:
         meta["kpsc_final_list"] = pd.NA
-    kpsc_nan_mask = meta["kpsc_final_list"].isna()
-    nan_lra_indices = meta.index[lra_mask & kpsc_nan_mask & has_call.reindex(meta.index, fill_value=False)]
-    stats["kpsc_final_list_filled_on_nan_rows"] = int(len(nan_lra_indices))
-    if len(nan_lra_indices):
-        meta.loc[nan_lra_indices, "kpsc_final_list"] = (
-            _coerce_bool(meta.loc[nan_lra_indices, "lra_final_set"])
-            & _coerce_bool(meta.loc[nan_lra_indices, "is_kpsc"])
-        )
-        n_true_filled = int(_coerce_bool(meta.loc[nan_lra_indices, "kpsc_final_list"]).sum())
-        stats["kpsc_final_list_filled_True"]  = n_true_filled
-        stats["kpsc_final_list_filled_False"] = int(len(nan_lra_indices) - n_true_filled)
+    pre_lra_kpsc_fl = _coerce_bool(meta.loc[lra_mask, "kpsc_final_list"])
+    new_lra_kpsc_fl = _coerce_bool(meta.loc[lra_mask, "is_kpsc"])
+    diff = pre_lra_kpsc_fl != new_lra_kpsc_fl
+    stats["kpsc_final_list_changed_on_lra_rows"] = int(diff.sum())
+    stats["kpsc_final_list_set_T_to_F"] = int((pre_lra_kpsc_fl & ~new_lra_kpsc_fl).sum())
+    stats["kpsc_final_list_set_F_to_T"] = int((~pre_lra_kpsc_fl & new_lra_kpsc_fl).sum())
+    meta.loc[lra_mask, "kpsc_final_list"] = new_lra_kpsc_fl.values
 
     # Clear kleborate_needs_recall on rows that got a fresh call.
     if "kleborate_needs_recall" in meta.columns:
