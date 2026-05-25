@@ -708,9 +708,34 @@ def report_project_breakdown(gdf: pd.DataFrame, project_col: str, threshold: flo
                 print(f"      {proj}: n={n} ({pct:.1f}%)")
 
 
+def _run_paired_mode(_args: argparse.Namespace) -> None:
+    """Paired SR-vs-LRA comparison driver (Phase G.4).
+
+    Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on ``sr_biosample``,
+    and runs McNemar's (binary features) + paired t-test / Wilcoxon
+    signed-rank (numeric features) over the same Kleborate / ISEScan feature
+    set the cross-section clonal-group mode covers.
+
+    Not yet implemented — placeholder until G.1 + G.2 + G.3 ship
+    ``metadata_v2`` and ``sr_shadow_for_lra.tsv`` for this codepath to consume.
+    """
+    raise NotImplementedError(
+        "compare_lra_to_sra.py --mode paired is wired in Phase G.4, after "
+        "metadata_v2 + sr_shadow_for_lra.tsv exist. Until then, use "
+        "--mode clonal_group for the cross-section comparison."
+    )
+
+
 def main() -> None:
-    """CLI entry point for CG cohort feature comparison."""
+    """CLI entry point — dispatch to clonal_group (cross-section) or paired (G.4) mode."""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--mode",
+        choices=["clonal_group", "paired"],
+        default="clonal_group",
+        help="clonal_group: cross-section is_refseq vs short-read per CG (default). "
+        "paired: same-biosample SR-vs-LRA stats from metadata_v2 + sr_shadow_for_lra.tsv (G.4).",
+    )
     parser.add_argument("--metadata", type=Path, default=DEFAULT_METADATA)
     parser.add_argument("--isescan-csv", type=Path, default=DEFAULT_ISESCAN)
     parser.add_argument(
@@ -741,6 +766,10 @@ def main() -> None:
         help="Print projects accounting for >= this fraction of stratum samples (default 0.10).",
     )
     args = parser.parse_args()
+
+    if args.mode == "paired":
+        _run_paired_mode(args)
+        return
 
     output_dir = args.output_dir
     counts_dir = output_dir / "counts"

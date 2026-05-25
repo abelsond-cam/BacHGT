@@ -18,7 +18,7 @@ repo, one shared uv environment, seven subpackages under `src/`:
 | `bac_metadata` | ENA metadata curation → the curated metadata TSV | `src/bac_metadata/CLAUDE.md` |
 | `bac_data` | Data acquisition — discover, audit, download assemblies/runs | `src/bac_data/CLAUDE.md` |
 | `bac_isescan` | ISEScan IS-element analysis — copy number, gene context, hotspots | `src/bac_isescan/CLAUDE.md` |
-| `bac_cohort` | Complete-genome vs short-read cohort feature comparison | `src/bac_cohort/CLAUDE.md` |
+| `bac_complete_genomes` | Complete-genome vs short-read cohort feature comparison (cross-section per-CG + paired SR-vs-LRA) | `src/bac_complete_genomes/CLAUDE.md` |
 | `bac_kleborate` | Vendored Kleborate reference data (virulence + AMR FASTAs) — consumed by `bac_ariba` and `bac_panaroo` | `src/bac_kleborate/CLAUDE.md` |
 
 ## Sibling repos

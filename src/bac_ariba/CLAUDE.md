@@ -97,7 +97,7 @@ Four scripts wired by Slurm:
 2. **`pp/parallel_ariba.py submit`** — compose + sbatch the array against that list. Subcommands: `submit`, `status`, `retry` (re-submits failed indices via sacct).
 3. **`src/bac_ariba/slurm_scripts/ariba_array.sh`** — thin shim per array task; reads line N of the list, calls `pp/run_ariba.py`. icelake-himem partition, 4 cpus, 12 GB, 2 h.
 4. **`pp/run_ariba.py`** — per-sample worker: `curl` R1+R2 from ENA → md5 verify → `apptainer exec ariba_213.sif ariba run` → atomic copy `report.tsv` (and optionally `assembled_seqs.fa.gz` + `assemblies.fa.gz` with `--detailed`) to RDS → cleanup scratch. Idempotent on `report.tsv` presence.
-5. **`tl/assess_recovery.py`** — post-hoc: tally per-locus presence + gene completeness; if `bac_cohort`'s `complete_vs_sr_genomes/penetrance/<cohort>.csv` is around, emit comparison tables. Output: `<run-dir>/assessment/<cohort>_recovery.{md,tsv}`.
+5. **`tl/assess_recovery.py`** — post-hoc: tally per-locus presence + gene completeness; if `bac_complete_genomes`'s `complete_vs_sr_genomes/penetrance/<cohort>.csv` is around, emit comparison tables. Output: `<run-dir>/assessment/<cohort>_recovery.{md,tsv}`.
 
 Outputs land at `<RDS>/processed/mag_rescue/<db>/<run-name>/{reports,sample_logs,assembled_seqs,assemblies,accessions,assessment}/`. Slurm stdout/stderr at `<RDS>/processed/mag_rescue/slurm_logs/`.
 

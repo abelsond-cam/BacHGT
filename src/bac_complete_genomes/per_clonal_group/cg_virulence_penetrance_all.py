@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Per-CG virulence-BSC penetrance: complete genomes vs short-read MAGs (all CGs >= n).
 
-Generalises the per-CG penetrance pass in ``cg_feature_cohort_analysis`` (which
+Generalises the per-CG penetrance pass in ``compare_lra_to_sra`` (which
 only writes tables for the top-N epidemic CGs + pooled rare + all_samples) to
 every clonal group with at least ``--min-complete`` ``is_refseq=True`` genomes.
 For each qualifying CG and each Kleborate virulence biosynthetic cluster
@@ -11,7 +11,7 @@ two sample counts.
 
 Output: long-format TSV (one row per (CG, BSC)) and, unless ``--no-plot``, a
 scatter PNG of complete-vs-SR penetrance produced by
-:mod:`bac_cohort.cg_virulence_penetrance_scatter`.
+:mod:`bac_complete_genomes.per_clonal_group.cg_virulence_penetrance_scatter`.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_cohort.cg_feature_cohort_analysis import (
+from bac_complete_genomes.compare_lra_to_sra import (
     DEFAULT_METADATA,
     DEFAULT_OUTPUT_DIR,
     KLEBORATE_VIRULENCE_LOCI,
@@ -178,7 +178,7 @@ def main() -> None:
     if args.no_plot or df.empty:
         return
 
-    from bac_cohort.cg_virulence_penetrance_scatter import plot_cg_virulence_penetrance
+    from bac_complete_genomes.per_clonal_group.cg_virulence_penetrance_scatter import plot_cg_virulence_penetrance
 
     png_path = args.output_dir / f"{stem}.png"
     plot_cg_virulence_penetrance(

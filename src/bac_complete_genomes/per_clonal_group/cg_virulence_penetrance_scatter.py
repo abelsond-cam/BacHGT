@@ -1,7 +1,7 @@
 """Scatter: per-CG virulence-BSC penetrance in complete genomes vs short-read MAGs.
 
 Inputs the long-format table produced by
-``bac_cohort.cg_virulence_penetrance_all`` (one row
+``bac_complete_genomes.per_clonal_group.cg_virulence_penetrance_all`` (one row
 per (CG, BSC)). Each point is one (CG, BSC). Color encodes the BSC; per-point
 alpha encodes ``n_complete`` -- pale at the inclusion threshold, opaque once
 the estimate is reliable (n >= 30). Axes default to symlog so zero-penetrance
