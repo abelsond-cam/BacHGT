@@ -3,8 +3,13 @@
 
 Reads:
   - ``metadata_v2_all_samples_and_columns.tsv``
-  - ``<kleborate_lra_out>/kleborate_klebsiella_pneumo_complex_output.tsv``
-    (the main per-genome typing module from ``run_kleborate_lra collate``)
+  - Every ``<kleborate_lra_out>/kleborate_*_complex_output.tsv`` typing
+    module from ``run_kleborate_lra collate``. Kleborate v3 splits its
+    output by detected complex — we have one file for KpSC genomes
+    (``klebsiella_pneumo_complex_output.txt``), one for KoSC contamination
+    (``klebsiella_oxytoca_complex_output.txt``), and possibly others. All
+    typing tables share the species column so we just concatenate them.
+    ``*_hAMRonization_output.tsv`` (AMR-hit tables) are *not* read here.
 
 For each ``lra_final_set=True`` row, the cascade:
 
@@ -46,10 +51,13 @@ DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
 DEFAULT_KLEBORATE_OUT = DATA_ROOT / "david/processed/kleborate_lra"
 
-# Default name of Kleborate v3's main per-genome typing module after collation.
-# (The actual filename written by `kleborate -p kpsc` is
-# `klebsiella_pneumo_complex_output.txt`, prefixed with `kleborate_` by collate.)
-DEFAULT_TYPING_FILE = "kleborate_klebsiella_pneumo_complex_output.tsv"
+# Glob (relative to --kleborate-out) for the collated typing-table files,
+# one per Kleborate-detected complex. Excludes hAMRonization (AMR hit) tables.
+DEFAULT_TYPING_GLOB = "kleborate_*_complex_output.tsv"
+
+# Kleborate v3 column naming: namespaced "<scheme>__<module>__<field>".
+KLEB_SPECIES_COL = "enterobacterales__species__species"
+KLEB_STRAIN_COL  = "Sample"  # collate renames Kleborate's "strain" → "Sample"
 
 # The species names Kleborate v3 emits for the KPSC. Match by prefix so we catch
 # all subspecies variants without hard-coding the exact subspecies suffix:
@@ -102,16 +110,16 @@ def apply_cascade(meta: pd.DataFrame, kleb: pd.DataFrame) -> tuple[pd.DataFrame,
 
     # Kleborate's collated output keys on Sample (bare GCF/GCA). Each LRA in v2
     # has Sample = scoring_accession (versioned). Join via bare accession.
-    if "Sample" not in kleb.columns:
-        raise KeyError("Kleborate output missing 'Sample' column "
-                       "(run collate which renames Kleborate's 'strain' column).")
-    if "species" not in kleb.columns:
-        raise KeyError("Kleborate output missing 'species' column.")
+    if KLEB_STRAIN_COL not in kleb.columns:
+        raise KeyError(f"Kleborate output missing '{KLEB_STRAIN_COL}' column "
+                       "(collate renames Kleborate's 'strain' column).")
+    if KLEB_SPECIES_COL not in kleb.columns:
+        raise KeyError(f"Kleborate output missing '{KLEB_SPECIES_COL}' column.")
 
     kleb = kleb.copy()
-    kleb["_bare"] = kleb["Sample"].map(_bare)
+    kleb["_bare"] = kleb[KLEB_STRAIN_COL].map(_bare)
     kleb = kleb.drop_duplicates("_bare")
-    species_map = kleb.set_index("_bare")["species"].to_dict()
+    species_map = kleb.set_index("_bare")[KLEB_SPECIES_COL].to_dict()
 
     lra_mask = _coerce_bool(meta["lra_final_set"])
     stats["lra_final_set_rows"] = int(lra_mask.sum())
@@ -167,20 +175,32 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--metadata-v2",  type=Path, default=DEFAULT_METADATA_V2)
     ap.add_argument("--kleborate-out", type=Path, default=DEFAULT_KLEBORATE_OUT,
-                    help="Dir containing the collated Kleborate typing TSV.")
-    ap.add_argument("--typing-file",  type=str,  default=DEFAULT_TYPING_FILE,
-                    help="Name of the Kleborate typing-module TSV inside --kleborate-out.")
+                    help="Dir containing the collated Kleborate typing TSVs.")
+    ap.add_argument("--typing-glob",  type=str,  default=DEFAULT_TYPING_GLOB,
+                    help="Glob (relative to --kleborate-out) for typing-table TSVs.")
     ap.add_argument("--dry-run", action="store_true", help="Print stats; don't write.")
     args = ap.parse_args(argv)
 
-    typing_path = args.kleborate_out / args.typing_file
+    typing_paths = sorted(args.kleborate_out.glob(args.typing_glob))
     print(f"metadata_v2  : {args.metadata_v2}")
-    print(f"kleborate    : {typing_path}")
+    print(f"kleborate    : {args.kleborate_out} / {args.typing_glob}")
+    print(f"  matched files: {len(typing_paths)}")
+    for p in typing_paths:
+        print(f"    {p.name}")
+    if not typing_paths:
+        print(f"FATAL: no Kleborate typing TSVs matching '{args.typing_glob}' under {args.kleborate_out}",
+              file=sys.stderr)
+        return 2
 
     meta = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
-    kleb = pd.read_csv(typing_path, sep="\t", low_memory=False)
+    kleb_frames = []
+    for p in typing_paths:
+        df = pd.read_csv(p, sep="\t", low_memory=False)
+        df["_source_file"] = p.name
+        kleb_frames.append(df)
+    kleb = pd.concat(kleb_frames, ignore_index=True, sort=False)
     print(f"\nmetadata_v2 rows  : {len(meta):,}")
-    print(f"kleborate rows    : {len(kleb):,}")
+    print(f"kleborate rows    : {len(kleb):,}  (concatenated from {len(typing_paths)} complex files)")
 
     updated, stats = apply_cascade(meta, kleb)
 

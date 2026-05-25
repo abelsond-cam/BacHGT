@@ -55,6 +55,8 @@ mkdir -p "$TMPDIR"
 trap 'rm -rf "$TMPDIR"' EXIT
 
 cd "$PIXI_DIR"
+# bac_kleborate isn't installed inside the pixi env — expose it via PYTHONPATH.
+export PYTHONPATH="$REPO_DIR/src${PYTHONPATH:+:$PYTHONPATH}"
 pixi run python -m bac_kleborate.run_kleborate_lra worker \
     --inputs "$INPUTS" \
     --chunk-idx "$CHUNK_IDX" \
