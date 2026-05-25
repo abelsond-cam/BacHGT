@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the locked LRA acceptance rule → emit ``lra_set.tsv`` + ``lra_rejected.tsv``.
+"""Apply the locked LRA acceptance rule → emit ``lra_final_set.tsv`` + ``lra_rejected.tsv``.
 
 build_lra_set.py
 ----------------
@@ -16,8 +16,12 @@ Locked rule (2026-05-25):
 
 Outputs (both keyed on ``scoring_accession``)::
 
-    <out-dir>/lra_set.tsv        accepted set  (expected: 5,521 rows)
+    <out-dir>/lra_final_set.tsv  accepted set  (expected: 5,521 rows)
     <out-dir>/lra_rejected.tsv   rejected set with `reason` column (expected: 36)
+
+Output filename ``lra_final_set.tsv`` is the canonical name (matches the
+``lra_final_set`` boolean column on metadata_v2). An older run wrote
+``lra_set.tsv``; that file is superseded.
 
 The two TSVs are partitioned, not deduplicated — each row in
 ``lra_discovery.tsv`` lands in exactly one. The schema is the discovery TSV's
@@ -53,7 +57,7 @@ MAX_CONTAMINATION = 5.0    # %   — MIGS / GTDB threshold (Bowers 2017)
 
 # ─── OUTPUT SCHEMA ────────────────────────────────────────────────────────────
 
-# Columns shared by both lra_set.tsv and lra_rejected.tsv. ``accept_reason`` is
+# Columns shared by both lra_final_set.tsv and lra_rejected.tsv. ``accept_reason`` is
 # the last column; for the accepted set it is "accept" everywhere.
 OUTPUT_COLS = [
     # identity
@@ -160,7 +164,7 @@ def main(argv: list[str] | None = None) -> int:
     rejected = rejected[cols].sort_values(["accept_reason", "scoring_accession"]).reset_index(drop=True)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    out_accepted = args.out_dir / "lra_set.tsv"
+    out_accepted = args.out_dir / "lra_final_set.tsv"
     out_rejected = args.out_dir / "lra_rejected.tsv"
 
     # Back up any existing copies first so the run is non-destructive.
