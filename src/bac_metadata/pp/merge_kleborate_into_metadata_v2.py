@@ -75,7 +75,10 @@ KPSC_SPECIES_PREFIXES: tuple[str, ...] = (
     "Klebsiella tropica",
 )
 
-_ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")
+# Accept either versioned (GCA_X.Y) or bare (GCA_X) accessions — Kleborate's
+# output uses the file stem, which is bare, while metadata_v2.Sample is
+# versioned. Both _bare() through to the same key.
+_ACC_RE = re.compile(r"(GC[AF]_\d+)(?:\.\d+)?")
 
 
 def _bare(acc: object) -> str:
