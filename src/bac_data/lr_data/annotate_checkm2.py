@@ -49,10 +49,20 @@ CHECKM2_COLS = [
 
 
 def load_checkm2(path: Path) -> pd.DataFrame:
-    """Load + normalise CheckM2's quality_report.tsv (lower-snake + prefix)."""
+    """Load + normalise CheckM2's quality_report.tsv (lower-snake + prefix).
+
+    CheckM2 strips ``.gz`` from input file names but keeps ``.fna`` / ``.fa`` /
+    ``.fasta``, so ``Name`` looks like ``GCA_013733775.1.fna``. Strip those
+    extensions so the join key matches ``scoring_accession`` (the bare
+    accession used by ``build_lra_discovery``).
+    """
     df = pd.read_csv(path, sep="\t", low_memory=False)
     keep = [c for c in CHECKM2_COLS if c in df.columns]
     df = df[keep].rename(columns={"Name": "scoring_accession"})
+    df["scoring_accession"] = (
+        df["scoring_accession"].astype(str)
+        .str.replace(r"\.(fna|fa|fasta)(\.gz)?$", "", regex=True)
+    )
     rename_map = {c: f"checkm2_{c.lower()}" for c in df.columns if c != "scoring_accession"}
     return df.rename(columns=rename_map)
 
