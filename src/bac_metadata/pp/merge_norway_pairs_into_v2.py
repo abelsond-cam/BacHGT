@@ -154,7 +154,8 @@ def merge_norway_pairs(v2: pd.DataFrame, integ: pd.DataFrame) -> tuple[pd.DataFr
             # i.e. the LR-extra was keyed by biosample not GCA. Skip merge.
             n_already_keyed_by_gca += 1
             continue
-        if _coerce_bool(v2.at[sr_idx, "lra_final_set"] if "lra_final_set" in v2.columns else pd.NA):
+        sr_lra_flag = v2.at[sr_idx, "lra_final_set"] if "lra_final_set" in v2.columns else None
+        if str(sr_lra_flag).lower() in {"true", "1", "yes"}:
             # SR partner is already LRA-bearing — shouldn't happen, but defensively skip.
             n_partner_already_lra += 1
             continue
