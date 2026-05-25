@@ -658,7 +658,8 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
 
     print("\n=== Column delta v1 → v2 ===")
     v1_cols = set(v1_meta.columns)
-    v2_cols = set(v2.columns)
+    # Internal tracking columns (prefixed with _) aren't part of the public schema.
+    v2_cols = {c for c in v2.columns if not c.startswith("_")}
     dropped = sorted(v1_cols - v2_cols)
     added   = sorted(v2_cols - v1_cols)
     kept    = sorted(v1_cols & v2_cols)
