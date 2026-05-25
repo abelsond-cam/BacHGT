@@ -110,23 +110,20 @@ def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, d
 
     lra = _coerce_bool(v2["lra_final_set"])
     biosample = v2.get("sr_biosample", pd.Series([pd.NA] * len(v2)))
-    paired_mask = lra & biosample.notna() & (biosample.astype(str) != "") & (biosample.astype(str).str.lower() != "nan")
-    paired = v2.loc[paired_mask].copy()
+    biosample_str = biosample.astype(str)
+    paired_mask = lra & biosample.notna() & (biosample_str != "") & (biosample_str.str.lower() != "nan")
+    paired = v2.loc[paired_mask, [c for c in (
+        "Sample", "sr_biosample", "lra_gca", "lra_gcf",
+    ) if c in v2.columns]].copy()
+    paired = paired.rename(columns={
+        "Sample":      "replaced_by_v2_sample",
+        "lra_gca":     "replaced_by_lra_gca",
+        "lra_gcf":     "replaced_by_lra_gcf",
+    })
+    paired["sr_biosample"] = paired["sr_biosample"].astype(str)
     stats["paired_rows_in_v2"] = len(paired)
 
-    # Lookup v1 rows by Sample == sr_biosample. v1's Sample for SR rows is the
-    # BioSample (SAMEA/SAMN/SAMD); for is_refseq rows it's a GCF/GCA. We want
-    # the SR partner row in both cases — its Sample IS the v2.sr_biosample.
-    v1_indexed = v1.set_index(v1["Sample"].astype(str), drop=False)
-    looked_up_idx = paired["sr_biosample"].astype(str).map(
-        lambda b: b if b in v1_indexed.index else None
-    )
-    stats["paired_with_v1_match"]    = int(looked_up_idx.notna().sum())
-    stats["paired_without_v1_match"] = int(looked_up_idx.isna().sum())
-
-    # Build the shadow rows. For rows without a v1 match, the SR-side cols
-    # stay NaN — surfaced in the stats but not gated, since some audit-matched
-    # samples may have v1 entries that don't actually have curated metadata.
+    # Determine the snapshot columns from v1.
     v1_cols = list(v1.columns)
     amr_cols = _amr_columns(v1_cols)
     vir_cols = _virulence_columns(v1_cols)
@@ -141,25 +138,29 @@ def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, d
         "virulence": len([c for c in vir_cols if c in snapshot_cols]),
     }
 
-    # Initialise the output frame with the identity / pointer columns.
-    out = pd.DataFrame({
-        "sr_biosample":          paired["sr_biosample"].astype(str).values,
-        "replaced_by_v2_sample": paired["Sample"].values,
-        "replaced_by_lra_gca":   paired.get("lra_gca", pd.Series([pd.NA] * len(paired))).values,
-        "replaced_by_lra_gcf":   paired.get("lra_gcf", pd.Series([pd.NA] * len(paired))).values,
-    })
+    # Project v1 to (Sample, snapshot_cols), dedupe (some BioSamples appear in
+    # multiple v1 rows: same BioSample, multiple ENA runs — keep the first).
+    v1_sr = v1[["Sample"] + snapshot_cols].copy()
+    v1_sr["Sample"] = v1_sr["Sample"].astype(str)
+    v1_sr = v1_sr.drop_duplicates("Sample", keep="first")
 
-    # Pull each snapshot column off v1 via the looked-up indices.
-    for col in snapshot_cols:
-        sr_col = f"sr_{col}"
-        values = pd.Series(pd.NA, index=range(len(paired)))
-        matched = looked_up_idx.notna().to_numpy()
-        if matched.any():
-            biosamples = looked_up_idx.dropna().astype(str)
-            values_matched = v1_indexed.loc[biosamples.values, col].values
-            values.loc[matched] = values_matched
-        out[sr_col] = values.values
+    merged = paired.merge(
+        v1_sr, left_on="sr_biosample", right_on="Sample", how="left", suffixes=("", "_v1"),
+    ).drop(columns=["Sample"], errors="ignore")
 
+    n_matched = int(merged[snapshot_cols[0]].notna().sum()) if snapshot_cols else 0
+    stats["paired_with_v1_match"]    = n_matched
+    stats["paired_without_v1_match"] = len(merged) - n_matched
+
+    # Rename snapshot columns to sr_<col>.
+    rename = {c: f"sr_{c}" for c in snapshot_cols}
+    merged = merged.rename(columns=rename)
+
+    # Order: identity columns first, then sr_* in (qc, species, amr, virulence) order.
+    identity = ["sr_biosample", "replaced_by_v2_sample", "replaced_by_lra_gca", "replaced_by_lra_gcf"]
+    identity = [c for c in identity if c in merged.columns]
+    sr_cols  = [f"sr_{c}" for c in snapshot_cols]
+    out = merged[identity + sr_cols]
     return out, stats
 
 
