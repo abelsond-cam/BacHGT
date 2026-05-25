@@ -119,52 +119,75 @@ def fix_norway_rows(v2: pd.DataFrame, integ: pd.DataFrame) -> tuple[pd.DataFrame
     n_run_was_empty    = 0
     n_illumina_missing = 0
     n_illumina_set     = 0
+    n_sr_biosample_set = 0
+    n_lr_acc_set       = 0
 
     for v2_idx, looked in matched_lookups.items():
         if looked is None:
             continue
         current_run = str(v2.at[v2_idx, "run_accession"]) if pd.notna(v2.at[v2_idx, "run_accession"]) else ""
+        if current_run.lower() == "nan":
+            current_run = ""
+        current_lr  = str(v2.at[v2_idx, "lr_run_accession"]) if pd.notna(v2.at[v2_idx, "lr_run_accession"]) else ""
+        if current_lr.lower() == "nan":
+            current_lr = ""
+        current_sb  = str(v2.at[v2_idx, "sr_biosample"]) if pd.notna(v2.at[v2_idx, "sr_biosample"]) else ""
+        if current_sb.lower() == "nan":
+            current_sb = ""
+
         ont = str(looked.get("ont_acc") or "")
         illumina = str(looked.get("illumina_acc") or "")
         biosample = str(looked.get("biosample") or "")
 
-        # Determine ONT placement: from current run_accession if it matches the
-        # integration's ont_acc, else fall back to the integration's ont_acc.
+        # Case 1: current run_accession == ONT (the bug case). Move to lr; replace
+        # run_accession with illumina if we have it, else clear it.
+        # Case 2: current run_accession empty. Fill both from xlsx.
+        # Case 3: current run_accession is *something else* (probably already an
+        # Illumina accession from a different upstream pass). Leave it alone;
+        # only fill the missing lr / sr_biosample fields.
         if current_run and current_run == ont:
             n_run_was_ont += 1
-            ont_to_set = current_run
-        elif current_run == "" or current_run.lower() == "nan":
-            n_run_was_empty += 1
-            ont_to_set = ont
-        else:
-            # run_accession is something else — keep it; only fill lr from ont.
-            n_run_was_other += 1
-            ont_to_set = ont
-
-        # Apply.
-        if ont_to_set:
-            v2.at[v2_idx, "lr_run_accession"] = ont_to_set
-            v2.at[v2_idx, "lr_instrument_platform"] = "OXFORD_NANOPORE"
-
-        if illumina:
-            v2.at[v2_idx, "run_accession"] = illumina
-            n_illumina_set += 1
-        else:
-            # Only clear run_accession if the current value was the ONT
-            # (otherwise we keep whatever non-ONT value was there).
-            if current_run and current_run == ont:
+            if illumina:
+                v2.at[v2_idx, "run_accession"] = illumina
+                n_illumina_set += 1
+            else:
                 v2.at[v2_idx, "run_accession"] = pd.NA
-            n_illumina_missing += 1
+                n_illumina_missing += 1
+            if not current_lr:
+                v2.at[v2_idx, "lr_run_accession"] = current_run
+                v2.at[v2_idx, "lr_instrument_platform"] = "OXFORD_NANOPORE"
+                n_lr_acc_set += 1
+        elif current_run == "":
+            n_run_was_empty += 1
+            if illumina:
+                v2.at[v2_idx, "run_accession"] = illumina
+                n_illumina_set += 1
+            else:
+                n_illumina_missing += 1
+            if not current_lr and ont:
+                v2.at[v2_idx, "lr_run_accession"] = ont
+                v2.at[v2_idx, "lr_instrument_platform"] = "OXFORD_NANOPORE"
+                n_lr_acc_set += 1
+        else:
+            n_run_was_other += 1
+            # Don't touch run_accession; only fill missing companion fields.
+            if not current_lr and ont:
+                v2.at[v2_idx, "lr_run_accession"] = ont
+                v2.at[v2_idx, "lr_instrument_platform"] = "OXFORD_NANOPORE"
+                n_lr_acc_set += 1
 
-        if biosample:
+        if not current_sb and biosample:
             v2.at[v2_idx, "sr_biosample"] = biosample
+            n_sr_biosample_set += 1
 
     stats.update({
-        "current_run_was_ont":   n_run_was_ont,
-        "current_run_was_empty": n_run_was_empty,
-        "current_run_was_other": n_run_was_other,
-        "illumina_set":          n_illumina_set,
+        "current_run_was_ont":     n_run_was_ont,
+        "current_run_was_empty":   n_run_was_empty,
+        "current_run_was_other":   n_run_was_other,
+        "illumina_set":            n_illumina_set,
         "illumina_missing_for_row": n_illumina_missing,
+        "lr_run_accession_set":    n_lr_acc_set,
+        "sr_biosample_set":        n_sr_biosample_set,
     })
 
     return v2, stats
