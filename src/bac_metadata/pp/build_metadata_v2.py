@@ -386,6 +386,8 @@ def ingest_orphan_lras(
     scaffold["lra_final_set"] = True
     scaffold["kleborate_needs_recall"] = True
     scaffold["isescan_needs_recall"] = True
+    if "_was_v1_is_refseq" in v2_columns:
+        scaffold["_was_v1_is_refseq"] = False  # new rows, not from v1
 
     # Run curation. Order matters: parse_host has documented side-effects on
     # country/isolation_source so it must come *after* those have been parsed
@@ -432,11 +434,18 @@ def build_metadata_v2(
     """Apply the merge + Sample swap + orphan ingestion. Return (v2, residual_orphans, stats)."""
     stats: dict = {}
 
-    # ── Step 0: pre-cleanup — drop ~2,576 LR-appended duplicate rows.
+    # ── Step 0: pre-cleanup — drop ~3,078 LR-appended duplicate rows.
     meta, n_dropped = drop_lr_appended_rows(meta)
     stats["dropped_lr_appended_rows"] = n_dropped
 
     v2 = meta.copy()
+    # Tracking column for v1↔v2 diagnostics. Survives Step 5 (rename/drop) so
+    # the cross-table in _print_v2_diagnostics still works after Sample is
+    # flipped to scoring_accession. Dropped just before write.
+    if "is_refseq" in v2.columns:
+        v2["_was_v1_is_refseq"] = _coerce_bool(v2["is_refseq"])
+    else:
+        v2["_was_v1_is_refseq"] = False
 
     # Pre-resolve the LRA-side join columns from the discovery TSV.
     disc = disc.copy()
@@ -635,12 +644,8 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
             print(f"  {label}: kpsc_final_list True {n_kpsc:>7,} / {n_total:>7,}")
         print(f"  kpsc_final_list True (any)  : {int(kpsc.sum()):>7,} / {len(v2):>7,}")
 
-    if "is_refseq" in v1_meta.columns:
-        v1_refseq_samples = set(
-            v1_meta.loc[_coerce_bool(v1_meta["is_refseq"]), "Sample"].astype(str)
-        )
-        v2_sample_str = v2["Sample"].astype(str)
-        was_refseq = v2_sample_str.isin(v1_refseq_samples)
+    if "_was_v1_is_refseq" in v2.columns:
+        was_refseq = _coerce_bool(v2["_was_v1_is_refseq"])
         print("\n=== v2.lra_final_set × v1.is_refseq cross-table ===")
         print("                          v1.is_refseq=True    v1.is_refseq=False")
         for lflag, label in ((True, "v2.lra_final_set=True "), (False, "v2.lra_final_set=False")):
@@ -648,6 +653,8 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
             n_true  = int((mask & was_refseq).sum())
             n_false = int((mask & ~was_refseq).sum())
             print(f"  {label}: {n_true:>14,}   {n_false:>14,}")
+        v2_refseq = int(was_refseq.sum())
+        print(f"  v1.is_refseq=True rows surviving into v2: {v2_refseq:,}  (v1 had {int(_coerce_bool(v1_meta['is_refseq']).sum()):,})")
 
     print("\n=== Column delta v1 → v2 ===")
     v1_cols = set(v1_meta.columns)
@@ -658,6 +665,15 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
     print(f"  dropped from v1 ({len(dropped)}): {dropped}")
     print(f"  added in v2     ({len(added)}): {added}")
     print(f"  kept            ({len(kept)} cols; first 20): {kept[:20]} ...")
+
+    # "Neither" rows: no SR run AND not in lra_final_set. Usually is_refseq=True
+    # rows whose GCF/GCA wasn't in lra_final_set (CheckM2-rejected, suppressed, etc.).
+    neither_mask = (~lra) & ~has_sr_run
+    if int(neither_mask.sum()) > 0 and "_was_v1_is_refseq" in v2.columns:
+        n_was_refseq = int((neither_mask & _coerce_bool(v2["_was_v1_is_refseq"])).sum())
+        print(f"\n  'Neither' breakdown (no SR run, no LRA): {int(neither_mask.sum()):,}")
+        print(f"    of which v1 was is_refseq=True (LRA rejected by CheckM2 etc.): {n_was_refseq:,}")
+        print(f"    other (no SR run, not is_refseq):                              {int(neither_mask.sum()) - n_was_refseq:,}")
 
     print("\n=== Sample rows: 3 per category ===")
     show_cols = [c for c in (
@@ -758,6 +774,9 @@ def main(argv: list[str] | None = None) -> int:
             p.rename(backup)
             print(f"backed up existing → {backup.name}")
 
+    # Drop internal tracking column before write.
+    if "_was_v1_is_refseq" in v2.columns:
+        v2 = v2.drop(columns=["_was_v1_is_refseq"])
     v2.to_csv(out_v2, sep="\t", index=False)
     residual.to_csv(out_orphan, sep="\t", index=False)
     print(f"\nwrote {out_v2}  rows={len(v2)}  cols={len(v2.columns)}")
