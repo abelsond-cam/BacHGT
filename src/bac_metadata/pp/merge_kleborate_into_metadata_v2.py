@@ -51,9 +51,12 @@ DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
 DEFAULT_KLEBORATE_OUT = DATA_ROOT / "david/processed/kleborate_lra"
 
-# Glob (relative to --kleborate-out) for the collated typing-table files,
-# one per Kleborate-detected complex. Excludes hAMRonization (AMR hit) tables.
-DEFAULT_TYPING_GLOB = "kleborate_*_complex_output.tsv"
+# Two globs:
+#   - typing tables (KpSC + KoSC) → drive species/is_kpsc cascade.
+#   - non-Klebsiella tables (escherichia, salmonella, etc.) → discard from
+#     the LRA cohort (set lra_final_set=False).
+DEFAULT_TYPING_GLOB  = "kleborate_*_complex_output.tsv"
+DEFAULT_DISCARD_GLOB = "kleborate_escherichia_output.tsv"
 
 # Kleborate v3 column naming: namespaced "<scheme>__<module>__<field>".
 KLEB_SPECIES_COL = "enterobacterales__species__species"
@@ -103,8 +106,17 @@ def _is_kpsc(species: pd.Series) -> pd.Series:
 
 # ─── MAIN MERGE ───────────────────────────────────────────────────────────────
 
-def apply_cascade(meta: pd.DataFrame, kleb: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+def apply_cascade(
+    meta: pd.DataFrame,
+    kleb: pd.DataFrame,
+    discard: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, dict]:
     """Apply species → is_kpsc → kpsc_final_list cascade on lra_final_set rows.
+
+    If ``discard`` is provided (Kleborate output for non-Klebsiella species,
+    e.g. ``escherichia_output.tsv``), the matched rows are removed from the
+    LRA cohort: ``lra_final_set=False``, ``kpsc_final_list=False``. Species
+    is still set so downstream auditing can see why they were dropped.
 
     Returns ``(updated_meta, stats)``.
     """
@@ -170,6 +182,42 @@ def apply_cascade(meta: pd.DataFrame, kleb: pd.DataFrame) -> tuple[pd.DataFrame,
     if "kleborate_needs_recall" in meta.columns:
         meta.loc[fill_idx, "kleborate_needs_recall"] = False
 
+    # ── Discard non-Klebsiella matches from the LRA cohort ────────────────
+    n_discarded = 0
+    if discard is not None and not discard.empty:
+        if KLEB_STRAIN_COL not in discard.columns or KLEB_SPECIES_COL not in discard.columns:
+            print("WARNING: discard table missing required columns; skipping discard step.",
+                  file=sys.stderr)
+        else:
+            d = discard.copy()
+            d["_bare"] = d[KLEB_STRAIN_COL].map(_bare)
+            d = d.drop_duplicates("_bare")
+            d_species_map = d.set_index("_bare")[KLEB_SPECIES_COL].to_dict()
+            meta_bare_all = meta["Sample"].map(_bare)
+            discard_mask = meta_bare_all.map(lambda b: b in d_species_map)
+            disc_idx = meta.index[discard_mask]
+            for idx in disc_idx:
+                sp = d_species_map.get(meta_bare_all.loc[idx])
+                if sp:
+                    meta.at[idx, "species"] = sp
+                    if "scientific_name" in meta.columns:
+                        meta.at[idx, "scientific_name"] = sp
+                meta.at[idx, "lra_final_set"] = False
+                if "is_kpsc" in meta.columns:
+                    meta.at[idx, "is_kpsc"] = False
+                if "kpsc_final_list" in meta.columns:
+                    meta.at[idx, "kpsc_final_list"] = False
+                if "kleborate_needs_recall" in meta.columns:
+                    meta.at[idx, "kleborate_needs_recall"] = False
+            n_discarded = int(len(disc_idx))
+    stats["discarded_non_klebsiella"] = n_discarded
+
+    # ── Sanity gate: how many lra_final_set rows still lack a species call? ──
+    final_lra = _coerce_bool(meta["lra_final_set"])
+    null_species = final_lra & meta["species"].isna()
+    stats["lra_rows_null_species_post_cascade"] = int(null_species.sum())
+    stats["lra_final_set_count_post_cascade"] = int(final_lra.sum())
+
     return meta, stats
 
 
@@ -181,14 +229,21 @@ def main(argv: list[str] | None = None) -> int:
                     help="Dir containing the collated Kleborate typing TSVs.")
     ap.add_argument("--typing-glob",  type=str,  default=DEFAULT_TYPING_GLOB,
                     help="Glob (relative to --kleborate-out) for typing-table TSVs.")
+    ap.add_argument("--discard-glob", type=str,  default=DEFAULT_DISCARD_GLOB,
+                    help="Glob for non-Klebsiella outputs whose matched rows "
+                         "should be removed from the LRA cohort (lra_final_set=False).")
     ap.add_argument("--dry-run", action="store_true", help="Print stats; don't write.")
     args = ap.parse_args(argv)
 
-    typing_paths = sorted(args.kleborate_out.glob(args.typing_glob))
+    typing_paths  = sorted(args.kleborate_out.glob(args.typing_glob))
+    discard_paths = sorted(args.kleborate_out.glob(args.discard_glob))
     print(f"metadata_v2  : {args.metadata_v2}")
-    print(f"kleborate    : {args.kleborate_out} / {args.typing_glob}")
-    print(f"  matched files: {len(typing_paths)}")
+    print(f"kleborate    : {args.kleborate_out}")
+    print(f"  typing glob  : {args.typing_glob}  → {len(typing_paths)} files")
     for p in typing_paths:
+        print(f"    {p.name}")
+    print(f"  discard glob : {args.discard_glob}  → {len(discard_paths)} files")
+    for p in discard_paths:
         print(f"    {p.name}")
     if not typing_paths:
         print(f"FATAL: no Kleborate typing TSVs matching '{args.typing_glob}' under {args.kleborate_out}",
@@ -202,10 +257,15 @@ def main(argv: list[str] | None = None) -> int:
         df["_source_file"] = p.name
         kleb_frames.append(df)
     kleb = pd.concat(kleb_frames, ignore_index=True, sort=False)
+    discard = pd.DataFrame()
+    if discard_paths:
+        d_frames = [pd.read_csv(p, sep="\t", low_memory=False) for p in discard_paths]
+        discard = pd.concat(d_frames, ignore_index=True, sort=False) if d_frames else discard
     print(f"\nmetadata_v2 rows  : {len(meta):,}")
-    print(f"kleborate rows    : {len(kleb):,}  (concatenated from {len(typing_paths)} complex files)")
+    print(f"kleborate rows    : {len(kleb):,}  (typing tables)")
+    print(f"discard rows      : {len(discard):,}  (non-Klebsiella, to be removed from LRA cohort)")
 
-    updated, stats = apply_cascade(meta, kleb)
+    updated, stats = apply_cascade(meta, kleb, discard=discard)
 
     print("\n=== Cascade stats ===")
     for k, v in stats.items():
