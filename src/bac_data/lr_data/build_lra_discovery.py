@@ -130,7 +130,10 @@ def load_norway(norway_tsv: Path) -> pd.DataFrame:
         # The Norway integration adds rows to metadata keyed on biosample; carry
         # the Norway BioSample as Sample so the join back is unambiguous.
         "Sample": df["biosample"],
-        "related_lr_run_accession": df["ont_in_run_accession"],
+        # ont_acc = the actual ONT DRR/SRR run accession.
+        # ont_in_run_accession is the *boolean* indicator of whether that accession
+        # is present in our metadata's run_accession column — not the accession itself.
+        "related_lr_run_accession": df["ont_acc"],
         "level":  df["assembly_level"],
         "seb_path": "",
         "source_audit": False,
