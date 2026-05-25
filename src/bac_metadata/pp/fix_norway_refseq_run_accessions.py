@@ -75,18 +75,20 @@ def fix_norway_rows(v2: pd.DataFrame, integ: pd.DataFrame) -> tuple[pd.DataFrame
 
     # Build a bare-accession → (biosample, illumina_acc, ont_acc) lookup
     # from the integration TSV. Skip rows with no resolved assembly.
+    # NB: itertuples() mangles fieldnames starting with "_", so name the
+    # derived columns without a leading underscore.
     integ = integ.copy()
-    integ["_gca_bare"] = integ["resolved_gca"].map(_bare)
-    integ["_gcf_bare"] = integ["resolved_refseq_gcf"].map(_bare)
+    integ["gca_bare"] = integ["resolved_gca"].map(_bare)
+    integ["gcf_bare"] = integ["resolved_refseq_gcf"].map(_bare)
 
     lookup: dict[str, dict] = {}
     for r in integ.itertuples(index=False):
         d = {
-            "biosample":    getattr(r, "biosample", ""),
-            "illumina_acc": getattr(r, "illumina_acc", ""),
-            "ont_acc":      getattr(r, "ont_acc", ""),
+            "biosample":    getattr(r, "biosample", "") or "",
+            "illumina_acc": getattr(r, "illumina_acc", "") or "",
+            "ont_acc":      getattr(r, "ont_acc", "") or "",
         }
-        for key in (getattr(r, "_gca_bare", ""), getattr(r, "_gcf_bare", "")):
+        for key in (getattr(r, "gca_bare", ""), getattr(r, "gcf_bare", "")):
             if key:
                 lookup[key] = d
     stats["integration_keys"] = len(lookup)
