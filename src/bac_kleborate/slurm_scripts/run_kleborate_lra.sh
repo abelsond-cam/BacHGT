@@ -17,7 +17,7 @@
 #   uv run python -m bac_kleborate.run_kleborate_lra collate
 
 #SBATCH --job-name=kleborate_lra
-#SBATCH --partition=icelake
+#SBATCH --partition=icelake-himem
 #SBATCH --account=FLOTO-PROJECT-K-SL2-CPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
