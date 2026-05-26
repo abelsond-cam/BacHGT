@@ -24,7 +24,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
-#SBATCH --time=06:00:00
+#SBATCH --time=24:00:00
 #SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/isescan_lra/slurm_logs/%x_%A_%a.out
 #SBATCH --error=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/isescan_lra/slurm_logs/%x_%A_%a.err
 
