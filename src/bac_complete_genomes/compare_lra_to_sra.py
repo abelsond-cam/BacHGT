@@ -708,22 +708,238 @@ def report_project_breakdown(gdf: pd.DataFrame, project_col: str, threshold: flo
                 print(f"      {proj}: n={n} ({pct:.1f}%)")
 
 
-def _run_paired_mode(_args: argparse.Namespace) -> None:
+DEFAULT_METADATA_V2 = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv"
+)
+DEFAULT_SR_SHADOW = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/sr_shadow_for_lra.tsv"
+)
+DEFAULT_PAIRED_OUT = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/lra_vs_sr_comparison.tsv"
+)
+
+
+def _mcnemar_exact(b: int, c: int) -> float:
+    """Exact McNemar p-value via two-sided binomial against H0=0.5.
+
+    b = #(LR positive AND SR negative) = "LR-only" calls.
+    c = #(LR negative AND SR positive) = "SR-only" calls.
+    Returns NaN if b + c == 0 (no discordance to test).
+    """
+    n = b + c
+    if n == 0:
+        return float("nan")
+    return float(stats.binomtest(min(b, c), n, 0.5).pvalue)
+
+
+def _paired_binary_stats(
+    lr_present: pd.Series, sr_present: pd.Series, feature: str, category: str,
+) -> dict:
+    """McNemar 2×2 contingency on a paired binary feature."""
+    lr01 = lr_present.astype(int)
+    sr01 = sr_present.astype(int)
+    a = int(((lr01 == 1) & (sr01 == 1)).sum())  # both positive
+    b = int(((lr01 == 1) & (sr01 == 0)).sum())  # LR rescue
+    c = int(((lr01 == 0) & (sr01 == 1)).sum())  # SR-only (LR loss)
+    d = int(((lr01 == 0) & (sr01 == 0)).sum())  # both negative
+    n_pairs = a + b + c + d
+    lr_pickup = (b / (b + c)) if (b + c) else float("nan")
+    return {
+        "feature":          feature,
+        "category":         category,
+        "stat":             "mcnemar",
+        "n_pairs":          n_pairs,
+        "both_positive":    a,
+        "lr_only":          b,
+        "sr_only":          c,
+        "both_negative":    d,
+        "lr_pickup_rate":   lr_pickup,
+        "mcnemar_p":        _mcnemar_exact(b, c),
+        "lr_mean":          float(lr01.mean()) if n_pairs else float("nan"),
+        "sr_mean":          float(sr01.mean()) if n_pairs else float("nan"),
+        "paired_t_p":       float("nan"),
+        "wilcoxon_p":       float("nan"),
+    }
+
+
+def _paired_numeric_stats(
+    lr_vals: pd.Series, sr_vals: pd.Series, feature: str, category: str,
+) -> dict:
+    """Paired t-test + Wilcoxon signed-rank on a paired numeric feature."""
+    lr = pd.to_numeric(lr_vals, errors="coerce")
+    sr = pd.to_numeric(sr_vals, errors="coerce")
+    mask = lr.notna() & sr.notna()
+    n_pairs = int(mask.sum())
+    if n_pairs < 2:
+        return {
+            "feature": feature, "category": category, "stat": "paired_numeric",
+            "n_pairs": n_pairs, "lr_mean": float("nan"), "sr_mean": float("nan"),
+            "lr_only": int(((lr.fillna(0) > 0) & ~(sr.fillna(0) > 0)).sum()),
+            "sr_only": int((~(lr.fillna(0) > 0) & (sr.fillna(0) > 0)).sum()),
+            "both_positive": float("nan"), "both_negative": float("nan"),
+            "lr_pickup_rate": float("nan"), "mcnemar_p": float("nan"),
+            "paired_t_p": float("nan"), "wilcoxon_p": float("nan"),
+        }
+    lr_v, sr_v = lr[mask].astype(float), sr[mask].astype(float)
+    diff = lr_v - sr_v
+    # Paired t-test (handles zero-variance via NaN p).
+    if diff.std(ddof=1) == 0 or diff.empty:
+        t_p = float("nan")
+    else:
+        with np.errstate(invalid="ignore"):
+            _, t_p = stats.ttest_rel(lr_v, sr_v)
+    # Wilcoxon: skip if all diffs are zero.
+    if (diff == 0).all():
+        w_p = float("nan")
+    else:
+        try:
+            _, w_p = stats.wilcoxon(lr_v, sr_v, zero_method="wilcox")
+        except ValueError:
+            w_p = float("nan")
+    return {
+        "feature":         feature,
+        "category":        category,
+        "stat":            "paired_numeric",
+        "n_pairs":         n_pairs,
+        "lr_mean":         float(lr_v.mean()),
+        "sr_mean":         float(sr_v.mean()),
+        "lr_only":         int((diff > 0).sum()),
+        "sr_only":         int((diff < 0).sum()),
+        "both_positive":   float("nan"),
+        "both_negative":   float("nan"),
+        "lr_pickup_rate":  float("nan"),
+        "mcnemar_p":       float("nan"),
+        "paired_t_p":      float(t_p),
+        "wilcoxon_p":      float(w_p),
+    }
+
+
+def _paired_features(merged: pd.DataFrame) -> list[dict]:
+    """Walk every paired feature and emit one stats dict per feature."""
+    rows: list[dict] = []
+
+    # ── Binary Kleborate virulence BSCs (presence of the lineage column) ──
+    for code, info in KLEBORATE_VIRULENCE_LOCI.items():
+        lineage = info.get("lineage") or ("rmpA2" if code == "rmpA2" else None)
+        if not lineage:
+            continue
+        lr_col, sr_col = lineage, f"sr_{lineage}"
+        if lr_col not in merged.columns or sr_col not in merged.columns:
+            continue
+        lr_present = kleborate_column_to_presence(merged[lr_col])
+        sr_present = kleborate_column_to_presence(merged[sr_col])
+        rows.append(_paired_binary_stats(lr_present, sr_present, f"{lineage}_bsc", "virulence_bsc"))
+
+    # ── Numeric BSC allele counts (LR vs SR sum of present alleles) ──
+    for code, info in KLEBORATE_VIRULENCE_LOCI.items():
+        feat = f"{code}_allele_count"
+        lr_alleles = [a for a in info["alleles"] if a in merged.columns]
+        sr_alleles = [a for a in info["alleles"] if f"sr_{a}" in merged.columns]
+        if not lr_alleles or not sr_alleles:
+            continue
+        lr_count = sum(kleborate_column_to_presence(merged[a]) for a in lr_alleles)
+        sr_count = sum(kleborate_column_to_presence(merged[f"sr_{a}"]) for a in sr_alleles)
+        rows.append(_paired_numeric_stats(lr_count, sr_count, feat, "virulence_allele_count"))
+
+    # ── Binary MLST locus presence ──
+    for locus in KLEBORATE_CHROMOSOMAL_MLST_COLS:
+        if locus not in merged.columns or f"sr_{locus}" not in merged.columns:
+            continue
+        lr_present = kleborate_column_to_presence(merged[locus])
+        sr_present = kleborate_column_to_presence(merged[f"sr_{locus}"])
+        rows.append(_paired_binary_stats(lr_present, sr_present, locus, "mlst"))
+
+    # ── Acquired-AMR token counts ──
+    for col in acquired_column_names(list(merged.columns)):
+        sr_col = f"sr_{col}"
+        if sr_col not in merged.columns:
+            continue
+        lr_count = count_acquired_tokens(merged[col])
+        sr_count = count_acquired_tokens(merged[sr_col])
+        rows.append(_paired_numeric_stats(lr_count, sr_count, col, "amr_acquired"))
+
+    return rows
+
+
+def _run_paired_mode(args: argparse.Namespace) -> None:
     """Paired SR-vs-LRA comparison driver (Phase G.4).
 
-    Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on ``sr_biosample``,
-    and runs McNemar's (binary features) + paired t-test / Wilcoxon
-    signed-rank (numeric features) over the same Kleborate / ISEScan feature
-    set the cross-section clonal-group mode covers.
+    Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on
+    ``sr_biosample``, and runs McNemar's (binary) + paired t-test /
+    Wilcoxon signed-rank (numeric) over the Kleborate + AMR feature set.
 
-    Not yet implemented — placeholder until G.1 + G.2 + G.3 ship
-    ``metadata_v2`` and ``sr_shadow_for_lra.tsv`` for this codepath to consume.
+    ISEScan is **LR-only** (no SR-side counts in v1), so IS-family features
+    are not paired — those go via the cross-section ``--mode clonal_group``.
+
+    Writes ``lra_vs_sr_comparison.tsv`` with one row per feature.
     """
-    raise NotImplementedError(
-        "compare_lra_to_sra.py --mode paired is wired in Phase G.4, after "
-        "metadata_v2 + sr_shadow_for_lra.tsv exist. Until then, use "
-        "--mode clonal_group for the cross-section comparison."
-    )
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Loading metadata_v2: {args.metadata_v2}")
+    meta = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
+    print(f"  rows: {len(meta):,}")
+    print(f"Loading SR-shadow:   {args.sr_shadow}")
+    shadow = pd.read_csv(args.sr_shadow, sep="\t", low_memory=False)
+    print(f"  rows: {len(shadow):,}")
+
+    # Filter to LRA-bearing rows with sr_biosample, then inner-join with shadow.
+    lra = meta["lra_final_set"].astype(str).str.lower().isin({"true", "1", "yes"})
+    paired_meta = meta[lra & meta["sr_biosample"].notna()].copy()
+    paired_meta["sr_biosample"] = paired_meta["sr_biosample"].astype(str)
+    shadow["sr_biosample"] = shadow["sr_biosample"].astype(str)
+
+    merged = paired_meta.merge(shadow, on="sr_biosample", how="inner", suffixes=("", "_shadow"))
+    print(f"\nPaired rows after merge: {len(merged):,}")
+    print(f"  LRA-bearing rows with sr_biosample : {len(paired_meta):,}")
+    print(f"  shadow rows                         : {len(shadow):,}")
+
+    rows = _paired_features(merged)
+    out = pd.DataFrame(rows)
+
+    # Add BH-corrected q values per stat-test column.
+    for p_col, q_col in (("mcnemar_p", "mcnemar_q"), ("paired_t_p", "paired_t_q"), ("wilcoxon_p", "wilcoxon_q")):
+        if p_col in out.columns:
+            valid = out[p_col].notna()
+            ranked = out.loc[valid, p_col].rank(method="average")
+            n = int(valid.sum())
+            if n:
+                out.loc[valid, q_col] = (out.loc[valid, p_col] * n / ranked).clip(upper=1.0)
+            else:
+                out[q_col] = float("nan")
+
+    out_path = args.output_dir / "lra_vs_sr_comparison.tsv"
+    out.to_csv(out_path, sep="\t", index=False)
+    print(f"\nwrote {out_path}  rows={len(out)}")
+
+    # Headline summary: per-category LR-rescue rate + total LR-only calls.
+    print("\n=== Per-category headline ===")
+    if "category" in out.columns and len(out):
+        binary = out[out["stat"] == "mcnemar"]
+        if not binary.empty:
+            print("\n  Binary features (Kleborate presence/absence):")
+            for cat, g in binary.groupby("category"):
+                total_b = int(g["lr_only"].sum())
+                total_c = int(g["sr_only"].sum())
+                rate = total_b / (total_b + total_c) if (total_b + total_c) else float("nan")
+                sig = int((g["mcnemar_p"] < 0.05).sum())
+                print(f"    {cat:25s}  features={len(g):>3}  LR-only={total_b:>5}  "
+                      f"SR-only={total_c:>5}  LR-rescue-rate={rate:.3f}  sig@0.05={sig}")
+        numeric = out[out["stat"] == "paired_numeric"]
+        if not numeric.empty:
+            print("\n  Numeric features (paired t / Wilcoxon):")
+            for cat, g in numeric.groupby("category"):
+                sig_t  = int((g["paired_t_p"]  < 0.05).sum())
+                sig_w  = int((g["wilcoxon_p"]  < 0.05).sum())
+                print(f"    {cat:25s}  features={len(g):>3}  sig_t@0.05={sig_t}  sig_wilcoxon@0.05={sig_w}")
+
+    # Top 10 LR-rescue features overall (sorted by lr_only count).
+    binary_calls = out[out["stat"] == "mcnemar"].sort_values("lr_only", ascending=False).head(10)
+    if not binary_calls.empty:
+        print("\n  Top 10 LR-rescue binary features (by LR-only count):")
+        for _, r in binary_calls.iterrows():
+            print(f"    {r['feature']:35s}  LR-only={int(r['lr_only']):>4}  "
+                  f"SR-only={int(r['sr_only']):>4}  rate={r['lr_pickup_rate']:.3f}  "
+                  f"p={r['mcnemar_p']:.2e}")
 
 
 def main() -> None:
@@ -738,11 +954,17 @@ def main() -> None:
     )
     parser.add_argument("--metadata", type=Path, default=DEFAULT_METADATA)
     parser.add_argument("--isescan-csv", type=Path, default=DEFAULT_ISESCAN)
+    # Paired-mode inputs (Phase G.4).
+    parser.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2,
+                        help="(paired mode) metadata_v2 TSV with LR-Kleborate values.")
+    parser.add_argument("--sr-shadow",   type=Path, default=DEFAULT_SR_SHADOW,
+                        help="(paired mode) sr_shadow_for_lra.tsv with SR-Kleborate frozen at v1.")
     parser.add_argument(
         "--output-dir",
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
-        help="Output directory",
+        help="Output directory (clonal_group mode); paired mode writes "
+             "lra_vs_sr_comparison.tsv under <RDS>/david/processed/ by default.",
     )
     parser.add_argument(
         "--full-virulence-output",
