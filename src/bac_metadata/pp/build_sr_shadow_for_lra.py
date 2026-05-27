@@ -42,6 +42,13 @@ DEFAULT_METADATA_V1 = DATA_ROOT / "david/final/metadata_final_curated_all_sample
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
 DEFAULT_OUT_PATH    = DATA_ROOT / "david/final/sr_shadow_for_lra.tsv"
 
+# Seb-tree SR-side sidecars produced by ``import_sr_kleborate`` /
+# ``import_sr_isescan``. These fill the 957 priority-3 audit-matched
+# biosamples whose Kleborate / ISEScan results live in seb/ but were
+# never merged into v1.
+DEFAULT_SR_KLEBORATE = DATA_ROOT / "seb/sr_kleborate_v3.2.4.tsv"
+DEFAULT_SR_ISESCAN   = DATA_ROOT / "seb/sr_isescan_family_counts.tsv"
+
 # ─── COLUMN POLICY ────────────────────────────────────────────────────────────
 
 # Identity/QC columns to copy directly from v1 (prefixed with sr_ in output).
@@ -108,8 +115,59 @@ def _coerce_bool(series: pd.Series) -> pd.Series:
 
 # ─── BUILD ────────────────────────────────────────────────────────────────────
 
-def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+def _fill_from_sidecar(
+    merged: pd.DataFrame,
+    sidecar: pd.DataFrame,
+    key_col: str,
+    sidecar_key: str,
+    cols: list[str],
+) -> tuple[pd.DataFrame, dict]:
+    """Fill NaN values in ``cols`` of ``merged`` from a BioSample-keyed sidecar.
+
+    Returns ``(merged, stats)``. ``stats`` reports rows-changed per column
+    and a single ``filled_total`` count for the whole sidecar pass.
+    """
+    stats: dict = {}
+    if sidecar.empty:
+        stats["sidecar_rows"] = 0
+        return merged, stats
+
+    sc = sidecar.drop_duplicates(sidecar_key, keep="first").set_index(sidecar_key)
+    # Only fill where the sidecar actually has the column.
+    fillable = [c for c in cols if c in sc.columns]
+    stats["sidecar_rows"]     = len(sc)
+    stats["sidecar_cols_used"] = len(fillable)
+
+    n_filled_total = 0
+    keys = merged[key_col].astype(str)
+    for c in fillable:
+        existing = merged[c]
+        # treat empty string + literal 'nan' as missing
+        existing_str = existing.astype(str)
+        is_missing = existing.isna() | (existing_str == "") | (existing_str.str.lower() == "nan")
+        if not is_missing.any():
+            continue
+        new_vals = keys.map(sc[c])
+        # Only fill rows that are both missing in v1 AND present in sidecar.
+        to_fill = is_missing & new_vals.notna()
+        if to_fill.any():
+            merged.loc[to_fill, c] = new_vals[to_fill].values
+            n_filled_total += int(to_fill.sum())
+    stats["filled_total_cells"] = n_filled_total
+    return merged, stats
+
+
+def build_sr_shadow(
+    v1: pd.DataFrame,
+    v2: pd.DataFrame,
+    sr_kleborate: pd.DataFrame | None = None,
+    sr_isescan: pd.DataFrame | None = None,
+) -> tuple[pd.DataFrame, dict]:
     """Snapshot SR-side state for every paired SR+LR row in v2.
+
+    Optionally fills missing Kleborate columns from a BioSample-keyed
+    seb-tree sidecar, and appends SR-ISEScan family counts as
+    ``sr_IS_<family>`` columns.
 
     Returns ``(shadow_df, stats)``.
     """
@@ -160,6 +218,23 @@ def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, d
     stats["paired_with_v1_match"]    = n_matched
     stats["paired_without_v1_match"] = len(merged) - n_matched
 
+    # Fill missing Kleborate-derived columns (SPECIES + MLST + AMR +
+    # virulence) from the seb-tree sidecar. QC columns (contig_count, N50,
+    # …) stay v1-sourced — those are SR-assembly QC and weren't re-run.
+    if sr_kleborate is not None and not sr_kleborate.empty:
+        kleborate_cols_for_fill = [
+            c for c in (SPECIES_COLUMNS + MLST_COLUMNS + amr_cols + vir_cols)
+            if c in snapshot_cols
+        ]
+        merged, fill_stats = _fill_from_sidecar(
+            merged,
+            sr_kleborate,
+            key_col="sr_biosample",
+            sidecar_key="BioSample",
+            cols=kleborate_cols_for_fill,
+        )
+        stats["sr_kleborate_sidecar"] = fill_stats
+
     # Rename snapshot columns to sr_<col>.
     rename = {c: f"sr_{c}" for c in snapshot_cols}
     merged = merged.rename(columns=rename)
@@ -168,7 +243,28 @@ def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, d
     identity = ["sr_biosample", "replaced_by_v2_sample", "replaced_by_lra_gca", "replaced_by_lra_gcf"]
     identity = [c for c in identity if c in merged.columns]
     sr_cols  = [f"sr_{c}" for c in snapshot_cols]
-    out = merged[identity + sr_cols]
+    out = merged[identity + sr_cols].copy()
+
+    # Append SR-ISEScan per-Sample family counts as sr_IS_<family> columns.
+    if sr_isescan is not None and not sr_isescan.empty:
+        ise_key = "Sample" if "Sample" in sr_isescan.columns else sr_isescan.columns[0]
+        ise = sr_isescan.drop_duplicates(ise_key, keep="first").set_index(ise_key)
+        # Family columns are everything except the key.
+        fam_cols = [c for c in ise.columns if c != ise_key]
+        renamed = {c: f"sr_IS_{c}" for c in fam_cols}
+        sub = ise[fam_cols].rename(columns=renamed)
+        out = out.merge(sub, how="left", left_on="sr_biosample", right_index=True)
+        # Samples present in v2 but missing from the SR-ISEScan sidecar
+        # carry NaN here — meaning "no SR ISEScan run available" (distinct
+        # from "ran, found zero hits", which would be a populated row).
+        # That distinction matters for the paired comparison: NaN → exclude
+        # from the pair; 0 → genuine no-call.
+        n_ise_matched = int(out[f"sr_IS_{fam_cols[0]}"].notna().sum()) if fam_cols else 0
+        stats["sr_isescan_sidecar"] = {
+            "families":         len(fam_cols),
+            "paired_with_isescan": n_ise_matched,
+            "paired_without_isescan": len(out) - n_ise_matched,
+        }
     return out, stats
 
 
@@ -177,20 +273,44 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--metadata-v1", type=Path, default=DEFAULT_METADATA_V1)
     ap.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2)
+    ap.add_argument("--sr-kleborate", type=Path, default=DEFAULT_SR_KLEBORATE,
+                    help="BioSample-keyed sidecar from import_sr_kleborate; "
+                         "pass empty string to disable sidecar fill.")
+    ap.add_argument("--sr-isescan",   type=Path, default=DEFAULT_SR_ISESCAN,
+                    help="Sample-keyed per-family count sidecar from import_sr_isescan; "
+                         "pass empty string to disable sidecar fill.")
     ap.add_argument("--out",         type=Path, default=DEFAULT_OUT_PATH)
     ap.add_argument("--dry-run", action="store_true", help="Print stats; don't write.")
     args = ap.parse_args(argv)
 
-    print(f"metadata_v1 : {args.metadata_v1}")
-    print(f"metadata_v2 : {args.metadata_v2}")
-    print(f"out         : {args.out}")
+    print(f"metadata_v1  : {args.metadata_v1}")
+    print(f"metadata_v2  : {args.metadata_v2}")
+    print(f"sr_kleborate : {args.sr_kleborate}")
+    print(f"sr_isescan   : {args.sr_isescan}")
+    print(f"out          : {args.out}")
 
     v1 = pd.read_csv(args.metadata_v1, sep="\t", low_memory=False)
     v2 = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
     print(f"\nv1 rows: {len(v1):,}")
     print(f"v2 rows: {len(v2):,}")
 
-    shadow, stats = build_sr_shadow(v1, v2)
+    sr_kleborate: pd.DataFrame | None = None
+    if str(args.sr_kleborate):
+        if args.sr_kleborate.exists():
+            sr_kleborate = pd.read_csv(args.sr_kleborate, sep="\t", low_memory=False)
+            print(f"sr_kleborate sidecar rows: {len(sr_kleborate):,}")
+        else:
+            print(f"NOTE: {args.sr_kleborate} not found; skipping sidecar fill.", file=sys.stderr)
+
+    sr_isescan: pd.DataFrame | None = None
+    if str(args.sr_isescan):
+        if args.sr_isescan.exists():
+            sr_isescan = pd.read_csv(args.sr_isescan, sep="\t", low_memory=False)
+            print(f"sr_isescan sidecar rows: {len(sr_isescan):,}")
+        else:
+            print(f"NOTE: {args.sr_isescan} not found; skipping sidecar.", file=sys.stderr)
+
+    shadow, stats = build_sr_shadow(v1, v2, sr_kleborate=sr_kleborate, sr_isescan=sr_isescan)
 
     print("\n=== SR-shadow stats ===")
     for k, v in stats.items():
