@@ -68,6 +68,13 @@ SPECIES_COLUMNS = [
     "Species",  # legacy duplicate
 ]
 
+# Kleborate KpSC chromosomal MLST 7-locus scheme + ST. Captured for the
+# paired SR-vs-LRA MLST comparison (housekeeping genes; failure to detect
+# any is an assembly-quality signal).
+MLST_COLUMNS = [
+    "gapA", "infB", "mdh", "pgi", "phoE", "rpoB", "tonB", "ST",
+]
+
 # Acquired-AMR + virulence columns (the BSC structure) are pattern-matched
 # rather than enumerated to stay robust to Kleborate version changes.
 AMR_PATTERN_SUFFIXES = ("_acquired", "_chr", "_mutations")
@@ -127,13 +134,14 @@ def build_sr_shadow(v1: pd.DataFrame, v2: pd.DataFrame) -> tuple[pd.DataFrame, d
     v1_cols = list(v1.columns)
     amr_cols = _amr_columns(v1_cols)
     vir_cols = _virulence_columns(v1_cols)
-    snapshot_cols = QC_COLUMNS + SPECIES_COLUMNS + amr_cols + vir_cols
+    snapshot_cols = QC_COLUMNS + SPECIES_COLUMNS + MLST_COLUMNS + amr_cols + vir_cols
     snapshot_cols = [c for c in snapshot_cols if c in v1.columns]
     snapshot_cols = list(dict.fromkeys(snapshot_cols))  # dedupe, preserve order
     stats["sr_columns_snapshotted"] = len(snapshot_cols)
     stats["snapshot_split"] = {
         "qc":        len([c for c in QC_COLUMNS if c in snapshot_cols]),
         "species":   len([c for c in SPECIES_COLUMNS if c in snapshot_cols]),
+        "mlst":      len([c for c in MLST_COLUMNS if c in snapshot_cols]),
         "amr":       len([c for c in amr_cols if c in snapshot_cols]),
         "virulence": len([c for c in vir_cols if c in snapshot_cols]),
     }
