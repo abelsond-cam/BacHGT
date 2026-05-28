@@ -336,6 +336,10 @@ def run_lra(
     for col in ("lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file"):
         if col not in df.columns:
             df[col] = pd.NA
+    # An all-NaN column is float64; scalar string assignment into it raises in
+    # future pandas — hold the path columns as object up front.
+    df["lra_assembly_file"] = df["lra_assembly_file"].astype("object")
+    df["lra_gff_file"] = df["lra_gff_file"].astype("object")
 
     asm_pool = _related_lr_pool(asm_dir, ".fna.gz")
     gff_pool = _related_lr_pool(gff_dir, ".gff")
