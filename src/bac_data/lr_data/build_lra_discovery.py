@@ -36,8 +36,8 @@ Schema (output ``lra_discovery.tsv``)::
     source_audit, source_norway, source_refseq_metadata,
     is_norway, is_refseq, stale_refseq
 
-    # NCBI metadata (when available)
-    level
+    # NCBI metadata (from lra_ncbi_assembly_meta.tsv)
+    level, library_class, ncbi_sequencing_tech, ncbi_assembly_method
 
     # scoring
     scoring_accession, expected_fasta_path, fasta_on_disk, download_needed
@@ -71,6 +71,7 @@ DEFAULT_METADATA   = DATA_ROOT / "david/final/metadata_final_curated_all_samples
 DEFAULT_LR_ASM_DIR = DATA_ROOT / "david/raw/related_lr/assemblies"
 DEFAULT_PROJECT_K  = DATA_ROOT                # for resolving metadata.assembly_file
 DEFAULT_OUT_TSV    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
+DEFAULT_NCBI_META  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_ncbi_assembly_meta.tsv"
 
 # Sample column → bare GCA/GCF accession. Same regex as prep_checkm2_inputs.
 _ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")
@@ -78,12 +79,38 @@ _ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")
 PROVENANCE_COLS = ["source_audit", "source_norway", "source_refseq_metadata"]
 FLAG_COLS       = ["is_norway", "is_refseq"]
 
+# Sequencing-platform classification from NCBI's reported sequencing_tech.
+# Same vocabulary as lra_fragmentation.ipynb's is_hybrid logic.
+LONG_RE  = re.compile(r"pacbio|nanopore|\bont\b|oxford|smrt|hifi", re.IGNORECASE)
+SHORT_RE = re.compile(
+    r"illumina|hiseq|miseq|nextseq|novaseq|bgi|mgi|dnbseq|bgiseq|solid|ion[\s_-]?torrent",
+    re.IGNORECASE,
+)
+
+
+def classify_tech(tech: object) -> str:
+    """Classify a raw NCBI sequencing_tech string → hybrid / long_only / short_only / unknown."""
+    if tech is None or (isinstance(tech, float) and np.isnan(tech)):
+        return "unknown"
+    s = str(tech).strip()
+    if not s:
+        return "unknown"
+    has_long = bool(LONG_RE.search(s))
+    has_short = bool(SHORT_RE.search(s))
+    if has_long and has_short:
+        return "hybrid"
+    if has_long:
+        return "long_only"
+    if has_short:
+        return "short_only"
+    return "unknown"
+
 # Final output column order — deterministic, easy to eyeball.
 OUTPUT_COLS = [
     "GCA", "GCF", "accession_bare_primary", "Sample", "related_lr_run_accession",
     "source_audit", "source_norway", "source_refseq_metadata",
     "is_norway", "is_refseq", "stale_refseq",
-    "level",
+    "level", "library_class", "ncbi_sequencing_tech", "ncbi_assembly_method",
     "scoring_accession", "expected_fasta_path", "fasta_on_disk", "download_needed",
 ]
 
@@ -298,6 +325,44 @@ def derive_identity_cols(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def merge_ncbi_meta(df: pd.DataFrame, ncbi_meta_tsv: Path) -> pd.DataFrame:
+    """Join the NCBI assembly-metadata cache onto the discovery rows.
+
+    Match is by version-stripped ``scoring_accession`` ↔ the cache's bare
+    ``lookup_accession`` (~99.98% hit). NCBI's ``assembly_level`` is
+    authoritative and ~100% complete, so it overwrites the partial per-source
+    ``level`` (the stale-fix). ``library_class`` is derived from the reported
+    sequencing tech; the raw ``ncbi_sequencing_tech`` / ``ncbi_assembly_method``
+    are carried through. A missing cache is tolerated (level untouched,
+    library_class="unknown") so the build never hard-fails.
+    """
+    df = df.copy()
+    if not Path(ncbi_meta_tsv).is_file():
+        print(f"WARN: NCBI meta cache not found ({ncbi_meta_tsv}); "
+              "leaving level as-is, library_class=unknown", file=sys.stderr)
+        df["library_class"] = "unknown"
+        df["ncbi_sequencing_tech"] = ""
+        df["ncbi_assembly_method"] = ""
+        return df
+
+    meta = pd.read_csv(ncbi_meta_tsv, sep="\t", low_memory=False)
+    meta["_key"] = meta["lookup_accession"].astype(str).map(_bare)
+    keep = ["_key", "ncbi_assembly_level", "ncbi_sequencing_tech", "ncbi_assembly_method"]
+    meta = meta[[c for c in keep if c in meta.columns]].drop_duplicates("_key", keep="first")
+
+    df["_key"] = df["scoring_accession"].astype(str).map(_bare)
+    df = df.merge(meta, on="_key", how="left").drop(columns="_key")
+
+    lvl = df.pop("ncbi_assembly_level") if "ncbi_assembly_level" in df.columns else None
+    if lvl is not None:
+        df["level"] = lvl.where(lvl.notna() & (lvl.astype(str) != ""), df["level"])
+
+    df["ncbi_sequencing_tech"] = df.get("ncbi_sequencing_tech", pd.Series("", index=df.index)).fillna("")
+    df["ncbi_assembly_method"] = df.get("ncbi_assembly_method", pd.Series("", index=df.index)).fillna("")
+    df["library_class"] = df["ncbi_sequencing_tech"].map(classify_tech)
+    return df
+
+
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 
 def _print_counts(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataFrame, out: pd.DataFrame) -> None:
@@ -355,6 +420,18 @@ def _print_counts(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataFram
             print(f"  {k:<24} : {int(vc[k]):>5}")
     print()
 
+    # NCBI-enriched columns (after merge_ncbi_meta).
+    if "level" in out.columns:
+        print("assembly level (NCBI assembly_level, post-enrichment):")
+        for k, v in out["level"].fillna("").replace("", "(blank)").value_counts().items():
+            print(f"  {str(k):<24} : {int(v):>5}")
+        print()
+    if "library_class" in out.columns:
+        print("library_class (from NCBI sequencing_tech):")
+        for k, v in out["library_class"].fillna("unknown").value_counts().items():
+            print(f"  {str(k):<24} : {int(v):>5}")
+        print()
+
 
 def main(argv: list[str] | None = None) -> int:
     """CLI entry point — read 3 sources, union, write ``lra_discovery.tsv``."""
@@ -366,6 +443,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="Canonical pool for downloaded GCA + GCF FASTAs.")
     ap.add_argument("--project-k",  type=Path, default=DEFAULT_PROJECT_K,
                     help="Root for resolving metadata.assembly_file (relative paths).")
+    ap.add_argument("--ncbi-meta",  type=Path, default=DEFAULT_NCBI_META,
+                    help="NCBI assembly-metadata cache (lra_ncbi_assembly_meta.tsv).")
     ap.add_argument("--out-tsv",    type=Path, default=DEFAULT_OUT_TSV)
     ap.add_argument("--dry-run",   action="store_true",
                     help="Print counts but don't write the output TSV.")
@@ -375,6 +454,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"norway_tsv : {args.norway_tsv}")
     print(f"metadata   : {args.metadata}")
     print(f"lr_asm_dir : {args.lr_asm_dir}")
+    print(f"ncbi_meta  : {args.ncbi_meta}")
     print(f"out_tsv    : {args.out_tsv}")
 
     audit  = load_audit(args.audit_tsv)
@@ -384,6 +464,7 @@ def main(argv: list[str] | None = None) -> int:
     merged = merge_assemblies(audit, norway, refseq)
     merged = derive_identity_cols(merged)
     merged = derive_scoring(merged, args.lr_asm_dir, args.project_k)
+    merged = merge_ncbi_meta(merged, args.ncbi_meta)
     merged = merged.sort_values("accession_bare_primary").reset_index(drop=True)
     merged = merged[OUTPUT_COLS]
 
