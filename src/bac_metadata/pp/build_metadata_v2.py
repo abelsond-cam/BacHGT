@@ -326,7 +326,7 @@ def ingest_orphan_lras(
 
     # Pull the discovery columns we need onto the orphan list.
     disc_cols = [c for c in (
-        "scoring_accession", "GCA", "GCF", "Sample", "fasta_on_disk",
+        "scoring_accession", "GCA", "GCF", "Sample", "fasta_on_disk", "gff_on_disk",
         "related_lr_run_accession", "source_norway",
         "is_complete", "is_hybrid", "is_reference_genome",
     ) if c in disc.columns]
@@ -392,6 +392,8 @@ def ingest_orphan_lras(
         scaffold["lra_gcf"] = o["GCF"].to_numpy()
     if "lra_assembly_file" in scaffold.columns and "fasta_on_disk" in o.columns:
         scaffold["lra_assembly_file"] = o["fasta_on_disk"].to_numpy()
+    if "lra_gff_file" in scaffold.columns and "gff_on_disk" in o.columns:
+        scaffold["lra_gff_file"] = o["gff_on_disk"].to_numpy()
     if "lr_run_accession" in scaffold.columns and "related_lr_run_accession" in o.columns:
         scaffold["lr_run_accession"] = o["related_lr_run_accession"].to_numpy()
     if "lr_instrument_platform" in scaffold.columns:
@@ -468,6 +470,10 @@ def build_metadata_v2(
 
     # Pre-resolve the LRA-side join columns from the discovery TSV.
     disc = disc.copy()
+    # gff_on_disk is a newer discovery column; default it so v2 still builds
+    # against an older discovery TSV (lra_gff_file just stays empty there).
+    if "gff_on_disk" not in disc.columns:
+        disc["gff_on_disk"] = ""
     disc["_scoring_bare"] = disc["scoring_accession"].map(_bare)
     disc["_lra_final_list"] = disc["scoring_accession"].isin(final_set_accs)
 
@@ -506,7 +512,7 @@ def build_metadata_v2(
     # Bring discovery columns onto matched.
     matched = matched.merge(
         disc[[
-            "scoring_accession", "GCA", "GCF", "fasta_on_disk",
+            "scoring_accession", "GCA", "GCF", "fasta_on_disk", "gff_on_disk",
             "related_lr_run_accession", "_lra_final_list",
             "lr_instrument_platform", "lr_instrument_model",
             *LRA_FLAG_COLUMNS,
@@ -531,6 +537,7 @@ def build_metadata_v2(
         "GCA": "lra_gca",
         "GCF": "lra_gcf",
         "fasta_on_disk": "lra_assembly_file",
+        "gff_on_disk": "lra_gff_file",
         "related_lr_run_accession": "lr_run_accession",
         "lr_instrument_platform": "lr_instrument_platform",
         "lr_instrument_model": "lr_instrument_model",

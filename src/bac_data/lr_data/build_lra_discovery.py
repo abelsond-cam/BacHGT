@@ -69,6 +69,7 @@ DEFAULT_AUDIT_TSV  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_disc
 DEFAULT_NORWAY_TSV = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/norway_tables1_integration.tsv"
 DEFAULT_METADATA   = DATA_ROOT / "david/final/metadata_final_curated_all_samples_and_columns.tsv"
 DEFAULT_LR_ASM_DIR = DATA_ROOT / "david/raw/related_lr/assemblies"
+DEFAULT_LR_GFF_DIR = DATA_ROOT / "david/raw/related_lr/gff"
 DEFAULT_PROJECT_K  = DATA_ROOT                # for resolving metadata.assembly_file
 DEFAULT_OUT_TSV    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
 DEFAULT_NCBI_META  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_ncbi_assembly_meta.tsv"
@@ -111,7 +112,7 @@ OUTPUT_COLS = [
     "source_audit", "source_norway", "source_refseq_metadata",
     "is_norway", "is_refseq", "stale_refseq",
     "level", "library_class", "ncbi_sequencing_tech", "ncbi_assembly_method",
-    "scoring_accession", "expected_fasta_path", "fasta_on_disk", "download_needed",
+    "scoring_accession", "expected_fasta_path", "fasta_on_disk", "gff_on_disk", "download_needed",
 ]
 
 
@@ -259,8 +260,8 @@ def merge_assemblies(audit: pd.DataFrame, norway: pd.DataFrame, refseq: pd.DataF
 
 # ─── DERIVED COLUMNS ──────────────────────────────────────────────────────────
 
-def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path) -> pd.DataFrame:
-    """Add ``scoring_accession``, ``expected_fasta_path``, ``fasta_on_disk``, ``download_needed``.
+def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path, lr_gff_dir: Path) -> pd.DataFrame:
+    """Add ``scoring_accession``, ``expected_fasta_path``, ``fasta_on_disk``, ``gff_on_disk``, ``download_needed``.
 
     Per-row resolution:
       1. Prefer the GCF (RefSeq is the curated version) — try seb path first,
@@ -270,6 +271,12 @@ def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path) -> pd.Da
          ``scoring_accession`` flips to the GCA accession in that case.
       3. If neither has a FASTA on disk, ``scoring_accession`` is left at the
          preferred (GCF if present, else GCA) and ``download_needed=True``.
+
+    ``gff_on_disk`` is resolved independently from ``lr_gff_dir/<acc>.gff``
+    (the pool ``download_lra_gffs.py`` fills), preferring the scoring
+    accession's own annotation, then the GCF (RefSeq), then the GCA — so the
+    GFF tracks file presence just like the FASTA and a later GFF download is
+    picked up on the next re-run.
 
     This means a re-run after downloading the fallback GCA automatically
     picks it up — no manual TSV edits needed for suppressed-GCF rows.
@@ -289,28 +296,41 @@ def derive_scoring(df: pd.DataFrame, lr_asm_dir: Path, project_k: Path) -> pd.Da
             return lr_full
         return ""
 
-    def _resolve(row: pd.Series) -> tuple[str, str, str]:
+    def _try_gff(acc: str) -> str:
+        """Return the on-disk GFF path for ``acc`` in the LR GFF pool, or ''."""
+        if not acc:
+            return ""
+        gff = lr_gff_dir / f"{acc}.gff"
+        return str(gff) if gff.is_file() and gff.stat().st_size > 0 else ""
+
+    def _resolve(row: pd.Series) -> tuple[str, str, str, str]:
         gca, gcf, seb = row["GCA"], row["GCF"], row.get("seb_path", "")
+        scoring = expected = on_disk = ""
         # GCF preferred when present on disk anywhere.
         if gcf:
-            on_disk = _try_path(gcf, seb)
-            if on_disk:
-                return gcf, on_disk, on_disk
+            od = _try_path(gcf, seb)
+            if od:
+                scoring, expected, on_disk = gcf, od, od
         # GCF missing on disk — fall back to GCA if it has a FASTA.
-        if gca:
-            on_disk = _try_path(gca, seb if not gcf else "")
-            if on_disk:
-                return gca, on_disk, on_disk
+        if not scoring and gca:
+            od = _try_path(gca, seb if not gcf else "")
+            if od:
+                scoring, expected, on_disk = gca, od, od
         # Neither on disk: set scoring to preferred (GCF if present, else GCA)
         # and expected_fasta_path under the LR pool, so the downloader queues it.
-        preferred = gcf or gca
-        expected = str(lr_asm_dir / f"{preferred}.fna.gz") if preferred else ""
-        return preferred, expected, ""
+        if not scoring:
+            preferred = gcf or gca
+            scoring = preferred
+            expected = str(lr_asm_dir / f"{preferred}.fna.gz") if preferred else ""
+        # GFF: prefer the shipped accession's own annotation, then GCF, then GCA.
+        gff = _try_gff(scoring) or _try_gff(gcf) or _try_gff(gca)
+        return scoring, expected, on_disk, gff
 
     resolved = df.apply(_resolve, axis=1, result_type="expand")
     df["scoring_accession"]   = resolved[0]
     df["expected_fasta_path"] = resolved[1]
     df["fasta_on_disk"]       = resolved[2]
+    df["gff_on_disk"]         = resolved[3]
     df["download_needed"]     = df["fasta_on_disk"] == ""
     return df
 
@@ -441,6 +461,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--metadata",   type=Path, default=DEFAULT_METADATA)
     ap.add_argument("--lr-asm-dir", type=Path, default=DEFAULT_LR_ASM_DIR,
                     help="Canonical pool for downloaded GCA + GCF FASTAs.")
+    ap.add_argument("--lr-gff-dir", type=Path, default=DEFAULT_LR_GFF_DIR,
+                    help="Canonical pool for downloaded GCA + GCF GFFs (download_lra_gffs.py).")
     ap.add_argument("--project-k",  type=Path, default=DEFAULT_PROJECT_K,
                     help="Root for resolving metadata.assembly_file (relative paths).")
     ap.add_argument("--ncbi-meta",  type=Path, default=DEFAULT_NCBI_META,
@@ -454,6 +476,7 @@ def main(argv: list[str] | None = None) -> int:
     print(f"norway_tsv : {args.norway_tsv}")
     print(f"metadata   : {args.metadata}")
     print(f"lr_asm_dir : {args.lr_asm_dir}")
+    print(f"lr_gff_dir : {args.lr_gff_dir}")
     print(f"ncbi_meta  : {args.ncbi_meta}")
     print(f"out_tsv    : {args.out_tsv}")
 
@@ -463,7 +486,7 @@ def main(argv: list[str] | None = None) -> int:
 
     merged = merge_assemblies(audit, norway, refseq)
     merged = derive_identity_cols(merged)
-    merged = derive_scoring(merged, args.lr_asm_dir, args.project_k)
+    merged = derive_scoring(merged, args.lr_asm_dir, args.project_k, args.lr_gff_dir)
     merged = merge_ncbi_meta(merged, args.ncbi_meta)
     merged = merged.sort_values("accession_bare_primary").reset_index(drop=True)
     merged = merged[OUTPUT_COLS]

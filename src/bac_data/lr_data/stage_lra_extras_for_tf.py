@@ -10,7 +10,9 @@ rsynced as the next batch and deleted afterwards.
 ``lra_assembly_file`` is an absolute on-disk path (the discovery table's
 ``fasta_on_disk``), pointing either at a ``seb/...`` RefSeq genome (is_refseq
 rows) or at ``.../david/raw/related_lr/assemblies/<acc>.fna.gz`` (downloaded LR
-genomes). The reserved ``lra_gff_file`` column is never populated, so GFFs are
+genomes). ``lra_gff_file`` is populated by ``build_metadata_v2`` from the
+discovery ``gff_on_disk`` column, but this stager resolves GFFs independently
+(so it works even before a v2 rebuild): GFFs are
 matched in ``related_lr/gff`` by **bare accession** — the seb FASTA stems carry
 the full NCBI name (``GCF_..._ASM..._genomic``) while ``related_lr/gff`` is
 named by the bare accession, so we match on ``lra_gcf`` / ``lra_gca`` (and the
