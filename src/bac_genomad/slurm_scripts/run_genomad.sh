@@ -9,9 +9,9 @@
 #   3. pixi run python -m bac_genomad.run_genomad prepare
 #      → writes <RDS>/david/processed/genomad/inputs/genomad_inputs.tsv (~90 k rows)
 #
-# Submit (90 k / 100 = ~900 chunks → array indices 0..899 — adjust to the
+# Submit (88,810 / 100 = 889 chunks → array indices 0..888 — adjust to the
 # actual chunk count printed by `prepare`):
-#   sbatch --array=0-899 src/bac_genomad/slurm_scripts/run_genomad.sh
+#   sbatch --array=0-888 src/bac_genomad/slurm_scripts/run_genomad.sh
 #
 # Each task processes 100 assemblies sequentially at ~5 min/genome (8 threads
 # each) → ~8 h per chunk. Resumable: per-sample .genomad.done sentinels skip
@@ -19,6 +19,13 @@
 #
 # After the array finishes, collate on the login node:
 #   pixi run python -m bac_genomad.run_genomad collate
+#
+# Smoke test via a 1-task array against a trimmed inputs TSV (DB + pixi cache
+# stay pinned to the real root; only OUT_DIR/INPUTS/CHUNK_SIZE are overridden):
+#   sbatch --job-name=genomad_smoke --array=0 --time=00:30:00 \
+#     --export=ALL,GENOMAD_OUT_DIR=$G/smoke,GENOMAD_INPUTS=$G/inputs/genomad_inputs.smoke.tsv,GENOMAD_CHUNK_SIZE=3 \
+#     src/bac_genomad/slurm_scripts/run_genomad.sh
+#   (where G=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/genomad)
 
 #SBATCH --job-name=genomad
 #SBATCH --partition=icelake
@@ -36,16 +43,19 @@ set -euo pipefail
 REPO_DIR=${REPO_DIR:-$HOME/workspace/BacHGT}
 PIXI_DIR="$REPO_DIR/src/bac_genomad"     # genomad lives in this env
 RDS=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-OUT_DIR="$RDS/david/processed/genomad"
-INPUTS="$OUT_DIR/inputs/genomad_inputs.tsv"
-DB_DIR="$OUT_DIR/db/genomad_db"
-CHUNK_SIZE=100
+GENOMAD_ROOT="$RDS/david/processed/genomad"   # fixed: DB + pixi env/cache live here
+
+# Overridable for smoke runs via sbatch --export (defaults = the real run):
+OUT_DIR="${GENOMAD_OUT_DIR:-$GENOMAD_ROOT}"
+INPUTS="${GENOMAD_INPUTS:-$OUT_DIR/inputs/genomad_inputs.tsv}"
+DB_DIR="${GENOMAD_DB_DIR:-$GENOMAD_ROOT/db/genomad_db}"
+CHUNK_SIZE="${GENOMAD_CHUNK_SIZE:-100}"
 
 # The geNomad pixi env pulls in TensorFlow (~4–5 GB), too big for the /home
 # quota — env + package cache are detached onto project_k. The env location is
 # pinned in src/bac_genomad/.pixi/config.toml (detached-environments); pin the
 # cache here too so a `pixi run` revalidation never falls back to /home.
-export PIXI_CACHE_DIR="$OUT_DIR/pixi_cache"
+export PIXI_CACHE_DIR="$GENOMAD_ROOT/pixi_cache"
 
 mkdir -p "$OUT_DIR/slurm_logs"
 
