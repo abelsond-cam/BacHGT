@@ -41,6 +41,12 @@ INPUTS="$OUT_DIR/inputs/genomad_inputs.tsv"
 DB_DIR="$OUT_DIR/db/genomad_db"
 CHUNK_SIZE=100
 
+# The geNomad pixi env pulls in TensorFlow (~4–5 GB), too big for the /home
+# quota — env + package cache are detached onto project_k. The env location is
+# pinned in src/bac_genomad/.pixi/config.toml (detached-environments); pin the
+# cache here too so a `pixi run` revalidation never falls back to /home.
+export PIXI_CACHE_DIR="$OUT_DIR/pixi_cache"
+
 mkdir -p "$OUT_DIR/slurm_logs"
 
 CHUNK_IDX="${SLURM_ARRAY_TASK_ID:-0}"

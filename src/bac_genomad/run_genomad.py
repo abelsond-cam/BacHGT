@@ -61,6 +61,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_genomad.genomad_constants import (
+    DATA_ROOT,
     DEFAULT_CHUNK_SIZE,
     DEFAULT_DB_DIR,
     DEFAULT_INPUTS_TSV,
@@ -72,11 +73,19 @@ from bac_genomad.genomad_constants import (
 
 # ─── PREPARE ──────────────────────────────────────────────────────────────────
 
-def _exists_on_disk(path: object) -> bool:
-    """True if ``path`` is a non-null string pointing at an existing file."""
+def _resolve(path: object) -> Path | None:
+    """Resolve a metadata path to an existing absolute file, else ``None``.
+
+    metadata_v2 stores ``lra_assembly_file`` as absolute paths but
+    ``assembly_file`` (SR) relative to the RDS ``DATA_ROOT``. Relative paths are
+    joined onto ``DATA_ROOT``; the result is returned only if it is a real file.
+    """
     if path is None or pd.isna(path):
-        return False
-    return Path(str(path)).is_file()
+        return None
+    p = Path(str(path))
+    if not p.is_absolute():
+        p = DATA_ROOT / p
+    return p if p.is_file() else None
 
 
 def cmd_prepare(args: argparse.Namespace) -> int:
@@ -87,27 +96,28 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     df = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
     print(f"metadata_v2 rows: {len(df):,}")
 
-    has_lra = df["lra_assembly_file"].map(_exists_on_disk)
-    has_sr  = df["assembly_file"].map(_exists_on_disk)
+    df["_lra_path"] = df["lra_assembly_file"].map(_resolve)
+    df["_sr_path"]  = df["assembly_file"].map(_resolve)
+    has_lra = df["_lra_path"].notna()
+    has_sr  = df["_sr_path"].notna()
     print(f"  rows with lra_assembly_file on disk: {int(has_lra.sum()):,}")
     print(f"  rows with assembly_file (SR) on disk: {int(has_sr.sum()):,}")
     print(f"  rows with BOTH (paired): {int((has_lra & has_sr).sum()):,}")
 
     rows: list[dict] = []
 
-    lra_df = df.loc[has_lra, ["Sample", "lra_assembly_file"]].copy()
-    for sample, fp in lra_df.itertuples(index=False):
-        rows.append({"Sample": sample, "fasta_path": str(fp), "source": "lra"})
+    for sample, p in df.loc[has_lra, ["Sample", "_lra_path"]].itertuples(index=False):
+        rows.append({"Sample": sample, "fasta_path": str(p), "source": "lra"})
 
     sr_only_mask = has_sr & ~has_lra
-    for sample, fp in df.loc[sr_only_mask, ["Sample", "assembly_file"]].itertuples(index=False):
-        rows.append({"Sample": sample, "fasta_path": str(fp), "source": "sr"})
+    for sample, p in df.loc[sr_only_mask, ["Sample", "_sr_path"]].itertuples(index=False):
+        rows.append({"Sample": sample, "fasta_path": str(p), "source": "sr"})
 
     paired_mask = has_sr & has_lra
-    for sample, fp in df.loc[paired_mask, ["Sample", "assembly_file"]].itertuples(index=False):
+    for sample, p in df.loc[paired_mask, ["Sample", "_sr_path"]].itertuples(index=False):
         rows.append({
             "Sample": f"{sample}{SR_PAIRED_SUFFIX}",
-            "fasta_path": str(fp),
+            "fasta_path": str(p),
             "source": "sr_paired",
         })
 

@@ -22,6 +22,19 @@ Flat package — one CLI module. Runs in this subpackage's own pixi env
 geNomad's bioconda toolchain (MMseqs2, ARAGORN, neural-net weights) would
 perturb library deps.
 
+**HPC env placement (important):** geNomad depends on **TensorFlow** (its NN
+classifier), making the env ~4–5 GB — too big for the `/home` quota where pixi
+installs by default. On the HPC the env + package cache are **detached onto
+project_k**:
+- `src/bac_genomad/.pixi/config.toml` (git-ignored, HPC-only absolute path) sets
+  `detached-environments = ".../david/processed/genomad/pixi_env"`.
+- `PIXI_CACHE_DIR=.../david/processed/genomad/pixi_cache` (same filesystem so
+  packages hardlink) — exported in `slurm_scripts/run_genomad.sh`; export it too
+  for any manual `pixi install` / `pixi run` on the login node.
+
+On the local Mac, pixi installs to the default home location as usual (the
+`.pixi/config.toml` is not committed).
+
 | Module | Purpose |
 |---|---|
 | `genomad_constants.py` | Default paths (metadata_v2, output root, DB dir), chunk size, threads, `SR_PAIRED_SUFFIX` |
