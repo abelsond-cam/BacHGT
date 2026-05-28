@@ -30,8 +30,8 @@ import pandas as pd
 # ─── PATHS ────────────────────────────────────────────────────────────────────
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
-DEFAULT_DISCOVERY = DATA_ROOT / "david/processed/lra_discovery.tsv"
-DEFAULT_OUT_DIR   = DATA_ROOT / "david/processed"
+DEFAULT_DISCOVERY = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
+DEFAULT_OUT_DIR   = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery"
 
 
 def _missing_subset(disc: pd.DataFrame, kind: str) -> pd.DataFrame:

@@ -42,7 +42,7 @@ fi
 
 # ---------------- User-editable settings ----------------
 BASE=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-TSV="${BASE}/david/processed/lra_download_gca_missing.tsv"
+TSV="${BASE}/david/processed/complete_vs_sr_genomes/lr_discovery/lra_download_gca_missing.tsv"
 OUT_DIR="${BASE}/david/raw/related_lr"
 WORKERS=6
 MAX_ROUNDS=5

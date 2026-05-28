@@ -70,7 +70,7 @@ from bac_data.lr_data.norway_cohort_audit import (
 # the real path; locally point --metadata at the Weimann mirror.
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david")
 DEFAULT_METADATA = DATA_ROOT / "final" / "metadata_final_curated_all_samples_and_columns.tsv"
-DEFAULT_OUT_DIR = DATA_ROOT / "processed"
+DEFAULT_OUT_DIR = DATA_ROOT / "processed" / "complete_vs_sr_genomes" / "lr_discovery"
 SIDE_CSV_NAME = "related_lr_run_accessions.csv"
 
 # ─── COLUMNS ──────────────────────────────────────────────────────────────────

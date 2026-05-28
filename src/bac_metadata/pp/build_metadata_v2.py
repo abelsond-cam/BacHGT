@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Build metadata_v2: unified assembly-keyed cohort (Phase G.1).
 
-Reads metadata_v1 + ``lra_final_set.tsv`` + ``lra_discovery.tsv`` and emits
+Reads metadata_v1 + ``lra_final_list.tsv`` + ``lra_discovery.tsv`` and emits
 ``metadata_v2_all_samples_and_columns.tsv`` — the canonical metadata table
 where:
 
 - ``Sample`` is the **assembly key**: GCF/GCA where an LRA exists in
-  ``lra_final_set.tsv``, SR BioSample where not.
-- ``lra_final_set`` (bool) is the headline quality flag. Replaces both
+  ``lra_final_list.tsv``, SR BioSample where not.
+- ``lra_final_list`` (bool) is the headline quality flag. Replaces both
   ``is_complete`` (dropped; NCBI ``assembly_level`` is unreliable) and
   ``is_refseq`` (dropped; encoded in ``Sample.startswith("GCF_")``).
 - LRA-derived columns sit alongside SR-derived columns (``lra_gca``,
@@ -64,8 +64,8 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V1   = DATA_ROOT / "david/final/metadata_final_curated_all_samples_and_columns.tsv"
-DEFAULT_DISCOVERY     = DATA_ROOT / "david/processed/lra_discovery.tsv"
-DEFAULT_FINAL_SET     = DATA_ROOT / "david/processed/lra_final_set.tsv"
+DEFAULT_DISCOVERY     = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
+DEFAULT_FINAL_SET     = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lra_final_list.tsv"
 DEFAULT_LR_RUNS_CSV   = DATA_ROOT / "david/final/related_lr_run_accessions.csv"
 DEFAULT_TABLE_S1      = DATA_ROOT / "david/raw/Norway_Complete_Genomes_Fig1.xlsx"
 DEFAULT_OUT_DIR       = DATA_ROOT / "david/final"
@@ -79,7 +79,7 @@ _RUN_RE = re.compile(r"^(?:SRR|ERR|DRR)\d+$")
 
 # New columns added by metadata_v2. Order matters for the output header.
 NEW_LRA_COLUMNS = [
-    "lra_final_set",
+    "lra_final_list",
     "lra_gca",
     "lra_gcf",
     "lra_assembly_file",
@@ -383,7 +383,7 @@ def ingest_orphan_lras(
         scaffold["lr_instrument_platform"] = o["lr_instrument_platform"].to_numpy()
     if "lr_instrument_model" in scaffold.columns:
         scaffold["lr_instrument_model"] = o["lr_instrument_model"].to_numpy()
-    scaffold["lra_final_set"] = True
+    scaffold["lra_final_list"] = True
     scaffold["kleborate_needs_recall"] = True
     scaffold["isescan_needs_recall"] = True
     if "_was_v1_is_refseq" in v2_columns:
@@ -450,7 +450,7 @@ def build_metadata_v2(
     # Pre-resolve the LRA-side join columns from the discovery TSV.
     disc = disc.copy()
     disc["_scoring_bare"] = disc["scoring_accession"].map(_bare)
-    disc["_lra_final_set"] = disc["scoring_accession"].isin(final_set_accs)
+    disc["_lra_final_list"] = disc["scoring_accession"].isin(final_set_accs)
 
     # Pull LR-run platform info from related_lr_run_accessions.csv.
     if lr_runs is not None and not lr_runs.empty:
@@ -488,7 +488,7 @@ def build_metadata_v2(
     matched = matched.merge(
         disc[[
             "scoring_accession", "GCA", "GCF", "fasta_on_disk",
-            "related_lr_run_accession", "_lra_final_set",
+            "related_lr_run_accession", "_lra_final_list",
             "lr_instrument_platform", "lr_instrument_model",
         ]],
         on="scoring_accession", how="left",
@@ -498,7 +498,7 @@ def build_metadata_v2(
     for col in NEW_LRA_COLUMNS:
         if col not in v2.columns:
             v2[col] = pd.NA
-    v2["lra_final_set"] = False
+    v2["lra_final_list"] = False
     v2["kleborate_needs_recall"] = False
     v2["isescan_needs_recall"] = False
 
@@ -524,7 +524,7 @@ def build_metadata_v2(
             val = m.get(src, "")
             if pd.notna(val) and str(val) != "":
                 v2.at[idx, dst] = val
-        v2.at[idx, "lra_final_set"] = bool(m["_lra_final_set"])
+        v2.at[idx, "lra_final_list"] = bool(m["_lra_final_list"])
         v2.at[idx, "kleborate_needs_recall"] = True
         v2.at[idx, "isescan_needs_recall"] = True
 
@@ -567,7 +567,7 @@ def build_metadata_v2(
     # the canonical LR-run column going forward.
 
     # ── 6. Ingest orphan LRAs as new pure-LR rows (G.1.1).
-    # Only ingest orphans that are in lra_final_set (the accepted cohort).
+    # Only ingest orphans that are in lra_final_list (the accepted cohort).
     accepted_orphans = orphans[orphans["scoring_accession"].isin(final_set_accs)].copy() if len(orphans) else orphans
     stats["n_orphans_in_final_set"] = len(accepted_orphans)
     residual = pd.DataFrame()
@@ -586,7 +586,7 @@ def build_metadata_v2(
 
     # ── 7. Finalize: validate Sample uniqueness on LRA-bearing rows, sort, etc.
     stats["v2_rows"] = len(v2)
-    stats["lra_final_set_count"] = int(_coerce_bool(v2["lra_final_set"]).sum())
+    stats["lra_final_list_count"] = int(_coerce_bool(v2["lra_final_list"]).sum())
     # metadata_v1 already has many duplicate Sample values for SR-only rows (same
     # BioSample, multiple ENA runs). Count them separately from LRA-bearing
     # duplicates: only the LRA case is a logic bug.
@@ -596,7 +596,7 @@ def build_metadata_v2(
     lra_rows = v2[is_lra_sample]
     stats["sample_duplicate_count_lra"] = int(lra_rows["Sample"].duplicated().sum())
     stats["paired_sr_lra_count"] = int(
-        (_coerce_bool(v2["lra_final_set"]) & v2.get("run_accession", pd.Series([pd.NA] * len(v2))).notna()).sum()
+        (_coerce_bool(v2["lra_final_list"]) & v2.get("run_accession", pd.Series([pd.NA] * len(v2))).notna()).sum()
     )
 
     v2 = v2.sort_values("Sample", kind="stable").reset_index(drop=True)
@@ -609,14 +609,14 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
     """Verification breakdowns: row categories + v1↔v2 column delta + sample rows.
 
     Computes the SR-only / LR-only / paired counts, breaks them down by
-    ``kpsc_final_list`` if present, cross-tabulates v2's ``lra_final_set``
+    ``kpsc_final_list`` if present, cross-tabulates v2's ``lra_final_list``
     against v1's ``is_refseq`` flag (joined by the LR-bearing row's
     sample_accession → v1 row), and shows a few sample rows from each
     category so the headline column changes (old kept, old dropped, new
     added) are easy to eyeball.
     """
     print("\n=== v2 row breakdown ===")
-    lra = _coerce_bool(v2["lra_final_set"])
+    lra = _coerce_bool(v2["lra_final_list"])
     run_acc_str = v2.get("run_accession", pd.Series([pd.NA] * len(v2))).astype(str).fillna("")
     has_sr_run = (run_acc_str != "") & (run_acc_str.str.lower() != "nan")
 
@@ -646,9 +646,9 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
 
     if "_was_v1_is_refseq" in v2.columns:
         was_refseq = _coerce_bool(v2["_was_v1_is_refseq"])
-        print("\n=== v2.lra_final_set × v1.is_refseq cross-table ===")
+        print("\n=== v2.lra_final_list × v1.is_refseq cross-table ===")
         print("                          v1.is_refseq=True    v1.is_refseq=False")
-        for lflag, label in ((True, "v2.lra_final_set=True "), (False, "v2.lra_final_set=False")):
+        for lflag, label in ((True, "v2.lra_final_list=True "), (False, "v2.lra_final_list=False")):
             mask = (lra == lflag)
             n_true  = int((mask & was_refseq).sum())
             n_false = int((mask & ~was_refseq).sum())
@@ -667,8 +667,8 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
     print(f"  added in v2     ({len(added)}): {added}")
     print(f"  kept            ({len(kept)} cols; first 20): {kept[:20]} ...")
 
-    # "Neither" rows: no SR run AND not in lra_final_set. Usually is_refseq=True
-    # rows whose GCF/GCA wasn't in lra_final_set (CheckM2-rejected, suppressed, etc.).
+    # "Neither" rows: no SR run AND not in lra_final_list. Usually is_refseq=True
+    # rows whose GCF/GCA wasn't in lra_final_list (CheckM2-rejected, suppressed, etc.).
     neither_mask = (~lra) & ~has_sr_run
     if int(neither_mask.sum()) > 0 and "_was_v1_is_refseq" in v2.columns:
         n_was_refseq = int((neither_mask & _coerce_bool(v2["_was_v1_is_refseq"])).sum())
@@ -679,7 +679,7 @@ def _print_v2_diagnostics(v2: pd.DataFrame, v1_meta: pd.DataFrame) -> None:
     print("\n=== Sample rows: 3 per category ===")
     show_cols = [c for c in (
         "Sample", "sample_accession", "sr_biosample", "run_accession",
-        "lr_run_accession", "lra_final_set", "lra_gca", "lra_gcf",
+        "lr_run_accession", "lra_final_list", "lra_gca", "lra_gcf",
         "host", "country", "isolation_source", "collection_date",
         "kpsc_final_list",
     ) if c in v2.columns]
@@ -706,14 +706,14 @@ def _print_stats(stats: dict) -> None:
 
     print("\n=== Merges + ingestion ===")
     print(f"  n_orphans (unmatched LRAs)     : {stats.get('n_orphans', 0)}")
-    print(f"    in lra_final_set              : {stats.get('n_orphans_in_final_set', 0)}  (expected ~124)")
+    print(f"    in lra_final_list              : {stats.get('n_orphans_in_final_set', 0)}  (expected ~124)")
     print(f"    ingested as pure-LR rows      : {stats.get('n_orphans_ingested', 0)}")
     print(f"    residual (no Norway-S1 match) : {stats.get('n_orphans_residual', 0)}  (expected ~0; informational)")
     print(f"  n_sr_refseq_pairs merged       : {stats.get('n_sr_refseq_pairs', 0)}  (expected ~957)")
 
     print("\n=== Final v2 ===")
     print(f"  v2 rows                   : {stats.get('v2_rows', 0)}  (expected ~87,494)")
-    print(f"  lra_final_set=True        : {stats.get('lra_final_set_count', 0)}  (expected 5,521)")
+    print(f"  lra_final_list=True        : {stats.get('lra_final_list_count', 0)}  (expected 5,521)")
     print(f"  paired SR+LR rows         : {stats.get('paired_sr_lra_count', 0)}  (expected ~5,400; excludes pure-LR orphans)")
     # SR-only-rows can have duplicate Sample (same BioSample, multiple ENA runs) —
     # inherited from metadata_v1, not a logic bug. Only LRA-bearing duplicates matter.

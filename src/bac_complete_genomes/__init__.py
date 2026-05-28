@@ -3,7 +3,7 @@
 Two comparison modes share the same Kleborate / ISEScan parsing logic:
 
 - :mod:`bac_complete_genomes.per_clonal_group` — cross-section: complete-genome
-  cohort (``lra_final_set=True``) vs short-read cohort, **different samples in
+  cohort (``lra_final_list=True``) vs short-read cohort, **different samples in
   each arm**, per clonal group. Reports p-value-sorted enrichment / penetrance
   tables and the BSC heatmaps.
 

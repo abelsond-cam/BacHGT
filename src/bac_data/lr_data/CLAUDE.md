@@ -88,7 +88,7 @@ solely-refseq rows are the genuinely-orphaned flags.
 
 ## Single source of truth: `lra_discovery.tsv`
 
-At `<RDS>/david/processed/lra_discovery.tsv`. One row per biological assembly.
+At `<RDS>/david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv`. One row per biological assembly.
 Built by `build_lra_discovery.py` (pure-local merge of the three sources;
 re-runnable in <60 s). CheckM2 results join back onto it via
 `annotate_checkm2.py`. The Phase C notebook and Phase E selector both consume
@@ -150,7 +150,11 @@ thresholds from the RefSeq empirical distribution in `lra_discovery.tsv`.
 convergence-retry loop), `norway_cohort_audit.py` (shared NCBI helpers),
 `find_related_run_accessions.py`, `resolve_sr_partner_biosamples.py`,
 `fix_related_lr_accession.py`, `clean_find_long_reads_appended.py`,
-`stage_sr_for_related_lr.py`.
+`stage_sr_for_related_lr.py` (stages the SR side into
+`staging_for_tf/{assemblies,gff}`), `stage_lra_extras_for_tf.py` (companion that
+stages the LR assemblies — every v2 `lra_assembly_file` + its `related_lr` GFF —
+into the separate `staging_for_tf/lra/{assemblies,gff}` section for the next
+transfer batch).
 
 `norway_tables1_integrate.py`, `related_lr_complete_assembly_audit.py`, and
 `download_related_lr_complete_genomes.py` all import NCBI helpers

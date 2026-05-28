@@ -58,6 +58,7 @@ TABLE_S1="${BASE}/david/raw/Norway_Complete_Genomes_Fig1.xlsx"
 FULL_METADATA="${BASE}/david/final/metadata_final_curated_all_samples_and_columns.tsv"
 ASSEMBLIES_DIR="${BASE}/david/raw/related_lr/assemblies"
 GFF_DIR="${BASE}/david/raw/related_lr/gff"
+OUT_DIR="${BASE}/david/processed/complete_vs_sr_genomes/lr_discovery"
 DATASETS_CMD="micromamba run -n ncbi-datasets datasets"
 WORKERS=4
 # -------------------------------------------------------
@@ -80,9 +81,12 @@ fi
 
 mkdir -p "${ASSEMBLIES_DIR}" "${GFF_DIR}"
 
+mkdir -p "${OUT_DIR}"
+
 uv run python -u -m bac_data.lr_data.norway_tables1_integrate \
   --table-s1 "${TABLE_S1}" \
   --metadata "${FULL_METADATA}" \
+  --out-dir "${OUT_DIR}" \
   --workers "${WORKERS}" \
   --augment --write-back \
   --download \

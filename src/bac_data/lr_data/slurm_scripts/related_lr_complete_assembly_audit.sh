@@ -44,7 +44,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # ---------------- User-editable settings ----------------
 BASE=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
 METADATA="${BASE}/david/final/metadata_final_curated_all_samples_and_columns.tsv"
-OUT_DIR="${BASE}/david/processed"
+OUT_DIR="${BASE}/david/processed/complete_vs_sr_genomes/lr_discovery"
 # -------------------------------------------------------
 
 echo "========================================================================"

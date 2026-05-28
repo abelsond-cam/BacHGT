@@ -31,7 +31,7 @@ Usage
 ─────
     uv run python src/bac_data/gca_to_gcf_lookup.py
         [--input PATH]    # default: <DATA_ROOT>/processed/ena_sample_assembly_lookup.tsv
-        [--output PATH]   # default: <DATA_ROOT>/processed/refseq_lr_assembly_lookup.tsv
+        [--output PATH]   # default: <DATA_ROOT>/processed/complete_vs_sr_genomes/lr_discovery/refseq_lr_assembly_lookup.tsv
         [--batch N]       # default: 100
 
 The output TSV is the input TSV plus these new columns:
@@ -76,7 +76,7 @@ import requests
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david")
 DEFAULT_INPUT = DATA_ROOT / "processed" / "ena_sample_assembly_lookup.tsv"
-DEFAULT_OUTPUT = DATA_ROOT / "processed" / "refseq_lr_assembly_lookup.tsv"
+DEFAULT_OUTPUT = DATA_ROOT / "processed" / "complete_vs_sr_genomes" / "lr_discovery" / "refseq_lr_assembly_lookup.tsv"
 
 NCBI_DATASETS = "https://api.ncbi.nlm.nih.gov/datasets/v2/genome/accession"
 DEFAULT_BATCH = 100

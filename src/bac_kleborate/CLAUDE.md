@@ -36,7 +36,7 @@ source data + the LRA-cohort runner.
 ## LRA-cohort Kleborate runner (Phase G.2)
 
 `run_kleborate_lra.py` runs Kleborate v3 (`-p kpsc`) over every assembly in
-`metadata_v2` where `lra_final_set=True` (~5,521 genomes). Designed as a
+`metadata_v2` where `lra_final_list=True` (~5,521 genomes). Designed as a
 Slurm-array job — three subcommands:
 
 | Subcommand | Where | Purpose |
@@ -67,7 +67,7 @@ uv run python -m bac_metadata.pp.merge_kleborate_into_metadata_v2
 ```
 
 The cascade updates `species`, `is_kpsc`, and `kpsc_final_list` on every
-`lra_final_set=True` row (full detail in
+`lra_final_list=True` row (full detail in
 `src/bac_metadata/pp/merge_kleborate_into_metadata_v2.py`).
 
 ## Consumers

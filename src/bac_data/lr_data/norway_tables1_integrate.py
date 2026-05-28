@@ -100,6 +100,9 @@ TABLE_S1_DEFAULT = Path(
 )
 TABLE_S1_SHEET = "Table S1"
 
+# Canonical home for the integration TSV + discrepancy/changes sidecars.
+DEFAULT_OUT_DIR = DEFAULT_METADATA.parent.parent / "processed" / "complete_vs_sr_genomes" / "lr_discovery"
+
 # Related-run side CSVs live next to the curated metadata.
 RELATED_SR_CSV = "related_sr_run_accessions.csv"
 RELATED_LR_CSV = "related_lr_run_accessions.csv"
@@ -856,7 +859,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    out_dir = args.out_dir or args.metadata.parent / "processed"
+    out_dir = args.out_dir or DEFAULT_OUT_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
     assemblies_dir = args.assemblies_dir or out_dir / "related_lr" / "assemblies"
     gff_dir = args.gff_dir or out_dir / "related_lr" / "gff"

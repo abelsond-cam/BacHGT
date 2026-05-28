@@ -65,12 +65,12 @@ import pandas as pd
 # ─── PATHS ────────────────────────────────────────────────────────────────────
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
-DEFAULT_AUDIT_TSV  = DATA_ROOT / "david/processed/related_lr_complete_assembly_audit.tsv"
-DEFAULT_NORWAY_TSV = DATA_ROOT / "david/processed/norway_tables1_integration.tsv"
+DEFAULT_AUDIT_TSV  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/related_lr_complete_assembly_audit.tsv"
+DEFAULT_NORWAY_TSV = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/norway_tables1_integration.tsv"
 DEFAULT_METADATA   = DATA_ROOT / "david/final/metadata_final_curated_all_samples_and_columns.tsv"
 DEFAULT_LR_ASM_DIR = DATA_ROOT / "david/raw/related_lr/assemblies"
 DEFAULT_PROJECT_K  = DATA_ROOT                # for resolving metadata.assembly_file
-DEFAULT_OUT_TSV    = DATA_ROOT / "david/processed/lra_discovery.tsv"
+DEFAULT_OUT_TSV    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
 
 # Sample column → bare GCA/GCF accession. Same regex as prep_checkm2_inputs.
 _ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")

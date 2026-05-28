@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply the locked LRA acceptance rule → emit ``lra_final_set.tsv`` + ``lra_rejected.tsv``.
+"""Apply the locked LRA acceptance rule → emit ``lra_final_list.tsv`` + ``lra_rejected.tsv``.
 
 build_lra_set.py
 ----------------
@@ -16,11 +16,11 @@ Locked rule (2026-05-25):
 
 Outputs (both keyed on ``scoring_accession``)::
 
-    <out-dir>/lra_final_set.tsv  accepted set  (expected: 5,521 rows)
-    <out-dir>/lra_rejected.tsv   rejected set with `reason` column (expected: 36)
+    <out-dir>/lra_final_list.tsv             accepted set  (expected: 5,521 rows)
+    <out-dir>/lr_discovery/lra_rejected.tsv  rejected set with `reason` column (expected: 36)
 
-Output filename ``lra_final_set.tsv`` is the canonical name (matches the
-``lra_final_set`` boolean column on metadata_v2). An older run wrote
+Output filename ``lra_final_list.tsv`` is the canonical name (matches the
+``lra_final_list`` boolean column on metadata_v2). An older run wrote
 ``lra_set.tsv``; that file is superseded.
 
 The two TSVs are partitioned, not deduplicated — each row in
@@ -46,8 +46,8 @@ import pandas as pd
 # ─── PATHS ────────────────────────────────────────────────────────────────────
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
-DEFAULT_DISCOVERY = DATA_ROOT / "david/processed/lra_discovery.tsv"
-DEFAULT_OUT_DIR   = DATA_ROOT / "david/processed"
+DEFAULT_DISCOVERY = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
+DEFAULT_OUT_DIR   = DATA_ROOT / "david/processed/complete_vs_sr_genomes"
 
 # ─── LOCKED THRESHOLDS (match `lra_quality_cutoffs.ipynb` §8) ────────────────
 
@@ -57,7 +57,7 @@ MAX_CONTAMINATION = 5.0    # %   — MIGS / GTDB threshold (Bowers 2017)
 
 # ─── OUTPUT SCHEMA ────────────────────────────────────────────────────────────
 
-# Columns shared by both lra_final_set.tsv and lra_rejected.tsv. ``accept_reason`` is
+# Columns shared by both lra_final_list.tsv and lra_rejected.tsv. ``accept_reason`` is
 # the last column; for the accepted set it is "accept" everywhere.
 OUTPUT_COLS = [
     # identity
@@ -164,8 +164,9 @@ def main(argv: list[str] | None = None) -> int:
     rejected = rejected[cols].sort_values(["accept_reason", "scoring_accession"]).reset_index(drop=True)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    out_accepted = args.out_dir / "lra_final_set.tsv"
-    out_rejected = args.out_dir / "lra_rejected.tsv"
+    out_accepted = args.out_dir / "lra_final_list.tsv"
+    out_rejected = args.out_dir / "lr_discovery" / "lra_rejected.tsv"
+    out_rejected.parent.mkdir(parents=True, exist_ok=True)
 
     # Back up any existing copies first so the run is non-destructive.
     ts = _dt.datetime.now(_dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")

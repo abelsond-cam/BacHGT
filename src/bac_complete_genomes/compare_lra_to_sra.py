@@ -712,10 +712,10 @@ DEFAULT_METADATA_V2 = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv"
 )
 DEFAULT_SR_SHADOW = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/sr_shadow_for_lra.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv"
 )
 DEFAULT_PAIRED_OUT = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/lra_vs_sr_comparison.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/lra_vs_sr_comparison.tsv"
 )
 
 
@@ -883,7 +883,7 @@ def _run_paired_mode(args: argparse.Namespace) -> None:
     print(f"  rows: {len(shadow):,}")
 
     # Filter to LRA-bearing rows with sr_biosample, then inner-join with shadow.
-    lra = meta["lra_final_set"].astype(str).str.lower().isin({"true", "1", "yes"})
+    lra = meta["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
     paired_meta = meta[lra & meta["sr_biosample"].notna()].copy()
     paired_meta["sr_biosample"] = paired_meta["sr_biosample"].astype(str)
     shadow["sr_biosample"] = shadow["sr_biosample"].astype(str)

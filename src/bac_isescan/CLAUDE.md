@@ -30,7 +30,7 @@ annotation (bioconda pixi env)** below.
 | `isescan_lineage_panaroo_hotspots.py` | Per-lineage hotspots grouped by **(Panaroo cluster, IS family)** — recurrence test against the family-conditioned uniform-over-clusters null + Kleborate left-join |
 | `isescan_lineage_kleborate_hotspots.py` | Pivot of the same flank events onto **(Kleborate label, IS family)** — virulence genes + AMR drug classes (descriptive; no enrichment test) |
 | `annotate_kleborate_isescan.py` | Batch-run Kleborate + ISEScan over staged genome sets (`sr`/`gca`/`gcf`) for the SR-vs-complete discrepancy analysis; **bioconda pixi env**, see below |
-| `run_isescan_lra.py` | **Phase G.2 ISEScan runner over the LRA cohort** (`metadata_v2.lra_final_set=True`). `prepare`/`worker`/`collate` subcommands, Slurm array, resumable per-sample sentinels. Uses the same pixi env as `annotate_kleborate_isescan.py` |
+| `run_isescan_lra.py` | **Phase G.2 ISEScan runner over the LRA cohort** (`metadata_v2.lra_final_list=True`). `prepare`/`worker`/`collate` subcommands, Slurm array, resumable per-sample sentinels. Uses the same pixi env as `annotate_kleborate_isescan.py` |
 
 ## Genome annotation (bioconda pixi env)
 

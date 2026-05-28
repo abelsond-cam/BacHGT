@@ -47,7 +47,7 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2  = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
-DEFAULT_LRA_FINAL_SET = DATA_ROOT / "david/processed/lra_final_set.tsv"
+DEFAULT_LRA_FINAL_SET = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lra_final_list.tsv"
 DEFAULT_SR_KLEBORATE = DATA_ROOT / "seb/sr_kleborate_v3.2.4.tsv"
 DEFAULT_SR_ISESCAN   = DATA_ROOT / "seb/sr_isescan_family_counts.tsv"
 DEFAULT_OUT_DIR      = DATA_ROOT / "david/processed/complete_vs_sr_genomes"
@@ -119,25 +119,25 @@ def _kleborate_feature_cols(df_cols: list[str]) -> list[str]:
 
 def build_paired_index(
     v2: pd.DataFrame,
-    lra_final_set: pd.DataFrame,
+    lra_final_list: pd.DataFrame,
 ) -> tuple[pd.DataFrame, dict]:
     """One row per paired SR+LR sample with per-LRA metadata for cohort filtering.
 
-    Join: ``v2.Sample`` ↔ ``lra_final_set.scoring_accession`` (both
+    Join: ``v2.Sample`` ↔ ``lra_final_list.scoring_accession`` (both
     versioned GCF/GCA accessions).
     """
-    stats: dict = {"v2_rows": len(v2), "lra_final_set_rows": len(lra_final_set)}
+    stats: dict = {"v2_rows": len(v2), "lra_final_list_rows": len(lra_final_list)}
 
     # Select paired rows from v2.
-    lra_mask = _coerce_bool(v2["lra_final_set"])
+    lra_mask = _coerce_bool(v2["lra_final_list"])
     biosample = v2["sr_biosample"].astype(str)
     paired_mask = lra_mask & v2["sr_biosample"].notna() & (biosample != "") & (biosample.str.lower() != "nan")
     paired_v2 = v2.loc[paired_mask].copy()
     stats["paired_rows"] = len(paired_v2)
 
-    # Build the LRA-side join frame from lra_final_set.
-    lra_cols = ["scoring_accession"] + [c for c in PAIRED_INDEX_LRA_FINAL_SET_COLS if c in lra_final_set.columns]
-    lra_slice = lra_final_set[lra_cols].drop_duplicates("scoring_accession", keep="first").copy()
+    # Build the LRA-side join frame from lra_final_list.
+    lra_cols = ["scoring_accession"] + [c for c in PAIRED_INDEX_LRA_FINAL_SET_COLS if c in lra_final_list.columns]
+    lra_slice = lra_final_list[lra_cols].drop_duplicates("scoring_accession", keep="first").copy()
 
     # Rename to lra_<col> to keep namespaces clean in the output.
     rename_lra = {c: f"lra_{c}" for c in lra_cols if c != "scoring_accession"}
@@ -155,8 +155,8 @@ def build_paired_index(
         how="left",
     )
     n_matched = int(merged["scoring_accession"].notna().sum())
-    stats["paired_with_lra_final_set_match"]    = n_matched
-    stats["paired_without_lra_final_set_match"] = len(merged) - n_matched
+    stats["paired_with_lra_final_list_match"]    = n_matched
+    stats["paired_without_lra_final_list_match"] = len(merged) - n_matched
 
     # Compose the final paired_index columns.
     v2_cols = [c for c in PAIRED_INDEX_V2_COLS if c in merged.columns]
@@ -256,7 +256,7 @@ def main(argv: list[str] | None = None) -> int:
     """CLI entry: build paired_index + lra_features + sr_features."""
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--metadata-v2",      type=Path, default=DEFAULT_METADATA_V2)
-    ap.add_argument("--lra-final-set",    type=Path, default=DEFAULT_LRA_FINAL_SET)
+    ap.add_argument("--lra-final-list",   type=Path, default=DEFAULT_LRA_FINAL_SET)
     ap.add_argument("--sr-kleborate",     type=Path, default=DEFAULT_SR_KLEBORATE)
     ap.add_argument("--sr-isescan",       type=Path, default=DEFAULT_SR_ISESCAN)
     ap.add_argument("--out-dir",          type=Path, default=DEFAULT_OUT_DIR)
@@ -266,15 +266,15 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     print(f"metadata_v2      : {args.metadata_v2}")
-    print(f"lra_final_set    : {args.lra_final_set}")
+    print(f"lra_final_list    : {args.lra_final_list}")
     if not args.paired_index_only:
         print(f"sr_kleborate     : {args.sr_kleborate}")
         print(f"sr_isescan       : {args.sr_isescan}")
     print(f"out_dir          : {args.out_dir}")
 
     v2  = pd.read_csv(args.metadata_v2,   sep="\t", low_memory=False)
-    lra = pd.read_csv(args.lra_final_set, sep="\t", low_memory=False)
-    print(f"\nv2 rows: {len(v2):,}    lra_final_set rows: {len(lra):,}")
+    lra = pd.read_csv(args.lra_final_list, sep="\t", low_memory=False)
+    print(f"\nv2 rows: {len(v2):,}    lra_final_list rows: {len(lra):,}")
 
     # === paired_index.tsv (always built first) ===
     paired_index, idx_stats = build_paired_index(v2, lra)

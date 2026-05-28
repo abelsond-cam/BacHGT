@@ -4,7 +4,7 @@
 Mirror of :mod:`bac_kleborate.run_kleborate_lra` for ISEScan. Three
 subcommands designed for a Slurm-array launch pattern:
 
-  prepare — read ``metadata_v2``, filter to ``lra_final_set=True``, write
+  prepare — read ``metadata_v2``, filter to ``lra_final_list=True``, write
             ``isescan_inputs.tsv`` (one row per LRA: ``Sample``,
             ``fasta_path``). Pure-local, ~5 s.
 
@@ -79,7 +79,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
 
-    lra_mask = df["lra_final_set"].astype(str).str.lower().isin({"true", "1", "yes"})
+    lra_mask = df["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
     lra = df.loc[lra_mask, ["Sample", "lra_assembly_file"]].copy()
     n_total = len(lra)
     n_missing = int(lra["lra_assembly_file"].isna().sum())
@@ -88,7 +88,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     n_exists = int(lra["lra_assembly_file"].map(lambda p: Path(p).is_file()).sum())
 
     print(f"metadata_v2 rows         : {len(df):,}")
-    print(f"lra_final_set=True rows  : {n_total:,}")
+    print(f"lra_final_list=True rows  : {n_total:,}")
     print(f"  missing lra_assembly_file (skipped): {n_missing}")
     print(f"  fasta exists on disk            : {n_exists} / {len(lra)}")
 

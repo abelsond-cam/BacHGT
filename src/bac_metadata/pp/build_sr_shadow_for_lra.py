@@ -5,7 +5,7 @@ Reads:
   - ``metadata_final_curated_all_samples_and_columns.tsv`` (v1 — has the
     SR-side QC + Kleborate values before the v2 build flipped Sample +
     overwrote Kleborate on audit-matched rows).
-  - ``metadata_v2_all_samples_and_columns.tsv`` (v2 — has the lra_final_set
+  - ``metadata_v2_all_samples_and_columns.tsv`` (v2 — has the lra_final_list
     flag, sr_biosample on every paired row, and the lra_gca / lra_gcf
     pointer to the LRA that replaced the SR row).
 
@@ -15,7 +15,7 @@ built, so the paired LRA-vs-SR comparison in G.4 can compute deltas
 without losing the SR-Kleborate baseline.
 
 Run this **before** the G.2 Kleborate cascade overwrites
-``metadata_v2.species`` / ``is_kpsc`` on every ``lra_final_set=True``
+``metadata_v2.species`` / ``is_kpsc`` on every ``lra_final_list=True``
 row. After the cascade fires, the SR-derived Kleborate calls are gone
 from v2 and would have to be recovered from v1 — which is exactly what
 this shadow table preserves.
@@ -40,7 +40,7 @@ import pandas as pd
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V1 = DATA_ROOT / "david/final/metadata_final_curated_all_samples_and_columns.tsv"
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
-DEFAULT_OUT_PATH    = DATA_ROOT / "david/final/sr_shadow_for_lra.tsv"
+DEFAULT_OUT_PATH    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv"
 
 # Seb-tree SR-side sidecars produced by ``import_sr_kleborate`` /
 # ``import_sr_isescan``. These fill the 957 priority-3 audit-matched
@@ -173,7 +173,7 @@ def build_sr_shadow(
     """
     stats: dict = {"v1_rows": len(v1), "v2_rows": len(v2)}
 
-    lra = _coerce_bool(v2["lra_final_set"])
+    lra = _coerce_bool(v2["lra_final_list"])
     biosample = v2.get("sr_biosample", pd.Series([pd.NA] * len(v2)))
     biosample_str = biosample.astype(str)
     paired_mask = lra & biosample.notna() & (biosample_str != "") & (biosample_str.str.lower() != "nan")

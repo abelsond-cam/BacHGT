@@ -11,7 +11,7 @@ Reads:
     typing tables share the species column so we just concatenate them.
     ``*_hAMRonization_output.tsv`` (AMR-hit tables) are *not* read here.
 
-For each ``lra_final_set=True`` row, the cascade:
+For each ``lra_final_list=True`` row, the cascade:
 
   1. **species + scientific_name** — overwrite with the Kleborate call
      (LRA-derived; more accurate than the SR-derived values currently on
@@ -20,7 +20,7 @@ For each ``lra_final_set=True`` row, the cascade:
      (K. pneumoniae, K. variicola, K. quasipneumoniae *.subsp.*, K. africana,
      K. tropica). Catches both 5 + 6 subspecies form.
   3. **kpsc_final_list** — ``True`` iff this row is in
-     ``lra_final_set AND is_kpsc``. Only fills rows where the existing
+     ``lra_final_list AND is_kpsc``. Only fills rows where the existing
      value is NaN (the 117 ingested orphans) to avoid clobbering the
      curated whitelist on existing rows.
   4. **kleborate_needs_recall** — cleared (False) on rows that got a
@@ -54,7 +54,7 @@ DEFAULT_KLEBORATE_OUT = DATA_ROOT / "david/processed/kleborate_lra"
 # Two globs:
 #   - typing tables (KpSC + KoSC) → drive species/is_kpsc cascade.
 #   - non-Klebsiella tables (escherichia, salmonella, etc.) → discard from
-#     the LRA cohort (set lra_final_set=False).
+#     the LRA cohort (set lra_final_list=False).
 DEFAULT_TYPING_GLOB  = "kleborate_*_complex_output.tsv"
 DEFAULT_DISCARD_GLOB = "kleborate_escherichia_output.tsv"
 
@@ -111,11 +111,11 @@ def apply_cascade(
     kleb: pd.DataFrame,
     discard: pd.DataFrame | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    """Apply species → is_kpsc → kpsc_final_list cascade on lra_final_set rows.
+    """Apply species → is_kpsc → kpsc_final_list cascade on lra_final_list rows.
 
     If ``discard`` is provided (Kleborate output for non-Klebsiella species,
     e.g. ``escherichia_output.tsv``), the matched rows are removed from the
-    LRA cohort: ``lra_final_set=False``, ``kpsc_final_list=False``. Species
+    LRA cohort: ``lra_final_list=False``, ``kpsc_final_list=False``. Species
     is still set so downstream auditing can see why they were dropped.
 
     Returns ``(updated_meta, stats)``.
@@ -136,8 +136,8 @@ def apply_cascade(
     kleb = kleb.drop_duplicates("_bare")
     species_map = kleb.set_index("_bare")[KLEB_SPECIES_COL].to_dict()
 
-    lra_mask = _coerce_bool(meta["lra_final_set"])
-    stats["lra_final_set_rows"] = int(lra_mask.sum())
+    lra_mask = _coerce_bool(meta["lra_final_list"])
+    stats["lra_final_list_rows"] = int(lra_mask.sum())
 
     # Find which v2 LRA rows have a Kleborate call.
     meta_bare = meta.loc[lra_mask, "Sample"].map(_bare)
@@ -154,7 +154,7 @@ def apply_cascade(
     meta.loc[fill_idx, "species"] = new_species.loc[fill_idx].values
     meta.loc[fill_idx, "scientific_name"] = new_species.loc[fill_idx].values
 
-    # Recompute is_kpsc on every lra_final_set row whose species is now non-null.
+    # Recompute is_kpsc on every lra_final_list row whose species is now non-null.
     if "is_kpsc" not in meta.columns:
         meta["is_kpsc"] = pd.NA
     new_is_kpsc = _is_kpsc(meta.loc[fill_idx, "species"])
@@ -202,7 +202,7 @@ def apply_cascade(
                     meta.at[idx, "species"] = sp
                     if "scientific_name" in meta.columns:
                         meta.at[idx, "scientific_name"] = sp
-                meta.at[idx, "lra_final_set"] = False
+                meta.at[idx, "lra_final_list"] = False
                 if "is_kpsc" in meta.columns:
                     meta.at[idx, "is_kpsc"] = False
                 if "kpsc_final_list" in meta.columns:
@@ -212,11 +212,11 @@ def apply_cascade(
             n_discarded = int(len(disc_idx))
     stats["discarded_non_klebsiella"] = n_discarded
 
-    # ── Sanity gate: how many lra_final_set rows still lack a species call? ──
-    final_lra = _coerce_bool(meta["lra_final_set"])
+    # ── Sanity gate: how many lra_final_list rows still lack a species call? ──
+    final_lra = _coerce_bool(meta["lra_final_list"])
     null_species = final_lra & meta["species"].isna()
     stats["lra_rows_null_species_post_cascade"] = int(null_species.sum())
-    stats["lra_final_set_count_post_cascade"] = int(final_lra.sum())
+    stats["lra_final_list_count_post_cascade"] = int(final_lra.sum())
 
     return meta, stats
 
@@ -231,7 +231,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="Glob (relative to --kleborate-out) for typing-table TSVs.")
     ap.add_argument("--discard-glob", type=str,  default=DEFAULT_DISCARD_GLOB,
                     help="Glob for non-Klebsiella outputs whose matched rows "
-                         "should be removed from the LRA cohort (lra_final_set=False).")
+                         "should be removed from the LRA cohort (lra_final_list=False).")
     ap.add_argument("--dry-run", action="store_true", help="Print stats; don't write.")
     args = ap.parse_args(argv)
 
@@ -283,7 +283,7 @@ def main(argv: list[str] | None = None) -> int:
     updated.to_csv(args.metadata_v2, sep="\t", index=False)
     print(f"wrote {args.metadata_v2}  rows={len(updated):,}  cols={len(updated.columns)}")
 
-    # Gate: every lra_final_set=True row must now have non-null species + is_kpsc.
+    # Gate: every lra_final_list=True row must now have non-null species + is_kpsc.
     failed = False
     if stats.get("lra_rows_missing_kleborate", 0) > 0:
         print(f"\nWARNING: {stats['lra_rows_missing_kleborate']} LRA rows missing Kleborate calls "

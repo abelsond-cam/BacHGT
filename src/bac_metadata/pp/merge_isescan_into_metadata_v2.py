@@ -6,7 +6,7 @@ Reads:
   - ``<isescan_lra_out>/isescan_lra_family_counts.tsv`` (per-Sample wide
     table of IS-family copy counts, from ``run_isescan_lra collate``).
 
-For each ``lra_final_set=True`` row, adds one column per detected IS
+For each ``lra_final_list=True`` row, adds one column per detected IS
 family with the per-genome count from the LR assembly. Existing
 ``IS*`` / ``n_IS*`` columns from v1 (if any) are renamed to ``sr_IS*``
 to preserve the SR-derived snapshot before overwrite (no SR-side IS
@@ -57,7 +57,7 @@ def _coerce_bool(series: pd.Series) -> pd.Series:
 
 
 def apply_isescan_merge(meta: pd.DataFrame, counts: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Add per-IS-family count columns to v2 for every lra_final_set=True row.
+    """Add per-IS-family count columns to v2 for every lra_final_list=True row.
 
     Returns ``(updated_meta, stats)``.
     """
@@ -75,7 +75,7 @@ def apply_isescan_merge(meta: pd.DataFrame, counts: pd.DataFrame) -> tuple[pd.Da
     stats["isescan_families_detected"] = len(fam_cols)
     stats["isescan_samples_with_counts"] = len(counts)
 
-    lra_mask = _coerce_bool(meta["lra_final_set"])
+    lra_mask = _coerce_bool(meta["lra_final_list"])
     meta_bare = meta.loc[lra_mask, "Sample"].map(_bare)
     has_count = meta_bare.map(lambda b: b in counts.index)
     stats["lra_rows"] = int(lra_mask.sum())
@@ -100,7 +100,7 @@ def apply_isescan_merge(meta: pd.DataFrame, counts: pd.DataFrame) -> tuple[pd.Da
     if "isescan_needs_recall" in meta.columns:
         meta.loc[matched_idx, "isescan_needs_recall"] = False
 
-    # Sanity gate: every lra_final_set row should now have at least one IS_
+    # Sanity gate: every lra_final_list row should now have at least one IS_
     # column populated (= 0 if no ISs found, but NOT NaN).
     if fam_cols:
         sample_fam_col = f"IS_{fam_cols[0]}"

@@ -23,7 +23,7 @@ and does the same overlay the audit-matched flow does:
   - Save the original SR Sample → sr_biosample.
   - Copy lra_gca / lra_gcf / lra_assembly_file / lra_gff_file from the
     LR-extra onto the SR row.
-  - Copy lra_final_set + lr_run_accession (= LR-extra's run_accession,
+  - Copy lra_final_list + lr_run_accession (= LR-extra's run_accession,
     the ONT) + lr_instrument_platform = OXFORD_NANOPORE onto the SR row.
   - Set kleborate_needs_recall + isescan_needs_recall = True (the LRA
     needs fresh calls; SR-derived values on the SR row are stale).
@@ -56,7 +56,7 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
-DEFAULT_INTEG       = DATA_ROOT / "david/processed/norway_tables1_integration.tsv"
+DEFAULT_INTEG       = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/norway_tables1_integration.tsv"
 DEFAULT_TABLE_S1    = DATA_ROOT / "david/raw/Norway_Complete_Genomes_Fig1.xlsx"
 
 _ACC_RE = re.compile(r"(GC[AF]_\d+)(?:\.\d+)?")
@@ -148,7 +148,7 @@ def merge_norway_pairs(
     # Columns to copy from the LR-extra onto the SR partner row.
     lra_cols_to_copy = [
         "lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file",
-        "lra_final_set",
+        "lra_final_list",
         # lr_instrument_model — keep if LR-extra had one (usually NaN).
         "lr_instrument_model",
     ]
@@ -191,7 +191,7 @@ def merge_norway_pairs(
             # i.e. the LR-extra was keyed by biosample not GCA. Skip merge.
             n_already_keyed_by_gca += 1
             continue
-        sr_lra_flag = v2.at[sr_idx, "lra_final_set"] if "lra_final_set" in v2.columns else None
+        sr_lra_flag = v2.at[sr_idx, "lra_final_list"] if "lra_final_list" in v2.columns else None
         if str(sr_lra_flag).lower() in {"true", "1", "yes"}:
             # SR partner is already LRA-bearing — shouldn't happen, but defensively skip.
             n_partner_already_lra += 1

@@ -14,7 +14,7 @@ Cohort-agnostic by design: any caller who can produce a TSV with the columns
 through this step.
 
 Inputs (HPC defaults; flags override):
-  --discovery-tsv   <RDS>/david/processed/lra_discovery.tsv
+  --discovery-tsv   <RDS>/david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv
 
 Outputs (default: <RDS>/david/processed/checkm2_lra/):
   manifest.tsv        one row per CheckM2 scoring target
@@ -35,7 +35,7 @@ import pandas as pd
 
 # Defaults match the HPC layout. --override flags handle local dev.
 DEFAULT_DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
-DEFAULT_DISCOVERY = DEFAULT_DATA_ROOT / "david/processed/lra_discovery.tsv"
+DEFAULT_DISCOVERY = DEFAULT_DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
 DEFAULT_OUT_DIR   = DEFAULT_DATA_ROOT / "david/processed/checkm2_lra"
 
 

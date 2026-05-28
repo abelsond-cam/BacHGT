@@ -12,7 +12,7 @@ paired comparison mode.)
 ## Purpose
 
 Compare the complete-genome cohort (after Phase G: rows with
-`lra_final_set=True` in `metadata_v2`; pre-Phase-G: rows with `is_refseq=True`)
+`lra_final_list=True` in `metadata_v2`; pre-Phase-G: rows with `is_refseq=True`)
 against the short-read (MAG) cohort, across feature classes: Kleborate
 virulence loci, chromosomal MLST, acquired AMR, and ISEScan IS families.
 
@@ -34,7 +34,7 @@ epidemic CGs + pooled rare CGs + all_samples.
 ### Paired (paired mode) — `paired_lra_vs_sra/`
 
 **Same biosamples in both arms** — SR-Kleborate frozen in
-`<RDS>/david/final/sr_shadow_for_lra.tsv` (Phase G.3 output), LR-Kleborate
+`<RDS>/david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv` (Phase G.3 output), LR-Kleborate
 live in `metadata_v2` (Phase G.1+G.2 output). ~2,500-3,000 paired biosamples,
 enabling McNemar's test on binary features + paired t-test / Wilcoxon
 signed-rank on numeric features.
