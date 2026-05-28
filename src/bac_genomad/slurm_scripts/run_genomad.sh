@@ -28,7 +28,7 @@
 #   (where G=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/genomad)
 
 #SBATCH --job-name=genomad
-#SBATCH --partition=icelake
+#SBATCH --partition=icelake-himem
 #SBATCH --account=FLOTO-PROJECT-K-SL2-CPU
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
