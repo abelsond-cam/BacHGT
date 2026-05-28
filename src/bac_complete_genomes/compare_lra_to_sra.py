@@ -331,12 +331,16 @@ def acquired_column_names(columns: list[str]) -> list[str]:
 
 
 def count_acquired_tokens(series: pd.Series) -> pd.Series:
-    """Split by ';', count non-empty tokens."""
+    """Split by ';', count non-empty tokens.
+
+    Kleborate writes ``-`` for a class with no acquired gene; that is a
+    no-hit marker, not a gene, so it must not be counted as one token.
+    """
 
     def count_tokens(x):
         if pd.isna(x):
             return 0
-        tokens = [t.strip() for t in str(x).split(";") if t.strip()]
+        tokens = [t.strip() for t in str(x).split(";") if t.strip() and t.strip() != "-"]
         return len(tokens)
 
     return series.apply(count_tokens)
@@ -849,74 +853,60 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
         sr_present = kleborate_column_to_presence(merged[f"sr_{locus}"])
         rows.append(_paired_binary_stats(lr_present, sr_present, locus, "mlst"))
 
-    # ── Acquired-AMR token counts ──
+    # ── Acquired-AMR: numeric gene-count magnitude + binary presence ──
     for col in acquired_column_names(list(merged.columns)):
+        if col.startswith("sr_"):
+            continue  # the shadow's own sr_*_acquired cols are the SR arm, not features
         sr_col = f"sr_{col}"
         if sr_col not in merged.columns:
             continue
         lr_count = count_acquired_tokens(merged[col])
         sr_count = count_acquired_tokens(merged[sr_col])
         rows.append(_paired_numeric_stats(lr_count, sr_count, col, "amr_acquired"))
+        # Presence/absence McNemar: did the LR arm rescue an AMR class the SR
+        # arm missed (or vice versa)? Gives a full integer 2×2 alongside the count.
+        rows.append(_paired_binary_stats(lr_count > 0, sr_count > 0, col, "amr_presence"))
 
     return rows
 
 
-def _run_paired_mode(args: argparse.Namespace) -> None:
-    """Paired SR-vs-LRA comparison driver (Phase G.4).
+# Canonical paired-output column order: descriptive + contingency counts
+# first, then every test statistic (stat, n_pairs, p-values, q-values) at the end.
+PAIRED_OUTPUT_COLUMN_ORDER = [
+    "feature", "category",
+    "both_positive", "lr_only", "sr_only", "both_negative",
+    "lr_pickup_rate", "lr_mean", "sr_mean",
+    "stat", "n_pairs",
+    "mcnemar_p", "paired_t_p", "wilcoxon_p",
+    "mcnemar_q", "paired_t_q", "wilcoxon_q",
+]
 
-    Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on
-    ``sr_biosample``, and runs McNemar's (binary) + paired t-test /
-    Wilcoxon signed-rank (numeric) over the Kleborate + AMR feature set.
+PAIRED_COHORTS = ("lra_final_list", "reference_genome")
 
-    ISEScan is **LR-only** (no SR-side counts in v1), so IS-family features
-    are not paired — those go via the cross-section ``--mode clonal_group``.
 
-    Writes ``lra_vs_sr_comparison.tsv`` with one row per feature.
+def _select_paired_cohort(meta: pd.DataFrame, cohort: str) -> pd.DataFrame:
+    """Rows for a paired cohort: LRA-bearing with an sr_biosample partner.
+
+    ``reference_genome`` further restricts to ``is_reference_genome == True``
+    (a strict subset of ``lra_final_list``).
     """
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-
-    print(f"Loading metadata_v2: {args.metadata_v2}")
-    meta = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
-    print(f"  rows: {len(meta):,}")
-    print(f"Loading SR-shadow:   {args.sr_shadow}")
-    shadow = pd.read_csv(args.sr_shadow, sep="\t", low_memory=False)
-    print(f"  rows: {len(shadow):,}")
-
-    # Filter to LRA-bearing rows with sr_biosample, then inner-join with shadow.
     lra = meta["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
-    paired_meta = meta[lra & meta["sr_biosample"].notna()].copy()
-    paired_meta["sr_biosample"] = paired_meta["sr_biosample"].astype(str)
-    shadow["sr_biosample"] = shadow["sr_biosample"].astype(str)
+    sel = lra & meta["sr_biosample"].notna()
+    if cohort == "reference_genome":
+        refg = meta["is_reference_genome"].astype(str).str.lower().isin({"true", "1", "yes"})
+        sel = sel & refg
+    out = meta[sel].copy()
+    out["sr_biosample"] = out["sr_biosample"].astype(str)
+    return out
 
-    merged = paired_meta.merge(shadow, on="sr_biosample", how="inner", suffixes=("", "_shadow"))
-    print(f"\nPaired rows after merge: {len(merged):,}")
-    print(f"  LRA-bearing rows with sr_biosample : {len(paired_meta):,}")
-    print(f"  shadow rows                         : {len(shadow):,}")
 
-    rows = _paired_features(merged)
-    out = pd.DataFrame(rows)
-
-    # Add BH-corrected q values per stat-test column.
-    for p_col, q_col in (("mcnemar_p", "mcnemar_q"), ("paired_t_p", "paired_t_q"), ("wilcoxon_p", "wilcoxon_q")):
-        if p_col in out.columns:
-            valid = out[p_col].notna()
-            ranked = out.loc[valid, p_col].rank(method="average")
-            n = int(valid.sum())
-            if n:
-                out.loc[valid, q_col] = (out.loc[valid, p_col] * n / ranked).clip(upper=1.0)
-            else:
-                out[q_col] = float("nan")
-
-    out_path = args.output_dir / "lra_vs_sr_comparison.tsv"
-    out.to_csv(out_path, sep="\t", index=False)
-    print(f"\nwrote {out_path}  rows={len(out)}")
-
-    # Headline summary: per-category LR-rescue rate + total LR-only calls.
+def _print_paired_summary(out: pd.DataFrame) -> None:
+    """Per-category LR-rescue headline + top-10 LR-rescue binary features."""
     print("\n=== Per-category headline ===")
     if "category" in out.columns and len(out):
         binary = out[out["stat"] == "mcnemar"]
         if not binary.empty:
-            print("\n  Binary features (Kleborate presence/absence):")
+            print("\n  Binary features (presence/absence):")
             for cat, g in binary.groupby("category"):
                 total_b = int(g["lr_only"].sum())
                 total_c = int(g["sr_only"].sum())
@@ -932,7 +922,6 @@ def _run_paired_mode(args: argparse.Namespace) -> None:
                 sig_w  = int((g["wilcoxon_p"]  < 0.05).sum())
                 print(f"    {cat:25s}  features={len(g):>3}  sig_t@0.05={sig_t}  sig_wilcoxon@0.05={sig_w}")
 
-    # Top 10 LR-rescue features overall (sorted by lr_only count).
     binary_calls = out[out["stat"] == "mcnemar"].sort_values("lr_only", ascending=False).head(10)
     if not binary_calls.empty:
         print("\n  Top 10 LR-rescue binary features (by LR-only count):")
@@ -940,6 +929,64 @@ def _run_paired_mode(args: argparse.Namespace) -> None:
             print(f"    {r['feature']:35s}  LR-only={int(r['lr_only']):>4}  "
                   f"SR-only={int(r['sr_only']):>4}  rate={r['lr_pickup_rate']:.3f}  "
                   f"p={r['mcnemar_p']:.2e}")
+
+
+def _run_paired_cohort(meta: pd.DataFrame, shadow: pd.DataFrame, cohort: str, output_dir: Path) -> None:
+    """Run + write the paired comparison for a single cohort."""
+    print(f"\n{'=' * 66}\nCohort: {cohort}\n{'=' * 66}")
+    paired_meta = _select_paired_cohort(meta, cohort)
+    merged = paired_meta.merge(shadow, on="sr_biosample", how="inner", suffixes=("", "_shadow"))
+    print(f"Paired rows after merge: {len(merged):,}")
+    print(f"  cohort-selected rows with sr_biosample : {len(paired_meta):,}")
+
+    out = pd.DataFrame(_paired_features(merged))
+
+    # BH-corrected q values per stat-test column.
+    for p_col, q_col in (("mcnemar_p", "mcnemar_q"), ("paired_t_p", "paired_t_q"), ("wilcoxon_p", "wilcoxon_q")):
+        if p_col in out.columns:
+            valid = out[p_col].notna()
+            ranked = out.loc[valid, p_col].rank(method="average")
+            n = int(valid.sum())
+            if n:
+                out.loc[valid, q_col] = (out.loc[valid, p_col] * n / ranked).clip(upper=1.0)
+            else:
+                out[q_col] = float("nan")
+
+    # Descriptive/count columns first; stat + n_pairs + p/q values to the END.
+    ordered = [c for c in PAIRED_OUTPUT_COLUMN_ORDER if c in out.columns]
+    out = out[ordered + [c for c in out.columns if c not in ordered]]
+
+    out_path = output_dir / f"lra_vs_sr_comparison__{cohort}.tsv"
+    out.to_csv(out_path, sep="\t", index=False)
+    print(f"\nwrote {out_path}  rows={len(out)}")
+    _print_paired_summary(out)
+
+
+def _run_paired_mode(args: argparse.Namespace) -> None:
+    """Paired SR-vs-LRA comparison driver (Phase G.4).
+
+    Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on
+    ``sr_biosample``, and runs McNemar's (binary) + paired t-test /
+    Wilcoxon signed-rank (numeric) over the Kleborate + AMR feature set.
+
+    ISEScan is **LR-only** (no SR-side counts in v1), so IS-family features
+    are not paired — those go via the cross-section ``--mode clonal_group``.
+
+    Writes one ``lra_vs_sr_comparison__<cohort>.tsv`` per requested cohort.
+    """
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"Loading metadata_v2: {args.metadata_v2}")
+    meta = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
+    print(f"  rows: {len(meta):,}")
+    print(f"Loading SR-shadow:   {args.sr_shadow}")
+    shadow = pd.read_csv(args.sr_shadow, sep="\t", low_memory=False)
+    print(f"  rows: {len(shadow):,}")
+    shadow["sr_biosample"] = shadow["sr_biosample"].astype(str)
+
+    cohorts = list(PAIRED_COHORTS) if args.cohort == "both" else [args.cohort]
+    for cohort in cohorts:
+        _run_paired_cohort(meta, shadow, cohort, args.output_dir)
 
 
 def main() -> None:
@@ -959,6 +1006,14 @@ def main() -> None:
                         help="(paired mode) metadata_v2 TSV with LR-Kleborate values.")
     parser.add_argument("--sr-shadow",   type=Path, default=DEFAULT_SR_SHADOW,
                         help="(paired mode) sr_shadow_for_lra.tsv with SR-Kleborate frozen at v1.")
+    parser.add_argument(
+        "--cohort",
+        choices=["lra_final_list", "reference_genome", "both"],
+        default="lra_final_list",
+        help="(paired mode) which paired cohort to compare. lra_final_list (default): "
+             "all paired LRAs. reference_genome: is_reference_genome==True subset. "
+             "both: emit one TSV per cohort.",
+    )
     parser.add_argument(
         "--output-dir",
         type=Path,
