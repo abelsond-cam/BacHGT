@@ -25,8 +25,8 @@ set -euo pipefail
 REPO_DIR=${REPO_DIR:-$HOME/workspace/BacHGT}
 PIXI_DIR="$REPO_DIR/src/bac_data/checkm2"
 RDS=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-INPUT_DIR="$RDS/david/processed/checkm2_lra/links"
-OUTPUT_DIR="$RDS/david/processed/checkm2_lra/checkm2_out"
+INPUT_DIR="$RDS/david/processed/complete_vs_sr_genomes/checkm2_lra/links"
+OUTPUT_DIR="$RDS/david/processed/complete_vs_sr_genomes/checkm2_lra/checkm2_out"
 # CheckM2 v1.x wants the .dmnd file itself, not the dir Zenodo extracts into.
 DB_PATH="$RDS/david/raw/CheckM2/Zenodo_db/CheckM2_database/uniref100.KO.1.dmnd"
 
@@ -69,5 +69,5 @@ pixi run checkm2 predict \
     --force        # overwrite previous run; CheckM2 is fast enough
 
 # Hoist the headline TSV to a stable name beside it.
-cp -f "$OUTPUT_DIR/quality_report.tsv" "$RDS/david/processed/checkm2_lra/quality_report.tsv"
-echo "[$(date -Is)] DONE → $RDS/david/processed/checkm2_lra/quality_report.tsv"
+cp -f "$OUTPUT_DIR/quality_report.tsv" "$RDS/david/processed/complete_vs_sr_genomes/checkm2_lra/quality_report.tsv"
+echo "[$(date -Is)] DONE → $RDS/david/processed/complete_vs_sr_genomes/checkm2_lra/quality_report.tsv"

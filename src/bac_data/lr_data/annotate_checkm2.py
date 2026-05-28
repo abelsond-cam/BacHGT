@@ -35,7 +35,7 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_DISCOVERY  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
-DEFAULT_CHECKM2_TSV = DATA_ROOT / "david/processed/checkm2_lra/quality_report.tsv"
+DEFAULT_CHECKM2_TSV = DATA_ROOT / "david/processed/complete_vs_sr_genomes/checkm2_lra/quality_report.tsv"
 
 # Columns CheckM2 v1.x writes. Kept in this order; "Name" is the join key.
 CHECKM2_COLS = [

@@ -49,7 +49,7 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
-DEFAULT_KLEBORATE_OUT = DATA_ROOT / "david/processed/kleborate_lra"
+DEFAULT_KLEBORATE_OUT = DATA_ROOT / "david/processed/complete_vs_sr_genomes/kleborate_lra"
 
 # Two globs:
 #   - typing tables (KpSC + KoSC) → drive species/is_kpsc cascade.

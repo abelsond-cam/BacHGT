@@ -47,7 +47,7 @@ import numpy as np
 import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
-DEFAULT_PROTEIN_DIR    = DATA_ROOT / "david/processed/checkm2_lra/checkm2_out/protein_files"
+DEFAULT_PROTEIN_DIR    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/checkm2_lra/checkm2_out/protein_files"
 DEFAULT_AGGREGATE_TSV  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_per_gene_gc.tsv"
 DEFAULT_SAMPLE_TSV     = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_per_protein_gc_sample.tsv"
 

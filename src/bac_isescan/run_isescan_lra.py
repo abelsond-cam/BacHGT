@@ -56,7 +56,7 @@ import pandas as pd
 
 DATA_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 DEFAULT_METADATA_V2 = DATA_ROOT / "david/final/metadata_v2_all_samples_and_columns.tsv"
-DEFAULT_OUT_DIR     = DATA_ROOT / "david/processed/isescan_lra"
+DEFAULT_OUT_DIR     = DATA_ROOT / "david/processed/complete_vs_sr_genomes/isescan_lra"
 DEFAULT_INPUTS_TSV  = DEFAULT_OUT_DIR / "isescan_inputs.tsv"
 DEFAULT_CHUNK_SIZE  = 30
 DEFAULT_THREADS     = 4

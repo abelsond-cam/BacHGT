@@ -3,7 +3,7 @@
 #
 # Prereqs (one-time):
 #   1. uv run python -m bac_isescan.run_isescan_lra prepare
-#      → writes <RDS>/david/processed/isescan_lra/isescan_inputs.tsv (~5,521 rows)
+#      → writes <RDS>/david/processed/complete_vs_sr_genomes/isescan_lra/isescan_inputs.tsv (~5,521 rows)
 #   2. The pixi env at src/bac_isescan/ already pins isescan >= 1.7.2.
 #      (cd src/bac_isescan && pixi install) once if not yet installed on HPC.
 #
@@ -25,15 +25,15 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=24:00:00
-#SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/isescan_lra/slurm_logs/%x_%A_%a.out
-#SBATCH --error=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/isescan_lra/slurm_logs/%x_%A_%a.err
+#SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/isescan_lra/slurm_logs/%x_%A_%a.out
+#SBATCH --error=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/isescan_lra/slurm_logs/%x_%A_%a.err
 
 set -euo pipefail
 
 REPO_DIR=${REPO_DIR:-$HOME/workspace/BacHGT}
 PIXI_DIR="$REPO_DIR/src/bac_isescan"     # isescan lives in this env
 RDS=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-OUT_DIR="$RDS/david/processed/isescan_lra"
+OUT_DIR="$RDS/david/processed/complete_vs_sr_genomes/isescan_lra"
 INPUTS="$OUT_DIR/isescan_inputs.tsv"
 CHUNK_SIZE=30
 

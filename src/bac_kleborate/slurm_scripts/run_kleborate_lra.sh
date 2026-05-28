@@ -3,7 +3,7 @@
 #
 # Prereqs (one-time):
 #   1. uv run python -m bac_kleborate.run_kleborate_lra prepare
-#      → writes <RDS>/david/processed/kleborate_lra/lra_inputs.tsv (~5,521 rows)
+#      → writes <RDS>/david/processed/complete_vs_sr_genomes/kleborate_lra/lra_inputs.tsv (~5,521 rows)
 #   2. The pixi env at src/bac_isescan/ already pins kleborate >= 3.1.
 #      (cd src/bac_isescan && pixi install) once if not yet installed on HPC.
 #
@@ -24,15 +24,15 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=01:30:00
-#SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/kleborate_lra/slurm_logs/%x_%A_%a.out
-#SBATCH --error=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/kleborate_lra/slurm_logs/%x_%A_%a.err
+#SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/kleborate_lra/slurm_logs/%x_%A_%a.out
+#SBATCH --error=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/kleborate_lra/slurm_logs/%x_%A_%a.err
 
 set -euo pipefail
 
 REPO_DIR=${REPO_DIR:-$HOME/workspace/BacHGT}
 PIXI_DIR="$REPO_DIR/src/bac_isescan"     # kleborate lives in this env
 RDS=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw
-OUT_DIR="$RDS/david/processed/kleborate_lra"
+OUT_DIR="$RDS/david/processed/complete_vs_sr_genomes/kleborate_lra"
 INPUTS="$OUT_DIR/lra_inputs.tsv"
 CHUNK_SIZE=100
 

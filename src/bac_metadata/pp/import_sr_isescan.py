@@ -13,7 +13,7 @@ why the first-pass result claimed zero SR-side IS calls.
 
 This module fixes that by walking every CSV, counting IS calls by
 family, and emitting one wide TSV that mirrors
-``<RDS>/david/processed/isescan_lra/isescan_lra_family_counts.tsv``
+``<RDS>/david/processed/complete_vs_sr_genomes/isescan_lra/isescan_lra_family_counts.tsv``
 (same shape — one row per Sample, one column per IS family) so the
 G.3 SR-shadow builder can consume both tables symmetrically.
 

@@ -36,12 +36,12 @@ Two steps — first build the input manifest + symlinks (cheap, runs on login
 node), then submit the Slurm job (heavy, runs on icelake-himem).
 
 ```bash
-# Build symlinks at <RDS>/processed/checkm2_lra/links/<sample_id>.fna.gz
+# Build symlinks at <RDS>/processed/complete_vs_sr_genomes/checkm2_lra/links/<sample_id>.fna.gz
 # and inputs.tsv with (sample_id, tier, source_path, link_path).
 cd ~/workspace/BacHGT
 uv run python -m bac_data.checkm2.prep_checkm2_inputs   # uses the shared uv env, NOT this pixi env
 
-# Submit the array. Output → <RDS>/processed/checkm2_lra/quality_report.tsv
+# Submit the array. Output → <RDS>/processed/complete_vs_sr_genomes/checkm2_lra/quality_report.tsv
 sbatch src/bac_data/checkm2/slurm_scripts/run_checkm2.sh
 ```
 
