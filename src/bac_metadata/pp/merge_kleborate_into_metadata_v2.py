@@ -308,13 +308,22 @@ def main(argv: list[str] | None = None) -> int:
     updated.to_csv(args.metadata_v2, sep="\t", index=False)
     print(f"wrote {args.metadata_v2}  rows={len(updated):,}  cols={len(updated.columns)}")
 
-    # Gate: every lra_final_list=True row must now have non-null species + is_kpsc.
-    failed = False
-    if stats.get("lra_rows_missing_kleborate", 0) > 0:
-        print(f"\nWARNING: {stats['lra_rows_missing_kleborate']} LRA rows missing Kleborate calls "
-              f"— re-submit the Slurm array for the failed chunks.", file=sys.stderr)
-        failed = True
-    return 1 if failed else 0
+    # Missing-Kleborate is informational, NOT fatal: some accepted LRAs are
+    # non-KpSC (E. coli / KoSC / species-only) and legitimately have no KpSC
+    # typing row. The genuine-failure signals are an accepted LRA with NO
+    # species at all, or a NaN is_kpsc — those indicate a failed Slurm chunk.
+    n_missing = stats.get("lra_rows_missing_kleborate", 0)
+    if n_missing > 0:
+        print(f"\nNOTE: {n_missing} accepted LRA rows have no KpSC Kleborate call "
+              "(expected for non-KpSC genomes; not fatal).", file=sys.stderr)
+    fatal = (
+        stats.get("lra_rows_null_species_post_cascade", 0) > 0
+        or stats.get("kpsc_gate_is_kpsc_nan_on_accepted", 0) > 0
+    )
+    if fatal:
+        print("\nERROR: accepted LRA rows with no species / NaN is_kpsc — investigate "
+              "(likely a failed Kleborate chunk).", file=sys.stderr)
+    return 1 if fatal else 0
 
 
 if __name__ == "__main__":
