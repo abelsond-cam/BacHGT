@@ -65,7 +65,8 @@ OUTPUT_COLS = [
     # provenance + NCBI metadata
     "source_audit", "source_norway", "source_refseq_metadata",
     "is_norway", "is_refseq", "stale_refseq",
-    "level", "is_complete",
+    "level", "library_class", "is_complete", "is_hybrid", "is_reference_genome",
+    "ncbi_sequencing_tech", "ncbi_assembly_method",
     # checkm2 metrics (full set — even the non-gates, for downstream filtering)
     "checkm2_completeness", "checkm2_contamination", "checkm2_genome_size",
     "checkm2_gc_content", "checkm2_contig_n50", "checkm2_total_contigs",
@@ -114,9 +115,17 @@ def main(argv: list[str] | None = None) -> int:
         if b in df.columns:
             df[b] = df[b].astype(str).str.lower().isin({"true", "1", "yes"})
 
-    # Derive tier + is_complete (no upstream change needed; these are mechanical).
+    # Derive tier + the NCBI-enrichment flags (all mechanical from level/library_class).
     df["tier"] = np.where(df["scoring_accession"].str.startswith("GCF_"), "GCF", "GCA")
     df["is_complete"] = df["level"].astype(str) == "Complete Genome"
+    if "library_class" not in df.columns:
+        df["library_class"] = "unknown"
+    df["is_hybrid"] = df["library_class"].astype(str) == "hybrid"
+    # "from RefSeq" = the scored assembly is a GCF (tier=="GCF"); equals
+    # Sample.startswith("GCF_") once propagated to v2 (Sample == scoring_accession there).
+    df["is_reference_genome"] = (
+        df["is_complete"] & df["is_hybrid"] & df["scoring_accession"].astype(str).str.startswith("GCF_")
+    )
 
     # Data-derived ceiling — worst-GCF genome size (i.e. the largest GCF; for
     # a ceiling criterion the "worst" sits at the upper extreme, not the lower).
@@ -151,8 +160,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     print(cross.to_string())
     print()
-    print("=== is_complete distribution within accepted ===")
-    print(f"  is_complete=True (NCBI 'Complete Genome'): {int(accepted['is_complete'].sum())} / {len(accepted)}")
+    print("=== NCBI-enrichment flags within accepted ===")
+    n_acc = len(accepted)
+    print(f"  is_complete=True  (NCBI 'Complete Genome')        : {int(accepted['is_complete'].sum())} / {n_acc}")
+    print(f"  is_hybrid=True    (library_class=='hybrid')       : {int(accepted['is_hybrid'].sum())} / {n_acc}")
+    print(f"  is_reference_genome=True (complete∧hybrid∧GCF)    : {int(accepted['is_reference_genome'].sum())} / {n_acc}")
+    print("  library_class breakdown (accepted):")
+    for k, v in accepted["library_class"].fillna("unknown").value_counts().items():
+        print(f"    {str(k):<12} : {int(v)}")
 
     if args.dry_run:
         print("\n--dry-run set; not writing output.")
