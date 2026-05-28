@@ -149,6 +149,9 @@ def merge_norway_pairs(
     lra_cols_to_copy = [
         "lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file",
         "lra_final_list",
+        # NCBI-derived per-row flags (G.7) — must travel with the LRA overlay,
+        # else the merged row keeps the SR partner's default False.
+        "is_complete", "is_hybrid", "is_reference_genome",
         # lr_instrument_model — keep if LR-extra had one (usually NaN).
         "lr_instrument_model",
     ]
