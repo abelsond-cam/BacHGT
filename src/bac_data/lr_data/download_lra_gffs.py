@@ -95,15 +95,17 @@ def _fetch_gff_zip(acc: str, headers: dict[str, str], limiter: RateLimiter) -> b
         limiter.wait()
         try:
             r = requests.get(url, params=params, headers=headers, timeout=DEFAULT_TIMEOUT, stream=True)
+            if r.status_code == 200:
+                # Stream inside the try: a mid-response drop raises
+                # ChunkedEncodingError (a RequestException) — retry, don't crash.
+                buf = io.BytesIO()
+                for chunk in r.iter_content(chunk_size=1 << 20):
+                    buf.write(chunk)
+                return buf.getvalue()
         except requests.RequestException as exc:
             print(f"  WARN {acc} attempt={attempt + 1}: {exc}", file=sys.stderr, flush=True)
             time.sleep(2 * (attempt + 1))
             continue
-        if r.status_code == 200:
-            buf = io.BytesIO()
-            for chunk in r.iter_content(chunk_size=1 << 20):
-                buf.write(chunk)
-            return buf.getvalue()
         if r.status_code in (429, 500, 502, 503, 504):
             time.sleep(2 * (attempt + 1))
             continue
