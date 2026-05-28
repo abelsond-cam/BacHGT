@@ -6,11 +6,19 @@ Sample from each path with GC normalization, writes TSVs, then loads metadata
 and adds assembly_file / gff_file via dict lookup. The .txt lists are simple
 one-path-per-line files — produce them with e.g.
 ``find <ASSEMBLIES_DIR> -name "*.fna.gz" > assemblies_file_list.txt``.
+
+``--mode lra`` fills the long-read columns ``lra_assembly_file`` /
+``lra_gff_file`` on a metadata_v2 TSV from the ``related_lr/{assemblies,gff}``
+pools (the GFF pool also holds the backfilled is_refseq GFFs), resolving by
+accession (the shipped accession first, then GCF, then GCA). It only fills
+``lra_assembly_file`` where empty so discovery's seb paths are preserved, and
+is re-runnable so newly downloaded GFFs are picked up.
 """
 
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -20,6 +28,11 @@ import pandas as pd
 DATA_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/")
 
 METADATA_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv")
+METADATA_V2_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv")
+
+RELATED_LR_ASM_DIR = DATA_DIR / "david/raw/related_lr/assemblies"
+RELATED_LR_GFF_DIR = DATA_DIR / "david/raw/related_lr/gff"
+_ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")
 
 ASSEMBLY_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/assemblies_file_list.txt")
 NCBI_GFF_LIST_F = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/ncbi_gff.txt")
@@ -280,6 +293,92 @@ def run_add_single_path_column(
     print("Done!")
 
 
+def _bare_versioned(value: object) -> str:
+    """Versioned bare accession (GCF_000009885.1) from an accession or path/stem."""
+    m = _ACC_RE.search(str(value or ""))
+    return m.group(1) if m else ""
+
+
+def _related_lr_pool(d: Path, suffix: str) -> dict[str, str]:
+    """Map versioned accession → path for files named ``<acc><suffix>`` in ``d``."""
+    out: dict[str, str] = {}
+    if d.is_dir():
+        for p in d.iterdir():
+            if p.name.endswith(suffix):
+                out[p.name[: -len(suffix)]] = str(p)
+    return out
+
+
+def run_lra(
+    metadata_path: Path | None = None,
+    *,
+    asm_dir: Path = RELATED_LR_ASM_DIR,
+    gff_dir: Path = RELATED_LR_GFF_DIR,
+) -> None:
+    """Fill ``lra_gff_file`` (and ``lra_assembly_file`` where empty) on metadata_v2.
+
+    LR genomes live at ``related_lr/{assemblies,gff}/<versioned-acc>.{fna.gz,gff}``.
+    For every LRA row (non-empty ``lra_gca``/``lra_gcf``) the GFF/assembly is
+    resolved by the shipped accession first (the stem of ``lra_assembly_file``),
+    then the GCF (RefSeq), then the GCA — matching the discovery resolver.
+    ``lra_assembly_file`` is only filled where empty so discovery's seb-resident
+    paths are preserved; ``lra_gff_file`` is always (re)resolved from the pool.
+    """
+    meta_path = Path(metadata_path) if metadata_path is not None else METADATA_V2_F
+    print(f"Metadata file: {meta_path}")
+    if not meta_path.exists():
+        raise FileNotFoundError(f"Metadata file does not exist: {meta_path}")
+
+    df = pd.read_csv(meta_path, sep="\t", low_memory=False)
+    print(f"Loaded {len(df)} rows")
+    if "lra_gca" not in df.columns and "lra_gcf" not in df.columns:
+        raise SystemExit("No lra_gca/lra_gcf columns — not a metadata_v2 TSV; nothing to do.")
+    for col in ("lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file"):
+        if col not in df.columns:
+            df[col] = pd.NA
+
+    asm_pool = _related_lr_pool(asm_dir, ".fna.gz")
+    gff_pool = _related_lr_pool(gff_dir, ".gff")
+    print(f"related_lr pools: assemblies={len(asm_pool)} gff={len(gff_pool)}")
+
+    gcf = df["lra_gcf"].fillna("").astype(str).str.strip()
+    gca = df["lra_gca"].fillna("").astype(str).str.strip()
+    lra_mask = (gcf != "") | (gca != "")
+    n_rows = int(lra_mask.sum())
+
+    gff_filled = asm_filled = 0
+    for idx in df.index[lra_mask]:
+        cands = [
+            c for c in (
+                _bare_versioned(df.at[idx, "lra_assembly_file"]),
+                gcf.at[idx],
+                gca.at[idx],
+                _bare_versioned(df.at[idx, "Sample"]),
+            ) if c
+        ]
+        for acc in cands:
+            if acc in gff_pool:
+                df.at[idx, "lra_gff_file"] = gff_pool[acc]
+                gff_filled += 1
+                break
+        cur = str(df.at[idx, "lra_assembly_file"] or "").strip()
+        if cur in ("", "nan"):
+            for acc in cands:
+                if acc in asm_pool:
+                    df.at[idx, "lra_assembly_file"] = asm_pool[acc]
+                    asm_filled += 1
+                    break
+
+    print(f"LRA rows: {n_rows}")
+    print(f"  lra_gff_file filled: {gff_filled} ({n_rows - gff_filled} without a GFF on disk)")
+    print(f"  lra_assembly_file filled (empty only): {asm_filled}")
+
+    df.to_csv(meta_path, sep="\t", index=False)
+    print("\n" + "=" * 80)
+    print(f"Writing updated metadata to: {meta_path}")
+    print("Done!")
+
+
 def main(argv: list[str] | None = None) -> None:
     """CLI entry point with default and generic single-column modes."""
     if argv is None:
@@ -293,9 +392,10 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument(
         "--mode",
-        choices=["default", "isescan"],
+        choices=["default", "isescan", "lra"],
         default="default",
-        help="Run default assembly+gff mode or single-column isescan mode.",
+        help="default: SR assembly+gff. isescan: single-column. "
+             "lra: fill lra_assembly_file/lra_gff_file on metadata_v2 from related_lr pools.",
     )
     parser.add_argument(
         "--isescan-list",
@@ -308,6 +408,10 @@ def main(argv: list[str] | None = None) -> None:
 
     if args.mode == "default":
         run(metadata_path)
+        return
+
+    if args.mode == "lra":
+        run_lra(metadata_path)
         return
 
     run_add_single_path_column(
