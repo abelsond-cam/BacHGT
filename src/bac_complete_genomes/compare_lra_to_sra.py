@@ -769,48 +769,48 @@ def _paired_binary_stats(
 def _paired_numeric_stats(
     lr_vals: pd.Series, sr_vals: pd.Series, feature: str, category: str,
 ) -> dict:
-    """Paired t-test + Wilcoxon signed-rank on a paired numeric feature."""
+    """Paired t-test + Wilcoxon signed-rank on a paired numeric feature.
+
+    The four contingency cells are *annotations* on the count comparison, not a
+    strict 2×2: ``both_positive``/``both_negative`` are presence-based (#pairs
+    where both/neither carry the gene), while ``lr_only``/``sr_only`` are
+    diff-sign (#pairs where LR/SR carries strictly more). They deliberately
+    overlap, so they do NOT sum to ``n_pairs`` — the paired binary
+    (``presence / absence``) row is the strict 2×2. The paired-t / Wilcoxon
+    p-values still require ≥2 pairs + non-zero variance.
+    """
     lr = pd.to_numeric(lr_vals, errors="coerce")
     sr = pd.to_numeric(sr_vals, errors="coerce")
     mask = lr.notna() & sr.notna()
     n_pairs = int(mask.sum())
-    if n_pairs < 2:
-        return {
-            "feature": feature, "category": category, "stat": "paired_numeric",
-            "n_pairs": n_pairs, "lr_mean": float("nan"), "sr_mean": float("nan"),
-            "lr_only": int(((lr.fillna(0) > 0) & ~(sr.fillna(0) > 0)).sum()),
-            "sr_only": int((~(lr.fillna(0) > 0) & (sr.fillna(0) > 0)).sum()),
-            "both_positive": float("nan"), "both_negative": float("nan"),
-            "lr_pickup_rate": float("nan"), "mcnemar_p": float("nan"),
-            "paired_t_p": float("nan"), "wilcoxon_p": float("nan"),
-        }
     lr_v, sr_v = lr[mask].astype(float), sr[mask].astype(float)
     diff = lr_v - sr_v
-    # Paired t-test (handles zero-variance via NaN p).
-    if diff.std(ddof=1) == 0 or diff.empty:
+    lr_pos, sr_pos = lr_v > 0, sr_v > 0
+
+    if n_pairs < 2 or diff.std(ddof=1) == 0 or diff.empty:
         t_p = float("nan")
     else:
         with np.errstate(invalid="ignore"):
             _, t_p = stats.ttest_rel(lr_v, sr_v)
-    # Wilcoxon: skip if all diffs are zero.
-    if (diff == 0).all():
+    if n_pairs < 2 or (diff == 0).all():
         w_p = float("nan")
     else:
         try:
             _, w_p = stats.wilcoxon(lr_v, sr_v, zero_method="wilcox")
         except ValueError:
             w_p = float("nan")
+
     return {
         "feature":         feature,
         "category":        category,
         "stat":            "paired_numeric",
         "n_pairs":         n_pairs,
-        "lr_mean":         float(lr_v.mean()),
-        "sr_mean":         float(sr_v.mean()),
+        "lr_mean":         float(lr_v.mean()) if n_pairs else float("nan"),
+        "sr_mean":         float(sr_v.mean()) if n_pairs else float("nan"),
+        "both_positive":   int((lr_pos & sr_pos).sum()),
+        "both_negative":   int((~lr_pos & ~sr_pos).sum()),
         "lr_only":         int((diff > 0).sum()),
         "sr_only":         int((diff < 0).sum()),
-        "both_positive":   float("nan"),
-        "both_negative":   float("nan"),
         "lr_pickup_rate":  float("nan"),
         "mcnemar_p":       float("nan"),
         "paired_t_p":      float(t_p),
@@ -832,7 +832,7 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
             continue
         lr_present = kleborate_column_to_presence(merged[lr_col])
         sr_present = kleborate_column_to_presence(merged[sr_col])
-        rows.append(_paired_binary_stats(lr_present, sr_present, f"{lineage}_bsc", "virulence_bsc"))
+        rows.append(_paired_binary_stats(lr_present, sr_present, f"{lineage}_bsc", "virulence presence / absence"))
 
     # ── Numeric BSC allele counts (LR vs SR sum of present alleles) ──
     for code, info in KLEBORATE_VIRULENCE_LOCI.items():
@@ -843,7 +843,7 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
             continue
         lr_count = sum(kleborate_column_to_presence(merged[a]) for a in lr_alleles)
         sr_count = sum(kleborate_column_to_presence(merged[f"sr_{a}"]) for a in sr_alleles)
-        rows.append(_paired_numeric_stats(lr_count, sr_count, feat, "virulence_allele_count"))
+        rows.append(_paired_numeric_stats(lr_count, sr_count, feat, "virulence counts"))
 
     # ── Binary MLST locus presence ──
     for locus in KLEBORATE_CHROMOSOMAL_MLST_COLS:
@@ -851,7 +851,7 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
             continue
         lr_present = kleborate_column_to_presence(merged[locus])
         sr_present = kleborate_column_to_presence(merged[f"sr_{locus}"])
-        rows.append(_paired_binary_stats(lr_present, sr_present, locus, "mlst"))
+        rows.append(_paired_binary_stats(lr_present, sr_present, locus, "mlst presence / absence"))
 
     # ── Acquired-AMR: numeric gene-count magnitude + binary presence ──
     for col in acquired_column_names(list(merged.columns)):
@@ -862,10 +862,10 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
             continue
         lr_count = count_acquired_tokens(merged[col])
         sr_count = count_acquired_tokens(merged[sr_col])
-        rows.append(_paired_numeric_stats(lr_count, sr_count, col, "amr_acquired"))
+        rows.append(_paired_numeric_stats(lr_count, sr_count, col, "amr counts"))
         # Presence/absence McNemar: did the LR arm rescue an AMR class the SR
         # arm missed (or vice versa)? Gives a full integer 2×2 alongside the count.
-        rows.append(_paired_binary_stats(lr_count > 0, sr_count > 0, col, "amr_presence"))
+        rows.append(_paired_binary_stats(lr_count > 0, sr_count > 0, col, "amr presence / absence"))
 
     return rows
 
