@@ -11,8 +11,13 @@ rsynced as the next batch and deleted afterwards.
 ``fasta_on_disk``), pointing either at a ``seb/...`` RefSeq genome (is_refseq
 rows) or at ``.../david/raw/related_lr/assemblies/<acc>.fna.gz`` (downloaded LR
 genomes). The reserved ``lra_gff_file`` column is never populated, so GFFs are
-sourced from ``related_lr/gff/<acc>.gff`` — present only for the downloaded
-subset; seb-resident LRAs have no GFF there and are reported.
+matched in ``related_lr/gff`` by **bare accession** — the seb FASTA stems carry
+the full NCBI name (``GCF_..._ASM..._genomic``) while ``related_lr/gff`` is
+named by the bare accession, so we match on ``lra_gcf`` / ``lra_gca`` (and the
+bare form of the assembly stem), preferring the shipped accession's own GFF.
+The matched GFF is symlinked under the assembly's stem so each
+``<stem>.fna.gz`` pairs with a ``<stem>.gff``. Missing GFFs are reported;
+``download_lra_gffs.py`` backfills them.
 
 Files whose basename already lives in the SR staging section are skipped (they
 were sent in the first batch).
@@ -24,6 +29,7 @@ Run from ~/workspace/BacHGT:
 from __future__ import annotations
 
 import csv
+import re
 import sys
 from pathlib import Path
 
@@ -37,12 +43,27 @@ SR_ASM_DIR = STAGING / "assemblies"
 SR_GFF_DIR = STAGING / "gff"
 
 ASM_SUFFIXES = (".fna.gz", ".fna", ".fasta.gz", ".fasta")
+_ACC_RE = re.compile(r"(GC[AF]_\d+\.\d+)")
 
 
-def load_lra_assembly_files() -> list[str]:
-    """Unique non-empty ``lra_assembly_file`` paths from the v2 metadata."""
+def bare_accession(value: str) -> str:
+    """Bare versioned accession (GCF_000009885.1) from an accession or stem."""
+    m = _ACC_RE.match(str(value or "").strip())
+    return m.group(1) if m else ""
+
+
+def assembly_stem(name: str) -> str:
+    """Strip a FASTA suffix to get the full assembly stem (for paired naming)."""
+    for suffix in ASM_SUFFIXES:
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return Path(name).stem
+
+
+def load_lra_rows() -> list[tuple[str, str, str]]:
+    """Unique (lra_assembly_file, lra_gcf, lra_gca) from the v2 metadata."""
     csv.field_size_limit(sys.maxsize)
-    seen: dict[str, None] = {}
+    seen: dict[str, tuple[str, str]] = {}
     with METADATA_V2.open(newline="") as fh:
         reader = csv.DictReader(fh, delimiter="\t")
         if "lra_assembly_file" not in (reader.fieldnames or []):
@@ -52,9 +73,12 @@ def load_lra_assembly_files() -> list[str]:
             )
         for row in reader:
             path = (row.get("lra_assembly_file") or "").strip()
-            if path:
-                seen.setdefault(path, None)
-    return list(seen)
+            if path and path not in seen:
+                seen[path] = (
+                    (row.get("lra_gcf") or "").strip(),
+                    (row.get("lra_gca") or "").strip(),
+                )
+    return [(path, gcf, gca) for path, (gcf, gca) in seen.items()]
 
 
 def existing_sr_basenames() -> set[str]:
@@ -77,17 +101,20 @@ def clear_symlinks(d: Path) -> int:
     return n
 
 
-def assembly_stem(name: str) -> str:
-    """Strip a FASTA suffix to get the accession stem (for the GFF lookup)."""
-    for suffix in ASM_SUFFIXES:
-        if name.endswith(suffix):
-            return name[: -len(suffix)]
-    return Path(name).stem
+def find_gff(stem: str, gcf: str, gca: str) -> Path | None:
+    """Locate a related_lr GFF by bare accession; prefer the shipped one."""
+    candidates = [bare_accession(stem), bare_accession(gcf), bare_accession(gca)]
+    for acc in candidates:
+        if acc:
+            gff = RELATED_LR / "gff" / f"{acc}.gff"
+            if gff.is_file():
+                return gff
+    return None
 
 
-def link_into(dst_dir: Path, original: Path) -> None:
-    """Symlink ``original`` into ``dst_dir`` under its own basename."""
-    link = dst_dir / original.name
+def link_into(dst_dir: Path, original: Path, name: str | None = None) -> None:
+    """Symlink ``original`` into ``dst_dir`` (under ``name`` if given)."""
+    link = dst_dir / (name or original.name)
     if link.is_symlink() or link.exists():
         link.unlink()
     link.symlink_to(original)
@@ -95,10 +122,10 @@ def link_into(dst_dir: Path, original: Path) -> None:
 
 def main() -> int:
     """CLI entry point."""
-    asm_paths = load_lra_assembly_files()
+    rows = load_lra_rows()
     sr_names = existing_sr_basenames()
     print(
-        f"LRA assemblies in v2 metadata: {len(asm_paths)} | "
+        f"LRA assemblies in v2 metadata: {len(rows)} | "
         f"already in SR staging: {len(sr_names)} basenames\n"
     )
 
@@ -110,10 +137,10 @@ def main() -> int:
 
     report: list[str] = []
     asm_linked = gff_linked = 0
-    missing_asm = already_sr = no_gff_dir = missing_gff = 0
+    missing_asm = already_sr = missing_gff = 0
     seen_asm: set[str] = set()
 
-    for path in asm_paths:
+    for path, gcf, gca in rows:
         original = Path(path)
         if not original.is_file():
             missing_asm += 1
@@ -130,18 +157,14 @@ def main() -> int:
         link_into(asm_dst, original)
         asm_linked += 1
 
-        # GFFs are only on disk for the related_lr-downloaded subset.
-        if "related_lr/assemblies" in original.as_posix():
-            gff = RELATED_LR / "gff" / f"{assembly_stem(original.name)}.gff"
-            if gff.is_file():
-                link_into(gff_dst, gff)
-                gff_linked += 1
-            else:
-                missing_gff += 1
-                report.append(f"gff\tmissing_gff\t{original.name}\t{gff}")
+        stem = assembly_stem(original.name)
+        gff = find_gff(stem, gcf, gca)
+        if gff is not None:
+            link_into(gff_dst, gff, name=f"{stem}.gff")
+            gff_linked += 1
         else:
-            no_gff_dir += 1
-            report.append(f"gff\tgff_not_in_related_lr\t{original.name}\t{original}")
+            missing_gff += 1
+            report.append(f"gff\tmissing_gff\t{stem}\t{gcf}\t{gca}")
 
     report_path = LRA_STAGING / "lra_staging_report.tsv"
     report_path.write_text("kind\tstatus\tdetail...\n" + "\n".join(report) + ("\n" if report else ""))
@@ -150,8 +173,7 @@ def main() -> int:
         f"cleared_old_symlinks={cleared}\n"
         f"assemblies: symlinked={asm_linked} missing_assembly={missing_asm} "
         f"already_in_sr_staging={already_sr}\n"
-        f"gff: symlinked={gff_linked} missing_gff={missing_gff} "
-        f"gff_not_in_related_lr={no_gff_dir}\n"
+        f"gff: symlinked={gff_linked} missing_gff={missing_gff}\n"
         f"\nReport: {report_path} ({len(report)} problem rows)"
     )
     return 0
