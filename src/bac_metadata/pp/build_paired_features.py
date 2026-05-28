@@ -60,7 +60,10 @@ DEFAULT_OUT_DIR      = DATA_ROOT / "david/processed/complete_vs_sr_genomes"
 PAIRED_INDEX_LRA_FINAL_SET_COLS = [
     "tier",                       # "GCF" / "GCA"
     "level",                      # NCBI assembly_level: "Complete Genome", "Chromosome", "Scaffold", "Contig", NaN
+    "library_class",              # hybrid / long_only / short_only / unknown (from NCBI sequencing_tech)
     "is_complete",                # bool: level == "Complete Genome"
+    "is_hybrid",                  # bool: library_class == "hybrid"
+    "is_reference_genome",        # bool: is_complete ∧ is_hybrid ∧ GCF-scored
     "is_refseq",                  # bool: source had a RefSeq curation
     "is_norway",                  # bool: from Norway Table S1
     "stale_refseq",               # bool: NCBI suppression-aware

@@ -7,9 +7,13 @@ where:
 
 - ``Sample`` is the **assembly key**: GCF/GCA where an LRA exists in
   ``lra_final_list.tsv``, SR BioSample where not.
-- ``lra_final_list`` (bool) is the headline quality flag. Replaces both
-  ``is_complete`` (dropped; NCBI ``assembly_level`` is unreliable) and
-  ``is_refseq`` (dropped; encoded in ``Sample.startswith("GCF_")``).
+- ``lra_final_list`` (bool) is the headline quality flag. ``is_refseq`` is
+  dropped (encoded in ``Sample.startswith("GCF_")``).
+- ``is_complete`` / ``is_hybrid`` / ``is_reference_genome`` (bool) are
+  NCBI-derived per-row flags (G.7) carried from ``lra_final_list.tsv`` onto
+  LRA-bearing rows; False on SR rows. ``assembly_level`` is now collected
+  fresh from NCBI (``lra_ncbi_assembly_meta.tsv``), so ``is_complete`` is
+  reliable and no longer dropped.
 - LRA-derived columns sit alongside SR-derived columns (``lra_gca``,
   ``lra_gcf``, ``lra_assembly_file``, ``lra_gff_file``,
   ``lr_run_accession``, ``lr_instrument_platform``, ``lr_instrument_model``,
@@ -32,7 +36,7 @@ Pipeline order:
      LRA's ``scoring_accession``.
   3. **Merge** the 957 SR + is_refseq pairs (copy SR metadata onto the
      refseq row, drop the SR row).
-  4. **Rename + drop** legacy columns (``is_complete``, ``is_refseq``).
+  4. **Rename + drop** legacy columns (``is_refseq``).
   5. **Ingest orphan LRAs** — LRAs with no metadata row to attach to
      (~124, almost all Norway-sourced) are appended as pure-LR rows,
      enriched from ``Norway_Complete_Genomes_Fig1.xlsx`` (host, source,
@@ -82,6 +86,9 @@ NEW_LRA_COLUMNS = [
     "lra_final_list",
     "lra_gca",
     "lra_gcf",
+    "is_complete",
+    "is_hybrid",
+    "is_reference_genome",
     "lra_assembly_file",
     "lra_gff_file",
     "lr_run_accession",
@@ -92,8 +99,15 @@ NEW_LRA_COLUMNS = [
     "isescan_needs_recall",
 ]
 
-# Columns dropped wholesale (replaced by the new schema).
-DROPPED_COLUMNS = ["is_complete", "is_refseq"]
+# NCBI-derived per-row flags carried from lra_final_list onto LRA-bearing rows.
+LRA_FLAG_COLUMNS = ["is_complete", "is_hybrid", "is_reference_genome"]
+
+# Columns dropped wholesale (replaced by the new schema). is_complete is NO
+# LONGER dropped — it is now NCBI-authoritative (G.7) and carried from
+# lra_final_list. is_complete_norway_genome is intentionally retained (still
+# consumed by merge_norway_pairs_into_v2 + bac_panaroo/bac_isescan; its removal
+# is deferred to the G.5 caller sweep).
+DROPPED_COLUMNS = ["is_refseq"]
 
 # Existing columns renamed.
 RENAMED_COLUMNS = {
@@ -314,6 +328,7 @@ def ingest_orphan_lras(
     disc_cols = [c for c in (
         "scoring_accession", "GCA", "GCF", "Sample", "fasta_on_disk",
         "related_lr_run_accession", "source_norway",
+        "is_complete", "is_hybrid", "is_reference_genome",
     ) if c in disc.columns]
     o = orphans[["scoring_accession"]].drop_duplicates().merge(
         disc[disc_cols], on="scoring_accession", how="left",
@@ -386,6 +401,10 @@ def ingest_orphan_lras(
     scaffold["lra_final_list"] = True
     scaffold["kleborate_needs_recall"] = True
     scaffold["isescan_needs_recall"] = True
+    # NCBI-derived flags carried from disc (orphans are all in lra_final_list).
+    for _f in ("is_complete", "is_hybrid", "is_reference_genome"):
+        if _f in o.columns and _f in scaffold.columns:
+            scaffold[_f] = o[_f].fillna(False).to_numpy()
     if "_was_v1_is_refseq" in v2_columns:
         scaffold["_was_v1_is_refseq"] = False  # new rows, not from v1
 
@@ -490,6 +509,7 @@ def build_metadata_v2(
             "scoring_accession", "GCA", "GCF", "fasta_on_disk",
             "related_lr_run_accession", "_lra_final_list",
             "lr_instrument_platform", "lr_instrument_model",
+            *LRA_FLAG_COLUMNS,
         ]],
         on="scoring_accession", how="left",
     )
@@ -501,6 +521,10 @@ def build_metadata_v2(
     v2["lra_final_list"] = False
     v2["kleborate_needs_recall"] = False
     v2["isescan_needs_recall"] = False
+    # NCBI-derived flags default False everywhere (incl. SR rows + any legacy v1
+    # is_complete values); overlaid True on matched LRA rows below.
+    for _f in LRA_FLAG_COLUMNS:
+        v2[_f] = False
 
     # ── 3. Apply LRA overlay on every matched row.
     overlay_cols = {
@@ -510,6 +534,9 @@ def build_metadata_v2(
         "related_lr_run_accession": "lr_run_accession",
         "lr_instrument_platform": "lr_instrument_platform",
         "lr_instrument_model": "lr_instrument_model",
+        "is_complete": "is_complete",
+        "is_hybrid": "is_hybrid",
+        "is_reference_genome": "is_reference_genome",
     }
     for _, m in matched.iterrows():
         idx = m["target_idx"]
@@ -745,6 +772,14 @@ def main(argv: list[str] | None = None) -> int:
     disc = pd.read_csv(args.discovery, sep="\t", low_memory=False)
     final_set = pd.read_csv(args.final_set, sep="\t", low_memory=False)
     final_set_accs = set(final_set["scoring_accession"].astype(str))
+    # Carry the NCBI-derived flags (derived once in build_lra_set) onto disc by
+    # scoring_accession so the v2 overlay can place them on LRA-bearing rows.
+    _present = [c for c in LRA_FLAG_COLUMNS if c in final_set.columns]
+    if _present:
+        _flags = final_set[["scoring_accession", *_present]].drop_duplicates("scoring_accession")
+        disc = disc.merge(_flags, on="scoring_accession", how="left")
+    for c in LRA_FLAG_COLUMNS:
+        disc[c] = _coerce_bool(disc[c]) if c in disc.columns else False
     lr_runs = pd.read_csv(args.lr_runs, low_memory=False) if args.lr_runs.exists() else pd.DataFrame()
     table_s1_df = load_norway_table_s1(args.table_s1)
 

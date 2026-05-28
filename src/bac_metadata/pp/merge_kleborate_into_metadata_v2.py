@@ -218,6 +218,31 @@ def apply_cascade(
     stats["lra_rows_null_species_post_cascade"] = int(null_species.sum())
     stats["lra_final_list_count_post_cascade"] = int(final_lra.sum())
 
+    # ── kpsc_final_list integrity gate (G.7) ──────────────────────────────
+    # Canonical rule on LRA-bearing rows (Sample is a GCF/GCA assembly key):
+    #   kpsc_final_list = lra_final_list AND is_kpsc.
+    # is_kpsc must be non-NaN on every accepted (lra_final_list=True) LRA row;
+    # a NaN there is a bug (missing species call) and is reported by Sample so
+    # it can be chased. SR rows keep their v1 kpsc_final_list untouched.
+    lra_bearing = meta["Sample"].astype(str).str.startswith(("GCF_", "GCA_"))
+    raw_kpsc = meta["is_kpsc"]
+    is_kpsc_nan = raw_kpsc.isna() | raw_kpsc.astype(str).str.strip().isin(["", "nan", "<NA>", "None"])
+    bad = lra_bearing & final_lra & is_kpsc_nan
+    stats["kpsc_gate_accepted_lra_rows"] = int((lra_bearing & final_lra).sum())
+    stats["kpsc_gate_is_kpsc_nan_on_accepted"] = int(bad.sum())
+    if bad.any():
+        print(f"\n⚠  kpsc gate: {int(bad.sum())} accepted LRA rows have NaN is_kpsc "
+              "(species call needs chasing):", file=sys.stderr)
+        for s in meta.loc[bad, "Sample"].astype(str).tolist()[:30]:
+            print(f"     {s}", file=sys.stderr)
+    desired_full = final_lra & _coerce_bool(meta["is_kpsc"])
+    pre_full = _coerce_bool(meta["kpsc_final_list"])
+    stats["kpsc_gate_amended"] = int((lra_bearing & (desired_full != pre_full)).sum())
+    meta.loc[lra_bearing, "kpsc_final_list"] = desired_full[lra_bearing].values
+    # Post-amend assertion: zero residual mismatch on LRA-bearing rows.
+    post_full = _coerce_bool(meta["kpsc_final_list"])
+    stats["kpsc_gate_residual_mismatch"] = int((lra_bearing & (post_full != desired_full)).sum())
+
     return meta, stats
 
 
