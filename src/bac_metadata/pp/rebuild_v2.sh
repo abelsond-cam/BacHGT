@@ -13,13 +13,15 @@
 #   5. import_sr_kleborate            concat seb/kleborate_v3.2.4 batches → sidecar
 #   6. import_sr_isescan              concat seb/ISEScan_results/csv_files → sidecar
 #   7. build_sr_shadow_for_lra        SR-side snapshot for paired rows (consumes sidecars)
+#   8. add_paths_gff_fna_to_metadata  fill lra_gff_file (+ lra_assembly_file where empty)
+#                                     from the related_lr/{assemblies,gff} pools (--mode lra)
 #
 # Each merge step backs up v2 with a UTC-stamped .bak.*.tsv before
 # overwriting; safe to re-run.
 #
 # Usage:
 #   ./rebuild_v2.sh                  # full rebuild from v1
-#   ./rebuild_v2.sh --skip-g1        # keep existing v2; re-run steps 2-7
+#   ./rebuild_v2.sh --skip-g1        # keep existing v2; re-run steps 2-8
 #   ./rebuild_v2.sh --skip-isescan   # skip step 4 (e.g. when ISEScan array
 #                                    # hasn't completed yet)
 #   ./rebuild_v2.sh --skip-sr-import # skip steps 5-6 (use existing sidecars)
@@ -51,34 +53,37 @@ done
 step() { echo ""; echo "=================================================================="; echo "$1"; echo "=================================================================="; }
 
 if (( SKIP_G1 == 0 )); then
-    step "Step 1/7: build_metadata_v2 (fresh from v1)"
+    step "Step 1/8: build_metadata_v2 (fresh from v1)"
     uv run python -m bac_metadata.pp.build_metadata_v2
 fi
 
-step "Step 2/7: merge_norway_pairs_into_v2"
+step "Step 2/8: merge_norway_pairs_into_v2"
 uv run python -m bac_metadata.pp.merge_norway_pairs_into_v2
 
-step "Step 3/7: merge_kleborate_into_metadata_v2"
+step "Step 3/8: merge_kleborate_into_metadata_v2"
 uv run python -m bac_metadata.pp.merge_kleborate_into_metadata_v2
 
 if (( SKIP_ISESCAN == 0 )); then
-    step "Step 4/7: merge_isescan_into_metadata_v2"
+    step "Step 4/8: merge_isescan_into_metadata_v2"
     uv run python -m bac_metadata.pp.merge_isescan_into_metadata_v2
 else
-    step "Step 4/7: merge_isescan_into_metadata_v2  (SKIPPED via --skip-isescan)"
+    step "Step 4/8: merge_isescan_into_metadata_v2  (SKIPPED via --skip-isescan)"
 fi
 
 if (( SKIP_SR_IMPORT == 0 )); then
-    step "Step 5/7: import_sr_kleborate  (concat seb/kleborate_v3.2.4/ → sidecar)"
+    step "Step 5/8: import_sr_kleborate  (concat seb/kleborate_v3.2.4/ → sidecar)"
     uv run python -m bac_metadata.pp.import_sr_kleborate
 
-    step "Step 6/7: import_sr_isescan    (collate seb/ISEScan_results/csv_files/ → sidecar)"
+    step "Step 6/8: import_sr_isescan    (collate seb/ISEScan_results/csv_files/ → sidecar)"
     uv run python -m bac_metadata.pp.import_sr_isescan
 else
-    step "Steps 5-6/7: import_sr_kleborate + import_sr_isescan  (SKIPPED via --skip-sr-import)"
+    step "Steps 5-6/8: import_sr_kleborate + import_sr_isescan  (SKIPPED via --skip-sr-import)"
 fi
 
-step "Step 7/7: build_sr_shadow_for_lra  (consumes both sidecars)"
+step "Step 7/8: build_sr_shadow_for_lra  (consumes both sidecars)"
 uv run python -m bac_metadata.pp.build_sr_shadow_for_lra
+
+step "Step 8/8: add_paths_gff_fna_to_metadata --mode lra  (fill lra_gff_file from related_lr pools)"
+uv run python -m bac_metadata.pp.add_paths_gff_fna_to_metadata --mode lra
 
 step "DONE"
