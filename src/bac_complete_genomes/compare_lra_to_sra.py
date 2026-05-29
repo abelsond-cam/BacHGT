@@ -16,15 +16,16 @@ Two modes, one builder:
 Wide schema (one row per feature, both modes), column order:
 
     feature
-    lr_pickup, sr_pickup, lr_sr_pickup_ratio
+    lr_per_genome_sensitivity, sr_per_genome_sensitivity, lr_sr_sensitivity_ratio
     penetrance_concordance               (paired only; blank in clonal_group)
     lr_gene_count, sr_gene_count, lr_sr_gene_count_ratio
     lr_copies_per_carrier, sr_copies_per_carrier, lr_sr_copies_per_carrier_ratio
     n_lr, n_sr
 
-Pickup = ``n_positive_in_arm / n_total_in_arm`` — the per-arm detection rate.
-(Named ``pickup`` rather than ``penetrance`` to keep it distinct from
-``penetrance_concordance``, which describes 2×2 agreement.) Copy counts are summed
+Per-genome sensitivity = ``n_positive_in_arm / n_total_in_arm`` — the per-arm
+detection rate, i.e. the fraction of genomes in which the feature was called.
+Distinct from ``penetrance_concordance`` (pair-level 2×2 agreement) and from
+``lr_gene_count`` (per-feature copy totals). Copy counts are summed
 over the arm: ISEScan reads ``IS_<fam>`` directly; acquired-AMR uses
 ``count_acquired_tokens``; virulence BSCs use Σ allele presence over each
 locus's allele set. MLST loci are single-copy → presence-only, so the six
@@ -149,9 +150,9 @@ KLEBORATE_ABSENT_TOKENS: frozenset[str] = frozenset(
 
 WIDE_OUTPUT_COLUMN_ORDER: list[str] = [
     "feature",
-    "lr_pickup",
-    "sr_pickup",
-    "lr_sr_pickup_ratio",
+    "lr_per_genome_sensitivity",
+    "sr_per_genome_sensitivity",
+    "lr_sr_sensitivity_ratio",
     "penetrance_concordance",
     "lr_gene_count",
     "sr_gene_count",
@@ -163,7 +164,7 @@ WIDE_OUTPUT_COLUMN_ORDER: list[str] = [
     "n_sr",
 ]
 
-PAIRED_COHORTS = ("lra_final_list", "reference_genome")
+PAIRED_COHORTS = ("lra_final_list", "complete_genome", "reference_genome")
 
 
 # ---------------------------------------------------------------------------
@@ -229,12 +230,17 @@ def sluggify(group_name) -> str:
 def _select_paired_cohort(meta: pd.DataFrame, cohort: str) -> pd.DataFrame:
     """Return rows for a paired cohort: LRA-bearing with an ``sr_biosample`` partner.
 
-    ``reference_genome`` further restricts to ``is_reference_genome == True``
-    (a strict subset of ``lra_final_list``).
+    ``complete_genome`` further restricts to ``is_complete == True`` (assemblies
+    deposited as 'complete' — single-chromosome, no gaps); ``reference_genome``
+    further restricts to ``is_reference_genome == True`` (RefSeq references, a
+    strict subset of ``complete_genome``).
     """
     lra = meta["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
     sel = lra & meta["sr_biosample"].notna()
-    if cohort == "reference_genome":
+    if cohort == "complete_genome":
+        comp = meta["is_complete"].astype(str).str.lower().isin({"true", "1", "yes"})
+        sel = sel & comp
+    elif cohort == "reference_genome":
         refg = meta["is_reference_genome"].astype(str).str.lower().isin({"true", "1", "yes"})
         sel = sel & refg
     out = meta[sel].copy()
@@ -271,9 +277,9 @@ def _wide_feature_row(
     n_lr_pos = int(lr_pres.sum())
     n_sr_pos = int(sr_pres.sum())
 
-    lr_pickup = n_lr_pos / n_lr if n_lr else float("nan")
-    sr_pickup = n_sr_pos / n_sr if n_sr else float("nan")
-    pickup_ratio = (lr_pickup / sr_pickup) if sr_pickup else float("nan")
+    lr_sens = n_lr_pos / n_lr if n_lr else float("nan")
+    sr_sens = n_sr_pos / n_sr if n_sr else float("nan")
+    sens_ratio = (lr_sens / sr_sens) if sr_sens else float("nan")
 
     if paired:
         a = int(((lr_pres == 1) & (sr_pres == 1)).sum())
@@ -284,9 +290,9 @@ def _wide_feature_row(
 
     row: dict = {
         "feature": feature,
-        "lr_pickup": lr_pickup,
-        "sr_pickup": sr_pickup,
-        "lr_sr_pickup_ratio": pickup_ratio,
+        "lr_per_genome_sensitivity": lr_sens,
+        "sr_per_genome_sensitivity": sr_sens,
+        "lr_sr_sensitivity_ratio": sens_ratio,
         "penetrance_concordance": pen_conc,
         "lr_gene_count": pd.NA,
         "sr_gene_count": pd.NA,
@@ -476,20 +482,20 @@ def _clonal_group_features(rows: pd.DataFrame, is_lr_mask: pd.Series) -> list[di
 
 
 def _print_paired_summary(out: pd.DataFrame, label: str) -> None:
-    """Print n features, count with ``lr_sr_pickup_ratio > 1``, top-10 by ratio."""
+    """Print n features, count with ``lr_sr_sensitivity_ratio > 1``, top-10 by ratio."""
     n_features = len(out)
     if n_features == 0:
         print(f"  ({label}) no features")
         return
-    ratio = out["lr_sr_pickup_ratio"]
+    ratio = out["lr_sr_sensitivity_ratio"]
     n_lr_higher = int((ratio > 1).sum())
-    print(f"  ({label}) features={n_features}  lr_sr_pickup_ratio>1: {n_lr_higher}")
-    top = out.sort_values("lr_sr_pickup_ratio", ascending=False, na_position="last").head(10)
-    print(f"  Top 10 by lr_sr_pickup_ratio ({label}):")
+    print(f"  ({label}) features={n_features}  lr_sr_sensitivity_ratio>1: {n_lr_higher}")
+    top = out.sort_values("lr_sr_sensitivity_ratio", ascending=False, na_position="last").head(10)
+    print(f"  Top 10 by lr_sr_sensitivity_ratio ({label}):")
     for _, r in top.iterrows():
-        lr_p = "-" if pd.isna(r["lr_pickup"]) else f"{r['lr_pickup']:.3f}"
-        sr_p = "-" if pd.isna(r["sr_pickup"]) else f"{r['sr_pickup']:.3f}"
-        rat = "-" if pd.isna(r["lr_sr_pickup_ratio"]) else f"{r['lr_sr_pickup_ratio']:.3f}"
+        lr_p = "-" if pd.isna(r["lr_per_genome_sensitivity"]) else f"{r['lr_per_genome_sensitivity']:.3f}"
+        sr_p = "-" if pd.isna(r["sr_per_genome_sensitivity"]) else f"{r['sr_per_genome_sensitivity']:.3f}"
+        rat = "-" if pd.isna(r["lr_sr_sensitivity_ratio"]) else f"{r['lr_sr_sensitivity_ratio']:.3f}"
         print(f"    {str(r['feature']):40s}  lr={lr_p}  sr={sr_p}  ratio={rat}")
 
 
@@ -545,7 +551,11 @@ def _run_clonal_group_cohort(
     per_cg_dir.mkdir(parents=True, exist_ok=True)
 
     lra = meta["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
-    if cohort == "reference_genome":
+    if cohort == "complete_genome":
+        comp = meta["is_complete"].astype(str).str.lower().isin({"true", "1", "yes"})
+        is_lr = lra & comp
+        lr_def = "lra_final_list & is_complete"
+    elif cohort == "reference_genome":
         refg = meta["is_reference_genome"].astype(str).str.lower().isin({"true", "1", "yes"})
         is_lr = lra & refg
         lr_def = "lra_final_list & is_reference_genome"
@@ -604,10 +614,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--cohort",
-        choices=["lra_final_list", "reference_genome", "both"],
+        choices=["lra_final_list", "complete_genome", "reference_genome", "all"],
         default="lra_final_list",
-        help="Which LR cohort to use. lra_final_list (default), reference_genome "
-        "(strict subset), or both (one set of outputs per cohort).",
+        help="Which LR cohort to use. Nested subsets: lra_final_list (default) ⊃ "
+        "complete_genome (is_complete) ⊃ reference_genome (is_reference_genome). "
+        "Use 'all' to emit one set of outputs per cohort.",
     )
     parser.add_argument(
         "--min-per-arm",
@@ -629,7 +640,7 @@ def main() -> None:
     meta = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
     print(f"  rows: {len(meta):,}")
 
-    cohorts = list(PAIRED_COHORTS) if args.cohort == "both" else [args.cohort]
+    cohorts = list(PAIRED_COHORTS) if args.cohort == "all" else [args.cohort]
 
     if args.mode == "paired":
         print(f"Loading SR-shadow:   {args.sr_shadow}")

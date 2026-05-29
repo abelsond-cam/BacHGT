@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Horizontal bar chart of paired LR/SR pickup ratio per feature.
+"""Horizontal bar chart of paired LR/SR per-genome sensitivity ratio per feature.
 
 Reads the wide TSVs written by ``compare_lra_to_sra --mode paired``:
 
     lra_vs_sr_kleborate__<cohort>.tsv
     lra_vs_sr_isescan__<cohort>.tsv
 
-For each row computes the 95% CI on the paired pickup ratio using the
+For each row computes the 95% CI on the paired sensitivity ratio using the
 delta-method log-ratio variance for matched binary data (Nam 1995):
 
     Var(log R) = (b + c) / [(a + b) (a + c)]
@@ -14,8 +14,8 @@ delta-method log-ratio variance for matched binary data (Nam 1995):
 with the 2×2 cells recovered from the wide schema:
 
     b + c = n_lr * (1 - penetrance_concordance)
-    a + b = n_lr * lr_pickup
-    a + c = n_lr * sr_pickup
+    a + b = n_lr * lr_per_genome_sensitivity
+    a + c = n_lr * sr_per_genome_sensitivity
 
 The bars are sorted by ratio descending; a dashed line at x=1 marks
 equivalence. Writes one PNG per feature class.
@@ -61,8 +61,8 @@ def _paired_log_ratio_ci(df: pd.DataFrame, z: float = 1.96) -> pd.DataFrame:
     """Add ``ratio``, ``ci_lo``, ``ci_hi`` (95% delta-method paired CI on log R)."""
     out = df.copy()
     n = out["n_lr"].astype(float)
-    p_lr = out["lr_pickup"].astype(float)
-    p_sr = out["sr_pickup"].astype(float)
+    p_lr = out["lr_per_genome_sensitivity"].astype(float)
+    p_sr = out["sr_per_genome_sensitivity"].astype(float)
     conc = out["penetrance_concordance"].astype(float)
 
     # SE(log R) = sqrt( (1 - concordance) / (n * p_lr * p_sr) )
@@ -70,7 +70,7 @@ def _paired_log_ratio_ci(df: pd.DataFrame, z: float = 1.96) -> pd.DataFrame:
         var_log = (1.0 - conc) / (n * p_lr * p_sr)
         se_log = np.sqrt(var_log)
 
-    ratio = out["lr_sr_pickup_ratio"].astype(float)
+    ratio = out["lr_sr_sensitivity_ratio"].astype(float)
     out["ratio"] = ratio
     out["ci_lo"] = ratio * np.exp(-z * se_log)
     out["ci_hi"] = ratio * np.exp(+z * se_log)
@@ -109,7 +109,7 @@ def _plot_one(df: pd.DataFrame, out_png: Path, title: str) -> None:
     ax.axvline(1.0, linestyle="--", color="black", linewidth=0.9, alpha=0.8)
     ax.set_yticks(y)
     ax.set_yticklabels(df["feature"].tolist(), fontsize=8)
-    ax.set_xlabel("LR / SR pickup ratio (95% CI)")
+    ax.set_xlabel("LR / SR per-genome sensitivity ratio (95% CI)")
     ax.set_title(title)
 
     x_max = float(np.nanmax(hi)) if np.isfinite(hi).any() else float(np.nanmax(ratio))
@@ -147,12 +147,12 @@ def main() -> None:
     _plot_one(
         klebo,
         args.output_dir / "lra_vs_sr_prevalence_kleborate_ratio.png",
-        f"LR vs SR pickup ratio — Kleborate ({args.cohort})",
+        f"LR vs SR per-genome sensitivity ratio — Kleborate ({args.cohort})",
     )
     _plot_one(
         isescan,
         args.output_dir / "lra_vs_sr_prevalence_isescan_ratio.png",
-        f"LR vs SR pickup ratio — ISEScan ({args.cohort})",
+        f"LR vs SR per-genome sensitivity ratio — ISEScan ({args.cohort})",
     )
 
 
