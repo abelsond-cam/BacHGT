@@ -41,7 +41,7 @@ construction; `penetrance_concordance = (a+d)/n_pairs` from the 2×2.
 
 | Module | Purpose |
 |---|---|
-| `compare_lra_to_sra.py` (top level; `--mode paired`) | Paired driver. Writes `lra_vs_sr_kleborate__<cohort>.tsv` (virulence → MLST → AMR) and `lra_vs_sr_isescan__<cohort>.tsv` (alphabetical) per cohort. |
+| `compare_lra_to_sra.py` (top level; `--mode paired`) | Paired driver. Writes `lra_vs_sr_kleborate__<cohort>.tsv` (virulence → joint `Complete chromosomal ST` → AMR) and `lra_vs_sr_isescan__<cohort>.tsv` (alphabetical) per cohort. Cohorts are nested: `lra_final_list` ⊃ `complete_genome` (`is_complete`) ⊃ `reference_genome` (`is_reference_genome`). |
 | `paired_lra_vs_sra/notebooks/lra_vs_sr_comparison.ipynb` | The G.4 analysis notebook — per-category bar charts + the headline LR-pickup figure built from the wide rows. |
 
 ### Cross-section (clonal_group mode) — `per_clonal_group/`
@@ -55,7 +55,7 @@ subsets — `n_lr ≠ n_sr` in general. One combined wide TSV per CG with
 
 | Module | Purpose |
 |---|---|
-| `compare_lra_to_sra.py` (top level; `--mode clonal_group`) | Cross-section driver. Writes `<output_dir>/per_clonal_group/<CG>.tsv` (virulence → MLST → AMR → ISEScan). |
+| `compare_lra_to_sra.py` (top level; `--mode clonal_group`) | Cross-section driver. Writes `<output_dir>/per_clonal_group/<CG>.tsv` (virulence → joint `Complete chromosomal ST` → AMR → ISEScan). |
 | `per_clonal_group/cg_virulence_penetrance_all.py` | Per-CG virulence-BSC penetrance for every CG above a threshold; long-format TSV + scatter. |
 | `per_clonal_group/cg_virulence_penetrance_scatter.py` | Plot helper consumed by the all-CG penetrance driver. |
 

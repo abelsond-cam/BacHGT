@@ -41,7 +41,7 @@ _ISESCAN_COLOR = "#2ca02c"
 def _classify(feature: str) -> str:
     if feature.endswith(" bsc"):
         return "virulence"
-    if feature.endswith(" chromosomal"):
+    if feature == "Complete chromosomal ST":
         return "mlst"
     if feature.endswith("_acquired"):
         return "amr"

@@ -34,11 +34,19 @@ count columns are blank.
 Outputs:
 
 - **paired**: two TSVs per cohort,
-  ``lra_vs_sr_kleborate__<cohort>.tsv`` (virulence → MLST → AMR) and
-  ``lra_vs_sr_isescan__<cohort>.tsv`` (alphabetical).
+  ``lra_vs_sr_kleborate__<cohort>.tsv`` (virulence → joint chromosomal ST →
+  AMR) and ``lra_vs_sr_isescan__<cohort>.tsv`` (alphabetical).
 - **clonal_group**: one combined TSV per qualifying CG at
-  ``<output_dir>/per_clonal_group/<CG>.tsv`` (virulence → MLST → AMR → ISEScan).
-  Only CGs with ``≥ --min-per-arm`` rows in BOTH arms are written.
+  ``<output_dir>/per_clonal_group/<CG>.tsv`` (virulence → joint chromosomal
+  ST → AMR → ISEScan). Only CGs with ``≥ --min-per-arm`` rows in BOTH arms
+  are written.
+
+The 7 KpSC chromosomal MLST loci are collapsed to one row, ``Complete
+chromosomal ST``: the AND across all 7 per-locus presence calls. The 7
+individual loci type in lockstep per genome (per-genome assembly quality
+dominates per-locus biology), so the joint call is the more informative
+single statistic — a small per-locus gap powers up sevenfold (e.g. 0.96 →
+0.98 per locus = ~15% on the joint ST), matching what we observe.
 """
 
 from __future__ import annotations
@@ -331,9 +339,30 @@ def _virulence_bsc_name(code: str, info: dict) -> str:
     return f"{lineage} ({code}) bsc" if lineage else f"{code} bsc"
 
 
-def _mlst_name(locus: str) -> str:
-    """Wide-schema feature name for an MLST locus, e.g. ``gapA chromosomal``."""
-    return f"{locus} chromosomal"
+CHROMOSOMAL_ST_NAME = "Complete chromosomal ST"
+"""Joint-call feature name: present iff all 7 KpSC chromosomal MLST loci type.
+
+Reported as a single row instead of one per locus. The 7 loci typed in
+near-lockstep per genome (per-genome assembly quality dominates per-locus
+biology), so 7 near-identical rows of ratio ~1.05 add noise; the joint ST
+recovery, which is the AND of the 7 per-locus calls, surfaces the actual
+compound effect — a ~2% per-locus gap powers up to ~15% on the joint.
+"""
+
+
+def _mlst_joint_presence(df: pd.DataFrame, prefix: str = "") -> pd.Series | None:
+    """Return 0/1 Series for ``all 7 loci called``; None if any locus column is missing.
+
+    ``prefix`` is ``""`` (LR side: bare ``gapA`` etc.) or ``"sr_"`` (paired SR
+    side: ``sr_gapA`` etc.).
+    """
+    series_list = []
+    for locus in KLEBORATE_CHROMOSOMAL_MLST_COLS:
+        col = f"{prefix}{locus}"
+        if col not in df.columns:
+            return None
+        series_list.append(kleborate_column_to_presence(df[col]))
+    return (sum(series_list) == len(KLEBORATE_CHROMOSOMAL_MLST_COLS)).astype(int)
 
 
 # ---------------------------------------------------------------------------
@@ -366,15 +395,11 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
             )
         )
 
-    # Chromosomal MLST (presence-only)
-    for locus in KLEBORATE_CHROMOSOMAL_MLST_COLS:
-        if locus not in merged.columns or f"sr_{locus}" not in merged.columns:
-            continue
-        lr_present = kleborate_column_to_presence(merged[locus])
-        sr_present = kleborate_column_to_presence(merged[f"sr_{locus}"])
-        rows.append(
-            _wide_feature_row(lr_present, sr_present, None, None, _mlst_name(locus), paired=True)
-        )
+    # Chromosomal MLST — collapsed to a single joint row (all 7 loci called).
+    lr_st = _mlst_joint_presence(merged, prefix="")
+    sr_st = _mlst_joint_presence(merged, prefix="sr_")
+    if lr_st is not None and sr_st is not None:
+        rows.append(_wide_feature_row(lr_st, sr_st, None, None, CHROMOSOMAL_ST_NAME, paired=True))
 
     # Acquired AMR
     for col in acquired_column_names(list(merged.columns)):
@@ -445,15 +470,11 @@ def _clonal_group_features(rows: pd.DataFrame, is_lr_mask: pd.Series) -> list[di
             )
         )
 
-    # Chromosomal MLST (presence-only)
-    for locus in KLEBORATE_CHROMOSOMAL_MLST_COLS:
-        if locus not in cols:
-            continue
-        lr_present = kleborate_column_to_presence(lr_df[locus])
-        sr_present = kleborate_column_to_presence(sr_df[locus])
-        out.append(
-            _wide_feature_row(lr_present, sr_present, None, None, _mlst_name(locus), paired=False)
-        )
+    # Chromosomal MLST — collapsed to a single joint row (all 7 loci called).
+    lr_st = _mlst_joint_presence(lr_df, prefix="")
+    sr_st = _mlst_joint_presence(sr_df, prefix="")
+    if lr_st is not None and sr_st is not None:
+        out.append(_wide_feature_row(lr_st, sr_st, None, None, CHROMOSOMAL_ST_NAME, paired=False))
 
     # Acquired AMR
     for col in acquired_column_names(list(rows.columns)):
