@@ -781,9 +781,11 @@ def _paired_numeric_stats(
     - ``both_negative`` = 0                       — no both-absent pairs in a co-carrier subset.
 
     Identities: ``total LR copies = both_positive + lr_only`` and
-    ``total SR copies = both_positive + sr_only``. ``n_pairs`` = #co-carrier pairs;
-    ``lr_mean``/``sr_mean`` = mean copies among co-carriers; the paired-t / Wilcoxon
-    p-values still require ≥2 pairs + non-zero variance.
+    ``total SR copies = both_positive + sr_only``. ``lr_pickup_rate`` is the copy
+    fold-change ``total LR copies / total SR copies`` (>1 = LR recovers more
+    copies; <1 = SR more) — a plottable per-feature summary. ``n_pairs`` =
+    #co-carrier pairs; ``lr_mean``/``sr_mean`` = mean copies among co-carriers;
+    the paired-t / Wilcoxon p-values still require ≥2 pairs + non-zero variance.
     """
     lr = pd.to_numeric(lr_vals, errors="coerce")
     sr = pd.to_numeric(sr_vals, errors="coerce")
@@ -791,6 +793,12 @@ def _paired_numeric_stats(
     n_pairs = int(mask.sum())
     lr_v, sr_v = lr[mask].astype(float), sr[mask].astype(float)
     diff = lr_v - sr_v
+
+    shared = int(np.minimum(lr_v, sr_v).sum())
+    lr_extra = int(np.clip(lr_v - sr_v, 0, None).sum())
+    sr_extra = int(np.clip(sr_v - lr_v, 0, None).sum())
+    total_lr, total_sr = shared + lr_extra, shared + sr_extra
+    pickup = (total_lr / total_sr) if total_sr else float("nan")
 
     if n_pairs < 2 or diff.std(ddof=1) == 0 or diff.empty:
         t_p = float("nan")
@@ -812,11 +820,11 @@ def _paired_numeric_stats(
         "n_pairs":         n_pairs,
         "lr_mean":         float(lr_v.mean()) if n_pairs else float("nan"),
         "sr_mean":         float(sr_v.mean()) if n_pairs else float("nan"),
-        "both_positive":   int(np.minimum(lr_v, sr_v).sum()),
+        "both_positive":   shared,
         "both_negative":   0,
-        "lr_only":         int(np.clip(lr_v - sr_v, 0, None).sum()),
-        "sr_only":         int(np.clip(sr_v - lr_v, 0, None).sum()),
-        "lr_pickup_rate":  float("nan"),
+        "lr_only":         lr_extra,
+        "sr_only":         sr_extra,
+        "lr_pickup_rate":  pickup,
         "mcnemar_p":       float("nan"),
         "paired_t_p":      float(t_p),
         "wilcoxon_p":      float(w_p),
