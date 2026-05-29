@@ -168,6 +168,12 @@ def main(argv: list[str] | None = None) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     batches_dir = out_dir / BATCHES_SUBDIR
     batches_dir.mkdir(parents=True, exist_ok=True)
+    # Clear stale batch TSVs / lists from any previous run; batching is fully
+    # deterministic and a leftover from an earlier config (e.g. a species batch
+    # this config no longer emits) would be silently picked up by the list
+    # generator's find(1) glob.
+    for stale in [*batches_dir.glob("*.tsv"), *batches_dir.glob("*.list")]:
+        stale.unlink()
     log_path = batches_dir / LOG_FILENAME
     log = RunLog(log_path)
 
