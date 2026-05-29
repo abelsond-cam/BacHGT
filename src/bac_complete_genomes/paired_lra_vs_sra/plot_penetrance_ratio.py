@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from bac_complete_genomes.compare_lra_to_sra import DEFAULT_OUTPUT_DIR
+from bac_complete_genomes.compare_lra_to_sra import DEFAULT_OUTPUT_DIR, PAIRED_COHORTS
 
 _VIRULENCE_COLOR = "#1f77b4"
 _MLST_COLOR = "#7f7f7f"
@@ -128,32 +128,38 @@ def _plot_one(df: pd.DataFrame, out_png: Path, title: str) -> None:
     print(f"wrote {out_png}")
 
 
-def main() -> None:
-    """CLI entry point — write the two PNGs."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
-    parser.add_argument("--cohort", default="reference_genome")
-    args = parser.parse_args()
-
-    args.output_dir.mkdir(parents=True, exist_ok=True)
-
-    klebo_tsv = args.input_dir / f"lra_vs_sr_kleborate__{args.cohort}.tsv"
-    isescan_tsv = args.input_dir / f"lra_vs_sr_isescan__{args.cohort}.tsv"
-
-    klebo = pd.read_csv(klebo_tsv, sep="\t")
-    isescan = pd.read_csv(isescan_tsv, sep="\t")
-
+def _plot_cohort(input_dir: Path, output_dir: Path, cohort: str) -> None:
+    """Read the two wide TSVs for one cohort and write the two PNGs."""
+    klebo = pd.read_csv(input_dir / f"lra_vs_sr_kleborate__{cohort}.tsv", sep="\t")
+    isescan = pd.read_csv(input_dir / f"lra_vs_sr_isescan__{cohort}.tsv", sep="\t")
     _plot_one(
         klebo,
-        args.output_dir / "lra_vs_sr_prevalence_kleborate_ratio.png",
-        f"LR vs SR per-genome sensitivity ratio — Kleborate ({args.cohort})",
+        output_dir / f"lra_vs_sr_prevalence_kleborate_ratio__{cohort}.png",
+        f"LR vs SR per-genome sensitivity ratio — Kleborate ({cohort})",
     )
     _plot_one(
         isescan,
-        args.output_dir / "lra_vs_sr_prevalence_isescan_ratio.png",
-        f"LR vs SR per-genome sensitivity ratio — ISEScan ({args.cohort})",
+        output_dir / f"lra_vs_sr_prevalence_isescan_ratio__{cohort}.png",
+        f"LR vs SR per-genome sensitivity ratio — ISEScan ({cohort})",
     )
+
+
+def main() -> None:
+    """CLI entry point — write two PNGs per cohort."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument(
+        "--cohort",
+        choices=[*PAIRED_COHORTS, "all"],
+        default="reference_genome",
+    )
+    args = parser.parse_args()
+
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    cohorts = list(PAIRED_COHORTS) if args.cohort == "all" else [args.cohort]
+    for cohort in cohorts:
+        _plot_cohort(args.input_dir, args.output_dir, cohort)
 
 
 if __name__ == "__main__":
