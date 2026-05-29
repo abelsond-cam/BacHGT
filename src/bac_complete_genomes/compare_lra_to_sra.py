@@ -538,6 +538,38 @@ def _finalize_and_write(rows: list[dict], out_path: Path, label: str) -> None:
 # ---------------------------------------------------------------------------
 
 
+LINEAGE_SKEW_BUCKETS = (
+    ("pct_SL_lt_10", 0, 10),
+    ("pct_SL_10_to_99", 10, 100),
+    ("pct_SL_100_to_249", 100, 250),
+    ("pct_SL_gte_250", 250, None),
+)
+
+
+def _lineage_skew(meta: pd.DataFrame, cohort_meta: pd.DataFrame) -> dict:
+    """Return % of ``cohort_meta`` biosamples in each Sublineage-size bucket.
+
+    Universe = ``meta`` (i.e. all metadata_v2 rows with a non-null Sublineage).
+    Buckets are mutually exclusive and sum to 100% of cohort rows with an SL.
+    """
+    if "Sublineage" not in meta.columns or "Sublineage" not in cohort_meta.columns:
+        return {name: float("nan") for name, *_ in LINEAGE_SKEW_BUCKETS} | {"n_with_SL": 0}
+    sl_counts = meta["Sublineage"].dropna().astype(str).value_counts()
+    cohort_sl = cohort_meta["Sublineage"].dropna().astype(str)
+    n = len(cohort_sl)
+    if n == 0:
+        return {name: float("nan") for name, *_ in LINEAGE_SKEW_BUCKETS} | {"n_with_SL": 0}
+    sizes = cohort_sl.map(sl_counts).fillna(0)
+    out: dict = {"n_with_SL": n}
+    for name, lo, hi in LINEAGE_SKEW_BUCKETS:
+        if hi is None:
+            mask = sizes >= lo
+        else:
+            mask = (sizes >= lo) & (sizes < hi)
+        out[name] = 100.0 * float(mask.sum()) / n
+    return out
+
+
 def _median_year(series: pd.Series) -> tuple[float, int]:
     """Return ``(median year as float, n_parsed)`` for a date-string column.
 
@@ -581,6 +613,7 @@ def _build_chromosomal_st_summary(
         cohort_meta = _select_paired_cohort(meta, cohort)
         med_coll, n_coll = _median_year(cohort_meta.get("collection_date_parsed", pd.Series(dtype=object)))
         med_pub, n_pub = _median_year(cohort_meta.get("first_public", pd.Series(dtype=object)))
+        skew = _lineage_skew(meta, cohort_meta)
 
         rows.append(
             {
@@ -596,6 +629,7 @@ def _build_chromosomal_st_summary(
                 "n_with_collection_date": n_coll,
                 "median_first_public_year": med_pub,
                 "n_with_first_public": n_pub,
+                **skew,
             }
         )
     return pd.DataFrame(rows)
@@ -631,6 +665,21 @@ def _print_chromosomal_st_summary(df: pd.DataFrame) -> None:
         print(
             f"  {r['cohort']:<18} {int(r['n_pairs']):>8d} {coll} "
             f"{int(r['n_with_collection_date']):>7d} {pub} {int(r['n_with_first_public']):>9d}"
+        )
+
+    print(
+        "\n=== Lineage skew (% of cohort biosamples in Sublineages sized by total "
+        "metadata_v2 count) ==="
+    )
+    print(
+        f"  {'cohort':<18} {'n_with_SL':>10} "
+        f"{'SL<10 (%)':>11} {'SL 10-99 (%)':>14} {'SL 100-249 (%)':>16} {'SL>=250 (%)':>13}"
+    )
+    for _, r in df.iterrows():
+        print(
+            f"  {r['cohort']:<18} {int(r['n_with_SL']):>10d} "
+            f"{r['pct_SL_lt_10']:>11.1f} {r['pct_SL_10_to_99']:>14.1f} "
+            f"{r['pct_SL_100_to_249']:>16.1f} {r['pct_SL_gte_250']:>13.1f}"
         )
 
 
