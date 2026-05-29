@@ -104,10 +104,18 @@ GENOME_COLS = [
 
 
 def _abs_path(base: Path, rel: str | float | None) -> Path | None:
-    """Build absolute path; return None if rel is null/NaN."""
+    """Resolve a metadata path column to an absolute Path on disk.
+
+    v2 metadata is heterogeneous: ``gff_file`` / ``assembly_file`` are stored
+    relative to ``base`` (e.g. ``david/raw/...``), while ``lra_gff_file`` /
+    ``lra_assembly_file`` are full absolute paths (``/home/dca36/...``). Detect
+    the leading ``/`` to choose: absolute paths are used as-is; relative paths
+    are joined onto ``base``. Returns None for null / empty / NaN values.
+    """
     if pd.isna(rel) or rel is None or (isinstance(rel, str) and not rel.strip()):
         return None
-    p = base / str(rel).lstrip("/")
+    s = str(rel).strip()
+    p = Path(s) if s.startswith("/") else base / s
     return p.resolve()
 
 

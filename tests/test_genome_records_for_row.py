@@ -125,6 +125,43 @@ def test_skips_assembly_when_a_file_is_absent(tmp_path: Path) -> None:
     assert records[0]["assembly_type"] == "lra"
 
 
+def test_lra_absolute_path_not_double_prefixed(tmp_path: Path) -> None:
+    """v2 stores ``lra_*`` columns as absolute paths; base_dir must not be prepended.
+
+    Regression: the original ``base / str(rel).lstrip("/")`` double-prefixed
+    absolute LRA paths into ``base/home/dca36/...``, so no LRA record ever
+    survived disk-existence checks.
+    """
+    # SR files live under tmp_path (relative-path convention).
+    sr_gff = _touch(tmp_path / "SAMEA77.gff")
+    sr_fna = _touch(tmp_path / "SAMEA77.fna")
+    # LRA files live ELSEWHERE — at an absolute path outside tmp_path.
+    elsewhere = tmp_path.parent / "lra_root"
+    elsewhere.mkdir(exist_ok=True)
+    lra_gff = elsewhere / "GCF_99.1.gff"
+    lra_fna = elsewhere / "GCF_99.1.fna"
+    lra_gff.write_text("x")
+    lra_fna.write_text("x")
+
+    row = pd.Series(
+        {
+            "Sample": "GCF_99.1",
+            "sample_accession": "SAMEA77",
+            "gff_file": sr_gff,
+            "assembly_file": sr_fna,
+            "lra_gff_file": str(lra_gff),
+            "lra_assembly_file": str(lra_fna),
+        }
+    )
+
+    records = _genome_records_for_row(tmp_path, row)
+
+    assert len(records) == 2
+    by_type = {r["assembly_type"]: r for r in records}
+    assert by_type["lra"]["gff_abs"] == lra_gff.resolve()
+    assert by_type["lra"]["assembly_abs"] == lra_fna.resolve()
+
+
 def test_skips_sr_when_sample_accession_empty(tmp_path: Path) -> None:
     """SR files exist but sample_accession is empty: no SR record (cannot label)."""
     sr_gff = _touch(tmp_path / "x.gff")
