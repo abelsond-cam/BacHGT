@@ -20,10 +20,13 @@ virulence loci, chromosomal MLST, acquired AMR, and ISEScan IS families.
 
 Both modes share the same wide per-feature schema and the same row-building
 math (see `WIDE_OUTPUT_COLUMN_ORDER` in `compare_lra_to_sra.py`): per-arm
-penetrance + LR/SR penetrance ratio, gene-count totals + copies-per-carrier,
-and `n_lr` / `n_sr`. No p-values, no q-values, no `category`. The only column
-that differs is `penetrance_concordance` — populated in paired (from the 2×2
-contingency), blank in clonal_group (different samples in each arm).
+pickup (`n_positive_in_arm / n_total_in_arm`) + LR/SR pickup ratio,
+gene-count totals + copies-per-carrier, and `n_lr` / `n_sr`. No p-values,
+no q-values, no `category`. The only column that differs is
+`penetrance_concordance` — populated in paired (from the 2×2 contingency,
+`(a+d)/n`), blank in clonal_group (different samples in each arm). The
+pickup / concordance naming split makes the two ideas distinct: pickup is
+per-arm detection rate, concordance is pair-level agreement.
 
 ### Paired (paired mode) — `paired_lra_vs_sra/`
 

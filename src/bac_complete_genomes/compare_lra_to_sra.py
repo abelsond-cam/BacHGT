@@ -16,13 +16,15 @@ Two modes, one builder:
 Wide schema (one row per feature, both modes), column order:
 
     feature
-    lr_penetrance, sr_penetrance, lr_sr_penetrance_ratio
+    lr_pickup, sr_pickup, lr_sr_pickup_ratio
     penetrance_concordance               (paired only; blank in clonal_group)
     lr_gene_count, sr_gene_count, lr_sr_gene_count_ratio
     lr_copies_per_carrier, sr_copies_per_carrier, lr_sr_copies_per_carrier_ratio
     n_lr, n_sr
 
-Penetrance = ``n_positive_in_arm / n_total_in_arm``. Copy counts are summed
+Pickup = ``n_positive_in_arm / n_total_in_arm`` — the per-arm detection rate.
+(Named ``pickup`` rather than ``penetrance`` to keep it distinct from
+``penetrance_concordance``, which describes 2×2 agreement.) Copy counts are summed
 over the arm: ISEScan reads ``IS_<fam>`` directly; acquired-AMR uses
 ``count_acquired_tokens``; virulence BSCs use Σ allele presence over each
 locus's allele set. MLST loci are single-copy → presence-only, so the six
@@ -147,9 +149,9 @@ KLEBORATE_ABSENT_TOKENS: frozenset[str] = frozenset(
 
 WIDE_OUTPUT_COLUMN_ORDER: list[str] = [
     "feature",
-    "lr_penetrance",
-    "sr_penetrance",
-    "lr_sr_penetrance_ratio",
+    "lr_pickup",
+    "sr_pickup",
+    "lr_sr_pickup_ratio",
     "penetrance_concordance",
     "lr_gene_count",
     "sr_gene_count",
@@ -269,9 +271,9 @@ def _wide_feature_row(
     n_lr_pos = int(lr_pres.sum())
     n_sr_pos = int(sr_pres.sum())
 
-    lr_pen = n_lr_pos / n_lr if n_lr else float("nan")
-    sr_pen = n_sr_pos / n_sr if n_sr else float("nan")
-    pen_ratio = (lr_pen / sr_pen) if sr_pen else float("nan")
+    lr_pickup = n_lr_pos / n_lr if n_lr else float("nan")
+    sr_pickup = n_sr_pos / n_sr if n_sr else float("nan")
+    pickup_ratio = (lr_pickup / sr_pickup) if sr_pickup else float("nan")
 
     if paired:
         a = int(((lr_pres == 1) & (sr_pres == 1)).sum())
@@ -282,9 +284,9 @@ def _wide_feature_row(
 
     row: dict = {
         "feature": feature,
-        "lr_penetrance": lr_pen,
-        "sr_penetrance": sr_pen,
-        "lr_sr_penetrance_ratio": pen_ratio,
+        "lr_pickup": lr_pickup,
+        "sr_pickup": sr_pickup,
+        "lr_sr_pickup_ratio": pickup_ratio,
         "penetrance_concordance": pen_conc,
         "lr_gene_count": pd.NA,
         "sr_gene_count": pd.NA,
@@ -474,20 +476,20 @@ def _clonal_group_features(rows: pd.DataFrame, is_lr_mask: pd.Series) -> list[di
 
 
 def _print_paired_summary(out: pd.DataFrame, label: str) -> None:
-    """Print n features, count with ``lr_sr_penetrance_ratio > 1``, top-10 by ratio."""
+    """Print n features, count with ``lr_sr_pickup_ratio > 1``, top-10 by ratio."""
     n_features = len(out)
     if n_features == 0:
         print(f"  ({label}) no features")
         return
-    ratio = out["lr_sr_penetrance_ratio"]
+    ratio = out["lr_sr_pickup_ratio"]
     n_lr_higher = int((ratio > 1).sum())
-    print(f"  ({label}) features={n_features}  lr_sr_penetrance_ratio>1: {n_lr_higher}")
-    top = out.sort_values("lr_sr_penetrance_ratio", ascending=False, na_position="last").head(10)
-    print(f"  Top 10 by lr_sr_penetrance_ratio ({label}):")
+    print(f"  ({label}) features={n_features}  lr_sr_pickup_ratio>1: {n_lr_higher}")
+    top = out.sort_values("lr_sr_pickup_ratio", ascending=False, na_position="last").head(10)
+    print(f"  Top 10 by lr_sr_pickup_ratio ({label}):")
     for _, r in top.iterrows():
-        lr_p = "-" if pd.isna(r["lr_penetrance"]) else f"{r['lr_penetrance']:.3f}"
-        sr_p = "-" if pd.isna(r["sr_penetrance"]) else f"{r['sr_penetrance']:.3f}"
-        rat = "-" if pd.isna(r["lr_sr_penetrance_ratio"]) else f"{r['lr_sr_penetrance_ratio']:.3f}"
+        lr_p = "-" if pd.isna(r["lr_pickup"]) else f"{r['lr_pickup']:.3f}"
+        sr_p = "-" if pd.isna(r["sr_pickup"]) else f"{r['sr_pickup']:.3f}"
+        rat = "-" if pd.isna(r["lr_sr_pickup_ratio"]) else f"{r['lr_sr_pickup_ratio']:.3f}"
         print(f"    {str(r['feature']):40s}  lr={lr_p}  sr={sr_p}  ratio={rat}")
 
 
