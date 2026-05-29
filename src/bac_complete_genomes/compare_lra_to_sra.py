@@ -538,6 +538,62 @@ def _finalize_and_write(rows: list[dict], out_path: Path, label: str) -> None:
 # ---------------------------------------------------------------------------
 
 
+def _build_chromosomal_st_summary(output_dir: Path, cohorts: list[str]) -> pd.DataFrame:
+    """Cross-cohort joint chromosomal-ST recovery table from the per-cohort kleborate TSVs.
+
+    Adds a per-locus equivalent (``sensitivity^(1/n_loci)``) so the joint
+    ratio's compounding origin is explicit: a ~2 pp per-locus gap powers up
+    sevenfold into the joint ratio.
+    """
+    n_loci = len(KLEBORATE_CHROMOSOMAL_MLST_COLS)
+    rows: list[dict] = []
+    for cohort in cohorts:
+        tsv = output_dir / f"lra_vs_sr_kleborate__{cohort}.tsv"
+        if not tsv.exists():
+            continue
+        df = pd.read_csv(tsv, sep="\t")
+        st = df[df["feature"] == CHROMOSOMAL_ST_NAME]
+        if st.empty:
+            continue
+        r = st.iloc[0]
+        lr_sens = float(r["lr_per_genome_sensitivity"])
+        sr_sens = float(r["sr_per_genome_sensitivity"])
+        rows.append(
+            {
+                "cohort": cohort,
+                "n_pairs": int(r["n_lr"]),
+                "lr_per_genome_sensitivity": lr_sens,
+                "sr_per_genome_sensitivity": sr_sens,
+                "lr_sr_sensitivity_ratio": float(r["lr_sr_sensitivity_ratio"]),
+                "lr_per_locus_equivalent": lr_sens ** (1.0 / n_loci),
+                "sr_per_locus_equivalent": sr_sens ** (1.0 / n_loci),
+                "penetrance_concordance": float(r["penetrance_concordance"]),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _print_chromosomal_st_summary(df: pd.DataFrame) -> None:
+    """Print the cross-cohort joint-ST table as a fixed-width text block."""
+    if df.empty:
+        return
+    n_loci = len(KLEBORATE_CHROMOSOMAL_MLST_COLS)
+    print(f"\n=== Joint chromosomal ST recovery across cohorts (per-locus = sens^(1/{n_loci})) ===")
+    header = (
+        f"  {'cohort':<18} {'n_pairs':>8} {'LR sens':>9} {'SR sens':>9} "
+        f"{'ratio':>7}  {'LR/locus':>9} {'SR/locus':>9} {'concordance':>12}"
+    )
+    print(header)
+    for _, r in df.iterrows():
+        print(
+            f"  {r['cohort']:<18} {int(r['n_pairs']):>8d} "
+            f"{r['lr_per_genome_sensitivity']:>9.3f} {r['sr_per_genome_sensitivity']:>9.3f} "
+            f"{r['lr_sr_sensitivity_ratio']:>7.3f}  "
+            f"{r['lr_per_locus_equivalent']:>9.4f} {r['sr_per_locus_equivalent']:>9.4f} "
+            f"{r['penetrance_concordance']:>12.4f}"
+        )
+
+
 def _run_paired_cohort(meta: pd.DataFrame, shadow: pd.DataFrame, cohort: str, output_dir: Path) -> None:
     """Run + write the paired comparison for a single cohort (two tables)."""
     print(f"\n{'=' * 66}\nPaired cohort: {cohort}\n{'=' * 66}")
@@ -670,6 +726,13 @@ def main() -> None:
         shadow["sr_biosample"] = shadow["sr_biosample"].astype(str)
         for cohort in cohorts:
             _run_paired_cohort(meta, shadow, cohort, args.output_dir)
+
+        st_summary = _build_chromosomal_st_summary(args.output_dir, cohorts)
+        if not st_summary.empty:
+            summary_path = args.output_dir / "lra_vs_sr_chromosomal_st_summary.tsv"
+            st_summary.to_csv(summary_path, sep="\t", index=False)
+            print(f"\nwrote {summary_path}")
+            _print_chromosomal_st_summary(st_summary)
     else:
         for cohort in cohorts:
             _run_clonal_group_cohort(meta, cohort, args.output_dir, args.min_per_arm)
