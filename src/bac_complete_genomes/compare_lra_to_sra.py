@@ -718,9 +718,6 @@ DEFAULT_METADATA_V2 = Path(
 DEFAULT_SR_SHADOW = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv"
 )
-DEFAULT_PAIRED_OUT = Path(
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/lra_vs_sr_comparison.tsv"
-)
 
 
 def _mcnemar_exact(b: int, c: int) -> float:
@@ -773,18 +770,20 @@ def _paired_numeric_stats(
 
     Presence/absence over all pairs is the job of the paired binary
     (``presence / absence``) row; here we ask the complementary question — *given
-    both arms carry the class, do the copy numbers match?* So we restrict to
-    co-carriers (``LR>0 & SR>0``) and report a clean diff-partition over that
-    subset that sums to ``n_pairs``:
+    both arms carry the feature, how do the copy numbers compare?* So we restrict
+    to co-carriers (``LR>0 & SR>0``) and report a **copy-flow** decomposition (in
+    gene copies, not pairs) — which is why these counts can never read below the
+    presence row's pair counts:
 
-    - ``n_pairs``        = #co-carrier pairs (intentionally ≠ the presence row's).
-    - ``both_positive``  = #(LR==SR)  — equal copy number.
-    - ``lr_only``        = #(LR>SR)   — LR carries more copies.
-    - ``sr_only``        = #(SR>LR)   — SR carries more copies.
-    - ``both_negative``  = 0          — no both-absent pairs in a co-carrier subset.
+    - ``both_positive`` = ``Σ min(LR, SR)``      — copies found by both arms.
+    - ``lr_only``       = ``Σ max(0, LR − SR)``  — extra copies only LR found (SR undercount).
+    - ``sr_only``       = ``Σ max(0, SR − LR)``  — extra copies only SR found.
+    - ``both_negative`` = 0                       — no both-absent pairs in a co-carrier subset.
 
-    ``lr_mean``/``sr_mean`` are mean copies among co-carriers; the paired-t /
-    Wilcoxon p-values still require ≥2 pairs + non-zero variance.
+    Identities: ``total LR copies = both_positive + lr_only`` and
+    ``total SR copies = both_positive + sr_only``. ``n_pairs`` = #co-carrier pairs;
+    ``lr_mean``/``sr_mean`` = mean copies among co-carriers; the paired-t / Wilcoxon
+    p-values still require ≥2 pairs + non-zero variance.
     """
     lr = pd.to_numeric(lr_vals, errors="coerce")
     sr = pd.to_numeric(sr_vals, errors="coerce")
@@ -813,10 +812,10 @@ def _paired_numeric_stats(
         "n_pairs":         n_pairs,
         "lr_mean":         float(lr_v.mean()) if n_pairs else float("nan"),
         "sr_mean":         float(sr_v.mean()) if n_pairs else float("nan"),
-        "both_positive":   int((diff == 0).sum()),
+        "both_positive":   int(np.minimum(lr_v, sr_v).sum()),
         "both_negative":   0,
-        "lr_only":         int((diff > 0).sum()),
-        "sr_only":         int((diff < 0).sum()),
+        "lr_only":         int(np.clip(lr_v - sr_v, 0, None).sum()),
+        "sr_only":         int(np.clip(sr_v - lr_v, 0, None).sum()),
         "lr_pickup_rate":  float("nan"),
         "mcnemar_p":       float("nan"),
         "paired_t_p":      float(t_p),
@@ -873,6 +872,26 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
         # arm missed (or vice versa)? Gives a full integer 2×2 alongside the count.
         rows.append(_paired_binary_stats(lr_count > 0, sr_count > 0, col, "amr presence / absence"))
 
+    return rows
+
+
+def _paired_isescan_features(merged: pd.DataFrame) -> list[dict]:
+    """Paired IS-family features: per-family copy counts + presence/absence.
+
+    LR copy counts are the ``IS_<family>`` columns on metadata_v2; SR counts are
+    the matching ``sr_IS_<family>`` columns frozen in the SR shadow. ``startswith
+    ("IS_")`` (upper-case) selects the family columns while excluding the
+    lower-case ``is_*`` boolean flags and the ``sr_IS_*`` shadow columns.
+    """
+    rows: list[dict] = []
+    for col in sorted(c for c in merged.columns if str(c).startswith("IS_")):
+        sr_col = f"sr_{col}"
+        if sr_col not in merged.columns:
+            continue
+        lr = pd.to_numeric(merged[col], errors="coerce").fillna(0)
+        sr = pd.to_numeric(merged[sr_col], errors="coerce").fillna(0)
+        rows.append(_paired_numeric_stats(lr, sr, col, "isescan counts"))
+        rows.append(_paired_binary_stats(lr > 0, sr > 0, col, "isescan presence / absence"))
     return rows
 
 
@@ -937,15 +956,12 @@ def _print_paired_summary(out: pd.DataFrame) -> None:
                   f"p={r['mcnemar_p']:.2e}")
 
 
-def _run_paired_cohort(meta: pd.DataFrame, shadow: pd.DataFrame, cohort: str, output_dir: Path) -> None:
-    """Run + write the paired comparison for a single cohort."""
-    print(f"\n{'=' * 66}\nCohort: {cohort}\n{'=' * 66}")
-    paired_meta = _select_paired_cohort(meta, cohort)
-    merged = paired_meta.merge(shadow, on="sr_biosample", how="inner", suffixes=("", "_shadow"))
-    print(f"Paired rows after merge: {len(merged):,}")
-    print(f"  cohort-selected rows with sr_biosample : {len(paired_meta):,}")
-
-    out = pd.DataFrame(_paired_features(merged))
+def _finalize_and_write(rows: list[dict], out_path: Path, label: str) -> None:
+    """Add BH q-values, reorder columns, write the TSV, print the summary."""
+    out = pd.DataFrame(rows)
+    if out.empty:
+        print(f"\n  no {label} features; skipping {out_path.name}")
+        return
 
     # BH-corrected q values per stat-test column.
     for p_col, q_col in (("mcnemar_p", "mcnemar_q"), ("paired_t_p", "paired_t_q"), ("wilcoxon_p", "wilcoxon_q")):
@@ -962,10 +978,25 @@ def _run_paired_cohort(meta: pd.DataFrame, shadow: pd.DataFrame, cohort: str, ou
     ordered = [c for c in PAIRED_OUTPUT_COLUMN_ORDER if c in out.columns]
     out = out[ordered + [c for c in out.columns if c not in ordered]]
 
-    out_path = output_dir / f"lra_vs_sr_comparison__{cohort}.tsv"
     out.to_csv(out_path, sep="\t", index=False)
-    print(f"\nwrote {out_path}  rows={len(out)}")
+    print(f"\nwrote {out_path}  rows={len(out)}  ({label})")
     _print_paired_summary(out)
+
+
+def _run_paired_cohort(meta: pd.DataFrame, shadow: pd.DataFrame, cohort: str, output_dir: Path) -> None:
+    """Run + write the paired comparison for a single cohort (two tables)."""
+    print(f"\n{'=' * 66}\nCohort: {cohort}\n{'=' * 66}")
+    paired_meta = _select_paired_cohort(meta, cohort)
+    merged = paired_meta.merge(shadow, on="sr_biosample", how="inner", suffixes=("", "_shadow"))
+    print(f"Paired rows after merge: {len(merged):,}")
+    print(f"  cohort-selected rows with sr_biosample : {len(paired_meta):,}")
+
+    _finalize_and_write(
+        _paired_features(merged), output_dir / f"lra_vs_sr_kleborate__{cohort}.tsv", "kleborate",
+    )
+    _finalize_and_write(
+        _paired_isescan_features(merged), output_dir / f"lra_vs_sr_isescan__{cohort}.tsv", "isescan",
+    )
 
 
 def _run_paired_mode(args: argparse.Namespace) -> None:
@@ -973,12 +1004,12 @@ def _run_paired_mode(args: argparse.Namespace) -> None:
 
     Reads ``metadata_v2`` + ``sr_shadow_for_lra.tsv``, joins on
     ``sr_biosample``, and runs McNemar's (binary) + paired t-test /
-    Wilcoxon signed-rank (numeric) over the Kleborate + AMR feature set.
+    Wilcoxon signed-rank (numeric) over the Kleborate and ISEScan feature sets.
 
-    ISEScan is **LR-only** (no SR-side counts in v1), so IS-family features
-    are not paired — those go via the cross-section ``--mode clonal_group``.
-
-    Writes one ``lra_vs_sr_comparison__<cohort>.tsv`` per requested cohort.
+    Writes two tables per requested cohort: ``lra_vs_sr_kleborate__<cohort>.tsv``
+    (AMR + virulence + MLST) and ``lra_vs_sr_isescan__<cohort>.tsv`` (IS families).
+    SR-side IS-family counts come from the ``sr_IS_<family>`` columns frozen in
+    the SR shadow.
     """
     args.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1024,8 +1055,8 @@ def main() -> None:
         "--output-dir",
         type=Path,
         default=DEFAULT_OUTPUT_DIR,
-        help="Output directory (clonal_group mode); paired mode writes "
-             "lra_vs_sr_comparison.tsv under <RDS>/david/processed/ by default.",
+        help="Output directory; paired mode writes lra_vs_sr_kleborate__<cohort>.tsv "
+             "and lra_vs_sr_isescan__<cohort>.tsv here.",
     )
     parser.add_argument(
         "--full-virulence-output",
