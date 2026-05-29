@@ -769,23 +769,29 @@ def _paired_binary_stats(
 def _paired_numeric_stats(
     lr_vals: pd.Series, sr_vals: pd.Series, feature: str, category: str,
 ) -> dict:
-    """Paired t-test + Wilcoxon signed-rank on a paired numeric feature.
+    """Copy-number comparison restricted to co-carrier pairs.
 
-    The four contingency cells are *annotations* on the count comparison, not a
-    strict 2×2: ``both_positive``/``both_negative`` are presence-based (#pairs
-    where both/neither carry the gene), while ``lr_only``/``sr_only`` are
-    diff-sign (#pairs where LR/SR carries strictly more). They deliberately
-    overlap, so they do NOT sum to ``n_pairs`` — the paired binary
-    (``presence / absence``) row is the strict 2×2. The paired-t / Wilcoxon
-    p-values still require ≥2 pairs + non-zero variance.
+    Presence/absence over all pairs is the job of the paired binary
+    (``presence / absence``) row; here we ask the complementary question — *given
+    both arms carry the class, do the copy numbers match?* So we restrict to
+    co-carriers (``LR>0 & SR>0``) and report a clean diff-partition over that
+    subset that sums to ``n_pairs``:
+
+    - ``n_pairs``        = #co-carrier pairs (intentionally ≠ the presence row's).
+    - ``both_positive``  = #(LR==SR)  — equal copy number.
+    - ``lr_only``        = #(LR>SR)   — LR carries more copies.
+    - ``sr_only``        = #(SR>LR)   — SR carries more copies.
+    - ``both_negative``  = 0          — no both-absent pairs in a co-carrier subset.
+
+    ``lr_mean``/``sr_mean`` are mean copies among co-carriers; the paired-t /
+    Wilcoxon p-values still require ≥2 pairs + non-zero variance.
     """
     lr = pd.to_numeric(lr_vals, errors="coerce")
     sr = pd.to_numeric(sr_vals, errors="coerce")
-    mask = lr.notna() & sr.notna()
+    mask = lr.notna() & sr.notna() & (lr > 0) & (sr > 0)
     n_pairs = int(mask.sum())
     lr_v, sr_v = lr[mask].astype(float), sr[mask].astype(float)
     diff = lr_v - sr_v
-    lr_pos, sr_pos = lr_v > 0, sr_v > 0
 
     if n_pairs < 2 or diff.std(ddof=1) == 0 or diff.empty:
         t_p = float("nan")
@@ -807,8 +813,8 @@ def _paired_numeric_stats(
         "n_pairs":         n_pairs,
         "lr_mean":         float(lr_v.mean()) if n_pairs else float("nan"),
         "sr_mean":         float(sr_v.mean()) if n_pairs else float("nan"),
-        "both_positive":   int((lr_pos & sr_pos).sum()),
-        "both_negative":   int((~lr_pos & ~sr_pos).sum()),
+        "both_positive":   int((diff == 0).sum()),
+        "both_negative":   0,
         "lr_only":         int((diff > 0).sum()),
         "sr_only":         int((diff < 0).sum()),
         "lr_pickup_rate":  float("nan"),
