@@ -538,12 +538,31 @@ def _finalize_and_write(rows: list[dict], out_path: Path, label: str) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _build_chromosomal_st_summary(output_dir: Path, cohorts: list[str]) -> pd.DataFrame:
+def _median_year(series: pd.Series) -> tuple[float, int]:
+    """Return ``(median year as float, n_parsed)`` for a date-string column.
+
+    Year is fractional (e.g. ``2017.4``) — month-of-year resolution, which is
+    finer than the underlying YYYY-only collection_date strings warrant but
+    fine for comparing cohort centroids.
+    """
+    parsed = pd.to_datetime(series, errors="coerce")
+    n = int(parsed.notna().sum())
+    if n == 0:
+        return float("nan"), 0
+    med = parsed.dropna().median()
+    return med.year + (med.dayofyear - 1) / 365.25, n
+
+
+def _build_chromosomal_st_summary(
+    meta: pd.DataFrame, output_dir: Path, cohorts: list[str]
+) -> pd.DataFrame:
     """Cross-cohort joint chromosomal-ST recovery table from the per-cohort kleborate TSVs.
 
     Adds a per-locus equivalent (``sensitivity^(1/n_loci)``) so the joint
     ratio's compounding origin is explicit: a ~2 pp per-locus gap powers up
-    sevenfold into the joint ratio.
+    sevenfold into the joint ratio. Also adds median collection year +
+    median first_public year per cohort so the cohort-age confound can be
+    read off the same table.
     """
     n_loci = len(KLEBORATE_CHROMOSOMAL_MLST_COLS)
     rows: list[dict] = []
@@ -558,6 +577,11 @@ def _build_chromosomal_st_summary(output_dir: Path, cohorts: list[str]) -> pd.Da
         r = st.iloc[0]
         lr_sens = float(r["lr_per_genome_sensitivity"])
         sr_sens = float(r["sr_per_genome_sensitivity"])
+
+        cohort_meta = _select_paired_cohort(meta, cohort)
+        med_coll, n_coll = _median_year(cohort_meta.get("collection_date_parsed", pd.Series(dtype=object)))
+        med_pub, n_pub = _median_year(cohort_meta.get("first_public", pd.Series(dtype=object)))
+
         rows.append(
             {
                 "cohort": cohort,
@@ -568,22 +592,25 @@ def _build_chromosomal_st_summary(output_dir: Path, cohorts: list[str]) -> pd.Da
                 "lr_per_locus_equivalent": lr_sens ** (1.0 / n_loci),
                 "sr_per_locus_equivalent": sr_sens ** (1.0 / n_loci),
                 "penetrance_concordance": float(r["penetrance_concordance"]),
+                "median_collection_year": med_coll,
+                "n_with_collection_date": n_coll,
+                "median_first_public_year": med_pub,
+                "n_with_first_public": n_pub,
             }
         )
     return pd.DataFrame(rows)
 
 
 def _print_chromosomal_st_summary(df: pd.DataFrame) -> None:
-    """Print the cross-cohort joint-ST table as a fixed-width text block."""
+    """Print the cross-cohort joint-ST table + cohort-age block."""
     if df.empty:
         return
     n_loci = len(KLEBORATE_CHROMOSOMAL_MLST_COLS)
     print(f"\n=== Joint chromosomal ST recovery across cohorts (per-locus = sens^(1/{n_loci})) ===")
-    header = (
+    print(
         f"  {'cohort':<18} {'n_pairs':>8} {'LR sens':>9} {'SR sens':>9} "
         f"{'ratio':>7}  {'LR/locus':>9} {'SR/locus':>9} {'concordance':>12}"
     )
-    print(header)
     for _, r in df.iterrows():
         print(
             f"  {r['cohort']:<18} {int(r['n_pairs']):>8d} "
@@ -591,6 +618,19 @@ def _print_chromosomal_st_summary(df: pd.DataFrame) -> None:
             f"{r['lr_sr_sensitivity_ratio']:>7.3f}  "
             f"{r['lr_per_locus_equivalent']:>9.4f} {r['sr_per_locus_equivalent']:>9.4f} "
             f"{r['penetrance_concordance']:>12.4f}"
+        )
+
+    print("\n=== Cohort age (median, fractional year) ===")
+    print(
+        f"  {'cohort':<18} {'n_pairs':>8} {'median_collection':>18} {'n_coll':>7} "
+        f"{'median_first_public':>20} {'n_public':>9}"
+    )
+    for _, r in df.iterrows():
+        coll = "-" if pd.isna(r["median_collection_year"]) else f"{r['median_collection_year']:>18.2f}"
+        pub = "-" if pd.isna(r["median_first_public_year"]) else f"{r['median_first_public_year']:>20.2f}"
+        print(
+            f"  {r['cohort']:<18} {int(r['n_pairs']):>8d} {coll} "
+            f"{int(r['n_with_collection_date']):>7d} {pub} {int(r['n_with_first_public']):>9d}"
         )
 
 
@@ -727,7 +767,7 @@ def main() -> None:
         for cohort in cohorts:
             _run_paired_cohort(meta, shadow, cohort, args.output_dir)
 
-        st_summary = _build_chromosomal_st_summary(args.output_dir, cohorts)
+        st_summary = _build_chromosomal_st_summary(meta, args.output_dir, cohorts)
         if not st_summary.empty:
             summary_path = args.output_dir / "lra_vs_sr_chromosomal_st_summary.tsv"
             st_summary.to_csv(summary_path, sep="\t", index=False)
