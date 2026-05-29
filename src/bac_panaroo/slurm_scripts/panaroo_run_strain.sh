@@ -62,6 +62,10 @@ while [[ $# -gt 0 ]]; do
       SAMPLE_METADATA_FILE="$2"
       shift 2
       ;;
+    --non-kpsc-species)
+      NON_KPSC_SPECIES=1
+      shift
+      ;;
     *)
       echo "Warning: ignoring unknown argument $1" >&2
       shift
@@ -91,13 +95,19 @@ else
   if [[ -n "$SAMPLE_METADATA_FILE" ]]; then
     STRAIN_LABEL="$(basename "$SAMPLE_METADATA_FILE" | sed 's/\.[^.]*$//')"
   else
-    STRAIN_LABEL="metadata_final_curated_slimmed"
+    STRAIN_LABEL="metadata_v2_all_samples_and_columns"
   fi
 fi
 
 PYTHON_METADATA_ARGS=""
 if [[ -n "$SAMPLE_METADATA_FILE" ]]; then
   PYTHON_METADATA_ARGS="--sample-metadata-file $SAMPLE_METADATA_FILE"
+fi
+
+# Non-KPSC per-species batches disable the kpsc_final_list filter.
+PYTHON_NON_KPSC_ARGS=""
+if [[ -n "${NON_KPSC_SPECIES:-}" ]]; then
+  PYTHON_NON_KPSC_ARGS="--non-kpsc-species"
 fi
 
 RUN_SUBDIR="${OUTDIR}/${STRAIN_LABEL}"
@@ -163,6 +173,7 @@ echo ""
 uv run python src/bac_panaroo/pp/panaroo_run_strain.py \
   $PYTHON_STRAIN_ARGS \
   $PYTHON_METADATA_ARGS \
+  $PYTHON_NON_KPSC_ARGS \
   --n "$N_SAMPLES" \
   --outdir "$OUTDIR"
 

@@ -10,7 +10,7 @@ then runs the per-group analysis
 1. The whole set (one row, ``group_level='whole_set'``).
 2. Each major Clonal group (count >= ``min_group_size``) plus a pooled
    ``other`` slice (``group_level='clonal_group'``). Reference genomes
-   (mgh78578, RefSeq, and complete Norway) are added back to each slice so
+   (mgh78578 and is_reference_genome) are added back to each slice so
    they are always available for distance comparisons.
 3. Within each major Clonal group (not ``other``), each major K_locus
    (count >= ``min_group_size``) plus a pooled ``<CG>_other`` slice
@@ -35,6 +35,7 @@ import pandas as pd
 from bac_panaroo.tl.gpa_distances_single_group import (
     DEFAULT_METADATA_PATH,
     PANAROO_RUN_ROOT,
+    _augment_meta_with_panaroo_labels,
     _classify_run,
     _default_filter_cutoff,
     _filter_gpa_to_kpsc,
@@ -62,14 +63,14 @@ def _identify_reference_sample_ids(
 ) -> set[str]:
     """Return sample IDs whose metadata marks them as a reference genome.
 
-    A sample counts as a reference if any of ``is_mgh78578``, ``is_refseq``,
-    or ``is_complete_norway_genome`` is True. Only IDs that appear in
+    A sample counts as a reference if either ``is_mgh78578`` or
+    ``is_reference_genome`` is True. Only IDs that appear in
     ``gpa_sample_ids`` are returned.
     """
     result: set[str] = set()
     sid = pd.Index(gpa_sample_ids.astype(str))
     reindexed = meta_df.reindex(sid)
-    for col in ("is_mgh78578", "is_refseq", "is_complete_norway_genome"):
+    for col in ("is_mgh78578", "is_reference_genome"):
         if col not in reindexed.columns:
             continue
         mask = _series_to_bool(reindexed[col]).to_numpy()
@@ -189,6 +190,7 @@ def run_gpa_analysis(
             olog(f"min_group_size={min_group_size}")
 
             meta_df = _load_metadata(metadata_path, _helper_log)
+            meta_df = _augment_meta_with_panaroo_labels(meta_df, panaroo_dir, _helper_log)
             gff_counts_df = _load_gff_feature_counts(
                 gff_feature_counts_path, _helper_log
             )

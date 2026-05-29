@@ -26,7 +26,7 @@ export PYTHONUNBUFFERED=1
 
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
-CSV="${DATA_ROOT}/processed/panaroo_with_reference_genome_v2/SL17_part_0/gene_presence_absence.csv"
+CSV="${DATA_ROOT}/processed/panaroo_with_reference_genome/SL17_part_0/gene_presence_absence.csv"
 PROGRESS_EVERY=500
 # --------------------------------------------------------
 

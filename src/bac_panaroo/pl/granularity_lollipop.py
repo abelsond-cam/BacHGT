@@ -2,17 +2,18 @@
 """Lollipop/connected-dot plot for granularity level comparisons.
 
 Shows improvement in shared genes at each granularity level
-(f → e → d → c → b → a) per strain on a connected-dot lollipop chart:
+(f → d → c → b → a) per strain on a connected-dot lollipop chart:
 
   f: per-run mgh78578
-  e: best RefSeq in Subspecies (run-wide; same-species ref filter)
-  d: best RefSeq in SL (best ref across the whole run)
-  c: best RefSeq in CG
-  b: best RefSeq in CG / K-locus
-  a: best RefSeq per-sample
+  d: best reference in SL (best ref across the whole run)
+  c: best reference in CG
+  b: best reference in CG / K-locus
+  a: best reference per-sample
 
-All dots and connecting lines are gray. The histograms below show the per-row
-gain at each transition (f→e, e→d, d→c, c→b, b→a).
+Level e (best reference in subspecies via the fixed reference bucket) was
+removed with the bucket; recoverable from git, to be revisited after
+pangenome_merge. All dots and connecting lines are gray. The histograms below
+show the per-row gain at each transition (f→d, d→c, c→b, b→a).
 
 Strain labels are spread vertically to avoid overlap.
 Labels and connector lines in the highlight colour indicate CGs where the
@@ -41,7 +42,6 @@ _LINE_COLORS = {
 
 _DOT_COLORS = {
     "f": "gray",
-    "e": "gray",
     "d": "gray",
     "c": "gray",
     "b": "gray",
@@ -82,16 +82,10 @@ _HIST_BAR_COLOR = "#4682B4"  # steel blue
 # (gain_col, plot_title, x_label, file_stem) for each granularity transition
 _HISTOGRAM_TRANSITIONS: list[tuple[str, str, str, str]] = [
     (
-        "gain_f_to_e",
-        "Increase in shared genes using best reference at Subspecies vs mgh78578",
+        "gain_f_to_d",
+        "Increase in shared genes using best reference at SL vs mgh78578",
         "Shared-gene gain (genes)",
-        "granularity_gain_histogram_f_to_e",
-    ),
-    (
-        "gain_e_to_d",
-        "Increase in shared genes using best reference at SL vs Subspecies",
-        "Shared-gene gain (genes)",
-        "granularity_gain_histogram_e_to_d",
+        "granularity_gain_histogram_f_to_d",
     ),
     (
         "gain_d_to_c",
@@ -234,16 +228,16 @@ def plot_granularity_lollipop(
     if row_type_filter is not None and "row_type" in df.columns:
         df = df[df["row_type"].isin(row_type_filter)].copy()
 
-    # Keep only rows with all six plotted level values present.
+    # Keep only rows with all five plotted level values present.
     df = df[
-        df[["shared_genes_f", "shared_genes_e", "shared_genes_d",
+        df[["shared_genes_f", "shared_genes_d",
             "shared_genes_c", "shared_genes_b", "shared_genes_a"]]
         .notna()
         .all(axis=1)
     ].copy()
 
     if df.empty:
-        raise ValueError("No complete rows after filtering for f/e/d/c/b/a levels")
+        raise ValueError("No complete rows after filtering for f/d/c/b/a levels")
 
     if top_n:
         df = df.nlargest(top_n, "gain_b_to_a")
@@ -269,10 +263,9 @@ def plot_granularity_lollipop(
     fig, ax = plt.subplots(figsize=(16, 9))
 
     for row in df.itertuples():
-        levels = ["f", "e", "d", "c", "b", "a"]
+        levels = ["f", "d", "c", "b", "a"]
         values = [
             row.shared_genes_f,
-            row.shared_genes_e,
             row.shared_genes_d,
             row.shared_genes_c,
             row.shared_genes_b,
@@ -280,7 +273,6 @@ def plot_granularity_lollipop(
         ]
         fallback = [
             False,
-            getattr(row, "fallback_e", False),
             False,
             getattr(row, "fallback_c", False),
             getattr(row, "fallback_b", False),
@@ -336,18 +328,17 @@ def plot_granularity_lollipop(
         y_adj = _spread_labels(y_orig, min_gap)
         for (y_o, lbl, col, alp), y_a in zip(_annots, y_adj):
             if abs(y_a - y_o) > min_gap * 0.15:
-                ax.plot([5.05, 5.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
-            ax.text(5.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
+                ax.plot([4.05, 4.10], [y_o, y_a], lw=0.4, color=col, alpha=alp * 0.6, zorder=0)
+            ax.text(4.12, y_a, lbl, fontsize=ann_fontsize, va="center", color=col, alpha=alp)
 
     ax.set_ylabel("Shared genes with reference genome", fontsize=11, fontweight="bold")
-    ax.set_xticks(range(6))
+    ax.set_xticks(range(5))
     ax.set_xticklabels(
         ["f: Ref mgh78578",
-         "e: Best RefSeq in Subspecies",
-         "d: Best RefSeq in SL",
-         "c: Best RefSeq in CG",
-         "b: Best RefSeq in CG / K-locus",
-         "a: Best RefSeq Per-Sample"],
+         "d: Best reference in SL",
+         "c: Best reference in CG",
+         "b: Best reference in CG / K-locus",
+         "a: Best reference Per-Sample"],
         fontsize=10,
     )
     ax.grid(True, axis="y", alpha=0.3, linestyle="--")
@@ -397,9 +388,8 @@ def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
 
     Per-CG table is sorted by ``gain_d_to_c`` descending and reports absolute
     gene gains for d→c, c→b, b→a, plus the total d→a gain. The summary block
-    reports mean + range across kp_epidemic CGs for each of the five
-    consecutive transitions: mgh→Subspecies, Subspecies→SL, SL→CG, CG→CG/KL,
-    CG/KL→per-sample.
+    reports mean + range across kp_epidemic CGs for each of the four
+    consecutive transitions: mgh→SL, SL→CG, CG→CG/KL, CG/KL→per-sample.
     """
     epi = df[df["row_type"] == "kp_epidemic"].copy() if "row_type" in df.columns else df.copy()
 
@@ -453,8 +443,7 @@ def _write_gain_log(df: pd.DataFrame, log_path: str) -> None:
 
     # ---- Summary of gains across all kp_epidemic CGs ----
     transitions = [
-        ("mgh → Subspecies         (f → e)", "gain_f_to_e"),
-        ("Subspecies → SL          (e → d)", "gain_e_to_d"),
+        ("mgh → SL                 (f → d)", "gain_f_to_d"),
         ("SL → CG                  (d → c)", "gain_d_to_c"),
         ("CG → CG/K-locus          (c → b)", "gain_c_to_b"),
         ("CG/K-locus → Per-Sample  (b → a)", "gain_b_to_a"),

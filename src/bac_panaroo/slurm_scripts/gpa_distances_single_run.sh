@@ -44,11 +44,11 @@ export PYTHONDONTWRITEBYTECODE=1
 
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
-PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome_v2"
+PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
 DIRECTORY_LEAF="SL1"  # Used when PANAROO_DIR is empty
 PANAROO_DIR=""                 # Full path override; leave empty to use DIRECTORY_LEAF
 
-METADATA_PATH="${DATA_ROOT}/final/metadata_final_curated_all_samples_and_columns.tsv"
+METADATA_PATH="${DATA_ROOT}/final/metadata_v2_all_samples_and_columns.tsv"
 MIN_GROUP_SIZE=250             # Min Clonal group / K_locus size for its own slice
 GPA_FILTER_CUTOFF=""           # e.g. 20; leave empty for auto
 MERGE_SMALL_CLUSTERS=""        # e.g. 15; leave empty for auto

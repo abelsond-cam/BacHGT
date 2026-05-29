@@ -79,10 +79,10 @@ print(
 )
 
 PANAROO_RUN_ROOT = (
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome"
 )
 DEFAULT_METADATA_PATH = (
-    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_all_samples_and_columns.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv"
 )
 LEIDEN_RESOLUTION = 0.3
 QUALITY_SUBSAMPLE_THRESHOLD = 2000
@@ -184,6 +184,49 @@ def _load_metadata(meta_path: str, log) -> pd.DataFrame:
     meta_df.index = meta_df.index.astype(str)
     log(f"metadata: loaded {_fmt_log_path(meta_path)}  ({len(meta_df)} rows)")
     return meta_df
+
+
+PANAROO_GENOMES_FILENAME = "panaroo_genomes.tsv"
+
+
+def _augment_meta_with_panaroo_labels(meta_df: pd.DataFrame, run_dir: str, log=None) -> pd.DataFrame:
+    """Add alias rows so Panaroo column labels that differ from ``Sample`` resolve.
+
+    A run may include a genome under a label other than its metadata ``Sample``:
+    the short-read assembly of a paired isolate is labelled by
+    ``sample_accession`` while the long-read assembly keeps the ``Sample``
+    accession. ``panaroo_genomes.tsv`` (written by ``panaroo_run_strain.py``)
+    maps ``panaroo_label`` -> ``Sample``; for every label that differs from its
+    ``Sample`` this appends a copy of that ``Sample``'s metadata row indexed
+    under the label, so the existing ``meta.reindex(gpa.columns)`` (gpa columns
+    are Panaroo labels) finds it. Those alias rows are short-read drafts, so they
+    are forced to ``is_reference_genome=False`` / ``is_mgh78578=False`` — a draft
+    is a query genome, not a reference (only the long-read assembly of a paired
+    reference isolate is the reference). Legacy runs without the file are
+    returned unchanged.
+    """
+    genomes_path = os.path.join(run_dir, PANAROO_GENOMES_FILENAME)
+    if not os.path.isfile(genomes_path):
+        return meta_df
+    g = pd.read_csv(genomes_path, sep="\t")
+    if not {"panaroo_label", "Sample"}.issubset(g.columns):
+        return meta_df
+    g["panaroo_label"] = g["panaroo_label"].astype(str)
+    g["Sample"] = g["Sample"].astype(str)
+    alias = g[(g["panaroo_label"] != g["Sample"]) & ~g["panaroo_label"].isin(meta_df.index)]
+    if alias.empty:
+        return meta_df
+    src = meta_df.reindex(alias["Sample"].to_numpy())
+    src.index = pd.Index(alias["panaroo_label"].to_numpy(), name=meta_df.index.name)
+    src = src[~src.index.duplicated(keep="first")]
+    for col in ("is_reference_genome", "is_mgh78578"):
+        if col in src.columns:
+            src[col] = False
+    add = src.loc[~src.index.isin(meta_df.index)]
+    out = pd.concat([meta_df, add])
+    if log is not None:
+        log(f"panaroo_genomes: added {len(add)} short-read alias rows from {PANAROO_GENOMES_FILENAME}")
+    return out
 
 
 def _load_gpa_counts_from_csv(gpa_csv_path: str, log) -> pd.DataFrame:
@@ -482,20 +525,13 @@ def _plot_umap_reference_highlights(
 ) -> None:
     if "X_umap" not in adata.obsm:
         raise ValueError("UMAP missing: adata.obsm['X_umap'] not found.")
-    if "is_refseq" not in adata.obs.columns:
-        log("plot: skipping reference-highlight UMAP (is_refseq missing in metadata)")
+    if "is_reference_genome" not in adata.obs.columns:
+        log("plot: skipping reference-highlight UMAP (is_reference_genome missing in metadata)")
         return
 
     umap = adata.obsm["X_umap"]
-    ref_mask = _series_to_bool(adata.obs["is_refseq"]).to_numpy()
-    if "is_complete_norway_genome" in adata.obs.columns:
-        norway_mask = _series_to_bool(adata.obs["is_complete_norway_genome"]).to_numpy()
-    else:
-        norway_mask = np.zeros(adata.n_obs, dtype=bool)
-
-    ref_only = ref_mask & ~norway_mask
-    base = ~(ref_mask | norway_mask)
-    n_norway = int(norway_mask.sum())
+    ref_mask = _series_to_bool(adata.obs["is_reference_genome"]).to_numpy()
+    base = ~ref_mask
 
     fig, ax = plt.subplots(figsize=(8, 8))
     ax.set_title(title)
@@ -512,29 +548,17 @@ def _plot_umap_reference_highlights(
             label=f"other (n={int(base.sum())})",
             zorder=1,
         )
-    if ref_only.any():
+    if ref_mask.any():
         ax.scatter(
-            umap[ref_only, 0],
-            umap[ref_only, 1],
+            umap[ref_mask, 0],
+            umap[ref_mask, 1],
             s=48,
             c="#ff0000",
             alpha=0.98,
             linewidths=0.5,
             edgecolors="black",
-            label=f"RefSeq only (n={int(ref_only.sum())})",
+            label=f"reference genome (n={int(ref_mask.sum())})",
             zorder=2,
-        )
-    if norway_mask.any():
-        ax.scatter(
-            umap[norway_mask, 0],
-            umap[norway_mask, 1],
-            s=48,
-            c="#228B22",
-            alpha=0.98,
-            linewidths=0.5,
-            edgecolors="black",
-            label=f"complete Norway (n={n_norway})",
-            zorder=4,
         )
     ax.legend(loc="best", frameon=False, fontsize=8)
     fig.tight_layout()
@@ -1085,12 +1109,12 @@ def _mgh78578_sample_in_gpa(meta_df: pd.DataFrame, gpa_columns: pd.Index) -> str
 def _reference_sample_ids_in_gpa(meta_df: pd.DataFrame, gpa_columns: pd.Index) -> set[str]:
     """Return sample IDs in ``gpa_columns`` that are reference genomes.
 
-    A sample counts as a reference if any of ``is_mgh78578``, ``is_refseq``,
-    or ``is_complete_norway_genome`` is True in metadata. These are excluded
-    from classification counts so a reference genome in a different CG/Sublineage
+    A sample counts as a reference if either ``is_mgh78578`` or
+    ``is_reference_genome`` is True in metadata. These are excluded from
+    classification counts so a reference genome in a different CG/Sublineage
     does not inflate unique counts.
     """
-    ref_cols = ("is_mgh78578", "is_refseq", "is_complete_norway_genome")
+    ref_cols = ("is_mgh78578", "is_reference_genome")
     gpa_str = gpa_columns.astype(str)
     reindexed = meta_df.reindex(gpa_str)
     result: set[str] = set()
@@ -1325,10 +1349,14 @@ def _refseq_summary_and_distances(
     )
     contig_count = pd.to_numeric(obs.get("contig_count"), errors="coerce")
 
-    ref_mask = _series_to_bool(obs["is_refseq"]) if "is_refseq" in obs.columns else pd.Series(False, index=obs.index)
+    ref_mask = (
+        _series_to_bool(obs["is_reference_genome"])
+        if "is_reference_genome" in obs.columns
+        else pd.Series(False, index=obs.index)
+    )
     n_ref = int(ref_mask.sum())
     ref_summary["n_refseq_genomes"] = n_ref
-    log(f"refseq: genomes in set = {n_ref}")
+    log(f"reference genomes in set = {n_ref}")
 
     ref_ids: pd.Index
     if n_ref > 0:
@@ -1556,6 +1584,7 @@ def run_gpa_analysis(
         else:
             _log_section(log, "METADATA")
             meta_df = _load_metadata(metadata_path, log)
+            meta_df = _augment_meta_with_panaroo_labels(meta_df, panaroo_dir, log)
 
             _log_section(log, "LOAD GPA")
             gpa_csv = os.path.join(panaroo_dir, "gene_presence_absence.csv")
@@ -1870,8 +1899,8 @@ def run_gpa_analysis(
             # Counts over the FULL sample set (matches the full-mode counts, which
             # use adata_gpa.obs = all samples including non-belonging refs).
             full_meta = meta_df.reindex(full_sample_ids)
-            if "is_refseq" in full_meta.columns:
-                n_refseq_full = int(_series_to_bool(full_meta["is_refseq"]).sum())
+            if "is_reference_genome" in full_meta.columns:
+                n_refseq_full = int(_series_to_bool(full_meta["is_reference_genome"]).sum())
             else:
                 n_refseq_full = 0
             if "is_complete_norway_genome" in full_meta.columns:

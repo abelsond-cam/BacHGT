@@ -4,27 +4,37 @@
 Quantifies how much shared-gene coverage between query samples and their assigned
 reference genome improves as the assignment becomes more granular:
 
-  Level f (coarsest): best mgh78578 vs the run's KP samples ("Ref mgh78578")
-  Level e:            best single RefSeq across same-species refs only
-                       ("Best RefSeq in Subspecies"; falls back to f when no
-                       same-species refs are present in the run)
-  Level d:            best single RefSeq across all non-RefSeq samples in the run
-  Level c:            best single RefSeq scoped to one CG (or weighted-mean over
-                       all CG-level subgroups including 'other' for SL/run rows)
-  Level b:            best single RefSeq scoped to one CG/K-locus subgroup
+  Level f (coarsest): best mgh78578 vs the run's query genomes ("Ref mgh78578")
+  Level d:            best single reference across all non-reference genomes in
+                       the run
+  Level c:            best single reference scoped to one CG (or weighted-mean
+                       over all CG-level subgroups including 'other' for SL/run
+                       rows)
+  Level b:            best single reference scoped to one CG/K-locus subgroup
                        (or weighted-mean over all CG/KL subgroups for CG/SL rows)
-  Level a (finest):   per-sample max-shared-genes RefSeq
+  Level a (finest):   per-sample max-shared-genes reference
+
+The reference set is ``is_reference_genome | is_mgh78578``; queries are all
+non-reference genomes present in a run (no kpsc_final_list gate, so non-KPSC
+species runs are included). Panaroo column labels are mapped to metadata flags
+via each run's ``panaroo_genomes.tsv`` (the short-read assembly of a paired
+isolate is labelled by ``sample_accession``).
+
+Level e (best reference in subspecies via a fixed cross-run reference bucket)
+was **removed** when the bucket was scrubbed — without a fixed cross-run pool it
+collapsed toward level d. It is recoverable from git history and will be
+revisited after the pangenome_merge experiment.
 
 Walks Panaroo run directories directly and computes everything from each run's
 ``gene_presence_absence.Rtab`` via a single BLAS dot-product per run (X_refseq @
 X_query.T). No dependence on per-run detail TSVs from gpa_distances_batch_runs.sh.
 
 Produces: granularity_table.tsv, granularity_summary.tsv,
-best_e_ref_per_species.tsv, best_reference_per_sample.csv (one row per
-run/query sample with the best reference + shared-gene count at every level),
-run_inventory.md (only in 'inventory'/'both' modes — the inventory still reads
-the detail TSVs because it reports run-classification metadata they encode),
-and delegates lollipop plotting to bac_panaroo.pl.granularity_lollipop.
+best_reference_per_sample.csv (one row per run/query sample with the best
+reference + shared-gene count at every level), run_inventory.md (only in
+'inventory'/'both' modes — the inventory still reads the detail TSVs because it
+reports run-classification metadata they encode), and delegates lollipop
+plotting to bac_panaroo.pl.granularity_lollipop.
 
 Row types in the output table:
   kp_epidemic    — One per major CG (≥ min_group_size) within a KP sublineage run
@@ -102,6 +112,42 @@ def generate_run_inventory(combined_df: pd.DataFrame, out_path: str) -> None:
     _tslog(f"Wrote inventory: {out_path}")
 
 
+def _augment_metadata_with_panaroo_labels(
+    metadata_df: pd.DataFrame, run_dir: str, sample_col: str
+) -> pd.DataFrame:
+    """Append alias rows so Panaroo labels that differ from ``Sample`` resolve.
+
+    The short-read assembly of a paired isolate appears as a Panaroo column
+    labelled by ``sample_accession`` while the long-read assembly keeps the
+    ``Sample`` accession. ``panaroo_genomes.tsv`` (per run dir) maps
+    ``panaroo_label`` -> ``Sample``; for every label that differs from its
+    ``Sample`` this appends a copy of that ``Sample``'s metadata row whose
+    ``sample_col`` value is the label, with ``is_reference_genome`` /
+    ``is_mgh78578`` forced False (a short-read draft is a query, not a
+    reference). Runs without the file (legacy) are returned unchanged.
+    """
+    genomes_path = os.path.join(run_dir, "panaroo_genomes.tsv")
+    if not os.path.isfile(genomes_path):
+        return metadata_df
+    g = pd.read_csv(genomes_path, sep="\t")
+    if not {"panaroo_label", "Sample"}.issubset(g.columns):
+        return metadata_df
+    g["panaroo_label"] = g["panaroo_label"].astype(str)
+    g["Sample"] = g["Sample"].astype(str)
+    existing = set(metadata_df[sample_col].astype(str))
+    alias = g[(g["panaroo_label"] != g["Sample"]) & ~g["panaroo_label"].isin(existing)]
+    by_sample = metadata_df.drop_duplicates(subset=[sample_col]).set_index(sample_col)
+    alias = alias[alias["Sample"].isin(by_sample.index)]
+    if alias.empty:
+        return metadata_df
+    src = by_sample.loc[alias["Sample"].to_numpy()].reset_index()
+    src[sample_col] = alias["panaroo_label"].to_numpy()
+    for col in ("is_reference_genome", "is_mgh78578"):
+        if col in src.columns:
+            src[col] = False
+    return pd.concat([metadata_df, src], ignore_index=True)
+
+
 # -----------------------------------------------------------------------------
 # Per-run processing — single BLAS dot-product, returns metrics for every node
 # in the hierarchical split tree (whole_run, each CG, each CG/KL).
@@ -110,16 +156,19 @@ def process_panaroo_run(
     run_dir: str,
     metadata_df: pd.DataFrame,
     min_group_size: int,
-    use_kpsc_filter: bool,
-    bucket_ids: set[str] | None = None,
 ) -> dict[str, Any] | None:
-    """Compute level f/d/a + per-node best_shared + bucket matrix for one Panaroo run.
+    """Compute level f/d/c/b/a + per-node best_shared for one Panaroo run.
 
-    Level e is **not** computed here (it requires a cross-run species-level
-    aggregation). Instead this function returns the bucket-vs-query shared-gene
-    matrix and per-bucket-ref per-run mean, which ``compute_granularity_table``
-    uses to pick the best bucket ref per species and then fill in level e on
-    every node.
+    The reference set is ``is_reference_genome | is_mgh78578``; queries are all
+    non-reference genomes present in the run (so non-KPSC species runs, whose
+    rows are not on the kpsc_final_list, are not dropped). Panaroo columns are
+    resolved to their metadata flags via ``panaroo_genomes.tsv`` (the short-read
+    assembly of a paired isolate is labelled by ``sample_accession``).
+
+    Level e (best reference per species via cross-run aggregation over the fixed
+    reference bucket) was **removed** when the bucket was scrubbed — it had no
+    distinct meaning without a fixed cross-run reference pool. It is recoverable
+    from git history and will be revisited after the pangenome_merge experiment.
 
     Returns a dict::
 
@@ -135,21 +184,11 @@ def process_panaroo_run(
                                               "level_d", "level_a"}},
             "query_species":       str | None,
             "query_ids":           list[str],
-            "per_sample_f":        np.ndarray (n_query,),  # mgh per-query, for
-                                                            # fallback_e use
-            "bucket_shared":       np.ndarray (n_bucket_in_run, n_query),
-            "bucket_ref_ids_in_run": list[str],
-            "bucket_per_run_means": dict[str, float],
+            "per_sample_f":        np.ndarray (n_query,),  # mgh per-query
         }
 
-    ``bucket_ids`` is the set of Sample IDs designated as the reference bucket
-    (mgh + Norway-completes + HS11286 by default). If None or empty, the
-    function still works but level e in the table builder will be effectively
-    "best of mgh" (== level f) for every row. Bucket members not present in this
-    particular run are silently skipped (they just won't appear in
-    ``bucket_per_run_means`` for this run).
-
-    Returns None if the run cannot be processed (missing .Rtab, no RefSeqs, etc.).
+    Returns None if the run cannot be processed (missing .Rtab, no references,
+    no query genomes, etc.).
     """
     try:
         rtab_path = os.path.join(run_dir, "gene_presence_absence.Rtab")
@@ -167,18 +206,22 @@ def process_panaroo_run(
         if not sample_id_col:
             sample_id_col = metadata_df.columns[0]
 
-        # Restrict to samples we actually consume (curated or reference). The raw
-        # metadata file has duplicate Sample IDs for samples that were excluded
-        # from the final curated list; those duplicates are never used here, so
-        # drop them before set_index() to avoid pandas' "cannot reindex on an
-        # axis with duplicate labels" error.
+        # Resolve Panaroo column labels (gpa.columns) to metadata flags. The
+        # short-read assembly of a paired isolate is a column labelled by
+        # sample_accession; panaroo_genomes.tsv maps it back to its Sample.
+        metadata_df = _augment_metadata_with_panaroo_labels(metadata_df, run_dir, sample_id_col)
+
+        # The reference set is is_reference_genome | is_mgh78578. Queries are all
+        # non-reference genomes present in the run. The raw metadata file can
+        # carry duplicate Sample IDs for excluded samples; drop them before
+        # set_index() so reindex() doesn't choke on duplicate labels.
         flags = pd.DataFrame(
             {
                 "kpsc": metadata_df.get("kpsc_final_list", False).fillna(False).astype(bool)
                 if "kpsc_final_list" in metadata_df.columns
                 else False,
-                "ref": metadata_df.get("is_refseq", False).fillna(False).astype(bool)
-                if "is_refseq" in metadata_df.columns
+                "ref": metadata_df.get("is_reference_genome", False).fillna(False).astype(bool)
+                if "is_reference_genome" in metadata_df.columns
                 else False,
                 "mgh": metadata_df.get("is_mgh78578", False).fillna(False).astype(bool)
                 if "is_mgh78578" in metadata_df.columns
@@ -186,27 +229,30 @@ def process_panaroo_run(
             }
         )
         keep_mask = flags["kpsc"] | flags["ref"] | flags["mgh"]
-        meta_curated = metadata_df.loc[keep_mask]
+        meta_curated = metadata_df.loc[keep_mask].drop_duplicates(subset=[sample_id_col])
         meta = meta_curated.set_index(sample_id_col).reindex(gpa.columns)
 
-        is_refseq = meta["is_refseq"].fillna(False).astype(bool).to_numpy()
+        is_ref_genome = (
+            meta["is_reference_genome"].fillna(False).astype(bool).to_numpy()
+            if "is_reference_genome" in meta.columns
+            else np.zeros(len(meta), dtype=bool)
+        )
         is_mgh = (
             meta["is_mgh78578"].fillna(False).astype(bool).to_numpy()
             if "is_mgh78578" in meta.columns
             else np.zeros(len(meta), dtype=bool)
         )
-        if use_kpsc_filter:
-            is_query = (
-                meta["kpsc_final_list"].fillna(False).astype(bool).to_numpy() & ~is_refseq
-            )
-        else:
-            is_query = ~is_refseq
+        # Reference pool = is_reference_genome | mgh; queries = everything else
+        # present in the run (no kpsc_final_list gate, so non-KPSC species runs
+        # are kept).
+        is_refseq = is_ref_genome | is_mgh
+        is_query = ~is_refseq
 
         if not is_refseq.any():
-            _tslog(f"WARNING: No RefSeq samples in {run_dir}")
+            _tslog(f"WARNING: No reference genomes in {run_dir}")
             return None
         if not is_query.any():
-            _tslog(f"WARNING: No query samples in {run_dir}")
+            _tslog(f"WARNING: No query genomes in {run_dir}")
             return None
 
         # Binarise: (n_samples, n_genes)
@@ -261,28 +307,7 @@ def process_panaroo_run(
             else None
         )
 
-        # Bucket-vs-query shared-gene matrix. The bucket is chosen run-externally
-        # (default: mgh + all Norway-completes + HS11286, defined by reference_bucket.tsv);
-        # here we just slice ``shared`` to whichever bucket members are present
-        # in this run's ref set. The per-run mean for each bucket ref is what
-        # the table builder later weights across runs of the same species to
-        # pick best_e_ref[species].
         ref_sample_ids = list(gpa.columns[is_refseq])
-        if bucket_ids:
-            bucket_indices = [
-                i for i, sid in enumerate(ref_sample_ids) if sid in bucket_ids
-            ]
-        else:
-            bucket_indices = []
-        bucket_ref_ids_in_run = [ref_sample_ids[i] for i in bucket_indices]
-        if bucket_indices:
-            bucket_shared = shared[bucket_indices, :].astype(np.float32, copy=False)
-        else:
-            bucket_shared = np.zeros((0, shared.shape[1]), dtype=np.float32)
-        bucket_per_run_means: dict[str, float] = {
-            sid: float(bucket_shared[i].mean())
-            for i, sid in enumerate(bucket_ref_ids_in_run)
-        }
 
         # Build hierarchical split of query samples by (Sublineage, Clonal
         # group, K_locus). For KP sublineage runs the SL split is trivial
@@ -297,10 +322,8 @@ def process_panaroo_run(
         )
 
         # Compute metrics for every node in the tree (whole_run + recursive).
-        # Level e is filled in later by ``compute_granularity_table`` after the
-        # cross-run species-level pick of best_e_ref. ``best_ref_idx`` records
-        # WHICH ref (row of ``shared``) maximises the node's mean shared genes;
-        # it feeds the per-sample best-reference table.
+        # ``best_ref_idx`` records WHICH ref (row of ``shared``) maximises the
+        # node's mean shared genes; it feeds the per-sample best-reference table.
         node_metrics: dict[tuple[str, ...], dict[str, float]] = {}
 
         # Per-sample ref index for the CG-level (tree depth 2) and
@@ -324,7 +347,6 @@ def process_panaroo_run(
                 "best_shared": float(mean_per_ref.max()),
                 "best_ref_idx": best_ref_idx,
                 "level_f": float(np.nanmean(per_sample_f[mask_idx])),
-                "level_e": float("nan"),  # filled by compute_granularity_table
                 "level_d": float(per_sample_d[mask_idx].mean()),
                 "level_a": float(per_sample_a[mask_idx].mean()),
             }
@@ -368,9 +390,6 @@ def process_panaroo_run(
             "per_sample_c_idx": per_sample_c_idx,
             "per_sample_b": per_sample_b,
             "per_sample_b_idx": per_sample_b_idx,
-            "bucket_shared": bucket_shared,
-            "bucket_ref_ids_in_run": bucket_ref_ids_in_run,
-            "bucket_per_run_means": bucket_per_run_means,
         }
     except Exception as e:
         _tslog(f"ERROR processing run {run_dir}: {e}")
@@ -517,12 +536,10 @@ def _build_run_summary_row(
             "n_samples": run["n_query"],
             "n_refseq_genomes": run["n_refseq"],
             "shared_genes_f": run["level_f"],
-            "shared_genes_e": run["level_e"],
             "shared_genes_d": run["level_d"],
             "shared_genes_c": run["level_d"],
             "shared_genes_b": run["level_d"],
             "shared_genes_a": run["level_a"],
-            "fallback_e": run.get("fallback_e", False),
             "fallback_c": True,
             "fallback_b": True,
         }
@@ -553,12 +570,10 @@ def _build_run_summary_row(
         "n_samples": run["n_query"],
         "n_refseq_genomes": run["n_refseq"],
         "shared_genes_f": run["level_f"],
-        "shared_genes_e": run["level_e"],
         "shared_genes_d": d_value if not np.isnan(d_value) else run["level_d"],
         "shared_genes_c": c_value if not np.isnan(c_value) else run["level_d"],
         "shared_genes_b": b_value if not np.isnan(b_value) else run["level_d"],
         "shared_genes_a": run["level_a"],
-        "fallback_e": run.get("fallback_e", False),
         "fallback_c": not any_cg_split,
         "fallback_b": not any_kl_split,
     }
@@ -585,11 +600,11 @@ def _build_cg_rows(
     # Sample IDs that exist for non-curated rows in the raw metadata file.
     if "kpsc_final_list" in metadata_df.columns:
         keep = metadata_df["kpsc_final_list"].fillna(False).astype(bool)
-        if "is_refseq" in metadata_df.columns:
-            keep = keep | metadata_df["is_refseq"].fillna(False).astype(bool)
+        if "is_reference_genome" in metadata_df.columns:
+            keep = keep | metadata_df["is_reference_genome"].fillna(False).astype(bool)
         if "is_mgh78578" in metadata_df.columns:
             keep = keep | metadata_df["is_mgh78578"].fillna(False).astype(bool)
-        meta_idx = metadata_df.loc[keep].set_index(sample_id_col)
+        meta_idx = metadata_df.loc[keep].drop_duplicates(subset=[sample_id_col]).set_index(sample_id_col)
     else:
         meta_idx = metadata_df.set_index(sample_id_col)
 
@@ -644,12 +659,10 @@ def _build_cg_rows(
                     "n_samples": nm[path]["n"],
                     "n_refseq_genomes": run["n_refseq"],
                     "shared_genes_f": nm[path]["level_f"],
-                    "shared_genes_e": nm[path]["level_e"],
                     "shared_genes_d": nm[path]["level_d"],
                     "shared_genes_c": nm[path]["best_shared"],
                     "shared_genes_b": b_value,
                     "shared_genes_a": nm[path]["level_a"],
-                    "fallback_e": run.get("fallback_e", False),
                     "fallback_c": False,
                     "fallback_b": fallback_b,
                 }
@@ -660,138 +673,21 @@ def _build_cg_rows(
 # -----------------------------------------------------------------------------
 # Main table builder
 # -----------------------------------------------------------------------------
-def _resolve_bucket_ids(
-    metadata_df: pd.DataFrame,
-    bucket_tsv: str | os.PathLike | None,
-) -> tuple[set[str], str]:
-    """Return (bucket_ids, source_label). Falls back to is_mgh78578 alone."""
-    if bucket_tsv is not None and os.path.isfile(str(bucket_tsv)):
-        ids = set(
-            pd.read_csv(bucket_tsv, sep="\t")["Sample"].astype(str)
-        )
-        return ids, f"file:{bucket_tsv}"
-    if "is_mgh78578" in metadata_df.columns:
-        ids = set(
-            metadata_df.loc[
-                metadata_df["is_mgh78578"].fillna(False).astype(bool), "Sample"
-            ].astype(str)
-        )
-        return ids, "fallback:is_mgh78578"
-    return set(), "fallback:none"
-
-
-def _aggregate_best_e_ref_per_species(
-    run_results: dict[str, dict],
-) -> tuple[dict[str | None, str | None], list[dict]]:
-    """Cross-run species-level aggregation of bucket-ref scores.
-
-    For each ``query_species``, computes the n_query-weighted mean of
-    ``bucket_per_run_means[ref]`` over the runs of that species, then picks
-    the ref with the highest weighted mean as the species's best e ref.
-
-    Returns (best_e_ref_per_species, audit_rows). ``audit_rows`` is a list of
-    {species, best_ref, weighted_mean, n_runs, n_candidate_refs} dicts for
-    writing to ``best_e_ref_per_species.tsv``.
-    """
-    from collections import defaultdict
-
-    runs_by_species: dict[str | None, list[str]] = defaultdict(list)
-    for name, run in run_results.items():
-        runs_by_species[run.get("query_species")].append(name)
-
-    best_e_ref_for_species: dict[str | None, str | None] = {}
-    audit: list[dict] = []
-    for species, names in runs_by_species.items():
-        candidate_refs: set[str] = set()
-        for name in names:
-            candidate_refs |= set(run_results[name]["bucket_per_run_means"].keys())
-        weighted: dict[str, float] = {}
-        for ref in candidate_refs:
-            total_w, total_wv = 0.0, 0.0
-            for name in names:
-                run = run_results[name]
-                v = run["bucket_per_run_means"].get(ref, float("nan"))
-                if not np.isnan(v):
-                    w = float(run["n_query"])
-                    total_w += w
-                    total_wv += w * v
-            if total_w > 0:
-                weighted[ref] = total_wv / total_w
-        best_ref = max(weighted, key=weighted.get) if weighted else None
-        best_e_ref_for_species[species] = best_ref
-        audit.append(
-            {
-                "species": species if species is not None else "(unknown)",
-                "best_e_ref": best_ref,
-                "weighted_mean_shared_genes": (
-                    weighted[best_ref] if best_ref is not None else float("nan")
-                ),
-                "n_runs": len(names),
-                "n_candidate_refs": len(weighted),
-            }
-        )
-        _tslog(
-            f"best_e_ref[{species}] = {best_ref}  "
-            f"(weighted_mean={weighted.get(best_ref, float('nan')):.2f}; "
-            f"runs={len(names)}, candidate_refs={len(weighted)})"
-        )
-    return best_e_ref_for_species, audit
-
-
-def _fill_level_e_per_run(
-    run: dict,
-    best_e_ref_for_species: dict[str | None, str | None],
-) -> None:
-    """Resolve per-sample-level e for one run, then walk the tree updating
-    ``run['node_metrics'][path]['level_e']`` and run-level ``level_e`` /
-    ``fallback_e`` / ``best_e_ref`` fields."""
-    species = run.get("query_species")
-    best_ref = best_e_ref_for_species.get(species)
-    bucket_ids = run["bucket_ref_ids_in_run"]
-    if best_ref is not None and best_ref in bucket_ids:
-        ref_idx = bucket_ids.index(best_ref)
-        per_sample_e = run["bucket_shared"][ref_idx, :]
-        run["fallback_e"] = False
-        run["best_e_ref"] = best_ref
-    else:
-        per_sample_e = run["per_sample_f"]
-        run["fallback_e"] = True
-        run["best_e_ref"] = None
-    run["level_e"] = float(np.nanmean(per_sample_e))
-    run["per_sample_e"] = np.asarray(per_sample_e)
-
-    query_ids = run["query_ids"]
-    id_to_idx = {sid: i for i, sid in enumerate(query_ids)}
-    nm = run["node_metrics"]
-
-    def _walk(node: dict, path: tuple[str, ...]) -> None:
-        if path in nm:
-            members = node["members"]
-            mask_idx = [id_to_idx[m] for m in members if m in id_to_idx]
-            if mask_idx:
-                nm[path]["level_e"] = float(np.nanmean(per_sample_e[mask_idx]))
-        for child in node.get("subgroups", []):
-            _walk(child, path + (child["label"],))
-
-    _walk(run["tree"], ())
-
-
 def build_reference_assignment_table(run_results: dict[str, dict]) -> pd.DataFrame:
     """Build one row per (run, query sample) of best ref + shared count per level.
 
     Emits the best reference genome assigned at every granularity level, plus
     the gene count shared with it.
 
-    Levels mirror the granularity table: ``f`` = mgh78578, ``e`` = best
-    same-species bucket ref, ``d`` = best single ref over the whole run (the
-    "SL-level" reference for kp_sublineage runs), ``c`` = best ref for the
-    sample's CG, ``b`` = best ref for the sample's CG/K-locus subgroup,
-    ``a`` = per-sample best ref. ``ref_*`` columns hold the reference Sample
-    ID; ``shared_*`` columns hold the gene count shared with it.
+    Levels mirror the granularity table: ``f`` = mgh78578, ``d`` = best single
+    ref over the whole run (the "SL-level" reference for kp_sublineage runs),
+    ``c`` = best ref for the sample's CG, ``b`` = best ref for the sample's
+    CG/K-locus subgroup, ``a`` = per-sample best ref. ``ref_*`` columns hold the
+    reference Sample ID; ``shared_*`` columns hold the gene count shared with it.
+    (Level e was removed with the reference bucket; recoverable from git.)
 
     A sample can appear in more than one Panaroo run; the ``run`` column
-    disambiguates. ``_fill_level_e_per_run`` must have run first (it sets
-    ``best_e_ref`` / ``per_sample_e``).
+    disambiguates.
     """
 
     def _count(v: float | None) -> int | None:
@@ -806,14 +702,11 @@ def build_reference_assignment_table(run_results: dict[str, dict]) -> pd.DataFra
         qids = run["query_ids"]
         species = run.get("query_species")
         mgh_id = run.get("mgh_ref_id")
-        best_e = run.get("best_e_ref")
-        ref_e_id = best_e if best_e is not None else mgh_id
         ref_d_id = ref_ids[run["best_run_ref"]]
         a_idx = run["per_sample_a_idx"]
         c_idx = run["per_sample_c_idx"]
         b_idx = run["per_sample_b_idx"]
         psf = run["per_sample_f"]
-        pse = run.get("per_sample_e")
         psd = run["per_sample_d"]
         psa = run["per_sample_a"]
         psc = run["per_sample_c"]
@@ -826,8 +719,6 @@ def build_reference_assignment_table(run_results: dict[str, dict]) -> pd.DataFra
                     "species": species,
                     "ref_f": mgh_id,
                     "shared_f": _count(psf[i]),
-                    "ref_e": ref_e_id,
-                    "shared_e": _count(pse[i]) if pse is not None else None,
                     "ref_d": ref_d_id,
                     "shared_d": _count(psd[i]),
                     "ref_c": ref_ids[int(c_idx[i])],
@@ -846,17 +737,17 @@ def compute_granularity_table(
     metadata_df: pd.DataFrame,
     min_group_size: int = 50,
     workers: int = 1,
-    bucket_tsv: str | os.PathLike | None = None,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """Build the granularity table + best_e_ref audit by walking Panaroo runs.
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Build the granularity table by walking Panaroo runs.
 
-    Returns ``(granularity_df, best_e_ref_summary_df, ref_assignment_df)``. The
-    summary df has one row per query species with the bucket reference that
-    gave the highest n_query-weighted mean shared-gene count across that
-    species's runs ("which single ref should we use for this species?"). The
-    ref-assignment df has one row per (run, query sample) with the best
-    reference + shared-gene count at every level (see
-    ``build_reference_assignment_table``).
+    Returns ``(granularity_df, ref_assignment_df)``. The ref-assignment df has
+    one row per (run, query sample) with the best reference + shared-gene count
+    at every level (see ``build_reference_assignment_table``). The reference set
+    is ``is_reference_genome | is_mgh78578``.
+
+    Level e (best reference per species via cross-run aggregation over the fixed
+    reference bucket) was removed when the bucket was scrubbed; it is recoverable
+    from git history and will be revisited after the pangenome_merge experiment.
 
     No longer depends on per-run detail TSVs from gpa_distances_batch_runs.sh.
     """
@@ -864,18 +755,8 @@ def compute_granularity_table(
     runs = find_panaroo_runs(panaroo_run_root)
     _tslog(f"Discovered {len(runs)} Panaroo runs")
 
-    bucket_ids, bucket_source = _resolve_bucket_ids(metadata_df, bucket_tsv)
-    _tslog(f"Reference bucket: n={len(bucket_ids)} ({bucket_source})")
-
     # Process each run in parallel (or serial if workers=1)
-    run_params = [
-        (
-            os.path.join(panaroo_run_root, r),
-            r,
-            _classify_run_name(r) != "kp_species",  # use_kpsc_filter — false for species
-        )
-        for r in runs
-    ]
+    run_params = [(os.path.join(panaroo_run_root, r), r) for r in runs]
     run_results: dict[str, dict] = {}
 
     if workers > 1:
@@ -883,9 +764,9 @@ def compute_granularity_table(
         with ProcessPoolExecutor(max_workers=workers) as executor:
             futures = {
                 executor.submit(
-                    process_panaroo_run, rd, metadata_df, min_group_size, use_kpsc, bucket_ids
+                    process_panaroo_run, rd, metadata_df, min_group_size
                 ): name
-                for rd, name, use_kpsc in run_params
+                for rd, name in run_params
             }
             for future in futures:
                 name = futures[future]
@@ -896,31 +777,15 @@ def compute_granularity_table(
                 except Exception as e:
                     _tslog(f"ERROR for run {name}: {e}")
     else:
-        for rd, name, use_kpsc in run_params:
-            res = process_panaroo_run(
-                rd, metadata_df, min_group_size, use_kpsc, bucket_ids
-            )
+        for rd, name in run_params:
+            res = process_panaroo_run(rd, metadata_df, min_group_size)
             if res is not None:
                 run_results[name] = res
     _tslog(f"Processed {len(run_results)} runs successfully")
 
     if not run_results:
-        return (
-            pd.DataFrame(),
-            pd.DataFrame(
-                columns=["species", "best_e_ref", "weighted_mean_shared_genes",
-                         "n_runs", "n_candidate_refs"]
-            ),
-            pd.DataFrame(),
-        )
+        return pd.DataFrame(), pd.DataFrame()
 
-    # Cross-run species-level aggregation: pick best_e_ref per species, then
-    # back-fill level_e onto every run's node_metrics.
-    _tslog("=== Cross-run aggregation: picking best e ref per species ===")
-    best_e_ref_for_species, audit_rows = _aggregate_best_e_ref_per_species(run_results)
-    for run in run_results.values():
-        _fill_level_e_per_run(run, best_e_ref_for_species)
-    best_e_ref_df = pd.DataFrame(audit_rows)
     ref_assignment_df = build_reference_assignment_table(run_results)
 
     # Build rows from each run
@@ -951,15 +816,13 @@ def compute_granularity_table(
     result = _aggregate_split_runs(result)
     _tslog(f"Post-aggregation rows: {len(result)}")
 
-    # Compute gain columns (consecutive-level gains f→e→d→c→b→a)
-    result["gain_f_to_e"] = result["shared_genes_e"] - result["shared_genes_f"]
-    result["gain_e_to_d"] = result["shared_genes_d"] - result["shared_genes_e"]
+    # Compute gain columns (consecutive-level gains f→d→c→b→a; level e removed)
+    result["gain_f_to_d"] = result["shared_genes_d"] - result["shared_genes_f"]
     result["gain_d_to_c"] = result["shared_genes_c"] - result["shared_genes_d"]
     result["gain_c_to_b"] = result["shared_genes_b"] - result["shared_genes_c"]
     result["gain_b_to_a"] = result["shared_genes_a"] - result["shared_genes_b"]
     eps = 1e-9
-    result["pct_gain_f_to_e"] = 100 * result["gain_f_to_e"] / (result["shared_genes_f"] + eps)
-    result["pct_gain_e_to_d"] = 100 * result["gain_e_to_d"] / (result["shared_genes_e"] + eps)
+    result["pct_gain_f_to_d"] = 100 * result["gain_f_to_d"] / (result["shared_genes_f"] + eps)
     result["pct_gain_d_to_c"] = 100 * result["gain_d_to_c"] / (result["shared_genes_d"] + eps)
     result["pct_gain_c_to_b"] = (
         100 * result["gain_c_to_b"] / (result["shared_genes_c"] + eps)
@@ -977,28 +840,24 @@ def compute_granularity_table(
         "n_samples",
         "n_refseq_genomes",
         "shared_genes_f",
-        "shared_genes_e",
         "shared_genes_d",
         "shared_genes_c",
         "shared_genes_b",
         "shared_genes_a",
-        "fallback_e",
         "fallback_c",
         "fallback_b",
-        "gain_f_to_e",
-        "gain_e_to_d",
+        "gain_f_to_d",
         "gain_d_to_c",
         "gain_c_to_b",
         "gain_b_to_a",
-        "pct_gain_f_to_e",
-        "pct_gain_e_to_d",
+        "pct_gain_f_to_d",
         "pct_gain_d_to_c",
         "pct_gain_c_to_b",
         "pct_gain_b_to_a",
     ]
     result = result[[c for c in output_cols if c in result.columns]]
     _tslog(f"Granularity table: {len(result)} rows")
-    return result, best_e_ref_df, ref_assignment_df
+    return result, ref_assignment_df
 
 
 def _aggregate_split_runs(df: pd.DataFrame) -> pd.DataFrame:
@@ -1006,7 +865,6 @@ def _aggregate_split_runs(df: pd.DataFrame) -> pd.DataFrame:
     into one row by n_samples-weighted mean of all numeric columns."""
     weighted_cols = [
         "shared_genes_f",
-        "shared_genes_e",
         "shared_genes_d",
         "shared_genes_c",
         "shared_genes_b",
@@ -1020,8 +878,6 @@ def _aggregate_split_runs(df: pd.DataFrame) -> pd.DataFrame:
             "n_samples": float(w.sum()),
             "n_parts": int(len(grp)),
             "directory_leaf": ";".join(sorted(set(grp["directory_leaf"]))),
-            "fallback_e": bool(grp["fallback_e"].any())
-            if "fallback_e" in grp.columns else False,
             "fallback_c": bool(grp["fallback_c"].any()),
             "fallback_b": bool(grp["fallback_b"].any()),
         }
@@ -1046,7 +902,7 @@ def _aggregate_split_runs(df: pd.DataFrame) -> pd.DataFrame:
 def compute_summary_stats(granularity_df: pd.DataFrame) -> dict[str, float]:
     """Compute aggregate summary statistics."""
     stats: dict[str, float] = {}
-    for level in ["f", "e", "d", "c", "b", "a"]:
+    for level in ["f", "d", "c", "b", "a"]:
         col = f"shared_genes_{level}"
         if col in granularity_df.columns:
             valid = granularity_df[col].dropna()
@@ -1097,14 +953,6 @@ def main(argv: Iterable[str] | None = None) -> int:
     parser.add_argument(
         "--workers", type=int, default=1, help="Parallel workers (default 1)"
     )
-    parser.add_argument(
-        "--reference-bucket-tsv",
-        default=None,
-        help="Path to reference_bucket.tsv (Sample IDs to use as the level-e "
-        "comparison pool). Defaults to "
-        "<DATA_ROOT>/final/reference_bucket.tsv if present; else falls back "
-        "to is_mgh78578 alone.",
-    )
     parser.add_argument("--test-n-runs", type=int, default=None)
     parser.add_argument(
         "--recompile",
@@ -1141,18 +989,6 @@ def main(argv: Iterable[str] | None = None) -> int:
         _tslog(f"Loading metadata: {args.metadata}")
         metadata_df = pd.read_csv(args.metadata, sep="\t", low_memory=False)
 
-        # Default bucket TSV: <DATA_ROOT>/final/reference_bucket.tsv (sibling
-        # of the metadata file's parent). The user can override with
-        # --reference-bucket-tsv. If neither is present, the granularity
-        # table-builder falls back to is_mgh78578 alone.
-        bucket_tsv = args.reference_bucket_tsv
-        if bucket_tsv is None:
-            default_bucket = os.path.join(
-                os.path.dirname(args.metadata), "reference_bucket.tsv"
-            )
-            if os.path.isfile(default_bucket):
-                bucket_tsv = default_bucket
-
         # Optional run-count cap for testing
         if args.test_n_runs:
             all_runs = find_panaroo_runs(args.data_dir)[: args.test_n_runs]
@@ -1164,26 +1000,20 @@ def main(argv: Iterable[str] | None = None) -> int:
             _orig = _self_mod.find_panaroo_runs
             _self_mod.find_panaroo_runs = lambda root: all_runs  # type: ignore[assignment]
             try:
-                granularity_df, best_e_ref_df, ref_assignment_df = (
-                    compute_granularity_table(
-                        args.data_dir,
-                        metadata_df,
-                        min_group_size=args.min_group_size,
-                        workers=args.workers,
-                        bucket_tsv=bucket_tsv,
-                    )
-                )
-            finally:
-                _self_mod.find_panaroo_runs = _orig  # type: ignore[assignment]
-        else:
-            granularity_df, best_e_ref_df, ref_assignment_df = (
-                compute_granularity_table(
+                granularity_df, ref_assignment_df = compute_granularity_table(
                     args.data_dir,
                     metadata_df,
                     min_group_size=args.min_group_size,
                     workers=args.workers,
-                    bucket_tsv=bucket_tsv,
                 )
+            finally:
+                _self_mod.find_panaroo_runs = _orig  # type: ignore[assignment]
+        else:
+            granularity_df, ref_assignment_df = compute_granularity_table(
+                args.data_dir,
+                metadata_df,
+                min_group_size=args.min_group_size,
+                workers=args.workers,
             )
 
         if granularity_df.empty:
@@ -1192,10 +1022,6 @@ def main(argv: Iterable[str] | None = None) -> int:
             table_path = os.path.join(args.out_dir, "granularity_table.tsv")
             granularity_df.to_csv(table_path, sep="\t", index=False)
             _tslog(f"Wrote granularity table: {table_path}")
-
-            best_e_path = os.path.join(args.out_dir, "best_e_ref_per_species.tsv")
-            best_e_ref_df.to_csv(best_e_path, sep="\t", index=False)
-            _tslog(f"Wrote best-e-ref audit: {best_e_path}")
 
             ref_assign_path = os.path.join(
                 args.out_dir, "best_reference_per_sample.csv"

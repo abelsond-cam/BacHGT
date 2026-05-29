@@ -2,17 +2,22 @@
 # Generate phased .list files for panaroo_run_strain_metadata_array.sh from a
 # panaroo_metadata_batching.py output directory.
 #
-# panaroo_ref_tsvs_all.list order (concatenation of the five category lists):
+# panaroo_ref_tsvs_all.list order (concatenation of the five KPSC category lists):
 #   1) SL258 multi-part TSVs only          -> panaroo_ref_tsvs_sl258_parts.list
 #   2) Other *_part_*.tsv (not SL258)      -> panaroo_ref_tsvs_split_parts_other.list
 #   3) Large single-lineage TSVs           -> panaroo_ref_tsvs_large_single.list
-#   4) species_*.tsv                       -> panaroo_ref_tsvs_species.list
+#   4) species_*.tsv (KPSC non-pneumoniae) -> panaroo_ref_tsvs_species.list
 #   5) kp_rare_sublineage_batch_*.tsv      -> panaroo_ref_tsvs_kp_rare.list
 #
-# All five partitions must be non-empty or the script exits with an error (wrong
-# directory, batching not run, or unexpected layout). If you ever have only SL258
-# part files and no other *_part_*, you will need a one-off list or to relax that
-# check.
+# The non-KPSC per-species batches are written to a SEPARATE list and are NOT
+# part of panaroo_ref_tsvs_all.list, because they must be submitted with the
+# --non-kpsc-species flag (which disables the kpsc_final_list filter):
+#   6) non_kpsc_species_*.tsv              -> panaroo_ref_tsvs_non_kpsc_species.list
+#
+# All five KPSC partitions must be non-empty or the script exits with an error
+# (wrong directory, batching not run, or unexpected layout). The non-KPSC species
+# list is allowed to be empty (warning only). If you ever have only SL258 part
+# files and no other *_part_*, you will need a one-off list or to relax that check.
 #
 # Detailed batching rules and reference-genome handling are logged by
 # panaroo_metadata_batching.py in panaroo_batching.log under the batch directory.
@@ -31,7 +36,7 @@
 
 set -euo pipefail
 
-DEFAULT_BATCH_DIR="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2/batches"
+DEFAULT_BATCH_DIR="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome/batches"
 SL258_PREFIX="${SL258_PREFIX:-SL258}"
 
 usage() {
@@ -65,11 +70,15 @@ mapfile -t paths_other_parts < <(
 )
 mapfile -t paths_large_single < <(
   find "$BATCH_DIR" -type f -name '*.tsv' \
-    ! -name '*_part_*' ! -name 'species_*' ! -name 'kp_rare_sublineage_batch_*' | sort
+    ! -name '*_part_*' ! -name 'species_*' ! -name 'non_kpsc_species_*' \
+    ! -name 'kp_rare_sublineage_batch_*' | sort
 )
 mapfile -t paths_species < <(find "$BATCH_DIR" -type f -name 'species_*.tsv' | sort)
 mapfile -t paths_kp_rare < <(
   find "$BATCH_DIR" -type f -name 'kp_rare_sublineage_batch_*.tsv' | sort
+)
+mapfile -t paths_non_kpsc_species < <(
+  find "$BATCH_DIR" -type f -name 'non_kpsc_species_*.tsv' | sort
 )
 
 fail_empty() {
@@ -96,6 +105,12 @@ fi
 if (( ${#paths_kp_rare[@]} == 0 )); then
   fail_empty "kp_rare" "find BATCH_DIR -type f -name 'kp_rare_sublineage_batch_*.tsv'"
 fi
+# non_kpsc_species is allowed to be empty (warning only) — it is a separate,
+# optional category submitted with --non-kpsc-species, not part of the KPSC runs.
+if (( ${#paths_non_kpsc_species[@]} == 0 )); then
+  echo "WARNING: no non_kpsc_species_*.tsv files found under $BATCH_DIR" >&2
+  echo "  (the non-KPSC per-species list will be written empty)" >&2
+fi
 
 echo "========================================================================"
 echo "generate_panaroo_ref_tsv_lists.sh"
@@ -106,9 +121,10 @@ echo "  Lists to write:"
 echo "    - panaroo_ref_tsvs_sl258_parts.list       (SL258 multi-part batches)"
 echo "    - panaroo_ref_tsvs_split_parts_other.list (other *_part_*.tsv)"
 echo "    - panaroo_ref_tsvs_large_single.list      (one TSV per large unsplit SL)"
-echo "    - panaroo_ref_tsvs_species.list           (species_*.tsv)"
+echo "    - panaroo_ref_tsvs_species.list           (species_*.tsv, KPSC non-pneumoniae)"
 echo "    - panaroo_ref_tsvs_kp_rare.list           (kp_rare_sublineage_batch_*.tsv)"
-echo "    - panaroo_ref_tsvs_all.list               (concat of the five, fixed order)"
+echo "    - panaroo_ref_tsvs_all.list               (concat of the five KPSC lists, fixed order)"
+echo "    - panaroo_ref_tsvs_non_kpsc_species.list  (non_kpsc_species_*.tsv; submit with --non-kpsc-species)"
 echo "========================================================================"
 echo ""
 
@@ -118,6 +134,7 @@ out_large="${BATCH_DIR}/panaroo_ref_tsvs_large_single.list"
 out_species="${BATCH_DIR}/panaroo_ref_tsvs_species.list"
 out_kp="${BATCH_DIR}/panaroo_ref_tsvs_kp_rare.list"
 out_all="${BATCH_DIR}/panaroo_ref_tsvs_all.list"
+out_non_kpsc="${BATCH_DIR}/panaroo_ref_tsvs_non_kpsc_species.list"
 
 printf '%s\n' "${paths_sl258[@]}" >"$out_sl258"
 printf '%s\n' "${paths_other_parts[@]}" >"$out_other"
@@ -127,7 +144,15 @@ printf '%s\n' "${paths_kp_rare[@]}" >"$out_kp"
 
 cat "$out_sl258" "$out_other" "$out_large" "$out_species" "$out_kp" >"$out_all"
 
-for f in "$out_sl258" "$out_other" "$out_large" "$out_species" "$out_kp" "$out_all"; do
+# non-KPSC species list is written separately and is NOT concatenated into
+# panaroo_ref_tsvs_all.list (it must run with --non-kpsc-species).
+if (( ${#paths_non_kpsc_species[@]} > 0 )); then
+  printf '%s\n' "${paths_non_kpsc_species[@]}" >"$out_non_kpsc"
+else
+  : >"$out_non_kpsc"
+fi
+
+for f in "$out_sl258" "$out_other" "$out_large" "$out_species" "$out_kp" "$out_all" "$out_non_kpsc"; do
   n=$(wc -l < "$f")
   echo "  wrote $n lines -> $f"
 done
@@ -138,4 +163,9 @@ Done. Submit example (from repo root, adjust %concurrency):
   sbatch --array=1-\$(wc -l < ${out_sl258})%8 \\
     src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh --list-file ${out_sl258}
   (repeat for split_parts_other, large_single, species, kp_rare, or use --list-file ${out_all} once)
+
+  # Non-KPSC per-species batches MUST be submitted with --non-kpsc-species:
+  sbatch --array=1-\$(wc -l < ${out_non_kpsc})%8 \\
+    src/bac_panaroo/slurm_scripts/panaroo_run_strain_metadata_array.sh \\
+    --list-file ${out_non_kpsc} --non-kpsc-species
 EOF

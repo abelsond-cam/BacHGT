@@ -141,8 +141,7 @@ plots_png/
   granularity_lollipop_sl_highlight_epidemic.png           # KP epidemic SLs in dark blue
   granularity_lollipop_sl_highlight_epidemic_high_gain.png # only SLs with d→c > 20 genes
   granularity_lollipop_sl_highlight_rare.png               # rare-lineage batches in dark blue
-  granularity_gain_histogram_f_to_e.png                    # mgh → Subspecies
-  granularity_gain_histogram_e_to_d.png                    # Subspecies → SL
+  granularity_gain_histogram_f_to_d.png                    # mgh → SL
   granularity_gain_histogram_d_to_c.png                    # SL → CG
   granularity_gain_histogram_c_to_b.png                    # CG → CG/K-locus
   granularity_gain_histogram_b_to_a.png                    # CG/K-locus → per-sample
@@ -151,18 +150,19 @@ plots_pdf/  (mirror of plots_png/)
 
 ### Levels (granularity nodes)
 
-The lollipop plots each strain as a connected line across **six** nodes; values are the mean number of genes shared between the run's query samples and the chosen RefSeq.
+The lollipop plots each strain as a connected line across **five** nodes; values are the mean number of genes shared between the run's query genomes and the chosen reference. The reference set is `is_reference_genome ∪ is_mgh78578`; query genomes are all non-reference genomes present in the run.
 
 | Node | Label on plot | Definition | Notes |
 |---|---|---|---|
-| `f` | **Ref mgh78578** | mgh78578 mean shared genes vs the run's KP samples (per-Panaroo-run baseline) | NaN for runs that don't include mgh78578 |
-| `e` | **Best RefSeq in Subspecies** | Single best reference from the reference bucket, chosen **per query species via cross-run aggregation**: for each species the n_query-weighted mean shared-gene count of every bucket ref across all that species's Panaroo runs is computed, and the highest-scoring ref is `best_e_ref[species]`. `shared_genes_e` for any row = that ref's per-sample mean restricted to the row's query subset. The picks are written to `best_e_ref_per_species.tsv`. | Falls back to `f` (and `fallback_e=True`) only when no bucket ref is reachable for a species. Bucket = mgh + Norway-completes + HS11286 by default (controlled by `<DATA_ROOT>/final/reference_bucket.tsv`). |
-| `d` | **Best RefSeq in SL** | Per-CG row: run-wide best RefSeq applied to that CG's samples. SL/run summary row: n_samples-weighted mean across all SL-level subgroups in the run (major SLs + `other_SL` bucket) of each SL's `best_shared`. For KP sublineage runs the SL split is degenerate so this collapses to the run-wide best RefSeq. For `kp_rare` and `kp_species` runs the SL split is non-trivial — d reflects per-SL personalisation rather than one ref for the whole heterogeneous run. |
-| `c` | **Best RefSeq in CG** | Per-CG row: best RefSeq for that CG's samples. SL/run summary row: weighted mean across **all** CG-level subgroups (CGs within each major SL + each SL's `other_CG` bucket + the run's `other_SL` bucket as a single non-recursive contribution) — eliminates bias toward big children at any level. |
-| `b` | **Best RefSeq in CG / K-locus** | Per-CG row: weighted mean across the CG's K-locus subgroups (incl. `other_KL`). SL/run row: weighted mean across all KL-level leaves; nodes that bottom out earlier (no K-locus split) contribute their own `best_shared`. |
-| `a` | **Best RefSeq Per-Sample** | Mean over per-sample max shared genes across all RefSeqs in that run | |
+| `f` | **Ref mgh78578** | mgh78578 mean shared genes vs the run's query genomes (per-Panaroo-run baseline) | NaN for runs that don't include mgh78578 |
+| `d` | **Best reference in SL** | Per-CG row: run-wide best reference applied to that CG's samples. SL/run summary row: n_samples-weighted mean across all SL-level subgroups in the run (major SLs + `other_SL` bucket) of each SL's `best_shared`. For KP sublineage runs the SL split is degenerate so this collapses to the run-wide best reference. For `kp_rare` and `kp_species` runs the SL split is non-trivial — d reflects per-SL personalisation rather than one ref for the whole heterogeneous run. |
+| `c` | **Best reference in CG** | Per-CG row: best reference for that CG's samples. SL/run summary row: weighted mean across **all** CG-level subgroups (CGs within each major SL + each SL's `other_CG` bucket + the run's `other_SL` bucket as a single non-recursive contribution) — eliminates bias toward big children at any level. |
+| `b` | **Best reference in CG / K-locus** | Per-CG row: weighted mean across the CG's K-locus subgroups (incl. `other_KL`). SL/run row: weighted mean across all KL-level leaves; nodes that bottom out earlier (no K-locus split) contribute their own `best_shared`. |
+| `a` | **Best reference Per-Sample** | Mean over per-sample max shared genes across all references in that run | |
 
-`level_f ≤ level_e ≤ level_d ≤ level_c ≤ level_b ≤ level_a` is monotone by construction (each step either widens the ref pool or narrows the query scope).
+> **Level `e` (Best reference in Subspecies)** — previously a sixth node between `f` and `d`: a single best reference chosen per query species via cross-run aggregation over a fixed reference bucket (mgh + Norway-completes + HS11286). It was **removed** when the reference bucket was scrubbed — without a fixed cross-run reference pool it collapsed toward level `d`. Recoverable from git history; to be revisited after the pangenome_merge experiment.
+
+`level_f ≤ level_d ≤ level_c ≤ level_b ≤ level_a` is monotone by construction (each step either widens the ref pool or narrows the query scope).
 
 ### Row types (`row_type` column)
 
@@ -177,6 +177,6 @@ The CG-size threshold is now controlled solely by the granularity script's own `
 
 ### Key columns of `granularity_table.tsv`
 
-`strain`, `Sublineage`, `row_type`, `directory_leaf`, `n_parts`, `n_samples`, `n_refseq_genomes`, `shared_genes_f/e/d/c/b/a`, `fallback_e`, `fallback_c`, `fallback_b`, `gain_f_to_e`, `gain_e_to_d`, `gain_d_to_c`, `gain_c_to_b`, `gain_b_to_a`, `pct_gain_*`.
+`strain`, `Sublineage`, `row_type`, `directory_leaf`, `n_parts`, `n_samples`, `n_refseq_genomes`, `shared_genes_f/d/c/b/a`, `fallback_c`, `fallback_b`, `gain_f_to_d`, `gain_d_to_c`, `gain_c_to_b`, `gain_b_to_a`, `pct_gain_*`. (`n_refseq_genomes` counts `is_reference_genome ∪ is_mgh78578` genomes present in the run — the column name is retained for schema stability.)
 
-`fallback_e = True` when the Panaroo run had no same-species RefSeqs (so level e fell back to mgh78578 / level f). `fallback_c = True` when no major CG-level subgroup exists in any major SL. `fallback_b = True` when no major K-locus subgroup exists in any major CG. The `c`/`b` flags are typical for the smallest rare-batch and species runs whose SLs and CGs are too small to clear `--min-group-size`.
+`fallback_c = True` when no major CG-level subgroup exists in any major SL. `fallback_b = True` when no major K-locus subgroup exists in any major CG. The `c`/`b` flags are typical for the smallest rare-batch and species runs whose SLs and CGs are too small to clear `--min-group-size`.

@@ -35,8 +35,8 @@ export PYTHONDONTWRITEBYTECODE=1
 
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
-PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome_v2"
-METADATA_PATH="${DATA_ROOT}/final/metadata_final_curated_all_samples_and_columns.tsv"
+PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
+METADATA_PATH="${DATA_ROOT}/final/metadata_v2_all_samples_and_columns.tsv"
 OUTPUT_DIR="${DATA_ROOT}/processed/pangenome_analysis"
 WORKERS=8
 TEST_N_SUBDIR=""   # e.g. 3 for quick tests; leave empty for all

@@ -3,14 +3,24 @@ Build Panaroo input file from metadata, optionally filtered by strain.
 
 When --clonal-group or --sublineage is given, metadata is filtered to that
 strain.  When neither is provided, all samples in the metadata file are used.
+``kpsc_final_list`` is enforced unless ``--non-kpsc-species`` is passed (the
+non-KPSC per-species batches carry their own genomes plus the mgh reference).
 
-Keeps only samples with both gff_file and assembly_file present on disk.
+Each metadata row may carry **two** assemblies of one isolate: a short-read
+pair (``gff_file`` / ``assembly_file``) and a long-read pair (``lra_gff_file`` /
+``lra_assembly_file``). Both are emitted as separate Panaroo genomes when their
+files exist on disk. The genome's Panaroo label (= GFF stem = output column
+header) is the accession matching its files: ``sample_accession`` for the
+short-read genome, ``Sample`` for the long-read genome.
+
 GFF files that are gzipped (.gz) are decompressed into the run subdir
-(gff_unzipped/) so only the N samples needed are unzipped; assemblies are
-likewise decompressed into assembly_unzipped/. For each selected sample, a
-single Prokka-style combined GFF+FASTA file is created via Panaroo's convert
-logic in converted_gff/, and the input file lists only those combined GFF
-paths (one per line).
+(gff_unzipped/) so only the genomes needed are unzipped; assemblies are
+likewise decompressed into assembly_unzipped/. For each genome, a single
+Prokka-style combined GFF+FASTA file is created via Panaroo's convert logic in
+converted_gff/, and ``panaroo_input.txt`` lists those combined GFF paths (one
+per line). ``panaroo_genomes.tsv`` records ``panaroo_label`` → ``Sample`` (plus
+``assembly_type`` and ``sample_accession``) so downstream can map each Panaroo
+column back to its metadata row and flags.
 Used by src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh and panaroo_run_strain_split.sh.
 
 With --split 1 or --split 2 (and --clonal-group or --sublineage), writes
@@ -25,9 +35,9 @@ import argparse
 import gzip
 import importlib.util
 import os
+import shutil
 import sys
 from pathlib import Path
-import shutil
 
 import numpy as np
 import pandas as pd
@@ -68,19 +78,32 @@ convert = _load_convert_from_panaroo_fork()
 # are stored relative to it. DATA_ROOT is our personal subtree under it.
 PROJECT_K_ROOT = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw"
 DATA_ROOT = f"{PROJECT_K_ROOT}/david"
-METADATA_FILE = Path(f"{DATA_ROOT}/final/metadata_final_curated_slimmed.tsv")
+METADATA_FILE = Path(f"{DATA_ROOT}/final/metadata_v2_all_samples_and_columns.tsv")
 BASE_DIR = Path(PROJECT_K_ROOT)
 DEFAULT_OUTDIR = Path(f"{DATA_ROOT}/processed/panaroo_run")
 PANAROO_INPUT_FILENAME = "panaroo_input.txt"
 SAMPLE_METADATA_PART_FILENAME = "sample_metadata.tsv"
+PANAROO_GENOMES_FILENAME = "panaroo_genomes.tsv"
 SPLIT_SHUFFLE_SEED = 42
 
 GFF_UNZIPPED_SUBDIR = "gff_unzipped"
 ASSEMBLY_UNZIPPED_SUBDIR = "assembly_unzipped"
 CONVERTED_GFF_SUBDIR = "converted_gff"
 
+# Per-genome columns carried through the run pipeline. Each metadata row can
+# yield up to two genomes (a short-read and a long-read assembly); panaroo_label
+# is the GFF stem = Panaroo column header (sample_accession for SR, Sample for LRA).
+GENOME_COLS = [
+    "panaroo_label",
+    "gff_abs",
+    "assembly_abs",
+    "assembly_type",
+    "Sample",
+    "sample_accession",
+]
 
-def _abs_path(base: Path, rel: str | float) -> Path | None:
+
+def _abs_path(base: Path, rel: str | float | None) -> Path | None:
     """Build absolute path; return None if rel is null/NaN."""
     if pd.isna(rel) or rel is None or (isinstance(rel, str) and not rel.strip()):
         return None
@@ -88,16 +111,115 @@ def _abs_path(base: Path, rel: str | float) -> Path | None:
     return p.resolve()
 
 
+def _as_bool(series: pd.Series) -> pd.Series:
+    """Coerce a (possibly object/float/NaN) flag column to a clean boolean Series."""
+    if series.dtype == bool:
+        return series
+    if series.dtype == object:
+        return series.map(
+            lambda x: (
+                str(x).strip().lower() in ("true", "1", "yes", "t")
+                if pd.notna(x) and str(x).strip() != ""
+                else False
+            )
+        )
+    return series.fillna(False).astype(bool)
+
+
+def _both_exist(gff: Path | None, assembly: Path | None) -> bool:
+    """True only if both paths are resolved and present on disk."""
+    return (
+        gff is not None
+        and assembly is not None
+        and gff.exists()
+        and assembly.exists()
+    )
+
+
+def _genome_records_for_row(base_dir: Path, row: pd.Series) -> list[dict]:
+    """Expand one metadata row into up to two genome records (short-read + long-read).
+
+    Each metadata row may carry a short-read assembly (``gff_file`` /
+    ``assembly_file``) and/or a long-read assembly (``lra_gff_file`` /
+    ``lra_assembly_file``); both can coexist for the same isolate. Each is
+    emitted as its own genome only when **both** of its GFF and assembly files
+    resolve and exist on disk (graceful per-assembly skipping).
+
+    The Panaroo label (GFF stem = output column header) is the accession that
+    already matches the assembly's files: ``sample_accession`` for the
+    short-read genome, ``Sample`` for the long-read genome.
+
+    Parameters
+    ----------
+    base_dir
+        Root to prepend to the relative path columns.
+    row
+        One metadata row (``Sample``, ``sample_accession`` and the four file
+        columns are read via ``.get`` so missing columns degrade gracefully).
+
+    Returns
+    -------
+    list of dict
+        Up to two records with keys ``panaroo_label``, ``gff_abs``,
+        ``assembly_abs``, ``assembly_type`` (``"sr"`` / ``"lra"``), ``Sample``
+        and ``sample_accession``.
+    """
+    records: list[dict] = []
+    sample = row.get("Sample")
+    sample_accession = row.get("sample_accession")
+
+    sr_gff = _abs_path(base_dir, row.get("gff_file"))
+    sr_assembly = _abs_path(base_dir, row.get("assembly_file"))
+    if _both_exist(sr_gff, sr_assembly):
+        if pd.notna(sample_accession) and str(sample_accession).strip():
+            records.append(
+                {
+                    "panaroo_label": str(sample_accession).strip(),
+                    "gff_abs": sr_gff,
+                    "assembly_abs": sr_assembly,
+                    "assembly_type": "sr",
+                    "Sample": sample,
+                    "sample_accession": sample_accession,
+                }
+            )
+        else:
+            print(
+                f"Warning: short-read assembly present for Sample={sample!r} but "
+                "sample_accession is empty; cannot label the SR genome — skipping it.",
+                file=sys.stderr,
+            )
+
+    lra_gff = _abs_path(base_dir, row.get("lra_gff_file"))
+    lra_assembly = _abs_path(base_dir, row.get("lra_assembly_file"))
+    if _both_exist(lra_gff, lra_assembly):
+        records.append(
+            {
+                "panaroo_label": str(sample).strip(),
+                "gff_abs": lra_gff,
+                "assembly_abs": lra_assembly,
+                "assembly_type": "lra",
+                "Sample": sample,
+                "sample_accession": sample_accession,
+            }
+        )
+    return records
+
+
 def _eligible_samples_df(
     metadata_file: Path,
     base_dir: Path,
     strain_type: str | None,
     strain_value: str | None,
+    non_kpsc_species: bool = False,
 ) -> tuple[str, pd.DataFrame]:
-    """
-    Load metadata, apply strain filter and kpsc_final_list, keep rows with
-    both GFF and assembly on disk. Returns (group_desc, df) with all original
-    columns plus gff_abs and assembly_abs.
+    """Resolve eligible genomes for a run as a one-row-per-genome long frame.
+
+    Loads metadata, applies the strain filter and (unless *non_kpsc_species*)
+    the ``kpsc_final_list`` filter, then expands each surviving row into up to
+    two genome records (short-read + long-read assembly), keeping only genomes
+    whose GFF and assembly both exist on disk. Returns ``(group_desc, long_df)``
+    where ``long_df`` has the original metadata columns plus ``panaroo_label``,
+    ``gff_abs``, ``assembly_abs`` and ``assembly_type``.
     """
     df = pd.read_csv(metadata_file, sep="\t", low_memory=False)
 
@@ -118,15 +240,16 @@ def _eligible_samples_df(
         group_desc = f"All samples from {metadata_file.name}"
 
     before_kpsc_filter = len(subset)
-    subset = subset[subset["kpsc_final_list"]]
-    after_kpsc_filter = len(subset)
-    removed_by_kpsc_filter = before_kpsc_filter - after_kpsc_filter
-
     print(f"{group_desc}")
-    print("  Applied mandatory filter: kpsc_final_list == True")
-    print(f"  Before kpsc_final_list filter: {before_kpsc_filter}")
-    print(f"  Removed by kpsc_final_list filter: {removed_by_kpsc_filter}")
-    print(f"  Remaining after kpsc_final_list filter: {after_kpsc_filter}")
+    if non_kpsc_species:
+        print("  --non-kpsc-species: NOT applying the kpsc_final_list filter")
+    else:
+        subset = subset[_as_bool(subset["kpsc_final_list"])]
+        after_kpsc_filter = len(subset)
+        print("  Applied mandatory filter: kpsc_final_list == True")
+        print(f"  Before kpsc_final_list filter: {before_kpsc_filter}")
+        print(f"  Removed by kpsc_final_list filter: {before_kpsc_filter - after_kpsc_filter}")
+        print(f"  Remaining after kpsc_final_list filter: {after_kpsc_filter}")
 
     total_in_group = len(subset)
     if total_in_group == 0:
@@ -143,44 +266,59 @@ def _eligible_samples_df(
                 f"  Hint: no rows matched {strain_value!r} (after strip + case-insensitive match on "
                 f"{strain_type!r}). Example values (up to 25): {sample_vals}"
             )
-        elif before_kpsc_filter > 0:
+        elif before_kpsc_filter > 0 and not non_kpsc_species:
             print(
                 "  All strain-matched rows were removed by kpsc_final_list == True."
             )
         sys.exit(1)
 
-    subset["gff_abs"] = subset["gff_file"].apply(lambda x: _abs_path(base_dir, x))
-    subset["assembly_abs"] = subset["assembly_file"].apply(
-        lambda x: _abs_path(base_dir, x)
-    )
-    has_gff = subset["gff_abs"].notna() & subset["gff_abs"].apply(
-        lambda p: p.exists() if p is not None else False
-    )
-    has_assembly = subset["assembly_abs"].notna() & subset["assembly_abs"].apply(
-        lambda p: p.exists() if p is not None else False
-    )
-    n_gff = int(has_gff.sum())
-    n_assembly = int(has_assembly.sum())
-    has_both = has_gff & has_assembly
-    n_both = int(has_both.sum())
+    # Expand to one row per genome (SR and/or LRA). The helper only returns
+    # genomes whose GFF + assembly both exist on disk, so every record here is
+    # guaranteed to resolve. Bounded per-batch, so a row loop is fine.
+    genome_rows: list[dict] = []
+    for _, row in subset.iterrows():
+        for rec in _genome_records_for_row(base_dir, row):
+            genome_rows.append({**row.to_dict(), **rec})
 
-    print(f"  Total in group: {total_in_group}")
-    print(f"  With gff (present on disk): {n_gff}")
-    print(f"  With assembly (present on disk): {n_assembly}")
-    print(f"  With both: {n_both}")
-
-    if n_both == 0:
-        print("No samples have both gff and assembly files. Exiting.")
+    if not genome_rows:
+        print(
+            "No genomes have both a GFF and an assembly present on disk "
+            f"({group_desc}). Exiting.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
-    eligible = subset.loc[has_both].copy()
+    eligible = pd.DataFrame(genome_rows)
+
+    # Two genomes cannot share a Panaroo column header; drop dup labels keep-first.
+    dup_mask = eligible["panaroo_label"].duplicated(keep="first")
+    if dup_mask.any():
+        dups = sorted(eligible.loc[dup_mask, "panaroo_label"].astype(str).unique())
+        print(
+            f"  WARNING: dropped {int(dup_mask.sum())} duplicate panaroo_label(s) "
+            f"(keep-first): {dups[:20]}{' …' if len(dups) > 20 else ''}"
+        )
+        eligible = eligible.loc[~dup_mask].copy()
+
+    n_genomes = len(eligible)
+    n_sr = int((eligible["assembly_type"] == "sr").sum())
+    n_lra = int((eligible["assembly_type"] == "lra").sum())
+    labels = eligible["panaroo_label"].astype(str)
+    n_gcf = int(labels.str.startswith("GCF_").sum())
+    n_gca = int(labels.str.startswith("GCA_").sum())
+    n_other = n_genomes - n_gcf - n_gca
+    print(f"  Total in group (samples): {total_in_group}")
+    print(f"  Genomes with both GFF + assembly on disk: {n_genomes}")
+    print(f"    by assembly_type:  sr={n_sr}  lra={n_lra}")
+    print(f"    by accession:      GCF={n_gcf}  GCA={n_gca}  other(SR/SAM)={n_other}")
+
     return group_desc, eligible
 
 
 def _shuffle_and_part(eligible_df: pd.DataFrame, part: int) -> pd.DataFrame:
-    """
-    Shuffle row order with fixed seed, then take part 1 = first ceil(n/2) rows,
-    part 2 = remainder (deterministic across invocations).
+    """Shuffle row order with a fixed seed, then split into two deterministic halves.
+
+    Part 1 = first ceil(n/2) rows, part 2 = remainder (stable across invocations).
     """
     if part not in (1, 2):
         raise ValueError(f"part must be 1 or 2, got {part}")
@@ -220,16 +358,16 @@ def _symlink_converted_gff_from_canonical(
     run_subdir: Path,
     outdir: Path,
     run_label: str,
-    sample_ids: pd.Series,
+    panaroo_labels: pd.Series,
 ) -> None:
     """Symlink combined GFFs from canonical {run_label}_all/converted_gff when present."""
     canonical_gff = _canonical_run_dir(outdir, run_label) / CONVERTED_GFF_SUBDIR
     part_gff_dir = run_subdir / CONVERTED_GFF_SUBDIR
     part_gff_dir.mkdir(parents=True, exist_ok=True)
     n_link = 0
-    for sample_id in sample_ids.astype(str):
-        src = canonical_gff / f"{sample_id}.gff"
-        dst = part_gff_dir / f"{sample_id}.gff"
+    for label in panaroo_labels.astype(str):
+        src = canonical_gff / f"{label}.gff"
+        dst = part_gff_dir / f"{label}.gff"
         if not src.is_file():
             continue
         if dst.exists() or dst.is_symlink():
@@ -238,7 +376,7 @@ def _symlink_converted_gff_from_canonical(
         dst.symlink_to(rel)
         n_link += 1
     print(
-        f"  Symlinked {n_link}/{len(sample_ids)} combined GFFs from {canonical_gff}"
+        f"  Symlinked {n_link}/{len(panaroo_labels)} combined GFFs from {canonical_gff}"
     )
 
 
@@ -246,10 +384,11 @@ def _build_panaroo_input(
     run_subdir: Path,
     rows_both: pd.DataFrame,
 ) -> tuple[Path, Path]:
-    """
-    Create unzipped dirs, convert or reuse combined GFFs, write panaroo_input.txt.
-    rows_both must have columns Sample, gff_abs, assembly_abs.
-    Returns (input_path, run_subdir).
+    """Create unzipped dirs, convert/reuse combined GFFs, write the run inputs.
+
+    Writes ``panaroo_input.txt`` and ``panaroo_genomes.tsv``. ``rows_both`` must
+    have the GENOME_COLS columns (one row per genome). Returns
+    (input_path, run_subdir).
     """
     run_subdir.mkdir(parents=True, exist_ok=True)
     gff_unzipped_dir = run_subdir / GFF_UNZIPPED_SUBDIR
@@ -266,13 +405,27 @@ def _build_panaroo_input(
     lines_written = 0
     mismatched_rows: list[dict[str, str]] = []
     mismatched_tsv_path = run_subdir / "mismatched_faa_gff.tsv"
+    # Genomes that actually land in panaroo_input.txt (cached-reuse or freshly
+    # converted) — written to panaroo_genomes.tsv so downstream can map each
+    # Panaroo column header (panaroo_label) back to its metadata Sample + flags.
+    genomes_written: list[dict] = []
+
+    def _record(row: pd.Series, label: str) -> None:
+        genomes_written.append(
+            {
+                "panaroo_label": label,
+                "Sample": row["Sample"],
+                "assembly_type": row["assembly_type"],
+                "sample_accession": row["sample_accession"],
+            }
+        )
 
     with open(input_path, "w") as f:
         for i, (_, row) in enumerate(rows_both.iterrows()):
-            sample_id = row["Sample"]
+            label = str(row["panaroo_label"])
             gff_abs = row["gff_abs"]
             assembly_abs = row["assembly_abs"]
-            combined_gff = converted_gff_dir / f"{sample_id}.gff"
+            combined_gff = converted_gff_dir / f"{label}.gff"
 
             if combined_gff.exists():
                 is_valid, reason = _is_valid_combined_gff(combined_gff)
@@ -280,9 +433,10 @@ def _build_panaroo_input(
                     already_combined_count += 1
                     f.write(f"{combined_gff}\n")
                     lines_written += 1
+                    _record(row, label)
                     continue
                 print(
-                    f"Invalid existing combined GFF for sample {sample_id}: "
+                    f"Invalid existing combined GFF for genome {label}: "
                     f"{combined_gff} ({reason}). Regenerating."
                 )
                 try:
@@ -311,13 +465,15 @@ def _build_panaroo_input(
                     mismatched_rows.append(
                         {
                             "subdir": str(run_subdir),
-                            "Sample": str(sample_id),
+                            "panaroo_label": label,
+                            "assembly_type": str(row["assembly_type"]),
+                            "Sample": str(row["Sample"]),
                             "assembly_file": str(assembly_abs),
                             "gff_file": str(gff_abs),
                         }
                     )
                     print(
-                        f"Skipping sample {sample_id} due to FASTA/GFF mismatch.",
+                        f"Skipping genome {label} due to FASTA/GFF mismatch.",
                         file=sys.stderr,
                     )
                     # Ensure we don't leave a partial cached combined GFF behind.
@@ -331,6 +487,7 @@ def _build_panaroo_input(
                 newly_converted_count += 1
                 f.write(f"{combined_gff}\n")
                 lines_written += 1
+                _record(row, label)
             finally:
                 # Release large staged temp files promptly (even if conversion failed).
                 if gff_abs.suffix == ".gz":
@@ -369,18 +526,27 @@ def _build_panaroo_input(
             f"FASTA/GFF mismatches skipped: {len(mismatched_rows)}. "
             f"Wrote {mismatched_tsv_path}"
         )
-        print("Skipped samples (FASTA/GFF mismatch):")
+        print("Skipped genomes (FASTA/GFF mismatch):")
         for r in mismatched_rows:
             print(
-                f"  {r['Sample']}\t{r['gff_file']}\t{r['assembly_file']}"
+                f"  {r['panaroo_label']}\t{r['assembly_type']}\t{r['gff_file']}\t{r['assembly_file']}"
             )
+
+    genomes_tsv_path = run_subdir / PANAROO_GENOMES_FILENAME
+    pd.DataFrame(
+        genomes_written,
+        columns=["panaroo_label", "Sample", "assembly_type", "sample_accession"],
+    ).to_csv(genomes_tsv_path, sep="\t", index=False)
+    n_sr = sum(1 for g in genomes_written if g["assembly_type"] == "sr")
+    n_lra = sum(1 for g in genomes_written if g["assembly_type"] == "lra")
+    print(f"Wrote {genomes_tsv_path}  (n={len(genomes_written)}: sr={n_sr} lra={n_lra})")
     print(f"Run subdir (for panaroo -o): {run_subdir}")
     return input_path, run_subdir
 
 
 def _is_valid_combined_gff(path: Path) -> tuple[bool, str]:
-    """
-    Lightweight structural validation for cached combined GFF files.
+    """Lightweight structural validation for cached combined GFF files.
+
     Requires:
     - file exists and is non-empty
     - contains '##FASTA'
@@ -391,7 +557,7 @@ def _is_valid_combined_gff(path: Path) -> tuple[bool, str]:
     try:
         if path.stat().st_size == 0:
             return False, "file is empty"
-        with open(path, "r") as fh:
+        with open(path) as fh:
             content = fh.read()
     except OSError as exc:
         return False, f"unable to read file: {exc}"
@@ -406,9 +572,10 @@ def _is_valid_combined_gff(path: Path) -> tuple[bool, str]:
 
 
 def _ensure_gff_unzipped(gff_path: Path, out_dir: Path, index: int) -> Path:
-    """
-    If gff_path ends with .gz, decompress to out_dir/gff_{index}.gff and return that path.
-    Otherwise return gff_path unchanged.
+    """Decompress a gzipped GFF into out_dir, or return the path unchanged.
+
+    If gff_path ends with .gz, decompress to out_dir/gff_{index}.gff and return
+    that path. Otherwise return gff_path unchanged.
     """
     if gff_path.suffix != ".gz":
         return gff_path
@@ -421,9 +588,10 @@ def _ensure_gff_unzipped(gff_path: Path, out_dir: Path, index: int) -> Path:
 
 
 def _ensure_assembly_unzipped(assembly_path: Path, out_dir: Path, index: int) -> Path:
-    """
-    If assembly_path ends with .gz, decompress to out_dir/assembly_{index}.fna and return that path.
-    Otherwise return assembly_path unchanged.
+    """Decompress a gzipped assembly into out_dir, or return the path unchanged.
+
+    If assembly_path ends with .gz, decompress to out_dir/assembly_{index}.fna
+    and return that path. Otherwise return assembly_path unchanged.
     """
     if assembly_path.suffix != ".gz":
         return assembly_path
@@ -446,18 +614,23 @@ def run(
     base_dir: Path,
     run_label: str | None = None,
     split_part: int | None = None,
+    non_kpsc_species: bool = False,
 ) -> tuple[Path, Path]:
-    """
-    Optionally filter metadata by strain_type == strain_value, restrict to
-    samples with both gff and assembly on disk.
+    """Build a Panaroo run for a strain (or all samples), expanding to genomes.
 
-    When strain_type/strain_value are None, all rows are used.
+    Optionally filters metadata by strain_type == strain_value, expands each row
+    into up to two genomes (short-read + long-read), and restricts to genomes
+    with both GFF and assembly on disk.
+
+    When strain_type/strain_value are None, all rows are used. When
+    *non_kpsc_species* is True the ``kpsc_final_list`` filter is skipped (used
+    for the non-KPSC per-species batches, which carry their own genomes + mgh).
     *run_label* drives the output subdir name ({run_label}_all or
     {run_label}_n{n}).  Defaults to strain_value when filtering by strain,
     or the metadata file stem when using all samples.
 
     When *split_part* is 1 or 2, requires clonal group or sublineage; shuffles
-    eligible rows with fixed seed and writes only that half to
+    eligible genomes with fixed seed and writes only that half to
     {run_label}_all_part{p}.
 
     Returns (input_file_path, run_subdir_path).
@@ -483,19 +656,19 @@ def run(
             print("ERROR: --split requires --clonal-group or --sublineage.", file=sys.stderr)
             sys.exit(1)
         group_desc, eligible = _eligible_samples_df(
-            metadata_file, base_dir, strain_type, strain_value
+            metadata_file, base_dir, strain_type, strain_value, non_kpsc_species
         )
         part_df = _shuffle_and_part(eligible, split_part)
         if len(part_df) == 0:
             print(
-                f"No samples in split part {split_part} (empty partition). Exiting.",
+                f"No genomes in split part {split_part} (empty partition). Exiting.",
                 file=sys.stderr,
             )
             sys.exit(1)
         if run_label is None:
             run_label = strain_value
         print(
-            f"  - Split part {split_part}: {len(part_df)} samples "
+            f"  - Split part {split_part}: {len(part_df)} genomes "
             f"(shuffle seed {SPLIT_SHUFFLE_SEED}, first half = part 1)"
         )
         run_subdir = _run_subdir_for_split(outdir, run_label, split_part)
@@ -503,27 +676,32 @@ def run(
         meta_path = _write_part_metadata(run_subdir, part_df)
         print(f"  - Wrote {meta_path}")
         _symlink_converted_gff_from_canonical(
-            run_subdir, outdir, run_label, part_df["Sample"]
+            run_subdir, outdir, run_label, part_df["panaroo_label"]
         )
-        rows_both = part_df[["Sample", "gff_abs", "assembly_abs"]].copy()
+        rows_both = part_df[GENOME_COLS].copy()
         return _build_panaroo_input(run_subdir, rows_both)
 
     group_desc, eligible = _eligible_samples_df(
-        metadata_file, base_dir, strain_type, strain_value
+        metadata_file, base_dir, strain_type, strain_value, non_kpsc_species
     )
     rows_full = eligible
     if n >= 1:
-        rows_full = rows_full.head(n)
-        print(f"  - Selected first {n} samples ({group_desc})")
+        # --n caps the number of samples (isolates); keep all genomes of those
+        # samples so paired SR + LRA genomes stay together in smoke-tests.
+        keep_samples = rows_full["Sample"].drop_duplicates().head(n)
+        rows_full = rows_full[rows_full["Sample"].isin(keep_samples)]
+        print(
+            f"  - Selected first {n} samples ({len(rows_full)} genomes) ({group_desc})"
+        )
 
     n_written = len(rows_full)
     if run_label is None:
         run_label = strain_value if strain_value is not None else metadata_file.stem
 
     if n == -1:
-        print(f"  - Using all {n_written} samples ({group_desc})")
+        print(f"  - Using all {n_written} genomes ({group_desc})")
     run_subdir = outdir / run_label
-    rows_both = rows_full[["Sample", "gff_abs", "assembly_abs"]].copy()
+    rows_both = rows_full[GENOME_COLS].copy()
     return _build_panaroo_input(run_subdir, rows_both)
 
 
@@ -585,6 +763,15 @@ def main() -> None:
             "Requires --clonal-group or --sublineage; --n must be -1. Fixed shuffle seed 42."
         ),
     )
+    parser.add_argument(
+        "--non-kpsc-species",
+        action="store_true",
+        help=(
+            "Disable the otherwise-mandatory kpsc_final_list filter. Use for the "
+            "non-KPSC per-species batches, whose TSV already carries that species' "
+            "genomes plus the force-added mgh reference."
+        ),
+    )
     args = parser.parse_args()
 
     if args.split is not None and args.n != -1:
@@ -611,6 +798,7 @@ def main() -> None:
         metadata_file=args.sample_metadata_file,
         base_dir=args.base_dir,
         split_part=args.split,
+        non_kpsc_species=args.non_kpsc_species,
     )
 
 

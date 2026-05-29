@@ -20,9 +20,8 @@
 #   <OUTPUT_DIR>/run_inventory.md — run summary
 #   <OUTPUT_DIR>/granularity_table.tsv — per-CG granularity metrics
 #   <OUTPUT_DIR>/granularity_summary.tsv — aggregate stats
-#   <OUTPUT_DIR>/best_e_ref_per_species.tsv — best level-e ref per species
 #   <OUTPUT_DIR>/best_reference_per_sample.csv — per-sample best ref +
-#       shared-gene count at every level (f/e/d/c/b/a)
+#       shared-gene count at every level (f/d/c/b/a)
 #   <OUTPUT_DIR>/granularity_lollipop.png/pdf — connected-dot plot
 #
 
@@ -34,7 +33,7 @@ export PYTHONDONTWRITEBYTECODE=1
 # ---------------- User-editable settings ----------------
 DATA_ROOT="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david"
 PANAROO_RUN_ROOT="${DATA_ROOT}/processed/panaroo_with_reference_genome"
-METADATA_PATH="${DATA_ROOT}/final/metadata_final_curated_all_samples_and_columns.tsv"
+METADATA_PATH="${DATA_ROOT}/final/metadata_v2_all_samples_and_columns.tsv"
 OUTPUT_DIR="${DATA_ROOT}/processed/pangenome_analysis/granularity"
 WORKERS=8
 MIN_GROUP_SIZE=50           # Min CG / K-locus size to be its own slice (default 50)

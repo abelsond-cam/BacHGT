@@ -31,7 +31,7 @@
 #
 # Pipeline (details and fallback find commands at bottom of file):
 #   (i)   Generate batch TSVs with panaroo_metadata_batching.py under
-#         .../panaroo_with_reference_genome_v2/batches/ (log + TSVs).
+#         .../panaroo_with_reference_genome/batches/ (log + TSVs).
 #   (ii)  Build .list files with generate_panaroo_ref_tsv_lists.sh pointing at
 #         that batches/ directory (five phased lists + panaroo_ref_tsvs_all.list).
 #   (iii) Submit with sbatch --array=1-$(wc -l < list)%M ...
@@ -63,6 +63,10 @@ while [[ $# -gt 0 ]]; do
       N_SAMPLES="$2"
       shift 2
       ;;
+    --non-kpsc-species)
+      NON_KPSC_SPECIES=1
+      shift
+      ;;
     *)
       echo "Warning: ignoring unknown argument $1" >&2
       shift
@@ -70,10 +74,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-: "${LIST_FILE:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2/batches/panaroo_ref_tsvs_all.list}"
+: "${LIST_FILE:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome/batches/panaroo_ref_tsvs_all.list}"
 : "${CLEAN_MODE:=strict}"
 : "${N_SAMPLES:=-1}"
-: "${OUTDIR:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2}"
+: "${OUTDIR:=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome}"
 
 if [[ -z "${SLURM_ARRAY_TASK_ID:-}" ]]; then
   echo "ERROR: This script is for Slurm array jobs. Submit with sbatch --array=1-N%M ..." >&2
@@ -119,19 +123,26 @@ echo "========================================================================"
 echo "panaroo_run_strain_metadata_array: array_task=${SLURM_ARRAY_TASK_ID}  job=${SLURM_JOB_ID:-local}"
 echo "  LIST_FILE=${LIST_FILE}"
 echo "  sample_metadata_tsv=$(printf %q "$TSV")  (staged under run-named subdir)"
-echo "  OUTDIR=${OUTDIR}  clean_mode=${CLEAN_MODE}  n=${N_SAMPLES}"
+echo "  OUTDIR=${OUTDIR}  clean_mode=${CLEAN_MODE}  n=${N_SAMPLES}  non_kpsc_species=${NON_KPSC_SPECIES:-0}"
 echo "========================================================================"
 echo ""
+
+# Forward --non-kpsc-species only when set (empty var expands to nothing).
+NON_KPSC_ARG=""
+if [[ -n "${NON_KPSC_SPECIES:-}" ]]; then
+  NON_KPSC_ARG="--non-kpsc-species"
+fi
 
 exec bash "$STRAIN_SCRIPT" \
   --sample-metadata-file "$TSV" \
   --outdir "$OUTDIR" \
   --clean-mode "$CLEAN_MODE" \
-  --n "$N_SAMPLES"
+  --n "$N_SAMPLES" \
+  $NON_KPSC_ARG
 
 # -----------------------------------------------------------------------------
 # Layout after runs:
-#   ROOT/                                     (= OUTDIR, default panaroo_with_reference_genome_v2)
+#   ROOT/                                     (= OUTDIR, default panaroo_with_reference_genome)
 #     batches/                                (generated TSVs + log + .list files, untouched by runs)
 #       SL101.tsv  SL258_part_0.tsv  ...
 #       panaroo_batching.log
@@ -143,7 +154,7 @@ exec bash "$STRAIN_SCRIPT" \
 #       ...
 #
 # Paths for copy-paste:
-#   ROOT=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome_v2
+#   ROOT=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/panaroo_with_reference_genome
 #   BATCHES=$ROOT/batches
 #   REPO=/home/dca36/workspace/BacHGT
 #
