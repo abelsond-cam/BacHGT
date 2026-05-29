@@ -337,6 +337,27 @@ def main(argv: list[str] | None = None) -> None:
             if n_no_species:
                 log.line(f"  {n_no_species} non-KPSC rows have no species label — skipped")
             non_kpsc = non_kpsc.loc[has_species]
+
+            # Drop rows whose species is a KPSC species (e.g. K. pneumoniae /
+            # K. variicola): is_kpsc=False on a KPSC species marks a QC-rejected
+            # assembly, not a separate cohort to rebatch. KPSC species batches
+            # already come out of the kpsc subset above. Match on the bare
+            # binomial (subsp. stripped) so subspecies are caught too.
+            def _bare_species(s: str) -> str:
+                return str(s).split(" subsp.")[0].strip()
+
+            kpsc_species_set = {_bare_species(s) for s in kpsc["species"].dropna().astype(str)}
+            bare = non_kpsc["species"].astype(str).map(_bare_species)
+            is_kpsc_sp = bare.isin(kpsc_species_set)
+            n_qc_rejected = int(is_kpsc_sp.sum())
+            if n_qc_rejected:
+                rejected_species = sorted(non_kpsc.loc[is_kpsc_sp, "species"].astype(str).unique())
+                log.line(
+                    f"  {n_qc_rejected} non-KPSC rows are KPSC species (QC-rejected assemblies) "
+                    f"— skipped: {rejected_species}"
+                )
+            non_kpsc = non_kpsc.loc[~is_kpsc_sp]
+
             log.line(
                 f"Non-KPSC rows: {len(non_kpsc)} across "
                 f"{non_kpsc['species'].nunique()} species"
