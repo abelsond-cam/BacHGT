@@ -77,7 +77,20 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
     ax.set_title("Cohort sizes — LR assemblies and matched paired SR shadow")
     ax.legend(loc="upper right", frameon=True)
     ax.grid(axis="y", linestyle=":", alpha=0.5)
-    ax.set_ylim(top=max(lr_vals) * 1.12)
+    ax.set_ylim(top=max(lr_vals) * 1.22)
+
+    descriptors = {
+        "lra_final_list": "all long read assemblies",
+        "complete_genome": "NCBI complete = circular contigs",
+        "reference_genome": "complete assemblies using a hybrid of\nshort and long read technologies",
+    }
+    for i, c in enumerate(cohorts):
+        ax.text(
+            i, 0.97, descriptors[c],
+            transform=ax.get_xaxis_transform(),
+            ha="center", va="top",
+            fontsize=9, fontstyle="italic", color="#333",
+        )
 
     fig.tight_layout()
     fig.savefig(out_png, dpi=200)
