@@ -81,12 +81,12 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
 
     descriptors = {
         "lra_final_list": (
-            "All long read assemblies with CheckM2\n"
-            "completeness > 99% and contamination < 5%"
+            "All long read assemblies with\n"
+            "completeness > 99%, contamination < 5%"
         ),
         "complete_genome": (
-            "NCBI 'complete': all long read assemblies\n"
-            "which also have circular closed contigs"
+            "NCBI 'Complete': all long read assemblies\n"
+            "with closed circular contigs"
         ),
         "reference_genome": (
             "Complete assemblies using a hybrid of\n"
@@ -98,7 +98,7 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
             i, 0.97, descriptors[c],
             transform=ax.get_xaxis_transform(),
             ha="center", va="top",
-            fontsize=9, fontstyle="italic", color="#333",
+            fontsize=7, fontstyle="italic", color="#333",
         )
 
     fig.tight_layout()
