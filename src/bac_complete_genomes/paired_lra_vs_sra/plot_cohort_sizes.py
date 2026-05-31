@@ -80,9 +80,18 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
     ax.set_ylim(top=max(lr_vals) * 1.20)
 
     descriptors = {
-        "lra_final_list": "all long read assemblies",
-        "complete_genome": "NCBI complete = circular contigs",
-        "reference_genome": "complete assemblies using a hybrid of\nshort and long read technologies",
+        "lra_final_list": (
+            "All long read assemblies with CheckM2\n"
+            "completeness > 99% and contamination < 5%"
+        ),
+        "complete_genome": (
+            "NCBI 'complete': all long read assemblies\n"
+            "which also have circular closed contigs"
+        ),
+        "reference_genome": (
+            "Complete assemblies using a hybrid of\n"
+            "short and long read technologies"
+        ),
     }
     for i, c in enumerate(cohorts):
         ax.text(
