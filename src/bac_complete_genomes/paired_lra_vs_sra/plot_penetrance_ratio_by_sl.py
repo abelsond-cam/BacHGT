@@ -82,23 +82,11 @@ def _aligned(df: pd.DataFrame, feature_order: list[str]) -> pd.DataFrame:
     return df.set_index("feature").reindex(feature_order).reset_index()
 
 
-def _x_max(per_sl: dict[str, pd.DataFrame]) -> float:
-    """Global x-axis upper bound — max finite ``ci_hi`` (or ratio) across all SLs."""
-    finite: list[float] = []
-    for df in per_sl.values():
-        ci = _paired_log_ratio_ci(df)
-        for col in ("ci_hi", "ratio"):
-            vals = ci[col].replace([np.inf, -np.inf], np.nan).dropna()
-            finite.extend(vals.tolist())
-    return max(2.0, (max(finite) if finite else 2.0) * 1.05)
-
-
 def _plot_panel(
     ax: plt.Axes,
     df: pd.DataFrame,
     title: str,
     *,
-    x_max: float,
     show_xlabel: bool,
 ) -> None:
     """Render one SL panel onto a shared x-axis ``Axes``."""
@@ -145,7 +133,9 @@ def _plot_panel(
     ax.grid(axis="x", linestyle=":", linewidth=0.5, alpha=0.5)
     if show_xlabel:
         ax.set_xlabel("LR / SR per-genome sensitivity ratio (95% CI)")
-    ax.set_xlim(0.9, x_max)
+    # Fixed scale across all panels so the visual is comparable;
+    # bars/CIs that extend beyond 2.0 are deliberately clipped at the axis edge.
+    ax.set_xlim(0.9, 2.0)
 
 
 def _render_stacked(
@@ -163,8 +153,6 @@ def _render_stacked(
     n_features = len(feature_order)
     aligned = {sl: _aligned(per_sl[sl], feature_order) for sl in sls}
 
-    x_max = _x_max(aligned)
-
     panel_h = max(1.8, 0.22 * n_features + 0.5)
     fig_h = panel_h * n_sls + 1.0
     fig, axes = plt.subplots(n_sls, 1, sharex=True, figsize=(9.0, fig_h), squeeze=False)
@@ -177,7 +165,6 @@ def _render_stacked(
             axes[i],
             df,
             title=f"{sl}  (n={n_pairs})",
-            x_max=x_max,
             show_xlabel=(i == n_sls - 1),
         )
 
