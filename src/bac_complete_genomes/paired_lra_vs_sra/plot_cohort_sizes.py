@@ -50,7 +50,7 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
     lr_vals = [counts[c][0] for c in cohorts]
     sr_vals = [counts[c][1] for c in cohorts]
 
-    fig, ax = plt.subplots(figsize=(9, 5.5))
+    fig, ax = plt.subplots(figsize=(9.5, 6.2))
     x = np.arange(len(cohorts))
     width = 0.38
 
@@ -75,9 +75,9 @@ def _plot(counts: dict[str, tuple[int, int]], out_png: Path) -> None:
     ax.set_xticklabels(cohorts)
     ax.set_ylabel("n biosamples")
     ax.set_title("Cohort sizes — LR assemblies and matched paired SR shadow")
-    ax.legend(loc="upper right", frameon=True)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.08), ncol=2, frameon=True)
     ax.grid(axis="y", linestyle=":", alpha=0.5)
-    ax.set_ylim(top=max(lr_vals) * 1.22)
+    ax.set_ylim(top=max(lr_vals) * 1.20)
 
     descriptors = {
         "lra_final_list": "all long read assemblies",
