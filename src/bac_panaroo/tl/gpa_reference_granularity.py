@@ -211,25 +211,16 @@ def process_panaroo_run(
         # sample_accession; panaroo_genomes.tsv maps it back to its Sample.
         metadata_df = _augment_metadata_with_panaroo_labels(metadata_df, run_dir, sample_id_col)
 
-        # The reference set is is_reference_genome | is_mgh78578. Queries are all
-        # non-reference genomes present in the run. The raw metadata file can
-        # carry duplicate Sample IDs for excluded samples; drop them before
-        # set_index() so reindex() doesn't choke on duplicate labels.
-        flags = pd.DataFrame(
-            {
-                "kpsc": metadata_df.get("kpsc_final_list", False).fillna(False).astype(bool)
-                if "kpsc_final_list" in metadata_df.columns
-                else False,
-                "ref": metadata_df.get("is_reference_genome", False).fillna(False).astype(bool)
-                if "is_reference_genome" in metadata_df.columns
-                else False,
-                "mgh": metadata_df.get("is_mgh78578", False).fillna(False).astype(bool)
-                if "is_mgh78578" in metadata_df.columns
-                else False,
-            }
-        )
-        keep_mask = flags["kpsc"] | flags["ref"] | flags["mgh"]
-        meta_curated = metadata_df.loc[keep_mask].drop_duplicates(subset=[sample_id_col])
+        # Resolve flags for every gpa.columns entry. The raw metadata file can
+        # carry duplicate Sample IDs for excluded samples — drop_duplicates
+        # (keep first) handles that, and reindex(gpa.columns) keeps only the
+        # rows we actually need. (Previously a `kpsc | ref | mgh` keep_mask
+        # was applied here, but it silently dropped non-KPSC species samples —
+        # their flags became NaN, their species column ended up populated by
+        # the modal of the surviving keep_mask rows i.e. mgh's "Klebsiella
+        # pneumoniae", so non-KPSC species batches were mislabelled. Just
+        # dedupe and let reindex carry the actual flags through.)
+        meta_curated = metadata_df.drop_duplicates(subset=[sample_id_col])
         meta = meta_curated.set_index(sample_id_col).reindex(gpa.columns)
 
         is_ref_genome = (
@@ -596,17 +587,9 @@ def _build_cg_rows(
             break
     if sample_id_col is None:
         sample_id_col = metadata_df.columns[0]
-    # Same curated-only filter as in process_panaroo_run — avoids the duplicate
-    # Sample IDs that exist for non-curated rows in the raw metadata file.
-    if "kpsc_final_list" in metadata_df.columns:
-        keep = metadata_df["kpsc_final_list"].fillna(False).astype(bool)
-        if "is_reference_genome" in metadata_df.columns:
-            keep = keep | metadata_df["is_reference_genome"].fillna(False).astype(bool)
-        if "is_mgh78578" in metadata_df.columns:
-            keep = keep | metadata_df["is_mgh78578"].fillna(False).astype(bool)
-        meta_idx = metadata_df.loc[keep].drop_duplicates(subset=[sample_id_col]).set_index(sample_id_col)
-    else:
-        meta_idx = metadata_df.set_index(sample_id_col)
+    # Just dedupe Sample IDs (no kpsc/ref/mgh keep_mask filter — that previously
+    # dropped non-KPSC species rows and left their CG-level species lookup blank).
+    meta_idx = metadata_df.drop_duplicates(subset=[sample_id_col]).set_index(sample_id_col)
 
     # Tree structure: root → SL children → CG children → KL children. For KP
     # sublineage runs there is normally one major SL child (the run's own
