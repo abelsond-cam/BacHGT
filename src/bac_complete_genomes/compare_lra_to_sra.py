@@ -56,6 +56,16 @@ from pathlib import Path
 
 import pandas as pd
 
+from bac_isescan.parsing import is_family_columns
+from bac_kleborate.parsing import (
+    KLEBORATE_CHROMOSOMAL_MLST_COLS,
+    KLEBORATE_VIRULENCE_LOCI,
+    acquired_column_names,
+    count_acquired_tokens,
+    kleborate_column_to_presence,
+    virulence_bsc_name,
+)
+
 DEFAULT_METADATA = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_all_samples_and_columns.tsv"
 )
@@ -66,95 +76,6 @@ DEFAULT_SR_SHADOW = Path(
     "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv"
 )
 DEFAULT_OUTPUT_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/complete_vs_sr_genomes")
-
-# ---------------------------------------------------------------------------
-# Kleborate virulence module schema
-# Read directly from each module's get_headers() in
-# https://github.com/klebgenomics/Kleborate/tree/main/kleborate/modules
-# ---------------------------------------------------------------------------
-KLEBORATE_VIRULENCE_LOCI: dict[str, dict] = {
-    "ybt": {
-        "st": "YbST",
-        "lineage": "Yersiniabactin",
-        "alleles": ["ybtS", "ybtX", "ybtQ", "ybtP", "ybtA", "irp2", "irp1", "ybtU", "ybtT", "ybtE", "fyuA"],
-        "spurious": "spurious_ybt_hits",
-    },
-    "clb": {
-        "st": "CbST",
-        "lineage": "Colibactin",
-        "alleles": [
-            "clbA",
-            "clbB",
-            "clbC",
-            "clbD",
-            "clbE",
-            "clbF",
-            "clbG",
-            "clbH",
-            "clbI",
-            "clbL",
-            "clbM",
-            "clbN",
-            "clbO",
-            "clbP",
-            "clbQ",
-        ],
-        "spurious": "spurious_clb_hits",
-    },
-    "iuc": {
-        "st": "AbST",
-        "lineage": "Aerobactin",
-        "alleles": ["iucA", "iucB", "iucC", "iucD", "iutA"],
-        "spurious": "spurious_abst_hits",
-    },
-    "iro": {
-        "st": "SmST",
-        "lineage": "Salmochelin",
-        "alleles": ["iroB", "iroC", "iroD", "iroN"],
-        "spurious": "spurious_smst_hits",
-    },
-    "rmp": {
-        "st": "RmST",
-        "lineage": "RmpADC",
-        "alleles": ["rmpA", "rmpD", "rmpC"],
-        "spurious": "spurious_rmst_hits",
-    },
-    "rmpA2": {
-        "st": None,
-        "lineage": None,
-        "alleles": ["rmpA2"],
-        "spurious": None,
-    },
-}
-
-# Kleborate KpSC chromosomal 7-locus MLST scheme.
-# Treated as presence/absence: allele IDs are arbitrary, but failure to detect
-# a housekeeping gene is a meaningful assembly artefact.
-KLEBORATE_CHROMOSOMAL_MLST_COLS: list[str] = [
-    "gapA",
-    "infB",
-    "mdh",
-    "pgi",
-    "phoE",
-    "rpoB",
-    "tonB",
-]
-
-# Strings that Kleborate uses to indicate "no detection". The multi_mlst
-# function converts NA -> 0 in ST columns so 0 is treated as absent.
-KLEBORATE_ABSENT_TOKENS: frozenset[str] = frozenset(
-    {
-        "-",
-        "0",
-        "0.0",
-        "",
-        "NA",
-        "na",
-        "nan",
-        "None",
-        "none",
-    }
-)
 
 WIDE_OUTPUT_COLUMN_ORDER: list[str] = [
     "feature",
@@ -173,56 +94,6 @@ WIDE_OUTPUT_COLUMN_ORDER: list[str] = [
 ]
 
 PAIRED_COHORTS = ("lra_final_list", "complete_genome", "reference_genome")
-
-
-# ---------------------------------------------------------------------------
-# Kleborate cell parsing helpers
-# ---------------------------------------------------------------------------
-
-
-def kleborate_cell_present(val) -> bool:
-    """Return True if a Kleborate cell records a detection.
-
-    Treats any string outside ``KLEBORATE_ABSENT_TOKENS`` as a positive call,
-    including imperfect-match annotations (``15*``, ``15^``, ``15?``,
-    ``15*-42%``) and multi-copy comma-separated lists. Mirrors Kleborate's own
-    logic: it only writes a non-``-`` value when minimap2 finds a hit above the
-    module's identity/coverage thresholds.
-    """
-    if pd.isna(val):
-        return False
-    return str(val).strip() not in KLEBORATE_ABSENT_TOKENS
-
-
-def kleborate_column_to_presence(series: pd.Series) -> pd.Series:
-    """Return a float Series of 0/1 indicating Kleborate detection per row."""
-    return series.apply(kleborate_cell_present).astype(float)
-
-
-# ---------------------------------------------------------------------------
-# Acquired-AMR helpers
-# ---------------------------------------------------------------------------
-
-
-def acquired_column_names(columns: list[str]) -> list[str]:
-    """Return column names ending in ``_acquired``."""
-    return sorted(c for c in columns if str(c).endswith("_acquired"))
-
-
-def count_acquired_tokens(series: pd.Series) -> pd.Series:
-    """Split each cell by ``;`` and count non-empty tokens.
-
-    Kleborate writes ``-`` for a class with no acquired gene; that is a
-    no-hit marker, not a gene, so it must not be counted as one token.
-    """
-
-    def count_tokens(x):
-        if pd.isna(x):
-            return 0
-        tokens = [t.strip() for t in str(x).split(";") if t.strip() and t.strip() != "-"]
-        return len(tokens)
-
-    return series.apply(count_tokens)
 
 
 # ---------------------------------------------------------------------------
@@ -326,17 +197,6 @@ def _wide_feature_row(
         row["sr_copies_per_carrier"] = sr_cpc
         row["lr_sr_copies_per_carrier_ratio"] = cpc_ratio
     return row
-
-
-# ---------------------------------------------------------------------------
-# Feature-class names
-# ---------------------------------------------------------------------------
-
-
-def _virulence_bsc_name(code: str, info: dict) -> str:
-    """Wide-schema feature name for a virulence BSC, e.g. ``Yersiniabactin (ybt) bsc``."""
-    lineage = info.get("lineage")
-    return f"{lineage} ({code}) bsc" if lineage else f"{code} bsc"
 
 
 CHROMOSOMAL_ST_SUMMARY_EXPLAINER = """\
@@ -493,7 +353,7 @@ def _paired_features(merged: pd.DataFrame) -> list[dict]:
                 sr_present,
                 lr_copies,
                 sr_copies,
-                _virulence_bsc_name(code, info),
+                virulence_bsc_name(code, info),
                 paired=True,
             )
         )
@@ -529,7 +389,7 @@ def _paired_isescan_features(merged: pd.DataFrame) -> list[dict]:
     ``is_*`` boolean flags and the ``sr_IS_*`` shadow columns.
     """
     rows: list[dict] = []
-    for col in sorted(c for c in merged.columns if str(c).startswith("IS_")):
+    for col in is_family_columns(merged.columns):
         sr_col = f"sr_{col}"
         if sr_col not in merged.columns:
             continue
@@ -568,7 +428,7 @@ def _clonal_group_features(rows: pd.DataFrame, is_lr_mask: pd.Series) -> list[di
                 sr_present,
                 lr_copies,
                 sr_copies,
-                _virulence_bsc_name(code, info),
+                virulence_bsc_name(code, info),
                 paired=False,
             )
         )
@@ -590,7 +450,7 @@ def _clonal_group_features(rows: pd.DataFrame, is_lr_mask: pd.Series) -> list[di
         out.append(_wide_feature_row(lr_present, sr_present, lr_copies, sr_copies, col, paired=False))
 
     # ISEScan (alphabetical)
-    for col in sorted(c for c in rows.columns if str(c).startswith("IS_")):
+    for col in is_family_columns(rows.columns):
         lr_copies = pd.to_numeric(lr_df[col], errors="coerce").fillna(0)
         sr_copies = pd.to_numeric(sr_df[col], errors="coerce").fillna(0)
         lr_present = (lr_copies > 0).astype(int)
