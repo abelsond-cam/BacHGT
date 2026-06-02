@@ -12,6 +12,17 @@ DEFAULT_OUT_DIR     = DATA_ROOT / "david/processed/genomad"
 DEFAULT_INPUTS_TSV  = DEFAULT_OUT_DIR / "inputs" / "genomad_inputs.tsv"
 DEFAULT_DB_DIR      = DEFAULT_OUT_DIR / "db" / "genomad_db"
 
+# Long-format outputs of `bac_genomad.run_genomad collate` — consumed by
+# downstream comparators (e.g. compare_lra_to_sr).
+DEFAULT_PLASMID_LONG_TSV = DEFAULT_OUT_DIR / "genomad_plasmid_summary_long.tsv"
+DEFAULT_VIRUS_LONG_TSV   = DEFAULT_OUT_DIR / "genomad_virus_summary_long.tsv"
+
+# Comparator outputs land beside the existing complete-vs-SR artifacts in
+# `bac_complete_genomes`, under a `genomad/` sub-tree to keep them separable.
+DEFAULT_COMPARE_DIR    = DATA_ROOT / "david/processed/complete_vs_sr_genomes"
+DEFAULT_PAIRED_INDEX   = DEFAULT_COMPARE_DIR / "paired_index.tsv"
+DEFAULT_COMPARE_OUT_DIR = DEFAULT_COMPARE_DIR / "genomad"
+
 # ─── SIZING ───────────────────────────────────────────────────────────────────
 
 # ~5 min/sample at 8 threads → 100 samples ≈ 8.3 h per chunk; fits a 16 h
