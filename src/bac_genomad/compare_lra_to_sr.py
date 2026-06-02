@@ -15,24 +15,38 @@ Two subcommands:
   compare   — for each of four nested LRA cohorts (reference_genome ⊂ is_hybrid
               and is_complete ⊂ lra_final_list), join the per-Sample plasmid +
               virus totals against the paired SR partner (keyed
-              ``<Sample>__sr`` in the geNomad outputs) and add three
+              ``<Sample>__sr`` in the geNomad outputs) and add
               **coordinate-based** virus sub-counts computed against host
               contig lengths:
 
-                - ``n_virus_spans_whole_contig`` — call reaches both ends of
-                  the host contig: ``coord_start <= 1 AND coord_end >=
-                  host_contig_length``. Whole-contig topology rows (geNomad
-                  classified the entire contig as viral; ``coordinates`` is
-                  blank) count here by definition.
                 - ``n_full_prophage`` — provirus call bounded by host
                   sequence on BOTH sides: ``coord_start > 1 AND coord_end <
-                  host_contig_length``. The headline metric — these are
-                  complete integrations where both attachment sites are
-                  visible.
+                  host_contig_length``. Headline metric: complete
+                  integrations where both attachment sites are visible.
+                - ``n_virus_spans_whole_contig`` — virus call reaches both
+                  ends of its contig. Split into two sub-types:
+                    * ``n_virus_standalone_contig`` — geNomad's whole-contig
+                      topology rows (``topology != "Provirus"``). Real
+                      extrachromosomal virus: lytic phage caught mid-
+                      assembly, excised prophages, phage-plasmids, virion
+                      DNA. Further binned by contig length into
+                      ``standalone_small`` (<20 kb, likely SR fragmentation
+                      noise), ``standalone_phage`` (20–80 kb, typical phage
+                      genome — the real signal), ``standalone_large``
+                      (≥80 kb, jumbo phages or multi-element contigs).
+                    * ``n_virus_provirus_spans_all`` — provirus rows with
+                      coords spanning the entire contig. Usually an SR
+                      fragmentation artefact: the "host" contig is itself
+                      entirely viral because the assembler broke at the
+                      integration boundary.
                 - ``n_virus_edge_truncated`` — provirus call that touches
                   exactly one end of the host contig (start == 1 XOR end ==
                   length). Likely a real prophage truncated by an assembly
                   contig break, not a complete excision.
+
+              Identities: ``standalone = small + phage + large``;
+              ``spans_whole = standalone + provirus_spans_all``;
+              ``virus_total = spans_whole + full_prophage + edge_truncated``.
 
               Host-contig lengths are computed once from the paired FASTAs
               (~5.8 k files via threaded gunzip + ``>`` scan) and cached as
@@ -79,20 +93,36 @@ TRUE_TOKENS = frozenset({"true", "1", "yes"})
 # `compare` only — it needs contig lengths and only the paired cohort has them.
 AGGREGATE_METRICS = ("n_plasmid_contigs", "n_virus_total")
 
-# Coordinate-based virus sub-classes, computed in `compare`.
+# Coordinate-based virus sub-classes, computed in `compare`. Identities held by
+# the classification:
+#   n_virus_spans_whole_contig = n_virus_standalone_contig + n_virus_provirus_spans_all
+#   n_virus_standalone_contig  = n_virus_standalone_small + ..._phage + ..._large
+#   n_virus_total              = n_virus_spans_whole_contig + n_full_prophage + n_virus_edge_truncated
 VIRUS_COORD_CLASSES = (
-    "n_virus_spans_whole_contig",
+    "n_virus_spans_whole_contig",     # parent of the next 5
+    "n_virus_standalone_contig",      # topology != Provirus (real extrachromosomal virus)
+    "n_virus_standalone_small",       # standalone, contig < 20 kb (likely fragments / noise)
+    "n_virus_standalone_phage",       # standalone, 20 kb ≤ contig < 80 kb (typical phage)
+    "n_virus_standalone_large",       # standalone, contig ≥ 80 kb (jumbo / multi-element)
+    "n_virus_provirus_spans_all",     # topology == Provirus but coords span the whole contig
     "n_full_prophage",
     "n_virus_edge_truncated",
 )
 
-# Display order in the paired output. Plasmid → virus total → coord-based
-# breakdown with full_prophage as the headline of the three sub-classes.
+STANDALONE_SMALL_MAX = 20_000   # < 20 kb: fragmentation / non-phage viral debris
+STANDALONE_PHAGE_MAX = 80_000   # 20-80 kb: canonical phage-genome range
+
+# Display order in the paired output.
 PAIRED_METRIC_ORDER = (
     "n_plasmid_contigs",
     "n_virus_total",
     "n_full_prophage",
     "n_virus_spans_whole_contig",
+    "n_virus_standalone_contig",
+    "n_virus_standalone_small",
+    "n_virus_standalone_phage",
+    "n_virus_standalone_large",
+    "n_virus_provirus_spans_all",
     "n_virus_edge_truncated",
 )
 
@@ -236,31 +266,60 @@ def _classify_virus_coords(
 ) -> pd.DataFrame:
     """Per-Sample coord-based virus sub-counts for the paired universe.
 
-    Returns a DataFrame with columns ``Sample, n_virus_spans_whole_contig,
-    n_full_prophage, n_virus_edge_truncated``. Rules:
+    Rules:
 
-    - Whole-contig topology rows (``topology != "Provirus"``) — geNomad
-      already says the entire contig is viral; count as **spans_whole**.
-    - Provirus rows: parse ``coord_start`` / ``coord_end`` from
-      ``coordinates``, parse ``host_contig`` from ``seq_name``
-      (``<host_contig>|provirus_<start>_<end>``), look up
+    - **Whole-contig topology rows** (``topology != "Provirus"``) — geNomad
+      called the entire contig viral on its own terms. Count as
+      ``n_virus_standalone_contig`` and further binned by host-contig length
+      into ``small`` (<20 kb), ``phage`` (20-80 kb), ``large`` (≥80 kb).
+      The standalone class is biologically the "real extrachromosomal virus"
+      bucket: lytic phage caught in assembly, excised prophages,
+      phage-plasmids, virion DNA.
+    - **Provirus rows** (``topology == "Provirus"``) — parse ``coord_start``
+      / ``coord_end`` from ``coordinates`` and ``host_contig`` from
+      ``seq_name`` (``<host_contig>|provirus_<start>_<end>``); look up
       ``host_contig_length``. Then:
-        * ``start <= 1 AND end >= length`` → **spans_whole**
-        * ``start > 1 AND end < length`` → **full_prophage**
-        * touches exactly one end → **edge_truncated**
+        * ``start <= 1 AND end >= length`` → ``n_virus_provirus_spans_all``
+          (the "host" contig is itself entirely viral — usually a SR
+          fragmentation artefact)
+        * ``start > 1 AND end < length`` → ``n_full_prophage``
+        * touches exactly one end → ``n_virus_edge_truncated``
 
-    Provirus rows where the host-contig length lookup fails (parse
-    mismatch / contig missing) cannot be classified and are reported as a
-    warning; they appear in ``n_virus_total`` but not in any of the three
-    sub-counts.
+    Rows where the contig-length lookup fails (parse mismatch / contig
+    missing) are reported as warnings; they appear in ``n_virus_total`` but
+    not in any of the sub-classes.
     """
     sub = virus[virus["Sample"].isin(paired_samples)].copy()
     if sub.empty:
         return pd.DataFrame(columns=["Sample", *VIRUS_COORD_CLASSES])
 
     is_provirus = sub["topology"].fillna("") == "Provirus"
-    whole_topology = sub.loc[~is_provirus, ["Sample"]].copy()
 
+    # ── whole-contig topology rows → standalone, binned by contig length ──
+    wc = sub.loc[~is_provirus, ["Sample", "seq_name"]].copy()
+    wc["contig"] = wc["seq_name"].astype(str)
+    wc = wc.merge(lengths, on=["Sample", "contig"], how="left")
+    wc_missing = int(wc["length"].isna().sum())
+    if wc_missing:
+        print(
+            f"  WARNING: {wc_missing:,} whole-contig viral rows had no contig-length lookup;"
+            " they appear in n_virus_total but not in the standalone size bins.",
+            file=sys.stderr,
+        )
+    wc_len = pd.to_numeric(wc["length"], errors="coerce")
+    has_wc_len = wc_len.notna()
+    small_mask = has_wc_len & (wc_len < STANDALONE_SMALL_MAX)
+    phage_mask = has_wc_len & (wc_len >= STANDALONE_SMALL_MAX) & (wc_len < STANDALONE_PHAGE_MAX)
+    large_mask = has_wc_len & (wc_len >= STANDALONE_PHAGE_MAX)
+
+    standalone_small = wc.loc[small_mask].groupby("Sample").size().rename("n_virus_standalone_small")
+    standalone_phage = wc.loc[phage_mask].groupby("Sample").size().rename("n_virus_standalone_phage")
+    standalone_large = wc.loc[large_mask].groupby("Sample").size().rename("n_virus_standalone_large")
+    standalone_total = (
+        wc.loc[has_wc_len].groupby("Sample").size().rename("n_virus_standalone_contig")
+    )
+
+    # ── provirus rows → coord-based sub-classes ──
     pv = sub.loc[is_provirus].copy()
     pv["host_contig"] = pv["seq_name"].astype(str).str.rsplit("|provirus_", n=1).str[0]
     coords = pv["coordinates"].astype(str).str.split("-", n=1, expand=True)
@@ -272,38 +331,34 @@ def _classify_virus_coords(
         how="left",
     )
 
-    has_len = pv["host_contig_length"].notna() & pv["coord_start"].notna() & pv["coord_end"].notna()
-    missing = int((~has_len).sum())
-    if missing:
+    has_pv_len = pv["host_contig_length"].notna() & pv["coord_start"].notna() & pv["coord_end"].notna()
+    pv_missing = int((~has_pv_len).sum())
+    if pv_missing:
         print(
-            f"  WARNING: {missing:,} provirus rows in the paired cohort had no"
-            " contig-length lookup (host_contig parse mismatch or missing length);"
-            " they appear in n_virus_total but not in the three sub-classes.",
+            f"  WARNING: {pv_missing:,} provirus rows had no contig-length lookup"
+            " (host_contig parse mismatch); they appear in n_virus_total but not in"
+            " the provirus sub-classes.",
             file=sys.stderr,
         )
 
-    pv = pv[has_len]
+    pv = pv[has_pv_len]
     pv_spans = (pv["coord_start"] <= 1) & (pv["coord_end"] >= pv["host_contig_length"])
     pv_full = (pv["coord_start"] > 1) & (pv["coord_end"] < pv["host_contig_length"])
     pv_edge = ~pv_spans & ~pv_full
 
-    spans_provirus = pv.loc[pv_spans, ["Sample"]]
-    spans = (
-        pd.concat([whole_topology, spans_provirus], ignore_index=True)
-        .groupby("Sample")
-        .size()
-        .rename("n_virus_spans_whole_contig")
-    )
+    provirus_spans_all = pv.loc[pv_spans].groupby("Sample").size().rename("n_virus_provirus_spans_all")
     full = pv.loc[pv_full].groupby("Sample").size().rename("n_full_prophage")
     edge = pv.loc[pv_edge].groupby("Sample").size().rename("n_virus_edge_truncated")
 
-    return (
-        pd.concat([spans, full, edge], axis=1)
-        .fillna(0)
-        .astype(int)
-        .reset_index()
-        .reindex(columns=["Sample", *VIRUS_COORD_CLASSES])
+    classified = pd.concat(
+        [standalone_total, standalone_small, standalone_phage, standalone_large,
+         provirus_spans_all, full, edge],
+        axis=1,
+    ).fillna(0).astype(int)
+    classified["n_virus_spans_whole_contig"] = (
+        classified["n_virus_standalone_contig"] + classified["n_virus_provirus_spans_all"]
     )
+    return classified.reset_index().reindex(columns=["Sample", *VIRUS_COORD_CLASSES])
 
 
 # ─── COMPARE ──────────────────────────────────────────────────────────────────
@@ -411,7 +466,11 @@ def cmd_compare(args: argparse.Namespace) -> int:
     coord_classes = _classify_virus_coords(virus, lengths, paired_universe)
     print(
         f"  classified {len(coord_classes):,} Samples with at least one virus call"
-        f" ({int(coord_classes['n_virus_spans_whole_contig'].sum()):,} spans-whole,"
+        f" ({int(coord_classes['n_virus_spans_whole_contig'].sum()):,} spans-whole"
+        f" [{int(coord_classes['n_virus_standalone_small'].sum()):,} standalone<20kb,"
+        f" {int(coord_classes['n_virus_standalone_phage'].sum()):,} standalone-phage,"
+        f" {int(coord_classes['n_virus_standalone_large'].sum()):,} standalone≥80kb,"
+        f" {int(coord_classes['n_virus_provirus_spans_all'].sum()):,} provirus-spans-all],"
         f" {int(coord_classes['n_full_prophage'].sum()):,} full prophage,"
         f" {int(coord_classes['n_virus_edge_truncated'].sum()):,} edge-truncated)"
     )
