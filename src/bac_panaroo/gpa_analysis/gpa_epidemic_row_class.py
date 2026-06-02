@@ -4,7 +4,7 @@ The column ``epidemic_vs_mixed_row_class`` is metric-agnostic: species,
 ``group_level``, group labels, counts, and sample thresholds only.
 ``is_epidemic_gpa_clonal_target`` is a convenience boolean (true when the
 class is ``epidemic_group``). Per-metric mean/sd checks live in
-:mod:`bac_panaroo.pl.epidemic_vs_mixed`.
+:mod:`bac_panaroo.gpa_analysis.epidemic_vs_mixed`.
 """
 
 from __future__ import annotations

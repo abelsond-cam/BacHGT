@@ -27,7 +27,7 @@ By design simple and fast:
 Run via::
 
     PATH=/home/dca36/.conda/envs/kleborate/bin:$PATH \
-        uv run python -m bac_panaroo.tl.annotate_panaroo_nodes_minimap \
+        uv run python -m bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap \
         --panaroo-root <ROOT> --lineage SL39
 """
 

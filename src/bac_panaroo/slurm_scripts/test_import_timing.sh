@@ -33,7 +33,7 @@ export PYTHONUNBUFFERED=1
 
 SCRATCH="${SLURM_TMPDIR:-${TMPDIR:-/tmp}}"
 DEST="${SCRATCH}/bac_panaroo_venv_import_probe"
-PROBE="src/bac_panaroo/tl/test_import_timing_standalone.py"
+PROBE="tests/test_import_timing_standalone.py"
 
 echo "========================================================================"
 echo "Import timing: IceLake-HiMem (uv) vs node-local venv copy"

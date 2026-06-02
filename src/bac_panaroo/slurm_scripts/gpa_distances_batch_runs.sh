@@ -11,7 +11,7 @@
 #
 # gpa_distances_batch_runs.sh
 # ---------------------------
-# Runs: src/bac_panaroo/tl/gpa_distances_batch_runs.py
+# Runs: src/bac_panaroo/gpa_analysis/gpa_distances_batch_runs.py
 #
 # What it does:
 #   Scans PANAROO_RUN_ROOT (set below) for each immediate subdirectory that
@@ -107,7 +107,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_distances_batch_runs.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/gpa_analysis/gpa_distances_batch_runs.py
   --workers "${WORKERS}"
   --panaroo-run-root "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"

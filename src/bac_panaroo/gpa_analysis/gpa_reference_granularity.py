@@ -34,7 +34,7 @@ best_reference_per_sample.csv (one row per run/query sample with the best
 reference + shared-gene count at every level), run_inventory.md (only in
 'inventory'/'both' modes — the inventory still reads the detail TSVs because it
 reports run-classification metadata they encode), and delegates lollipop
-plotting to bac_panaroo.pl.granularity_lollipop.
+plotting to bac_panaroo.gpa_analysis.granularity_lollipop.
 
 Row types in the output table:
   kp_epidemic    — One per major CG (≥ min_group_size) within a KP sublineage run
@@ -58,9 +58,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from bac_panaroo.tl.gpa_distances_combined import load_and_concat_detail_tsvs
-from bac_panaroo.tl.gpa_distances_single_group import PANAROO_RUN_ROOT
-from bac_panaroo.tl.panaroo_groups import find_panaroo_runs, hierarchical_split
+from bac_panaroo.gpa_analysis.gpa_distances_combined import load_and_concat_detail_tsvs
+from bac_panaroo.gpa_analysis.gpa_distances_single_group import PANAROO_RUN_ROOT
+from bac_panaroo.gpa_analysis.panaroo_groups import find_panaroo_runs, hierarchical_split
 
 # Panaroo-run name patterns used to classify each run's output row type.
 _RARE_PREFIX = "kp_rare_sublineage_batch"
@@ -978,7 +978,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             _tslog(f"Test mode: limiting to first {args.test_n_runs} runs: {all_runs}")
             # Build a temporary symlink-free filtered tree by filtering at process time
             # (cheaper: just patch find_panaroo_runs via module attribute)
-            import bac_panaroo.tl.gpa_reference_granularity as _self_mod
+            import bac_panaroo.gpa_analysis.gpa_reference_granularity as _self_mod
 
             _orig = _self_mod.find_panaroo_runs
             _self_mod.find_panaroo_runs = lambda root: all_runs  # type: ignore[assignment]
@@ -1024,7 +1024,7 @@ def main(argv: Iterable[str] | None = None) -> int:
             _tslog(f"Wrote summary: {summary_path}")
 
             try:
-                from bac_panaroo.pl.granularity_lollipop import plot_granularity_lollipop
+                from bac_panaroo.gpa_analysis.granularity_lollipop import plot_granularity_lollipop
 
                 sl_filter = ["kp_epidemic_sl", "kp_rare", "kp_species"]
                 dark_blue = "#003d82"

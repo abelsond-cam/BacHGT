@@ -8,7 +8,7 @@ Discovers every ``gpa_distances_detail_*.tsv`` under
 concatenates them into one table, slices to a chosen ``group_level`` (default
 ``'clonal_group'``), deduplicates by ``strain`` keeping the row with the
 largest ``n_samples``, and drives the epidemic-vs-mixed-strain comparison
-from :mod:`bac_panaroo.pl.epidemic_vs_mixed` over one or more metrics.
+from :mod:`bac_panaroo.gpa_analysis.epidemic_vs_mixed` over one or more metrics.
 
 Three modes:
 
@@ -30,7 +30,7 @@ A run summary table ``epidemic_vs_mixed_metric_summary.tsv`` at the top of
 ``out_dir`` ranks metrics by the count of rows with ``p_bonferroni_m < 0.01``.
 
 Both naming conventions (``mean_<m>/sd_<m>`` and ``<m>_mean/<m>_sd``) are
-recognised by :func:`bac_panaroo.pl.epidemic_vs_mixed.resolve_mean_sd_columns`.
+recognised by :func:`bac_panaroo.gpa_analysis.epidemic_vs_mixed.resolve_mean_sd_columns`.
 """
 
 from __future__ import annotations
@@ -54,22 +54,22 @@ print(
     flush=True,
 )
 
-from bac_panaroo.pl.epidemic_vs_mixed import epidemic_vs_mixed_strain_comparison
+from bac_panaroo.gpa_analysis.epidemic_vs_mixed import epidemic_vs_mixed_strain_comparison
 
 print(
-    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: bac_panaroo.pl.epidemic_vs_mixed loaded",
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: bac_panaroo.gpa_analysis.epidemic_vs_mixed loaded",
     flush=True,
 )
 
-from bac_panaroo.tl.gpa_distances_single_group import PANAROO_RUN_ROOT
-from bac_panaroo.tl.gpa_epidemic_row_class import (
+from bac_panaroo.gpa_analysis.gpa_distances_single_group import PANAROO_RUN_ROOT
+from bac_panaroo.gpa_analysis.gpa_epidemic_row_class import (
     EPIDEMIC_ROW_CLASS_COL,
     IS_EPIDEMIC_GPA_CLONAL_TARGET_COL,
     add_epidemic_row_class_column,
 )
 
 print(
-    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: bac_panaroo.tl.gpa_distances_single_group loaded",
+    f"[{time.strftime('%Y-%m-%d %H:%M:%S %Z')}] import checkpoint: bac_panaroo.gpa_analysis.gpa_distances_single_group loaded",
     flush=True,
 )
 

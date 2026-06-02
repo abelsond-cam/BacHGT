@@ -35,7 +35,7 @@ signal; mixed two-sided counts conflate orientation flips, Panaroo paralog
 collapse and tandem-IS arrangements — don't treat them as event counts.
 
 If a sibling ``{lineage}_panaroo_nodes_annotate_kleborate.tsv`` (written by
-``bac_panaroo.tl.annotate_panaroo_nodes_minimap``) sits in the Panaroo run
+``bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap``) sits in the Panaroo run
 folder, its ``virulence_hits`` / ``amr_hits`` / ``amr_classes`` columns are
 left-joined onto the hotspot table. Missing file → empty columns.
 
@@ -98,7 +98,7 @@ def run(
     hot["annotation"] = hot["cluster"].map(ann)
 
     # Left-join Kleborate virulence + AMR labels from the Panaroo run folder
-    # (written by bac_panaroo.tl.annotate_panaroo_nodes_minimap). Missing file
+    # (written by bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap). Missing file
     # → empty columns, with a log line so the omission is visible.
     kleb_tsv = run_dir / f"{lineage}_panaroo_nodes_annotate_kleborate.tsv"
     if kleb_tsv.exists():

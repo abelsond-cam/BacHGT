@@ -1,6 +1,6 @@
 """Smoke tests for the Bakta ``convert`` loaded from the panaroo fork.
 
-Exercises the file-path loader in ``bac_panaroo.pp.panaroo_run_strain`` with
+Exercises the file-path loader in ``bac_panaroo.run_panaroo.panaroo_run_strain`` with
 synthetic Bakta-shaped fixtures: confirms that single-``#`` banner lines
 in the GFF body and pre-``>`` comment lines in the FASTA section are both
 stripped, and that a valid combined GFF+FASTA is produced.
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from bac_panaroo.pp.panaroo_run_strain import convert
+from bac_panaroo.run_panaroo.panaroo_run_strain import convert
 
 
 # 252 nt = 84 × "AAA" (Lys, no stop codons). Long enough for two 99 nt CDSs.

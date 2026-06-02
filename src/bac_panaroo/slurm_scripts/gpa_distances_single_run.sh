@@ -128,7 +128,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_distances_single_run.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/gpa_analysis/gpa_distances_single_run.py
   --panaroo-run-root "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"
   --min-group-size "${MIN_GROUP_SIZE}"

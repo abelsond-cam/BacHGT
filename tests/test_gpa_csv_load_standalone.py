@@ -2,7 +2,7 @@
 """Standalone timing harness for the streaming gene_presence_absence.csv loader.
 
 Minimal-imports (stdlib + numpy) script that mirrors the streaming parse logic
-from ``bac_panaroo.tl.gpa_distances_single_group._load_gpa_counts_from_csv``.
+from ``bac_panaroo.gpa_analysis.gpa_distances_single_group._load_gpa_counts_from_csv``.
 
 Steps
 -----

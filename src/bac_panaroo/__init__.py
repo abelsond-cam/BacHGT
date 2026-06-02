@@ -1,7 +1,7 @@
 from importlib.metadata import version
 
-from . import pl, pp, tl
+from . import annotate_nodes, gpa_analysis, run_panaroo
 
-__all__ = ["pl", "pp", "tl"]
+__all__ = ["annotate_nodes", "gpa_analysis", "run_panaroo"]
 
 __version__ = version("BacHGT")

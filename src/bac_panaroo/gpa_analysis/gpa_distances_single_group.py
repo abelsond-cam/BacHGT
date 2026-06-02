@@ -64,12 +64,12 @@ print(
     flush=True,
 )
 
-from bac_panaroo.tl.gpa_distances_cluster_metrics import (
+from bac_panaroo.gpa_analysis.gpa_distances_cluster_metrics import (
     jaccard_to_shared,
     log_medoid_report,
     medoid_metrics_from_dist_sq,
 )
-from bac_panaroo.tl.gpa_matrix_utils import (
+from bac_panaroo.gpa_analysis.gpa_matrix_utils import (
     filter_by_prevalence,
 )
 
@@ -1989,7 +1989,7 @@ def run_gpa_analysis(
 
 
 def main() -> int:
-    from bac_panaroo.tl.gpa_distances_single_run import DEFAULT_GFF_FEATURE_COUNTS_PATH
+    from bac_panaroo.gpa_analysis.gpa_distances_single_run import DEFAULT_GFF_FEATURE_COUNTS_PATH
 
     p = argparse.ArgumentParser(description=__doc__)
     input_group = p.add_mutually_exclusive_group(required=True)

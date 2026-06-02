@@ -4,7 +4,7 @@
 Discovers every immediate subdirectory of ``--panaroo-run-root`` that contains
 a ``gene_presence_absence.Rtab`` file and runs the stratified distance
 analysis orchestrator
-(:func:`bac_panaroo.tl.gpa_distances_single_run.run_gpa_analysis`) on each one
+(:func:`bac_panaroo.gpa_analysis.gpa_distances_single_run.run_gpa_analysis`) on each one
 in parallel using a :class:`concurrent.futures.ProcessPoolExecutor`.
 
 Per-run outputs (whole-set + per-Clonal-group + per-CG/K_locus detail TSVs)
@@ -25,7 +25,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 import pandas as pd
 
-from bac_panaroo.tl.gpa_distances_single_run import (
+from bac_panaroo.gpa_analysis.gpa_distances_single_run import (
     DEFAULT_METADATA_PATH,
     DEFAULT_MIN_GROUP_SIZE,
     PANAROO_RUN_ROOT,
@@ -45,7 +45,7 @@ def _discover_leaves(root: str) -> list[str]:
     (no recursive descent). The return value is the leaf directory names
     (not full paths), sorted alphabetically, ready to pass as
     ``directory_leaf`` to
-    :func:`bac_panaroo.tl.gpa_distances_single_run.run_gpa_analysis`.
+    :func:`bac_panaroo.gpa_analysis.gpa_distances_single_run.run_gpa_analysis`.
     """
     leaves: list[str] = []
     for entry in sorted(os.listdir(root)):
@@ -61,7 +61,7 @@ def main() -> int:
 
     Parses CLI arguments, discovers Panaroo run subdirectories under
     ``--panaroo-run-root``, and fans them out to parallel workers that call
-    :func:`bac_panaroo.tl.gpa_distances_single_run.run_gpa_analysis` for each
+    :func:`bac_panaroo.gpa_analysis.gpa_distances_single_run.run_gpa_analysis` for each
     run. When all workers complete, the whole-set summary rows are compiled
     into a single TSV under ``--output-dir``.
 

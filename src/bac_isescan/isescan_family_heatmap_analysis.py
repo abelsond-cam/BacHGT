@@ -31,7 +31,7 @@ from bac_isescan.isescan_constants import CANONICAL_IS_FAMILY_COLUMNS
 
 # Older notebooks imported `parse_bool` from this module — keep re-export.
 from bac_isescan.isescan_utils import parse_bool
-from bac_panaroo.tl.define_epidemic_cgs import (
+from bac_panaroo.gpa_analysis.define_epidemic_cgs import (
     group_mean_sd_for_columns,
     reorder_cg_rows_by_total_sample_count,
 )

@@ -85,7 +85,7 @@ fi
 echo ""
 
 CMD=(
-  "${PYTHON_CMD[@]}" src/bac_panaroo/tl/gpa_reference_granularity.py
+  "${PYTHON_CMD[@]}" src/bac_panaroo/gpa_analysis/gpa_reference_granularity.py
   --data-dir "${PANAROO_RUN_ROOT}"
   --metadata "${METADATA_PATH}"
   --out-dir "${OUTPUT_DIR}"

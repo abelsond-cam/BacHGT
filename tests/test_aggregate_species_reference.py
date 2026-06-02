@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from bac_panaroo.tl.aggregate_species_reference import (
+from bac_panaroo.gpa_analysis.aggregate_species_reference import (
     LEVELS_ALL,
     _modal_pick,
     aggregate_species_reference,

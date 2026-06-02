@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_panaroo.pp.panaroo_run_strain import _genome_records_for_row
+from bac_panaroo.run_panaroo.panaroo_run_strain import _genome_records_for_row
 
 
 def _touch(path: Path) -> str:

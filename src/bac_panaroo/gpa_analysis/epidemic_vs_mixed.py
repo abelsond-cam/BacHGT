@@ -47,7 +47,7 @@ print(
     flush=True,
 )
 
-from bac_panaroo.tl.gpa_epidemic_row_class import (
+from bac_panaroo.gpa_analysis.gpa_epidemic_row_class import (
     EpidemicRowClass,
     get_epidemic_row_class_series,
 )
@@ -96,7 +96,7 @@ def epidemic_vs_mixed_strain_stats(
     """Epidemic-clonal-group test vs pooled per-run ``other`` comparator.
 
     Structural class (species, group level, labels, counts) comes from
-    :mod:`bac_panaroo.tl.gpa_epidemic_row_class` (column
+    :mod:`bac_panaroo.gpa_analysis.gpa_epidemic_row_class` (column
     ``epidemic_vs_mixed_row_class`` or recomputed from ``species_filter`` and
     related args). This function does not apply a separate species filter:
     it keeps rows labelled ``epidemic_group`` or ``non_epidemic_comparator``,
@@ -347,7 +347,7 @@ def epidemic_vs_mixed_strain_plot(
     """Bar chart of ``mean_<metric>`` per row with CI error bars.
 
     Bar colours use structural class from ``epidemic_vs_mixed_row_class`` (or
-    :func:`bac_panaroo.tl.gpa_epidemic_row_class.get_epidemic_row_class_series`):
+    :func:`bac_panaroo.gpa_analysis.gpa_epidemic_row_class.get_epidemic_row_class_series`):
     light blue = ``epidemic_group``; all other classes are light red. The stats
     table can omit rows that fail per-metric weight/sd checks. If
     ``group_level`` / ``group_label`` are missing, falls back to

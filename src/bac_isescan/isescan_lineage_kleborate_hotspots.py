@@ -12,7 +12,7 @@ events; different recurrence unit. Each output row is a
 Mechanism: load the shared per-lineage prep (per-IS DataFrame + flank-event
 long form + Panaroo annotation), then left-join the per-cluster Kleborate
 annotation TSV produced by
-:mod:`bac_panaroo.tl.annotate_panaroo_nodes_minimap`, explode each flank
+:mod:`bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap`, explode each flank
 event by its cluster's labels, and group by ``(label, label_type, is_family)``.
 ``n_panaroo_clusters`` reports how many distinct Panaroo clusters under each
 label are flanked by that IS family.
@@ -79,7 +79,7 @@ def run(
     if not kleb_tsv.exists():
         sys.exit(
             f"no {kleb_tsv.name} under {run_dir} — run "
-            "bac_panaroo.tl.annotate_panaroo_nodes_minimap first"
+            "bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap first"
         )
     kleb = pd.read_csv(kleb_tsv, sep="\t", dtype=str).fillna("")
     labels = _explode_labels(kleb)

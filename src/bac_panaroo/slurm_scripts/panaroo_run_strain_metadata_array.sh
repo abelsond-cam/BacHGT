@@ -161,7 +161,7 @@ exec bash "$STRAIN_SCRIPT" \
 # (i) Generate batch TSVs + panaroo_batching.log under $BATCHES/:
 #
 #   cd "$REPO"
-#   uv run python src/bac_panaroo/pp/panaroo_metadata_batching.py
+#   uv run python src/bac_panaroo/run_panaroo/panaroo_metadata_batching.py
 #   bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 #
 # (ii) Submit: use --array=1-$(wc -l < FILE)%M so N matches the line count.

@@ -32,7 +32,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from bac_panaroo.tl.gpa_distances_single_group import (
+from bac_panaroo.gpa_analysis.gpa_distances_single_group import (
     DEFAULT_METADATA_PATH,
     PANAROO_RUN_ROOT,
     _augment_meta_with_panaroo_labels,
@@ -45,11 +45,11 @@ from bac_panaroo.tl.gpa_distances_single_group import (
     _series_to_bool,
     _str2bool,
 )
-from bac_panaroo.tl.gpa_distances_single_group import (
+from bac_panaroo.gpa_analysis.gpa_distances_single_group import (
     run_gpa_analysis as run_single_group_analysis,
 )
-from bac_panaroo.tl.gpa_matrix_utils import filter_by_prevalence
-from bac_panaroo.tl.panaroo_groups import split_samples
+from bac_panaroo.gpa_analysis.gpa_matrix_utils import filter_by_prevalence
+from bac_panaroo.gpa_analysis.panaroo_groups import split_samples
 
 DEFAULT_MIN_GROUP_SIZE = 250
 DEFAULT_GFF_FEATURE_COUNTS_PATH = (

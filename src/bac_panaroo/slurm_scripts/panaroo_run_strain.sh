@@ -11,7 +11,7 @@
 #
 # panaroo_run_strain.sh
 # ---------------------
-# Step 1 — Python: src/bac_panaroo/pp/panaroo_run_strain.py
+# Step 1 — Python: src/bac_panaroo/run_panaroo/panaroo_run_strain.py
 #   Reads project metadata (default slimmed TSV or --sample-metadata-file),
 #   optionally filters to one --clonal-group or --sublineage (or uses all rows
 #   when neither is set), checks GFF/assembly paths, builds combined GFF+FASTA
@@ -170,7 +170,7 @@ echo "Using TMPDIR: $TMPDIR"
 echo ""
 
 # Build Panaroo input file (single-column list of combined GFF+FASTA files) and run subdir
-uv run python src/bac_panaroo/pp/panaroo_run_strain.py \
+uv run python src/bac_panaroo/run_panaroo/panaroo_run_strain.py \
   $PYTHON_STRAIN_ARGS \
   $PYTHON_METADATA_ARGS \
   $PYTHON_NON_KPSC_ARGS \
