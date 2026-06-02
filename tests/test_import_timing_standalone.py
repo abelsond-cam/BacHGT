@@ -8,7 +8,7 @@ Designed for two use cases:
 
 2. **Local venv copy:** ``/path/to/copied/venv/bin/python .../test_import_timing_standalone.py``
    After ``rsync -a`` (or ``cp -a``) of the *resolved* venv tree to e.g.
-   ``$SLURM_TMPDIR/bacotype_venv`` — uses node-local disk, not workspace quota.
+   ``$SLURM_TMPDIR/bac_panaroo_venv`` — uses node-local disk, not workspace quota.
 
 Each run is a **fresh process**, so import times reflect cold loads from whatever
 filesystem backs ``sys.prefix``.

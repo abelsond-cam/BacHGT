@@ -1,0 +1,45 @@
+[workspace]
+name = "mag-rescue"
+version = "0.1.0"
+description = "ARIBA-driven virulence/AMR profiling on Klebsiella short-read genomes"
+authors = ["David Abelson <dca36@cam.ac.uk>"]
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tasks]
+test = "pytest tests/"
+lint = "ruff check src/ tests/ && ruff format --check src/ tests/"
+fmt = "ruff format src/ tests/"
+
+# Cross-platform Python deps — our own wrappers' runtime.
+# ARIBA + its native deps (samtools, bowtie2, spades, mummer, cd-hit, pysam)
+# do NOT live in pixi; they ship in an apptainer (singularity) container that
+# pins their internal versions to a working set. ARIBA's modern-pysam
+# incompatibility (pysam 0.16+ removed `mpileup -t/-u/-v`) is unsolvable in
+# pixi because pysam <0.16 only has Python 2 wheels. See CLAUDE.md.
+[dependencies]
+python = "3.12.*"
+pandas = ">=2.2"
+numpy = ">=1.26"
+biopython = ">=1.83"
+tqdm = ">=4.66"
+requests = ">=2.31"
+
+[pypi-dependencies]
+mag-rescue = { path = ".", editable = true }
+
+[feature.dev.dependencies]
+pytest = "*"
+pytest-cov = "*"
+ruff = "*"
+pre-commit = "*"
+
+# refbuild env: kleborate for the one-off ref-DB vendoring (linux-only).
+# Independent solve so its transitive deps don't constrain runtime.
+[feature.refbuild.target.linux-64.dependencies]
+kleborate = ">=3.2"
+
+[environments]
+default = { features = [], solve-group = "runtime" }
+dev = { features = ["dev"], solve-group = "runtime" }
+refbuild = { features = ["refbuild"] }

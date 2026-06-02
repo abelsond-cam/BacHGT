@@ -1,0 +1,17 @@
+[workspace]
+name = "bac-checkm2"
+version = "0.1.0"
+description = "CheckM2 runner for the LRA cohort — LR-GCAs + is_refseq assemblies"
+authors = ["David Abelson <dca36@cam.ac.uk>"]
+channels = ["conda-forge", "bioconda"]
+# Linux-only — CheckM2 runs on HPC, not on the dev laptop.
+platforms = ["linux-64"]
+
+[dependencies]
+# CheckM2's bioconda recipe (1.0.2 / 1.1.0) is stuck on old transitive pins:
+# python >=3.6,<3.9, diamond 2.0.4.*, pandas <=1.4.0. Don't add our own pins
+# for any of them — let the solver wire in whatever CheckM2 requires.
+# This env runs only the `checkm2 predict` binary; the prep script
+# `bac_data.checkm2.prep_checkm2_inputs` runs from the shared uv env (modern
+# pandas + Python), not from this pixi env.
+checkm2 = ">=1.0.2"

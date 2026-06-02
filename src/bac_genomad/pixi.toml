@@ -1,0 +1,24 @@
+# Standalone pixi environment for geNomad
+# (https://portal.nersc.gov/genomad/), used to call plasmids and proviruses
+# across every long-read and short-read Klebsiella assembly in metadata_v2.
+# Kept separate from the monorepo's shared uv env so the bioconda toolchain
+# does not perturb library deps. Run pixi commands from this directory.
+#
+#   pixi install                                 # solve + fetch the toolchain
+#   pixi run genomad --version
+#   pixi run genomad download-database <dir>     # one-time, ~2 GB DB
+#   pixi run python -m bac_genomad.run_genomad --help
+#
+# Apple Silicon note: bioconda's broad coverage is osx-64, so the platform is
+# pinned to osx-64 and runs under Rosetta 2 (verified available on this M1).
+# linux-64 is pinned for reproducibility on the HPC.
+
+[workspace]
+name = "bac-genomad"
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-64", "linux-64"]
+
+[dependencies]
+python  = ">=3.10,<3.13"
+genomad = ">=1.12.0"
+pandas  = ">=2.0"

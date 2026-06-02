@@ -1,0 +1,29 @@
+# Standalone pixi environment for the bac_isescan genome-annotation tools
+# (Kleborate + ISEScan), used to annotate the related-long-read genome
+# sets for the SR-vs-complete discrepancy analysis. Kept separate from
+# the monorepo's shared uv env so the bioconda toolchain does not perturb
+# library deps. Run pixi commands from this directory.
+#
+#   pixi install                       # solve + fetch the toolchain
+#   pixi run kleborate --version
+#   pixi run isescan.py --help
+#   pixi run annotate --help           # the annotation batch runner
+#
+# Apple Silicon note: bioconda's broad coverage is osx-64, so the
+# platform is pinned to osx-64 and runs under Rosetta 2 (verified
+# available on this M1). linux-64 is kept for reproducibility on HPC
+# once it is back (Fri 22 May 2026).
+
+[workspace]
+name = "bac-isescan-annotate"
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-64", "linux-64"]
+
+[dependencies]
+python = ">=3.10,<3.13"
+kleborate = ">=3.1"
+isescan = ">=1.7.2"
+pandas = ">=2.0"
+
+[tasks]
+annotate = "python annotate_kleborate_isescan.py"
