@@ -76,7 +76,7 @@ Reports per-source counts and the chunk plan.
 ### 3. `worker` — Slurm array task
 
 ```bash
-sbatch --array=0-899 src/bac_genomad/slurm_scripts/run_genomad.sh
+sbatch --array=0-888 src/bac_genomad/slurm_scripts/run_genomad.sh
 ```
 
 Per task:
@@ -90,23 +90,38 @@ Per task:
 - Writes `.genomad.done` sentinel on success; per-chunk log in
   `<OUT_DIR>/chunk_logs/chunk_NNNNN.log`
 
-Sizing: ~5 min/sample × 100 per chunk ≈ 8 h walltime (16 h requested for
-slack). 8 CPUs / 16 GB per task. The Slurm script redirects `$TMPDIR` to
+**Measured (2026-06-02 run, 88,810 samples):** ~3.5 min/sample × 100 ≈ 5–6 h
+per chunk (16 h walltime is ample). 8 CPUs / **64 GB** per task on
+`icelake-himem` (peak MaxRSS ~20 GB — MMseqs2 `prefilter` is the spike; 16 GB
+OOM'd in the first smoke test). The Slurm script redirects `$TMPDIR` to
 personal RDS (1 TB) — geNomad's MMseqs2 annotate step writes large
 intermediates that don't fit in worker `/tmp`.
 
 ### 4. `collate` — concatenate summaries
 
 ```bash
-pixi run python -m bac_genomad.run_genomad collate
+pixi run python -m bac_genomad.run_genomad collate [--workers 16] [--limit N]
 ```
 
-Walks every `per_sample/<Sample>/` with a `.genomad.done` sentinel, reads each
-`<bare>_plasmid_summary.tsv` and `<bare>_virus_summary.tsv`, tags rows with
-`Sample`, and writes:
+Walks every `per_sample/<Sample>/` with a `.genomad.done` sentinel, reads
+`<sample>_summary/<sample>_plasmid_summary.tsv` and
+`<sample>_summary/<sample>_virus_summary.tsv` (direct path — no `rglob`),
+tags rows with `Sample`, and writes:
 
 - `<OUT_DIR>/genomad_plasmid_summary_long.tsv` — one row per plasmid contig
 - `<OUT_DIR>/genomad_virus_summary_long.tsv`  — one row per virus/prophage region
+
+`--workers N` (default 16) uses a thread pool for the I/O-bound Lustre reads;
+`--limit N` collates only the first N per-sample dirs (subset inspection — pair
+with a separate `--out-dir` so it doesn't clobber the real long TSVs).
+**Measured (2026-06-02):** ~13 min full collate of 88,810 samples at 16 workers.
+
+**"No-call" samples are silent in the long TSVs.** A sample with sentinel +
+header-only summary TSVs (geNomad processed but classified nothing as plasmid
+or virus — e.g. chromosome-only RefSeq deposits) does not appear in either
+long TSV. The 2026-06-02 run had **94 such samples** (22 LRA, 21 paired SR, 51
+SR — almost all `kpsc_final_list=True`). To list them downstream:
+`set(genomad_inputs.Sample) − set(plasmid_long.Sample ∪ virus_long.Sample)`.
 
 ## Output layout
 
@@ -132,6 +147,17 @@ slurm_logs/
 genomad_plasmid_summary_long.tsv    # produced by `collate`
 genomad_virus_summary_long.tsv
 ```
+
+## Run history
+
+| Date | Cohort | Outcome |
+|---|---|---|
+| 2026-06-02 | 88,810 samples (5,557 LRA + 77,985 SR-only + 5,268 paired SR) | 88,810/88,810 sentinels; 94 zero-call (legit, see above); 2,005,368 plasmid contig rows, 607,352 virus region rows |
+
+Settings used in that run: `--partition=icelake-himem`, `--cpus-per-task=8`,
+`--mem=64G`, `--time=16:00:00`, `CHUNK_SIZE=100`, geNomad 1.12.0, DB v1.9.
+17 chunks had a single-sample JSONDecodeError each on Jun 1 (cluster restart
+window) — retried cleanly in a 1-task array.
 
 ## Knobs
 
