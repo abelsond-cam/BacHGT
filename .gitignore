@@ -9,6 +9,9 @@ buck-out/
 __pycache__/
 .*cache/
 
+# Secrets / API keys
+.env
+
 # Distribution / packaging
 /dist/
 
@@ -21,6 +24,9 @@ __pycache__/
 # docs
 /docs/generated/
 /docs/_build/
+
+# Notebook data caches — analysis outputs, large; live on RDS, not in git
+**/notebooks/_data/
 
 # Everything in /logs
 /logs/
