@@ -23,7 +23,17 @@ For each ``lra_final_list=True`` row, the cascade:
      ``lra_final_list AND is_kpsc``. Only fills rows where the existing
      value is NaN (the 117 ingested orphans) to avoid clobbering the
      curated whitelist on existing rows.
-  4. **kleborate_needs_recall** — cleared (False) on rows that got a
+  4. **Full typing block overlay** — every Kleborate v3 column whose bare
+     name (last ``__``-segment) matches an existing v2 column is overlaid
+     onto matched rows where the v2 cell is empty. Covers MLST (``ST`` +
+     ``gapA``/``infB``/``mdh``/``pgi``/``phoE``/``rpoB``/``tonB``), virulence
+     MLSTs (``YbST``/``CbST``/``AbST``/``SmST``/``RmST`` + locus genes),
+     ``rmpA2``, AMR per-class acquired/mutations, resistance/virulence scores,
+     Kaptive K/O locus, ``wzi``, cipro prediction. Fill-on-empty preserves
+     curated v1 values on already-typed rows. ``Sublineage``/``LINcode``/
+     ``Clonal group``/``Phylogroup`` are **not** emitted by Kleborate v3 and
+     are left untouched here — they come from a separate LIN-typing layer.
+  5. **kleborate_needs_recall** — cleared (False) on rows that got a
      fresh Kleborate call.
 
 Always backs up the existing metadata_v2 with a UTC-stamped ``.bak.*.tsv``
@@ -85,10 +95,22 @@ _ACC_RE = re.compile(r"(GC[AF]_\d+)(?:\.\d+)?")
 
 
 def _bare(acc: object) -> str:
+    """Return a stable join key.
+
+    For GCF/GCA accessions, strip the ``.<version>`` suffix
+    (``GCF_003855335.1`` → ``GCF_003855335``). For non-GCF/GCA accessions
+    (e.g. SAM*/ERR*), return the trimmed string as-is so SR-only rows can
+    still be joined to their Kleborate output (whose ``strain`` column is
+    populated from the input FASTA filename, which the runner names after
+    the Sample for non-GCF/GCA inputs).
+    """
     if acc is None or pd.isna(acc):
         return ""
-    m = _ACC_RE.search(str(acc))
-    return m.group(1).split(".", 1)[0] if m else ""
+    s = str(acc).strip()
+    m = _ACC_RE.search(s)
+    if m:
+        return m.group(1).split(".", 1)[0]
+    return s
 
 
 def _coerce_bool(series: pd.Series) -> pd.Series:
@@ -102,6 +124,56 @@ def _is_kpsc(species: pd.Series) -> pd.Series:
     for prefix in KPSC_SPECIES_PREFIXES:
         mask = mask | s.str.startswith(prefix)
     return mask
+
+
+# Cells treated as empty for fill-on-empty overlay semantics.
+_EMPTY_STRS = {"", "nan", "NaN", "None", "<NA>"}
+
+
+def _is_empty_cell(val: object) -> bool:
+    if val is None:
+        return True
+    try:
+        if pd.isna(val):
+            return True
+    except (TypeError, ValueError):
+        pass
+    return str(val).strip() in _EMPTY_STRS
+
+
+def _kleb_bare_col(col: str) -> str:
+    """Map a Kleborate v3 namespaced column to its bare v1-style name.
+
+    ``klebsiella_pneumo_complex__mlst__ST`` → ``ST``;
+    ``klebsiella__ybst__YbST`` → ``YbST``;
+    ``general__contig_stats__N50`` → ``N50``.
+    """
+    return col.rsplit("__", 1)[-1]
+
+
+def _build_overlay_map(kleb_cols: list[str], v2_cols: set[str]) -> dict[str, str]:
+    """Build the Kleborate→v2 column-name overlay map.
+
+    Returns ``{kleb_col: v2_col}`` for every Kleborate column whose bare name
+    matches an existing v2 column. Skips columns where the bare name collides
+    with another Kleborate column (would be ambiguous).
+    """
+    bare_to_kleb: dict[str, list[str]] = {}
+    for c in kleb_cols:
+        bare_to_kleb.setdefault(_kleb_bare_col(c), []).append(c)
+    overlay: dict[str, str] = {}
+    skipped_collisions: list[str] = []
+    for bare, kcols in bare_to_kleb.items():
+        if bare not in v2_cols:
+            continue
+        if len(kcols) > 1:
+            skipped_collisions.append(f"{bare} <- {kcols}")
+            continue
+        overlay[kcols[0]] = bare
+    if skipped_collisions:
+        print(f"WARN: skipped {len(skipped_collisions)} Kleborate columns due to bare-name "
+              f"collisions; first few: {skipped_collisions[:3]}", file=sys.stderr)
+    return overlay
 
 
 # ─── MAIN MERGE ───────────────────────────────────────────────────────────────
@@ -178,9 +250,47 @@ def apply_cascade(
     stats["kpsc_final_list_set_F_to_T"] = int((~pre_lra_kpsc_fl & new_lra_kpsc_fl).sum())
     meta.loc[lra_mask, "kpsc_final_list"] = new_lra_kpsc_fl.values
 
-    # Clear kleborate_needs_recall on rows that got a fresh call.
+    # ── Overlay the full Kleborate typing block on matched rows ───────────
+    # Kleborate v3 emits MLST (ST + 7 alleles), virulence MLSTs (Yb/Cb/Ab/Sm/Rm/rmpA2),
+    # AMR per-class acquired/mutations, resistance/virulence scores, Kaptive K/O,
+    # wzi, cipro_prediction. Sublineage/LINcode/Clonal group are NOT emitted by
+    # Kleborate v3 — they came from a separate LIN-typing layer in v1's QC Excel.
+    # Fill-on-empty so curated v1 values on the already-typed rows are preserved.
+    # Scope: every v2 row whose Sample matches a row in the Kleborate output
+    # (covers both LRA-cohort rows and recall-flagged SR rows that were
+    # included in the runner's prepare step).
+    overlay_map = _build_overlay_map(list(kleb.columns), set(meta.columns))
+    # Drop species-related cols (already handled above; avoid double-write under different semantics).
+    overlay_map = {k: v for k, v in overlay_map.items() if v not in {"species", "scientific_name"}}
+    stats["typing_block_cols_overlaid"] = len(overlay_map)
+    kleb_indexed = kleb.set_index("_bare")
+    meta_bare_all = meta["Sample"].map(_bare)
+    overlay_mask = meta_bare_all.map(lambda b: bool(b) and b in kleb_indexed.index)
+    overlay_idx = meta.index[overlay_mask]
+    stats["typing_block_rows_overlaid"] = int(overlay_mask.sum())
+    n_cells_filled = 0
+    for kleb_col, v2_col in overlay_map.items():
+        kleb_vals = meta_bare_all.loc[overlay_idx].map(kleb_indexed[kleb_col])
+        v2_vals = meta.loc[overlay_idx, v2_col]
+        empty_mask = v2_vals.map(_is_empty_cell)
+        target_idx = v2_vals.index[empty_mask]
+        if len(target_idx) == 0:
+            continue
+        new_vals = kleb_vals.loc[target_idx]
+        # Only write where the Kleborate value itself is non-empty.
+        nonempty = ~new_vals.map(_is_empty_cell)
+        target_idx = target_idx[nonempty.values]
+        if len(target_idx) == 0:
+            continue
+        meta.loc[target_idx, v2_col] = new_vals.loc[target_idx].values
+        n_cells_filled += int(len(target_idx))
+    stats["typing_block_cells_filled"] = n_cells_filled
+
+    # Clear kleborate_needs_recall on rows that got a fresh call (LRA or
+    # recall-flagged SR rows whose Sample matched the Kleborate output).
     if "kleborate_needs_recall" in meta.columns:
         meta.loc[fill_idx, "kleborate_needs_recall"] = False
+        meta.loc[overlay_idx, "kleborate_needs_recall"] = False
 
     # ── Discard non-Klebsiella matches from the LRA cohort ────────────────
     n_discarded = 0
