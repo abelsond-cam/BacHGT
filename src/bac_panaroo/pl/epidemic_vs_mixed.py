@@ -1,7 +1,7 @@
 """Epidemic-vs-mixed-strain comparison plots and stats.
 
 Generalised port of the ``sublineage_vs_rare_lineage_*`` functions from
-``docs/notebooks/pangenome/intra_genome_clonalgroup.ipynb`` (and the matching
+``docs/intra_genome_clonalgroup.ipynb`` (and the matching
 sublineage notebook). The statistical logic is identical; the two
 notebook-specific assumptions (``n_unique_sublineages`` as the group-count
 column and ``samples_in_strain`` as the per-row weight) are parameterised so
