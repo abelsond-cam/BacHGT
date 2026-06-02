@@ -84,3 +84,33 @@ sample count for smoke-tests.
   pangenome_merge experiment. Level definitions, row types, and output schema:
   [`docs/panaroo_run_inventory.md`](docs/panaroo_run_inventory.md). Submit via
   `sbatch src/bac_panaroo/slurm_scripts/gpa_reference_granularity.sh` (fast enough for the login node).
+
+## Week of 2026-05-30 — assigned workstream item (C3 medoid extraction)
+
+Anchor: program plan `~/.claude/PROGRAM_PLAN_2026-05-30.md` — Workstream C,
+part C3. Branch: `task-ariba-rescue` (shared with bac_ariba).
+
+New script: **`tl/extract_medoid_per_cluster.py`**.
+
+`pan_genome_reference.fa` currently carries a Panaroo *centroid* per
+cluster (longest exemplar). For the ARIBA-rescue pipeline (workstream C)
+we want the **medoid carrier genome** — the one whose copy of the gene
+has minimal mean amino-acid distance to all other carriers' copies. First
+pass: protein-length distance is defensible and fast; can switch to
+ESM-C cosine later if it matters.
+
+Inputs:
+- Panaroo run dir (`gene_presence_absence.csv`, per-genome `.gff` paths).
+
+Outputs:
+- `<panaroo_run>/medoid_per_cluster.tsv` — cluster_id, medoid_sample,
+  medoid_locus_tag, n_carriers.
+- `<panaroo_run>/medoid_fasta/<cluster_id>.fa` — emitted in the
+  `bac_kleborate/refs/<db>/inputs/`-style vendoring format so
+  `bac_ariba/pp/build_ariba_ref.py` picks them up unchanged once the
+  `kleb_panaroo_medoid` DB is registered.
+
+Existing `medoid_metrics_from_dist_sq()` in
+`tl/gpa_distances_cluster_metrics.py` finds medoids of *genomes* under
+Jaccard GPA distance — different problem; can't be reused directly. The
+new script is per-cluster + per-protein.
