@@ -7,6 +7,12 @@ standalone metadata-curation repo. Monorepo and global guidance:
 refers to OneDrive-synced paths, that predates the migration — code now lives
 under `~/developer` (local) / `~/workspace` (HPC).
 
+> **📖 Read first: [`METADATA_v2_README.md`](METADATA_v2_README.md)** — the
+> authoritative description of metadata_v2 (cohort definition, row keying,
+> flag definitions, every column group's source, the rebuild pipeline). Anyone
+> writing code that consumes the table should start there. This file (the
+> CLAUDE.md) covers package-internal layout + how to *re-run* the pipeline.
+
 ## Project Overview
 
 A metadata curation and processing pipeline for Klebsiella bacterial genomic data. Ingests metadata from the European Nucleotide Archive (ENA), integrates quality control data (Kleborate, bakrep, LINcode), and produces cleaned, categorized metadata TSVs for downstream analysis.

@@ -97,6 +97,7 @@ NEW_LRA_COLUMNS = [
     "sr_biosample",
     "kleborate_needs_recall",
     "isescan_needs_recall",
+    "is_variant_called",
 ]
 
 # NCBI-derived per-row flags carried from lra_final_list onto LRA-bearing rows.
@@ -104,15 +105,26 @@ LRA_FLAG_COLUMNS = ["is_complete", "is_hybrid", "is_reference_genome"]
 
 # Columns dropped wholesale (replaced by the new schema). is_complete is NO
 # LONGER dropped — it is now NCBI-authoritative (G.7) and carried from
-# lra_final_list. is_complete_norway_genome is intentionally retained (still
-# consumed by merge_norway_pairs_into_v2 + bac_panaroo/bac_isescan; its removal
-# is deferred to the G.5 caller sweep).
-DROPPED_COLUMNS = ["is_refseq"]
+# lra_final_list. is_complete_norway_genome is also dropped: merge_norway_pairs_into_v2
+# now identifies Norway LR-extras directly from the integration TSV / Table S1 xlsx,
+# so no flag-based filter on v2 is needed. The remaining `bac_panaroo` /
+# `bac_isescan` REF_BUCKET callers will be repointed to is_reference_genome in the
+# G.5 caller sweep (or simply lose the norway flag from their bucket — see plan).
+DROPPED_COLUMNS = ["is_refseq", "is_complete_norway_genome"]
 
-# Existing columns renamed.
+# Existing columns renamed. Applied at the end of build_metadata_v2's scaffold +
+# overlay logic (line ~592) so internal code can keep referring to the old names;
+# only the final v2 output uses the renamed columns. Cascade steps 2-8 read v2
+# AFTER the rename and must use the new names (lr_*, sr_*, collection_year).
 RENAMED_COLUMNS = {
     "related_lr_accession": "_legacy_related_lr_accession",
     "related_sr_accession": "sr_run_accession",
+    # 2026-06-02: SR/LR path-column renames + collection_year rename.
+    "gff_file":          "sr_gff_file",
+    "assembly_file":     "sr_assembly_file",
+    "lra_gff_file":      "lr_gff_file",
+    "lra_assembly_file": "lr_assembly_file",
+    "year_parsed":       "collection_year",
 }
 
 # ─── HELPERS ──────────────────────────────────────────────────────────────────

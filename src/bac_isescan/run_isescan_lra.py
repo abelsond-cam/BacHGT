@@ -80,19 +80,19 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     df = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
 
     lra_mask = df["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
-    lra = df.loc[lra_mask, ["Sample", "lra_assembly_file"]].copy()
+    lra = df.loc[lra_mask, ["Sample", "lr_assembly_file"]].copy()
     n_total = len(lra)
-    n_missing = int(lra["lra_assembly_file"].isna().sum())
-    lra = lra.dropna(subset=["lra_assembly_file"])
-    lra["lra_assembly_file"] = lra["lra_assembly_file"].astype(str)
-    n_exists = int(lra["lra_assembly_file"].map(lambda p: Path(p).is_file()).sum())
+    n_missing = int(lra["lr_assembly_file"].isna().sum())
+    lra = lra.dropna(subset=["lr_assembly_file"])
+    lra["lr_assembly_file"] = lra["lr_assembly_file"].astype(str)
+    n_exists = int(lra["lr_assembly_file"].map(lambda p: Path(p).is_file()).sum())
 
     print(f"metadata_v2 rows         : {len(df):,}")
     print(f"lra_final_list=True rows  : {n_total:,}")
-    print(f"  missing lra_assembly_file (skipped): {n_missing}")
+    print(f"  missing lr_assembly_file (skipped): {n_missing}")
     print(f"  fasta exists on disk            : {n_exists} / {len(lra)}")
 
-    out = lra.rename(columns={"lra_assembly_file": "fasta_path"})
+    out = lra.rename(columns={"lr_assembly_file": "fasta_path"})
     out.to_csv(args.inputs, sep="\t", index=False)
     print(f"\nwrote {args.inputs}  rows={len(out)}")
     print(f"chunk plan @ chunk_size={args.chunk_size}: "

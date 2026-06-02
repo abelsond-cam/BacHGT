@@ -510,6 +510,11 @@ def parse_collection_date(df, verbose=True):
     final_parsed_missing = df['collection_date_parsed'].isna().sum()
     final_year_filled = df['year_parsed'].notna().sum()
     final_year_missing = df['year_parsed'].isna().sum()
+    # 2026-06-02: emit collection_year alongside year_parsed for v2 / downstream
+    # consistency. Future-proof: when v1 is next regenerated, downstream code can
+    # use collection_year directly; until then, build_metadata_v2's RENAMED_COLUMNS
+    # still maps year_parsed → collection_year on existing v1 TSVs.
+    df['collection_year'] = df['year_parsed']
     unparsable_mask = df['collection_date'].notna() & (df['collection_date_parsed'].isna() | df['year_parsed'].isna())
     unparsable_df = df.loc[unparsable_mask, ['collection_date', 'collection_date_parsed', 'year_parsed']]
 

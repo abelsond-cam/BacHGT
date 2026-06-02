@@ -1,9 +1,9 @@
-"""Symlink short-read assembly_file/gff_file originals into staging_for_tf.
+"""Symlink short-read sr_assembly_file/sr_gff_file originals into staging_for_tf.
 
 For every long-read complete genome downloaded under
 ``raw/related_lr/{assemblies,gff}`` (named by its ``resolved_gca`` stem),
 find the matching short-read sample and symlink that sample's
-``assembly_file`` / ``gff_file`` original into
+``sr_assembly_file`` / ``sr_gff_file`` original into
 ``raw/staging_for_tf/{assemblies,gff}`` so the resolved files can be
 rsynced for the transformer workflow.
 
@@ -43,13 +43,13 @@ def load_gca_to_biosample() -> dict[str, str]:
 
 
 def load_sample_files() -> dict[str, tuple[str, str]]:
-    """Sample -> (assembly_file, gff_file) from the curated slimmed metadata."""
+    """Sample -> (sr_assembly_file, sr_gff_file) from the curated slimmed metadata."""
     out: dict[str, tuple[str, str]] = {}
     with METADATA.open(newline="") as fh:
         for row in csv.DictReader(fh, delimiter="\t"):
             out[row["Sample"]] = (
-                row.get("assembly_file", "") or "",
-                row.get("gff_file", "") or "",
+                row.get("sr_assembly_file", "") or "",
+                row.get("sr_gff_file", "") or "",
             )
     return out
 

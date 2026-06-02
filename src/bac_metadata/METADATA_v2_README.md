@@ -1,0 +1,561 @@
+# `metadata_v2` — README
+
+*Snapshot: 2026-05-29 · `metadata_v2_all_samples_and_columns.tsv` · 86,518 rows × 483 columns*
+
+*(483 columns span: ENA Portal metadata, NCBI Datasets assembly info, Kleborate v3.2.4 typing
+(species/MLST/virulence/AMR/Kaptive/wzi), ISEScan IS-family counts, CheckM2 QC, Bakta annotation
+stats, parsed/categorised clinical metadata, file-path pointers, and cohort flags.)*
+
+Authoritative description of the Klebsiella **metadata_v2** table for BacHGT, BacPredict, and
+external collaborators. Read this before consuming the table — it explains how rows are keyed,
+what each flag means, where each column came from, and what to do if the data needs to change.
+
+The canonical TSV lives on HPC at:
+```
+/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv
+```
+*(That's `<project_k>/david/final/`. See `~/.claude/hpc_storage_overview.md` for storage roots.)*
+
+---
+
+## 1. The cohort
+
+- **~90,000** Klebsiella-annotated assemblies were curated from **All The Bacteria (ATB)** as the
+  starting set (downloaded by `bac_data` via the bakrep + ENA pipelines).
+- Extra QC was performed with **CheckM2** and specialist scripts. The final QC whitelist for the
+  short-read cohort lives in the QC Excel (`klebsiella_qc_NCTC.xlsx`, sheet `FINAL_LIST`).
+  ⚠ The Excel currently lives on **OneDrive locally** at
+  `~/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/`,
+  **not** on HPC `raw/`. Moving it to HPC is a tracked cleanup (§12).
+- In addition to ATB, **long-read assemblies from RefSeq** were downloaded plus the **NCTC**
+  historic Klebs set (`is_nctc=97`).
+- Species had to match Klebsiella via **Kleborate v3.2.4**. The KpSC species complex
+  (*K. pneumoniae*, *K. variicola*, *K. quasipneumoniae*, *K. africana*, *K. tropica*) gives
+  `is_kpsc=79,268` rows; the curated final list `kpsc_final_list=79,022` (the 246 excluded are
+  KPSC-by-species but failed cohort QC).
+- **~7,246** non-KPSC Klebsiella (e.g. *K. oxytoca*, *K. aerogenes*) are present in v2 but **not**
+  in `is_kpsc`. They were not put through the full extra QC.
+
+**Snapshot counts** (2026-05-29):
+
+| | rows |
+|---|---:|
+| Total v2 rows | **86,518** |
+| `is_kpsc=True` | 79,268 |
+| `kpsc_final_list=True` | **79,022** |
+| Non-KPSC Klebsiella | ~7,246 |
+| `lra_final_list=True` | **5,519** |
+| `is_complete=True` | 4,017 |
+| `is_hybrid=True` | 2,618 |
+| `is_reference_genome=True` | **1,777** (1,681 KPSC + 96 non-KPSC) |
+| `is_nctc=True` | 97 |
+| `is_mgh78578=True` | 1 |
+| ~~`is_complete_norway_genome=True`~~ *(scheduled for removal — see §12)* | 580 |
+| Paired (LR + SR partner) | 2,919  *(matches `paired_index.tsv`)* |
+
+---
+
+## 2. Structure of the table — **the important bit for most users**
+
+Each v2 row refers to **one biosample**. The `Sample` column resolves as:
+
+- **Long-read assembly** when one exists (the LR is the canonical row key for that isolate).
+  Long-read `Sample` is a **versioned** NCBI assembly accession (`GCF_…\.\d+` for RefSeq,
+  `GCA_…\.\d+` for GenBank). Zero bare GC accessions. Most are `.1` (5,444 of 5,771);
+  `.2`/`.3`/`.4` appear when NCBI has reissued an assembly (327 rows, mostly `.2`).
+- **Short-read BioSample** otherwise (e.g. `SAMN…`, `SAME…`, `SAMD…`). These are SR-only rows.
+
+### Quick column families
+
+Full lists + descriptions in §4 and §5.
+
+- **SR columns** — refer to the short-read partner:
+  `sample_accession`, `run_accession`, `sr_run_accession`, `fastq_ftp`, `fastq_md5`,
+  `sr_assembly_file`, `sr_gff_file`, `instrument_platform`, `instrument_model`,
+  `study_accession`, `secondary_sample_accession`, `sr_biosample`.
+- **LR columns** — refer to the long-read assembly:
+  `lra_gca`, `lra_gcf`, `lr_assembly_file`, `lr_gff_file`, `lr_run_accession`,
+  `lr_instrument_platform`, `lr_instrument_model`, `level`, `library_class`,
+  `scoring_accession`, `checkm2_*`.
+
+### Three row archetypes
+
+| Archetype | `Sample` is… | SR columns | LR columns | `sr_biosample` |
+|---|---|---|---|---|
+| **SR-only** (~80.7k) | a BioSample (`SAMN…`/`SAME…`/`SAMD…`) | filled | empty | empty |
+| **Paired** (~2,919) | an LR accession (`GCF_…`/`GCA_…`) | filled (SR partner's values copied in) | filled | original SR BioSample |
+| **LR-only / orphan LRA** (~130) | an LR accession (`GCF_…`/`GCA_…`) | empty | filled | empty |
+
+Sample-prefix breakdown: SAME 38,918 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / GCA_ 1,408.
+
+---
+
+## 3. Key flags
+
+| Flag | Definition | Count |
+|---|---|---:|
+| `is_kpsc` | Kleborate species call ∈ {K. pneumoniae, K. variicola, K. quasipneumoniae, K. africana, K. tropica} | 79,268 |
+| `kpsc_final_list` | Curated KPSC cohort: `lra_final_list ∧ is_kpsc` on LR-bearing rows; v1-curated whitelist on SR rows | 79,022 |
+| `is_mgh78578` | The historic *K. pneumoniae* MGH 78578 reference used for variant calling (Sample `GCF_000016305.1`, ST38). **Complete but NOT hybrid-assembled** → not in `is_reference_genome` | 1 |
+| `lra_final_list` | LR assemblies passing CheckM2 (completeness ≥ 99.0%, contamination ≤ 5.0%, genome size ≤ max RefSeq observed). Derivation: [`build_lra_set.py:120`](../bac_data/lr_data/build_lra_set.py#L120) | 5,519 |
+| `is_complete` | NCBI `assembly_level == "Complete Genome"` (chromosome + plasmids closed/circular) | 4,017 |
+| `is_hybrid` | NCBI `library_class == "hybrid"` — **any LR sequenced with both long and short read tech**. Includes drafts; NOT gated on `is_complete`. Derivation: [`build_lra_set.py:123`](../bac_data/lr_data/build_lra_set.py#L123) | 2,618 |
+| `is_reference_genome` | **Strict** intersection: `is_complete ∧ is_hybrid ∧ Sample starts with GCF_` (RefSeq). Highest-confidence reference set. Derivation: [`build_lra_set.py:126-127`](../bac_data/lr_data/build_lra_set.py#L126-L127) | 1,777 |
+| `is_nctc` | Historic NCTC Klebs assembly | 97 |
+| ~~`is_complete_norway_genome`~~ | ⚠ **Code drop in place** — added to `build_metadata_v2.py`'s `DROPPED_COLUMNS`; `merge_norway_pairs_into_v2.py` now identifies Norway LR-extras directly from the integration TSV / Table S1 xlsx (no v2 flag dependency). Will disappear from the TSV on the next `rebuild_v2.sh` run. Do not use in new code. | 580 (current TSV) |
+
+**Important nuances:**
+
+- `is_hybrid` does **not** require `is_complete`. A draft assembly built with hybrid technology is
+  `is_hybrid=True`, `is_complete=False`, `is_reference_genome=False`.
+- `is_reference_genome` requires **RefSeq** (`GCF_` prefix) — GenBank-only hybrids (`GCA_`) are
+  excluded even if complete.
+- `is_mgh78578` is `is_complete=True` but `is_hybrid=False`, so it is **not** a reference genome
+  under this scheme.
+- `is_reference_genome` species composition: 1,681 KPSC + 96 non-KPSC. Non-KPSC includes
+  *K. aerogenes* (31), *K. michiganensis* (21), *K. oxytoca* (15), *K. grimontii* (12), and a tail
+  of other Klebsiella species (~14 more, ≤ 3 each).
+
+---
+
+## 4. Short-read assembly columns
+
+Populated on SR-only rows and paired rows (copied from the SR partner during the v2 build).
+Empty on LR-only orphan rows.
+
+| Column | Source | Notes |
+|---|---|---|
+| `sample_accession` | ENA Portal | BioSample (SAMN/SAME/SAMD) |
+| `run_accession` | ENA Portal | SR Illumina run accession. On paired rows this is the SR partner's run (the LR run lives in `lr_run_accession`). |
+| `sr_run_accession` | renamed from v1 `related_sr_accession` | Mirror of the SR run on paired rows for unambiguous SR pickup |
+| `fastq_ftp`, `fastq_md5` | ENA Portal | SR fastq URLs + checksums. ⚠ NOT copied onto the ~957 merged paired rows during the SR↔RefSeq merge — those rows have `run_accession` but no `fastq_ftp`. Resolve via the ENA API from `run_accession` if needed. |
+| `sr_assembly_file` | `add_paths_gff_fna_to_metadata.py` | SR assembly FASTA path on HPC. ⚠ Renamed from legacy `assembly_file` in `build_metadata_v2.py`'s `RENAMED_COLUMNS` (2026-06-02); current on-disk v2 TSV still uses `assembly_file` until next `rebuild_v2.sh` run. |
+| `sr_gff_file` | `add_paths_gff_fna_to_metadata.py` | SR GFF path. ⚠ Renamed from legacy `gff_file` (same rename pass). |
+| `instrument_platform`, `instrument_model` | ENA Portal | SR sequencer info |
+| `study_accession`, `secondary_sample_accession` | ENA Portal | Standard ENA accessions |
+
+The LR↔SR pairing logic lives in [`build_metadata_v2.py`](pp/build_metadata_v2.py) — see
+`_pair_refseq_sr` and the merge of 957 SR+RefSeq pairs at lines 565-589.
+
+---
+
+## 5. Long-read assembly columns
+
+Populated on `lra_final_list=True` rows (and on the LR-only orphan rows).
+
+| Column | Source | Notes |
+|---|---|---|
+| `lra_gca`, `lra_gcf` | NCBI Datasets | The LR assembly's GCA / GCF accessions (versioned). One of these is the row's `Sample`. |
+| `lr_assembly_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR FASTA path on HPC. ⚠ Renamed from legacy `lra_assembly_file` in `build_metadata_v2.py`'s `RENAMED_COLUMNS` (2026-06-02); current on-disk v2 TSV still uses `lra_assembly_file` until next `rebuild_v2.sh` run. **Path-relative rewrite (drop `<project_k>` prefix) is still pending — see §12.** |
+| `lr_gff_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR GFF path. ⚠ Renamed from legacy `lra_gff_file` (same rename pass). Path-relative rewrite still pending. |
+| `lr_run_accession` | ENA / NCBI Datasets | LR run accession (ONT/PacBio); separate from SR's `run_accession` |
+| `lr_instrument_platform`, `lr_instrument_model` | ENA / NCBI Datasets | LR sequencer info |
+| `level` | NCBI Datasets | NCBI `assembly_level` (used to derive `is_complete`) |
+| `library_class` | NCBI Datasets (derived) | hybrid / long-read / short-read (used to derive `is_hybrid`) |
+| `scoring_accession` | `build_lra_discovery.py` | The assembly used for CheckM2 scoring (GCF preferred, else GCA) |
+| `checkm2_completeness`, `checkm2_contamination`, `checkm2_genome_size`, `checkm2_*` (~13 cols) | `bac_data/checkm2/` | CheckM2 v1.x results on the LR FASTA |
+
+---
+
+## 6. Kleborate columns
+
+All from **Kleborate v3.2.4** run on the LR assembly via
+[`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py) with `-p kpsc` preset, then merged
+into v2 by [`merge_kleborate_into_metadata_v2.py`](pp/merge_kleborate_into_metadata_v2.py).
+
+| Column | Notes |
+|---|---|
+| `species` (lowercase) | Kleborate species call |
+| `scientific_name` | mirror of `species` |
+| `ST` | Kp 7-locus MLST sequence type (e.g. `ST258`) |
+| `gapA`, `infB`, `mdh`, `pgi`, `phoE`, `rpoB`, `tonB` | MLST allele numbers |
+| `Sublineage`, `Clonal group`, `LINcode`, `Phylogroup` | **From v1 QC Excel LINcode sheet (Pasteur BIGSdb LIN-typing)** — NOT Kleborate v3 output. See §12 note on the 124-row gap. |
+| `K_locus`, `K_type`, `K_locus_confidence`, `K_Missing_expected_genes` | Kaptive K typing |
+| `O_locus`, `O_type`, `O_locus_confidence`, `O_Missing_expected_genes` | Kaptive O typing |
+| `wzi` | wzi-type K-antigen prediction |
+| Virulence MLSTs + loci | `YbST`, `CbST`, `AbST`, `SmST`, `RmST`, `Yersiniabactin`/`Colibactin`/`Aerobactin`/`Salmochelin`/`RmpADC`, per-locus genes (`ybt*`, `clb*`, `iuc*`, `iro*`, `rmp*`, `rmpA2`), `virulence_score`, `spurious_virulence_hits` |
+| AMR — acquired | `<class>_acquired` (AGly, Col, Fcyn, Flq, Gly, MLS, Phe, Rif, Sul, Tet, Tgc, Tmt, Bla, Bla_inhR, Bla_ESBL, Bla_ESBL_inhR, Bla_Carb) |
+| AMR — chromosomal + mutations | `Bla_chr`, `SHV_mutations`, `Omp_mutations`, `Col_mutations`, `Flq_mutations`, `truncated_resistance_hits`, `spurious_resistance_hits` |
+| AMR — scores + predictions | `resistance_score`, `num_resistance_classes`, `num_resistance_genes`, `Ciprofloxacin_prediction`, `Ciprofloxacin_profile`, `Ciprofloxacin_MIC_prediction` |
+
+**Parsing helpers** — virulence and AMR call strings can be parsed with
+[`src/bac_kleborate/parsing.py`](../bac_kleborate/parsing.py) (Kleborate's `;`-separated /
+`-`-no-hit syntax → structured tokens).
+
+> **Note:** the Kleborate Sublineage call is missing from **~124** rows — 121 newly-added orphan
+> LRA + Norway rows, 3 SR with a v1 LINcode-sheet gap. Closing this requires the Pasteur BIGSdb
+> LIN-typing service (Kleborate v3.2.4 does **not** include a LIN-coding module). Tracked in §12.
+
+---
+
+## 7. Bakta annotation columns
+
+Bakta annotation outputs from the bakrep pipeline (`<project_k>/bakrep/`), joined into v1 via
+[`qc_add_metadata.py`](pp/qc_add_metadata.py) (`bakrep` sheet of the QC Excel) and carried into v2.
+
+| Column | Notes |
+|---|---|
+| `bakta.genome.genus` | Bakta-classified genus |
+| `bakta.genome.species` | Bakta-classified species |
+| `bakta.genome.strain` | Bakta-classified strain identifier |
+| `bakta.stats.no_sequences` | Number of contigs |
+| `bakta.stats.size` | Total genome size (bp) |
+| `bakta.stats.gc` | GC content |
+| `bakta.stats.n_ratio` | Fraction of N bases |
+| `bakta.stats.n50` | Assembly N50 |
+| `bakta.stats.coding_ratio` | Coding density |
+| `bakta_gbff_downloaded` | Flag — whether the Bakta `.gbff` is on disk for the SR row |
+
+---
+
+## 8. ISEScan IS-family columns (`IS_*`)
+
+Per-genome IS-family copy counts from **ISEScan**, run on LR assemblies via
+[`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py) and merged into v2 by
+[`merge_isescan_into_metadata_v2.py`](pp/merge_isescan_into_metadata_v2.py).
+
+- One `IS_<family>` column per family detected across the LRA cohort (e.g. `IS_IS1`, `IS_IS3`,
+  `IS_IS5`, `IS_IS6`, `IS_IS21`, `IS_IS66`, `IS_IS110`, `IS_IS200/IS605`, `IS_ISKRA4`, … ~24 families).
+- Value = copy count from ISEScan; `0` on matched LR rows with no detection of that family;
+  `NaN` on non-LR rows.
+
+---
+
+## 9. Paired long+short read subset
+
+Of the LR rows in `lra_final_list` (and within those, `is_complete` / `is_hybrid` /
+`is_reference_genome`), a subset have **pre-curated short-read partner assemblies** from ATB.
+
+*Note: although `is_hybrid` and `is_reference_genome` rows were all sequenced with combined SR+LR
+data, the SR fastq/assembly is **not always retained** as a separate paired SR row in ATB.*
+
+Dedicated paired artefacts under `<project_k>/david/processed/complete_vs_sr_genomes/`:
+
+- `paired_index.tsv` — 2,919 rows. Identity columns: `lra_sample`, `sr_biosample`, `lra_gca`,
+  `lra_gcf`, `lra_assembly_level`, …
+- `lra_features.tsv` — 2,919 × 115 — LR-side typing + IS + AMR features.
+- `sr_features.tsv` — 2,523 × 172 — SR-side mirror (superset; 109 cols overlap with LR; ~410 SR
+  rows have no extant LR partner).
+- `sr_shadow_for_lra.tsv` — frozen SR-side typing snapshot keyed on `sr_biosample`, used so v2's
+  overwrite of LR-side fields doesn't lose the SR-side state.
+
+Consumed by analyses in [`src/bac_complete_genomes/`](../bac_complete_genomes/).
+
+---
+
+## 10. Curated clinical metadata
+
+The four primary fields curated for research, processed in
+[`metadata_curation.py`](pp/metadata_curation.py):
+
+`collection_date` · `country` · `host` · `isolation_source`
+
+Each goes through (1) **parse** (regex + lookup tables for spelling, language, synonyms — e.g.
+*Homo sapiens* → `"human"`) and then (2) **categorise**.
+
+### Parsed columns (cleaned canonical strings)
+
+`country_parsed` · `host_parsed` · `isolation_source_parsed` · `collection_date_parsed` ·
+`collection_year` ⚠ *(renamed from legacy `year_parsed` in `build_metadata_v2.py`'s `RENAMED_COLUMNS`,
+2026-06-02; current on-disk v2 still has `year_parsed` until next `rebuild_v2.sh`. `metadata_curation.py`
+now also emits `collection_year` directly for future v1 rebuilds. The legacy `Collection.Year` v1 column
+is unrelated and unchanged.)*
+
+### Category columns (categorical buckets)
+
+#### `region` (WHO/geographic regions)
+
+| Region | Rows |
+|---|---:|
+| W. Europe | 25,287 |
+| N. America | 19,177 |
+| E. Asia | 15,119 |
+| Africa | 7,062 |
+| M. East, Central Asia | 4,967 |
+| Oceania | 3,018 |
+| Central & S. America | 2,787 |
+| E. Europe | 2,451 |
+| (NaN) | 6,650 |
+
+#### `host_category`
+
+| Category | Rows |
+|---|---:|
+| human | 66,351 |
+| wastewater & water | 2,129 |
+| grazing livestock & horses | 1,350 |
+| poultry livestock | 598 |
+| domestic animals | 558 |
+| vegetable, plant or soil | 466 |
+| clinical environment or surface | 409 |
+| meat products | 405 |
+| wild animals | 307 |
+| insect | 157 |
+| wild birds | 46 |
+| (NaN) | 13,742 |
+
+#### `isolation_source_category`
+
+| Category | Rows |
+|---|---:|
+| blood | 13,339 |
+| urine | 13,100 |
+| faeces & rectal swabs | 12,702 |
+| lower respiratory, endotracheal | 6,821 |
+| wound & pus, abscess, surgical drain, body tissue, bone, biopsy | 3,175 |
+| wastewater & water | 2,129 |
+| invasive gut & organs | 1,160 |
+| body fluid (ascites / peritoneal / pleural) | 636 |
+| vegetable, plant or soil | 466 |
+| urinary catheter | 438 |
+| upper airway | 423 |
+| clinical environment or surface | 409 |
+| meat products | 405 |
+| skin swabs (skin, groin, vaginal, genital, eye, ear) | 303 |
+| insect | 157 |
+| (NaN) | 30,760
+
+### Category composition notes
+
+A few categories are heterogeneous — worth knowing what each rolls up:
+
+- **`wound & pus, abscess, surgical drain, body tissue, bone, biopsy`** — wound, pus, abscess,
+  surgical drain, bone/biopsy tissue. **Liver abscess** lands here (66/67 rows).
+- **`body fluid (ascites / peritoneal / pleural)`** — separate from wound. **CSF** lands here
+  (24/25 rows; not in wound).
+- **`urine`** (13,100) vs **`urinary catheter`** (438) — separate categories. The catheter
+  bucket is matched via `(?=.*catheter)(?=.*urin)` regex in `metadata_curation.py:1525`.
+- **`lower respiratory, endotracheal`** — tracheal aspirates, tracheostomy, sputum, bronchial
+  lavage. **`upper airway`** is a separate category (423 rows).
+- **`skin swabs (skin, groin, vaginal, genital, eye, ear)`** — dedicated category for surface
+  swabs; not in wound.
+
+### Study-level columns
+
+Annotated manually during study review (see §11):
+
+- **`amr_study`** — what the study selected for:
+
+  | Value | Rows |
+  |---|---:|
+  | `AMR` | 41,056 |
+  | (NaN) | 19,121 |
+  | `Surveillance` | 16,447 |
+  | `AMR plus control` | 9,894 |
+
+- **`study_setting`** — where the samples were collected:
+
+  | Value | Rows |
+  |---|---:|
+  | `Hospital` | 51,245 |
+  | (NaN) | 23,688 |
+  | `Mixed` | 7,883 |
+  | `Community` | 3,702 |
+
+- **`study_accession`, `secondary_study_accession`, `study_alias`, `study_title`** — ENA-side
+  identifiers and titles for the source study; carried from the ENA Portal collation step.
+
+---
+
+## 11. How the metadata was collected + study-level annotation
+
+For the ~90,000 ATB samples, **ENA project accessions** were screened: studies with > 130
+samples were reviewed manually (nearly 75% of the assembly set). Reviewed studies had:
+
+- Number of Klebsiella samples in the study (vs other species) checked.
+- Country, host, isolation source, collection dates verified against the publication / metadata.
+- **`amr_study`** — what the study selected for (AMR / `AMR plus control` / Surveillance / NaN),
+  based on whether sequencing was limited to AMR-resistant samples (typically 3rd-gen cephalosporins
+  or carbapenems detected by AST or ARG PCR). Annotated on ~80% of reviewed studies. See §10 counts.
+- **`study_setting`** — Hospital / Community / Mixed (current column; see §10 counts).
+- For studies without per-sample metadata: if all samples were from one country, isolation
+  source, host, or within a two-year window, the key variables were back-filled from that
+  study-level assumption.
+
+**Sources** (per pipeline stage):
+
+| Source | Used for | Joined in |
+|---|---|---|
+| ENA Portal API + ready_to_merge patches | SR sample/run metadata, fastq URLs, study fields | [`metadata_collation.py`](pp/metadata_collation.py) |
+| NCBI Datasets API | RefSeq/GenBank LR assemblies, NCTC, assembly_level, library_class | [`bac_data/lr_data/`](../bac_data/lr_data/) |
+| Bakrep | Bakta annotation stats (`bakta.*`) | [`qc_add_metadata.py`](pp/qc_add_metadata.py) (`bakrep` sheet of QC Excel) |
+| QC Excel `LINcode` sheet (Pasteur BIGSdb) | `Sublineage`, `LINcode`, `Clonal group`, `Phylogroup` | [`qc_add_metadata.py`](pp/qc_add_metadata.py) |
+| Kleborate v3.2.4 (run on LR) | Species, MLST, virulence, AMR, Kaptive, wzi | [`merge_kleborate_into_metadata_v2.py`](pp/merge_kleborate_into_metadata_v2.py) |
+| ISEScan (run on LR) | `IS_<family>` copy counts | [`merge_isescan_into_metadata_v2.py`](pp/merge_isescan_into_metadata_v2.py) |
+| Google Sheet (study-level review) | `amr_study`, `study_setting` | [`metadata_curation.py`](pp/metadata_curation.py) |
+| CheckM2 (run on LR) | `checkm2_*` QC stats; cohort gate | [`bac_data/checkm2/`](../bac_data/checkm2/) |
+
+---
+
+## 12. Known issues + open To Do
+
+### Known data issues
+
+- **`Sublineage` missing on 124 KPSC rows** (121 LRA orphan/Norway + 3 SR with v1 LINcode-sheet
+  gaps). Kleborate v3.2.4 does not emit `Sublineage`/`LINcode` — those came from a separate
+  Pasteur BIGSdb LIN-typing layer in v1. Closing this requires running BIGSdb LIN-typing or a
+  manual LIN-typing pass. **Not currently scheduled.**
+- **~957 paired rows lack `fastq_ftp`/`fastq_md5`** even though `run_accession` is populated.
+  The SR↔RefSeq merge in [`build_metadata_v2.py:570-574`](pp/build_metadata_v2.py#L570-L574)
+  doesn't copy fastq columns onto the merged row. Workaround: resolve via the ENA API from
+  `run_accession`.
+
+### Code / schema cleanups (deferred — to apply when v2 is next rebuilt)
+
+- ~~**Rename** `year_parsed` → `collection_year`~~ ✅ Code complete (2026-06-02):
+  added to `build_metadata_v2.py`'s `RENAMED_COLUMNS`; [`metadata_curation.py`](pp/metadata_curation.py)
+  also now emits `collection_year` directly (forward-fix for next v1 rebuild). Pending `rebuild_v2.sh`
+  to apply the rename to the on-disk v2 TSV.
+- ~~**Rename** `gff_file` → `sr_gff_file` and `assembly_file` → `sr_assembly_file`~~ ✅ Code complete
+  (2026-06-02): added to `RENAMED_COLUMNS` in [`build_metadata_v2.py`](pp/build_metadata_v2.py).
+  Pending `rebuild_v2.sh` to apply.
+- ~~**Rename** `lra_gff_file` → `lr_gff_file` and `lra_assembly_file` → `lr_assembly_file`~~ ✅ Code
+  complete (2026-06-02): added to `RENAMED_COLUMNS`; cascade-internal scripts
+  ([`add_paths_gff_fna_to_metadata.py`](pp/add_paths_gff_fna_to_metadata.py),
+  [`merge_norway_pairs_into_v2.py`](pp/merge_norway_pairs_into_v2.py)) updated to write the new names.
+  Pending `rebuild_v2.sh` to apply.
+- **Path-relative rewrite** *(still pending)* — strip the `<project_k>` prefix from `lr_assembly_file` /
+  `lr_gff_file` / `sr_assembly_file` / `sr_gff_file` so consumers can supply their own root prefix.
+  Touches every consumer that opens these paths.
+- **Downstream consumer sweep** *(coupled with the cascade re-run)* — when `rebuild_v2.sh` lands the
+  renames, the following scripts will start reading the new column names and need updating before
+  they run again: [`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py),
+  [`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py),
+  [`panaroo_run_strain.py`](../bac_panaroo/run_panaroo/panaroo_run_strain.py),
+  [`run_genomad.py`](../bac_genomad/run_genomad.py),
+  [`stage_lra_extras_for_tf.py`](../bac_data/lr_data/stage_lra_extras_for_tf.py),
+  [`download_lra_gffs.py`](../bac_data/lr_data/download_lra_gffs.py),
+  [`stage_sr_for_related_lr.py`](../bac_data/lr_data/stage_sr_for_related_lr.py),
+  [`build_sr_shadow_for_lra.py`](pp/build_sr_shadow_for_lra.py) (reads v1; only affected if v1 is
+  rebuilt with new names),
+  [`slim_metadata.py`](pp/slim_metadata.py),
+  [`count_gff_features.py`](pp/count_gff_features.py),
+  [`merge_gff_feature_counts_into_metadata.py`](pp/merge_gff_feature_counts_into_metadata.py).
+- ~~**Drop** `is_complete_norway_genome`~~ ✅ Code complete (2026-06-02): added to
+  `DROPPED_COLUMNS` in [`build_metadata_v2.py`](pp/build_metadata_v2.py#L110);
+  [`merge_norway_pairs_into_v2.py`](pp/merge_norway_pairs_into_v2.py) now identifies Norway
+  LR-extras from the integration TSV / xlsx (no flag dependency). Pending `rebuild_v2.sh` to
+  actually remove the column from the on-disk TSV.
+- **`is_refseq` legacy sweep** — six modules in `bac_isescan`, `bac_panaroo` (mgefinder
+  selector), and `bac_ariba` still read the dropped `is_refseq` flag and the slimmed v1 TSV.
+  Repoint by intent: cohort-arm → `lra_final_list`; reference-bucket → `is_reference_genome`;
+  SR-exclusion → SR-side signal (e.g. `run_accession` populated).
+- **OneDrive decommission** — rsync the QC Excel + ancillary raw data to `<project_k>/raw/`,
+  document the canonical HPC path, delete local OneDrive copies.
+
+### Planned additions (cross-repo)
+
+- **`predicted_{antibiotic}_AST`** columns — Bacformer-derived AST predictions, added by a
+  standalone BacPredict script that will plug into the rebuild pipeline.
+- **`EBI_{antibiotic}_AST`** columns — curated truth values from EBI / publication metadata for
+  validation. Same BacPredict workstream.
+
+---
+
+## 13. Changing metadata — full rebuild pipeline
+
+**Don't run the rebuild ad-hoc.** Contact David first. Changes should land in the production
+pipeline so the table is reproducible.
+
+The chain:
+
+1. **Collate ENA metadata** — [`metadata_collation.py`](pp/metadata_collation.py). Reads ENA TSV
+   exports + per-project `ready_to_merge` patches → writes
+   `intermediate_collated_metadata_wo_qc_or_kleborate.tsv`.
+2. **Run QC + KPSC pipeline** — [`qc_add_metadata.py`](pp/qc_add_metadata.py). Joins the QC Excel
+   sheets (`bakrep`, `Refseq`, `NCTC`, `kleborate`, `LINcode`, `FINAL_LIST`).
+3. **Curate** — [`metadata_curation.py`](pp/metadata_curation.py). Parse + categorise `host` /
+   `isolation_source` / `country` / `collection_date`; emit
+   `metadata_final_curated_all_samples_and_columns.tsv` (= "v1").
+4. **Add file paths** — [`add_paths_gff_fna_to_metadata.py`](pp/add_paths_gff_fna_to_metadata.py).
+   Walks HPC paths to fill `gff_file` / `assembly_file` for SR and `lra_gff_file` /
+   `lra_assembly_file` for LR.
+5. **Rebuild v2** — [`rebuild_v2.sh`](pp/rebuild_v2.sh) (8-step cascade, all idempotent; each
+   merge step renames the existing TSV to `.bak.<UTC>.tsv` before writing):
+   1. `build_metadata_v2.py` — **always rebuilds from v1** (no auto-skip if a v2 file already
+      exists; the existing v2 is renamed to `.bak.<UTC>.tsv` before write). Ingests orphan LRAs,
+      drops `is_refseq`, adds LR/SR pairing columns.
+   2. `merge_norway_pairs_into_v2.py`
+   3. `merge_kleborate_into_metadata_v2.py` ← Kleborate output
+   4. `merge_isescan_into_metadata_v2.py` ← ISEScan output
+   5. `import_sr_kleborate.py`
+   6. `import_sr_isescan.py`
+   7. `build_sr_shadow_for_lra.py` ← writes `sr_shadow_for_lra.tsv`
+   8. `add_paths_gff_fna_to_metadata.py --mode lra`
+
+   Use `--skip-g1` / `--skip-isescan` / `--skip-sr-import` to skip subsections when only
+   downstream changes are needed.
+
+---
+
+## 14. Downloading assemblies / GFFs / reads
+
+See [`src/bac_data/`](../bac_data/) — scripts that automate downloads from v2 metadata:
+
+- `download_bakrep_gbff_files.py` — Bakta `.gbff` fetcher.
+- `download_lra_gffs.py` — LR GFF backfill.
+- `download_related_lr_complete_genomes.py` — LR FASTA fetcher for the related-LR cohort.
+- `gca_to_gcf_lookup.py` — accession resolver.
+- Slurm scripts: `slurm_scripts/collect_bakrep_samples.py`,
+  `slurm_scripts/collect_ncbi_datasets_samples.py`, `slurm_scripts/download_bakrep.sh`,
+  `slurm_scripts/download_ncbi_datasets.sh`.
+
+---
+
+## 15. Reference scripts (one-look index)
+
+| Script | Purpose |
+|---|---|
+| [`metadata_collation.py`](pp/metadata_collation.py) | ENA TSV + ready_to_merge → intermediate |
+| [`qc_add_metadata.py`](pp/qc_add_metadata.py) | + QC Excel sheets (bakrep, Refseq, NCTC, kleborate, LINcode, FINAL_LIST) |
+| [`metadata_curation.py`](pp/metadata_curation.py) | parse + categorise (host, isolation source, country, date) |
+| [`add_paths_gff_fna_to_metadata.py`](pp/add_paths_gff_fna_to_metadata.py) | fill assembly/gff path columns |
+| [`build_metadata_v2.py`](pp/build_metadata_v2.py) | v1 → v2 scaffold + pairing |
+| [`merge_kleborate_into_metadata_v2.py`](pp/merge_kleborate_into_metadata_v2.py) | Kleborate overlay |
+| [`merge_isescan_into_metadata_v2.py`](pp/merge_isescan_into_metadata_v2.py) | ISEScan overlay |
+| [`build_paired_features.py`](pp/build_paired_features.py) | paired_index + lra_features + sr_features |
+| [`rebuild_v2.sh`](pp/rebuild_v2.sh) | 8-step cascade orchestrator |
+| [`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py) | LRA Kleborate Slurm runner |
+| [`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py) | LRA ISEScan Slurm runner |
+| [`parsing.py`](../bac_kleborate/parsing.py) | Kleborate virulence/AMR call-string parsers |
+
+History of the v2 build is archived in
+[`bac_data/completed_pipelines/`](../bac_data/completed_pipelines/).
+
+---
+
+## 16. Contact
+
+For metadata changes: **contact David**. Pipeline edits should land in the canonical scripts
+above; ad-hoc TSV edits will be overwritten on the next cascade run.
+
+---
+
+## 17. Where this file lives + cross-refs (for maintenance)
+
+**Canonical source of truth** (the file you're reading):
+
+- Local repo: `~/developer/BacHGT/src/bac_metadata/METADATA_v2_README.md`
+- HPC checkout (mirrored via git push/pull): `~/workspace/BacHGT/src/bac_metadata/METADATA_v2_README.md`
+
+**Mirror sitting next to the data** (so colleagues landing on HPC find it):
+
+- HPC sibling of the TSV: `<project_k>/david/final/METADATA_v2_README.md`
+  *(= `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/METADATA_v2_README.md`)*
+- HPC stub (short pointer file): `<project_k>/david/final/README.md` — directs readers here.
+
+**Cross-references** (places that link to this README — update these if the README is renamed
+or moved):
+
+| File | Section / context |
+|---|---|
+| [`~/.claude/CLAUDE.md`](~/.claude/CLAUDE.md) | global BacHGT ecosystem block — link to canonical |
+| [`~/developer/BacHGT/CLAUDE.md`](~/developer/BacHGT/CLAUDE.md) | monorepo CLAUDE.md — "Metadata" section |
+| [`~/developer/BacHGT/src/bac_metadata/CLAUDE.md`](~/developer/BacHGT/src/bac_metadata/CLAUDE.md) | subpackage CLAUDE.md — "Read first" callout |
+| [`~/developer/BacPredict/CLAUDE.md`](~/developer/BacPredict/CLAUDE.md) | sibling repo — §0.3 "Metadata source" |
+| `<project_k>/david/final/README.md` (HPC stub) | HPC-side discoverability — points at this canonical doc |
+
+**Maintenance flow.** If the README is **edited in place**: re-rsync to the HPC sibling
+(`<project_k>/david/final/METADATA_v2_README.md`) so colleagues see the latest. If the README is
+**renamed or moved**: update each of the cross-refs above. If a new cross-ref is added (e.g. a
+new sibling repo's CLAUDE.md), append it to this table so future moves stay synchronised.

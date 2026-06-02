@@ -3,14 +3,14 @@
 Second batch for the transformer workflow. The short-read (SR) genomes were
 already staged and sent by ``stage_sr_for_related_lr.py`` (into
 ``raw/staging_for_tf/{assemblies,gff}``). This module stages the **long-read
-assemblies themselves** — every ``lra_assembly_file`` in the v2 metadata — into
+assemblies themselves** — every ``lr_assembly_file`` in the v2 metadata — into
 a separate ``raw/staging_for_tf/lra/{assemblies,gff}`` section so they can be
 rsynced as the next batch and deleted afterwards.
 
-``lra_assembly_file`` is an absolute on-disk path (the discovery table's
+``lr_assembly_file`` is an absolute on-disk path (the discovery table's
 ``fasta_on_disk``), pointing either at a ``seb/...`` RefSeq genome (is_refseq
 rows) or at ``.../david/raw/related_lr/assemblies/<acc>.fna.gz`` (downloaded LR
-genomes). ``lra_gff_file`` is populated by ``build_metadata_v2`` from the
+genomes). ``lr_gff_file`` is populated by ``build_metadata_v2`` from the
 discovery ``gff_on_disk`` column, but this stager resolves GFFs independently
 (so it works even before a v2 rebuild): GFFs are
 matched in ``related_lr/gff`` by **bare accession** — the seb FASTA stems carry
@@ -63,18 +63,18 @@ def assembly_stem(name: str) -> str:
 
 
 def load_lra_rows() -> list[tuple[str, str, str]]:
-    """Unique (lra_assembly_file, lra_gcf, lra_gca) from the v2 metadata."""
+    """Unique (lr_assembly_file, lra_gcf, lra_gca) from the v2 metadata."""
     csv.field_size_limit(sys.maxsize)
     seen: dict[str, tuple[str, str]] = {}
     with METADATA_V2.open(newline="") as fh:
         reader = csv.DictReader(fh, delimiter="\t")
-        if "lra_assembly_file" not in (reader.fieldnames or []):
+        if "lr_assembly_file" not in (reader.fieldnames or []):
             raise SystemExit(
-                f"lra_assembly_file column not found in {METADATA_V2}\n"
+                f"lr_assembly_file column not found in {METADATA_V2}\n"
                 f"columns: {reader.fieldnames}"
             )
         for row in reader:
-            path = (row.get("lra_assembly_file") or "").strip()
+            path = (row.get("lr_assembly_file") or "").strip()
             if path and path not in seen:
                 seen[path] = (
                     (row.get("lra_gcf") or "").strip(),

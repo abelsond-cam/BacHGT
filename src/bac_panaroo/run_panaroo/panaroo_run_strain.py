@@ -7,8 +7,8 @@ strain.  When neither is provided, all samples in the metadata file are used.
 non-KPSC per-species batches carry their own genomes plus the mgh reference).
 
 Each metadata row may carry **two** assemblies of one isolate: a short-read
-pair (``gff_file`` / ``assembly_file``) and a long-read pair (``lra_gff_file`` /
-``lra_assembly_file``). Both are emitted as separate Panaroo genomes when their
+pair (``sr_gff_file`` / ``sr_assembly_file``) and a long-read pair (``lr_gff_file`` /
+``lr_assembly_file``). Both are emitted as separate Panaroo genomes when their
 files exist on disk. The genome's Panaroo label (= GFF stem = output column
 header) is the accession matching its files: ``sample_accession`` for the
 short-read genome, ``Sample`` for the long-read genome.
@@ -106,9 +106,9 @@ GENOME_COLS = [
 def _abs_path(base: Path, rel: str | float | None) -> Path | None:
     """Resolve a metadata path column to an absolute Path on disk.
 
-    v2 metadata is heterogeneous: ``gff_file`` / ``assembly_file`` are stored
-    relative to ``base`` (e.g. ``david/raw/...``), while ``lra_gff_file`` /
-    ``lra_assembly_file`` are full absolute paths (``/home/dca36/...``). Detect
+    v2 metadata is heterogeneous: ``sr_gff_file`` / ``sr_assembly_file`` are stored
+    relative to ``base`` (e.g. ``david/raw/...``), while ``lr_gff_file`` /
+    ``lr_assembly_file`` are full absolute paths (``/home/dca36/...``). Detect
     the leading ``/`` to choose: absolute paths are used as-is; relative paths
     are joined onto ``base``. Returns None for null / empty / NaN values.
     """
@@ -147,9 +147,9 @@ def _both_exist(gff: Path | None, assembly: Path | None) -> bool:
 def _genome_records_for_row(base_dir: Path, row: pd.Series) -> list[dict]:
     """Expand one metadata row into up to two genome records (short-read + long-read).
 
-    Each metadata row may carry a short-read assembly (``gff_file`` /
-    ``assembly_file``) and/or a long-read assembly (``lra_gff_file`` /
-    ``lra_assembly_file``); both can coexist for the same isolate. Each is
+    Each metadata row may carry a short-read assembly (``sr_gff_file`` /
+    ``sr_assembly_file``) and/or a long-read assembly (``lr_gff_file`` /
+    ``lr_assembly_file``); both can coexist for the same isolate. Each is
     emitted as its own genome only when **both** of its GFF and assembly files
     resolve and exist on disk (graceful per-assembly skipping).
 
@@ -176,8 +176,8 @@ def _genome_records_for_row(base_dir: Path, row: pd.Series) -> list[dict]:
     sample = row.get("Sample")
     sample_accession = row.get("sample_accession")
 
-    sr_gff = _abs_path(base_dir, row.get("gff_file"))
-    sr_assembly = _abs_path(base_dir, row.get("assembly_file"))
+    sr_gff = _abs_path(base_dir, row.get("sr_gff_file"))
+    sr_assembly = _abs_path(base_dir, row.get("sr_assembly_file"))
     if _both_exist(sr_gff, sr_assembly):
         if pd.notna(sample_accession) and str(sample_accession).strip():
             records.append(
@@ -197,8 +197,8 @@ def _genome_records_for_row(base_dir: Path, row: pd.Series) -> list[dict]:
                 file=sys.stderr,
             )
 
-    lra_gff = _abs_path(base_dir, row.get("lra_gff_file"))
-    lra_assembly = _abs_path(base_dir, row.get("lra_assembly_file"))
+    lra_gff = _abs_path(base_dir, row.get("lr_gff_file"))
+    lra_assembly = _abs_path(base_dir, row.get("lr_assembly_file"))
     if _both_exist(lra_gff, lra_assembly):
         records.append(
             {
@@ -476,8 +476,8 @@ def _build_panaroo_input(
                             "panaroo_label": label,
                             "assembly_type": str(row["assembly_type"]),
                             "Sample": str(row["Sample"]),
-                            "assembly_file": str(assembly_abs),
-                            "gff_file": str(gff_abs),
+                            "sr_assembly_file": str(assembly_abs),
+                            "sr_gff_file": str(gff_abs),
                         }
                     )
                     print(
@@ -537,7 +537,7 @@ def _build_panaroo_input(
         print("Skipped genomes (FASTA/GFF mismatch):")
         for r in mismatched_rows:
             print(
-                f"  {r['panaroo_label']}\t{r['assembly_type']}\t{r['gff_file']}\t{r['assembly_file']}"
+                f"  {r['panaroo_label']}\t{r['assembly_type']}\t{r['sr_gff_file']}\t{r['sr_assembly_file']}"
             )
 
     genomes_tsv_path = run_subdir / PANAROO_GENOMES_FILENAME
@@ -757,7 +757,7 @@ def main() -> None:
         "--base-dir",
         type=Path,
         default=BASE_DIR,
-        help="Base directory to prepend to gff_file and assembly_file paths (default: project default)",
+        help="Base directory to prepend to sr_gff_file and sr_assembly_file paths (default: project default)",
     )
     parser.add_argument(
         "--split",

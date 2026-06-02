@@ -137,17 +137,32 @@ def merge_norway_pairs(
         .to_dict()
     )
 
-    # Identify Norway LR-extras: is_complete_norway_genome=True AND
-    # Sample.startswith("GCA_"/"GCF_").
+    # Identify Norway LR-extras directly from the canonical Norway sources
+    # (integration TSV + Table S1 xlsx fallback). Previously gated on the
+    # ``is_complete_norway_genome`` v2 column, but that column is being retired —
+    # the integration TSV + xlsx are the source of truth for "is this row a
+    # Norway LR-extra."
     sample_str = v2["Sample"].astype(str)
-    nor = _coerce_bool(v2["is_complete_norway_genome"])
-    lra_extra_mask = nor & sample_str.str.startswith(("GCA_", "GCF_"))
+    gc_mask = sample_str.str.startswith(("GCA_", "GCF_"))
+    sample_bare = sample_str.map(_bare)
+    primary_mask = gc_mask & sample_bare.map(lambda b: bool(b) and b in bs_by_acc)
+    # Fallback: GCA/GCF rows whose run_accession is in the xlsx ont_acc lookup
+    # (catches LR-extras whose GCA isn't yet in the integration TSV).
+    run_acc = v2["run_accession"].astype(str) if "run_accession" in v2.columns else pd.Series([""] * len(v2))
+    ont_in_xlsx = run_acc.map(lambda r: r in bs_by_ont if r and r.lower() != "nan" else False)
+    fallback_mask = gc_mask & ~primary_mask & ont_in_xlsx
+    lra_extra_mask = primary_mask | fallback_mask
     lra_extras = v2.index[lra_extra_mask].tolist()
-    stats["norway_lra_extras_detected"] = len(lra_extras)
+    stats["norway_lra_extras_detected"]            = len(lra_extras)
+    stats["norway_lra_extras_via_integration_tsv"] = int(primary_mask.sum())
+    stats["norway_lra_extras_via_xlsx_ont"]        = int(fallback_mask.sum())
 
     # Columns to copy from the LR-extra onto the SR partner row.
+    # Note: by the time this step runs, build_metadata_v2 step 1 has renamed
+    # lra_assembly_file → lr_assembly_file and lra_gff_file → lr_gff_file
+    # (see RENAMED_COLUMNS). Use the post-rename names here.
     lra_cols_to_copy = [
-        "lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file",
+        "lra_gca", "lra_gcf", "lr_assembly_file", "lr_gff_file",
         "lra_final_list",
         # NCBI-derived per-row flags (G.7) — must travel with the LRA overlay,
         # else the merged row keeps the SR partner's default False.

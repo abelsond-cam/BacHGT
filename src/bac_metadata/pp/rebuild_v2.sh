@@ -13,7 +13,7 @@
 #   5. import_sr_kleborate            concat seb/kleborate_v3.2.4 batches → sidecar
 #   6. import_sr_isescan              concat seb/ISEScan_results/csv_files → sidecar
 #   7. build_sr_shadow_for_lra        SR-side snapshot for paired rows (consumes sidecars)
-#   8. add_paths_gff_fna_to_metadata  fill lra_gff_file (+ lra_assembly_file where empty)
+#   8. add_paths_gff_fna_to_metadata  fill lr_gff_file (+ lr_assembly_file where empty)
 #                                     from the related_lr/{assemblies,gff} pools (--mode lra)
 #
 # Each merge step backs up v2 with a UTC-stamped .bak.*.tsv before
@@ -83,7 +83,7 @@ fi
 step "Step 7/8: build_sr_shadow_for_lra  (consumes both sidecars)"
 uv run python -m bac_metadata.pp.build_sr_shadow_for_lra
 
-step "Step 8/8: add_paths_gff_fna_to_metadata --mode lra  (fill lra_gff_file from related_lr pools)"
+step "Step 8/8: add_paths_gff_fna_to_metadata --mode lra  (fill lr_gff_file from related_lr pools)"
 uv run python -m bac_metadata.pp.add_paths_gff_fna_to_metadata --mode lra
 
 step "DONE"

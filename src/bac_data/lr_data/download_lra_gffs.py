@@ -1,6 +1,6 @@
 """Backfill GFF annotations for the LRA staging set.
 
-Every LRA row in ``metadata_v2`` ships an assembly (``lra_assembly_file``), but
+Every LRA row in ``metadata_v2`` ships an assembly (``lr_assembly_file``), but
 many have no GFF on disk: their genome came from the is_refseq metadata (FASTA
 already on ``seb/``), so it never passed through
 ``download_related_lr_complete_genomes`` — and that downloader skips any
@@ -68,7 +68,7 @@ def _asm_stem(path: str) -> str:
 def needed_accessions(gff_dir: Path) -> list[str]:
     """Bare accessions whose GFF is not yet on disk (prefer GCF for RefSeq)."""
     m = pd.read_csv(METADATA_V2, sep="\t", dtype=str, low_memory=False)
-    m = m[m["lra_assembly_file"].fillna("").str.strip() != ""]
+    m = m[m["lr_assembly_file"].fillna("").str.strip() != ""]
     on_disk = (
         {p.name[:-4] for p in gff_dir.iterdir() if p.name.endswith(".gff")}
         if gff_dir.is_dir()
@@ -78,7 +78,7 @@ def needed_accessions(gff_dir: Path) -> list[str]:
     for _, r in m.iterrows():
         gcf = _bare(r.get("lra_gcf"))
         gca = _bare(r.get("lra_gca"))
-        stem = _bare(_asm_stem(r["lra_assembly_file"]))
+        stem = _bare(_asm_stem(r["lr_assembly_file"]))
         if any(a and a in on_disk for a in (stem, gcf, gca)):
             continue
         target = gcf or gca or stem

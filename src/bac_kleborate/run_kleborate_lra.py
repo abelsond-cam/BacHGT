@@ -81,8 +81,8 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     paired SR row whose LR partner failed CheckM2, or an SR-only row whose
     v1 typing block has gaps).
 
-    For each included row the FASTA source is ``lra_assembly_file`` if
-    non-empty, else ``assembly_file`` (SR). Rows whose chosen FASTA is
+    For each included row the FASTA source is ``lr_assembly_file`` if
+    non-empty, else ``sr_assembly_file`` (SR). Rows whose chosen FASTA is
     missing on disk are skipped with a count.
     """
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -92,17 +92,17 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     recall_mask = _truthy(df["kleborate_needs_recall"]) if "kleborate_needs_recall" in df.columns else pd.Series(False, index=df.index)
     keep_mask = lra_mask | recall_mask
 
-    keep_cols = ["Sample", "lra_assembly_file"]
-    if "assembly_file" in df.columns:
-        keep_cols.append("assembly_file")
+    keep_cols = ["Sample", "lr_assembly_file"]
+    if "sr_assembly_file" in df.columns:
+        keep_cols.append("sr_assembly_file")
     sub = df.loc[keep_mask, keep_cols].copy()
 
     # Choose FASTA: LR if non-empty, else SR.
     def _pick(row: pd.Series) -> str:
-        lr = row.get("lra_assembly_file")
+        lr = row.get("lr_assembly_file")
         if pd.notna(lr) and str(lr).strip() not in {"", "nan", "<NA>"}:
             return str(lr)
-        sr = row.get("assembly_file")
+        sr = row.get("sr_assembly_file")
         if pd.notna(sr) and str(sr).strip() not in {"", "nan", "<NA>"}:
             return str(sr)
         return ""
@@ -116,7 +116,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     print(f"lra_final_list=True rows                           : {int(lra_mask.sum()):,}")
     print(f"kleborate_needs_recall=True rows                   : {int(recall_mask.sum()):,}")
     print(f"union (lra ∪ recall) rows                          : {int(keep_mask.sum()):,}")
-    print(f"  missing both lra/sr assembly_file (skipped)      : {n_missing_path}")
+    print(f"  missing both lr_assembly_file and sr_assembly_file (skipped)      : {n_missing_path}")
     print(f"  fasta exists on disk                             : {n_exists} / {len(sub)}")
 
     out = sub[["Sample", "fasta_path"]]

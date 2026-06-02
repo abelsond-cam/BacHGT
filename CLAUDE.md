@@ -23,6 +23,11 @@ repo, one shared uv environment, seven subpackages under `src/`:
 | `bac_complete_genomes` | Complete-genome vs short-read cohort feature comparison (cross-section per-CG + paired SR-vs-LRA) | `src/bac_complete_genomes/CLAUDE.md` |
 | `bac_kleborate` | Vendored Kleborate reference data (virulence + AMR FASTAs) — consumed by `bac_ariba` and `bac_panaroo` | `src/bac_kleborate/CLAUDE.md` |
 
+## Metadata
+
+The authoritative description of **`metadata_v2`** (cohort definition, row keying, column groups, flag definitions, source provenance, rebuild pipeline) lives at
+[`src/bac_metadata/METADATA_v2_README.md`](src/bac_metadata/METADATA_v2_README.md). Read it before writing code that consumes the table.
+
 ## Sibling repos
 
 Separate checkouts beside BacHGT (`~/developer/` locally, `~/workspace/` on HPC) —

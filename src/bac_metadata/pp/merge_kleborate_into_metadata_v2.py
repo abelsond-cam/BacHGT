@@ -19,10 +19,13 @@ For each ``lra_final_list=True`` row, the cascade:
   2. **is_kpsc** — recompute as ``species`` ∈ KPSC species set
      (K. pneumoniae, K. variicola, K. quasipneumoniae *.subsp.*, K. africana,
      K. tropica). Catches both 5 + 6 subspecies form.
-  3. **kpsc_final_list** — ``True`` iff this row is in
-     ``lra_final_list AND is_kpsc``. Only fills rows where the existing
-     value is NaN (the 117 ingested orphans) to avoid clobbering the
-     curated whitelist on existing rows.
+  3. **kpsc_final_list** — additive rule (only ADD, never REMOVE samples).
+     - Paired LR rows (sr_biosample populated): ``kpsc_v2 = kpsc_v1 OR (lra_final_list AND is_kpsc)``.
+       The v1 SR-side QC pass is preserved even if the LRA fails CheckM2;
+       new orphans can also be promoted to True if LRA QC + KPSC pass.
+     - Orphan LR rows (sr_biosample empty): ``kpsc_v2 = lra_final_list AND is_kpsc``
+       (no v1 SR-side data exists; the LRA QC is the only signal).
+     - SR-only rows: unchanged from v1.
   4. **Full typing block overlay** — every Kleborate v3 column whose bare
      name (last ``__``-segment) matches an existing v2 column is overlaid
      onto matched rows where the v2 cell is empty. Covers MLST (``ST`` +
@@ -234,21 +237,10 @@ def apply_cascade(
     stats["lra_rows_is_kpsc_true"]  = int(new_is_kpsc.sum())
     stats["lra_rows_is_kpsc_false"] = int(len(new_is_kpsc) - new_is_kpsc.sum())
 
-    # kpsc_final_list rule on the LRA cohort: kpsc_final_list = is_kpsc.
-    # This covers two cases (both per user spec):
-    #   1. Ingested orphans (kpsc_final_list was NaN) get set True/False per is_kpsc.
-    #   2. LRAs where v1's curated list disagrees with the LR-Kleborate is_kpsc
-    #      (e.g. a non-KPSC LRA wrongly on the v1 whitelist) flip to match.
-    # Non-LRA rows keep their v1 kpsc_final_list value untouched.
+    # Ensure the kpsc_final_list column exists; the authoritative write happens
+    # in the kpsc gate below (additive on paired rows, strict on orphan LRAs).
     if "kpsc_final_list" not in meta.columns:
         meta["kpsc_final_list"] = pd.NA
-    pre_lra_kpsc_fl = _coerce_bool(meta.loc[lra_mask, "kpsc_final_list"])
-    new_lra_kpsc_fl = _coerce_bool(meta.loc[lra_mask, "is_kpsc"])
-    diff = pre_lra_kpsc_fl != new_lra_kpsc_fl
-    stats["kpsc_final_list_changed_on_lra_rows"] = int(diff.sum())
-    stats["kpsc_final_list_set_T_to_F"] = int((pre_lra_kpsc_fl & ~new_lra_kpsc_fl).sum())
-    stats["kpsc_final_list_set_F_to_T"] = int((~pre_lra_kpsc_fl & new_lra_kpsc_fl).sum())
-    meta.loc[lra_mask, "kpsc_final_list"] = new_lra_kpsc_fl.values
 
     # ── Overlay the full Kleborate typing block on matched rows ───────────
     # Kleborate v3 emits MLST (ST + 7 alleles), virulence MLSTs (Yb/Cb/Ab/Sm/Rm/rmpA2),
@@ -328,30 +320,69 @@ def apply_cascade(
     stats["lra_rows_null_species_post_cascade"] = int(null_species.sum())
     stats["lra_final_list_count_post_cascade"] = int(final_lra.sum())
 
-    # ── kpsc_final_list integrity gate (G.7) ──────────────────────────────
-    # Canonical rule on LRA-bearing rows (Sample is a GCF/GCA assembly key):
-    #   kpsc_final_list = lra_final_list AND is_kpsc.
+    # ── kpsc_final_list integrity gate (updated 2026-06-02) ──────────────
+    # Additive rule: the v1 kpsc_final_list was set for short-read samples
+    # whose SR assembly already passed QC. v2 should only ADD to kpsc_final_list
+    # (via the orphan LRA ingest), never REMOVE — a sample whose LR fails
+    # CheckM2 still has valid SR data and should stay in the cohort.
+    #
+    #   Paired LR rows  (sr_biosample populated):   kpsc_v2 = kpsc_v1 OR (lra_final_list AND is_kpsc)
+    #   Orphan LR rows  (sr_biosample empty/NaN):   kpsc_v2 = lra_final_list AND is_kpsc
+    #   SR-only rows    (Sample not GCF_/GCA_):     unchanged from v1.
+    #
     # is_kpsc must be non-NaN on every accepted (lra_final_list=True) LRA row;
-    # a NaN there is a bug (missing species call) and is reported by Sample so
-    # it can be chased. SR rows keep their v1 kpsc_final_list untouched.
+    # a NaN there is a bug (missing species call) and is reported below.
     lra_bearing = meta["Sample"].astype(str).str.startswith(("GCF_", "GCA_"))
+    if "sr_biosample" in meta.columns:
+        srb = meta["sr_biosample"].astype(str).str.strip().str.lower()
+        has_sr_partner = meta["sr_biosample"].notna() & ~srb.isin({"", "nan", "<na>", "none"})
+    else:
+        has_sr_partner = pd.Series(False, index=meta.index)
+    paired_lra = lra_bearing & has_sr_partner
+    orphan_lra = lra_bearing & ~has_sr_partner
+
     raw_kpsc = meta["is_kpsc"]
     is_kpsc_nan = raw_kpsc.isna() | raw_kpsc.astype(str).str.strip().isin(["", "nan", "<NA>", "None"])
     bad = lra_bearing & final_lra & is_kpsc_nan
-    stats["kpsc_gate_accepted_lra_rows"] = int((lra_bearing & final_lra).sum())
+    stats["kpsc_gate_accepted_lra_rows"]      = int((lra_bearing & final_lra).sum())
     stats["kpsc_gate_is_kpsc_nan_on_accepted"] = int(bad.sum())
     if bad.any():
         print(f"\n⚠  kpsc gate: {int(bad.sum())} accepted LRA rows have NaN is_kpsc "
               "(species call needs chasing):", file=sys.stderr)
         for s in meta.loc[bad, "Sample"].astype(str).tolist()[:30]:
             print(f"     {s}", file=sys.stderr)
-    desired_full = final_lra & _coerce_bool(meta["is_kpsc"])
+
+    strict_kpsc = final_lra & _coerce_bool(meta["is_kpsc"])  # lra_final_list ∧ is_kpsc
     pre_full = _coerce_bool(meta["kpsc_final_list"])
-    stats["kpsc_gate_amended"] = int((lra_bearing & (desired_full != pre_full)).sum())
-    meta.loc[lra_bearing, "kpsc_final_list"] = desired_full[lra_bearing].values
-    # Post-amend assertion: zero residual mismatch on LRA-bearing rows.
+
+    # Paired LR rows: additive (v1 OR strict). Never lose a v1 True.
+    paired_post = pre_full | strict_kpsc
+    meta.loc[paired_lra, "kpsc_final_list"] = paired_post[paired_lra].values
+    # Orphan LR rows: strict formula (no v1 SR-side data to preserve).
+    meta.loc[orphan_lra, "kpsc_final_list"] = strict_kpsc[orphan_lra].values
+
+    # Stats — categorise the outcome.
     post_full = _coerce_bool(meta["kpsc_final_list"])
-    stats["kpsc_gate_residual_mismatch"] = int((lra_bearing & (post_full != desired_full)).sum())
+    stats["kpsc_paired_lr_rows"]                       = int(paired_lra.sum())
+    stats["kpsc_orphan_lr_rows"]                       = int(orphan_lra.sum())
+    stats["kpsc_paired_preserved_T_despite_strict_F"]  = int((paired_lra & pre_full & ~strict_kpsc).sum())
+    stats["kpsc_paired_added_F_to_T"]                  = int((paired_lra & ~pre_full & strict_kpsc).sum())
+    stats["kpsc_orphan_set_T"]                         = int((orphan_lra & strict_kpsc).sum())
+    stats["kpsc_orphan_set_F"]                         = int((orphan_lra & ~strict_kpsc).sum())
+    stats["kpsc_total_changes_on_lr_rows"]             = int((lra_bearing & (post_full != pre_full)).sum())
+
+    # ── is_variant_called flag ────────────────────────────────────────────
+    # True iff the row has SR data that passed v1's KPSC QC (which is the
+    # cohort variant-calling was performed against). Definition:
+    #   is_variant_called = (NOT orphan LRA) AND (v1's kpsc_final_list was True)
+    # Equivalently: True for SR-only rows that were on v1's kpsc_final_list, and
+    # for paired rows whose SR side was on v1's kpsc_final_list. False for orphan
+    # LRA rows (no SR data exists for variant calling).
+    has_sr_data = ~orphan_lra  # SR-only OR paired-LR
+    meta["is_variant_called"] = has_sr_data & pre_full
+    stats["is_variant_called_total"]    = int(meta["is_variant_called"].sum())
+    stats["is_variant_called_paired"]   = int((meta["is_variant_called"] & paired_lra).sum())
+    stats["is_variant_called_sr_only"]  = int((meta["is_variant_called"] & ~lra_bearing).sum())
 
     return meta, stats
 

@@ -54,8 +54,8 @@ Three modes sharing `run_panaroo/panaroo_run_strain.py`:
 (`<DATA_ROOT>/final/metadata_v2_all_samples_and_columns.tsv`). v2
 replaced `is_refseq` with `is_reference_genome` (= complete & hybrid & GCF) plus
 `is_complete` / `is_hybrid` / `lra_final_list`, and each row can carry **two**
-assemblies of one isolate: a short-read pair (`gff_file` / `assembly_file`) and a
-long-read pair (`lra_gff_file` / `lra_assembly_file`). `panaroo_run_strain.py`
+assemblies of one isolate: a short-read pair (`sr_gff_file` / `sr_assembly_file`) and a
+long-read pair (`lr_gff_file` / `lr_assembly_file`). `panaroo_run_strain.py`
 emits **both** as separate Panaroo genomes — labelled by `sample_accession` (SR)
 and `Sample` (LRA) — and writes `panaroo_genomes.tsv` (`panaroo_label` → `Sample`
 + `assembly_type`) into each run dir so downstream resolves each column's flags.

@@ -72,13 +72,13 @@ echo "Wrote $(wc -l < "${KLEB_GFF_OUT}") Klebsiella GFF paths to ${KLEB_GFF_OUT}
 
 echo
 echo "Running add_paths_gff_fna_to_metadata.py on the FULL TSV (parse path"
-echo "lists, write TSVs, add assembly_file/gff_file to the canonical metadata)..."
+echo "lists, write TSVs, add sr_assembly_file/sr_gff_file to the canonical metadata)..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${SCRIPT_DIR}/../../.."
 uv run python -m bac_metadata.pp.add_paths_gff_fna_to_metadata "${FULL_METADATA}"
 
 # The slimmed TSV is a column subset of the augmented full TSV: derive it
-# (kept = current slimmed header ∪ assembly_file,gff_file). Backs the
+# (kept = current slimmed header ∪ sr_assembly_file,sr_gff_file). Backs the
 # previous slimmed up to a timestamped <stem>.bak.<UTC>.tsv first.
 echo
 echo "Deriving slimmed TSV from full (slim_metadata)..."

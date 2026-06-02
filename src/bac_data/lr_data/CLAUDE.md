@@ -97,7 +97,7 @@ this single file. See module docstrings for the schema.
 ## The pipeline (B.1 → B.8)
 
 ```
-  1. add_paths_gff_fna_to_metadata.sh           ← bac_metadata; populates assembly_file
+  1. add_paths_gff_fna_to_metadata.sh           ← bac_metadata; populates sr_assembly_file
                                                  for is_refseq rows (~3,500 GCFs already
                                                  live under seb/assemblies_2/...)
   2. build_lra_discovery                        ← unions 3 sources → lra_discovery.tsv
@@ -152,7 +152,7 @@ convergence-retry loop), `norway_cohort_audit.py` (shared NCBI helpers),
 `fix_related_lr_accession.py`, `clean_find_long_reads_appended.py`,
 `stage_sr_for_related_lr.py` (stages the SR side into
 `staging_for_tf/{assemblies,gff}`), `stage_lra_extras_for_tf.py` (companion that
-stages the LR assemblies — every v2 `lra_assembly_file` + its `related_lr` GFF —
+stages the LR assemblies — every v2 `lr_assembly_file` + its `related_lr` GFF —
 into the separate `staging_for_tf/lra/{assemblies,gff}` section for the next
 transfer batch).
 

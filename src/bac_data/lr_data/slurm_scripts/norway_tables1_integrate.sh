@@ -96,4 +96,4 @@ uv run python -u -m bac_data.lr_data.norway_tables1_integrate \
 
 echo
 echo "Done. Next: run src/bac_metadata/slurm_scripts/add_paths_gff_fna_to_metadata.sh to add"
-echo "assembly_file/gff_file to the full TSV and regenerate the slimmed TSV."
+echo "sr_assembly_file/sr_gff_file to the full TSV and regenerate the slimmed TSV."
