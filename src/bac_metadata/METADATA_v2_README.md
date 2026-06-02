@@ -225,15 +225,74 @@ Per-genome IS-family copy counts from **ISEScan**, run on LR assemblies via
 
 Of the LR rows in `lra_final_list` (and within those, `is_complete` / `is_hybrid` /
 `is_reference_genome`), a subset have **pre-curated short-read partner assemblies** from ATB.
+The paired cohort totals **2,919** rows.
 
 *Note: although `is_hybrid` and `is_reference_genome` rows were all sequenced with combined SR+LR
 data, the SR fastq/assembly is **not always retained** as a separate paired SR row in ATB.*
 
-Dedicated paired artefacts under `<project_k>/david/processed/complete_vs_sr_genomes/`:
+### Quick join file — `paired_index.tsv`
 
-- `paired_index.tsv` — 2,919 rows. Identity columns: `lra_sample`, `sr_biosample`, `lra_gca`,
-  `lra_gcf`, `lra_assembly_level`, …
-- `lra_features.tsv` — 2,919 × 115 — LR-side typing + IS + AMR features.
+Shortcut for working with the paired cohort:
+
+```
+<project_k>/david/processed/complete_vs_sr_genomes/paired_index.tsv
+```
+
+23 columns covering LR-side identity + QC + flags, keyed by both `lra_sample` and
+`sr_biosample`. Most useful columns:
+
+| Column | Meaning |
+|---|---|
+| `lra_sample` | LR-side Sample (`GCF_…` / `GCA_…`, versioned) — joins to v2 `Sample` |
+| `sr_biosample` | SR partner's BioSample (`SAMN`/`SAME`/`SAMD`) — joins to v2 `sr_biosample` |
+| `lra_gca`, `lra_gcf` | LR assembly accessions (versioned) |
+| `lra_assembly_level` | NCBI level (`Complete Genome` / `Chromosome` / `Scaffold` / `Contig`) |
+| `lra_tier` | `GCF` (RefSeq) vs `GCA` (GenBank) |
+| `lra_library_class` | `hybrid` / `short_only` / `long_only` / `unknown` |
+| `lra_is_complete`, `lra_is_hybrid`, `lra_is_reference_genome` | LR cohort flags |
+| `lra_checkm2_*` | CheckM2 QC metrics on the LR assembly |
+| `lra_species`, `lra_is_kpsc`, `kpsc_final_list` | LR-side species + KPSC membership |
+
+### LR-side breakdown of the 2,919 paired pairs
+
+**By assembly quality** (`lra_assembly_level`):
+
+| Level | Pairs |
+|---|---:|
+| Complete Genome | **1,574** (54%) |
+| Contig (draft) | 1,205 (41%) |
+| Chromosome | 91 |
+| Scaffold | 49 |
+
+**By library class** (`lra_library_class`):
+
+| Class | Pairs |
+|---|---:|
+| `hybrid` | **1,546** (53%) |
+| `short_only` | 807 |
+| `long_only` | 412 |
+| `unknown` | 154 |
+
+**By cohort flags:**
+
+| Subset | Pairs | Definition |
+|---|---:|---|
+| `lra_is_complete=True` | 1,574 | NCBI Complete Genome |
+| `lra_is_hybrid=True` | 1,546 | hybrid library |
+| Complete ∧ Hybrid (any tier) | 1,093 | LR closed AND hybrid-assembled |
+| `lra_is_reference_genome=True` | **748** | complete ∧ hybrid ∧ GCF — highest-confidence reference subset |
+| **None of complete/hybrid/reference** | **892** (31%) | draft LR paired with SR — useful for LR-vs-SR comparison but not a reference |
+
+**By tier:**
+
+| Tier | Pairs |
+|---|---:|
+| `GCF` (RefSeq) | 1,748 |
+| `GCA` (GenBank) | 1,171 |
+
+### Companion paired artefacts (same directory)
+
+- `lra_features.tsv` — 2,919 × 115 — LR-side typing + IS + AMR features extracted from v2.
 - `sr_features.tsv` — 2,523 × 172 — SR-side mirror (superset; 109 cols overlap with LR; ~410 SR
   rows have no extant LR partner).
 - `sr_shadow_for_lra.tsv` — frozen SR-side typing snapshot keyed on `sr_biosample`, used so v2's
@@ -443,12 +502,59 @@ samples were reviewed manually (nearly 75% of the assembly set). Reviewed studie
 - **OneDrive decommission** — rsync the QC Excel + ancillary raw data to `<project_k>/raw/`,
   document the canonical HPC path, delete local OneDrive copies.
 
-### Planned additions (cross-repo)
+### Recently added: Bacformer-predicted AST + EBI ground-truth columns ✅ (2026-05-31)
 
-- **`predicted_{antibiotic}_AST`** columns — Bacformer-derived AST predictions, added by a
-  standalone BacPredict script that will plug into the rebuild pipeline.
-- **`EBI_{antibiotic}_AST`** columns — curated truth values from EBI / publication metadata for
-  validation. Same BacPredict workstream.
+Three column families per panel drug, populated by
+[`merge_predicted_and_ebi_ast_into_metadata_v2.py`](pp/merge_predicted_and_ebi_ast_into_metadata_v2.py)
+(rebuild_v2 step 9 — see §13).
+
+| Column | Type | Source | Domain |
+|---|---|---|---|
+| `predicted_{drug}_AST` | str | BacPredict (Bacformer Stage C) | `"R"` / `"S"` / NaN |
+| `predicted_{drug}_AST_prob` | float | same | `[0, 1]` or NaN |
+| `EBI_{drug}_AST` | str | BacPredict's `binary_ast.csv` (curated EBI / publication AST), translated 1→R / 0→S | `"R"` / `"S"` / NaN |
+
+**Panel (22 drugs):** `gentamicin, ceftazidime, meropenem, ciprofloxacin,
+trimethoprim-sulfamethoxazole, amikacin, ceftriaxone, piperacillin-tazobactam,
+cefoxitin, aztreonam, cefazolin, tobramycin, cefepime, imipenem, levofloxacin,
+cefotaxime, cefuroxime, ampicillin-sulbactam, ertapenem, tetracycline,
+azithromycin, colistin`. (Top-23 by EBI-labelled count, minus ampicillin —
+intrinsic Kp resistance — and `pentizidone` — unverified drug-name parsing
+artefact — plus colistin, the canonical chromosomal-mechanism bellwether.)
+
+**Coverage.** `predicted_*` columns are populated for every `kpsc_final_list` row
+that has an ESM-C embedding on disk; NaN otherwise (~5 % of `kpsc_final_list`
+lacks embeddings as of the 2026-05-29 snapshot, per `find_missing_embeddings.py`).
+`EBI_*` columns are populated only for the subset that has curated EBI AST
+testing — a few thousand isolates, mostly post-2010.
+
+**R/S threshold.** Per drug, the **Youden-J operating point** (max sens+spec)
+selected on the model's validation fold and recorded in
+`<checkpoint>/eval_results.json::operating_point.threshold`. This is the unbiased
+threshold; AUROC/AUPRC are threshold-independent and live in the same JSON.
+Six drugs have **extreme thresholds** at deployment (worth knowing when
+interpreting `predicted_*`):
+
+| Drug | Youden threshold | Interpretation |
+|---|---|---|
+| meropenem | 0.000 | model probabilities cluster near zero; tiny cut separates R/S |
+| amikacin | 0.058 | likewise |
+| colistin | 0.066 | likewise — also the chromosomal-mechanism floor (AUROC 0.81) |
+| cefuroxime | 1.000 | model overconfident; only top tail called R |
+| cefazolin | 1.000 | likewise |
+| imipenem | 1.000 | likewise |
+
+For these, `predicted_<drug>_AST_prob` is the more nuanced signal than the R/S
+call. Reasoning: in the panel evaluation the Youden-tuned call still beats the
+0.5 default for balanced accuracy on the held-out evaluate set; we keep the
+same calibration in deployment for consistency.
+
+**See also:** per-drug rolling resistance-rate-over-time plots
+(predicted thick + EBI dashed) live at
+`<project_k>/david/processed/train_kleb_ast/predicting_AST_over_time/<drug>.png`,
+produced by BacPredict's
+[`src/kleb_ast/plot_resistance_over_time.py`](../../../BacPredict/src/kleb_ast/plot_resistance_over_time.py)
+(login-node CPU). Default rolling window is 100 samples by `collection_date_parsed`.
 
 ---
 
@@ -482,9 +588,16 @@ The chain:
    6. `import_sr_isescan.py`
    7. `build_sr_shadow_for_lra.py` ← writes `sr_shadow_for_lra.tsv`
    8. `add_paths_gff_fna_to_metadata.py --mode lra`
+   9. `merge_predicted_and_ebi_ast_into_metadata_v2.py` ← BacPredict-side Bacformer AST
+      predictions (Youden-tuned R/S calls + probabilities) and EBI ground-truth AST,
+      joined onto v2 by `Sample`. See §12 for column families. Prereq: the BacPredict GPU
+      array `predict_amr_panel_on_slurm.sh` has produced per-drug parquets under
+      `<project_k>/david/processed/train_kleb_ast/predictions_for_metadata/<drug>.parquet`.
+      Idempotent (drops `predicted_*` / `EBI_*` columns before each merge); safe to re-run
+      against a stale or partial parquet directory.
 
-   Use `--skip-g1` / `--skip-isescan` / `--skip-sr-import` to skip subsections when only
-   downstream changes are needed.
+   Use `--skip-g1` / `--skip-isescan` / `--skip-sr-import` / `--skip-predicted-ast` to skip
+   subsections when only downstream changes are needed.
 
 ---
 

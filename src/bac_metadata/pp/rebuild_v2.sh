@@ -15,6 +15,8 @@
 #   7. build_sr_shadow_for_lra        SR-side snapshot for paired rows (consumes sidecars)
 #   8. add_paths_gff_fna_to_metadata  fill lr_gff_file (+ lr_assembly_file where empty)
 #                                     from the related_lr/{assemblies,gff} pools (--mode lra)
+#   9. merge_predicted_and_ebi_ast    Bacformer-predicted + EBI-ground-truth AST columns
+#                                     (BacPredict workstream — see README §12)
 #
 # Each merge step backs up v2 with a UTC-stamped .bak.*.tsv before
 # overwriting; safe to re-run.
@@ -25,6 +27,7 @@
 #   ./rebuild_v2.sh --skip-isescan   # skip step 4 (e.g. when ISEScan array
 #                                    # hasn't completed yet)
 #   ./rebuild_v2.sh --skip-sr-import # skip steps 5-6 (use existing sidecars)
+#   ./rebuild_v2.sh --skip-predicted-ast  # skip step 9 (no BacPredict parquets yet)
 #   ./rebuild_v2.sh --skip-g1 --skip-isescan --skip-sr-import
 #
 # All steps run on the login node (no Slurm). Total runtime: ~2-5 min
@@ -37,11 +40,13 @@ cd "$(git rev-parse --show-toplevel)"
 SKIP_G1=0
 SKIP_ISESCAN=0
 SKIP_SR_IMPORT=0
+SKIP_PREDICTED_AST=0
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --skip-g1)        SKIP_G1=1;        shift ;;
-        --skip-isescan)   SKIP_ISESCAN=1;   shift ;;
-        --skip-sr-import) SKIP_SR_IMPORT=1; shift ;;
+        --skip-g1)            SKIP_G1=1;            shift ;;
+        --skip-isescan)       SKIP_ISESCAN=1;       shift ;;
+        --skip-sr-import)     SKIP_SR_IMPORT=1;     shift ;;
+        --skip-predicted-ast) SKIP_PREDICTED_AST=1; shift ;;
         -h|--help)
             head -32 "$0" | sed 's/^# *//'
             exit 0
@@ -83,7 +88,14 @@ fi
 step "Step 7/8: build_sr_shadow_for_lra  (consumes both sidecars)"
 uv run python -m bac_metadata.pp.build_sr_shadow_for_lra
 
-step "Step 8/8: add_paths_gff_fna_to_metadata --mode lra  (fill lr_gff_file from related_lr pools)"
+step "Step 8/9: add_paths_gff_fna_to_metadata --mode lra  (fill lr_gff_file from related_lr pools)"
 uv run python -m bac_metadata.pp.add_paths_gff_fna_to_metadata --mode lra
+
+if (( SKIP_PREDICTED_AST == 0 )); then
+    step "Step 9/9: merge_predicted_and_ebi_ast_into_metadata_v2  (BacPredict AMR predictions + EBI truth)"
+    uv run python -m bac_metadata.pp.merge_predicted_and_ebi_ast_into_metadata_v2
+else
+    step "Step 9/9: merge_predicted_and_ebi_ast_into_metadata_v2  (SKIPPED via --skip-predicted-ast)"
+fi
 
 step "DONE"
