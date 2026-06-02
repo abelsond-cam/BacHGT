@@ -6,8 +6,8 @@ designed for a Slurm-array launch pattern:
 
   prepare — read ``metadata_v2`` and emit ``genomad_inputs.tsv`` with one row
             per FASTA to run. Columns: ``Sample`` | ``fasta_path`` | ``source``.
-            Sources: ``lra`` (every row with ``lra_assembly_file`` populated),
-            ``sr`` (every row with only ``assembly_file`` — the legacy v1 SR
+            Sources: ``lra`` (every row with ``lr_assembly_file`` populated),
+            ``sr`` (every row with only ``sr_assembly_file`` — the legacy v1 SR
             column), ``sr_paired`` (rows that have both — the paired SR FASTA
             is emitted under ``<Sample>__sr`` so it doesn't collide with the
             LRA row).
@@ -76,8 +76,8 @@ from bac_genomad.genomad_constants import (
 def _resolve(path: object) -> Path | None:
     """Resolve a metadata path to an existing absolute file, else ``None``.
 
-    metadata_v2 stores ``lra_assembly_file`` as absolute paths but
-    ``assembly_file`` (SR) relative to the RDS ``DATA_ROOT``. Relative paths are
+    metadata_v2 stores ``lr_assembly_file`` as absolute paths but
+    ``sr_assembly_file`` (SR) relative to the RDS ``DATA_ROOT``. Relative paths are
     joined onto ``DATA_ROOT``; the result is returned only if it is a real file.
     """
     if path is None or pd.isna(path):
@@ -96,12 +96,12 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     df = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
     print(f"metadata_v2 rows: {len(df):,}")
 
-    df["_lra_path"] = df["lra_assembly_file"].map(_resolve)
-    df["_sr_path"]  = df["assembly_file"].map(_resolve)
+    df["_lra_path"] = df["lr_assembly_file"].map(_resolve)
+    df["_sr_path"]  = df["sr_assembly_file"].map(_resolve)
     has_lra = df["_lra_path"].notna()
     has_sr  = df["_sr_path"].notna()
-    print(f"  rows with lra_assembly_file on disk: {int(has_lra.sum()):,}")
-    print(f"  rows with assembly_file (SR) on disk: {int(has_sr.sum()):,}")
+    print(f"  rows with lr_assembly_file on disk: {int(has_lra.sum()):,}")
+    print(f"  rows with sr_assembly_file (SR) on disk: {int(has_sr.sum()):,}")
     print(f"  rows with BOTH (paired): {int((has_lra & has_sr).sum()):,}")
 
     rows: list[dict] = []
@@ -247,8 +247,27 @@ def _read_summary_tsv(path: Path, sample: str) -> pd.DataFrame | None:
     return df
 
 
+def _collate_one(sd: Path) -> tuple[pd.DataFrame | None, pd.DataFrame | None, str]:
+    """Read one sample's plasmid + virus summary TSVs. Returns (plasmid_df, virus_df, status).
+
+    Status is one of: ``ok`` (both read), ``no_sentinel`` (sample not yet done),
+    ``no_summary`` (sentinel present but the summary files are missing).
+    """
+    if not (sd / ".genomad.done").exists():
+        return (None, None, "no_sentinel")
+    summary_dir = sd / f"{sd.name}_summary"
+    plasmid_path = summary_dir / f"{sd.name}_plasmid_summary.tsv"
+    virus_path   = summary_dir / f"{sd.name}_virus_summary.tsv"
+    pdf = _read_summary_tsv(plasmid_path, sd.name) if plasmid_path.is_file() else None
+    vdf = _read_summary_tsv(virus_path,   sd.name) if virus_path.is_file()   else None
+    status = "ok" if (pdf is not None or vdf is not None) else "no_summary"
+    return (pdf, vdf, status)
+
+
 def cmd_collate(args: argparse.Namespace) -> int:
-    """Concatenate per-sample geNomad plasmid + virus summary TSVs."""
+    """Concatenate per-sample geNomad plasmid + virus summary TSVs (threaded)."""
+    from concurrent.futures import ThreadPoolExecutor
+
     per_sample_root = args.out_dir / "per_sample"
     if not per_sample_root.exists():
         print(f"no per_sample dir at {per_sample_root}", file=sys.stderr)
@@ -256,31 +275,26 @@ def cmd_collate(args: argparse.Namespace) -> int:
 
     sample_dirs = sorted(p for p in per_sample_root.iterdir() if p.is_dir())
     print(f"found {len(sample_dirs)} per-sample dirs under {per_sample_root}")
+    if args.limit and args.limit > 0:
+        sample_dirs = sample_dirs[: args.limit]
+        print(f"  (limited to first {len(sample_dirs)} for inspection)")
 
     plasmid_frames: list[pd.DataFrame] = []
     virus_frames:   list[pd.DataFrame] = []
-    n_done = 0
-    n_no_summary = 0
-    for sd in sample_dirs:
-        if not (sd / ".genomad.done").exists():
-            continue
-        n_done += 1
-        # geNomad writes outputs as <fa_stem>_summary/<fa_stem>_{plasmid,virus}_summary.tsv.
-        # Our worker writes <sample>.fna, so fa_stem == sample. Use a glob to be tolerant
-        # if the user runs the worker on a renamed input.
-        plasmid_hits = list(sd.rglob("*_plasmid_summary.tsv"))
-        virus_hits   = list(sd.rglob("*_virus_summary.tsv"))
-        if not plasmid_hits and not virus_hits:
-            n_no_summary += 1
-            continue
-        for p in plasmid_hits:
-            df = _read_summary_tsv(p, sd.name)
-            if df is not None:
-                plasmid_frames.append(df)
-        for p in virus_hits:
-            df = _read_summary_tsv(p, sd.name)
-            if df is not None:
-                virus_frames.append(df)
+    n_done = n_no_sentinel = n_no_summary = 0
+    with ThreadPoolExecutor(max_workers=args.workers) as pool:
+        for pdf, vdf, status in pool.map(_collate_one, sample_dirs):
+            if status == "no_sentinel":
+                n_no_sentinel += 1
+                continue
+            if status == "no_summary":
+                n_no_summary += 1
+                continue
+            n_done += 1
+            if pdf is not None:
+                plasmid_frames.append(pdf)
+            if vdf is not None:
+                virus_frames.append(vdf)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     ok = True
@@ -302,8 +316,9 @@ def cmd_collate(args: argparse.Namespace) -> int:
         print("no virus summaries found", file=sys.stderr)
         ok = False
 
-    print(f"  sample dirs done : {n_done}")
-    print(f"  sample dirs with no summary TSVs : {n_no_summary}")
+    print(f"  sample dirs done       : {n_done}")
+    print(f"  sample dirs no sentinel: {n_no_sentinel}")
+    print(f"  sample dirs no summary : {n_no_summary}")
     return 0 if ok else 1
 
 
@@ -332,6 +347,10 @@ def main(argv: list[str] | None = None) -> int:
 
     c = sub.add_parser("collate", help="Concatenate per-sample geNomad summaries.")
     c.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
+    c.add_argument("--workers", type=int, default=16,
+                   help="Thread pool size for parallel summary-TSV reads (default: 16).")
+    c.add_argument("--limit",   type=int, default=0,
+                   help="If >0, only collate the first N per-sample dirs (subset inspection).")
     c.set_defaults(func=cmd_collate)
 
     args = ap.parse_args(argv)

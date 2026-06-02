@@ -67,9 +67,9 @@ Reads `metadata_v2_all_samples_and_columns.tsv` and emits
 
 | source     | rows | from column | Sample id |
 |---|---|---|---|
-| `lra`       | every row where `lra_assembly_file` exists on disk      | `lra_assembly_file` | metadata `Sample` |
-| `sr`        | every row where `assembly_file` exists AND no LRA       | `assembly_file`     | metadata `Sample` |
-| `sr_paired` | every row where BOTH `lra_assembly_file` and `assembly_file` exist | `assembly_file` | metadata `Sample` + `__sr` suffix |
+| `lra`       | every row where `lr_assembly_file` exists on disk      | `lr_assembly_file` | metadata `Sample` |
+| `sr`        | every row where `sr_assembly_file` exists AND no LRA       | `sr_assembly_file`     | metadata `Sample` |
+| `sr_paired` | every row where BOTH `lr_assembly_file` and `sr_assembly_file` exist | `sr_assembly_file` | metadata `Sample` + `__sr` suffix |
 
 Reports per-source counts and the chunk plan.
 
