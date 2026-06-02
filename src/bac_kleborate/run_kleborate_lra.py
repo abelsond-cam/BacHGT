@@ -68,25 +68,58 @@ def _bare(acc: object) -> str:
     return m.group(1).split(".", 1)[0] if m else ""
 
 
+def _truthy(s: pd.Series) -> pd.Series:
+    return s.astype(str).str.lower().isin({"true", "1", "yes"})
+
+
 def cmd_prepare(args: argparse.Namespace) -> int:
-    """Build lra_inputs.tsv from metadata_v2."""
+    """Build lra_inputs.tsv from metadata_v2.
+
+    Includes every row where ``lra_final_list=True`` OR
+    ``kleborate_needs_recall=True``. The recall flag picks up KPSC rows that
+    are not in the LRA cohort but still need a fresh Kleborate call (e.g. a
+    paired SR row whose LR partner failed CheckM2, or an SR-only row whose
+    v1 typing block has gaps).
+
+    For each included row the FASTA source is ``lra_assembly_file`` if
+    non-empty, else ``assembly_file`` (SR). Rows whose chosen FASTA is
+    missing on disk are skipped with a count.
+    """
     args.out_dir.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(args.metadata_v2, sep="\t", low_memory=False)
 
-    lra_mask = df["lra_final_list"].astype(str).str.lower().isin({"true", "1", "yes"})
-    lra = df.loc[lra_mask, ["Sample", "lra_assembly_file"]].copy()
-    n_total = len(lra)
-    n_missing = int(lra["lra_assembly_file"].isna().sum())
-    lra = lra.dropna(subset=["lra_assembly_file"])
-    lra["lra_assembly_file"] = lra["lra_assembly_file"].astype(str)
-    n_exists = int(lra["lra_assembly_file"].map(lambda p: Path(p).is_file()).sum())
+    lra_mask = _truthy(df["lra_final_list"])
+    recall_mask = _truthy(df["kleborate_needs_recall"]) if "kleborate_needs_recall" in df.columns else pd.Series(False, index=df.index)
+    keep_mask = lra_mask | recall_mask
 
-    print(f"metadata_v2 rows         : {len(df):,}")
-    print(f"lra_final_list=True rows  : {n_total:,}")
-    print(f"  missing lra_assembly_file (skipped): {n_missing}")
-    print(f"  fasta exists on disk            : {n_exists} / {len(lra)}")
+    keep_cols = ["Sample", "lra_assembly_file"]
+    if "assembly_file" in df.columns:
+        keep_cols.append("assembly_file")
+    sub = df.loc[keep_mask, keep_cols].copy()
 
-    out = lra.rename(columns={"lra_assembly_file": "fasta_path"})
+    # Choose FASTA: LR if non-empty, else SR.
+    def _pick(row: pd.Series) -> str:
+        lr = row.get("lra_assembly_file")
+        if pd.notna(lr) and str(lr).strip() not in {"", "nan", "<NA>"}:
+            return str(lr)
+        sr = row.get("assembly_file")
+        if pd.notna(sr) and str(sr).strip() not in {"", "nan", "<NA>"}:
+            return str(sr)
+        return ""
+
+    sub["fasta_path"] = sub.apply(_pick, axis=1)
+    n_missing_path = int((sub["fasta_path"] == "").sum())
+    sub = sub[sub["fasta_path"] != ""].copy()
+    n_exists = int(sub["fasta_path"].map(lambda p: Path(p).is_file()).sum())
+
+    print(f"metadata_v2 rows                                  : {len(df):,}")
+    print(f"lra_final_list=True rows                           : {int(lra_mask.sum()):,}")
+    print(f"kleborate_needs_recall=True rows                   : {int(recall_mask.sum()):,}")
+    print(f"union (lra ∪ recall) rows                          : {int(keep_mask.sum()):,}")
+    print(f"  missing both lra/sr assembly_file (skipped)      : {n_missing_path}")
+    print(f"  fasta exists on disk                             : {n_exists} / {len(sub)}")
+
+    out = sub[["Sample", "fasta_path"]]
     out.to_csv(args.inputs, sep="\t", index=False)
     print(f"\nwrote {args.inputs}  rows={len(out)}")
     print(f"chunk plan @ chunk_size={args.chunk_size}: "
