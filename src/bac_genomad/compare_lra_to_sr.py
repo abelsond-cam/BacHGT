@@ -71,6 +71,7 @@ import pandas as pd
 from bac_genomad.genomad_constants import (
     DEFAULT_COMPARE_OUT_DIR,
     DEFAULT_INPUTS_TSV,
+    DEFAULT_METADATA_V2,
     DEFAULT_PAIRED_INDEX,
     DEFAULT_PLASMID_LONG_TSV,
     DEFAULT_VIRUS_LONG_TSV,
@@ -517,6 +518,158 @@ def cmd_compare(args: argparse.Namespace) -> int:
     return 0
 
 
+# ─── DUMP STANDALONE VIRAL LENGTHS (for histogram analysis) ───────────────────
+
+
+# metadata_v2 cohort columns mapped to the cohort name used in outputs. None
+# for ``lra_final_list`` means "no extra filter — just use the column itself".
+COHORT_META_COLS: list[tuple[str, str]] = [
+    ("reference_genome", "is_reference_genome"),
+    ("is_complete", "is_complete"),
+    ("is_hybrid", "is_hybrid"),
+    ("lra_final_list", "lra_final_list"),
+]
+
+
+def cmd_dump_lengths(args: argparse.Namespace) -> int:
+    """Dump per-cohort standalone-viral contig lengths for LRA-all + paired LRA + paired SR.
+
+    Produces ``standalone_viral_lengths.tsv`` with columns
+    ``Sample, contig, length, cohort, side`` where ``side`` is one of:
+
+      - ``lra`` — paired LRA samples (subset of ``lra_all``)
+      - ``sr``  — paired SR partners (``<Sample>__sr``)
+      - ``lra_all`` — every LRA sample flagged True for the cohort in
+        metadata_v2 (paired + unpaired)
+
+    Tests whether the bimodal LRA length distribution seen in the paired
+    cohort is preserved when the unpaired (~2-2.5×) LRA samples are added.
+
+    Side-effect: builds ``contig_lengths_lra_all.tsv`` as a cache (union of
+    the LRA rows already in ``contig_lengths_paired.tsv`` + a FASTA scan of
+    the unpaired LRA samples not yet cached).
+    """
+    out_dir: Path = args.out_dir
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    print(f"reading metadata_v2: {args.metadata_v2}")
+    meta_cols = ["Sample", *{c for _, c in COHORT_META_COLS}]
+    meta = pd.read_csv(args.metadata_v2, sep="\t", usecols=meta_cols, dtype=str)
+    print(f"  {len(meta):,} rows")
+
+    # Universe of LRA samples in ANY of the 4 cohorts → needs a length lookup.
+    cohort_lra_sets: dict[str, set[str]] = {}
+    union_lra: set[str] = set()
+    for cohort_name, col in COHORT_META_COLS:
+        flagged = meta.loc[_truthy(meta[col]), "Sample"].astype(str)
+        cohort_lra_sets[cohort_name] = set(flagged)
+        union_lra |= cohort_lra_sets[cohort_name]
+        print(f"  cohort {cohort_name:<18} LRA-all: {len(cohort_lra_sets[cohort_name]):>6,}")
+    print(f"  union of LRA across cohorts: {len(union_lra):,}")
+
+    inputs = _read_inputs_universe(args.inputs)
+
+    # Reuse paired contig lengths cache. Split: LRA partitions stay; SR rows
+    # are kept for the paired-SR series; rows for samples not in any cohort
+    # are dropped from this view (but the file itself is untouched).
+    if args.paired_lengths.exists():
+        paired_lengths = pd.read_csv(
+            args.paired_lengths, sep="\t",
+            dtype={"Sample": str, "contig": str, "length": int},
+        )
+        print(f"loaded paired lengths cache: {len(paired_lengths):,} contig rows  ({args.paired_lengths})")
+    else:
+        sys.exit(f"missing {args.paired_lengths} — run `compare` first to populate the paired cache.")
+
+    cached_samples = set(paired_lengths["Sample"].unique())
+    need_scan = union_lra - cached_samples
+    print(f"  LRA samples needing fresh FASTA scan (not in paired cache): {len(need_scan):,}")
+
+    if need_scan:
+        unpaired_path = out_dir / "contig_lengths_lra_unpaired.tsv"
+        unpaired_lengths = _build_contig_lengths(inputs, need_scan, unpaired_path, args.workers)
+    else:
+        unpaired_lengths = pd.DataFrame(columns=["Sample", "contig", "length"])
+
+    # Union of all contig-length data we have: paired + unpaired LRA scan
+    all_lengths = pd.concat([paired_lengths, unpaired_lengths], ignore_index=True)
+    all_lengths = all_lengths.drop_duplicates(subset=["Sample", "contig"], keep="first")
+    print(f"all contig lengths in scope: {len(all_lengths):,} rows over {all_lengths['Sample'].nunique():,} samples")
+
+    # Write LRA-all cache for downstream reuse
+    lra_all_path = out_dir / "contig_lengths_lra_all.tsv"
+    all_lengths[all_lengths["Sample"].isin(union_lra)].to_csv(lra_all_path, sep="\t", index=False)
+    print(f"wrote {lra_all_path}")
+
+    # Standalone viral rows (whole-contig topology, NOT Provirus) joined to lengths
+    print(f"reading {args.virus_long} ...")
+    virus = pd.read_csv(
+        args.virus_long, sep="\t",
+        usecols=["Sample", "seq_name", "topology"],
+        dtype={"Sample": str, "seq_name": str, "topology": str},
+    )
+    standalone = virus[virus["topology"].fillna("") != "Provirus"].copy()
+    standalone["contig"] = standalone["seq_name"].astype(str)
+    standalone = standalone.merge(all_lengths, on=["Sample", "contig"], how="left")
+    n_with_len = int(standalone["length"].notna().sum())
+    print(f"  {len(standalone):,} standalone viral rows; with length lookup: {n_with_len:,}")
+
+    # Paired-index for paired-LRA / paired-SR series
+    paired = pd.read_csv(args.paired_index, sep="\t", dtype=str)
+    sample_col = "lra_sample" if "lra_sample" in paired.columns else "Sample"
+
+    records: list[pd.DataFrame] = []
+    for cohort_name, col in COHORT_META_COLS:
+        sub_paired = paired if col == "lra_final_list" else paired[_truthy(paired[f"lra_{col}"])]
+        paired_lra = set(sub_paired[sample_col].astype(str))
+        paired_sr = {s + SR_PAIRED_SUFFIX for s in paired_lra}
+        lra_all = cohort_lra_sets[cohort_name]
+        for side, samples in [("lra", paired_lra), ("sr", paired_sr), ("lra_all", lra_all)]:
+            sub = standalone[standalone["Sample"].isin(samples) & standalone["length"].notna()].copy()
+            sub["cohort"] = cohort_name
+            sub["side"] = side
+            records.append(sub[["Sample", "contig", "length", "cohort", "side"]])
+
+    out = pd.concat(records, ignore_index=True)
+    out_tsv = out_dir / "standalone_viral_lengths.tsv"
+    out.to_csv(out_tsv, sep="\t", index=False)
+    print(f"\nwrote {out_tsv}  rows={len(out):,}")
+
+    # Per-cohort × side percentile summary
+    print("\n=== Standalone viral contig length distribution (bp) ===")
+    print(
+        f"  {'cohort':<18} {'side':<8} {'n':>7} {'min':>7} {'p5':>7} {'p25':>7}"
+        f" {'median':>8} {'p75':>8} {'p95':>8} {'max':>10}"
+    )
+    summary_rows: list[dict] = []
+    for (cohort, side), grp in out.groupby(["cohort", "side"]):
+        lens = grp["length"].astype(int)
+        if lens.empty:
+            continue
+        row = {
+            "cohort": cohort,
+            "side": side,
+            "n_contigs": int(len(lens)),
+            "min": int(lens.min()),
+            "p5": int(lens.quantile(0.05)),
+            "p25": int(lens.quantile(0.25)),
+            "median": int(lens.median()),
+            "p75": int(lens.quantile(0.75)),
+            "p95": int(lens.quantile(0.95)),
+            "max": int(lens.max()),
+        }
+        summary_rows.append(row)
+        print(
+            f"  {cohort:<18} {side:<8} {row['n_contigs']:>7,} {row['min']:>7,}"
+            f" {row['p5']:>7,} {row['p25']:>7,} {row['median']:>8,}"
+            f" {row['p75']:>8,} {row['p95']:>8,} {row['max']:>10,}"
+        )
+    summary_path = out_dir / "standalone_viral_length_summary.tsv"
+    pd.DataFrame(summary_rows).to_csv(summary_path, sep="\t", index=False)
+    print(f"\nwrote {summary_path}")
+    return 0
+
+
 # ─── CLI ──────────────────────────────────────────────────────────────────────
 
 
@@ -544,6 +697,24 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     pcmp.add_argument("--workers", type=int, default=16, help="threads for FASTA scanning.")
     pcmp.set_defaults(func=cmd_compare)
+
+    pdump = sub.add_parser(
+        "dump_lengths",
+        help="dump per-cohort standalone-viral lengths (paired LRA + paired SR + LRA-all)",
+    )
+    pdump.add_argument("--inputs", type=Path, default=DEFAULT_INPUTS_TSV)
+    pdump.add_argument("--virus-long", type=Path, default=DEFAULT_VIRUS_LONG_TSV)
+    pdump.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2)
+    pdump.add_argument("--paired-index", type=Path, default=DEFAULT_PAIRED_INDEX)
+    pdump.add_argument(
+        "--paired-lengths",
+        type=Path,
+        default=DEFAULT_COMPARE_OUT_DIR / "contig_lengths_paired.tsv",
+        help="paired-FASTA length cache produced by `compare`.",
+    )
+    pdump.add_argument("--out-dir", type=Path, default=DEFAULT_COMPARE_OUT_DIR)
+    pdump.add_argument("--workers", type=int, default=128, help="threads for FASTA scanning.")
+    pdump.set_defaults(func=cmd_dump_lengths)
 
     return parser
 

@@ -30,7 +30,16 @@ COHORT_TITLES = {
     "is_hybrid": "is_hybrid",
     "lra_final_list": "lra_final_list (all paired)",
 }
-SIDE_COLORS = {"lra": "#1f77b4", "sr": "#d62728"}  # blue / red
+SIDE_COLORS = {
+    "lra_all": "#2ca02c",  # green — every LRA sample in the cohort (paired + unpaired)
+    "lra": "#1f77b4",      # blue  — paired LRA only
+    "sr": "#d62728",       # red   — paired SR partners
+}
+SIDE_LABELS = {
+    "lra_all": "LRA-all",
+    "lra": "LRA-paired",
+    "sr": "SR-paired",
+}
 SIZE_BIN_CUTS_KB = (2, 20, 80)
 
 
@@ -58,27 +67,31 @@ def main() -> int:
     axes = axes.flatten()
 
     for ax, cohort in zip(axes, COHORTS, strict=False):
-        for side, colour in SIDE_COLORS.items():
+        # Draw LRA-all underneath (broadest distribution), then paired LRA and SR
+        # on top — both as stepfilled with the same alpha so peak alignment
+        # vs. lra_all is readable at a glance.
+        for side in ("lra_all", "lra", "sr"):
             sub = df[(df["cohort"] == cohort) & (df["side"] == side)]
+            if sub.empty:
+                continue
+            colour = SIDE_COLORS[side]
             ax.hist(
                 sub["length"],
                 bins=bins,
                 histtype="stepfilled",
-                alpha=0.45,
+                alpha=0.40,
                 color=colour,
                 edgecolor=colour,
                 linewidth=1.2,
-                label=f"{side.upper()}  (n={len(sub):,})",
+                label=f"{SIDE_LABELS[side]}  (n={len(sub):,})",
             )
         for cut in SIZE_BIN_CUTS_KB:
             ax.axvline(cut * 1000, color="grey", linestyle="--", linewidth=0.7, alpha=0.5)
         ax.set_xscale("log")
-        n_lra = int(((df["cohort"] == cohort) & (df["side"] == "lra")).sum())
-        n_sr = int(((df["cohort"] == cohort) & (df["side"] == "sr")).sum())
-        ax.set_title(f"{COHORT_TITLES[cohort]}  (LRA={n_lra:,}  SR={n_sr:,} contigs)")
+        ax.set_title(COHORT_TITLES[cohort])
         ax.set_xlabel("standalone viral contig length (bp, log)")
         ax.set_ylabel("contigs")
-        ax.legend(loc="upper left", fontsize=9)
+        ax.legend(loc="upper left", fontsize=8)
         ax.grid(True, which="both", alpha=0.2)
         for kb in SIZE_BIN_CUTS_KB:
             ax.text(
@@ -87,7 +100,7 @@ def main() -> int:
             )
 
     fig.suptitle(
-        "Standalone viral contig length — LRA vs paired SR, by cohort\n"
+        "Standalone viral contig length — LRA-all vs paired LRA vs paired SR, by cohort\n"
         "(geNomad whole-contig topology calls; dashed lines at 2/20/80 kb)",
         fontsize=12,
     )
