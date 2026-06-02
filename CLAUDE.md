@@ -5,6 +5,8 @@ preferences, the wider ecosystem, environment policy, HPC connection + storage
 map — is in `~/.claude/CLAUDE.md`. Each `src/bac_*` subpackage has its own
 `CLAUDE.md` with subpackage-specific detail.
 
+> **Active program plan (week of 2026-05-30):** see [`~/.claude/PROGRAM_PLAN_2026-05-30.md`](../../.claude/PROGRAM_PLAN_2026-05-30.md). Workstreams **C** (ARIBA rescue → re-embed, touches `bac_ariba` + `bac_panaroo` + `bac_complete_genomes`, then BacPredict tail) and **D** (reverse pangenome ↔ IS mapping in `bac_isescan`) live in this repo. Run on separate branches and agents — see §0.5 norms.
+
 ## What BacHGT is
 
 The Klebsiella-genomics monorepo: pangenome / gene-presence-absence (GPA) /

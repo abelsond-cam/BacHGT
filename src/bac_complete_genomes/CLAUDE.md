@@ -82,3 +82,28 @@ uv run python -m bac_complete_genomes.compare_lra_to_sra --mode clonal_group --c
 # Per-CG virulence-BSC penetrance for every CG over a threshold:
 uv run python -m bac_complete_genomes.per_clonal_group.cg_virulence_penetrance_all
 ```
+
+## Week of 2026-05-30 — assigned workstream item (C2 plot extension)
+
+Anchor: program plan `~/.claude/PROGRAM_PLAN_2026-05-30.md` — Workstream C,
+part C2. Branch: `task-ariba-rescue` (shared with bac_ariba).
+
+Extend **`paired_lra_vs_sra/plot_penetrance_ratio.py`** with a third bar
+per category: **SR-baseline / SR+ARIBA / LR-truth**. Today the plot shows
+per-feature `lr_sr_sensitivity_ratio` with 95% delta-method CIs as a
+horizontal bar; the extension adds the ARIBA-rescued SR rate alongside,
+so the visual question is "does ARIBA close the gap?" for both Kleborate
+virulence loci and acquired AMR.
+
+Inputs:
+- Existing `lra_vs_sr_kleborate__<cohort>.tsv` (LR + SR penetrance per
+  category, current schema).
+- New per-category SR+ARIBA penetrance from
+  `<RDS>/processed/mag_rescue/<db>/lra_paired/<cohort>/` (output of
+  Workstream C2 in `bac_ariba`).
+
+Schema change: add `sr_plus_ariba_per_genome_sensitivity` (+ its 95% CI
+via the same delta-method math as `lr_sr_sensitivity_ratio` so the
+comparison is fair) to the wide-row schema. `compare_lra_to_sra.py`'s
+wide-row builder may need to learn the new column for downstream
+consumers — minimal change; per-arm sensitivity math is unchanged.

@@ -78,3 +78,42 @@ in turn consumes the vendored references in `bac_kleborate`.
 
 `isescan_family_copy_per_sample.py` runs on Slurm via
 `src/bac_isescan/slurm_scripts/isescan_n_per_sample.sh`.
+
+## Week of 2026-05-30 — assigned workstream (D)
+
+Anchor: program plan `~/.claude/PROGRAM_PLAN_2026-05-30.md` — Workstream D.
+Branch: `task-pangenome-IS-distance`.
+
+Goal: quantify how much of the accessory genome is explained by IS
+proximity / contig-edge effects. This is the **reverse** of the existing
+IS → Panaroo hotspot mapping (`isescan_lineage_panaroo_hotspots.py`):
+instead of "which clusters are recurrently flanked by IS", we want "per
+Panaroo cluster, what's the distribution of distance-to-nearest-IS and
+distance-to-nearest-contig-end across its carriers?"
+
+- **D1 — per-node IS-proximity table.** New script:
+  `pangenome_node_is_proximity.py`. For each Panaroo cluster in a lineage,
+  loop over carrier genomes; from `is_gene_context.tsv.gz`, look up nearest
+  upstream/downstream IS distance (`upstream_distance_bp`,
+  `downstream_distance_bp`); from the per-genome GFF, look up distance to
+  nearest contig end. Aggregate per cluster: median + IQR of min-IS-
+  distance, median + IQR of contig-end distance, fraction within 2 kb /
+  5 kb of IS, `is_core` (carrier fraction ≥ 0.95). Output:
+  `<panaroo_run>/per_cluster_is_and_contig_proximity.tsv`. Reuse
+  `_lineage_hotspot_common.py`'s `_build_index()` (sample|locus_tag →
+  cluster) and `_filter_is_rows()` — both are exactly the lookups needed.
+  **Contig-length lookup is new** — confirm contig length is available in
+  the GFF or pull from the assembly FASTA (cache per genome).
+- **D2 — accessory-genome explanation report.** New script:
+  `accessory_is_explanation.py`. Split clusters into core (carrier fraction
+  ≥ 0.95) vs accessory. For accessory, report: fraction within 2 kb of an
+  IS in ≥ 50% of carriers; fraction within 10 kb of a contig end. Compare
+  to core baselines. Deliverable:
+  `docs/accessory_is_explanation_<lineage>.md` with the headline
+  percentages + two plots (distance-to-IS histogram and distance-to-
+  contig-end histogram, core vs accessory overlay).
+
+Feeds back into **A5 (BacPredict iso-source explainability)**: top
+importance genes that ALSO sit close to IS / contig edges are more likely
+to be assembly-artefact signals than biological signals — useful filter
+when interpreting the per-gene importance ranks.

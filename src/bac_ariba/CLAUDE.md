@@ -108,6 +108,52 @@ Outputs land at `<RDS>/processed/mag_rescue/<db>/<run-name>/{reports,sample_logs
 - SL23, CG307, CG340 arrays in flight (jobs 29161949 / 29161950 / 29161952).
 - Hard rows (~2,000 mixed-platform / multi-run) deferred — see `<accessions>/kleb_short_reads_v1.skipped.tsv`.
 
+## Week of 2026-05-30 — assigned workstream (C)
+
+Anchor: program plan `~/.claude/PROGRAM_PLAN_2026-05-30.md` — Workstream C.
+Branch: `task-ariba-rescue`.
+
+Goal: recover the 10–20% per-locus pickup deficit observed in short-read
+assemblies (the `bac_complete_genomes` paired LR-vs-SR plots) by re-running
+ARIBA on short-read accessions paired with LRA samples, then feed the
+"rescued" protein sequences back into BacPredict for re-embedding +
+re-fine-tuning. The CG39 pilot already showed 4–21× rescue for
+iro/rmpADC/rmpa2/clb — this week extends that to the full LR-paired cohort
+and then to a Panaroo-medoid-derived DB.
+
+- **C1 — paired-SR-for-LRA runner.** Filter `metadata_v2`'s `sr_biosample`
+  column to rows where `lra_final_list = True` to produce the paired SR
+  accession list. Reuse `pp/extract_accessions.py` and
+  `pp/parallel_ariba.py` (Slurm submit/status/retry) with a new
+  `--paired-with-lra` filter. Output:
+  `<RDS>/processed/mag_rescue/<db>/lra_paired/<cohort>/`.
+- **C2 — Kleborate virulence + AMR on the paired cohort.** Run on the
+  existing `kleb_virulence` DB (already built — 39 alleles / 55 CD-HIT
+  clusters; CG39 4–21× rescue is the proof-of-concept) and add `kleb_amr`
+  (already in `DB_REGISTRY`). Extend
+  `bac_complete_genomes/paired_lra_vs_sra/plot_penetrance_ratio.py` with a
+  third bar per category: **SR-baseline / SR+ARIBA / LR-truth**. That plot
+  is the headline C2 deliverable — does ARIBA close the gap by 1–2 pp
+  across virulence + AMR loci?
+- **C3 — Panaroo medoid → ARIBA reference pipeline.** Most novel piece —
+  no medoid-assembly extraction exists today. Depends on new
+  `bac_panaroo/tl/extract_medoid_per_cluster.py` (see bac_panaroo's
+  CLAUDE.md). Once medoid FASTAs land in
+  `src/bac_kleborate/refs/kleb_panaroo_medoid/inputs/`, register
+  `kleb_panaroo_medoid` in `pp/build_ariba_ref.py:DB_REGISTRY` and
+  `tl/assess_recovery.py:DB_LOCI`, build prepareref, smoke on the paired-SR
+  cohort, render the same penetrance plot.
+  **Scale gate:** only expand beyond the paired cohort to the full ~80k SR
+  set if per-cluster rescue rate ≥ 1% on average.
+- **C4 — re-embed rescued samples → re-fine-tune BacPredict** (tail in
+  BacPredict, not here, but the merge rule is owned here): append ARIBA-
+  recovered protein sequences to the existing SR proteomes →
+  `tl/embed/generate_embeddings.py` writes to
+  `processed/klebsiella_esm_embeddings_rescued/` (parallel store; keep
+  originals untouched) → re-fine-tune iso-source + cipro/ceftriaxone.
+  **Merge rule for double-rescue:** ARIBA-recovered preferred over native
+  short-read for the same locus.
+
 ## Code style
 
 - Line length: 120; numpy docstrings (enforced by `ruff pydocstyle`).
