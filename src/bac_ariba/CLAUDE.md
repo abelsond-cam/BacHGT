@@ -137,7 +137,7 @@ and then to a Panaroo-medoid-derived DB.
   across virulence + AMR loci?
 - **C3 — Panaroo medoid → ARIBA reference pipeline.** Most novel piece —
   no medoid-assembly extraction exists today. Depends on new
-  `bac_panaroo/tl/extract_medoid_per_cluster.py` (see bac_panaroo's
+  `bac_panaroo/gpa_analysis/extract_medoid_per_cluster.py` (see bac_panaroo's
   CLAUDE.md). Once medoid FASTAs land in
   `src/bac_kleborate/refs/kleb_panaroo_medoid/inputs/`, register
   `kleb_panaroo_medoid` in `pp/build_ariba_ref.py:DB_REGISTRY` and

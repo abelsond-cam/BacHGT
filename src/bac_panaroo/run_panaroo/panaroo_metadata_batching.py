@@ -10,7 +10,7 @@ the cross-batch reference comparison is handled by a separate all-reference run.
 
 Writes batch TSVs and ``panaroo_batching.log`` under ``<output_dir>/batches/``.
 
-Run: uv run python src/bac_panaroo/pp/panaroo_metadata_batching.py
+Run: uv run python src/bac_panaroo/run_panaroo/panaroo_metadata_batching.py
 """
 
 # ruff: noqa: D102, D103

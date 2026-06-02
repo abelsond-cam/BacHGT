@@ -13,17 +13,20 @@ distances to reference genomes.
 
 ## Package layout
 
-scanpy-style modules under `src/bac_panaroo/`:
+Domain-coherent packages under `src/bac_panaroo/` (the old scanpy `pp/tl/pl`
+split was retired — the layering didn't hold and `pp/` mixed concerns):
 
 | Module | Purpose |
 |---|---|
-| `pp/` | Preprocessing — build Panaroo-sized input batches (Sublineage / species / rare packs) |
-| `tl/` | Tools/analysis — Jaccard distances, ref-genome scoring, clustering, pangenome stats |
-| `pl/` | Plotting — GPA matrices, epidemic-vs-mixed, granularity lollipops |
+| `run_panaroo/` | Produce Panaroo runs — metadata batching + per-strain run |
+| `gpa_analysis/` | GPA analysis downstream of a run — Jaccard distances, ref-genome scoring/granularity, epidemic-vs-mixed + its plotting (granularity lollipops, GPA matrices) |
+| `annotate_nodes/` | Annotate Panaroo cluster representatives with Kleborate virulence/AMR hits (minimap2) |
+| `docs/` | Analysis notebooks (`*.ipynb`) + `panaroo_run_inventory.md` — flat, no subfolders |
+| `pangenomerge/` | `pangenome_merge` runner + its own `docs/` (e.g. the SL147 paralogue-split report) |
 
 ## Panaroo fork dependency
 
-`pp/panaroo_run_strain.py` loads the Bakta→Prokka `convert` function from the
+`run_panaroo/panaroo_run_strain.py` loads the Bakta→Prokka `convert` function from the
 `panaroo` fork's `scripts/convert_bakta_to_prokka_gff.py` **by file path** — the
 fork must be checked out as a sibling of the BacHGT repo (`~/developer/panaroo`
 locally, `~/workspace/panaroo` on HPC). See `_load_convert_from_panaroo_fork()`.
@@ -36,14 +39,14 @@ Metadata preprocessing — scanning assembly/GFF dirs, resolving per-sample path
 GFF-feature QC, PopPUNK clusters, slimming the curated TSV — is handled by the
 `bac_metadata` subpackage (see `src/bac_metadata/CLAUDE.md`); its curated
 metadata TSV is the single source of truth for everything below. What remains in
-`bac_panaroo/pp/` is Panaroo-input prep: `panaroo_metadata_batching.py` (see Task 2).
+`bac_panaroo/run_panaroo/` is Panaroo-input prep: `panaroo_metadata_batching.py` (see Task 2).
 
 ### Task 2 — Run Panaroo
 
-Three modes sharing `pp/panaroo_run_strain.py`:
+Three modes sharing `run_panaroo/panaroo_run_strain.py`:
 
 - **2a** single CG: `sbatch src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh --clonal-group CG11`
-- **2b** whole dataset as a Slurm array: `pp/panaroo_metadata_batching.py` →
+- **2b** whole dataset as a Slurm array: `run_panaroo/panaroo_metadata_batching.py` →
   `panaroo_run_strain_metadata_array.sh`
 - **2c** arbitrary sample list: same script with `--sample-metadata-file`
 
@@ -68,13 +71,13 @@ sample count for smoke-tests.
 
 ### Task 3 — Analyse GPA & distances
 
-- **3a–c** distance analysis (Jaccard) — `tl/gpa_distances_single_group.py` →
+- **3a–c** distance analysis (Jaccard) — `gpa_analysis/gpa_distances_single_group.py` →
   `..._single_run.py` → `..._batch_runs.py` (narrowest → broadest). Tunables at the
   top of the `.sh`: `MIN_GROUP_SIZE`, `REFERENCE_TOP_N`, `GPA_FILTER_CUTOFF`,
   `CORE_SHELL_CUTOFF`, `SHELL_CLOUD_CUTOFF`, `WORKERS`.
-- **3d** combine — `tl/gpa_distances_combined.py` concatenates per-run detail TSVs;
+- **3d** combine — `gpa_analysis/gpa_distances_combined.py` concatenates per-run detail TSVs;
   optional epidemic-vs-mixed comparison.
-- **3e** granularity — `tl/gpa_reference_granularity.py` (+ `pl/granularity_lollipop.py`)
+- **3e** granularity — `gpa_analysis/gpa_reference_granularity.py` (+ `gpa_analysis/granularity_lollipop.py`)
   measures ref-assignment improvement across five levels (`f` → `d` → `c` → `b` →
   `a`) per strain, using the reference set `is_reference_genome ∪ is_mgh78578`.
   Self-contained: walks Panaroo run dirs, hierarchically splits `Sublineage` →
@@ -90,7 +93,7 @@ sample count for smoke-tests.
 Anchor: program plan `~/.claude/PROGRAM_PLAN_2026-05-30.md` — Workstream C,
 part C3. Branch: `task-ariba-rescue` (shared with bac_ariba).
 
-New script: **`tl/extract_medoid_per_cluster.py`**.
+New script: **`gpa_analysis/extract_medoid_per_cluster.py`**.
 
 `pan_genome_reference.fa` currently carries a Panaroo *centroid* per
 cluster (longest exemplar). For the ARIBA-rescue pipeline (workstream C)
@@ -111,6 +114,6 @@ Outputs:
   `kleb_panaroo_medoid` DB is registered.
 
 Existing `medoid_metrics_from_dist_sq()` in
-`tl/gpa_distances_cluster_metrics.py` finds medoids of *genomes* under
+`gpa_analysis/gpa_distances_cluster_metrics.py` finds medoids of *genomes* under
 Jaccard GPA distance — different problem; can't be reused directly. The
 new script is per-cluster + per-protein.

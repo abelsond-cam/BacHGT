@@ -30,7 +30,7 @@ Separate checkouts beside BacHGT (`~/developer/` locally, `~/workspace/` on HPC)
 
 - `panaroo` — fork of [gtonkinhill/panaroo](https://github.com/gtonkinhill/panaroo).
   `bac_panaroo` loads its `scripts/convert_bakta_to_prokka_gff.py` by file path
-  (the loader in `src/bac_panaroo/pp/panaroo_run_strain.py`); the fork must be
+  (the loader in `src/bac_panaroo/run_panaroo/panaroo_run_strain.py`); the fork must be
   cloned as a sibling of this repo.
 - `pangenome_merge` — fork of an external tool that merges Panaroo runs across
   batches. Run standalone; no code coupling to BacHGT.
@@ -42,7 +42,7 @@ One shared uv environment for the whole monorepo:
 
 ```bash
 uv sync                                                              # build / refresh the env
-uv run python src/bac_panaroo/tl/gpa_distances_single_run.py --help  # always use uv run
+uv run python src/bac_panaroo/gpa_analysis/gpa_distances_single_run.py --help  # always use uv run
 uv run --group test pytest tests/ src/bac_ariba/tests/               # tests
 uvx ruff check src/                                                  # lint (ruff is not a project dep)
 ```

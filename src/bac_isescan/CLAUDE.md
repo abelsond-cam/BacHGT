@@ -68,11 +68,11 @@ subpackage — its outputs feed the per-sample IS-family counter
 ## Cross-package dependency
 
 `isescan_family_heatmap_analysis.py` imports the clonal-group selection helper
-`bac_panaroo.tl.define_epidemic_cgs` (kept in `bac_panaroo`; shared with
+`bac_panaroo.gpa_analysis.define_epidemic_cgs` (kept in `bac_panaroo`; shared with
 `bac_complete_genomes`). Works because the monorepo shares one uv environment.
 
 The two lineage-hotspot modules + `_lineage_hotspot_common.py` left-join
-Kleborate annotations from `bac_panaroo.tl.annotate_panaroo_nodes_minimap`'s
+Kleborate annotations from `bac_panaroo.annotate_nodes.annotate_panaroo_nodes_minimap`'s
 output (`<panaroo_run>/<lineage>_panaroo_nodes_annotate_kleborate.tsv`), which
 in turn consumes the vendored references in `bac_kleborate`.
 

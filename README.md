@@ -57,7 +57,7 @@ input before invoking Panaroo. Three execution modes share this core:
 Run Panaroo on one clonal group, one sublineage, or one custom sample-list
 TSV as a single Slurm job.
 
-- Python: [`src/bac_panaroo/pp/panaroo_run_strain.py`](src/bac_panaroo/pp/panaroo_run_strain.py)
+- Python: [`src/bac_panaroo/run_panaroo/panaroo_run_strain.py`](src/bac_panaroo/run_panaroo/panaroo_run_strain.py)
 - Slurm: [`src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh`](src/bac_panaroo/slurm_scripts/panaroo_run_strain.sh)
 
 Examples:
@@ -90,7 +90,7 @@ To cover the whole dataset, we pre-compute per-lineage sample lists, include
 the reference genomes in each, and submit them as a Slurm array. Each array
 task calls the single-strain runner on one TSV.
 
-- Python: [`src/bac_panaroo/pp/panaroo_metadata_batching.py`](src/bac_panaroo/pp/panaroo_metadata_batching.py)
+- Python: [`src/bac_panaroo/run_panaroo/panaroo_metadata_batching.py`](src/bac_panaroo/run_panaroo/panaroo_metadata_batching.py)
   generates per-lineage batch TSVs plus a log under
   `<PANAROO_RUN_ROOT>/batches/`.
 - Shell helper: [`src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh`](src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh)
@@ -105,7 +105,7 @@ ROOT=/path/to/processed/panaroo_with_reference_genome
 BATCHES=$ROOT/batches
 
 # (i) Generate batch TSVs + .list files:
-uv run python src/bac_panaroo/pp/panaroo_metadata_batching.py
+uv run python src/bac_panaroo/run_panaroo/panaroo_metadata_batching.py
 bash src/bac_panaroo/slurm_scripts/generate_panaroo_ref_tsv_lists.sh
 
 # (ii) Submit one array per phased list (size N = line count of the list):
@@ -148,7 +148,7 @@ Core analysis module for one sample set: pangenome features, KPSC filtering,
 Jaccard distances + shared-gene counts vs. reference cohorts, clustering
 metrics.
 
-- Python: [`src/bac_panaroo/tl/gpa_distances_single_group.py`](src/bac_panaroo/tl/gpa_distances_single_group.py)
+- Python: [`src/bac_panaroo/gpa_analysis/gpa_distances_single_group.py`](src/bac_panaroo/gpa_analysis/gpa_distances_single_group.py)
 
 Not usually invoked directly — it is called by the orchestrator (3b) both on
 the whole set and on each stratified subset. Call it directly only when you
@@ -161,7 +161,7 @@ each major Clonal group (>= `MIN_GROUP_SIZE`) plus a pooled `other`, then on
 each major K_locus within each major Clonal group (plus pooled `other`).
 Reference genomes are always included in every subset.
 
-- Python: [`src/bac_panaroo/tl/gpa_distances_single_run.py`](src/bac_panaroo/tl/gpa_distances_single_run.py)
+- Python: [`src/bac_panaroo/gpa_analysis/gpa_distances_single_run.py`](src/bac_panaroo/gpa_analysis/gpa_distances_single_run.py)
 - Slurm: [`src/bac_panaroo/slurm_scripts/gpa_distances_single_run.sh`](src/bac_panaroo/slurm_scripts/gpa_distances_single_run.sh)
 
 Run:
@@ -192,7 +192,7 @@ Walks `PANAROO_RUN_ROOT`, picks every immediate subdirectory containing
 detail TSVs are still written by 3b inside each run directory. The batch
 itself compiles one summary TSV (one row per run = the whole-set row).
 
-- Python: [`src/bac_panaroo/tl/gpa_distances_batch_runs.py`](src/bac_panaroo/tl/gpa_distances_batch_runs.py)
+- Python: [`src/bac_panaroo/gpa_analysis/gpa_distances_batch_runs.py`](src/bac_panaroo/gpa_analysis/gpa_distances_batch_runs.py)
 - Slurm: [`src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh`](src/bac_panaroo/slurm_scripts/gpa_distances_batch_runs.sh)
 
 Run:
