@@ -593,6 +593,17 @@ def build_metadata_v2(
             # Only copy if the refseq side is empty / NaN.
             if pd.isna(v_refseq) or str(v_refseq) in ("", "nan"):
                 v2.at[ridx, col] = v_sr
+        # ── Additively carry SR-side boolean cohort flags onto the merged row.
+        # The SR row is about to be dropped; without this, its v1 `kpsc_final_list=True`
+        # (which encoded the v1 SR-side QC pass) would be lost, since the kept
+        # RefSeq row typically had `kpsc_final_list=False` (RefSeq rows weren't
+        # on v1's curated SR whitelist). The downstream additive kpsc gate in
+        # merge_kleborate_into_metadata_v2 then has nothing to recover from.
+        for bcol in ("kpsc_final_list", "is_kpsc"):
+            if bcol in meta.columns:
+                sr_val = str(v2.at[sidx, bcol]).strip().lower() in {"true", "1", "yes"}
+                ref_val = str(v2.at[ridx, bcol]).strip().lower() in {"true", "1", "yes"}
+                v2.at[ridx, bcol] = sr_val or ref_val
         # Save the SR BioSample for the join-back in sr_shadow.
         if pd.isna(v2.at[ridx, "sr_biosample"]) or str(v2.at[ridx, "sr_biosample"]) in ("", "nan"):
             v2.at[ridx, "sr_biosample"] = v2.at[sidx, "Sample"]
@@ -600,17 +611,10 @@ def build_metadata_v2(
     if sr_indices_to_drop:
         v2 = v2.drop(index=sr_indices_to_drop)
 
-    # ── 5. Column renames + drops.
-    for old, new in RENAMED_COLUMNS.items():
-        if old in v2.columns and new not in v2.columns:
-            v2 = v2.rename(columns={old: new})
-    for col in DROPPED_COLUMNS:
-        if col in v2.columns:
-            v2 = v2.drop(columns=[col])
-    # The legacy related_lr_accession column had heterogeneous content
-    # (sometimes a run accession, sometimes an assembly accession). After
-    # rename it lives at `_legacy_related_lr_accession`. lr_run_accession is
-    # the canonical LR-run column going forward.
+    # Note: column renames + drops moved to AFTER the orphan-ingest concat
+    # (step 6 below), otherwise the orphan scaffold can re-introduce legacy
+    # column names (e.g. `year_parsed`) via the concat, leaving the v2 output
+    # with both old and new names side-by-side.
 
     # ── 6. Ingest orphan LRAs as new pure-LR rows (G.1.1).
     # Only ingest orphans that are in lra_final_list (the accepted cohort).
@@ -629,6 +633,19 @@ def build_metadata_v2(
     else:
         stats["n_orphans_ingested"] = 0
         stats["n_orphans_residual"] = 0
+
+    # ── 6.5 Column renames + drops (moved here from step 5, after the orphan
+    # concat, so the scaffold can't reintroduce legacy column names).
+    for old, new in RENAMED_COLUMNS.items():
+        if old in v2.columns and new not in v2.columns:
+            v2 = v2.rename(columns={old: new})
+    for col in DROPPED_COLUMNS:
+        if col in v2.columns:
+            v2 = v2.drop(columns=[col])
+    # The legacy related_lr_accession column had heterogeneous content
+    # (sometimes a run accession, sometimes an assembly accession). After
+    # rename it lives at `_legacy_related_lr_accession`. lr_run_accession is
+    # the canonical LR-run column going forward.
 
     # ── 7. Finalize: validate Sample uniqueness on LRA-bearing rows, sort, etc.
     stats["v2_rows"] = len(v2)

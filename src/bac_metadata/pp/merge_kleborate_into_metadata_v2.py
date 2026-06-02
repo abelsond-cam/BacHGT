@@ -75,18 +75,21 @@ DEFAULT_DISCARD_GLOB = "kleborate_escherichia_output.tsv"
 KLEB_SPECIES_COL = "enterobacterales__species__species"
 KLEB_STRAIN_COL  = "Sample"  # collate renames Kleborate's "strain" → "Sample"
 
-# The species names Kleborate v3 emits for the KPSC. Match by prefix so we catch
-# all subspecies variants without hard-coding the exact subspecies suffix:
-#   "Klebsiella pneumoniae"
-#   "Klebsiella variicola subsp. variicola"
-#   "Klebsiella quasipneumoniae subsp. quasipneumoniae"
-#   "Klebsiella quasipneumoniae subsp. similipneumoniae"
-#   "Klebsiella africana"
-#   "Klebsiella tropica"           (formerly K. variicola subsp. tropica)
+# KPSC species rule (Long et al. 2017 + downstream — 7 phylogroups Kp1-Kp7):
+#   - any species name containing "variicola" (covers K. variicola subsp. variicola,
+#     K. variicola subsp. tropica, K. quasivariicola — Kp3/Kp5/Kp6)
+#   - any species name containing "quasi" (covers K. quasipneumoniae subsp. *,
+#     K. quasivariicola — Kp2/Kp4/Kp6)
+#   - K. pneumoniae (Kp1)
+#   - K. africana (Kp7)
+#   - K. tropica (alternate name for K. variicola subsp. tropica)
+# Implemented in `_is_kpsc` below as a substring + prefix OR. KPSC_SPECIES_PREFIXES
+# is retained only as a documentation aid; `_is_kpsc` is authoritative.
 KPSC_SPECIES_PREFIXES: tuple[str, ...] = (
     "Klebsiella pneumoniae",
     "Klebsiella variicola",
     "Klebsiella quasipneumoniae",
+    "Klebsiella quasivariicola",
     "Klebsiella africana",
     "Klebsiella tropica",
 )
@@ -121,11 +124,27 @@ def _coerce_bool(series: pd.Series) -> pd.Series:
 
 
 def _is_kpsc(species: pd.Series) -> pd.Series:
-    """True iff species starts with one of the KPSC genus-species prefixes."""
+    """True iff species is a Klebsiella pneumoniae species complex member.
+
+    Rule (Long et al. 2017 — 7 phylogroups Kp1-Kp7):
+      - species name contains ``variicola`` (Kp3/Kp5/Kp6: K. variicola subsp. *,
+        K. quasivariicola)
+      - species name contains ``quasi`` (Kp2/Kp4/Kp6: K. quasipneumoniae subsp. *,
+        K. quasivariicola)
+      - starts with ``Klebsiella pneumoniae`` (Kp1)
+      - starts with ``Klebsiella africana`` (Kp7)
+      - starts with ``Klebsiella tropica`` (alternate name for K. variicola subsp. tropica)
+
+    Kleborate v3 species output is canonical, so plain substring/prefix checks
+    suffice (no need for case-folding).
+    """
     s = species.astype(str)
     mask = pd.Series(False, index=species.index)
-    for prefix in KPSC_SPECIES_PREFIXES:
-        mask = mask | s.str.startswith(prefix)
+    mask = mask | s.str.contains("variicola", regex=False, na=False)
+    mask = mask | s.str.contains("quasi",     regex=False, na=False)
+    mask = mask | s.str.startswith("Klebsiella pneumoniae")
+    mask = mask | s.str.startswith("Klebsiella africana")
+    mask = mask | s.str.startswith("Klebsiella tropica")
     return mask
 
 
