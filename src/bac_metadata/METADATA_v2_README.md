@@ -1,10 +1,11 @@
 # `metadata_v2` — README
 
-*Snapshot: 2026-05-29 · `metadata_v2_all_samples_and_columns.tsv` · 86,518 rows × 483 columns*
+*Snapshot: 2026-06-02 · `metadata_v2_all_samples_and_columns.tsv` · 86,398 rows × 505 columns*
 
-*(483 columns span: ENA Portal metadata, NCBI Datasets assembly info, Kleborate v3.2.4 typing
+*(505 columns span: ENA Portal metadata, NCBI Datasets assembly info, Kleborate v3.2.4 typing
 (species/MLST/virulence/AMR/Kaptive/wzi), ISEScan IS-family counts, CheckM2 QC, Bakta annotation
-stats, parsed/categorised clinical metadata, file-path pointers, and cohort flags.)*
+stats, parsed/categorised clinical metadata, file-path pointers, cohort flags, and
+`EBI_*_AST` binary truth values for 22 antibiotics (BacPredict step 9).)*
 
 Authoritative description of the Klebsiella **metadata_v2** table for BacHGT, BacPredict, and
 external collaborators. Read this before consuming the table — it explains how rows are keyed,
@@ -29,29 +30,41 @@ The canonical TSV lives on HPC at:
   **not** on HPC `raw/`. Moving it to HPC is a tracked cleanup (§12).
 - In addition to ATB, **long-read assemblies from RefSeq** were downloaded plus the **NCTC**
   historic Klebs set (`is_nctc=97`).
-- Species had to match Klebsiella via **Kleborate v3.2.4**. The KpSC species complex
-  (*K. pneumoniae*, *K. variicola*, *K. quasipneumoniae*, *K. africana*, *K. tropica*) gives
-  `is_kpsc=79,268` rows; the curated final list `kpsc_final_list=79,022` (the 246 excluded are
-  KPSC-by-species but failed cohort QC).
+- Species had to match Klebsiella via **Kleborate v3.2.4**. The Kp species complex (KPSC) covers
+  the 7 phylogroups Kp1-Kp7 per Long et al. 2017:
+  - **Kp1** — *Klebsiella pneumoniae*
+  - **Kp2 / Kp4** — *K. quasipneumoniae* subsp. similipneumoniae / quasipneumoniae
+  - **Kp3** — *K. variicola* subsp. *variicola*
+  - **Kp5** — *K. variicola* subsp. *tropica* (also known as *K. tropica*)
+  - **Kp6** — *K. quasivariicola*
+  - **Kp7** — *K. africana*
+
+  Implementation rule (`_is_kpsc` in `merge_kleborate_into_metadata_v2.py`): species name
+  **contains** `variicola` OR **contains** `quasi`, OR starts with *Klebsiella pneumoniae* /
+  *africana* / *tropica*. Catches all 7 phylogroups including hyphenated subspecies.
+
+  v2 `is_kpsc=True` = **79,153**; curated final list `kpsc_final_list=True` = **79,054** (99
+  excluded — KPSC-by-species but failed cohort QC).
 - **~7,246** non-KPSC Klebsiella (e.g. *K. oxytoca*, *K. aerogenes*) are present in v2 but **not**
   in `is_kpsc`. They were not put through the full extra QC.
 
-**Snapshot counts** (2026-05-29):
+**Snapshot counts** (2026-06-02 — post `rebuild_v2.sh` with the column-rename + kpsc-additive + is_variant_called cascade):
 
 | | rows |
 |---|---:|
-| Total v2 rows | **86,518** |
-| `is_kpsc=True` | 79,268 |
-| `kpsc_final_list=True` | **79,022** |
-| Non-KPSC Klebsiella | ~7,246 |
+| Total v2 rows | **86,398** |
+| `is_kpsc=True` | 79,153 |
+| `kpsc_final_list=True` | **79,054** |
+| `is_variant_called=True` *(NEW)* | **76,574** |
 | `lra_final_list=True` | **5,519** |
 | `is_complete=True` | 4,017 |
 | `is_hybrid=True` | 2,618 |
 | `is_reference_genome=True` | **1,777** (1,681 KPSC + 96 non-KPSC) |
 | `is_nctc=True` | 97 |
 | `is_mgh78578=True` | 1 |
-| ~~`is_complete_norway_genome=True`~~ *(scheduled for removal — see §12)* | 580 |
-| Paired (LR + SR partner) | 2,919  *(matches `paired_index.tsv`)* |
+| Paired (LR + SR partner) | 3,075 |
+| Orphan LR-only | 2,581 |
+| SR-only | 80,742 |
 
 ---
 
@@ -80,13 +93,21 @@ Full lists + descriptions in §4 and §5.
 
 ### Three row archetypes
 
-| Archetype | `Sample` is… | SR columns | LR columns | `sr_biosample` |
-|---|---|---|---|---|
-| **SR-only** (~80.7k) | a BioSample (`SAMN…`/`SAME…`/`SAMD…`) | filled | empty | empty |
-| **Paired** (~2,919) | an LR accession (`GCF_…`/`GCA_…`) | filled (SR partner's values copied in) | filled | original SR BioSample |
-| **LR-only / orphan LRA** (~130) | an LR accession (`GCF_…`/`GCA_…`) | empty | filled | empty |
+| Archetype | `Sample` is… | rows | SR columns | LR columns | `sr_biosample` |
+|---|---|---:|---|---|---|
+| **SR-only** | a BioSample (`SAMN…`/`SAME…`/`SAMD…`) | **80,742** | filled | empty | empty |
+| **Paired LR+SR** | an LR accession (`GCF_…`/`GCA_…`) | **3,075** | filled (SR partner's values copied in) | filled | original SR BioSample |
+| **LR-only / orphan LRA** | an LR accession (`GCF_…`/`GCA_…`) | **2,581** | empty | filled | empty |
 
-Sample-prefix breakdown: SAME 38,918 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / GCA_ 1,408.
+Per-archetype KPSC and variant-call breakdown:
+
+| Archetype | rows | `is_kpsc=T` | `kpsc_final_list=T` | `is_variant_called=T` |
+|---|---:|---:|---:|---:|
+| SR-only | 80,742 | 73,754 | 73,754 | 73,754 |
+| Paired LR+SR | 3,075 | 2,820 | 2,820 | 2,820 |
+| Orphan LR-only | 2,581 | 2,579 | 2,480 | **0** *(no SR data → no variant calls)* |
+
+Sample-prefix breakdown: SAME 38,913 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / GCA_ 1,293.
 
 ---
 
@@ -94,15 +115,15 @@ Sample-prefix breakdown: SAME 38,918 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / G
 
 | Flag | Definition | Count |
 |---|---|---:|
-| `is_kpsc` | Kleborate species call ∈ {K. pneumoniae, K. variicola, K. quasipneumoniae, K. africana, K. tropica} | 79,268 |
-| `kpsc_final_list` | Curated KPSC cohort: `lra_final_list ∧ is_kpsc` on LR-bearing rows; v1-curated whitelist on SR rows | 79,022 |
+| `is_kpsc` | Kp species complex (Kp1-Kp7): species **contains** `variicola` OR `quasi`, OR starts with *K. pneumoniae* / *africana* / *tropica*. See §1. | **79,153** |
+| `kpsc_final_list` | Curated KPSC cohort. **Additive rule** (post-2026-06-02 cascade): paired LR rows = `kpsc_v1 OR (lra_final_list ∧ is_kpsc)` — preserves v1's SR-side QC pass even if LR fails CheckM2; orphan LR rows = `lra_final_list ∧ is_kpsc`; SR-only rows = unchanged from v1. | **79,054** |
+| `is_variant_called` *(NEW)* | True iff the row has SR data that passed v1's KPSC QC (the cohort variant calling was performed against). Computed as `(NOT orphan LRA) AND v1's kpsc_final_list=True`. Always False on orphan LRA rows. | **76,574** |
 | `is_mgh78578` | The historic *K. pneumoniae* MGH 78578 reference used for variant calling (Sample `GCF_000016305.1`, ST38). **Complete but NOT hybrid-assembled** → not in `is_reference_genome` | 1 |
 | `lra_final_list` | LR assemblies passing CheckM2 (completeness ≥ 99.0%, contamination ≤ 5.0%, genome size ≤ max RefSeq observed). Derivation: [`build_lra_set.py:120`](../bac_data/lr_data/build_lra_set.py#L120) | 5,519 |
 | `is_complete` | NCBI `assembly_level == "Complete Genome"` (chromosome + plasmids closed/circular) | 4,017 |
 | `is_hybrid` | NCBI `library_class == "hybrid"` — **any LR sequenced with both long and short read tech**. Includes drafts; NOT gated on `is_complete`. Derivation: [`build_lra_set.py:123`](../bac_data/lr_data/build_lra_set.py#L123) | 2,618 |
 | `is_reference_genome` | **Strict** intersection: `is_complete ∧ is_hybrid ∧ Sample starts with GCF_` (RefSeq). Highest-confidence reference set. Derivation: [`build_lra_set.py:126-127`](../bac_data/lr_data/build_lra_set.py#L126-L127) | 1,777 |
 | `is_nctc` | Historic NCTC Klebs assembly | 97 |
-| ~~`is_complete_norway_genome`~~ | ⚠ **Code drop in place** — added to `build_metadata_v2.py`'s `DROPPED_COLUMNS`; `merge_norway_pairs_into_v2.py` now identifies Norway LR-extras directly from the integration TSV / Table S1 xlsx (no v2 flag dependency). Will disappear from the TSV on the next `rebuild_v2.sh` run. Do not use in new code. | 580 (current TSV) |
 
 **Important nuances:**
 
@@ -225,7 +246,10 @@ Per-genome IS-family copy counts from **ISEScan**, run on LR assemblies via
 
 Of the LR rows in `lra_final_list` (and within those, `is_complete` / `is_hybrid` /
 `is_reference_genome`), a subset have **pre-curated short-read partner assemblies** from ATB.
-The paired cohort totals **2,919** rows.
+The paired cohort in `paired_index.tsv` totals **2,919** rows (snapshot from G.4.5). After the
+2026-06-02 cascade rebuild, the equivalent v2 archetype count is **3,075** — `paired_index.tsv`
+predates the latest Norway-pair merger and is mildly stale; re-run `build_paired_features.py`
+to refresh.
 
 *Note: although `is_hybrid` and `is_reference_genome` rows were all sequenced with combined SR+LR
 data, the SR fastq/assembly is **not always retained** as a separate paired SR row in ATB.*
@@ -461,40 +485,30 @@ samples were reviewed manually (nearly 75% of the assembly set). Reviewed studie
 
 ### Code / schema cleanups (deferred — to apply when v2 is next rebuilt)
 
-- ~~**Rename** `year_parsed` → `collection_year`~~ ✅ Code complete (2026-06-02):
-  added to `build_metadata_v2.py`'s `RENAMED_COLUMNS`; [`metadata_curation.py`](pp/metadata_curation.py)
-  also now emits `collection_year` directly (forward-fix for next v1 rebuild). Pending `rebuild_v2.sh`
-  to apply the rename to the on-disk v2 TSV.
-- ~~**Rename** `gff_file` → `sr_gff_file` and `assembly_file` → `sr_assembly_file`~~ ✅ Code complete
-  (2026-06-02): added to `RENAMED_COLUMNS` in [`build_metadata_v2.py`](pp/build_metadata_v2.py).
-  Pending `rebuild_v2.sh` to apply.
-- ~~**Rename** `lra_gff_file` → `lr_gff_file` and `lra_assembly_file` → `lr_assembly_file`~~ ✅ Code
-  complete (2026-06-02): added to `RENAMED_COLUMNS`; cascade-internal scripts
-  ([`add_paths_gff_fna_to_metadata.py`](pp/add_paths_gff_fna_to_metadata.py),
-  [`merge_norway_pairs_into_v2.py`](pp/merge_norway_pairs_into_v2.py)) updated to write the new names.
-  Pending `rebuild_v2.sh` to apply.
+- ~~**Rename** `year_parsed` → `collection_year`~~ ✅ **Applied 2026-06-02** — column gone from
+  v2 on disk; `metadata_curation.py` forward-fix emits `collection_year` directly.
+- ~~**Rename** `gff_file` → `sr_gff_file` and `assembly_file` → `sr_assembly_file`~~ ✅ **Applied 2026-06-02**.
+- ~~**Rename** `lra_gff_file` → `lr_gff_file` and `lra_assembly_file` → `lr_assembly_file`~~
+  ✅ **Applied 2026-06-02** — cascade-internal scripts updated; 20 downstream consumer files
+  swept ([`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py), [`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py),
+  [`panaroo_run_strain.py`](../bac_panaroo/run_panaroo/panaroo_run_strain.py),
+  [`run_genomad.py`](../bac_genomad/run_genomad.py), bac_data/lr_data/* scripts).
 - **Path-relative rewrite** *(still pending)* — strip the `<project_k>` prefix from `lr_assembly_file` /
   `lr_gff_file` / `sr_assembly_file` / `sr_gff_file` so consumers can supply their own root prefix.
   Touches every consumer that opens these paths.
-- **Downstream consumer sweep** *(coupled with the cascade re-run)* — when `rebuild_v2.sh` lands the
-  renames, the following scripts will start reading the new column names and need updating before
-  they run again: [`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py),
-  [`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py),
-  [`panaroo_run_strain.py`](../bac_panaroo/run_panaroo/panaroo_run_strain.py),
-  [`run_genomad.py`](../bac_genomad/run_genomad.py),
-  [`stage_lra_extras_for_tf.py`](../bac_data/lr_data/stage_lra_extras_for_tf.py),
-  [`download_lra_gffs.py`](../bac_data/lr_data/download_lra_gffs.py),
-  [`stage_sr_for_related_lr.py`](../bac_data/lr_data/stage_sr_for_related_lr.py),
-  [`build_sr_shadow_for_lra.py`](pp/build_sr_shadow_for_lra.py) (reads v1; only affected if v1 is
-  rebuilt with new names),
+- ~~**Downstream consumer sweep**~~ ✅ **Applied 2026-06-02** — 20 BacHGT files updated via
+  word-boundary regex: bac_kleborate, bac_isescan, bac_panaroo runners; bac_genomad; bac_data/lr_data
+  staging + downloads; relevant slurm scripts + CLAUDE.mds. The v1-only readers
+  ([`build_sr_shadow_for_lra.py`](pp/build_sr_shadow_for_lra.py),
   [`slim_metadata.py`](pp/slim_metadata.py),
   [`count_gff_features.py`](pp/count_gff_features.py),
-  [`merge_gff_feature_counts_into_metadata.py`](pp/merge_gff_feature_counts_into_metadata.py).
-- ~~**Drop** `is_complete_norway_genome`~~ ✅ Code complete (2026-06-02): added to
-  `DROPPED_COLUMNS` in [`build_metadata_v2.py`](pp/build_metadata_v2.py#L110);
-  [`merge_norway_pairs_into_v2.py`](pp/merge_norway_pairs_into_v2.py) now identifies Norway
-  LR-extras from the integration TSV / xlsx (no flag dependency). Pending `rebuild_v2.sh` to
-  actually remove the column from the on-disk TSV.
+  [`merge_gff_feature_counts_into_metadata.py`](pp/merge_gff_feature_counts_into_metadata.py),
+  [`plot_completeness_after_curation_and_collation.py`](pp/plot_completeness_after_curation_and_collation.py))
+  intentionally kept on legacy names — they read v1 directly and will follow when v1 is next rebuilt.
+  BacPredict rename batch (7 files) handed off to that repo's agent.
+- ~~**Drop** `is_complete_norway_genome`~~ ✅ **Applied 2026-06-02** — code complete + cascade
+  re-run. Column is gone from v2 on disk; `merge_norway_pairs_into_v2.py` identifies Norway
+  LR-extras from the integration TSV / Table S1 xlsx directly.
 - **`is_refseq` legacy sweep** — six modules in `bac_isescan`, `bac_panaroo` (mgefinder
   selector), and `bac_ariba` still read the dropped `is_refseq` flag and the slimmed v1 TSV.
   Repoint by intent: cohort-arm → `lra_final_list`; reference-bucket → `is_reference_genome`;
