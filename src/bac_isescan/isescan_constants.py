@@ -34,7 +34,7 @@ CANONICAL_IS_FAMILY_COLUMNS: tuple[str, ...] = tuple(
     ),
 )
 
-META_COLUMNS: tuple[str, ...] = ("Sample", "Clonal group", "is_refseq")
+META_COLUMNS: tuple[str, ...] = ("Sample", "Clonal group", "lra_final_list")
 
 
 def cluster_csv_column(cluster_id: str) -> str:

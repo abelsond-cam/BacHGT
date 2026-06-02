@@ -126,7 +126,6 @@ def test_filter_with_sublineage_and_clonal_group(tmp_path):
         # header
         [
             "kpsc_final_list",
-            "is_refseq",
             "run_accession",
             "metadata.runs.instrument.platform",
             "fastq_ftp",
@@ -135,13 +134,13 @@ def test_filter_with_sublineage_and_clonal_group(tmp_path):
             "Clonal group",
         ],
         # SL23 / CG23 — match
-        ["True", "False", "SRR_A", "ILLUMINA", "ftp.x/A_1.fastq.gz;ftp.x/A_2.fastq.gz", "m1;m2", "SL23", "CG23"],
+        ["True", "SRR_A", "ILLUMINA", "ftp.x/A_1.fastq.gz;ftp.x/A_2.fastq.gz", "m1;m2", "SL23", "CG23"],
         # SL23 / CG39 — sublineage match but wrong CG
-        ["True", "False", "SRR_B", "ILLUMINA", "ftp.x/B_1.fastq.gz;ftp.x/B_2.fastq.gz", "m1;m2", "SL23", "CG39"],
+        ["True", "SRR_B", "ILLUMINA", "ftp.x/B_1.fastq.gz;ftp.x/B_2.fastq.gz", "m1;m2", "SL23", "CG39"],
         # SL15 / CG39 — sublineage doesn't match
-        ["True", "False", "SRR_C", "ILLUMINA", "ftp.x/C_1.fastq.gz;ftp.x/C_2.fastq.gz", "m1;m2", "SL15", "CG39"],
-        # SL23 / CG23 but is_refseq — excluded by the kpsc/refseq filter
-        ["True", "True", "SRR_D", "ILLUMINA", "ftp.x/D_1.fastq.gz;ftp.x/D_2.fastq.gz", "m1;m2", "SL23", "CG23"],
+        ["True", "SRR_C", "ILLUMINA", "ftp.x/C_1.fastq.gz;ftp.x/C_2.fastq.gz", "m1;m2", "SL15", "CG39"],
+        # kpsc=False — excluded by the kpsc filter
+        ["False", "SRR_D", "ILLUMINA", "ftp.x/D_1.fastq.gz;ftp.x/D_2.fastq.gz", "m1;m2", "SL23", "CG23"],
     ]
     p = tmp_path / "meta.tsv"
     with p.open("w", newline="") as fh:

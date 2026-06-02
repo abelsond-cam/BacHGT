@@ -1,15 +1,23 @@
 """One-shot accession-list builder for the ARIBA Slurm array.
 
-Reads Bacotype's curated metadata TSV, filters to the kleb short-read subset
-(``kpsc_final_list==True AND is_refseq==False``), parses ``fastq_ftp`` URLs,
-and writes a slim 5-column TSV the array job consumes line-by-line. Every
-row that does NOT make it into the inclusion list is written to a sidecar
-skipped TSV with a ``reason`` column, so deferred edge cases stay visible.
+Reads bac_metadata's curated metadata_v2 TSV, filters to the kleb short-read
+subset (``kpsc_final_list==True`` plus SR-side fastq presence enforced by
+``_classify_row``), parses ``fastq_ftp`` URLs, and writes a slim 5-column TSV
+the array job consumes line-by-line. Every row that does NOT make it into
+the inclusion list is written to a sidecar skipped TSV with a ``reason``
+column, so deferred edge cases stay visible.
+
+The legacy ``is_refseq==False`` clause was removed (2026-06-02): v2 dropped
+``is_refseq``; SR rows are now identified by the row having a non-empty
+``run_accession`` + ``fastq_ftp`` + ``ILLUMINA`` platform (the gates already
+applied per-row by ``_classify_row``). Pure-LR / complete-genome rows
+without SR fastqs are naturally excluded via the ``no_fastq_ftp`` skip
+reason.
 
 Usage
 -----
     pixi run -e dev python -m bac_ariba.pp.extract_accessions \
-        --metadata <bacotype_metadata.tsv> \
+        --metadata <metadata_v2.tsv> \
         --outdir <run-accessions-dir> \
         --version v1
 """
@@ -25,9 +33,8 @@ from pathlib import Path
 
 logger = logging.getLogger("extract_accessions")
 
-# Column names we read from Bacotype's metadata.tsv.
+# Column names we read from bac_metadata's metadata_v2 TSV.
 COL_KPSC = "kpsc_final_list"
-COL_REFSEQ = "is_refseq"
 COL_RUN_ACC = "run_accession"
 COL_FASTQ_FTP = "fastq_ftp"
 COL_FASTQ_MD5 = "fastq_md5"
@@ -130,10 +137,10 @@ def _filter_to_kleb_short_reads(
     """Stream the metadata TSV and partition into included + skipped rows.
 
     Optional ``sublineage`` and ``clonal_group`` further restrict the inclusion
-    set. Rows that pass kpsc/refseq but fail the SL/CG filter are simply not
-    written anywhere — they're not the same kind of "skip" as a malformed row.
+    set. Rows that pass kpsc but fail the SL/CG filter are simply not written
+    anywhere — they're not the same kind of "skip" as a malformed row.
     """
-    required = (COL_KPSC, COL_REFSEQ, COL_RUN_ACC, COL_FASTQ_FTP, COL_FASTQ_MD5, COL_PLATFORM)
+    required = (COL_KPSC, COL_RUN_ACC, COL_FASTQ_FTP, COL_FASTQ_MD5, COL_PLATFORM)
     if sublineage is not None:
         required = (*required, COL_SUBLINEAGE)
     if clonal_group is not None:
@@ -147,7 +154,7 @@ def _filter_to_kleb_short_reads(
             if col not in reader.fieldnames:
                 raise SystemExit(f"metadata TSV missing required column: {col}")
         for row in reader:
-            if row.get(COL_KPSC) != "True" or row.get(COL_REFSEQ) != "False":
+            if row.get(COL_KPSC) != "True":
                 continue
             if sublineage is not None and row.get(COL_SUBLINEAGE, "").strip() != sublineage:
                 continue

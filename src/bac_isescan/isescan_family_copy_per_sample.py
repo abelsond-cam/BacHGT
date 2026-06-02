@@ -69,7 +69,7 @@ def load_isescan_family_and_clusters(
 
 
 def _worker_task(task: tuple[str, object, bool, str, str]) -> tuple[dict[str, Any] | None, str]:
-    sample, cg, is_refseq, rel_s, base_dir_str = task
+    sample, cg, lra_final_list, rel_s, base_dir_str = task
     base_dir = Path(base_dir_str)
 
     rel: object = rel_s if rel_s else ""
@@ -95,7 +95,7 @@ def _worker_task(task: tuple[str, object, bool, str, str]) -> tuple[dict[str, An
     row: dict[str, Any] = {
         "Sample": sample,
         "Clonal group": cg,
-        "is_refseq": bool(is_refseq),
+        "lra_final_list": bool(lra_final_list),
     }
     row.update(fam_counts)
     for ck, cv in cluster_counts.items():
@@ -110,7 +110,7 @@ def _tasks_from_meta(meta_rows: pd.DataFrame, base_dir: Path) -> list[tuple[str,
     for sample, cg, iref, rel in zip(
         meta_rows["Sample"],
         meta_rows["Clonal group"],
-        meta_rows["is_refseq"],
+        meta_rows["lra_final_list"],
         meta_rows["isescan_file"],
         strict=True,
     ):
@@ -186,13 +186,13 @@ def main() -> None:
 
     meta = pd.read_csv(args.metadata, sep="\t", low_memory=False)
 
-    required = ("kpsc_final_list", "is_refseq", "isescan_file", "Clonal group", "Sample")
+    required = ("kpsc_final_list", "lra_final_list", "isescan_file", "Clonal group", "Sample")
     for col in required:
         if col not in meta.columns:
             raise KeyError(f"metadata must contain column '{col}'")
 
     kpsc = meta.loc[parse_bool(cast(pd.Series, meta["kpsc_final_list"]))].copy()
-    kpsc["is_refseq"] = parse_bool(cast(pd.Series, kpsc["is_refseq"]))
+    kpsc["lra_final_list"] = parse_bool(cast(pd.Series, kpsc["lra_final_list"]))
 
     tasks = _tasks_from_meta(kpsc, args.base_dir)
     skip_reasons: dict[str, int] = {}

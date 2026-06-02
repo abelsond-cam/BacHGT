@@ -4,7 +4,7 @@
 Does not read raw ISEScan CSVs — load the per-sample table produced by
 ``isescan_family_copy_per_sample.py`` first.
 
-For each cohort (refseq vs short-read builds from ``is_refseq``), computes:
+For each cohort (refseq vs short-read builds from ``lra_final_list``), computes:
   - Mean and SD (sample SD, ddof=1) of canonical IS-family copy counts across samples
     per top-N clonal groups (by cohort unique-sample count).
   - A ``rare_CGs`` pooled group: samples belonging to the K least-populated clonal groups
@@ -147,13 +147,13 @@ def main() -> None:
         missing = set(CANONICAL_IS_FAMILY_COLUMNS) - set(fam_cols)
         raise ValueError(f"Per-sample CSV missing canonical family columns: {sorted(missing)}")
 
-    if "is_refseq" not in df.columns:
-        raise KeyError("Per-sample CSV must contain is_refseq.")
+    if "lra_final_list" not in df.columns:
+        raise KeyError("Per-sample CSV must contain lra_final_list.")
 
-    df["is_refseq"] = _coerce_bool_series(df["is_refseq"])
+    df["lra_final_list"] = _coerce_bool_series(df["lra_final_list"])
 
-    refseq = df[df["is_refseq"]].copy()
-    short_read = df[~df["is_refseq"]].copy()
+    refseq = df[df["lra_final_list"]].copy()
+    short_read = df[~df["lra_final_list"]].copy()
 
     whole = df.dropna(subset=["Clonal group"]).copy()
     whole["_cg_key"] = whole["Clonal group"].astype(str)

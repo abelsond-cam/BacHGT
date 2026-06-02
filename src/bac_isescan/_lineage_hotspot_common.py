@@ -45,7 +45,13 @@ USE_COLS = [
 ]
 
 # A sample is "reference bucket" if any of these run-TSV flags is True.
-REF_BUCKET_FLAGS = ("is_refseq", "is_nctc", "is_mgh78578", "is_complete_norway_genome")
+# Updated 2026-06-02 to match the v2 reference-set convention (bac_panaroo's
+# `is_reference_genome ∪ is_mgh78578`). Legacy flags `is_refseq` and
+# `is_complete_norway_genome` were dropped from v2; `is_nctc` is kept out per
+# bac_panaroo's documented reference set. The downstream loop already guards
+# with `if c in meta.columns` so older run-TSVs that still carry the legacy
+# flags don't break.
+REF_BUCKET_FLAGS = ("is_reference_genome", "is_mgh78578")
 
 GPA_META_COLS = {"Gene", "Non-unique Gene name", "Annotation"}
 

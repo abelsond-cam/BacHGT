@@ -12,7 +12,7 @@ a sibling subpackage; `bac_metadata` produces the curated metadata TSV).
 
 `bac_ariba` runs [ARIBA](https://github.com/sanger-pathogens/ariba) on ~80,000 Klebsiella short-read genomes against curated allele dictionaries — recovering virulence (and later AMR/MLST) profiles directly from reads. The pipeline shape is parametrised by a `--<dbname>` flag; the first DB is `--kleb-virulence` (5 loci: ybt / clb / iuc / iro / rmp), seeded from [Kleborate](https://github.com/klebgenomics/Kleborate)'s reference alleles. ARIBA's `prepareref` step runs CD-HIT to cluster alleles — we use its defaults.
 
-Sister subpackages in this monorepo: `bac_panaroo` (pangenome / GPA / mobile-element analysis) and `bac_metadata` (the curated metadata TSV producer). `bac_ariba` consumes `metadata_final_curated_all_samples_and_columns.tsv` to source accessions: filter rows where `is_refseq == False` AND `kpsc_final_list == True`, then take the `run_accession` column. (`related_sr_accession` is reserved for an on-hold long-vs-short-read comparison and is **not** the column to use.)
+Sister subpackages in this monorepo: `bac_panaroo` (pangenome / GPA / mobile-element analysis) and `bac_metadata` (the curated metadata TSV producer). `bac_ariba` consumes **`metadata_v2_all_samples_and_columns.tsv`** to source accessions: filter rows where `kpsc_final_list == True`, then take the `run_accession` column. SR-only rows are then identified by `_classify_row` (requires non-empty `run_accession` + `fastq_ftp` + `ILLUMINA` platform), so pure-LR / complete-genome rows without SR fastqs drop into the `no_fastq_ftp` skip bucket. (The legacy `is_refseq == False` clause was removed 2026-06-02: v2 dropped `is_refseq`.)
 
 ## Commands
 
@@ -26,9 +26,9 @@ pixi run -e dev fmt             # ruff format
 pixi run -e refbuild python -m bac_ariba.pp.build_ariba_ref \
     --kleb-virulence --ariba-sif <RDS>/.../containers/ariba_213.sif
 
-# Extract a cohort accession list (HPC only — reads Bacotype's metadata).
+# Extract a cohort accession list (HPC only — reads metadata_v2).
 pixi run -e dev python -m bac_ariba.pp.extract_accessions \
-    --metadata <RDS>/.../final/metadata_final_curated_all_samples_and_columns.tsv \
+    --metadata <RDS>/.../final/metadata_v2_all_samples_and_columns.tsv \
     --outdir   <RDS>/.../processed/mag_rescue/kleb_virulence/<cohort>/accessions \
     --version v1 [--sublineage SL23 | --clonal-group CG39]
 

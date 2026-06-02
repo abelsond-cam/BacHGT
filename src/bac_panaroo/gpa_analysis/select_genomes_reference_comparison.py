@@ -5,8 +5,9 @@ import argparse
 import pandas as pd
 from pathlib import Path
 
-# Hardcoded metadata path
-METADATA_PATH = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_slimmed.tsv"
+# Hardcoded metadata path (switched to metadata_v2 2026-06-02 — the legacy
+# `is_refseq` column is gone; reference selection uses `is_reference_genome`).
+METADATA_PATH = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv"
 OUTPUT_PATH = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/mgefinder/reference_comparison_sets.tsv"
 CLONAL_GROUP = "CG258"
 REFERENCE_KL_TYPES = ["KL63", "KL106", "KL107"]  # reference KL types
@@ -29,15 +30,16 @@ def select_genomes(n):
     cg_df = df[df["Clonal group"] == CLONAL_GROUP].copy()
     print(f"Total genomes in {CLONAL_GROUP}: {len(cg_df)}")
     
-    # Get all is_refseq genomes
-    ref_df = cg_df[cg_df["is_refseq"].astype(str).str.lower().isin(["true", "1", "yes"])]
-    
+    # Get all reference-genome candidates (v2 strict: complete ∧ hybrid ∧ GCF — the
+    # highest-confidence reference subset; replaces the legacy v1 `is_refseq` flag).
+    ref_df = cg_df[cg_df["is_reference_genome"].astype(str).str.lower().isin(["true", "1", "yes"])]
+
     # Select 3 references: one from each KL type
     references = []
     for kl in REFERENCE_KL_TYPES:
         kl_ref_df = ref_df[ref_df["K_locus"] == kl]
         if len(kl_ref_df) == 0:
-            print(f"ERROR: No is_refseq genome found for {CLONAL_GROUP} + {kl} combination")
+            print(f"ERROR: No is_reference_genome found for {CLONAL_GROUP} + {kl} combination")
             continue
         
         ref_genome = kl_ref_df.iloc[0]
