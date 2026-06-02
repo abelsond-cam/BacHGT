@@ -377,6 +377,16 @@ def run_lra(
     print(f"  lr_gff_file filled: {gff_filled} ({n_rows - gff_filled} without a GFF on disk)")
     print(f"  lr_assembly_file filled (empty only): {asm_filled}")
 
+    # ── Path-relative rewrite (2026-06-02): strip the project_k prefix from
+    # lr_assembly_file / lr_gff_file (and sr_* if present) so v2's path
+    # columns are portable. Consumers prepend their own root via
+    # `bac_metadata.path_resolve.resolve_v2_path`.
+    from bac_metadata.path_resolve import to_relative_v2_path
+    for col in ("lr_assembly_file", "lr_gff_file", "sr_assembly_file", "sr_gff_file"):
+        if col in df.columns:
+            mask = df[col].notna() & (df[col].astype(str).str.strip().ne("")) & (df[col].astype(str).str.lower().ne("nan"))
+            df.loc[mask, col] = df.loc[mask, col].map(to_relative_v2_path)
+
     df.to_csv(meta_path, sep="\t", index=False)
     print("\n" + "=" * 80)
     print(f"Writing updated metadata to: {meta_path}")

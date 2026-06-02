@@ -493,9 +493,17 @@ samples were reviewed manually (nearly 75% of the assembly set). Reviewed studie
   swept ([`run_kleborate_lra.py`](../bac_kleborate/run_kleborate_lra.py), [`run_isescan_lra.py`](../bac_isescan/run_isescan_lra.py),
   [`panaroo_run_strain.py`](../bac_panaroo/run_panaroo/panaroo_run_strain.py),
   [`run_genomad.py`](../bac_genomad/run_genomad.py), bac_data/lr_data/* scripts).
-- **Path-relative rewrite** *(still pending)* — strip the `<project_k>` prefix from `lr_assembly_file` /
-  `lr_gff_file` / `sr_assembly_file` / `sr_gff_file` so consumers can supply their own root prefix.
-  Touches every consumer that opens these paths.
+- **Path-relative rewrite** *(groundwork landed 2026-06-02; activation deferred)* — helper
+  module [`src/bac_metadata/path_resolve.py`](path_resolve.py) provides
+  `resolve_v2_path(value, root=None)` (back-compat: absolute paths pass through unchanged) +
+  `to_relative_v2_path(absolute, root=None)`. The cascade's `add_paths_gff_fna --mode lra` step
+  now strips the `<project_k>` prefix from `lr_*` / `sr_*` path columns at write time. **NOT yet
+  activated** because that requires updating the 7 consumers that open these paths
+  (`run_kleborate_lra.py`, `run_isescan_lra.py`, `panaroo_run_strain.py`, `run_genomad.py`,
+  `stage_lra_extras_for_tf.py`, `download_lra_gffs.py`, `stage_sr_for_related_lr.py`) to call
+  `resolve_v2_path`. **Trigger activation by**: (1) sweeping the 7 consumers, (2) re-running
+  `rebuild_v2.sh` to lay down relative paths. Without (1), the rebuild would produce relative
+  paths that consumers can't open directly.
 - ~~**Downstream consumer sweep**~~ ✅ **Applied 2026-06-02** — 20 BacHGT files updated via
   word-boundary regex: bac_kleborate, bac_isescan, bac_panaroo runners; bac_genomad; bac_data/lr_data
   staging + downloads; relevant slurm scripts + CLAUDE.mds. The v1-only readers
