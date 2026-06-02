@@ -636,8 +636,19 @@ def build_metadata_v2(
 
     # ── 6.5 Column renames + drops (moved here from step 5, after the orphan
     # concat, so the scaffold can't reintroduce legacy column names).
+    # If BOTH `old` and `new` are present after the concat (the orphan scaffold
+    # may have emitted `new` directly via metadata_curation's forward-fix, e.g.
+    # `collection_year`), MERGE: use `new` where populated, fall back to `old`,
+    # then drop `old`. This handles year_parsed → collection_year cleanly when
+    # the scaffold has 117 rows with collection_year set but the bulk of v2's
+    # rows only have year_parsed.
     for old, new in RENAMED_COLUMNS.items():
-        if old in v2.columns and new not in v2.columns:
+        if old not in v2.columns:
+            continue
+        if new in v2.columns:
+            v2[new] = v2[new].combine_first(v2[old])
+            v2 = v2.drop(columns=[old])
+        else:
             v2 = v2.rename(columns={old: new})
     for col in DROPPED_COLUMNS:
         if col in v2.columns:
