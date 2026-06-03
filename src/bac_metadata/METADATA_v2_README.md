@@ -59,7 +59,7 @@ The canonical TSV lives on HPC at:
 | `lra_final_list=True` | **5,519** |
 | `is_complete=True` | 4,017 |
 | `is_hybrid=True` | 2,618 |
-| `is_reference_genome=True` | **1,777** (1,681 KPSC + 96 non-KPSC) |
+| `is_reference_genome=True` | **1,777** (1,684 KPSC + 93 non-KPSC) |
 | `is_nctc=True` | 97 |
 | `is_mgh78578=True` | 1 |
 | Paired (LR + SR partner) | 3,075 |
@@ -167,8 +167,8 @@ Populated on `lra_final_list=True` rows (and on the LR-only orphan rows).
 | Column | Source | Notes |
 |---|---|---|
 | `lra_gca`, `lra_gcf` | NCBI Datasets | The LR assembly's GCA / GCF accessions (versioned). One of these is the row's `Sample`. |
-| `lr_assembly_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR FASTA path on HPC. Path-relative rewrite still pending — see §12. |
-| `lr_gff_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR GFF path. Path-relative rewrite still pending. |
+| `lr_assembly_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR FASTA path, relative to `<project_k>`. |
+| `lr_gff_file` | `add_paths_gff_fna_to_metadata.py --mode lra` | LR GFF path, relative to `<project_k>`. |
 | `lr_run_accession` | ENA / NCBI Datasets | LR run accession (ONT/PacBio); separate from SR's `run_accession` |
 | `lr_instrument_platform`, `lr_instrument_model` | ENA / NCBI Datasets | LR sequencer info |
 | `level` | NCBI Datasets | NCBI `assembly_level` (used to derive `is_complete`) |
@@ -242,87 +242,89 @@ Per-genome IS-family copy counts from **ISEScan**, run on LR assemblies via
 
 ---
 
-## 9. Paired long+short read subset
+## 9. Paired long+short read subset — the LR-vs-SR comparison cohort
 
-Of the LR rows in `lra_final_list` (and within those, `is_complete` / `is_hybrid` /
-`is_reference_genome`), a subset have **pre-curated short-read partner assemblies** from ATB.
-The paired cohort in `paired_index.tsv` totals **2,919** rows (snapshot from G.4.5). After the
-2026-06-03 cascade rebuild, the equivalent v2 archetype count is **3,075** — `paired_index.tsv`
-predates the latest Norway-pair merger and is mildly stale; re-run `build_paired_features.py`
-to refresh.
+> **TL;DR — when asked to compare long-read and short-read assemblies of the same isolate:**
+> filter v2 to the rows that carry both sides (4 paths populated) and then sub-select to
+> `is_reference_genome` (or `is_complete` if you want the wider set). v2 is the single source of
+> truth; no auxiliary join file is needed. The recipe is verbatim below.
 
-*Note: although `is_hybrid` and `is_reference_genome` rows were all sequenced with combined SR+LR
-data, the SR fastq/assembly is **not always retained** as a separate paired SR row in ATB.*
+### Step 1 — entry filter (the 4-path archetype gate)
 
-### Quick join file — `paired_index.tsv`
+```python
+import pandas as pd
+v2 = pd.read_csv(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/"
+    "metadata_v2_all_samples_and_columns.tsv",
+    sep="\t", low_memory=False,
+)
 
-Shortcut for working with the paired cohort:
+# A row is part of the paired set iff:
+#   - its Sample is a GCF/GCA accession (LR-keyed, the canonical row form for paired isolates)
+#   - it carries an SR partner BioSample (sr_biosample), and
+#   - all four assembly/GFF paths are on disk.
+samp   = v2["Sample"].astype(str)
+paired = v2[samp.str.startswith(("GCF_", "GCA_")) & v2["sr_biosample"].notna()]
+paired = paired[paired[[
+    "sr_assembly_file", "sr_gff_file",
+    "lr_assembly_file", "lr_gff_file",
+]].notna().all(axis=1)]
+```
+
+`paired` is `2,675 rows` (post-rebuild, 2026-06-03). This is the largest set on which BOTH the
+long- and short-read assembly + GFF resolve on disk — the prerequisite for any per-isolate
+LR-vs-SR comparison.
+
+| Filter step | Rows |
+|---|---:|
+| GCF/GCA `Sample` + `sr_biosample.notna()` | **3,075** |
+| above + all 4 paths populated | **2,675** |
+| (the 400-row gap is paired isolates whose assemblies haven't been staged on disk yet) | |
+
+### Step 2 — choose the cohort
+
+Within the 2,675-row paired set, sub-select with one of the cohort flags below. Counts on the
+post-rebuild v2 (2026-06-03):
+
+| Flag | Rows | Meaning | LR-vs-SR comparison quality |
+|---|---:|---|---|
+| `is_reference_genome` | **709** | complete ∧ hybrid ∧ `GCF_` (RefSeq) — built with modern hybrid tech, NCBI-closed | **best** |
+| `is_complete` | **1,454** | NCBI `assembly_level == "Complete Genome"` (closed circular chromosome) | very good |
+| `is_hybrid` | 1,451 | `library_class == "hybrid"` — assembled from combined SR+LR reads | much weaker (drafts allowed) |
+| `lra_final_list` | 2,648 | LR passed CheckM2 (≥ 99% completeness, ≤ 5% contamination, size ≤ max RefSeq) | weakest (drafts dominate) |
+
+So the **default when asked to "compare long and short reads":** filter for the 4 paths populated
+and then `is_reference_genome` (best) or `is_complete` (broader). Avoid `is_hybrid` /
+`lra_final_list` for this purpose — they admit draft assemblies that aren't directly comparable
+to a finished SR partner.
+
+### Two notes on edge cases
+
+- **`is_mgh78578`** (1 row): is_complete=True, is_hybrid=False, is_reference_genome=False. It's a
+  closed genome assembled with **older Sanger sequencing**, not hybrid SR+LR — so it's not a
+  reference under this scheme and is not in the `is_reference_genome` cohort.
+- **Why `lra_final_list` (2,648) < paired+4paths (2,675):** the 27-row gap is paired isolates
+  whose LR assembly didn't pass our CheckM2 QC. Without the 4-paths gate, the unfiltered count
+  difference is 36 (3,075 paired vs 3,039 in lra_final_list) — those are the long reads that
+  failed QC for the LRA cohort overall. They remain in v2 as paired rows because the SR side is
+  fine; they just shouldn't be used as the LR reference.
+
+### Companion artefact: `sr_shadow_for_lra.tsv`
+
+A construction-time sidecar at `<project_k>/david/processed/complete_vs_sr_genomes/` that keeps
+a frozen snapshot of the SR-side Kleborate / ISEScan typing for every paired row, so v2's
+LR-overlay step doesn't overwrite the SR-side values when the row's `Sample` flips from
+SR BioSample to LR accession. **Not the right entry point for analysis** — read v2 directly with
+the recipe above. The shadow's value is downstream typing reconciliation (it pairs `sr_*` typing
+columns alongside v2's unprefixed LR-side typing for the same row), and it sits at:
 
 ```
-<project_k>/david/processed/complete_vs_sr_genomes/paired_index.tsv
+<project_k>/david/processed/complete_vs_sr_genomes/sr_shadow_for_lra.tsv
 ```
 
-23 columns covering LR-side identity + QC + flags, keyed by both `lra_sample` and
-`sr_biosample`. Most useful columns:
-
-| Column | Meaning |
-|---|---|
-| `lra_sample` | LR-side Sample (`GCF_…` / `GCA_…`, versioned) — joins to v2 `Sample` |
-| `sr_biosample` | SR partner's BioSample (`SAMN`/`SAME`/`SAMD`) — joins to v2 `sr_biosample` |
-| `lra_gca`, `lra_gcf` | LR assembly accessions (versioned) |
-| `lra_assembly_level` | NCBI level (`Complete Genome` / `Chromosome` / `Scaffold` / `Contig`) |
-| `lra_tier` | `GCF` (RefSeq) vs `GCA` (GenBank) |
-| `lra_library_class` | `hybrid` / `short_only` / `long_only` / `unknown` |
-| `lra_is_complete`, `lra_is_hybrid`, `lra_is_reference_genome` | LR cohort flags |
-| `lra_checkm2_*` | CheckM2 QC metrics on the LR assembly |
-| `lra_species`, `lra_is_kpsc`, `kpsc_final_list` | LR-side species + KPSC membership |
-
-### LR-side breakdown of the 2,919 paired pairs
-
-**By assembly quality** (`lra_assembly_level`):
-
-| Level | Pairs |
-|---|---:|
-| Complete Genome | **1,574** (54%) |
-| Contig (draft) | 1,205 (41%) |
-| Chromosome | 91 |
-| Scaffold | 49 |
-
-**By library class** (`lra_library_class`):
-
-| Class | Pairs |
-|---|---:|
-| `hybrid` | **1,546** (53%) |
-| `short_only` | 807 |
-| `long_only` | 412 |
-| `unknown` | 154 |
-
-**By cohort flags:**
-
-| Subset | Pairs | Definition |
-|---|---:|---|
-| `lra_is_complete=True` | 1,574 | NCBI Complete Genome |
-| `lra_is_hybrid=True` | 1,546 | hybrid library |
-| Complete ∧ Hybrid (any tier) | 1,093 | LR closed AND hybrid-assembled |
-| `lra_is_reference_genome=True` | **748** | complete ∧ hybrid ∧ GCF — highest-confidence reference subset |
-| **None of complete/hybrid/reference** | **892** (31%) | draft LR paired with SR — useful for LR-vs-SR comparison but not a reference |
-
-**By tier:**
-
-| Tier | Pairs |
-|---|---:|
-| `GCF` (RefSeq) | 1,748 |
-| `GCA` (GenBank) | 1,171 |
-
-### Companion paired artefacts (same directory)
-
-- `lra_features.tsv` — 2,919 × 115 — LR-side typing + IS + AMR features extracted from v2.
-- `sr_features.tsv` — 2,523 × 172 — SR-side mirror (superset; 109 cols overlap with LR; ~410 SR
-  rows have no extant LR partner).
-- `sr_shadow_for_lra.tsv` — frozen SR-side typing snapshot keyed on `sr_biosample`, used so v2's
-  overwrite of LR-side fields doesn't lose the SR-side state.
-
-Consumed by analyses in [`src/bac_complete_genomes/`](../bac_complete_genomes/).
+Downstream paired analyses in [`src/bac_complete_genomes/`](../bac_complete_genomes/) consume v2
+directly via the 4-path filter and only reach for the shadow when SR-side typing reconciliation
+is needed.
 
 ---
 
@@ -568,8 +570,10 @@ The chain:
    `isolation_source` / `country` / `collection_date`; emit
    `metadata_final_curated_all_samples_and_columns.tsv` (= "v1").
 4. **Add file paths** — [`add_paths_gff_fna_to_metadata.py`](pp/add_paths_gff_fna_to_metadata.py).
-   Walks HPC paths to fill `gff_file` / `assembly_file` for SR and `lra_gff_file` /
-   `lra_assembly_file` for LR.
+   Default mode walks the SR pools to fill `sr_assembly_file` / `sr_gff_file` on v1 (GC-prefixed
+   Samples are skipped — they're LR-only and have no SR path). `--mode lra` fills
+   `lr_assembly_file` / `lr_gff_file` on v2 from the `related_lr` pools. All four columns are
+   stored relative to `<project_k>`.
 5. **Rebuild v2** — [`rebuild_v2.sh`](pp/rebuild_v2.sh) (8-step cascade, all idempotent; each
    merge step renames the existing TSV to `.bak.<UTC>.tsv` before writing):
    1. `build_metadata_v2.py` — **always rebuilds from v1** (no auto-skip if a v2 file already
