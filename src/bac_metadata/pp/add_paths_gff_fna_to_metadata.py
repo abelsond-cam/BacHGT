@@ -263,7 +263,8 @@ def run(metadata_path: Path | None = None) -> None:
         mask = df[col].notna() & s.str.strip().ne("") & s.str.lower().ne("nan")
         df.loc[mask, col] = df.loc[mask, col].map(to_relative_v2_path)
 
-    df = df.drop(columns=["sample_key"])
+    # Drop legacy bare names if present (older v1 produced by pre-rename runs).
+    df = df.drop(columns=[c for c in ("assembly_file", "gff_file", "sample_key") if c in df.columns])
     df.to_csv(meta_path, sep="\t", index=False)
 
     print("\n" + "=" * 80)
