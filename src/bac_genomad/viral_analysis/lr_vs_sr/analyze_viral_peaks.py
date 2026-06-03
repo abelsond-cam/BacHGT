@@ -40,15 +40,18 @@ from bac_genomad.viral_analysis.viral_brackets import (
 
 DEFAULT_INPUT = DEFAULT_VIRAL_LR_VS_SR_DIR / "standalone_viral_lengths.tsv"
 
-# 3-series overlay for --multi mode (LRA-vs-SR carriage-ratio plot). Each
-# entry: (cohort, side, colour, alpha, display_label, ratio_role) — ratio_role
-# values are "sr_baseline" (used as denominator) or "lra_<tag>" (used as
-# numerator in the per-bracket ratio annotation).
-MULTI_SERIES_DEFAULT = [
-    ("reference_genome", "lra", "#1f4f8a", 0.60, "LRA-reference", "lra_ref"),
-    ("is_complete",      "lra", "#5fa3d0", 0.55, "LRA-complete",  "lra_complete"),
-    ("is_complete",      "sr",  "#d62728", 0.45, "SR-paired",     "sr_baseline"),
+# Paired comparisons for --multi mode. Each row of the 2×2 grid is one
+# (cohort, display_label) — only same-cohort SR partners are overlaid with
+# the LRA samples, so the two arms are always the same pair set.
+MULTI_PAIRED_COMPARISONS = [
+    ("reference_genome", "Reference (n=748 paired)"),
+    ("is_complete",      "Complete  (n=1,574 paired)"),
 ]
+
+# Colour scheme used inside each panel — LRA blue, SR red. Same across rows
+# so the reader doesn't need to re-check the legend per panel.
+LRA_COLOUR = "#1f77b4"
+SR_COLOUR  = "#d62728"
 
 # Bracket cuts from the peak fits — used to compute carriage in the multi-
 # series plot. Centre/width come from viral_brackets so they stay in sync.
@@ -192,88 +195,92 @@ def _cohort_universe_sizes(paired_index_tsv: Path) -> dict[str, int]:
 def _plot_zoom_multi(
     df: pd.DataFrame,
     universes: dict[str, int],
-    series_spec: list[tuple],
     bin_bp: int,
     lower_window_bp: tuple[int, int],
     upper_window_bp: tuple[int, int],
     out_png: Path,
 ) -> None:
-    """3-series overlay zoom plot with per-bracket carriage ratios.
+    """2×2 paired-cohort overlay zoom plot with per-bracket carriage ratios.
 
-    Each series in ``series_spec`` is ``(cohort, side, colour, alpha, label, role)``.
-    Carriage rate per (series, bracket) = unique Samples with a contig in
-    the bracket, divided by ``universes[cohort]`` (n paired samples in
-    that cohort). The ``role == "sr_baseline"`` series is the denominator
-    of every printed ratio.
+    Rows = cohorts (Reference / Complete); columns = peaks (Wbr_v / Sgld_v).
+    Each panel overlays the **same-cohort** paired LRA (blue) and SR-partners
+    (red) so the comparison is strictly apples-to-apples. Each panel is
+    annotated with the LRA + SR carriage in the ±2σ bracket and the LRA/SR
+    ratio.
     """
-    fig, axes = plt.subplots(1, 2, figsize=(15, 6))
-    series_data: list[dict] = []
-    for cohort, side, colour, alpha, label, role in series_spec:
-        sub = df[(df["cohort"] == cohort) & (df["side"] == side) & df["length"].notna()]
-        n_univ = universes.get(cohort, 0)
-        series_data.append({
-            "cohort": cohort, "side": side, "colour": colour, "alpha": alpha,
-            "label": label, "role": role, "lengths": sub["length"].to_numpy(),
-            "samples": sub["Sample"].to_numpy(), "n_universe": n_univ,
-        })
-
     panels = [
-        ("Wbr_v (Weber virus) — lower peak", *lower_window_bp, WBR_V_LO, WBR_V_HI),
-        ("Sgld_v (Sugargold virus) — upper peak", *upper_window_bp, SGLD_V_LO, SGLD_V_HI),
+        ("Wbr_v (Weber virus)",      *lower_window_bp, WBR_V_LO, WBR_V_HI),
+        ("Sgld_v (Sugargold virus)", *upper_window_bp, SGLD_V_LO, SGLD_V_HI),
     ]
 
-    for ax, (title, win_lo, win_hi, br_lo, br_hi) in zip(axes, panels, strict=False):
-        edges = np.arange(win_lo, win_hi + bin_bp, bin_bp) / 1000.0
-        baseline_carriage = None
-        carriage_rates: list[tuple[str, float, int, int]] = []  # (label, rate, n_carriers, n_universe)
+    fig, axes = plt.subplots(
+        len(MULTI_PAIRED_COMPARISONS), len(panels),
+        figsize=(15, 5 * len(MULTI_PAIRED_COMPARISONS)),
+        sharex="col",
+    )
 
-        for s in series_data:
-            in_window = (s["lengths"] >= win_lo) & (s["lengths"] < win_hi)
-            ax.hist(
-                s["lengths"][in_window] / 1000.0, bins=edges,
-                alpha=s["alpha"], color=s["colour"], edgecolor=s["colour"],
-                linewidth=1.0, label=s["label"],
+    for r, (cohort, row_label) in enumerate(MULTI_PAIRED_COMPARISONS):
+        n_pairs = universes.get(cohort, 0)
+        lra = df[(df["cohort"] == cohort) & (df["side"] == "lra") & df["length"].notna()]
+        sr  = df[(df["cohort"] == cohort) & (df["side"] == "sr")  & df["length"].notna()]
+        lra_lens = lra["length"].to_numpy()
+        sr_lens  = sr["length"].to_numpy()
+        lra_samples = lra["Sample"].to_numpy()
+        sr_samples  = sr["Sample"].to_numpy()
+
+        for c, (title, win_lo, win_hi, br_lo, br_hi) in enumerate(panels):
+            ax = axes[r, c]
+            edges = np.arange(win_lo, win_hi + bin_bp, bin_bp) / 1000.0
+
+            for lens_arr, label_prefix, colour, alpha in (
+                (lra_lens, "LRA", LRA_COLOUR, 0.55),
+                (sr_lens,  "SR",  SR_COLOUR,  0.45),
+            ):
+                in_window = (lens_arr >= win_lo) & (lens_arr < win_hi)
+                ax.hist(
+                    lens_arr[in_window] / 1000.0, bins=edges,
+                    alpha=alpha, color=colour, edgecolor=colour,
+                    linewidth=1.0, label=f"{label_prefix}-paired",
+                )
+
+            # Carriage rates inside the ±2σ bracket
+            lra_in_br = (lra_lens >= br_lo) & (lra_lens < br_hi)
+            sr_in_br  = (sr_lens  >= br_lo) & (sr_lens  < br_hi)
+            n_lra_carr = int(pd.Series(lra_samples[lra_in_br]).nunique())
+            n_sr_carr  = int(pd.Series(sr_samples [sr_in_br]).nunique())
+            lra_rate = n_lra_carr / n_pairs if n_pairs else float("nan")
+            sr_rate  = n_sr_carr  / n_pairs if n_pairs else float("nan")
+            ratio = lra_rate / sr_rate if sr_rate else float("nan")
+
+            # Bracket window shaded
+            ax.axvspan(br_lo / 1000.0, br_hi / 1000.0, color="gold", alpha=0.10, zorder=0)
+            ax.axvline(br_lo / 1000.0, color="gold", linestyle=":", linewidth=1, alpha=0.8)
+            ax.axvline(br_hi / 1000.0, color="gold", linestyle=":", linewidth=1, alpha=0.8)
+
+            ax.set_xlabel("standalone viral contig length (kb)" if r == len(MULTI_PAIRED_COMPARISONS) - 1 else "")
+            ax.set_ylabel("contigs")
+            ax.set_title(f"{row_label}  —  {title}", fontsize=10.5)
+            ax.legend(loc="upper left", fontsize=8)
+            ax.grid(True, alpha=0.2)
+
+            # Stats box
+            box_text = (
+                f"bracket [{br_lo/1000:.1f} – {br_hi/1000:.1f}] kb (±2σ)\n"
+                f"  LRA carriage: {n_lra_carr:>3}/{n_pairs:<5} = {100*lra_rate:5.2f}%\n"
+                f"  SR  carriage: {n_sr_carr :>3}/{n_pairs:<5} = {100*sr_rate :5.2f}%\n"
+                f"  LRA / SR ratio = {ratio:.2f}×"
             )
-            # Carriage rate in the bracket window (not the full plot window)
-            in_bracket = (s["lengths"] >= br_lo) & (s["lengths"] < br_hi)
-            n_carriers = int(pd.Series(s["samples"][in_bracket]).nunique())
-            rate = n_carriers / s["n_universe"] if s["n_universe"] else float("nan")
-            carriage_rates.append((s["label"], rate, n_carriers, s["n_universe"]))
-            if s["role"] == "sr_baseline":
-                baseline_carriage = rate
-
-        # Bracket window shaded
-        ax.axvspan(br_lo / 1000.0, br_hi / 1000.0, color="gold", alpha=0.10, zorder=0)
-        ax.axvline(br_lo / 1000.0, color="gold", linestyle=":", linewidth=1, alpha=0.8)
-        ax.axvline(br_hi / 1000.0, color="gold", linestyle=":", linewidth=1, alpha=0.8)
-
-        ax.set_xlabel("standalone viral contig length (kb)")
-        ax.set_ylabel("contigs")
-        ax.set_title(title, fontsize=11)
-        ax.legend(loc="upper left", fontsize=8)
-        ax.grid(True, alpha=0.2)
-
-        # Per-bracket carriage + ratio annotation
-        lines = [f"carriage in bracket [{br_lo/1000:.1f} – {br_hi/1000:.1f} kb]:"]
-        for label, rate, n_carr, n_univ in carriage_rates:
-            lines.append(f"  {label}: {n_carr:>3}/{n_univ:<4} = {100*rate:5.2f}%")
-        if baseline_carriage and baseline_carriage > 0:
-            lines.append("")
-            for label, rate, _, _ in carriage_rates:
-                if label.startswith("SR"):
-                    continue
-                ratio = rate / baseline_carriage
-                lines.append(f"  {label} / SR = {ratio:.2f}×")
-        ax.text(
-            0.98, 0.97, "\n".join(lines),
-            transform=ax.transAxes, ha="right", va="top",
-            fontsize=8, family="monospace",
-            bbox={"facecolor": "white", "alpha": 0.85, "edgecolor": "grey", "linewidth": 0.5},
-        )
+            ax.text(
+                0.98, 0.97, box_text,
+                transform=ax.transAxes, ha="right", va="top",
+                fontsize=8, family="monospace",
+                bbox={"facecolor": "white", "alpha": 0.88, "edgecolor": "grey", "linewidth": 0.5},
+            )
 
     fig.suptitle(
-        "Standalone viral peaks — paired LRA-reference / LRA-complete / SR-paired"
-        f"  ({bin_bp//1000} kb bins, ±2σ bracket window shaded)",
+        "Standalone viral peaks — paired LRA-vs-SR by cohort\n"
+        f"(top: 748 reference-genome pairs; bottom: 1,574 complete-genome pairs; "
+        f"{bin_bp//1000} kb bins; ±2σ bracket window shaded)",
         fontsize=12,
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))
@@ -317,7 +324,7 @@ def main() -> int:
         args.out_dir.mkdir(parents=True, exist_ok=True)
         png_path = args.out_dir / "standalone_viral_peak_zoom_multi.png"
         _plot_zoom_multi(
-            df, universes, MULTI_SERIES_DEFAULT, bin_bp,
+            df, universes, bin_bp,
             (int(args.lower_window_kb[0] * 1000), int(args.lower_window_kb[1] * 1000)),
             (int(args.upper_window_kb[0] * 1000), int(args.upper_window_kb[1] * 1000)),
             png_path,
