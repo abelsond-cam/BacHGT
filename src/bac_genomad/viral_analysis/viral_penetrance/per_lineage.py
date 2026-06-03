@@ -194,7 +194,11 @@ def _plot_penetrance(
     labels = df["label"].tolist()
     heights = df["n_samples"].to_numpy()
     cmap = plt.get_cmap("viridis")
-    norm = Normalize(vmin=0, vmax=100)
+    # Colour scale spans 0 → the actual data max (rounded up to nearest 5 %),
+    # shared across the two panels so Sgld_v and Wbr_v bars are colour-comparable.
+    data_max = float(max(df[f"pct_{b}_carriers"].max() for b in CARRIAGE_BRACKETS))
+    vmax = max(5.0, float(np.ceil(data_max / 5.0)) * 5.0)
+    norm = Normalize(vmin=0, vmax=vmax)
 
     fig, axes = plt.subplots(2, 1, figsize=(max(10, 0.5 * len(labels) + 4), 9), sharex=True)
     for ax, bracket in zip(axes, CARRIAGE_BRACKETS, strict=False):
@@ -222,7 +226,7 @@ def _plot_penetrance(
 
     sm = ScalarMappable(norm=norm, cmap=cmap)
     sm.set_array([])
-    fig.colorbar(sm, ax=axes, fraction=0.03, pad=0.02, label="% carriage")
+    fig.colorbar(sm, ax=axes, fraction=0.03, pad=0.02, label=f"% carriage (0 – {vmax:.0f}%)")
     fig.suptitle(
         f"Standalone-viral peak carriage by {group_col_name} (KpSC; epidemic ≥ "
         f"{int(df.loc[df['is_epidemic']].n_samples.min()) if df['is_epidemic'].any() else 0:,}"
