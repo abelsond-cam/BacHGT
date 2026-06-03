@@ -238,6 +238,18 @@ def merge_norway_pairs(
         if lr_acc:
             v2.at[sr_idx, "lr_run_accession"] = lr_acc
             v2.at[sr_idx, "lr_instrument_platform"] = "OXFORD_NANOPORE"
+        # ── Additively carry SR-side boolean cohort flags from the LR-extra
+        # onto the (kept) SR-partner row. Mirrors the SR+RefSeq carry in
+        # build_metadata_v2's `find_sr_refseq_pairs` merge — without this,
+        # if the LR-extra had `kpsc_final_list=True` in v1 (the RefSeq side
+        # of the curated KPSC list) but the SR partner had `kpsc=False`,
+        # the LR-extra's True would be lost when its row is dropped below.
+        # ~151 v1 Norway pairs are in this state.
+        for bcol in ("kpsc_final_list", "is_kpsc"):
+            if bcol in v2.columns:
+                sr_val = str(v2.at[sr_idx, bcol]).strip().lower() in {"true", "1", "yes"}
+                ex_val = str(v2.at[ex_idx, bcol]).strip().lower() in {"true", "1", "yes"}
+                v2.at[sr_idx, bcol] = sr_val or ex_val
         # The SR partner now needs fresh Kleborate + ISEScan against the LRA.
         v2.at[sr_idx, "kleborate_needs_recall"] = True
         v2.at[sr_idx, "isescan_needs_recall"] = True
