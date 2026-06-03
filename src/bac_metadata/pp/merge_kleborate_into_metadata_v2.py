@@ -377,8 +377,20 @@ def apply_cascade(
     # Paired LR rows: additive (v1 OR strict). Never lose a v1 True.
     paired_post = pre_full | strict_kpsc
     meta.loc[paired_lra, "kpsc_final_list"] = paired_post[paired_lra].values
-    # Orphan LR rows: strict formula (no v1 SR-side data to preserve).
-    meta.loc[orphan_lra, "kpsc_final_list"] = strict_kpsc[orphan_lra].values
+    # Orphan LR rows: additive, contingent on is_kpsc=True.
+    # Updated 2026-06-03: previously strict (`lra_final_list ∧ is_kpsc`), which
+    # dropped ~101 v1 RefSeq complete-genome rows whose CheckM2 score was missing
+    # or below threshold but were genuinely KPSC (90 K. pneumoniae, 5 K. variicola,
+    # 4 K. quasipneumoniae, …) and were on v1's curated kpsc whitelist. The new
+    # rule preserves v1 kpsc=True for these as long as Kleborate confirms KPSC:
+    #   orphan_post = is_kpsc ∧ (pre_full ∨ lra_final_list)
+    # i.e. require is_kpsc=True (Kleborate-confirmed), then admit if either v1
+    # had kpsc=True OR the LR passed CheckM2. Ingested-orphan LRAs (no v1 row,
+    # pre_full=False, lra_final_list=True) still resolve to is_kpsc, same as
+    # before. Non-KPSC orphans stay False.
+    is_kpsc_bool = _coerce_bool(meta["is_kpsc"])
+    orphan_post = is_kpsc_bool & (pre_full | final_lra)
+    meta.loc[orphan_lra, "kpsc_final_list"] = orphan_post[orphan_lra].values
 
     # Stats — categorise the outcome.
     post_full = _coerce_bool(meta["kpsc_final_list"])
