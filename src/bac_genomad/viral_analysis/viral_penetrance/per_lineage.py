@@ -55,6 +55,7 @@ from bac_genomad.viral_analysis.viral_brackets import BRACKET_LABELS, assign_bra
 
 # Brackets we want carriage flags for — the two named peaks.
 CARRIAGE_BRACKETS = ("Sgld_v", "Wbr_v")
+BRACKET_FULL_NAMES = {"Sgld_v": "Sugargold virus", "Wbr_v": "Weber virus"}
 
 # Cohort columns on metadata_v2.
 META_USECOLS = ("Sample", "Sublineage", "Clonal group", "is_kpsc")
@@ -213,7 +214,7 @@ def _plot_penetrance(
                 ha="center", va="bottom", fontsize=8,
             )
         ax.set_ylabel("n samples")
-        ax.set_title(f"{bracket} carriage by {group_col_name}")
+        ax.set_title(f"{bracket} ({BRACKET_FULL_NAMES[bracket]}) carriage by {group_col_name}")
         ax.grid(axis="y", alpha=0.2)
 
     axes[-1].set_xticks(np.arange(len(labels)))

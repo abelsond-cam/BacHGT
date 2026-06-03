@@ -6,8 +6,8 @@ companion ``lr_vs_sr/analyze_viral_peaks.py`` for the fitting code and
 ``lr_vs_sr/standalone_viral_peak_stats_is_complete_lra_all.tsv`` for the
 provenance numbers):
 
-- **Upper peak** ("Sgld_v"): μ = 111,018 bp, σ = 2,080 bp
-- **Lower peak** ("Wbr_v"): μ = 54,500 bp, σ = 1,160 bp
+- **Upper peak ``Sgld_v``** — *Sugargold virus*. μ = 111,018 bp, σ = 2,080 bp
+- **Lower peak ``Wbr_v``**  — *Weber virus*.     μ =  54,500 bp, σ = 1,160 bp
 
 Both peaks are very tight: σ/μ ≈ 1.9% (upper) and 2.1% (lower); FWHM
 4.9 kb and 2.7 kb respectively. We use ±2σ around each centre (95.4 %
