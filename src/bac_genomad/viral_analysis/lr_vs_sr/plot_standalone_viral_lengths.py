@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from bac_genomad.genomad_constants import DEFAULT_COMPARE_OUT_DIR
+from bac_genomad.genomad_constants import DEFAULT_VIRAL_LR_VS_SR_DIR
 
 COHORTS = ["reference_genome", "is_complete", "is_hybrid", "lra_final_list"]
 COHORT_TITLES = {
@@ -49,12 +49,12 @@ def main() -> int:
     parser.add_argument(
         "--input",
         type=Path,
-        default=DEFAULT_COMPARE_OUT_DIR / "standalone_viral_lengths.tsv",
+        default=DEFAULT_VIRAL_LR_VS_SR_DIR / "standalone_viral_lengths.tsv",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=DEFAULT_COMPARE_OUT_DIR / "standalone_viral_lengths.png",
+        default=DEFAULT_VIRAL_LR_VS_SR_DIR / "standalone_viral_lengths.png",
     )
     args = parser.parse_args()
 

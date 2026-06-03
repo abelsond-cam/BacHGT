@@ -69,14 +69,15 @@ from pathlib import Path
 import pandas as pd
 
 from bac_genomad.genomad_constants import (
-    DEFAULT_COMPARE_OUT_DIR,
     DEFAULT_INPUTS_TSV,
     DEFAULT_METADATA_V2,
     DEFAULT_PAIRED_INDEX,
     DEFAULT_PLASMID_LONG_TSV,
+    DEFAULT_VIRAL_LR_VS_SR_DIR,
     DEFAULT_VIRUS_LONG_TSV,
     SR_PAIRED_SUFFIX,
 )
+from bac_genomad.viral_analysis.viral_brackets import BRACKET_LABELS, assign_brackets
 
 # Cohort filters applied to paired_index. The value is the column name to test
 # True on (or None for "no filter — use the full paired_index").
@@ -94,17 +95,30 @@ TRUE_TOKENS = frozenset({"true", "1", "yes"})
 # `compare` only — it needs contig lengths and only the paired cohort has them.
 AGGREGATE_METRICS = ("n_plasmid_contigs", "n_virus_total")
 
+# Per-Sample bracket-count columns derived from the standalone viral peak fit.
+# Bracket cuts + labels live in ``bac_genomad.viral_analysis.viral_brackets``;
+# pull both the canonical column order and the user-facing column names from
+# that one source of truth.
+BRACKET_METRIC_ORDER = tuple(f"n_{label}" for label in BRACKET_LABELS)
+
 # Coordinate-based virus sub-classes, computed in `compare`. Identities held by
 # the classification:
 #   n_virus_spans_whole_contig = n_virus_standalone_contig + n_virus_provirus_spans_all
 #   n_virus_standalone_contig  = n_virus_standalone_small + ..._phage + ..._large
+#                              = n_above_upper + n_Sgld_v + n_between + n_Wbr_v + n_below_lower
 #   n_virus_total              = n_virus_spans_whole_contig + n_full_prophage + n_virus_edge_truncated
+#
+# The two breakdowns of n_virus_standalone_contig (size-bin and bracket) are
+# parallel partitions of the same row set — bracket-based comes from the
+# Gaussian peak fit on standalone-viral lengths; size-bin is the older
+# 20kb/80kb cut. Both sum to n_virus_standalone_contig.
 VIRUS_COORD_CLASSES = (
     "n_virus_spans_whole_contig",     # parent of the next 5
     "n_virus_standalone_contig",      # topology != Provirus (real extrachromosomal virus)
     "n_virus_standalone_small",       # standalone, contig < 20 kb (likely fragments / noise)
     "n_virus_standalone_phage",       # standalone, 20 kb ≤ contig < 80 kb (typical phage)
     "n_virus_standalone_large",       # standalone, contig ≥ 80 kb (jumbo / multi-element)
+    *BRACKET_METRIC_ORDER,            # n_above_upper / n_Sgld_v / n_between / n_Wbr_v / n_below_lower
     "n_virus_provirus_spans_all",     # topology == Provirus but coords span the whole contig
     "n_full_prophage",
     "n_virus_edge_truncated",
@@ -113,7 +127,8 @@ VIRUS_COORD_CLASSES = (
 STANDALONE_SMALL_MAX = 20_000   # < 20 kb: fragmentation / non-phage viral debris
 STANDALONE_PHAGE_MAX = 80_000   # 20-80 kb: canonical phage-genome range
 
-# Display order in the paired output.
+# Display order in the paired output. Bracket counts (peak-fit-derived) sit
+# alongside the older size-bin breakdown — both partition n_virus_standalone_contig.
 PAIRED_METRIC_ORDER = (
     "n_plasmid_contigs",
     "n_virus_total",
@@ -123,6 +138,7 @@ PAIRED_METRIC_ORDER = (
     "n_virus_standalone_small",
     "n_virus_standalone_phage",
     "n_virus_standalone_large",
+    *BRACKET_METRIC_ORDER,
     "n_virus_provirus_spans_all",
     "n_virus_edge_truncated",
 )
@@ -320,39 +336,60 @@ def _classify_virus_coords(
         wc.loc[has_wc_len].groupby("Sample").size().rename("n_virus_standalone_contig")
     )
 
-    # ── provirus rows → coord-based sub-classes ──
-    pv = sub.loc[is_provirus].copy()
-    pv["host_contig"] = pv["seq_name"].astype(str).str.rsplit("|provirus_", n=1).str[0]
-    coords = pv["coordinates"].astype(str).str.split("-", n=1, expand=True)
-    pv["coord_start"] = pd.to_numeric(coords[0], errors="coerce")
-    pv["coord_end"] = pd.to_numeric(coords[1], errors="coerce")
-    pv = pv.merge(
-        lengths.rename(columns={"contig": "host_contig", "length": "host_contig_length"}),
-        on=["Sample", "host_contig"],
-        how="left",
+    # ── Peak-fit bracket classification of standalone viral contigs ──
+    wc_with_len = wc.loc[has_wc_len].copy()
+    wc_with_len["bracket"] = assign_brackets(wc_with_len["length"])
+    bracket_wide = (
+        wc_with_len.groupby(["Sample", "bracket"]).size()
+        .unstack(fill_value=0)
+        .reindex(columns=list(BRACKET_LABELS), fill_value=0)
+        .rename(columns={label: f"n_{label}" for label in BRACKET_LABELS})
     )
 
-    has_pv_len = pv["host_contig_length"].notna() & pv["coord_start"].notna() & pv["coord_end"].notna()
-    pv_missing = int((~has_pv_len).sum())
-    if pv_missing:
-        print(
-            f"  WARNING: {pv_missing:,} provirus rows had no contig-length lookup"
-            " (host_contig parse mismatch); they appear in n_virus_total but not in"
-            " the provirus sub-classes.",
-            file=sys.stderr,
+    # ── provirus rows → coord-based sub-classes ──
+    pv = sub.loc[is_provirus].copy()
+    if pv.empty:
+        empty_idx = pd.Index([], name="Sample")
+        provirus_spans_all = pd.Series(dtype=int, name="n_virus_provirus_spans_all", index=empty_idx)
+        full = pd.Series(dtype=int, name="n_full_prophage", index=empty_idx)
+        edge = pd.Series(dtype=int, name="n_virus_edge_truncated", index=empty_idx)
+    else:
+        pv["host_contig"] = pv["seq_name"].astype(str).str.rsplit("|provirus_", n=1).str[0]
+        coords = pv["coordinates"].astype(str).str.split("-", n=1, expand=True)
+        pv["coord_start"] = pd.to_numeric(coords[0], errors="coerce")
+        pv["coord_end"] = pd.to_numeric(coords[1], errors="coerce")
+        pv = pv.merge(
+            lengths.rename(columns={"contig": "host_contig", "length": "host_contig_length"}),
+            on=["Sample", "host_contig"],
+            how="left",
         )
 
-    pv = pv[has_pv_len]
-    pv_spans = (pv["coord_start"] <= 1) & (pv["coord_end"] >= pv["host_contig_length"])
-    pv_full = (pv["coord_start"] > 1) & (pv["coord_end"] < pv["host_contig_length"])
-    pv_edge = ~pv_spans & ~pv_full
+        has_pv_len = (
+            pv["host_contig_length"].notna()
+            & pv["coord_start"].notna()
+            & pv["coord_end"].notna()
+        )
+        pv_missing = int((~has_pv_len).sum())
+        if pv_missing:
+            print(
+                f"  WARNING: {pv_missing:,} provirus rows had no contig-length lookup"
+                " (host_contig parse mismatch); they appear in n_virus_total but not in"
+                " the provirus sub-classes.",
+                file=sys.stderr,
+            )
 
-    provirus_spans_all = pv.loc[pv_spans].groupby("Sample").size().rename("n_virus_provirus_spans_all")
-    full = pv.loc[pv_full].groupby("Sample").size().rename("n_full_prophage")
-    edge = pv.loc[pv_edge].groupby("Sample").size().rename("n_virus_edge_truncated")
+        pv = pv[has_pv_len]
+        pv_spans = (pv["coord_start"] <= 1) & (pv["coord_end"] >= pv["host_contig_length"])
+        pv_full = (pv["coord_start"] > 1) & (pv["coord_end"] < pv["host_contig_length"])
+        pv_edge = ~pv_spans & ~pv_full
+
+        provirus_spans_all = pv.loc[pv_spans].groupby("Sample").size().rename("n_virus_provirus_spans_all")
+        full = pv.loc[pv_full].groupby("Sample").size().rename("n_full_prophage")
+        edge = pv.loc[pv_edge].groupby("Sample").size().rename("n_virus_edge_truncated")
 
     classified = pd.concat(
         [standalone_total, standalone_small, standalone_phage, standalone_large,
+         bracket_wide,
          provirus_spans_all, full, edge],
         axis=1,
     ).fillna(0).astype(int)
@@ -681,18 +718,18 @@ def _build_parser() -> argparse.ArgumentParser:
     pagg.add_argument("--inputs", type=Path, default=DEFAULT_INPUTS_TSV)
     pagg.add_argument("--plasmid-long", type=Path, default=DEFAULT_PLASMID_LONG_TSV)
     pagg.add_argument("--virus-long", type=Path, default=DEFAULT_VIRUS_LONG_TSV)
-    pagg.add_argument("--out-dir", type=Path, default=DEFAULT_COMPARE_OUT_DIR)
+    pagg.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     pagg.set_defaults(func=cmd_aggregate)
 
     pcmp = sub.add_parser("compare", help="paired LRA-vs-SR tables per cohort")
     pcmp.add_argument("--inputs", type=Path, default=DEFAULT_INPUTS_TSV)
     pcmp.add_argument("--virus-long", type=Path, default=DEFAULT_VIRUS_LONG_TSV)
     pcmp.add_argument("--paired-index", type=Path, default=DEFAULT_PAIRED_INDEX)
-    pcmp.add_argument("--out-dir", type=Path, default=DEFAULT_COMPARE_OUT_DIR)
+    pcmp.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     pcmp.add_argument(
         "--per-sample-counts",
         type=Path,
-        default=DEFAULT_COMPARE_OUT_DIR / "per_sample_counts.tsv",
+        default=DEFAULT_VIRAL_LR_VS_SR_DIR / "per_sample_counts.tsv",
         help="output of `aggregate`; default sits beside the cohort TSVs.",
     )
     pcmp.add_argument("--workers", type=int, default=16, help="threads for FASTA scanning.")
@@ -709,10 +746,10 @@ def _build_parser() -> argparse.ArgumentParser:
     pdump.add_argument(
         "--paired-lengths",
         type=Path,
-        default=DEFAULT_COMPARE_OUT_DIR / "contig_lengths_paired.tsv",
+        default=DEFAULT_VIRAL_LR_VS_SR_DIR / "contig_lengths_paired.tsv",
         help="paired-FASTA length cache produced by `compare`.",
     )
-    pdump.add_argument("--out-dir", type=Path, default=DEFAULT_COMPARE_OUT_DIR)
+    pdump.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     pdump.add_argument("--workers", type=int, default=128, help="threads for FASTA scanning.")
     pdump.set_defaults(func=cmd_dump_lengths)
 

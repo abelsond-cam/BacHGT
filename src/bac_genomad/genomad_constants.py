@@ -17,11 +17,15 @@ DEFAULT_DB_DIR      = DEFAULT_OUT_DIR / "db" / "genomad_db"
 DEFAULT_PLASMID_LONG_TSV = DEFAULT_OUT_DIR / "genomad_plasmid_summary_long.tsv"
 DEFAULT_VIRUS_LONG_TSV   = DEFAULT_OUT_DIR / "genomad_virus_summary_long.tsv"
 
-# Comparator outputs land beside the existing complete-vs-SR artifacts in
-# `bac_complete_genomes`, under a `genomad/` sub-tree to keep them separable.
-DEFAULT_COMPARE_DIR    = DATA_ROOT / "david/processed/complete_vs_sr_genomes"
-DEFAULT_PAIRED_INDEX   = DEFAULT_COMPARE_DIR / "paired_index.tsv"
-DEFAULT_COMPARE_OUT_DIR = DEFAULT_COMPARE_DIR / "genomad"
+# Paired-index sidecar lives outside the genomad tree (shared with bac_complete_genomes).
+DEFAULT_PAIRED_INDEX   = DATA_ROOT / "david/processed/complete_vs_sr_genomes/paired_index.tsv"
+
+# All downstream viral analyses (peak characterisation, LR-vs-SR comparison,
+# per-SL/CG penetrance, future phage/prophage work) live under one root:
+#   <DATA_ROOT>/david/processed/genomad/viral_analysis/
+DEFAULT_VIRAL_ANALYSIS_DIR  = DEFAULT_OUT_DIR / "viral_analysis"
+DEFAULT_VIRAL_LR_VS_SR_DIR  = DEFAULT_VIRAL_ANALYSIS_DIR / "lr_vs_sr"
+DEFAULT_VIRAL_PENETRANCE_DIR = DEFAULT_VIRAL_ANALYSIS_DIR / "viral_penetrance"
 
 # ─── SIZING ───────────────────────────────────────────────────────────────────
 

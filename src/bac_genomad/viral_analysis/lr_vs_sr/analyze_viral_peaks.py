@@ -30,9 +30,9 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 
-from bac_genomad.genomad_constants import DEFAULT_COMPARE_OUT_DIR
+from bac_genomad.genomad_constants import DEFAULT_VIRAL_LR_VS_SR_DIR
 
-DEFAULT_INPUT = DEFAULT_COMPARE_OUT_DIR / "standalone_viral_lengths.tsv"
+DEFAULT_INPUT = DEFAULT_VIRAL_LR_VS_SR_DIR / "standalone_viral_lengths.tsv"
 
 
 def _gaussian(x: np.ndarray, amp: float, mu: float, sigma: float) -> np.ndarray:
@@ -153,7 +153,7 @@ def main() -> int:
     """CLI entry."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_COMPARE_OUT_DIR)
+    parser.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     parser.add_argument("--cohort", default="is_complete",
                         help="One of: reference_genome, is_complete, is_hybrid, lra_final_list")
     parser.add_argument("--side", default="lra_all",
