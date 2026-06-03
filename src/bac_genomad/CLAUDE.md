@@ -37,9 +37,55 @@ On the local Mac, pixi installs to the default home location as usual (the
 
 | Module | Purpose |
 |---|---|
-| `genomad_constants.py` | Default paths (metadata_v2, output root, DB dir), chunk size, threads, `SR_PAIRED_SUFFIX` |
+| `genomad_constants.py` | Default paths (metadata_v2, output root, DB dir, viral-analysis subtrees), chunk size, threads, `SR_PAIRED_SUFFIX` |
 | `run_genomad.py` | **prepare / worker / collate** CLI — the whole pipeline |
+| `viral_analysis/` | All downstream analyses of the geNomad output (see below) |
 | `slurm_scripts/run_genomad.sh` | Slurm-array wrapper that invokes `worker` per chunk |
+| `slurm_scripts/run_per_lineage.sh` | Wrapper for the per-SL/CG viral-penetrance run |
+
+## Downstream: `viral_analysis/`
+
+All downstream analyses of the collated geNomad output (`genomad_plasmid_summary_long.tsv`,
+`genomad_virus_summary_long.tsv`) live under one subpackage so the
+peak-characterisation work can be cleanly separated from future phage / prophage
+extensions.
+
+| Module | Purpose |
+|---|---|
+| `viral_analysis/viral_brackets.py` | Single source of truth for the 5 size-bracket cuts (above_upper / **Sgld_v** / between / **Wbr_v** / below_lower) derived from a Gaussian peak fit on the is_complete LRA-all standalone-viral length distribution. ±2σ cuts (95.4 % of a Gaussian). Used by both lr_vs_sr/ and viral_penetrance/. |
+| `viral_analysis/lr_vs_sr/compare_lra_to_sr.py` | **aggregate / compare / dump_lengths** CLI — per-Sample plasmid + virus totals, paired LRA-vs-SR tables (4 nested cohorts × 15 metric columns), standalone-viral length dumps. |
+| `viral_analysis/lr_vs_sr/analyze_viral_peaks.py` | Window-bounded summary stats + Gaussian peak fit + zoomed PNG for the ~55 kb and ~110 kb peaks (configurable cohort / side / window cuts). |
+| `viral_analysis/lr_vs_sr/plot_standalone_viral_lengths.py` | 2×2 cohort overlay histograms (paired-LRA / paired-SR / LRA-all, log-x). |
+| `viral_analysis/viral_penetrance/per_lineage.py` | Per-Sublineage / per-Clonal-group binary carriage of Sgld_v and Wbr_v across the ~79 k `is_kpsc=True` universe, with epidemic (n ≥ 250) bars + a single `other` pool. Two-panel bar plot (top Sgld_v, bottom Wbr_v) — bar height = n_samples, fill colour = % carriage on viridis. |
+
+RDS layout — all viral-analysis outputs live under one root:
+
+```
+project_k/david/processed/genomad/
+├── (geNomad pipeline outputs as before)
+└── viral_analysis/
+    ├── lr_vs_sr/
+    │   ├── per_sample_counts.tsv
+    │   ├── paired__<cohort>.tsv               # + bracket columns (15 metrics × 4 cohorts)
+    │   ├── summary__<cohort>.tsv
+    │   ├── standalone_viral_lengths.tsv       # 3-series length dump
+    │   ├── standalone_viral_peak_stats_*.tsv  # Gaussian fits per cohort
+    │   ├── contig_lengths_paired.tsv          # cached FASTA lengths (paired LRA+SR)
+    │   ├── contig_lengths_lra_all.tsv         # cached FASTA lengths (full LRA cohort)
+    │   └── *.png                              # histograms + peak zoom
+    └── viral_penetrance/
+        ├── viral_bracket_carriage_per_sample.tsv  # full 88 k universe
+        ├── viral_penetrance_by_SL.tsv             # epidemic SLs + 'other'
+        ├── viral_penetrance_by_CG.tsv             # epidemic CGs + 'other'
+        ├── viral_penetrance_by_SL.png
+        └── viral_penetrance_by_CG.png
+```
+
+The bracket cuts in `viral_brackets.py` are CLI-overrideable on every
+consumer so a future peak refit can be picked up without code changes.
+**Identities**: the per-Sample bracket counts and the older size-bin
+counts (`n_virus_standalone_small/phage/large`) both partition
+`n_virus_standalone_contig`; the bracket-count partition is finer.
 
 ## Pipeline
 
