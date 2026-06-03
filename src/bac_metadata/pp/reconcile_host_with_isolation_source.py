@@ -240,7 +240,7 @@ Examples:
     parser.add_argument(
         '--input',
         type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata/qc_final_with_metadata.tsv",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata/qc_final_with_metadata.tsv",
         help='Path to metadata TSV file'
     )
     

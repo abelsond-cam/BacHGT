@@ -3,9 +3,10 @@ import csv  #built-in module for CSV files
 import re  #built-in module for regular expressions
 from pathlib import Path  #built-in module for pathlib
 
-pdf_path = Path("/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-                "Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/"
-                "ENA_projects/PRJEB29143/supplement_revision.pdf")
+pdf_path = Path(
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/"
+    "study_level_metadata/ENA_projects/PRJEB29143/supplement_revision.pdf"
+)
 out_path = pdf_path.with_suffix(".csv")
 
 headers = ["Isolate","Species","Phylo-group","ST","Country","Site","Isolation year","Accession Number"]

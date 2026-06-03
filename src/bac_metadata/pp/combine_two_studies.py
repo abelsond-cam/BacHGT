@@ -13,21 +13,11 @@ import pandas as pd
 
 
 # Input/output locations (hardcoded as requested)
-DATA_CSV = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/"
-    "ENA_projects/PRJNA351909_PRJEB6891/data.csv"
-)
-TSV_SUPPLEMENT = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/"
-    "ENA_projects/PRJNA351909_PRJEB6891/cix270_suppl_supplementarytable1.tsv"
-)
-OUTPUT_CSV = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/"
-    "ENA_projects/PRJNA351909_PRJEB6891/data_combined.csv"
-)
+_PROJECT_K = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david")
+_ENA_STUDY = _PROJECT_K / "raw/metadata/study_level_metadata/ENA_projects/PRJNA351909_PRJEB6891"
+DATA_CSV = _ENA_STUDY / "data.csv"
+TSV_SUPPLEMENT = _ENA_STUDY / "cix270_suppl_supplementarytable1.tsv"
+OUTPUT_CSV = _ENA_STUDY / "data_combined.csv"
 
 
 def _find_column(df: pd.DataFrame, target: str) -> str:

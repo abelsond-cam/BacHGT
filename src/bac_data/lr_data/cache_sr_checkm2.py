@@ -19,8 +19,7 @@ from pathlib import Path
 import pandas as pd
 
 QC_XLSX = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/raw/klebsiella_qc_NCTC.xlsx"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_qc_NCTC.xlsx"
 )
 OUT_TSV = Path(__file__).parent / "notebooks" / "_data" / "sr_checkm2.tsv"
 SHEET = "checkM2"

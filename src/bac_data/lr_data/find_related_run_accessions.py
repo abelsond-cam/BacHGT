@@ -141,9 +141,7 @@ class _TeeStream:
 # ─── CONFIGURE THESE ──────────────────────────────────────────────────────────
 
 DATA_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/metadata/"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata/"
 )
 METADATA_FILE = DATA_DIR + "metadata_final_curated_slimmed.tsv"
 METADATA_FILE_FULL = DATA_DIR + "metadata_final_curated_all_samples_and_columns.tsv"
@@ -158,19 +156,14 @@ OUTPUT_DIR = DATA_DIR + "processed/long_reads/"  # legacy — kept only for hist
 RELATED_SR_CSV = DATA_DIR + "related_sr_accessions.csv"
 RELATED_LR_CSV = DATA_DIR + "related_lr_accessions.csv"
 LONG_READS_OUTPUT_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/long_reads/"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/long_reads/"
 )
 # ATB outputs live in their own top-level dir so data/final/long_reads/ can be deleted
 ATB_LONG_READS_OUTPUT_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/atb_long_reads/"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/atb_long_reads/"
 )
 ATB_RELEASE_FILE = (
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Code_repos/md_curation/atb_release_incr_2_species_calls.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/atb_release_incr_2_species_calls.tsv"
 )
 # Log file (saved to current working directory)
 LOG_FILE_NAME = "find_long_reads.log"
@@ -197,9 +190,7 @@ NCBI_RETRY_MAX = 3
 NCBI_RETRY_PAUSE = 15  # seconds; NCBI 429 back-off
 
 SHORT_READS_OUTPUT_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/short_reads_from_refseq/"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/short_reads_from_refseq/"
 )
 
 # Column in the slimmed metadata that holds the clean GCF_X.N accession

@@ -73,9 +73,7 @@ import requests
 # Local OneDrive mirror of the curated metadata (same path the rest of
 # download_data/ uses). On HPC point --metadata at the rds copy.
 DATA_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/metadata/"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata/"
 )
 DEFAULT_METADATA = Path(DATA_DIR) / "metadata_final_curated_slimmed.tsv"
 

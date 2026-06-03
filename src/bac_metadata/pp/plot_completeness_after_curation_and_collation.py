@@ -249,10 +249,10 @@ def main():
         default='metadata_final_curated.tsv',
         help='Post-curation metadata filename (default: metadata_final_curated.tsv)')
     parser.add_argument('--metadata-dir', type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata",
         help='Directory containing metadata files')
     parser.add_argument('--output-dir', type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/visualisations/metadata_curation/",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/visualisations/metadata_curation/",
         help='Directory for saving plot')
     parser.add_argument('--top-n', type=int, default=6,
         help='Number of top categories for host/isolation_source (default: 6)')

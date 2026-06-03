@@ -6,7 +6,7 @@ import pandas as pd
 import os
 
 # File path
-KLEBNET_METADATA_FILE = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
+KLEBNET_METADATA_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
 
 print("="*80)
 print("DEBUG: KLEBNET METADATA FILE")

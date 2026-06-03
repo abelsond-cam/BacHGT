@@ -26,18 +26,18 @@ import numpy as np
 from bac_metadata.pp.metadata_curation import report_ena_column
 
 
-METADATA_DIR = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/metadata"
+METADATA_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata"
 ENA_METADATA_FILE1 = f"{METADATA_DIR}/ena_metadata_klebsiella_with_header_filtered.tsv"
 ENA_METADATA_FILE2 = f"{METADATA_DIR}/ena_metadata_klebsiella_with_header_filtered_r02_format.20240801.tsv"
 ENA_METADATA_FILE3 = f"{METADATA_DIR}/bakrep_klebsiella_genus_extra_ena_metadata.tsv"
-ENA_PROJECT_DIR = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/ENA_projects"
-OUTPUT_DIR = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata"
+ENA_PROJECT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/study_level_metadata/ENA_projects"
+OUTPUT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata"
 # Study metadata can be either a CSV file path or a Google Sheet URL/ID
 STUDY_METADATA_GOOGLE_SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 STUDY_METADATA_SHEET_NAME = "study_level"
 STUDY_METADATA_FILE = None  # Set to None to use Google Sheet, or provide CSV file path
-QC_EXCEL_FILE = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/klebsiella_qc_NCTC.xlsx"
-KLEBNET_METADATA_FILE = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/metadata/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
+QC_EXCEL_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_qc_NCTC.xlsx"
+KLEBNET_METADATA_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
 
 KEY_COLUMNS = ["collection_date", "country", "isolation_source", "host"]
 DEBUG_SAMPLE_ACCESSIONS = ["SAMD00112425"]

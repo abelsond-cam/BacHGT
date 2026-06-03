@@ -96,7 +96,7 @@ from bac_data.lr_data.norway_cohort_audit import (
 
 # The paper supplement. Note it is an .xlsx (sheet "Table S1"), not a CSV.
 TABLE_S1_DEFAULT = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Norway_Complete_Genomes_Fig1.xlsx"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/Norway_Complete_Genomes_Fig1.xlsx"
 )
 TABLE_S1_SHEET = "Table S1"
 

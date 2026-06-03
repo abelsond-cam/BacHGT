@@ -57,8 +57,7 @@ import pandas as pd
 
 # Canonical metadata folder (same as DATA_DIR in find_long_reads.py).
 DATA_DIR = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/metadata"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata"
 )
 FILES = [
     DATA_DIR / "metadata_final_curated_all_samples_and_columns.tsv",

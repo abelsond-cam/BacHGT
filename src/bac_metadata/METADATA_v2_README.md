@@ -24,10 +24,9 @@ The canonical TSV lives on HPC at:
 - **~90,000** Klebsiella-annotated assemblies were curated from **All The Bacteria (ATB)** as the
   starting set (downloaded by `bac_data` via the bakrep + ENA pipelines).
 - Extra QC was performed with **CheckM2** and specialist scripts. The final QC whitelist for the
-  short-read cohort lives in the QC Excel (`klebsiella_qc_NCTC.xlsx`, sheet `FINAL_LIST`).
-  ⚠ The Excel currently lives on **OneDrive locally** at
-  `~/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/`,
-  **not** on HPC `raw/`. Moving it to HPC is a tracked cleanup (§12).
+  short-read cohort lives in the QC Excel (`klebsiella_qc_NCTC.xlsx`, sheet `FINAL_LIST`), now at
+  `<project_k>/david/raw/klebsiella_qc_NCTC.xlsx` on HPC (migrated 2026-06-03; a safety copy is
+  preserved on the Weimann shared OneDrive).
 - In addition to ATB, **long-read assemblies from RefSeq** were downloaded plus the **NCTC**
   historic Klebs set (`is_nctc=97`).
 - Species had to match Klebsiella via **Kleborate v3.2.4**. The Kp species complex (KPSC) covers
@@ -521,8 +520,14 @@ samples were reviewed manually (nearly 75% of the assembly set). Reviewed studie
   selector), and `bac_ariba` still read the dropped `is_refseq` flag and the slimmed v1 TSV.
   Repoint by intent: cohort-arm → `lra_final_list`; reference-bucket → `is_reference_genome`;
   SR-exclusion → SR-side signal (e.g. `run_accession` populated).
-- **OneDrive decommission** — rsync the QC Excel + ancillary raw data to `<project_k>/raw/`,
-  document the canonical HPC path, delete local OneDrive copies.
+- ~~**OneDrive decommission**~~ ✅ **Applied 2026-06-03** — QC Excel (`klebsiella_qc_NCTC.xlsx`,
+  112 MB) rsync'd to `<project_k>/david/raw/`; metadata/ (481 MB: ENA TSVs + KlebNET-GSP CSV +
+  study_level_metadata/ENA_projects/) rsync'd to `<project_k>/david/raw/metadata/`. Six obsolete
+  OneDrive items deleted (`bakrep/`, `ISEscan/`, `archive/`, `atb_files/`, `klebs_snippy_pilot*`,
+  `assembly_qc/`). Hardcoded OneDrive paths in ~25 code files repointed to the HPC equivalents
+  (`/home/dca36/rds/.../david/...`); Google OAuth credentials intentionally kept on OneDrive
+  (not pushed to shared HPC filesystem). Weimann shared-drive copies of `metadata/` and the QC
+  Excel preserved as safety duplicates.
 
 ### Recently added: Bacformer-predicted AST + EBI ground-truth columns ✅ (2026-05-31)
 

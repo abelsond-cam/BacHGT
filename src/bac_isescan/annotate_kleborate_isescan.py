@@ -44,7 +44,7 @@ from pathlib import Path
 import pandas as pd
 
 DEFAULT_DATA_DIR = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/raw/related_lr"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/related_lr"
 )
 GROUP_GLOBS = {
     "sr": ("sr_originals", "*.fa.gz"),

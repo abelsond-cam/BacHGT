@@ -11,7 +11,7 @@ from pathlib import Path
 from bac_metadata.pp.metadata_curation import parse_city_from_location_coordinates
 
 # Path to metadata file
-metadata_dir = Path("/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata")
+metadata_dir = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata")
 metadata_file = metadata_dir / "qc_final_with_metadata.tsv"
 
 print(f"Loading metadata from: {metadata_file}")

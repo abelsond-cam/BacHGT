@@ -33,21 +33,12 @@ from itertools import islice
 
 # ─── CONFIGURE THESE ──────────────────────────────────────────────────────────
 
-DATA_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/metadata/"
-)
+DATA_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/"
 METADATA_FILE = DATA_DIR + "metadata_final_curated_slimmed.tsv"
 OUTPUT_DIR    = DATA_DIR + "processed/long_reads/"
-LONG_READS_OUTPUT_DIR = (
-    "/Users/davidabelson/Library/CloudStorage/"
-    "OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final/long_reads/"
-)
+LONG_READS_OUTPUT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/long_reads/"
 ATB_RELEASE_FILE = (
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Code_repos/md_curation/atb_release_incr_2_species_calls.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/atb_release_incr_2_species_calls.tsv"
 )
 
 # Column names in the metadata file — adjust if dry-run reveals different names

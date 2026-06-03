@@ -85,7 +85,7 @@ Examples:
     parser.add_argument(
         '--input',
         type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata/intermediate_collated_metadata_wo_qc_or_kleborate.tsv",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata/intermediate_collated_metadata_wo_qc_or_kleborate.tsv",
         help='Path to metadata TSV file'
     )
     

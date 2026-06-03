@@ -496,7 +496,7 @@ def main():
     parser.add_argument(
         '--metadata-file',
         type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/final/metadata/metadata_final_curated_slimmed.tsv",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata/metadata_final_curated_slimmed.tsv",
         help='Path to metadata TSV file'
     )
     parser.add_argument(

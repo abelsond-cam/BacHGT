@@ -7,10 +7,7 @@ metadata_curation.py via apply_kpsc_final_list_flag() on an in-memory dataframe.
 import pandas as pd
 from pathlib import Path
 
-FINAL_DIR = Path(
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
-    "Aaron Weimann's files - project_k/data/final"
-)
+FINAL_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final")
 SAMPLES_FINAL_PATH = FINAL_DIR / "samples_final_v2.txt"
 FULL_METADATA_PATH = FINAL_DIR / "metadata/metadata_final_curated_all_samples_and_columns.tsv"
 SLIMMED_METADATA_PATH = FINAL_DIR / "metadata/metadata_final_curated_slimmed.tsv"

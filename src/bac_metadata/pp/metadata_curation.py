@@ -51,12 +51,11 @@ STUDY_METADATA_GOOGLE_SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 STUDY_METADATA_SHEET_NAME = "study_level"
 
 # TSV file with study characteristics
-STUDY_CHARACTERISTICS_TSV_PATH = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata/study_characteristics_unreviewed.tsv"
+STUDY_CHARACTERISTICS_TSV_PATH = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata/study_characteristics_unreviewed.tsv"
 
 # Norway complete genomes: BioSample accessions match ``Sample`` in the QC-joined metadata table
 COMPLETE_NORWAY_GENOMES_CSV_PATH = (
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files "
-    "- project_k/data/raw/metadata/complete_norway_genomes.csv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/complete_norway_genomes.csv"
 )
 COMPLETE_NORWAY_GENOMES_BIOSAMPLE_COL = "BioSample accession"
 
@@ -72,11 +71,9 @@ TRANSCRIPTOME_SAMPLE_IDS = frozenset({
     "GCF_002813595.1_ASM281359v1_genomic",
 })
 
-MANUAL_RUNS_TO_ADD = ("/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files "
-    "- project_k/data/raw/metadata/manual_runs_to_add.csv")
+MANUAL_RUNS_TO_ADD = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/manual_runs_to_add.csv"
 USED_RUN_ACCESSION_TSV_PATH = (
-    "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files "
-    "- project_k/data/final/metadata/metadata_final_curated_used_accession.tsv"
+    "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata/metadata_final_curated_used_accession.tsv"
 )
 
 # Fixed categories for isolation source plots (sorted by count dynamically in each dataset)
@@ -5841,7 +5838,7 @@ if __name__ == '__main__':
         description='Process ENA metadata: report completeness and optionally parse metadata fields'
     )
     parser.add_argument('--metadata-dir', type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata",
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata",
         help='Directory containing metadata files')
     parser.add_argument('--metadata-file', type=str,
         default="qc_final_with_metadata.tsv",
@@ -5868,8 +5865,8 @@ if __name__ == '__main__':
         default="combined_metadata_before_collation.tsv",
         help='Pre-collation metadata filename (default: combined_metadata_before_collation.tsv)')
     parser.add_argument('--plots-output-dir', type=str,
-        default="/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/visualisations/metadata_curation/",
-        help='Directory for saving plots (default: Aaron Weimann\'s files - project_k/data/visualisations/metadata_curation/)')
+        default="/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/visualisations/metadata_curation/",
+        help='Directory for saving plots (default: <project_k>/david/visualisations/metadata_curation/)')
 
     args = parser.parse_args()
 

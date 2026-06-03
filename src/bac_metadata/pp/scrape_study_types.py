@@ -25,8 +25,8 @@ import numpy as np
 
 
 # File paths
-METADATA_FILE = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/final/metadata/metadata_final_curated_all_samples_and_columns.tsv"
-OUTPUT_DIR = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata"
+METADATA_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_final_curated_all_samples_and_columns.tsv"
+OUTPUT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata"
 OUTPUT_FILE = "study_characteristics_unreviewed.tsv"
 
 # AMR lookup words (from notebook)

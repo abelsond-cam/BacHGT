@@ -186,8 +186,8 @@ def analyze_missing_species(metadata_file: str, output_file: str = None):
 def main():
     """Main entry point."""
     # Default path to metadata file
-    default_metadata_path = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/final/metadata/metadata_final_curated_slimmed.tsv"
-    default_output_path = "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/processed/metadata/missing_kleborate_species.tsv"
+    default_metadata_path = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata/metadata_final_curated_slimmed.tsv"
+    default_output_path = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata/missing_kleborate_species.tsv"
     
     # Allow command-line override
     if len(sys.argv) > 1:

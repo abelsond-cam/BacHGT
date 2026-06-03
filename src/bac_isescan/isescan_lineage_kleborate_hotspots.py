@@ -153,7 +153,7 @@ def run(
 def main() -> int:
     """CLI entry point."""
     base = Path(
-        "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/local_data/klebsiella/processed"
+        "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed"
     )
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--is-gene-context", type=Path, default=base / "isescan_analysis/is_gene_context.tsv.gz")
