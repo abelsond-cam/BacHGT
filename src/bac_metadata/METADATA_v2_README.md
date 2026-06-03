@@ -109,6 +109,80 @@ Per-archetype KPSC and variant-call breakdown:
 
 Sample-prefix breakdown: SAME 38,913 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / GCA_ 1,293.
 
+### Filter recipes — how to access the rows you want
+
+All recipes start with the same load. The path columns store paths **relative to the
+`project_k` root** — resolve them with `bac_metadata.path_resolve.resolve_v2_path()` (or just
+prepend the root manually) before opening on disk.
+
+```python
+import pandas as pd
+from bac_metadata.path_resolve import resolve_v2_path  # adds <project_k>/ to a stored path
+
+V2 = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv"
+v2 = pd.read_csv(V2, sep="\t", low_memory=False)
+samp = v2["Sample"].astype(str)
+```
+
+**By row archetype** (mutually exclusive, sum to v2 total):
+
+```python
+# SR-only — Sample is a BioSample, no LR overlay. SR paths populated, lr_* empty.
+sr_only = v2[~samp.str.startswith(("GCF_", "GCA_"))]                       # 80,742
+
+# Paired LR+SR — Sample is LR accession AND sr_biosample carries the SR partner.
+paired = v2[samp.str.startswith(("GCF_", "GCA_")) & v2["sr_biosample"].notna()]   # 3,075
+
+# Orphan LR-only — Sample is LR accession with no SR partner.
+orphan_lr = v2[samp.str.startswith(("GCF_", "GCA_")) & v2["sr_biosample"].isna()] # 2,581
+```
+
+**By assembly availability** (what's actually on disk):
+
+```python
+# Any row with a usable SR assembly (SR-only + paired with files on disk).
+has_sr = v2[v2[["sr_assembly_file", "sr_gff_file"]].notna().all(axis=1)]
+
+# Any row with a usable LR assembly (paired + orphan with files on disk).
+has_lr = v2[v2[["lr_assembly_file", "lr_gff_file"]].notna().all(axis=1)]
+
+# Rows with BOTH sides on disk — entry gate for paired LR-vs-SR comparison. See §9.
+both_sides = v2[v2[["sr_assembly_file", "sr_gff_file",
+                    "lr_assembly_file", "lr_gff_file"]].notna().all(axis=1)]
+```
+
+**By analysis cohort:**
+
+```python
+# The curated KPSC cohort (= the species-complex working set).
+kpsc = v2[v2["kpsc_final_list"].fillna(False).astype(bool)]                # 79,153
+
+# The variant-calling cohort: rows whose SR data passed v1's KPSC QC. Always
+# excludes orphan LR-only rows (they have no SR data).
+vc_cohort = v2[v2["is_variant_called"].fillna(False).astype(bool)]         # 76,574
+
+# The LRA cohort: every LR-bearing row that passed CheckM2 QC.
+lra = v2[v2["lra_final_list"].fillna(False).astype(bool)]                  # 5,519
+
+# The reference set (highest-confidence closed genomes — modern hybrid + RefSeq).
+refs = v2[v2["is_reference_genome"].fillna(False).astype(bool)]            # 1,777
+```
+
+**Open the assemblies on disk:**
+
+```python
+for _, row in paired.head(5).iterrows():
+    sr_fa  = resolve_v2_path(row["sr_assembly_file"])
+    sr_gff = resolve_v2_path(row["sr_gff_file"])
+    lr_fa  = resolve_v2_path(row["lr_assembly_file"])
+    lr_gff = resolve_v2_path(row["lr_gff_file"])
+    # sr_fa / sr_gff / lr_fa / lr_gff are absolute pathlib.Paths under project_k.
+```
+
+For the **paired LR-vs-SR comparison default** (use this when asked to "compare long and short
+reads of the same isolate"), see §9 — it pairs the 4-path filter above with the
+`is_reference_genome` (best) or `is_complete` (broader) sub-cohort.
+
 ---
 
 ## 3. Key flags
