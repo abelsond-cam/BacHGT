@@ -42,8 +42,8 @@ The canonical TSV lives on HPC at:
   **contains** `variicola` OR **contains** `quasi`, OR starts with *Klebsiella pneumoniae* /
   *africana* / *tropica*. Catches all 7 phylogroups including hyphenated subspecies.
 
-  v2 `is_kpsc=True` = **79,153**; curated final list `kpsc_final_list=True` = **79,054** (99
-  excluded — KPSC-by-species but failed cohort QC).
+  v2 `is_kpsc=True` = **79,153**; curated final list `kpsc_final_list=True` = **79,153**
+  (orphan additive rule recovers RefSeq complete-genomes whose CheckM2 was missing — see §3).
 - **~7,246** non-KPSC Klebsiella (e.g. *K. oxytoca*, *K. aerogenes*) are present in v2 but **not**
   in `is_kpsc`. They were not put through the full extra QC.
 
@@ -53,7 +53,7 @@ The canonical TSV lives on HPC at:
 |---|---:|
 | Total v2 rows | **86,398** |
 | `is_kpsc=True` | 79,153 |
-| `kpsc_final_list=True` | **79,054** |
+| `kpsc_final_list=True` | **79,153** |
 | `is_variant_called=True` *(NEW)* | **76,574** |
 | `lra_final_list=True` | **5,519** |
 | `is_complete=True` | 4,017 |
@@ -104,7 +104,7 @@ Per-archetype KPSC and variant-call breakdown:
 |---|---:|---:|---:|---:|
 | SR-only | 80,742 | 73,754 | 73,754 | 73,754 |
 | Paired LR+SR | 3,075 | 2,820 | 2,820 | 2,820 |
-| Orphan LR-only | 2,581 | 2,579 | 2,480 | **0** *(no SR data → no variant calls)* |
+| Orphan LR-only | 2,581 | 2,579 | 2,579 | **0** *(no SR data → no variant calls)* |
 
 Sample-prefix breakdown: SAME 38,913 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / GCA_ 1,293.
 
@@ -115,7 +115,7 @@ Sample-prefix breakdown: SAME 38,913 / SAMN 38,542 / GCF_ 4,363 / SAMD 3,287 / G
 | Flag | Definition | Count |
 |---|---|---:|
 | `is_kpsc` | Kp species complex (Kp1-Kp7): species **contains** `variicola` OR `quasi`, OR starts with *K. pneumoniae* / *africana* / *tropica*. See §1. | **79,153** |
-| `kpsc_final_list` | Curated KPSC cohort. **Additive rule** (post-2026-06-02 cascade): paired LR rows = `kpsc_v1 OR (lra_final_list ∧ is_kpsc)` — preserves v1's SR-side QC pass even if LR fails CheckM2; orphan LR rows = `lra_final_list ∧ is_kpsc`; SR-only rows = unchanged from v1. | **79,054** |
+| `kpsc_final_list` | Curated KPSC cohort. **Additive rule** (post-2026-06-03 cascade): paired LR rows = `kpsc_v1 OR (lra_final_list ∧ is_kpsc)` — preserves v1's SR-side QC pass even if LR fails CheckM2. Orphan LR rows = `is_kpsc ∧ (kpsc_v1 OR lra_final_list)` — requires Kleborate-confirmed KPSC then admits if either v1 had it on the curated list OR the LR passed CheckM2 (recovers ~99 RefSeq complete-genomes whose CheckM2 score was missing). SR-only rows = unchanged from v1. | **79,153** |
 | `is_variant_called` *(NEW)* | True iff the row has SR data that passed v1's KPSC QC (the cohort variant calling was performed against). Computed as `(NOT orphan LRA) AND v1's kpsc_final_list=True`. Always False on orphan LRA rows. | **76,574** |
 | `is_mgh78578` | The historic *K. pneumoniae* MGH 78578 reference used for variant calling (Sample `GCF_000016305.1`, ST38). **Complete but NOT hybrid-assembled** → not in `is_reference_genome` | 1 |
 | `lra_final_list` | LR assemblies passing CheckM2 (completeness ≥ 99.0%, contamination ≤ 5.0%, genome size ≤ max RefSeq observed). Derivation: [`build_lra_set.py:120`](../bac_data/lr_data/build_lra_set.py#L120) | 5,519 |
