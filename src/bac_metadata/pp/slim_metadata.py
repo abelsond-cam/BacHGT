@@ -15,7 +15,7 @@ Historically the slimmed↔full relationship was implicit (several scripts
 double-wrote both). This module formalises it: the slimmed file is simply
 the full file projected onto the columns the **current** slimmed header
 already keeps, plus any ``--extra-cols`` (default the two path columns
-``assembly_file`` / ``gff_file`` that ``add_paths_gff_fna_to_metadata.py``
+``sr_assembly_file`` / ``sr_gff_file`` that ``add_paths_gff_fna_to_metadata.py``
 adds to the full TSV after augmentation). Columns are emitted in the
 full TSV's column order, and the existing slimmed file is backed up to a
 timestamped ``<stem>.bak.<UTC-YYYYmmddTHHMMSS>.tsv`` before being
@@ -27,7 +27,7 @@ Usage
         --full    PATH   # metadata_final_curated_all_samples_and_columns.tsv
         --slimmed PATH   # metadata_final_curated_slimmed.tsv (read for its
                          #   header, backed up, then overwritten)
-        [--extra-cols a,b,c]   # default: assembly_file,gff_file
+        [--extra-cols a,b,c]   # default: sr_assembly_file,sr_gff_file
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ from pathlib import Path
 
 import pandas as pd
 
-DEFAULT_EXTRA_COLS = "assembly_file,gff_file"
+DEFAULT_EXTRA_COLS = "sr_assembly_file,sr_gff_file"
 
 
 def slim_metadata(full_path: Path, slimmed_path: Path, extra_cols: list[str]) -> Path:
@@ -55,7 +55,7 @@ def slim_metadata(full_path: Path, slimmed_path: Path, extra_cols: list[str]) ->
         it is backed up and then overwritten with the new slimmed frame.
     extra_cols
         Additional columns to keep if present in the full TSV (e.g.
-        ``assembly_file`` / ``gff_file``, which do not exist in the
+        ``sr_assembly_file`` / ``sr_gff_file``, which do not exist in the
         current slimmed header because they are created downstream).
 
     Returns

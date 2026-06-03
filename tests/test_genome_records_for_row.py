@@ -1,8 +1,8 @@
 """Unit tests for ``_genome_records_for_row`` (dual SR+LRA genome expansion).
 
-Each curated metadata row may carry a short-read assembly (``gff_file`` /
-``assembly_file``) and/or a long-read assembly (``lra_gff_file`` /
-``lra_assembly_file``). ``_genome_records_for_row`` turns one row into up to two
+Each curated metadata row may carry a short-read assembly (``sr_gff_file`` /
+``sr_assembly_file``) and/or a long-read assembly (``lr_gff_file`` /
+``lr_assembly_file``). ``_genome_records_for_row`` turns one row into up to two
 genome records, labelling the short-read genome by ``sample_accession`` and the
 long-read genome by ``Sample``, and emitting a record only when both of its
 files exist on disk.
@@ -31,10 +31,10 @@ def test_sr_only_row(tmp_path: Path) -> None:
         {
             "Sample": "SAMEA1",  # SR-only: Sample == sample_accession
             "sample_accession": "SAMEA1",
-            "gff_file": gff,
-            "assembly_file": fna,
-            "lra_gff_file": pd.NA,
-            "lra_assembly_file": pd.NA,
+            "sr_gff_file": gff,
+            "sr_assembly_file": fna,
+            "lr_gff_file": pd.NA,
+            "lr_assembly_file": pd.NA,
         }
     )
 
@@ -57,10 +57,10 @@ def test_lra_only_row(tmp_path: Path) -> None:
         {
             "Sample": "GCF_9.1",
             "sample_accession": pd.NA,
-            "gff_file": pd.NA,
-            "assembly_file": pd.NA,
-            "lra_gff_file": lra_gff,
-            "lra_assembly_file": lra_fna,
+            "sr_gff_file": pd.NA,
+            "sr_assembly_file": pd.NA,
+            "lr_gff_file": lra_gff,
+            "lr_assembly_file": lra_fna,
         }
     )
 
@@ -83,10 +83,10 @@ def test_paired_row_yields_two_records(tmp_path: Path) -> None:
         {
             "Sample": "GCF_10.1",  # paired: Sample is the LRA accession
             "sample_accession": "SAMEA2",  # the SR SAM accession
-            "gff_file": sr_gff,
-            "assembly_file": sr_fna,
-            "lra_gff_file": lra_gff,
-            "lra_assembly_file": lra_fna,
+            "sr_gff_file": sr_gff,
+            "sr_assembly_file": sr_fna,
+            "lr_gff_file": lra_gff,
+            "lr_assembly_file": lra_fna,
         }
     )
 
@@ -112,10 +112,10 @@ def test_skips_assembly_when_a_file_is_absent(tmp_path: Path) -> None:
         {
             "Sample": "GCF_11.1",
             "sample_accession": "SAMEA3",
-            "gff_file": sr_gff,
-            "assembly_file": "SAMEA3_missing.fna",  # never created
-            "lra_gff_file": lra_gff,
-            "lra_assembly_file": lra_fna,
+            "sr_gff_file": sr_gff,
+            "sr_assembly_file": "SAMEA3_missing.fna",  # never created
+            "lr_gff_file": lra_gff,
+            "lr_assembly_file": lra_fna,
         }
     )
 
@@ -125,17 +125,17 @@ def test_skips_assembly_when_a_file_is_absent(tmp_path: Path) -> None:
     assert records[0]["assembly_type"] == "lra"
 
 
-def test_lra_absolute_path_not_double_prefixed(tmp_path: Path) -> None:
-    """v2 stores ``lra_*`` columns as absolute paths; base_dir must not be prepended.
+def test_lr_absolute_path_not_double_prefixed(tmp_path: Path) -> None:
+    """v2 may store ``lr_*`` columns as absolute paths; base_dir must not be prepended.
 
     Regression: the original ``base / str(rel).lstrip("/")`` double-prefixed
-    absolute LRA paths into ``base/home/dca36/...``, so no LRA record ever
+    absolute LR paths into ``base/home/dca36/...``, so no LR record ever
     survived disk-existence checks.
     """
     # SR files live under tmp_path (relative-path convention).
     sr_gff = _touch(tmp_path / "SAMEA77.gff")
     sr_fna = _touch(tmp_path / "SAMEA77.fna")
-    # LRA files live ELSEWHERE — at an absolute path outside tmp_path.
+    # LR files live ELSEWHERE — at an absolute path outside tmp_path.
     elsewhere = tmp_path.parent / "lra_root"
     elsewhere.mkdir(exist_ok=True)
     lra_gff = elsewhere / "GCF_99.1.gff"
@@ -147,10 +147,10 @@ def test_lra_absolute_path_not_double_prefixed(tmp_path: Path) -> None:
         {
             "Sample": "GCF_99.1",
             "sample_accession": "SAMEA77",
-            "gff_file": sr_gff,
-            "assembly_file": sr_fna,
-            "lra_gff_file": str(lra_gff),
-            "lra_assembly_file": str(lra_fna),
+            "sr_gff_file": sr_gff,
+            "sr_assembly_file": sr_fna,
+            "lr_gff_file": str(lra_gff),
+            "lr_assembly_file": str(lra_fna),
         }
     )
 
@@ -170,10 +170,10 @@ def test_skips_sr_when_sample_accession_empty(tmp_path: Path) -> None:
         {
             "Sample": "GCF_12.1",
             "sample_accession": "",
-            "gff_file": sr_gff,
-            "assembly_file": sr_fna,
-            "lra_gff_file": pd.NA,
-            "lra_assembly_file": pd.NA,
+            "sr_gff_file": sr_gff,
+            "sr_assembly_file": sr_fna,
+            "lr_gff_file": pd.NA,
+            "lr_assembly_file": pd.NA,
         }
     )
 

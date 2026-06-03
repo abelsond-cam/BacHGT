@@ -70,7 +70,7 @@ DEFAULT_NORWAY_TSV = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_disc
 DEFAULT_METADATA   = DATA_ROOT / "david/final/metadata_final_curated_all_samples_and_columns.tsv"
 DEFAULT_LR_ASM_DIR = DATA_ROOT / "david/raw/related_lr/assemblies"
 DEFAULT_LR_GFF_DIR = DATA_ROOT / "david/raw/related_lr/gff"
-DEFAULT_PROJECT_K  = DATA_ROOT                # for resolving metadata.assembly_file
+DEFAULT_PROJECT_K  = DATA_ROOT                # for resolving metadata.sr_assembly_file
 DEFAULT_OUT_TSV    = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_discovery.tsv"
 DEFAULT_NCBI_META  = DATA_ROOT / "david/processed/complete_vs_sr_genomes/lr_discovery/lra_ncbi_assembly_meta.tsv"
 
@@ -176,15 +176,15 @@ def load_norway(norway_tsv: Path) -> pd.DataFrame:
 def load_refseq_metadata(metadata_tsv: Path) -> pd.DataFrame:
     """One row per ``is_refseq=True`` metadata sample. Sample column holds GCF (mostly) or GCA.
 
-    If the metadata carries an ``assembly_file`` column (populated by
+    If the metadata carries an ``sr_assembly_file`` column (populated by
     ``bac_metadata.pp.add_paths_gff_fna_to_metadata`` — relative to project_k),
     pass it through as ``seb_path`` so ``derive_scoring`` can prefer the
     existing seb/ FASTA over re-downloading.
     """
     head = pd.read_csv(metadata_tsv, sep="\t", nrows=0).columns.tolist()
     cols = ["Sample", "is_refseq"]
-    if "assembly_file" in head:
-        cols.append("assembly_file")
+    if "sr_assembly_file" in head:
+        cols.append("sr_assembly_file")
     df = pd.read_csv(metadata_tsv, sep="\t", low_memory=False, usecols=cols, dtype=str).fillna("")
     rs = df[df["is_refseq"].str.lower().isin({"true", "1", "yes"})].copy()
     rs["acc"] = rs["Sample"].astype(str).str.extract(_ACC_RE, expand=False).fillna("")
@@ -196,7 +196,7 @@ def load_refseq_metadata(metadata_tsv: Path) -> pd.DataFrame:
         "Sample": rs["Sample"],
         "related_lr_run_accession": "",
         "level":  "",
-        "seb_path": rs["assembly_file"] if "assembly_file" in rs.columns else "",
+        "seb_path": rs["sr_assembly_file"] if "sr_assembly_file" in rs.columns else "",
         "source_audit": False,
         "source_norway": False,
         "source_refseq_metadata": True,
@@ -464,7 +464,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--lr-gff-dir", type=Path, default=DEFAULT_LR_GFF_DIR,
                     help="Canonical pool for downloaded GCA + GCF GFFs (download_lra_gffs.py).")
     ap.add_argument("--project-k",  type=Path, default=DEFAULT_PROJECT_K,
-                    help="Root for resolving metadata.assembly_file (relative paths).")
+                    help="Root for resolving metadata.sr_assembly_file (relative paths).")
     ap.add_argument("--ncbi-meta",  type=Path, default=DEFAULT_NCBI_META,
                     help="NCBI assembly-metadata cache (lra_ncbi_assembly_meta.tsv).")
     ap.add_argument("--out-tsv",    type=Path, default=DEFAULT_OUT_TSV)

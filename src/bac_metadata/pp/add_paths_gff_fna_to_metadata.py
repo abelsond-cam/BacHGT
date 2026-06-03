@@ -1,11 +1,16 @@
 """
-Add assembly_file and gff_file columns to metadata TSV.
+Add sr_assembly_file and sr_gff_file columns to metadata TSV.
 
 Reads the three .txt path lists (assemblies, ncbi_gff, klebsiella_gff), parses
 Sample from each path with GC normalization, writes TSVs, then loads metadata
-and adds assembly_file / gff_file via dict lookup. The .txt lists are simple
-one-path-per-line files — produce them with e.g.
+and adds sr_assembly_file / sr_gff_file via dict lookup. The .txt lists are
+simple one-path-per-line files — produce them with e.g.
 ``find <ASSEMBLIES_DIR> -name "*.fna.gz" > assemblies_file_list.txt``.
+
+Rows whose ``Sample`` starts with ``GCF_``/``GCA_`` are LR-only — the SR-side
+lookup is intentionally skipped on them so LR-tree paths can't leak into the
+sr_* columns. Stored paths are made relative to the project_k root via
+``bac_metadata.path_resolve.to_relative_v2_path``.
 
 ``--mode lra`` fills the long-read columns ``lr_assembly_file`` /
 ``lr_gff_file`` on a metadata_v2 TSV from the ``related_lr/{assemblies,gff}``
@@ -22,7 +27,6 @@ import re
 import sys
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 DATA_DIR = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/")
@@ -164,7 +168,15 @@ def _apply_path_column(
 
 
 def run(metadata_path: Path | None = None) -> None:
-    """Default mode: add assembly_file and gff_file columns to metadata."""
+    """Default mode: add sr_assembly_file / sr_gff_file columns to metadata.
+
+    Writes directly to the canonical v2 column names (sr_*). Rows whose
+    ``Sample`` starts with ``GCF_``/``GCA_`` are LR-only assemblies — the
+    SR-side lookup is intentionally skipped on them (their bare-GC sample
+    key would otherwise hit LR-tree entries in the assembly/GFF lists and
+    leak LR paths into sr_* columns). Stored paths are made relative to the
+    project_k root, matching what ``--mode lra`` does for lr_* columns.
+    """
     meta_path = Path(metadata_path) if metadata_path is not None else METADATA_F
 
     print(f"Metadata file: {meta_path}")
@@ -199,43 +211,57 @@ def run(metadata_path: Path | None = None) -> None:
 
     df["sample_key"] = df["Sample"].apply(_normalize_sample_for_lookup)
     total_samples = len(df)
-    df, n_assembly_found, used_assembly = _apply_path_column(
-        df,
-        sample_key_col="sample_key",
-        out_col="assembly_file",
-        lookup_dict=assembly_dict,
-    )
-    n_assembly_not_found = total_samples - n_assembly_found
+    is_gc_sample = df["Sample"].astype(str).str.startswith(("GCF_", "GCA_"))
+    sr_eligible = ~is_gc_sample
+    n_gc_skipped = int(is_gc_sample.sum())
 
-    print("Assembly files:")
-    print(f"  Samples in metadata: {total_samples}")
-    print(f"  Samples with assembly_file: {n_assembly_found}")
-    print(f"  Samples without assembly_file: {n_assembly_not_found}")
+    df["sr_assembly_file"] = pd.NA
+    df.loc[sr_eligible, "sr_assembly_file"] = (
+        df.loc[sr_eligible, "sample_key"].map(assembly_dict)
+    )
+    n_assembly_found     = int(df["sr_assembly_file"].notna().sum())
+    n_assembly_not_found = total_samples - n_assembly_found - n_gc_skipped
+    used_assembly        = int(df["sr_assembly_file"].dropna().nunique())
+
+    print("Assembly files (SR side):")
+    print(f"  Samples in metadata                : {total_samples}")
+    print(f"  GC-prefixed (skipped, LR-only rows): {n_gc_skipped}")
+    print(f"  Samples with sr_assembly_file      : {n_assembly_found}")
+    print(f"  SR-eligible without sr_assembly_file: {n_assembly_not_found}")
     if "kpsc_final_list" in df.columns:
-        # kpsc_final_list may carry NaN; .loc rejects NA-bearing boolean masks.
-        kpsc_mask = df["kpsc_final_list"].fillna(False).astype(bool)
-        n_kpsc_no_asm = int(df.loc[kpsc_mask, "assembly_file"].isna().sum())
-        print(f"    Metadata samples in kpsc_final_list without assemblies: {n_kpsc_no_asm}")
+        kpsc_mask = df["kpsc_final_list"].fillna(False).astype(bool) & sr_eligible
+        n_kpsc_no_asm = int(df.loc[kpsc_mask, "sr_assembly_file"].isna().sum())
+        print(f"    SR-eligible kpsc_final_list rows without sr_assembly_file: {n_kpsc_no_asm}")
     _summarise_matches(len(assembly_dict), used_assembly, "  Assembly list coverage")
 
-    search_ncbi = df["is_refseq"].astype(bool) | df["is_nctc"].astype(bool)
-    df["gff_file"] = np.where(
-        search_ncbi,
-        df["sample_key"].map(ncbi_dict),  # type: ignore[arg-type]
-        df["sample_key"].map(kleb_dict),  # type: ignore[arg-type]
+    is_refseq_or_nctc = (
+        df["is_refseq"].fillna(False).astype(bool)
+        | df["is_nctc"].fillna(False).astype(bool)
     )
+    search_ncbi = sr_eligible & is_refseq_or_nctc
+    search_kleb = sr_eligible & ~is_refseq_or_nctc
+    df["sr_gff_file"] = pd.NA
+    df.loc[search_ncbi, "sr_gff_file"] = df.loc[search_ncbi, "sample_key"].map(ncbi_dict)
+    df.loc[search_kleb, "sr_gff_file"] = df.loc[search_kleb, "sample_key"].map(kleb_dict)
 
-    n_gff_found = df["gff_file"].notna().sum()
-    n_gff_not_found = total_samples - n_gff_found
-    used_ncbi = int(df.loc[search_ncbi, "gff_file"].dropna().nunique())
-    used_kleb = int(df.loc[~search_ncbi, "gff_file"].dropna().nunique())
+    n_gff_found     = int(df["sr_gff_file"].notna().sum())
+    n_gff_not_found = total_samples - n_gff_found - n_gc_skipped
+    used_ncbi = int(df.loc[search_ncbi, "sr_gff_file"].dropna().nunique())
+    used_kleb = int(df.loc[search_kleb, "sr_gff_file"].dropna().nunique())
 
-    print("\nGFF files:")
-    print(f"  Samples in metadata: {total_samples}")
-    print(f"  Samples with gff_file: {n_gff_found}")
-    print(f"  Samples without gff_file: {n_gff_not_found}")
+    print("\nGFF files (SR side):")
+    print(f"  Samples with sr_gff_file           : {n_gff_found}")
+    print(f"  SR-eligible without sr_gff_file    : {n_gff_not_found}")
     _summarise_matches(len(ncbi_dict), used_ncbi, "  ncbi_gff3 list coverage")
     _summarise_matches(len(kleb_dict), used_kleb, "  klebsiella_gff3 list coverage")
+
+    # Path-relative rewrite: mirror the strip applied at the end of --mode lra
+    # so v1's path columns end up in the same canonical form as v2's lr_* ones.
+    from bac_metadata.path_resolve import to_relative_v2_path
+    for col in ("sr_assembly_file", "sr_gff_file"):
+        s = df[col].astype(str)
+        mask = df[col].notna() & s.str.strip().ne("") & s.str.lower().ne("nan")
+        df.loc[mask, col] = df.loc[mask, col].map(to_relative_v2_path)
 
     df = df.drop(columns=["sample_key"])
     df.to_csv(meta_path, sep="\t", index=False)

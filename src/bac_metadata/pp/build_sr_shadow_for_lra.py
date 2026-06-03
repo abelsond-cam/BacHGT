@@ -51,11 +51,14 @@ DEFAULT_SR_ISESCAN   = DATA_ROOT / "seb/sr_isescan_family_counts.tsv"
 
 # ─── COLUMN POLICY ────────────────────────────────────────────────────────────
 
-# Identity/QC columns to copy directly from v1 (prefixed with sr_ in output).
+# Identity/QC columns to copy directly from v1. Output names are sr_<col>;
+# entries that already start with ``sr_`` (v1 now exposes its SR-side path
+# columns under their canonical names) carry through verbatim — see the
+# rename loop below for the idempotency guard.
 QC_COLUMNS = [
     "run_accession",
-    "assembly_file",
-    "gff_file",
+    "sr_assembly_file",
+    "sr_gff_file",
     "contig_count",
     "N50",
     "largest_contig",
@@ -235,14 +238,16 @@ def build_sr_shadow(
         )
         stats["sr_kleborate_sidecar"] = fill_stats
 
-    # Rename snapshot columns to sr_<col>.
-    rename = {c: f"sr_{c}" for c in snapshot_cols}
+    # Rename snapshot columns to sr_<col>. Skip names that already start with
+    # ``sr_`` (v1's path columns are now natively sr_-prefixed) so we don't
+    # double-up to sr_sr_*.
+    rename = {c: f"sr_{c}" for c in snapshot_cols if not c.startswith("sr_")}
     merged = merged.rename(columns=rename)
 
     # Order: identity columns first, then sr_* in (qc, species, amr, virulence) order.
     identity = ["sr_biosample", "replaced_by_v2_sample", "replaced_by_lra_gca", "replaced_by_lra_gcf"]
     identity = [c for c in identity if c in merged.columns]
-    sr_cols  = [f"sr_{c}" for c in snapshot_cols]
+    sr_cols  = [c if c.startswith("sr_") else f"sr_{c}" for c in snapshot_cols]
     out = merged[identity + sr_cols].copy()
 
     # Append SR-ISEScan per-Sample family counts as sr_IS_<family> columns.

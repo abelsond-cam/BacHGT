@@ -119,9 +119,10 @@ DROPPED_COLUMNS = ["is_refseq", "is_complete_norway_genome"]
 RENAMED_COLUMNS = {
     "related_lr_accession": "_legacy_related_lr_accession",
     "related_sr_accession": "sr_run_accession",
-    # 2026-06-02: SR/LR path-column renames + collection_year rename.
-    "gff_file":          "sr_gff_file",
-    "assembly_file":     "sr_assembly_file",
+    # 2026-06-02: LR path-column renames + collection_year rename. SR-side
+    # path columns are now written directly under their final names
+    # (sr_assembly_file / sr_gff_file) by add_paths_gff_fna_to_metadata's
+    # default mode, so no rename is needed for them.
     "lra_gff_file":      "lr_gff_file",
     "lra_assembly_file": "lr_assembly_file",
     "year_parsed":       "collection_year",
@@ -574,42 +575,51 @@ def build_metadata_v2(
         v2.at[idx, "kleborate_needs_recall"] = True
         v2.at[idx, "isescan_needs_recall"] = True
 
-    # ── 4. Merge the 957 SR + is_refseq duplicate pairs (drop SR rows).
+    # ── 4. Merge the 957 SR + is_refseq duplicate pairs.
+    # Keep the SR row — it has the real SR-side metadata + correct
+    # sr_assembly_file / sr_gff_file. Drop the refseq row, but first transfer
+    # its LR-side overlay (populated by step 3) onto the SR row. Shape-matched
+    # to the Norway merge in merge_norway_pairs_into_v2.py, which also keeps
+    # the SR side.
     pairs = find_sr_refseq_pairs(meta)
     stats["n_sr_refseq_pairs"] = len(pairs)
-    # For each pair, copy SR metadata onto the refseq row + mark SR row for removal.
-    sr_indices_to_drop = []
-    sr_only_cols = [
-        "sample_accession", "run_accession", "instrument_platform", "instrument_model",
-        "study_accession", "center_name", "host", "country", "isolation_source",
-        "collection_date", "scientific_name", "tax_id",
+    refseq_indices_to_drop: list[int] = []
+    lra_cols_to_copy = [
+        "lra_gca", "lra_gcf", "lra_assembly_file", "lra_gff_file",
+        "lr_run_accession", "lr_instrument_platform", "lr_instrument_model",
+        "is_complete", "is_hybrid", "is_reference_genome",
+        "lra_final_list", "kleborate_needs_recall", "isescan_needs_recall",
+        # v1↔v2 diagnostic tracker — refseq side had True; carry onto kept SR row.
+        "_was_v1_is_refseq",
     ]
-    sr_only_cols = [c for c in sr_only_cols if c in meta.columns]
+    lra_cols_to_copy = [c for c in lra_cols_to_copy if c in v2.columns]
     for _, pair in pairs.iterrows():
         ridx, sidx = pair["refseq_idx"], pair["sr_idx"]
-        for col in sr_only_cols:
-            v_refseq = v2.at[ridx, col]
-            v_sr = v2.at[sidx, col]
-            # Only copy if the refseq side is empty / NaN.
-            if pd.isna(v_refseq) or str(v_refseq) in ("", "nan"):
-                v2.at[ridx, col] = v_sr
-        # ── Additively carry SR-side boolean cohort flags onto the merged row.
-        # The SR row is about to be dropped; without this, its v1 `kpsc_final_list=True`
-        # (which encoded the v1 SR-side QC pass) would be lost, since the kept
-        # RefSeq row typically had `kpsc_final_list=False` (RefSeq rows weren't
-        # on v1's curated SR whitelist). The downstream additive kpsc gate in
-        # merge_kleborate_into_metadata_v2 then has nothing to recover from.
+        # Save the SR row's original BioSample-form Sample into sr_biosample
+        # before flipping. Mirrors the LRA overlay's save at line 564-566.
+        orig_sr_sample = str(v2.at[sidx, "Sample"])
+        current_sb = v2.at[sidx, "sr_biosample"]
+        if pd.isna(current_sb) or str(current_sb) in ("", "nan"):
+            v2.at[sidx, "sr_biosample"] = orig_sr_sample
+        # Flip Sample → refseq's GCF/GCA accession.
+        v2.at[sidx, "Sample"] = v2.at[ridx, "Sample"]
+        # Transfer LR-side overlay from refseq row onto kept SR row.
+        for col in lra_cols_to_copy:
+            v2.at[sidx, col] = v2.at[ridx, col]
+        # ── Additively carry SR+refseq boolean cohort flags onto the kept SR row.
+        # The refseq side sometimes had `kpsc_final_list=True` (RefSeq rows on
+        # v1's curated KPSC whitelist) while the SR partner had False — without
+        # this carry, dropping the refseq row would lose that pass and the
+        # downstream additive kpsc gate in merge_kleborate_into_metadata_v2
+        # would have nothing to recover from.
         for bcol in ("kpsc_final_list", "is_kpsc"):
             if bcol in meta.columns:
-                sr_val = str(v2.at[sidx, bcol]).strip().lower() in {"true", "1", "yes"}
+                sr_val  = str(v2.at[sidx, bcol]).strip().lower() in {"true", "1", "yes"}
                 ref_val = str(v2.at[ridx, bcol]).strip().lower() in {"true", "1", "yes"}
-                v2.at[ridx, bcol] = sr_val or ref_val
-        # Save the SR BioSample for the join-back in sr_shadow.
-        if pd.isna(v2.at[ridx, "sr_biosample"]) or str(v2.at[ridx, "sr_biosample"]) in ("", "nan"):
-            v2.at[ridx, "sr_biosample"] = v2.at[sidx, "Sample"]
-        sr_indices_to_drop.append(int(sidx))
-    if sr_indices_to_drop:
-        v2 = v2.drop(index=sr_indices_to_drop)
+                v2.at[sidx, bcol] = sr_val or ref_val
+        refseq_indices_to_drop.append(int(ridx))
+    if refseq_indices_to_drop:
+        v2 = v2.drop(index=refseq_indices_to_drop)
 
     # Note: column renames + drops moved to AFTER the orphan-ingest concat
     # (step 6 below), otherwise the orphan scaffold can re-introduce legacy

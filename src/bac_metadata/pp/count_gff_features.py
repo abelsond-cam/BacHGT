@@ -60,12 +60,12 @@ def _load_jobs(metadata_path: Path, sidecar_path: Path) -> tuple[list[tuple[str,
     df = pd.read_csv(
         metadata_path,
         sep="\t",
-        usecols=["Sample", "gff_file"],
+        usecols=["Sample", "sr_gff_file"],
         dtype=str,
         low_memory=False,
     )
-    df["gff_file"] = df["gff_file"].fillna("").str.strip()
-    df = df[df["gff_file"].str.len() > 0].copy()
+    df["sr_gff_file"] = df["sr_gff_file"].fillna("").str.strip()
+    df = df[df["sr_gff_file"].str.len() > 0].copy()
     n_total = len(df)
 
     existing_df: pd.DataFrame | None = None
@@ -77,7 +77,7 @@ def _load_jobs(metadata_path: Path, sidecar_path: Path) -> tuple[list[tuple[str,
     df = df[~df["Sample"].isin(done_samples)].copy()
     n_skipped = n_total - len(df)
 
-    df["abs_path"] = df["gff_file"].map(lambda p: str(BASE_DIR / p))
+    df["abs_path"] = df["sr_gff_file"].map(lambda p: str(BASE_DIR / p))
     jobs: list[tuple[str, str]] = list(zip(df["Sample"].astype(str), df["abs_path"].astype(str), strict=False))
     return jobs, existing_df, n_total, n_skipped
 
@@ -135,7 +135,7 @@ def run(
 
     jobs, existing_df, n_total, n_skipped = _load_jobs(meta_path, side_path)
     n_jobs = len(jobs)
-    print(f"Samples with gff_file       : {n_total}")
+    print(f"Samples with sr_gff_file    : {n_total}")
     print(f"Already in sidecar (resume) : {n_skipped}")
     print(f"New jobs to process         : {n_jobs}")
 
@@ -165,7 +165,7 @@ def run(
             combined = new_df
         _atomic_write_tsv(combined, side_path)
         if errors:
-            err_df = pd.DataFrame(errors, columns=["Sample", "gff_file", "error"])
+            err_df = pd.DataFrame(errors, columns=["Sample", "sr_gff_file", "error"])
             _atomic_write_tsv(err_df, err_path)
         if final:
             print(f"Wrote sidecar: {side_path} ({len(combined)} rows)")

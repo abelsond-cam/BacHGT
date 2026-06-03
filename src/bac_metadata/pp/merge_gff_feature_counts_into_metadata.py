@@ -72,15 +72,15 @@ def run(
 
     n_matched = int(merged[feature_cols[0]].notna().sum())
     has_gff = (
-        merged["gff_file"].fillna("").astype(str).str.strip().str.len() > 0
-        if "gff_file" in merged.columns
+        merged["sr_gff_file"].fillna("").astype(str).str.strip().str.len() > 0
+        if "sr_gff_file" in merged.columns
         else pd.Series([True] * n_meta)
     )
     n_has_gff = int(has_gff.sum())
     n_has_gff_but_unmatched = int((has_gff & (merged[feature_cols[0]] == 0)).sum())
     print(f"Samples matched with counts          : {n_matched}/{n_meta}")
-    print(f"Samples with gff_file                : {n_has_gff}")
-    print(f"Samples with gff_file but 0 counts   : {n_has_gff_but_unmatched}")
+    print(f"Samples with sr_gff_file             : {n_has_gff}")
+    print(f"Samples with sr_gff_file but 0 counts: {n_has_gff_but_unmatched}")
 
     _atomic_write_tsv(merged, meta_path)
     print(f"Wrote {meta_path} ({len(merged)} rows, {len(merged.columns)} cols)")
