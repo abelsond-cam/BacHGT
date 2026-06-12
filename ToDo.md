@@ -38,19 +38,13 @@ Touches `bac_complete_genomes` (+ `bac_metadata` for the clean collation).
   tables/plots (e.g. AMR-gene frequencies; geNomad virus relative frequencies).
 - [ ] Re-derive and revisit the LR-vs-SR conclusions on the clean comparison set.
 
-## 3. Invasive disease (blood vs faeces isolation source first)
+## 3. Invasive disease GWAS — moved to BacPredict
 
-- [ ] **Hotspot rates by isolation source.** Compare per-source hotspot rates against
-  the whole-population background mutation rate at each locus as control → Chi-sq for
-  hotspots strongly associated with invasive disease. *Blocked on Aaron uploading
-  hotspots to HPC.*
-- [ ] **Pyseer unitig GWAS (KPSC-wide).** From variant calls, tabulate mutation loci
-  vs the reference genome per sample; filter low-frequency loci; compute pairwise
-  Jaccard distances. Combined with unitigs → whole-of-KPSC GWAS on unitigs.
-- [ ] **Pyseer presence/absence GWAS.** Same variant calls + the per-SL Panaroo we
-  have → presence/absence GWAS.
-- [ ] **Gubbins vs phage/virus families.** Compare Gubbins trees against the
-  phage/virus families being detected.
+The hotspot-rate and pyseer GWAS analyses (the blood-vs-faeces invasive-disease
+signal) now live in **BacPredict** under `src/bac_pyseer/` — tracked in
+[`BacPredict/ToDo.md`](../BacPredict/ToDo.md). This is variant-call / GWAS work, so
+it is compartmentalised there alongside the rest of the pyseer effort. The related
+phage/virus inheritance comparison stays in BacHGT under §4.
 
 ## 4. MGE characterisation (geNomad / ISEScan / ICEberg)
 
@@ -69,6 +63,8 @@ comparative / conjugative-element side.
   against Panaroo neighbourhoods / contig boundaries.
 - [ ] *(Dave)* Assess how **contig boundaries** fragment these sections, compared to
   reference / complete genomes.
+- [ ] *(Dave)* Compare **Gubbins trees** against the detected phage/virus families —
+  the order of inheritance of phage / virus from geNomad.
 
 ## 5. MGEfinder on complete vs short-read genomes
 
