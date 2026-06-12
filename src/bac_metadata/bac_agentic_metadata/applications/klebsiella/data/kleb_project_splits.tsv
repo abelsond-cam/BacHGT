@@ -1,0 +1,157 @@
+study_accession	paper_short_title	n_isolates	fold	seed
+PRJEB27342	northern_italy_ghana_one_health	3482	test	20260612
+PRJNA376414	ESPL KP Texas	1777	test	20260612
+PRJEB10018	EuSCAPE	1718	test	20260612
+PRJEB32655	malawi_ceftriaxone_esbl_enterobacteriaceae	1485	test	20260612
+PRJEB29424	Viet Nam MDR	1316	test	20260612
+PRJNA529744	australian_cpe_surveillance	1252	test	20260612
+PRJEB48268	death_risk_bsis	1088	test	20260612
+PRJNA548120	India_enterobacteriaceae	982	test	20260612
+PRJEB21081	klebsiella_diversity_in_Argentina	932	test	20260612
+PRJNA684006	Malawi_neonatal_outbreak	898	test	20260612
+PRJEB29738	klebsiella_phillipines	862	test	20260612
+PRJEB63349	cpe_southern_europe	687	test	20260612
+PRJNA577535	singapore_cpe	575	test	20260612
+PRJNA757551	singapore_cpe_surveillance	532	test	20260612
+PRJEB42350	Gastrointestinal carriage	484	test	20260612
+PRJEB1271	CUH_longitudinal	464	test	20260612
+PRJNA1133668	CRE_NYC	437	test	20260612
+PRJEB19226	capsule_depolymerase_study	422	test	20260612
+PRJEB56146	Norway population study	391	test	20260612
+PRJEB37504	MDR NMD	347	test	20260612
+PRJNA778230	French West One health	331	test	20260612
+PRJNA288601	cdc_surveillance	322	test	20260612
+PRJEB43870	norwegian_poultry_carriage	319	test	20260612
+PRJEB57159	norwegian_poultry_carriage	319	test	20260612
+PRJNA922900	norwegian_poultry_carriage	319	test	20260612
+PRJEB53835	finnish_benin_vaccine_trial	300	test	20260612
+PRJEB2111	klebsiella_global_diversity	288	test	20260612
+PRJNA543274	Swiss_kleb	272	test	20260612
+PRJEB38540	thailand_pig_farms	253	test	20260612
+PRJNA514908	China colonisation	241	test	20260612
+PRJNA810752	Melbourne_patient_samples	217	test	20260612
+PRJNA339843	new_abx_amr_consortium	206	test	20260612
+PRJNA532291	Thailand_CRE	200	test	20260612
+PRJNA433394	new_abx_amr_consortium	187	test	20260612
+PRJNA594602	Bovine mastitis	180	test	20260612
+PRJNA306133	uk_klebsiella	176	test	20260612
+PRJNA252957	CG 258 2	167	test	20260612
+PRJNA633565	cpe_glove_and_gown	166	test	20260612
+PRJNA547865	blakpc_singapore	157	test	20260612
+PRJNA825705	auto_amr	155	test	20260612
+PRJNA839691	new_chinese_neuro_icu	143	test	20260612
+PRJEB29739	ghru_nigeria	139	test	20260612
+PRJEB34643	european_food_products	131	test	20260612
+PRJEB37711	One day in Denmark	111	test	20260612
+PRJEB1272	blaoxa48_spain	105	test	20260612
+PRJEB1963	oxfordshire_amr_prediction	69	test	20260612
+PRJNA658369	cpe_crackle2		test	20260612
+PRJEB37378	uganda_and_malawi_amr	6508	train	20260612
+PRJEB28400	icu_hannoi	3153	train	20260612
+PRJEB19322	neonatal_klebsiella	1930	train	20260612
+PRJEB33565	neonatal_klebsiella	1930	train	20260612
+PRJEB46513	neonatal_klebsiella	1930	train	20260612
+PRJEB42462	Klebsiella_pneumoniae_longitudinal_study	1147	train	20260612
+PRJEB27256	Norway_k_pnuemoniae	868	train	20260612
+PRJEB22252	baby_biomes_uk	805	train	20260612
+PRJDB5929	thailand_cpe	747	train	20260612
+PRJNA845975	bangladesh_child_heatlh_research_foundation	599	train	20260612
+PRJNA1028672	CRKP_China	542	train	20260612
+PRJEB48990	MDR KP Wales	539	train	20260612
+PRJEB38289	portuguese_klebsiella	509	train	20260612
+PRJEB35685	Netherlands CPK	479	train	20260612
+PRJNA634885	Dutch plasmids	479	train	20260612
+PRJEB29143	word diagnostics	457	train	20260612
+PRJNA415194	Long term accute care	453	train	20260612
+PRJNA603790	transmission_cluster_detection_chicago	435	train	20260612
+PRJEB63361	cpe_south_africa	412	train	20260612
+PRJNA777643	Bactobolize	392	train	20260612
+PRJEB5065	mdr_surveillance_uk_ireland	379	train	20260612
+PRJEB20799	nan	356	train	20260612
+PRJEB6891	melb_surveillance	348	train	20260612
+PRJEB19229	irish_cpe_surveillance	330	train	20260612
+PRJEB19435	irish_cpe_surveillance	330	train	20260612
+PRJEB22264	irish_cpe_surveillance	330	train	20260612
+PRJEB24082	irish_cpe_surveillance	330	train	20260612
+PRJEB24083	irish_cpe_surveillance	330	train	20260612
+PRJEB24084	irish_cpe_surveillance	330	train	20260612
+PRJEB24085	irish_cpe_surveillance	330	train	20260612
+PRJEB24086	irish_cpe_surveillance	330	train	20260612
+PRJEB24087	irish_cpe_surveillance	330	train	20260612
+PRJEB28054	nan	326	train	20260612
+PRJNA398288	cephalosporin Autralia, NZ and Singapore	294	train	20260612
+PRJEB39867	Germany_ESBL	286	train	20260612
+PRJNA544438	polymixin B KP	275	train	20260612
+PRJNA604910	ratcliffe_hospital_sink_drains	264	train	20260612
+PRJEB22903	nan	261	train	20260612
+PRJNA789336	CPK bloodstream	258	train	20260612
+PRJNA341927	CG 258	244	train	20260612
+PRJEB6574	pakistan_klebsiella	227	train	20260612
+PRJEB24970	MDR neonates	224	train	20260612
+PRJEB58216	greek_cpe	209	train	20260612
+PRJNA325243	vetinary_fda	204	train	20260612
+PRJEB58018	Germany-Ukrain-NDM_OXA	201	train	20260612
+PRJEB30134	long_read_CPE	200	train	20260612
+PRJEB21277	Irish point prevelence	192	train	20260612
+PRJNA565795	melb_superbugs	190	train	20260612
+PRJNA1048341	nan	177	train	20260612
+PRJNA787062	ethiopian_klebsiella	177	train	20260612
+PRJNA767944	CPK transmission	173	train	20260612
+PRJDB12116	japanese_surveillance	168	train	20260612
+PRJDB14656	japanese_surveillance	168	train	20260612
+PRJDB17849	japanese_surveillance	168	train	20260612
+PRJEB12699	nan	160	train	20260612
+PRJNA982859	Wastewater_USA_isolates	159	train	20260612
+PRJEB22890	superiore_di_sanita	157	train	20260612
+PRJNA278886	nan	156	train	20260612
+PRJNA626430	OXA fitness effect	156	train	20260612
+PRJEB21605	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	148	train	20260612
+PRJNA1052047	human_and_bovine_culture_collection	148	train	20260612
+PRJNA1133624	nan	143	train	20260612
+PRJNA549322	NYC_CRE	143	train	20260612
+PRJEB64895	greek_cpe	141	train	20260612
+PRJNA804332	kenyan_neonate	138	train	20260612
+PRJNA1054115	Albany_bloodstream_usa	137	train	20260612
+PRJNA1087366	nan	135	train	20260612
+PRJNA246471	virginia_cpe	129	train	20260612
+PRJNA648389	texan_esbl	126	train	20260612
+PRJEB58136	nan	112	train	20260612
+PRJNA820335	Clinical CR-hvKP ST11 strains collection	110	train	20260612
+PRJEB74083	nan	106	train	20260612
+PRJNA271899	cpe_surveillance_five_us_hospitals	104	train	20260612
+PRJEB1800	nepal_hospital_outbreak	89	train	20260612
+PRJNA351909	melb_surveillance	16	train	20260612
+PRJNA475751	pittsburgh_edshat		train	20260612
+PRJNA564992	canada_esbl		train	20260612
+PRJNA789565	michigan_matched_colonising_infecting		train	20260612
+PRJEB74192	One Health Norway	3255	val	20260612
+PRJNA857686	nevada_health_lab	1345	val	20260612
+PRJEB17615	Philipines_network	1290	val	20260612
+PRJDB10842	enterobacterales_japan	1240	val	20260612
+PRJEB29740	indian_cpe_surveillance	1072	val	20260612
+PRJEB50614	indian_cpe_surveillance	1072	val	20260612
+PRJNA604975	oxfordshire_bsi_surveillance	886	val	20260612
+PRJNA768622	Manchester_TRACE	769	val	20260612
+PRJNA564424	Manchester_TRACE	569	val	20260612
+PRJNA686897	chigago_cpe_ndm	486	val	20260612
+PRJEB36683	CC14 KP clone	457	val	20260612
+PRJEB29742	columbia_cpe_surveillance	425	val	20260612
+PRJNA557275	columbia_irvine_polymyxin_resistance	388	val	20260612
+PRJEB50822	Spain CPK	336	val	20260612
+PRJNA996149	Cefiderocol_CRE_China	320	val	20260612
+PRJEB39943	CCRE survey	313	val	20260612
+PRJEB42331	dutch_cpe_surveillance	307	val	20260612
+PRJEB15226	cenre-sepcific typing	288	val	20260612
+PRJNA855907	canadian_blaoxa48	270	val	20260612
+PRJDB12075	Desinfectant susceptibility	241	val	20260612
+PRJNA765801	CPK Enterobacteriales	213	val	20260612
+PRJEB36486	malawi_colonisation_dynamics	203	val	20260612
+PRJEB1563	invasive_kilifi	198	val	20260612
+PRJNA396774	ml_predict_mic	177	val	20260612
+PRJNA395086	aminoglycoside_resistance	166	val	20260612
+PRJEB39293	maternal_amr_low_income_countrie	158	val	20260612
+PRJNA835677	aerobactin in pigs	150	val	20260612
+PRJNA646358	Cietnamise ICUs	141	val	20260612
+PRJNA885285	Cambodia_MDRE	130	val	20260612
+PRJNA978102	boston_bsis	108	val	20260612
+PRJNA641987	subsaharan_neonatal_outbreak	16	val	20260612

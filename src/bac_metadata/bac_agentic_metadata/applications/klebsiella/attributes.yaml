@@ -1,0 +1,69 @@
+# Attribute spec — Klebsiella application
+#
+# SINGLE SOURCE OF TRUTH for the Klebsiella curation rubric. David edits this directly.
+# Stage-0 SCAFFOLD: attribute names + value sets are filled in; the per-attribute grading
+# DEFINITIONS (when a value counts as gradeable/partial/not_gradeable, edge rules) are
+# marked `TBD` and are David's to supply before Stage 2. Do not invent grading criteria.
+#
+# See PIPELINE_PLAN.md (attribute-spec model) and STAGE0_kleb_curation_map.md.
+# Unit of work = project accession (study_accession). Grade scale applies to every attribute:
+grade_scale: [gradeable, partial, not_gradeable]
+
+application: klebsiella
+species: Klebsiella pneumoniae species complex (KPSC)
+
+attributes:
+
+  # 1) STUDY FILTERS — decide whether the whole study enters the cohort.
+  study_filters:
+    study_type:
+      values: [observational, experimental_evolution, other]
+      exclude_if: [experimental_evolution]   # experimental-evolution studies are dropped
+      ground_truth: curated_implicit          # excluded studies absent from study_level
+      definition: TBD
+
+  # 2) STUDY-LEVEL JUDGEMENTS — read from the paper; mostly absent from structured data.
+  study_level:
+    study_setting:
+      values: [hospital, community, mixed]
+      ground_truth: curated                   # study_level col `study_setting`
+      definition: TBD
+    amr_study:                                # a.k.a. `sample_selection` in the v1.0 snapshot
+      values: [amr, mixed, surveillance]
+      ground_truth: curated                   # study_level col `amr_study`/`sample_selection`
+      definition: TBD
+    amr_target:
+      values: [third_gen_cephalosporin, carbapenem, other]
+      applies_when: amr_study in [amr, mixed]
+      ground_truth: none                      # WANTED, not yet collected -> generate + spot-check
+      definition: TBD
+    amr_method:
+      values: [pcr_gene_presence, ast_result]
+      applies_when: amr_study in [amr, mixed]
+      ground_truth: none                      # WANTED, not yet collected -> generate + spot-check
+      definition: TBD
+    cohort_age:
+      values: [newborn_young_child, adult, mixed]
+      ground_truth: partial                   # study_level `cohort_age`/`newborn_cohort` unfinished
+      definition: TBD
+      note: drives the invasion-gene comparison (newborns/young children vs adults)
+
+  # 3) PER-SAMPLE COMPLETENESS / BACKFILL — measure ATB completeness, backfill from paper.
+  per_sample_completeness:
+    fields: [country, collection_date, isolation_source, host]
+    ground_truth: parsed_per_project          # the reliable "what was improved" record
+    deterministic_normaliser:                 # existing parse/categorise pairs in pp/metadata_curation.py
+      country: [parse_country, categorise_region]
+      collection_date: [parse_collection_date]
+      isolation_source: [parse_isolation_source, categorise_isolation_source]
+      host: [parse_host, categorise_host]
+    definition: TBD
+
+# COHORT FLAGS emitted per accession alongside the attributes above.
+cohort_flags:
+  cohort_mixed:
+    description: study mixes categories not labellable at accession level (needs raw per-sample tables)
+    definition: TBD
+  needs_manual_download:
+    description: paper not publicly accessible
+    definition: TBD

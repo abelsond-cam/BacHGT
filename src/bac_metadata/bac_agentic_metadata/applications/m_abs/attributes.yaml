@@ -1,0 +1,43 @@
+# Attribute spec — M. abscessus application
+#
+# SINGLE SOURCE OF TRUTH for the M. abscessus curation rubric. David edits this directly.
+# Stage-0 SCAFFOLD: attribute names + value sets are filled in; the per-attribute grading
+# DEFINITIONS (gradeable/partial/not_gradeable, edge rules) are marked `TBD` and are
+# David's to supply before Stage 2. Do not invent grading criteria.
+#
+# See ../../PIPELINE_PLAN.md (attribute-spec model). Same engine, same grade scale as
+# Klebsiella; the phenotype axis is the species-specific slot (here: CF status).
+grade_scale: [gradeable, partial, not_gradeable]
+
+application: m_abs
+species: Mycobacterium abscessus
+source_data: ATB_metadata_Mabs_2025_release.xlsx   # ~7,000 sequences
+
+attributes:
+
+  # STUDY-LEVEL JUDGEMENTS — the headline targets; ABSENT from the structured data.
+  study_level:
+    host_disease:
+      values: [CF, non_CF]
+      ground_truth: none                      # not in the data; David hand-grades a seed set first
+      definition: TBD
+      note: the primary phenotype axis for M. abscessus (CF vs non-CF)
+    host_smoking_status:
+      values: [smoker, non_smoker, unknown]
+      ground_truth: none
+      aspirational: true                      # unlikely to be recoverable for most studies
+      definition: TBD
+
+  # PER-SAMPLE COMPLETENESS / BACKFILL — same four core fields as Klebsiella.
+  per_sample_completeness:
+    fields: [country, collection_date, isolation_source, host]
+    ground_truth: none                        # no curated M. abs ground truth yet
+    definition: TBD
+
+cohort_flags:
+  cohort_mixed:
+    description: study mixes CF + non-CF (or other categories) not labellable at accession level
+    definition: TBD
+  needs_manual_download:
+    description: paper not publicly accessible
+    definition: TBD
