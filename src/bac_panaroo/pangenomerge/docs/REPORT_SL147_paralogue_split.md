@@ -287,3 +287,212 @@ best_u = union[np.arange(len(X)), best_j] / n
 print(f'median best-partner union: {np.median(best_u)*100:.2f}% of all genomes')
 print(f'spike clusters with a >=98%-union partner: {int((best_u >= 0.98).sum())}/{len(X)}')
 ```
+
+## Appendix A — Re-run with `--frameshift-coverage 20 --frameshift-identity 70`
+
+Same two input Panaroo runs, same pangenomerge dev commit (`944cbd8`), 16
+threads, 250 GB partition — only the frameshift-detector flags changed.
+
+| | default merge | **frameshift merge** | Δ |
+|---|---:|---:|---:|
+| Merge wall time | 31 min 58 s | 40 min 36 s | +9 min |
+| Total clusters | 20,840 | **21,174** | **+334 (more splitting, not less)** |
+| Spike clusters in [0.48, 0.52] | **526** | **637** | **+111 (+21 %)** |
+| Strict-pair clusters (union ≥ 0.98, inter ≤ 0.02) | 150 | 175 | +25 |
+| Per-pangenome core / soft / shell / cloud | 3 556 / 165 / 2 010 / 15 109 | 3 512 / 151 / 2 139 / 15 372 | core −44, shell +129 |
+| Per-genome core | 3 553.4 ± 7.9 | **3 509.5 ± 7.8** | **−44** |
+| Per-genome soft-core | 161.0 ± 8.3 | 147.4 ± 7.9 | −14 |
+| Per-genome shell | 838.3 ± 167.2 | **893.4 ± 167.8** | **+55** |
+| Per-genome cloud | 165.9 ± 103.5 | 168.4 ± 104.1 | +3 |
+| Per-genome total | 4 718.6 ± 150.9 | 4 718.6 ± 150.9 | **0 (content preserved)** |
+
+> Per-genome means here are a fresh recompute on the postprocess GPA using
+> Panaroo's standard 99/95/15 % cutoffs — both columns produced by the same
+> code on the same machine; the small offset from the main report's table
+> (which came from `gpa_clustering_summary_SL147.tsv` via the bac_panaroo
+> wrapper) is consistent across both runs and doesn't affect the deltas.
+
+The frameshift parameters **make the problem worse**: the spike grew from
+526 → 637 (+21 %), and the per-genome core dropped a further 44 clusters
+into the shell.  Total per-genome content is identical to the mille
+(4 718.58 in both, byte-equal), so the merge has not lost information; it
+has produced more cluster fragments and more paralog-split pairs.
+
+Re-running the spike-pair similarity diagnostic
+(`src/bac_panaroo/pangenomerge/medoid_representative_diagnostics.py`) against
+the frameshift merge confirms the conclusion below holds with this
+parameter set too:
+
+```
+[all-spike, frameshift] n=637
+  pct_identity:  median=17.9  q25=13.9  q75=28.2
+     0- 30 %   n=507   80%
+    30- 50 %   n=114   18%
+    50- 70 %   n=  7    1%
+    70- 80 %   n=  2    <1%
+    80- 90 %   n=  3    <1%
+    90- 99 %   n=  0    0%
+    99-100 %   n=  4    <1%   <-- 4/637 = 0.6 % at ≥ 99 %  (5/526 = 0.9 % defaults)
+```
+
+So neither parameter set produces a population of high-identity, equal-length
+representatives that the merge could plausibly recognise.  The
+representative-choice path remains the limiting factor.
+
+`spike_pair_similarity.tsv` for the frameshift run:
+`/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/pangenomerge/SL147_frameshift/spike_pair_similarity.tsv`
+
+## Appendix B — Paired-cluster representative-protein similarity
+
+For each cluster in the 526-cluster `[0.48, 0.52]` spike from the original
+merge, we identified its best union-partner (the other spike cluster
+maximising joint coverage of all 5 353 genomes), then retrieved both
+clusters' representative AA sequences from `pangenome_metadata.sqlite`
+(`node_sequences.protein`) and pairwise-aligned the two reps with Biopython's
+identity-only `PairwiseAligner` (no gap penalty, identity = matches / max
+length).  The mapping from GPA `Gene` to SQLite `nodes.name` goes via the
+`isolate_names` table and a Jaccard set-match on each cluster's
+genome-presence pattern, because pangenomerge re-numbers clusters during
+postprocess and the GPA `Gene` column is therefore not equal to
+`nodes.name`.  The match Jaccard was **median = 1.000** across all 526
+clusters (every cluster maps unambiguously to exactly one SQLite node).  The
+diagnostic is in
+[`src/bac_panaroo/pangenomerge/medoid_representative_diagnostics.py`](../medoid_representative_diagnostics.py).
+
+### Summary — *all* 526 spike clusters
+
+| Metric | All 526 spike clusters | Strict-pair subset (150) |
+|---|---:|---:|
+| Pairs aligned | 526 / 526 | 150 / 150 |
+| % identity — median | **19.2 %** | 19.7 % |
+| % identity — IQR (25–75 %) | 11.7 % – 28.7 % | 12.5 % – 31.9 % |
+| Length-ratio (min/max) — median | **0.313** | 0.307 |
+| Pairs at < 30 % identity | **411 / 526 (78 %)** | 100 / 150 (67 %) |
+| Pairs at < 70 % identity | **517 / 526 (98 %)** | 141 / 150 (94 %) |
+| Pairs at ≥ 90 % identity | **5 / 526 (0.95 %)** | 5 / 150 (3.3 %) |
+| Pairs at ≥ 99 % identity | 5 / 526 (0.95 %) | 5 / 150 (3.3 %) |
+| Strict-union partner (≥ 0.98) | **500 / 526 (95 %)** | n/a |
+
+The pattern survives moving the denominator from the 150-strict-pair subset
+to the full 526-cluster spike: ~95 % of all spike clusters have a strict
+union-partner inside the spike (so the paralogue-split framing is not an
+artefact of the strict criterion), and **only 5 of all 526 reps reach ≥ 90 %
+identity to their partner** — i.e. only ~1 % would clear Panaroo's typical
+mmseqs `--min-seq-id 0.7` (with 80 % coverage) threshold.
+
+### Distribution — all 526
+
+```
+pct_identity bins:
+   0 -  30 %   n=411  #######################################
+  30 -  50 %   n= 99  #########
+  50 -  70 %   n=  7
+  70 -  80 %   n=  2
+  80 -  90 %   n=  2
+  90 -  95 %   n=  0
+  95 -  99 %   n=  0
+  99 - 100 %   n=  5
+```
+
+The mass at the **0–30 %** band — combined with median length-ratio **0.31**
+(i.e. one rep is typically ~3× longer than its partner) — says that for the
+overwhelming majority of paralogue-split events, the two part-half graphs
+each pulled a **different paralog or different domain** as the cluster
+representative.  Their representatives do not look like the same gene
+family, so the merge step has no AA-level signal to bring them back
+together.  This is consistent with the medoid-choice hypothesis from your
+email rather than with a tunable identity / coverage threshold on the
+cross-graph alignment.
+
+The tiny 99–100 % tail (5 pairs) is the opposite case: identical-length,
+identical-sequence representatives that nevertheless landed in separate
+merged clusters — bona-fide misses by the merge alignment step itself.
+
+### Stratification by best-partner-union
+
+The 526 break down into three strata of partner strength:
+
+| Stratum | n | median %id | interpretation |
+|---|---:|---:|---|
+| Strict union (≥ 0.98) | **500** | 19.3 % | Cluster has an almost-exclusive partner in the spike. Either a true paralogue split, or a presence-pattern coincidence. |
+| Looser union (0.90–0.98) | 4 | 8.1 % | Near-pair, low identity — also paralog-mismatch. |
+| No clean partner (< 0.90) | 22 | 18.4 % | Cluster's best partner doesn't cover all genomes — looks like a part-half-specific cluster that has no twin to merge with. |
+
+### Worked examples (the named ones from the main report, now with reps)
+
+| GPA cluster A | SQLite node A | len A | GPA cluster B | SQLite node B | len B | len ratio | % id | annotation summary |
+|---|---|---:|---|---|---:|---:|---:|---|
+| `group_3210` | `group_1261_g1` | 852 | `group_8889` | `group_4460_g1` | **6487** | 0.13 | 13.1 % | FimD/PapC (both) — one part's rep is the 852-AA usher domain, the other's is the 6.5 kAA full-length anchor |
+| `luxR~~~acoK~~~malT` | `luxR~~~acoK~~~malT_g1` | 5691 | `group_6766` | `group_2900_g1` | 669 | 0.12 | 11.7 % | LuxR C-term regulator — one part picked the full ~5.7 kAA MalT, the other picked a 669-AA stand-alone LuxR-domain protein |
+| `rhtB` | `group_1246_g1` | 209 | `group_9580` | `group_1235_g1` | 162 | 0.78 | 28.2 % | RhtB family — closer lengths, but only ~28 % identity at the AA level |
+
+### Identical-protein outliers (potential merge-step misses)
+
+These five pairs have **identical AA sequences** (length-matched, 100 %
+identity) yet still ended up as different clusters in the merge.  These look
+like merge-side misses (rather than the medoid-choice problem):
+
+| Cluster A (GPA) | Cluster B (GPA) | SQL A | SQL B | length | %id | annotation A | annotation B |
+|---|---|---|---|---:|---:|---|---|
+| `pqqL` | `gltP~~~dctA` | `group_2879_g2` | `pqqL_g1` | 500 | 100 % | Zn-peptidase M16 | Na+/H+-dicarboxylate symporter |
+| `rhtB` | `group_12042` | `group_1246_g1` | `rhtB_g1` | 209 | 100 % | RhtB efflux | Response regulator receiver (annotation-mismatch) |
+| `rhtB` | `group_16307` | `group_1246_g1` | `rhtB_g1` | 209 | 100 % | RhtB efflux | RhtB efflux |
+| `dctA` | `gltP~~~dctA` | `group_2879_g2` | `pqqL_g1` | 500 | 100 % | DctA C4-dicarboxylate | Na+/H+-dicarboxylate symporter |
+| `group_11204` | `gltP~~~dctA` | `group_2879_g2` | `pqqL_g1` | 500 | 100 % | adenosine kinase | Na+/H+-dicarboxylate symporter |
+
+Three of the five rows involve the same SQLite pair
+(`group_2879_g2` ⟷ `pqqL_g1`, 500 AA, 100 % identical) — multiple GPA `Gene`
+labels resolving to the same SQLite node pair suggests these
+annotation-inconsistencies happen *inside* each part too (a single 500-AA
+protein gets ~3 different `Gene` labels in part_0/part_1).  The merge step
+then can't bridge the identical-protein clusters because their downstream
+context / annotation differs.
+
+### Smallest-vs-largest length-ratio examples (extreme paralog mispairs)
+
+The lowest-identity, lowest-len-ratio pairs are dominated by 49-AA fragments
+(transposases) paired against ~3 kAA proteins — these are likely *not* true
+paralogue splits but instead share-genome-set artefacts from one part
+assigning a tiny truncated read to a separate cluster while the other part
+has the full-length gene:
+
+| Cluster A | Cluster B | len A | len B | len ratio | %id | annotation A | annotation B |
+|---|---|---:|---:|---:|---:|---|---|
+| `group_3039` | `group_8893` | 49 | 2811 | 0.017 | 1.7 % | Transposase | Xylose isomerase-like TIM barrel |
+| `group_3039` | `ydhB~~~punR` | 49 | 2709 | 0.018 | 1.8 % | Transposase | LysR transcriptional regulator |
+| `feoA` | `group_15305` | 75 | 3403 | 0.022 | 2.2 % | Ferrous iron transporter A | DUF2345 |
+| `group_3039` | `casB` | 49 | 1402 | 0.035 | 3.5 % | Transposase | CRISPR Cse2/CasB |
+| `group_3039` | `group_8322` | 49 | 1402 | 0.035 | 3.5 % | Transposase | DUF3142 |
+
+The 49-AA `group_3039` (Transposase) pairs with 4 different ~1.4–2.8 kAA
+clusters at near-100 % mutual exclusivity — it has the *same population
+distribution* as several different big genes simply because it sits in ~half
+the genomes by coincidence of the random split.  Not all spike pairs are
+real biological paralogue splits; some are chance presence-pattern
+collisions.
+
+### Output files
+
+- `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/pangenomerge/SL147/spike_pair_similarity_v2.tsv`
+  — 526 rows, columns: `cluster_A_gpa, best_partner_gpa, best_partner_union_frac, best_partner_inter_ratio, cluster_A_size, is_strict_pair, annotation_A, annotation_B, cluster_A_sql, size_A_sql, len_A, jac_A, cluster_B_sql, size_B_sql, len_B, jac_B, match_score, pct_identity, len_ratio`.
+- `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/pangenomerge/SL147_frameshift/spike_pair_similarity.tsv`
+  — 637 rows, same columns (Appendix A data).
+
+### Interpretation for the merge algorithm
+
+Most paralogue-split pairs (~99 %) have representative proteins that do not
+clear a typical mmseqs identity gate (≥ 90 %).  This points to two
+complementary fix paths:
+
+1. **Per-cluster representative choice** (Panaroo or pangenomerge side): pick
+   representatives in a way that's consistent across part-graphs — e.g. pick
+   the longest representative once at the merge step from the union of each
+   cluster's per-genome carriers, rather than relying on each part's own
+   medoid choice.  The 0–30 % identity mass of the distribution is the
+   strongest evidence that this is the limiting factor.
+2. **Annotation-aware bridging at merge time** (pangenomerge side): the
+   small tail (≥ 99 % identity, identical lengths — 5 pairs per merge)
+   suggests the merge alignment step also misses identical-protein pairs
+   when their annotations differ between parts.  Annotation-aware bridging,
+   or a second pass that looks for length-matched identical sequences
+   regardless of annotation, would catch these.
