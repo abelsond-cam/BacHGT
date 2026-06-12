@@ -15,11 +15,10 @@ Outputs:
   thresholds, with CG rate + Wilson CI + parent SL rate + delta.
 - ``viral_penetrance_by_SL_then_CG.png`` — 2-panel grouped bar plot
   (top Sgld_v, bottom Wbr_v). X = epidemic SLs, ordered by parent-SL
-  Sgld_v rate descending. For each SL: one bar per qualifying CG
-  packed side-by-side (single colour, Wilson 95 % CI error bar). A
-  two-tier x-axis labels each bar with its CG number and centres the
-  SL name under the group. SLs with only one qualifying CG appear as
-  a single bar.
+  Sgld_v rate descending. Each SL gets its own hue (tab20/tab20b); each
+  CG within the SL is a darker→lighter shade of that hue (darkest =
+  largest CG). Wider gap between SL groups. Wilson 95 % CI error bars.
+  Two-tier x-axis: CG number under each bar, SL centred under the group.
 """
 
 from __future__ import annotations
@@ -31,6 +30,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.colors import to_rgb
 
 from bac_genomad.genomad_constants import DEFAULT_METADATA_V2, DEFAULT_VIRAL_PENETRANCE_DIR
 
@@ -103,23 +103,48 @@ def _build_table(
     return pd.DataFrame(rows)
 
 
-BAR_COLOUR = "#1f77b4"
-INTER_SL_PAD = 0.7  # gap between SL groups, in bar-width units
+INTER_SL_PAD = 1.5  # gap between SL groups, in bar-width units
+# Per-SL hue palette: tab20 then tab20b (40 distinct colours). Cycled if we
+# ever exceed 40 epidemic SLs.
+_SL_PALETTE = list(plt.get_cmap("tab20").colors) + list(plt.get_cmap("tab20b").colors)
 
 
-def _layout(df: pd.DataFrame, sl_order: list[str]) -> tuple[pd.DataFrame, list[float], list[tuple[float, str]]]:
-    """Compute the bar layout for grouped CG bars.
+def _sl_colours(sl_order: list[str]) -> dict[str, tuple[float, float, float]]:
+    """Stable per-SL hue from the tab20 + tab20b palette."""
+    return {sl: _SL_PALETTE[i % len(_SL_PALETTE)] for i, sl in enumerate(sl_order)}
 
-    Walks ``sl_order`` and, within each SL, sorts the qualifying CGs by
-    sample count desc. Assigns each bar an x-coordinate (1 bar-width apart
-    inside a group, ``INTER_SL_PAD`` between groups). Returns
-    ``(layout_rows, bar_x, slot_centres)`` where ``layout_rows`` is df
-    re-indexed in walk order, ``bar_x`` is the bar centre x per row, and
-    ``slot_centres`` is a list of ``(x_centre, sl_label)`` for the
-    SL-tier x-axis annotations.
+
+def _shade_ramp(base_color: tuple[float, float, float], n: int) -> list[tuple[float, float, float]]:
+    """Return ``n`` shades of ``base_color`` from darkest (pure base) → lightest.
+
+    Lighter shades are linear blends with white (``alpha`` from 1.0 → 0.35).
+    ``n == 1`` returns the base colour unchanged so single-CG SLs aren't faded.
     """
+    if n <= 0:
+        return []
+    if n == 1:
+        return [base_color]
+    base = np.array(to_rgb(base_color))
+    white = np.ones(3)
+    alphas = np.linspace(1.0, 0.35, n)
+    return [tuple(a * base + (1.0 - a) * white) for a in alphas]
+
+
+def _layout(df: pd.DataFrame, sl_order: list[str]) -> tuple[pd.DataFrame, list[float], list[tuple[float, str]], list[tuple[float, float, float]]]:
+    """Compute bar layout + per-bar shade ramp for grouped CG bars.
+
+    Within each SL, qualifying CGs are sorted by ``n_cg`` desc and laid out
+    1 bar-width apart; SL groups are separated by ``INTER_SL_PAD`` bar-widths.
+    The CG bars within an SL are shaded from the SL's hue (darkest = largest
+    CG) to a faded blend with white (lightest = smallest CG).
+
+    Returns ``(layout_rows, bar_x, slot_centres, bar_colours)`` — all four
+    keyed in walk order (same row index in each list).
+    """
+    sl_hue = _sl_colours(sl_order)
     layout_chunks: list[pd.DataFrame] = []
     bar_x: list[float] = []
+    bar_colours: list[tuple[float, float, float]] = []
     slot_centres: list[tuple[float, str]] = []
     cursor = 0.0
     for sl in sl_order:
@@ -130,10 +155,11 @@ def _layout(df: pd.DataFrame, sl_order: list[str]) -> tuple[pd.DataFrame, list[f
         xs = [cursor + i for i in range(n)]
         slot_centres.append((cursor + (n - 1) / 2.0, sl))
         bar_x.extend(xs)
+        bar_colours.extend(_shade_ramp(sl_hue[sl], n))
         layout_chunks.append(sub)
         cursor += n + INTER_SL_PAD
     layout_rows = pd.concat(layout_chunks, ignore_index=True)
-    return layout_rows, bar_x, slot_centres
+    return layout_rows, bar_x, slot_centres, bar_colours
 
 
 def _plot_dispersion(
@@ -149,7 +175,7 @@ def _plot_dispersion(
         df.drop_duplicates("Sublineage").set_index("Sublineage")["pct_Sgld_v_sl"]
         .sort_values(ascending=False).index.tolist()
     )
-    layout_rows, bar_x, slot_centres = _layout(df, sl_order)
+    layout_rows, bar_x, slot_centres, bar_colours = _layout(df, sl_order)
     cg_labels = layout_rows["Clonal group"].astype(str).tolist()
     total_width = (max(bar_x) + 0.5) if bar_x else 1.0
 
@@ -164,7 +190,7 @@ def _plot_dispersion(
         err_hi = np.maximum(ci_hi - rates, 0)
         ax.bar(
             bar_x, rates, width=0.9,
-            color=BAR_COLOUR, edgecolor="black", linewidth=0.5, zorder=3,
+            color=bar_colours, edgecolor="black", linewidth=0.5, zorder=3,
         )
         ax.errorbar(
             bar_x, rates, yerr=[err_lo, err_hi],
