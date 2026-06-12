@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Plot per-cohort standalone-viral contig length distributions (LRA vs paired SR).
+"""Plot per-cohort standalone-viral contig length distributions (paired LRA vs paired SR).
 
-Reads ``standalone_viral_lengths.tsv`` (produced by an ad-hoc length-dump pass
-over ``genomad_virus_summary_long.tsv`` + ``contig_lengths_paired.tsv``; see
-``compare_lra_to_sr``'s ``_classify_virus_coords`` for the classification
-rules) and writes a 4-panel PNG — one panel per cohort, LRA + paired SR
-overlaid — to ``standalone_viral_lengths.png`` beside the input.
+Reads ``standalone_viral_lengths.tsv`` (produced by ``compare_lra_to_sr
+dump_lengths``) and writes a 4-panel PNG — one panel per cohort, paired
+LRA + paired SR overlaid — to ``standalone_viral_lengths.png`` beside
+the input. ``lra_all`` rows in the TSV are ignored on this plot; the
+headline is the paired comparison.
 
 Log-spaced bins from 200 bp to 200 kb; vertical reference lines at the size-bin
 cuts used by ``compare_lra_to_sr`` (20 kb, 80 kb) plus an extra line at 2 kb to
@@ -31,15 +31,14 @@ COHORT_TITLES = {
     "lra_final_list": "lra_final_list (all paired)",
 }
 SIDE_COLORS = {
-    "lra_all": "#2ca02c",  # green — every LRA sample in the cohort (paired + unpaired)
-    "lra": "#1f77b4",      # blue  — paired LRA only
+    "lra": "#1f77b4",      # blue  — paired LRA
     "sr": "#d62728",       # red   — paired SR partners
 }
 SIDE_LABELS = {
-    "lra_all": "LRA-all",
     "lra": "LRA-paired",
     "sr": "SR-paired",
 }
+PLOT_SIDES = ("lra", "sr")
 SIZE_BIN_CUTS_KB = (2, 20, 80)
 
 
@@ -67,10 +66,10 @@ def main() -> int:
     axes = axes.flatten()
 
     for ax, cohort in zip(axes, COHORTS, strict=False):
-        # Draw LRA-all underneath (broadest distribution), then paired LRA and SR
-        # on top — both as stepfilled with the same alpha so peak alignment
-        # vs. lra_all is readable at a glance.
-        for side in ("lra_all", "lra", "sr"):
+        # Paired-LRA + paired-SR only — apples-to-apples. LRA-all was dropped
+        # because the unpaired LRA dilutes the headline that SR picks up the
+        # big peaks at near-LRA rates.
+        for side in PLOT_SIDES:
             sub = df[(df["cohort"] == cohort) & (df["side"] == side)]
             if sub.empty:
                 continue
@@ -100,7 +99,7 @@ def main() -> int:
             )
 
     fig.suptitle(
-        "Standalone viral contig length — LRA-all vs paired LRA vs paired SR, by cohort\n"
+        "Standalone viral contig length — paired LRA vs paired SR, by cohort\n"
         "(geNomad whole-contig topology calls; dashed lines at 2/20/80 kb)",
         fontsize=12,
     )

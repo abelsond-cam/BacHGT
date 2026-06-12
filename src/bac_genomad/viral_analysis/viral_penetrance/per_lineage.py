@@ -23,8 +23,9 @@ Outputs (under :data:`bac_genomad.genomad_constants.DEFAULT_VIRAL_PENETRANCE_DIR
 - ``viral_penetrance_by_SL.tsv`` — one row per epidemic SL + ``other``.
 - ``viral_penetrance_by_CG.tsv`` — one row per epidemic CG + ``other``.
 - ``viral_penetrance_by_SL.png`` — 2-panel: top = Sgld_v penetrance,
-  bottom = Wbr_v. Bar **height = n_samples**, bar **fill colour = % carriage**
-  (viridis 0-100%). Annotated with carriage %.
+  bottom = Wbr_v. Bar **height = % carriage** with Wilson 95 % CI error
+  bars (epidemic groups only); bar **fill colour = n_samples** (viridis,
+  log-norm so SL258 ~ 16 k doesn't black-out everyone else).
 - ``viral_penetrance_by_CG.png`` — same layout for Clonal group.
 
 Length comes straight from geNomad's ``length`` column in the long TSV —
@@ -37,13 +38,14 @@ from __future__ import annotations
 
 import argparse
 import sys
+from math import sqrt
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.cm import ScalarMappable
-from matplotlib.colors import Normalize
+from matplotlib.colors import LogNorm
 
 from bac_genomad.genomad_constants import (
     DEFAULT_INPUTS_TSV,
@@ -66,6 +68,17 @@ TRUE_TOKENS = frozenset({"true", "1", "yes"})
 def _truthy(series: pd.Series) -> pd.Series:
     """Boolean mask from mixed-case True/False string columns."""
     return series.astype(str).str.lower().isin(TRUE_TOKENS)
+
+
+def _wilson_ci(count: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    """Wilson 95 % CI for a binomial proportion. (nan, nan) when n == 0."""
+    if n == 0:
+        return float("nan"), float("nan")
+    p = count / n
+    denom = 1.0 + z * z / n
+    centre = (p + z * z / (2 * n)) / denom
+    half = z * sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denom
+    return max(0.0, centre - half), min(1.0, centre + half)
 
 
 # ─── per-Sample carriage table ────────────────────────────────────────────────
@@ -181,43 +194,64 @@ def _row_for(sub: pd.DataFrame, label: str, *, is_epidemic: bool) -> dict:
 def _plot_penetrance(
     df: pd.DataFrame, group_col_name: str, out_png: Path
 ) -> None:
-    """2-panel bar chart: top Sgld_v, bottom Wbr_v.
+    """2-panel bar chart: top Sgld_v carriage, bottom Wbr_v carriage.
 
-    Bar height = ``n_samples``; bar fill colour = % carriage on a viridis 0-100
-    colormap. ``other`` is drawn last with a distinct edge so it's visually
-    separable from the epidemic bars even when small.
+    Bar height = % carriage with a Wilson 95 % CI error bar (epidemic groups
+    only; ``other`` is drawn without a CI since the aggregate-rate confidence
+    isn't meaningful). Bar fill colour = ``n_samples`` on viridis (log-norm so
+    a wide dynamic range across SLs / CGs is legible). ``other`` is drawn with
+    a distinct black edge so it's visually separable from the epidemic bars.
     """
     if df.empty:
         print(f"  (no rows for {group_col_name}; skipping {out_png.name})", file=sys.stderr)
         return
 
     labels = df["label"].tolist()
-    heights = df["n_samples"].to_numpy()
+    n_samples_arr = df["n_samples"].to_numpy()
+    is_epidemic = df["is_epidemic"].to_numpy()
     cmap = plt.get_cmap("viridis")
-    # Colour scale spans 0 → the actual data max (rounded up to nearest 5 %),
-    # shared across the two panels so Sgld_v and Wbr_v bars are colour-comparable.
-    data_max = float(max(df[f"pct_{b}_carriers"].max() for b in CARRIAGE_BRACKETS))
-    vmax = max(5.0, float(np.ceil(data_max / 5.0)) * 5.0)
-    norm = Normalize(vmin=0, vmax=vmax)
+    # Log-norm on n_samples so SL258 (16 k) doesn't black-out everyone else.
+    n_min = max(1, int(n_samples_arr.min()))
+    n_max = int(n_samples_arr.max())
+    norm = LogNorm(vmin=n_min, vmax=n_max)
 
     fig, axes = plt.subplots(2, 1, figsize=(max(10, 0.5 * len(labels) + 4), 9), sharex=True)
     for ax, bracket in zip(axes, CARRIAGE_BRACKETS, strict=False):
         pct = df[f"pct_{bracket}_carriers"].to_numpy()
-        colours = cmap(norm(pct))
+        n_carr = df[f"n_{bracket}_carriers"].to_numpy()
+
+        # Wilson 95 % CI per epidemic bar — half-widths around the rate (%).
+        err_lo = np.zeros(len(labels))
+        err_hi = np.zeros(len(labels))
+        for i, (k, n, epi) in enumerate(zip(n_carr, n_samples_arr, is_epidemic, strict=False)):
+            if not epi:
+                continue
+            lo, hi = _wilson_ci(int(k), int(n))
+            err_lo[i] = pct[i] - 100.0 * lo
+            err_hi[i] = 100.0 * hi - pct[i]
+
+        colours = cmap(norm(n_samples_arr))
         edge_colours = ["black" if lbl == "other" else "none" for lbl in labels]
         bars = ax.bar(
-            np.arange(len(labels)), heights,
+            np.arange(len(labels)), pct,
             color=colours, edgecolor=edge_colours, linewidth=1.0,
         )
-        # carriage % annotations
-        for bar, pc in zip(bars, pct, strict=False):
+        # Wilson CI error bars on epidemic bars only.
+        ax.errorbar(
+            np.arange(len(labels)), pct,
+            yerr=[err_lo, err_hi],
+            fmt="none", ecolor="black", capsize=2.5, linewidth=0.9, zorder=4,
+        )
+        # carriage % annotations above each bar's CI cap
+        for i, (bar, pc) in enumerate(zip(bars, pct, strict=False)):
             ax.text(
                 bar.get_x() + bar.get_width() / 2,
-                bar.get_height() * 1.01,
+                pc + err_hi[i] + 0.5,
                 f"{pc:.0f}%",
                 ha="center", va="bottom", fontsize=8,
             )
-        ax.set_ylabel("n samples")
+        ax.set_ylim(bottom=0)
+        ax.set_ylabel("% carriage")
         ax.set_title(f"{bracket} ({BRACKET_FULL_NAMES[bracket]}) carriage by {group_col_name}")
         ax.grid(axis="y", alpha=0.2)
 
@@ -226,11 +260,12 @@ def _plot_penetrance(
 
     sm = ScalarMappable(norm=norm, cmap=cmap)
     sm.set_array([])
-    fig.colorbar(sm, ax=axes, fraction=0.03, pad=0.02, label=f"% carriage (0 – {vmax:.0f}%)")
+    fig.colorbar(sm, ax=axes, fraction=0.03, pad=0.02,
+                 label=f"n samples (log; {n_min:,} – {n_max:,})")
     fig.suptitle(
         f"Standalone-viral peak carriage by {group_col_name} (KpSC; epidemic ≥ "
         f"{int(df.loc[df['is_epidemic']].n_samples.min()) if df['is_epidemic'].any() else 0:,}"
-        " samples + 'other' pool)",
+        " samples + 'other' pool; Wilson 95 % CI)",
         fontsize=11,
     )
     out_png.parent.mkdir(parents=True, exist_ok=True)

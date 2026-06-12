@@ -3,8 +3,9 @@
 
 Reads ``standalone_viral_lengths.tsv`` (the per-Sample × per-contig length
 dump from ``compare_lra_to_sr dump_lengths``), restricts to one cohort × side
-(default ``is_complete`` × ``lra_all``), splits the data into two length
-windows ("lower peak", "upper peak"), and reports for each:
+(default ``is_complete`` × ``lra`` — paired-LRA so the fit stays
+apples-to-apples with the LRA-vs-SR comparison), splits the data into two
+length windows ("lower peak", "upper peak"), and reports for each:
 
   - window-bounded summary stats: ``n``, ``mean``, ``median``, ``std``, ``IQR``,
     ``p5``/``p95``, modal 2-kb bin
@@ -304,8 +305,10 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     parser.add_argument("--cohort", default="is_complete",
                         help="One of: reference_genome, is_complete, is_hybrid, lra_final_list")
-    parser.add_argument("--side", default="lra_all",
-                        help="One of: lra, lra_all, sr (use lra_all for tightest peaks).")
+    parser.add_argument("--side", default="lra",
+                        help="One of: lra, lra_all, sr. Default ``lra`` keeps the fit "
+                        "apples-to-apples with the paired comparison; ``lra_all`` adds the "
+                        "unpaired LRA samples for a tighter peak when noise matters.")
     parser.add_argument("--lower-window-kb", type=float, nargs=2, default=(35.0, 78.0),
                         metavar=("LO", "HI"),
                         help="Window enclosing the lower peak, in kb (default 35-78).")

@@ -13,12 +13,13 @@ Outputs:
 
 - ``viral_penetrance_by_SL_then_CG.tsv`` — one row per (SL, CG) above
   thresholds, with CG rate + Wilson CI + parent SL rate + delta.
-- ``viral_penetrance_by_SL_then_CG.png`` — 2-panel dispersion plot
+- ``viral_penetrance_by_SL_then_CG.png`` — 2-panel grouped bar plot
   (top Sgld_v, bottom Wbr_v). X = epidemic SLs, ordered by parent-SL
-  Sgld_v rate descending. For each SL: one dot per qualifying CG at
-  the SL's x position (small horizontal jitter so dots don't overlay),
-  size = CG sample count, vertical line = Wilson 95 % CI, black bar
-  across the slot = parent-SL carriage rate.
+  Sgld_v rate descending. For each SL: one bar per qualifying CG
+  packed side-by-side (single colour, Wilson 95 % CI error bar). A
+  two-tier x-axis labels each bar with its CG number and centres the
+  SL name under the group. SLs with only one qualifying CG appear as
+  a single bar.
 """
 
 from __future__ import annotations
@@ -102,66 +103,100 @@ def _build_table(
     return pd.DataFrame(rows)
 
 
+BAR_COLOUR = "#1f77b4"
+INTER_SL_PAD = 0.7  # gap between SL groups, in bar-width units
+
+
+def _layout(df: pd.DataFrame, sl_order: list[str]) -> tuple[pd.DataFrame, list[float], list[tuple[float, str]]]:
+    """Compute the bar layout for grouped CG bars.
+
+    Walks ``sl_order`` and, within each SL, sorts the qualifying CGs by
+    sample count desc. Assigns each bar an x-coordinate (1 bar-width apart
+    inside a group, ``INTER_SL_PAD`` between groups). Returns
+    ``(layout_rows, bar_x, slot_centres)`` where ``layout_rows`` is df
+    re-indexed in walk order, ``bar_x`` is the bar centre x per row, and
+    ``slot_centres`` is a list of ``(x_centre, sl_label)`` for the
+    SL-tier x-axis annotations.
+    """
+    layout_chunks: list[pd.DataFrame] = []
+    bar_x: list[float] = []
+    slot_centres: list[tuple[float, str]] = []
+    cursor = 0.0
+    for sl in sl_order:
+        sub = df[df["Sublineage"] == sl].sort_values("n_cg", ascending=False)
+        n = len(sub)
+        if n == 0:
+            continue
+        xs = [cursor + i for i in range(n)]
+        slot_centres.append((cursor + (n - 1) / 2.0, sl))
+        bar_x.extend(xs)
+        layout_chunks.append(sub)
+        cursor += n + INTER_SL_PAD
+    layout_rows = pd.concat(layout_chunks, ignore_index=True)
+    return layout_rows, bar_x, slot_centres
+
+
 def _plot_dispersion(
     df: pd.DataFrame, out_png: Path, min_sl: int, min_cg: int
 ) -> None:
-    """2-panel dispersion plot per bracket: CG dots + Wilson CIs + parent-SL bar."""
+    """2-panel grouped bar plot per bracket: one bar per CG, grouped within its SL."""
     if df.empty:
         print(f"  (no rows for {out_png.name})")
         return
 
-    # SL ordering: by parent Sgld_v carriage descending (so the "high-Sgld" SLs cluster left)
+    # SL ordering: by parent Sgld_v carriage descending (so high-Sgld SLs cluster left).
     sl_order = (
         df.drop_duplicates("Sublineage").set_index("Sublineage")["pct_Sgld_v_sl"]
         .sort_values(ascending=False).index.tolist()
     )
-    sl_x = {sl: i for i, sl in enumerate(sl_order)}
+    layout_rows, bar_x, slot_centres = _layout(df, sl_order)
+    cg_labels = layout_rows["Clonal group"].astype(str).tolist()
+    total_width = (max(bar_x) + 0.5) if bar_x else 1.0
 
-    fig, axes = plt.subplots(2, 1, figsize=(max(12, 0.5 * len(sl_order) + 4), 11), sharex=True)
+    fig, axes = plt.subplots(
+        2, 1, figsize=(max(12, 0.45 * len(bar_x) + 4), 10), sharex=True
+    )
     for ax, bracket in zip(axes, CARRIAGE_BRACKETS, strict=False):
-        # Parent-SL bars (drawn first so CG dots overlay)
-        for sl in sl_order:
-            sl_rate = float(df[df["Sublineage"] == sl][f"pct_{bracket}_sl"].iloc[0])
-            ax.hlines(sl_rate, sl_x[sl] - 0.40, sl_x[sl] + 0.40,
-                      colors="black", linewidth=2.5, zorder=3,
-                      label="parent SL rate" if sl == sl_order[0] else None)
-
-        # CG dots with Wilson CI
-        for _, row in df.iterrows():
-            x = sl_x[row["Sublineage"]]
-            # Jitter within the slot based on a stable hash of the CG name so re-runs match
-            jitter = (hash(str(row["Clonal group"])) % 1000) / 1000.0 * 0.6 - 0.30
-            xj = x + jitter
-            yc = row[f"pct_{bracket}_cg"]
-            ylo = row[f"pct_{bracket}_cg_ci_lo"]
-            yhi = row[f"pct_{bracket}_cg_ci_hi"]
-            ax.vlines(xj, ylo, yhi, colors="#444", linewidth=1.0, alpha=0.7, zorder=4)
-            ax.scatter(
-                [xj], [yc],
-                s=max(20.0, 5.0 * np.sqrt(row["n_cg"])),
-                color="#1f77b4", edgecolor="black", linewidth=0.5,
-                alpha=0.75, zorder=5,
-            )
-
-        ax.set_ylim(bottom=-2)
+        rates = layout_rows[f"pct_{bracket}_cg"].to_numpy()
+        ci_lo = layout_rows[f"pct_{bracket}_cg_ci_lo"].to_numpy()
+        ci_hi = layout_rows[f"pct_{bracket}_cg_ci_hi"].to_numpy()
+        err_lo = np.maximum(rates - ci_lo, 0)
+        err_hi = np.maximum(ci_hi - rates, 0)
+        ax.bar(
+            bar_x, rates, width=0.9,
+            color=BAR_COLOUR, edgecolor="black", linewidth=0.5, zorder=3,
+        )
+        ax.errorbar(
+            bar_x, rates, yerr=[err_lo, err_hi],
+            fmt="none", ecolor="black", capsize=2.5, linewidth=0.9, zorder=4,
+        )
+        ax.set_ylim(bottom=0)
         ax.set_ylabel(f"{bracket} carriage (%)")
         ax.set_title(
             f"{bracket} ({BRACKET_FULL_NAMES[bracket]}) carriage by Clonal group within each epidemic Sublineage  "
-            f"(SL n ≥ {min_sl}; CG n ≥ {min_cg})  —  dot size ∝ √n_CG, vertical line = Wilson 95 % CI"
+            f"(SL n ≥ {min_sl}; CG n ≥ {min_cg}; Wilson 95 % CI)"
         )
         ax.grid(axis="y", alpha=0.25)
-        ax.legend(loc="upper right", fontsize=8)
 
-    axes[-1].set_xticks(np.arange(len(sl_order)))
-    axes[-1].set_xticklabels(sl_order, rotation=45, ha="right", fontsize=9)
-    axes[-1].set_xlim(-0.7, len(sl_order) - 0.3)
+    # Two-tier x-axis: per-bar CG label (top tier, on the axis) + SL name
+    # centred under the group (bottom tier, in axes-fraction coords).
+    axes[-1].set_xticks(bar_x)
+    axes[-1].set_xticklabels(cg_labels, rotation=90, fontsize=7)
+    axes[-1].set_xlim(-0.7, total_width)
+    for centre, sl in slot_centres:
+        axes[-1].text(
+            centre, -0.12, sl,
+            ha="center", va="top", fontsize=9, fontweight="bold",
+            transform=axes[-1].get_xaxis_transform(),
+        )
+    fig.subplots_adjust(bottom=0.20)
 
     fig.suptitle(
         "Standalone-viral peak carriage — per-CG within epidemic SL\n"
-        "(KpSC universe; SL ordered by parent Sgld_v rate descending)",
+        "(KpSC universe; SL groups ordered by parent Sgld_v rate descending; "
+        "within-group bars sorted by CG sample count descending)",
         fontsize=12,
     )
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
     out_png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_png, dpi=150, bbox_inches="tight")
     plt.close(fig)
