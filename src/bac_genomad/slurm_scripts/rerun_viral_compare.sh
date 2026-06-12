@@ -2,7 +2,7 @@
 #SBATCH --job-name=viral_compare_metadata_v2
 #SBATCH --partition=icelake-himem
 #SBATCH --account=FLOTO-PROJECT-K-SL2-CPU
-#SBATCH --cpus-per-task=128
+#SBATCH --cpus-per-task=76
 #SBATCH --mem=128G
 #SBATCH --time=02:00:00
 #SBATCH --output=/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/genomad/slurm_logs/viral_rerun_%j.log
@@ -24,13 +24,16 @@ cd "$REPO_DIR"
 
 echo "[$(date -Is)] start viral_rerun on $(hostname) (cpus=${SLURM_CPUS_PER_TASK:-1})"
 
+# FASTA scanning is I/O-bound on Lustre — oversubscribe threads vs CPUs.
+SCAN_WORKERS=128
+
 echo "[$(date -Is)] === step 1: compare ==="
 time uv run python -m bac_genomad.viral_analysis.lr_vs_sr.compare_lra_to_sr compare \
-    --workers "${SLURM_CPUS_PER_TASK:-16}"
+    --workers "${SCAN_WORKERS}"
 
 echo "[$(date -Is)] === step 2: dump_lengths ==="
 time uv run python -m bac_genomad.viral_analysis.lr_vs_sr.compare_lra_to_sr dump_lengths \
-    --workers "${SLURM_CPUS_PER_TASK:-16}"
+    --workers "${SCAN_WORKERS}"
 
 echo "[$(date -Is)] === step 3: analyze_viral_peaks --multi ==="
 time uv run python -m bac_genomad.viral_analysis.lr_vs_sr.analyze_viral_peaks --multi
