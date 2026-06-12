@@ -52,10 +52,15 @@ Two subcommands:
               (~5.8 k files via threaded gunzip + ``>`` scan) and cached as
               ``contig_lengths_paired.tsv`` beside the outputs.
 
-Cohort filters are read straight from ``paired_index.tsv`` (every paired_index
-row is already in ``lra_final_list``, so ``lra_final_list`` is just the full
-paired index — no extra filter needed). Reuses the True/False-string parse
-idiom from ``bac_complete_genomes/compare_lra_to_sra.py``.
+The paired set is derived **directly from ``metadata_v2``** on every
+invocation — no ``paired_index.tsv`` sidecar. A row is treated as a
+genuine LR-SR pair iff all four of ``{sr,lr}_{assembly,gff}_file`` are
+populated AND ``lr_assembly_file != sr_assembly_file``; cohort flags
+(``is_reference_genome``, ``is_complete``, ``is_hybrid``,
+``lra_final_list``) are read off the same row. ``--require-kpsc`` (the
+default) restricts the universe to ``kpsc_final_list=True``.
+Mirrors ``_select_paired_cohort`` in
+``bac_complete_genomes/compare_lra_to_sra.py``.
 """
 
 from __future__ import annotations
@@ -71,7 +76,6 @@ import pandas as pd
 from bac_genomad.genomad_constants import (
     DEFAULT_INPUTS_TSV,
     DEFAULT_METADATA_V2,
-    DEFAULT_PAIRED_INDEX,
     DEFAULT_PLASMID_LONG_TSV,
     DEFAULT_VIRAL_LR_VS_SR_DIR,
     DEFAULT_VIRUS_LONG_TSV,
@@ -79,14 +83,24 @@ from bac_genomad.genomad_constants import (
 )
 from bac_genomad.viral_analysis.viral_brackets import BRACKET_LABELS, assign_brackets
 
-# Cohort filters applied to paired_index. The value is the column name to test
-# True on (or None for "no filter — use the full paired_index").
+# Cohort filters applied to the metadata-derived paired set. Value is the
+# metadata_v2 column name to test True on (or None for "no extra filter —
+# all paired rows").
 COHORTS: list[tuple[str, str | None]] = [
-    ("reference_genome", "lra_is_reference_genome"),
-    ("is_hybrid", "lra_is_hybrid"),
-    ("is_complete", "lra_is_complete"),
+    ("reference_genome", "is_reference_genome"),
+    ("is_hybrid", "is_hybrid"),
+    ("is_complete", "is_complete"),
     ("lra_final_list", None),
 ]
+
+# metadata_v2 columns needed to derive the paired set + apply cohort filters.
+PAIRED_META_USECOLS: tuple[str, ...] = (
+    "Sample", "sr_biosample",
+    "sr_assembly_file", "sr_gff_file",
+    "lr_assembly_file", "lr_gff_file",
+    "kpsc_final_list", "lra_final_list",
+    "is_reference_genome", "is_complete", "is_hybrid",
+)
 
 TRUE_TOKENS = frozenset({"true", "1", "yes"})
 
@@ -162,6 +176,40 @@ def _read_inputs_universe(inputs_tsv: Path) -> pd.DataFrame:
     if missing:
         sys.exit(f"{inputs_tsv} missing columns: {sorted(missing)}")
     return df
+
+
+def _load_paired_from_metadata(metadata_v2: Path, *, require_kpsc: bool) -> pd.DataFrame:
+    """Read ``metadata_v2`` and return rows that form a genuine LR-SR pair.
+
+    Filter:
+      - all four of ``{sr,lr}_{assembly,gff}_file`` non-null AND non-empty
+      - ``lr_assembly_file != sr_assembly_file`` (guards against the
+        pre-2026-06-03 corruption where ~65 % of paired-SR rows had
+        ``sr_assembly_file`` pointing at the LRA path)
+      - if ``require_kpsc``, ``kpsc_final_list == True``
+
+    Returns the kept rows with verbatim metadata_v2 column names:
+    ``Sample, sr_biosample, is_reference_genome, is_complete, is_hybrid,
+    lra_final_list``. ``Sample`` here is the LRA Sample id; the SR partner
+    is keyed as ``<Sample>__sr`` in the geNomad outputs (see
+    ``SR_PAIRED_SUFFIX``).
+    """
+    if not metadata_v2.exists():
+        sys.exit(f"missing metadata_v2: {metadata_v2}")
+    meta = pd.read_csv(metadata_v2, sep="\t", dtype=str, usecols=list(PAIRED_META_USECOLS))
+
+    file_cols = ("sr_assembly_file", "sr_gff_file", "lr_assembly_file", "lr_gff_file")
+    populated = pd.Series(True, index=meta.index)
+    for c in file_cols:
+        col = meta[c].astype(str)
+        populated &= col.notna() & (col.str.strip() != "") & (col.str.lower() != "nan")
+    distinct = meta["lr_assembly_file"].astype(str) != meta["sr_assembly_file"].astype(str)
+    sel = populated & distinct
+    if require_kpsc:
+        sel &= _truthy(meta["kpsc_final_list"])
+
+    keep = ["Sample", "sr_biosample", "is_reference_genome", "is_complete", "is_hybrid", "lra_final_list"]
+    return meta.loc[sel, keep].copy()
 
 
 # ─── AGGREGATE ────────────────────────────────────────────────────────────────
@@ -407,7 +455,7 @@ def _select_cohort(paired: pd.DataFrame, column: str | None) -> pd.DataFrame:
     if column is None:
         return paired
     if column not in paired.columns:
-        sys.exit(f"paired_index missing cohort column: {column}")
+        sys.exit(f"metadata_v2 paired view missing cohort column: {column}")
     return paired[_truthy(paired[column])].copy()
 
 
@@ -472,13 +520,13 @@ def cmd_compare(args: argparse.Namespace) -> int:
     counts = pd.read_csv(args.per_sample_counts, sep="\t", dtype={"Sample": str})
     print(f"per_sample_counts: {len(counts):,} rows  ({args.per_sample_counts})")
 
-    paired = pd.read_csv(args.paired_index, sep="\t", dtype=str)
-    print(f"paired_index:      {len(paired):,} rows  ({args.paired_index})")
-    sample_col = "lra_sample" if "lra_sample" in paired.columns else "Sample"
-    if sample_col not in paired.columns:
-        sys.exit(f"{args.paired_index} missing 'lra_sample' / 'Sample' column")
+    paired = _load_paired_from_metadata(args.metadata_v2, require_kpsc=args.require_kpsc)
+    print(
+        f"metadata_v2 paired view: {len(paired):,} rows  ({args.metadata_v2}, "
+        f"require_kpsc={args.require_kpsc})"
+    )
 
-    lra_samples_all = paired[sample_col].astype(str)
+    lra_samples_all = paired["Sample"].astype(str)
     sr_samples_all = lra_samples_all + SR_PAIRED_SUFFIX
     paired_universe = set(lra_samples_all) | set(sr_samples_all)
 
@@ -519,11 +567,11 @@ def cmd_compare(args: argparse.Namespace) -> int:
         cohort_paired = _select_cohort(paired, cohort_col)
         print(
             f"  {len(cohort_paired):,} pairs after filter"
-            f" ({cohort_col or 'all paired_index rows'})"
+            f" ({cohort_col or 'all paired rows from metadata_v2'})"
         )
         if cohort_paired.empty:
             continue
-        cohort_lra = cohort_paired[sample_col].astype(str)
+        cohort_lra = cohort_paired["Sample"].astype(str)
         cohort_sr = cohort_lra + SR_PAIRED_SUFFIX
 
         lra_arm = _arm_metrics(counts, coord_classes, cohort_lra)
@@ -558,8 +606,10 @@ def cmd_compare(args: argparse.Namespace) -> int:
 # ─── DUMP STANDALONE VIRAL LENGTHS (for histogram analysis) ───────────────────
 
 
-# metadata_v2 cohort columns mapped to the cohort name used in outputs. None
-# for ``lra_final_list`` means "no extra filter — just use the column itself".
+# metadata_v2 cohort columns mapped to the cohort name used in outputs.
+# ``lra_final_list`` carries no extra filter — every metadata_v2 row in the
+# paired view is already ``lra_final_list=True`` (LRA inclusion is what makes
+# a row eligible to be paired with an SR partner).
 COHORT_META_COLS: list[tuple[str, str]] = [
     ("reference_genome", "is_reference_genome"),
     ("is_complete", "is_complete"),
@@ -589,10 +639,13 @@ def cmd_dump_lengths(args: argparse.Namespace) -> int:
     out_dir: Path = args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"reading metadata_v2: {args.metadata_v2}")
-    meta_cols = ["Sample", *{c for _, c in COHORT_META_COLS}]
+    print(f"reading metadata_v2: {args.metadata_v2}  (require_kpsc={args.require_kpsc})")
+    meta_cols = ["Sample", "kpsc_final_list", *{c for _, c in COHORT_META_COLS}]
     meta = pd.read_csv(args.metadata_v2, sep="\t", usecols=meta_cols, dtype=str)
     print(f"  {len(meta):,} rows")
+    if args.require_kpsc:
+        meta = meta[_truthy(meta["kpsc_final_list"])]
+        print(f"  {len(meta):,} rows after kpsc_final_list filter")
 
     # Universe of LRA samples in ANY of the 4 cohorts → needs a length lookup.
     cohort_lra_sets: dict[str, set[str]] = {}
@@ -651,14 +704,15 @@ def cmd_dump_lengths(args: argparse.Namespace) -> int:
     n_with_len = int(standalone["length"].notna().sum())
     print(f"  {len(standalone):,} standalone viral rows; with length lookup: {n_with_len:,}")
 
-    # Paired-index for paired-LRA / paired-SR series
-    paired = pd.read_csv(args.paired_index, sep="\t", dtype=str)
-    sample_col = "lra_sample" if "lra_sample" in paired.columns else "Sample"
+    # Paired set derived from metadata_v2 (same require_kpsc gate as the
+    # LRA-all universe — keeps both arms apples-to-apples).
+    paired = _load_paired_from_metadata(args.metadata_v2, require_kpsc=args.require_kpsc)
+    print(f"  metadata_v2 paired view: {len(paired):,} rows")
 
     records: list[pd.DataFrame] = []
     for cohort_name, col in COHORT_META_COLS:
-        sub_paired = paired if col == "lra_final_list" else paired[_truthy(paired[f"lra_{col}"])]
-        paired_lra = set(sub_paired[sample_col].astype(str))
+        sub_paired = paired if col == "lra_final_list" else paired[_truthy(paired[col])]
+        paired_lra = set(sub_paired["Sample"].astype(str))
         paired_sr = {s + SR_PAIRED_SUFFIX for s in paired_lra}
         lra_all = cohort_lra_sets[cohort_name]
         for side, samples in [("lra", paired_lra), ("sr", paired_sr), ("lra_all", lra_all)]:
@@ -724,7 +778,12 @@ def _build_parser() -> argparse.ArgumentParser:
     pcmp = sub.add_parser("compare", help="paired LRA-vs-SR tables per cohort")
     pcmp.add_argument("--inputs", type=Path, default=DEFAULT_INPUTS_TSV)
     pcmp.add_argument("--virus-long", type=Path, default=DEFAULT_VIRUS_LONG_TSV)
-    pcmp.add_argument("--paired-index", type=Path, default=DEFAULT_PAIRED_INDEX)
+    pcmp.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2,
+                      help="source of the paired set + cohort flags.")
+    pcmp.add_argument("--require-kpsc", dest="require_kpsc", action="store_true", default=True,
+                      help="restrict to kpsc_final_list=True (default).")
+    pcmp.add_argument("--no-require-kpsc", dest="require_kpsc", action="store_false",
+                      help="include non-KpSC rows in the paired set.")
     pcmp.add_argument("--out-dir", type=Path, default=DEFAULT_VIRAL_LR_VS_SR_DIR)
     pcmp.add_argument(
         "--per-sample-counts",
@@ -742,7 +801,10 @@ def _build_parser() -> argparse.ArgumentParser:
     pdump.add_argument("--inputs", type=Path, default=DEFAULT_INPUTS_TSV)
     pdump.add_argument("--virus-long", type=Path, default=DEFAULT_VIRUS_LONG_TSV)
     pdump.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2)
-    pdump.add_argument("--paired-index", type=Path, default=DEFAULT_PAIRED_INDEX)
+    pdump.add_argument("--require-kpsc", dest="require_kpsc", action="store_true", default=True,
+                      help="restrict to kpsc_final_list=True (default).")
+    pdump.add_argument("--no-require-kpsc", dest="require_kpsc", action="store_false",
+                      help="include non-KpSC rows in both LRA-all + paired views.")
     pdump.add_argument(
         "--paired-lengths",
         type=Path,

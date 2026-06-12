@@ -30,7 +30,8 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 
-from bac_genomad.genomad_constants import DEFAULT_PAIRED_INDEX, DEFAULT_VIRAL_LR_VS_SR_DIR
+from bac_genomad.genomad_constants import DEFAULT_METADATA_V2, DEFAULT_VIRAL_LR_VS_SR_DIR
+from bac_genomad.viral_analysis.lr_vs_sr.compare_lra_to_sr import _load_paired_from_metadata, _truthy
 from bac_genomad.viral_analysis.viral_brackets import (
     SGLD_V_HI,
     SGLD_V_LO,
@@ -41,11 +42,12 @@ from bac_genomad.viral_analysis.viral_brackets import (
 DEFAULT_INPUT = DEFAULT_VIRAL_LR_VS_SR_DIR / "standalone_viral_lengths.tsv"
 
 # Paired comparisons for --multi mode. Each row of the 2×2 grid is one
-# (cohort, display_label) — only same-cohort SR partners are overlaid with
-# the LRA samples, so the two arms are always the same pair set.
+# (cohort, cohort-flag column in the metadata_v2 paired view). Universe
+# sizes for the panel labels are derived live from metadata_v2 so they
+# stay in sync with the data.
 MULTI_PAIRED_COMPARISONS = [
-    ("reference_genome", "Reference (n=748 paired)"),
-    ("is_complete",      "Complete  (n=1,574 paired)"),
+    ("reference_genome", "is_reference_genome", "Reference"),
+    ("is_complete",      "is_complete",         "Complete"),
 ]
 
 # Colour scheme used inside each panel — LRA blue, SR red. Same across rows
@@ -175,20 +177,21 @@ def _plot_zoom(
     print(f"wrote {out_png}")
 
 
-def _cohort_universe_sizes(paired_index_tsv: Path) -> dict[str, int]:
-    """Return number of paired-LRA samples per cohort flag.
+def _cohort_universe_sizes(metadata_v2: Path, *, require_kpsc: bool) -> dict[str, int]:
+    """Return the number of paired-LRA samples per cohort flag.
 
-    Reads paired_index.tsv once and counts the True rows per
-    ``lra_is_<cohort>`` flag plus the full row count (``lra_final_list``).
-    These are the denominators for paired-carriage rates.
+    Derives the paired set from ``metadata_v2`` (rows where all four of
+    ``{sr,lr}_{assembly,gff}_file`` are populated AND
+    ``lr_assembly_file != sr_assembly_file``; optionally KpSC-restricted),
+    then counts True rows per cohort flag plus the total row count
+    (``lra_final_list``). These are the denominators for paired-carriage rates.
     """
-    p = pd.read_csv(paired_index_tsv, sep="\t", dtype=str)
-    true_tokens = {"true", "1", "yes"}
+    paired = _load_paired_from_metadata(metadata_v2, require_kpsc=require_kpsc)
     return {
-        "reference_genome": int(p["lra_is_reference_genome"].astype(str).str.lower().isin(true_tokens).sum()),
-        "is_complete":      int(p["lra_is_complete"].astype(str).str.lower().isin(true_tokens).sum()),
-        "is_hybrid":        int(p["lra_is_hybrid"].astype(str).str.lower().isin(true_tokens).sum()),
-        "lra_final_list":   int(len(p)),
+        "reference_genome": int(_truthy(paired["is_reference_genome"]).sum()),
+        "is_complete":      int(_truthy(paired["is_complete"]).sum()),
+        "is_hybrid":        int(_truthy(paired["is_hybrid"]).sum()),
+        "lra_final_list":   int(len(paired)),
     }
 
 
@@ -219,8 +222,9 @@ def _plot_zoom_multi(
         sharex="col",
     )
 
-    for r, (cohort, row_label) in enumerate(MULTI_PAIRED_COMPARISONS):
+    for r, (cohort, _flag, row_stub) in enumerate(MULTI_PAIRED_COMPARISONS):
         n_pairs = universes.get(cohort, 0)
+        row_label = f"{row_stub} (n={n_pairs:,} paired)"
         lra = df[(df["cohort"] == cohort) & (df["side"] == "lra") & df["length"].notna()]
         sr  = df[(df["cohort"] == cohort) & (df["side"] == "sr")  & df["length"].notna()]
         lra_lens = lra["length"].to_numpy()
@@ -277,10 +281,13 @@ def _plot_zoom_multi(
                 bbox={"facecolor": "white", "alpha": 0.88, "edgecolor": "grey", "linewidth": 0.5},
             )
 
+    summary_bits = "; ".join(
+        f"{stub.lower()}: {universes.get(cohort, 0):,} pairs"
+        for cohort, _flag, stub in MULTI_PAIRED_COMPARISONS
+    )
     fig.suptitle(
         "Standalone viral peaks — paired LRA-vs-SR by cohort\n"
-        f"(top: 748 reference-genome pairs; bottom: 1,574 complete-genome pairs; "
-        f"{bin_bp//1000} kb bins; ±2σ bracket window shaded)",
+        f"({summary_bits}; {bin_bp//1000} kb bins; ±2σ bracket window shaded)",
         fontsize=12,
     )
     fig.tight_layout(rect=(0, 0, 1, 0.94))
@@ -311,16 +318,21 @@ def main() -> int:
                         help="Multi-series overlay (LRA-ref / LRA-complete / SR-paired) "
                         "with per-bracket carriage ratios. Writes "
                         "standalone_viral_peak_zoom_multi.png alongside the single-series outputs.")
-    parser.add_argument("--paired-index", type=Path, default=DEFAULT_PAIRED_INDEX,
-                        help="Used in --multi mode to get cohort universe sizes (n paired pairs).")
+    parser.add_argument("--metadata-v2", type=Path, default=DEFAULT_METADATA_V2,
+                        help="Used in --multi mode to derive cohort universe sizes "
+                        "(paired LRA-SR rows per cohort flag).")
+    parser.add_argument("--require-kpsc", dest="require_kpsc", action="store_true", default=True,
+                        help="restrict the paired universe to kpsc_final_list=True (default).")
+    parser.add_argument("--no-require-kpsc", dest="require_kpsc", action="store_false",
+                        help="include non-KpSC rows in the paired universe.")
     args = parser.parse_args()
 
     bin_bp = int(args.bin_kb * 1000)
     df = pd.read_csv(args.input, sep="\t", dtype={"Sample": str, "contig": str, "length": int})
 
     if args.multi:
-        universes = _cohort_universe_sizes(args.paired_index)
-        print(f"paired-cohort sizes: {universes}")
+        universes = _cohort_universe_sizes(args.metadata_v2, require_kpsc=args.require_kpsc)
+        print(f"paired-cohort sizes (require_kpsc={args.require_kpsc}): {universes}")
         args.out_dir.mkdir(parents=True, exist_ok=True)
         png_path = args.out_dir / "standalone_viral_peak_zoom_multi.png"
         _plot_zoom_multi(

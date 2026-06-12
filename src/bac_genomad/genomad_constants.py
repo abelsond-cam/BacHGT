@@ -17,9 +17,6 @@ DEFAULT_DB_DIR      = DEFAULT_OUT_DIR / "db" / "genomad_db"
 DEFAULT_PLASMID_LONG_TSV = DEFAULT_OUT_DIR / "genomad_plasmid_summary_long.tsv"
 DEFAULT_VIRUS_LONG_TSV   = DEFAULT_OUT_DIR / "genomad_virus_summary_long.tsv"
 
-# Paired-index sidecar lives outside the genomad tree (shared with bac_complete_genomes).
-DEFAULT_PAIRED_INDEX   = DATA_ROOT / "david/processed/complete_vs_sr_genomes/paired_index.tsv"
-
 # All downstream viral analyses (peak characterisation, LR-vs-SR comparison,
 # per-SL/CG penetrance, future phage/prophage work) live under one root:
 #   <DATA_ROOT>/david/processed/genomad/viral_analysis/
