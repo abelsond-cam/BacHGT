@@ -15,7 +15,7 @@ species: Klebsiella pneumoniae species complex (KPSC)
 # Genus/species we are studying. Projects can be broad (e.g. all Enterobacteriaceae) while
 # we only care about one genus, so project sizing, paper coverage and completeness are all
 # computed over records MATCHING this, not over the whole project.
-species_of_interest:
+taxon_of_interest:
   rank: genus
   name: Klebsiella
   scientific_name_match: [Klebsiella]   # substring match against the ENA `scientific name`
@@ -24,14 +24,14 @@ attributes:
 
   # 0) PAPER SELECTION — sizing the project (from EBI) and how well the chosen paper covers it.
   paper_selection:
-    paper_coverage_for_species:
+    paper_coverage_for_taxon:
       description: >-
-        Fraction of the project's species-of-interest records (NOT total project records)
+        Fraction of the project's taxon-of-interest records (NOT total project records)
         that the chosen paper describes. Derived from the EBI project counts: how many
-        records match `species_of_interest` (the denominator) vs how many of those the
+        records match `taxon_of_interest` (the denominator) vs how many of those the
         paper accounts for. Distinguishes a whole-project paper from one describing only a
         subsample, and guides picking the paper covering the largest part.
-      inputs: [project_records_in_species, paper_records_in_species]
+      inputs: [project_records_in_taxon, paper_records_in_taxon]
       ground_truth: none                  # not previously curated -> generate + spot-check
       definition: TBD
 

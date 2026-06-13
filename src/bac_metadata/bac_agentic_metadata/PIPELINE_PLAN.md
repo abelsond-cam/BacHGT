@@ -10,19 +10,19 @@ reference for the manual Klebsiella curation it generalises.
 For one **project accession** (`study_accession`) — the unit of work — the engine:
 
 1. Pulls the accession's structured ENA/ATB metadata, computes per-field completeness, and
-   reads the EBI project record counts (total records + species-of-interest by
+   reads the EBI project record counts (total records + taxon-of-interest by
    `scientific name`) to size the project.
 2. Finds the best paper describing the cohort — the one covering the largest part of the
    project (a paper may serve several accessions; the project counts tell us whether a
    candidate paper covers the whole project or only a subsample).
 3. Grades the paper into a **configured attribute set** (the application's spec).
 4. Emits, per attribute, a value + grade (`gradeable` / `partial` / `not_gradeable`) + an
-   evidence pointer; the `paper_coverage_for_species` metric (what fraction of the
-   project's species-of-interest records the chosen paper describes); plus cohort flags
+   evidence pointer; the `paper_coverage_for_taxon` metric (what fraction of the
+   project's taxon-of-interest records the chosen paper describes); plus cohort flags
    (`cohort_mixed`, `needs_manual_download`).
 
 Accessions are processed **biggest-first**, mirroring the manual workflow. The
-**species/genus of interest is application config** (`species_of_interest` in
+**taxon of interest is application config** (`taxon_of_interest` in
 `attributes.yaml`): projects can be broad (e.g. all *Enterobacteriaceae*), so sizing,
 coverage and completeness are all computed over records matching it, not the whole project.
 
@@ -84,7 +84,7 @@ final measured-agreement run.
 - **Stage 0 (this round) — DONE here.** Engine skeleton, this plan, the Stage 0 map, the
   attribute-spec scaffolds, and the seeded split.
 - **Stage 1 — Deterministic ingestion & completeness (no LLM).** Group by accession; pull
-  ENA/EBI project metadata; read project record counts (total + species-of-interest by
+  ENA/EBI project metadata; read project record counts (total + taxon-of-interest by
   `scientific name`) to size each project; compute completeness for the core + proxy
   fields; resolve best-column ambiguity. Validate completeness against `parsed_per_project`.
   The stable test bed for everything downstream.
