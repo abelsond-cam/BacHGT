@@ -9,8 +9,12 @@ reference for the manual Klebsiella curation it generalises.
 
 For one **project accession** (`study_accession`) — the unit of work — the engine:
 
-1. Pulls the accession's structured ENA/ATB metadata and computes per-field completeness.
-2. Finds the best paper describing the cohort (a paper may serve several accessions).
+1. Pulls the accession's structured ENA/ATB metadata, computes per-field completeness, and
+   reads the EBI project record counts (total records + species-of-interest by
+   `scientific name`) to size the project.
+2. Finds the best paper describing the cohort — the one covering the largest part of the
+   project (a paper may serve several accessions; the project counts tell us whether a
+   candidate paper covers the whole project or only a subsample).
 3. Grades the paper into a **configured attribute set** (the application's spec).
 4. Emits, per attribute, a value + grade (`gradeable` / `partial` / `not_gradeable`) + an
    evidence pointer, plus cohort flags (`cohort_mixed`, `needs_manual_download`).
@@ -75,9 +79,10 @@ final measured-agreement run.
 - **Stage 0 (this round) — DONE here.** Engine skeleton, this plan, the Stage 0 map, the
   attribute-spec scaffolds, and the seeded split.
 - **Stage 1 — Deterministic ingestion & completeness (no LLM).** Group by accession; pull
-  ENA/EBI project metadata; compute completeness for the core + proxy fields; resolve
-  best-column ambiguity. Validate completeness against `parsed_per_project`. The stable
-  test bed for everything downstream.
+  ENA/EBI project metadata; read project record counts (total + species-of-interest by
+  `scientific name`) to size each project; compute completeness for the core + proxy
+  fields; resolve best-column ambiguity. Validate completeness against `parsed_per_project`.
+  The stable test bed for everything downstream.
 - **Stage 2 — Paper lookup & structured grading (LLM).** Find best paper per accession;
   extract + grade into the fixed `attributes.yaml` schema; set `cohort_mixed` /
   `needs_manual_download`. Validate on the train+val ground-truth accessions only.

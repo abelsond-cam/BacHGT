@@ -22,7 +22,7 @@ The fundamental unit is the **ENA project accession** (`study_accession`, e.g.
    `filter_study_size = 131` in [`../pp/metadata_collation.py`](../pp/metadata_collation.py):
    unreviewed studies above it are dropped from the cohort; reviewed studies (any size)
    are kept.
-3. **Review EBI project data** - Access the project at https://www.ebi.ac.uk/ena/browser/view/PRJNA339843.  Check how many records are in the project (in https://www.ebi.ac.uk/ena/browser/view/PRJNA339843 is is 225) and how many of these are 'klebsiella' under 'scientific name'.  This means that we know, when finding a paper describing the project, whether the paper is describing all samples in the project or a subsample.
+3. **Review EBI project data** - Access the project at https://www.ebi.ac.uk/ena/browser/view/PRJNA339843.  Check how many records are in the project (for `PRJNA339843` it is 225) and how many of these are 'klebsiella' under 'scientific name'.  This means that we know, when finding a paper describing the project, whether the paper is describing all samples in the project or a subsample.
 4. **Find the best paper** describing each accession's cohort. One paper can describe
    several accessions (e.g. `PRJNA339843` + `PRJNA433394` are one ARGONAUT-IV study;
    `neonatal_klebsiella` spans four accessions). The paper is *found per accession*, not
@@ -95,9 +95,10 @@ fields is already implemented as parse/categorise pairs in
 |---|---|
 | Group samples by `study_accession`, rank by size, apply >130 threshold | **Deterministic** (`filter_study_size`) |
 | Pull project-level metadata from ENA/EBI | **Deterministic** (API fetch) |
+| Read EBI project record counts (total records + *Klebsiella* by `scientific name`) to size the project | **Deterministic** (ENA browser/API) |
 | Measure per-field completeness (country/date/source/host) | **Deterministic** (validated vs `parsed_per_project`) |
 | Normalise/categorise host, isolation source, country, date | **Deterministic** (existing parse/categorise pairs) |
-| Find the best paper for an accession | **LLM/agent + search** |
+| Find the best paper for an accession (the one covering the largest part of the project; there may be several) | **LLM/agent + search**, using the §1 project counts to judge whole-project vs subsample |
 | Grade study_setting / amr_study / amr_target / amr_method / cohort_age from the paper | **LLM/agent judgement** |
 | Backfill a low-completeness field from the paper | **LLM/agent judgement** (deterministic re-normalisation after) |
 | Decide a cohort is "mixed" / not labellable at accession level | **LLM/agent judgement**, flagged for raw per-sample download |
