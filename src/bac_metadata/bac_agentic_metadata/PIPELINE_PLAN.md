@@ -17,9 +17,14 @@ For one **project accession** (`study_accession`) — the unit of work — the e
    candidate paper covers the whole project or only a subsample).
 3. Grades the paper into a **configured attribute set** (the application's spec).
 4. Emits, per attribute, a value + grade (`gradeable` / `partial` / `not_gradeable`) + an
-   evidence pointer, plus cohort flags (`cohort_mixed`, `needs_manual_download`).
+   evidence pointer; the `paper_coverage_for_species` metric (what fraction of the
+   project's species-of-interest records the chosen paper describes); plus cohort flags
+   (`cohort_mixed`, `needs_manual_download`).
 
-Accessions are processed **biggest-first**, mirroring the manual workflow.
+Accessions are processed **biggest-first**, mirroring the manual workflow. The
+**species/genus of interest is application config** (`species_of_interest` in
+`attributes.yaml`): projects can be broad (e.g. all *Enterobacteriaceae*), so sizing,
+coverage and completeness are all computed over records matching it, not the whole project.
 
 ## 2. Architecture
 

@@ -13,7 +13,25 @@ application: m_abs
 species: Mycobacterium abscessus
 source_data: ATB_metadata_Mabs_2025_release.xlsx   # ~7,000 sequences
 
+# Species we are studying. Project sizing, paper coverage and completeness are computed
+# over records MATCHING this (projects can mix taxa), not over the whole project.
+species_of_interest:
+  rank: species
+  name: Mycobacterium abscessus
+  scientific_name_match: ["Mycobacterium abscessus"]   # substring match against ENA `scientific name`
+
 attributes:
+
+  # 0) PAPER SELECTION — sizing the project (from EBI) and how well the chosen paper covers it.
+  paper_selection:
+    paper_coverage_for_species:
+      description: >-
+        Fraction of the project's species-of-interest records (NOT total project records)
+        that the chosen paper describes; distinguishes a whole-project paper from one
+        describing only a subsample, and guides picking the paper covering the largest part.
+      inputs: [project_records_in_species, paper_records_in_species]
+      ground_truth: none
+      definition: TBD
 
   # STUDY-LEVEL JUDGEMENTS — the headline targets; ABSENT from the structured data.
   study_level:

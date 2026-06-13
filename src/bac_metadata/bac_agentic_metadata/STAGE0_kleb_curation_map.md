@@ -99,6 +99,7 @@ fields is already implemented as parse/categorise pairs in
 | Measure per-field completeness (country/date/source/host) | **Deterministic** (validated vs `parsed_per_project`) |
 | Normalise/categorise host, isolation source, country, date | **Deterministic** (existing parse/categorise pairs) |
 | Find the best paper for an accession (the one covering the largest part of the project; there may be several) | **LLM/agent + search**, using the §1 project counts to judge whole-project vs subsample |
+| Compute `paper_coverage_for_species` for the chosen paper | **Mixed** — denominator deterministic (EBI species count); numerator (how much the paper describes) is judgement |
 | Grade study_setting / amr_study / amr_target / amr_method / cohort_age from the paper | **LLM/agent judgement** |
 | Backfill a low-completeness field from the paper | **LLM/agent judgement** (deterministic re-normalisation after) |
 | Decide a cohort is "mixed" / not labellable at accession level | **LLM/agent judgement**, flagged for raw per-sample download |
