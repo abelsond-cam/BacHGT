@@ -43,6 +43,7 @@ def _explode_accessions(study_level: pd.DataFrame) -> pd.DataFrame:
                     "study_accession": acc,
                     "row_id": idx,
                     "paper_short_title": r.get("paper_short_title", ""),
+                    "paper_link": str(r.get("paper_link", "")),
                     "isolates_in_study": pd.to_numeric(r.get("isolates_in_study"), errors="coerce"),
                     "kleb_assemblies_in_paper": pd.to_numeric(r.get("kleb_assemblies_in_paper"), errors="coerce"),
                     "n_accessions_in_row": len(accs),
@@ -122,6 +123,7 @@ def _sizing_reconcile(stage1: pd.DataFrame, study_level: pd.DataFrame) -> pd.Dat
 
     agg = {
         "paper_short_title": ("paper_short_title", "first"),
+        "paper_link": ("paper_link", "first"),
         "prior_isolates_in_study": ("isolates_in_study", "first"),
         "prior_kleb_assemblies_in_paper": ("kleb_assemblies_in_paper", "first"),
         "n_accessions": ("study_accession", "nunique"),
@@ -135,9 +137,14 @@ def _sizing_reconcile(stage1: pd.DataFrame, study_level: pd.DataFrame) -> pd.Dat
     per_row = merged.groupby("row_id").agg(**agg).reset_index()
 
     per_row["coverage"] = per_row["prior_isolates_in_study"] / per_row["ena_klebsiella_samples"]
+    per_row["pathogenwatch_sourced"] = per_row["paper_link"].str.contains("pathogen.watch", case=False, na=False)
     classified = per_row.apply(_classify, axis=1, result_type="expand")
     per_row["classification"] = classified[0]
     per_row["note"] = classified[1]
+    # Pre-explain the review queue: Pathogenwatch/KlebNET counts are scraped from the collection,
+    # not deposited under the ENA accession, so a prior>ENA mismatch there is expected, not chased.
+    pw_review = per_row["pathogenwatch_sourced"] & per_row["classification"].str.startswith("review_")
+    per_row.loc[pw_review, "note"] += " — paper_link is Pathogenwatch: count scraped from a Pathogenwatch/KlebNET collection, not this ENA accession (expected; do not chase)"
     return per_row
 
 

@@ -59,6 +59,11 @@ def main() -> None:
     parser.add_argument("--metadata-file3", default=None, help="Local override for base ATB ENA TSV 3 (full mode).")
     parser.add_argument("--qc-excel", default=None, help="Local override for the QC Excel (RefSeq sheet).")
     parser.add_argument("--ena-project-dir", default=None, help="Local override for the ready_to_merge project dir.")
+    parser.add_argument(
+        "--study-metadata-file",
+        default=str(DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"),
+        help="Local study_level CSV for the reviewed flag (keeps collation offline; default: frozen snapshot).",
+    )
     args = parser.parse_args()
 
     spec = AttributeSpec.from_yaml(SPEC_PATH)
@@ -93,6 +98,7 @@ def main() -> None:
         metadata_file3=args.metadata_file3,
         qc_excel_path=args.qc_excel,
         ena_project_dir=args.ena_project_dir,
+        study_metadata_file=args.study_metadata_file,
     ).states()
     table = build_stage1_table(split, spec, states, sizing)
     out = args.output or DATA_DIR / "stage1_ingest.tsv"

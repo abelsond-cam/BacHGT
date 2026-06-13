@@ -36,6 +36,17 @@ unset or generic, so `scientific_name`-based counting under-reports Klebsiella. 
 **lower bound** and `ena_total_samples` an **upper bound**; the validation classifies these as
 `ena_underlabels_klebsiella` rather than errors. ~22 rows in the split fall here.
 
+## Pathogenwatch / KlebNET-sourced counts (not deposited under the ENA accession)
+
+For a couple of studies the metadata was **scraped from Pathogenwatch/KlebNET collections**, not
+read from the ENA project — so `isolates_in_study` reflects the collection size while only a
+handful of genomes sit under the ENA accession. Example: `PRJNA548120`
+("India_enterobacteriaceae", `paper_link` → `pathogen.watch/collection/klebnet-neonatal-sepsis`)
+has just 14–16 genomes in ENA but the sheet records 982/608. These appear as
+`review_prior_exceeds_ena` and are **expected, not curation errors or fixable by ENA sizing** —
+do not chase them. The validation auto-annotates any `review_*` row whose `paper_link` contains
+`pathogen.watch` so they're pre-explained.
+
 ## Assembly-only / zero-portal-record accessions
 
 A few curated accessions return **no** portal-visible reads or samples (e.g. `PRJNA565795`,

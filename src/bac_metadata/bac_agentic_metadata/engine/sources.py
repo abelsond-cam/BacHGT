@@ -42,6 +42,7 @@ class KlebCollationSource:
     metadata_file3: str | None = None
     qc_excel_path: str | None = None
     ena_project_dir: str | None = None
+    study_metadata_file: str | None = None  # local study_level CSV -> avoids the Google read
     keep_columns: tuple[str, ...] = DEFAULT_AUX_COLUMNS
     _clinical: tuple[str, ...] = field(
         default=("country", "collection_date", "isolation_source", "host"), init=False, repr=False
@@ -64,10 +65,13 @@ class KlebCollationSource:
                 "metadata_file2": self.metadata_file2,
                 "metadata_file3": self.metadata_file3,
                 "qc_excel_path": self.qc_excel_path,
+                "study_metadata_file": self.study_metadata_file,
             }.items()
             if v is not None
         }
-        base = mcoll.load_collated_metadata(**load_kwargs)
+        # google_sheet_id=None keeps collation offline: the reviewed flag (unused by completeness)
+        # comes from study_metadata_file if given, and removed_studies resolves to an empty set.
+        base = mcoll.load_collated_metadata(google_sheet_id=None, **load_kwargs)
 
         project_dir = self.ena_project_dir or mcoll.ENA_PROJECT_DIR
         ready_files = mcoll.find_ready_to_merge_files(project_dir, verbose=False)
