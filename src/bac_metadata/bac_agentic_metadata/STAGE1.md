@@ -105,4 +105,30 @@ So **109 rows are cleanly explained** (67 whole-project + 26 subsample + 15 shar
 1 umbrella), **22 are ENA under-labelling** (the curation is more complete — *not* errors), and
 **15 genuinely need review** (curated count exceeds what ENA holds under the accession, e.g.
 `Malawi_neonatal_outbreak` 898 vs 2 total, `India_enterobacteriaceae` 982 vs 16 total). The
-report's "Review queue" lists them with per-row notes; nothing is silently dropped.
+report's "Review queue" lists them with per-row notes; nothing is silently dropped. Review-queue
+rows whose `paper_link` is a Pathogenwatch/KlebNET collection are auto-annotated (the count was
+scraped from the collection, not deposited under the ENA accession — expected, do not chase).
+
+## Completeness verdict (three states, full mode)
+
+Mean per-field completeness over the 150 held accessions (`stage1_ingest.tsv`), from the base ATB
+metadata → after the per-project `ready_to_merge` backfill → after parse/categorise normalisation:
+
+| field | base | post-merge | norm | backfill Δ |
+|---|---:|---:|---:|---:|
+| country | 0.77 | 0.93 | 0.93 | +0.16 |
+| collection_date | 0.73 | 0.83 | 0.79 | +0.10 |
+| isolation_source | 0.58 | 0.72 | 0.67 | +0.14 |
+| host | 0.62 | 0.85 | 0.84 | +0.23 |
+
+The **base→post-merge gain (+10 to +23 pts)** is the manual paper-derived backfill the engine must
+reproduce in later stages. Sanity holds: `base ≤ post-merge` (merge only adds) and
+`norm ≤ post-merge` (normalisation nulls placeholders). The per-project reconcile against the live
+`parsed_per_project` tab is wired but needs `BAC_GOOGLE_CLIENT_SECRET` (off OneDrive) to run.
+
+## Data location
+
+The collation inputs are identical on HPC (`<project_k>/david/raw/…`) and the local OneDrive
+mirror (`…/project_k/data/raw/…`) — same sizes/mtimes, 98 `ready_to_merge` files both sides. The
+full run above was local; the only non-uniformity is the path root (a future tidy-up via
+`BACHGT_PROJECT_K_ROOT`, the pattern `path_resolve.resolve_v2_path` already uses).

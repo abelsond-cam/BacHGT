@@ -261,16 +261,45 @@ def _write_markdown(out_md: Path, per_row: pd.DataFrame, comp: pd.DataFrame, sta
                 "```",
                 "",
             ]
+    lines += _completeness_summary(stage1)
+
     if not comp.empty:
-        lines += ["## Completeness (engine norm vs parsed_per_project)", ""]
+        lines += ["## Completeness reconcile (engine norm vs parsed_per_project)", ""]
         for field in CLINICAL:
             diff = comp.get(f"completeness_diff_{field}")
             if diff is not None and diff.notna().any():
                 d = diff.dropna()
                 lines.append(f"- {field}: n={len(d)}, median diff={d.median():+.3f}, mean |diff|={d.abs().mean():.3f}")
     else:
-        lines += ["## Completeness", "_parsed_per_project not read (no credentials) — sizing only._"]
+        lines += [
+            "## Completeness reconcile (vs parsed_per_project)",
+            "_parsed_per_project not read (no Google credentials configured) — set "
+            "`BAC_GOOGLE_CLIENT_SECRET` to enable the per-project reconcile._",
+        ]
     out_md.write_text("\n".join(lines) + "\n")
+
+
+def _completeness_summary(stage1: pd.DataFrame) -> list[str]:
+    """Summarise the engine's three-state completeness + backfill, from stage1_ingest columns."""
+    if "completeness_base_country" not in stage1.columns:
+        return []  # sizing-only input
+    held = stage1[pd.to_numeric(stage1.get("n_held"), errors="coerce").fillna(0) > 0]
+    lines = [
+        "## Completeness (engine-computed, three states)",
+        f"Mean per-field completeness over the {len(held)} accessions we hold, across the base ATB "
+        "metadata, after the per-project ready_to_merge backfill, and after parse/categorise "
+        "normalisation. The base→post-merge gain is the manual backfill the engine must reproduce.",
+        "```",
+        f"{'field':<18}{'base':>8}{'postmerge':>11}{'norm':>8}{'backfill(Δ)':>13}",
+    ]
+    for field in CLINICAL:
+        b = pd.to_numeric(held.get(f"completeness_base_{field}"), errors="coerce").mean()
+        p = pd.to_numeric(held.get(f"completeness_postmerge_{field}"), errors="coerce").mean()
+        nm = pd.to_numeric(held.get(f"completeness_norm_{field}"), errors="coerce").mean()
+        d = pd.to_numeric(held.get(f"backfill_delta_{field}"), errors="coerce").mean()
+        lines.append(f"{field:<18}{b:>8.2f}{p:>11.2f}{nm:>8.2f}{d:>+13.3f}")
+    lines += ["```", ""]
+    return lines
 
 
 def main() -> None:

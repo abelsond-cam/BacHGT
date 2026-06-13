@@ -27,8 +27,8 @@ umbrella                       1
 ## Umbrella accessions (one accession aggregating many substudies)
 Flagged via distinct child studies; one 'best paper' cannot describe these. `PRJEB74192` (One Health Norway) is the canonical training case.
 ```
-study_accession paper_short_title  n_child_studies  ena_taxon_samples
-     PRJEB74192 One Health Norway                9               3261
+study_accession  n_child_studies  ena_taxon_samples
+     PRJEB74192                9               3261
 ```
 
 ## Lowest coverage (prior paper vs what ENA holds)
@@ -66,5 +66,15 @@ bangladesh_child_heatlh_research_foundation                    599.0            
                                  Swiss_kleb                    272.0                     261                261                                                                                                                                       prior curated 272 > ENA total 261 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
 ```
 
-## Completeness
-_parsed_per_project not read (no credentials) — sizing only._
+## Completeness (engine-computed, three states)
+Mean per-field completeness over the 150 accessions we hold, across the base ATB metadata, after the per-project ready_to_merge backfill, and after parse/categorise normalisation. The base→post-merge gain is the manual backfill the engine must reproduce.
+```
+field                 base  postmerge    norm  backfill(Δ)
+country               0.77       0.93    0.93       +0.162
+collection_date       0.73       0.83    0.79       +0.101
+isolation_source      0.58       0.72    0.67       +0.139
+host                  0.62       0.85    0.84       +0.234
+```
+
+## Completeness reconcile (vs parsed_per_project)
+_parsed_per_project not read (no Google credentials configured) — set `BAC_GOOGLE_CLIENT_SECRET` to enable the per-project reconcile._
