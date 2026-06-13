@@ -1,151 +1,151 @@
-row_id	paper_short_title	isolates_in_study	kleb_assemblies_in_paper	n_accessions	ena_taxon_samples_sum	coverage	holding_exceeds_project
-0	EuSCAPE	1718.0	2162.0	1	2321	0.7401981904351572	False
-1	enterobacterales_japan	1240.0	1240.0	1	1482	0.8367071524966262	False
-2	klebsiella_phillipines	862.0	259.0	1	862	1.0	False
-3	icu_hannoi	3153.0	1316.0	1	745	4.232214765100671	True
-4	thailand_cpe	747.0	577.0	1	707	1.0565770862800565	True
-5	vetinary_fda	204.0	204.0	1	630	0.3238095238095238	False
-6	new_abx_amr_consortium	206.0	200.0	1	207	0.9951690821256038	False
-7	greek_cpe	209.0	209.0	1	209	1.0	False
-8	new_abx_amr_consortium	187.0	200.0	1	187	1.0	False
-9	melb_superbugs	190.0	189.0	1	0	inf	True
-10	ml_predict_mic	177.0	1668.0	1	177	1.0	False
-11	aminoglycoside_resistance	166.0	158.0	1	166	1.0	False
-12	maternal_amr_low_income_countrie	158.0	161.0	1	161	0.9813664596273292	False
-13	auto_amr	155.0	154.0	1	155	1.0	False
-14	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	148.0	365.0	1	149	0.9932885906040269	False
-15	kenyan_neonate	138.0	116.0	1	138	1.0	False
-16	melb_surveillance	348.0	362.0	1	490	0.710204081632653	False
-17	melb_surveillance	16.0	362.0	1	58	0.27586206896551724	False
-18	Klebsiella_pneumoniae_longitudinal_study	1147.0	1373.0	1	1302	0.8809523809523809	False
-19	CRKP_China	542.0	542.0	1	546	0.9926739926739927	False
-20	Cefiderocol_CRE_China	320.0	320.0	1	320	1.0	False
-21	CRE_NYC	437.0	274.0	1	315	1.3873015873015873	True
-22	Wastewater_USA_isolates	159.0		1	183	0.8688524590163934	False
-23	Albany_bloodstream_usa	137.0	137.0	1	137	1.0	False
-24	NYC_CRE	143.0	88.0	1	284	0.5035211267605634	False
-25	Cambodia_MDRE	130.0	406.0	1	130	1.0	False
-26	Clinical CR-hvKP ST11 strains collection	110.0		1	110	1.0	False
-27	Norway_k_pnuemoniae	868.0	868.0	1	1063	0.8165569143932268	False
-28	japanese_surveillance	168.0	154.0	3	388	0.4329896907216495	False
-29	invasive_kilifi	198.0	198.0	1	198	1.0	False
-30	klebsiella_global_diversity	288.0		1	348	0.8275862068965517	False
-31	superiore_di_sanita	157.0	157.0	1	157	1.0	False
-32	malawi_ceftriaxone_esbl_enterobacteriaceae	1485.0	235.0	1	238	6.239495798319328	True
-33	malawi_colonisation_dynamics	203.0	221.0	1	221	0.918552036199095	False
-34	portuguese_klebsiella	509.0	500.0	1	508	1.0019685039370079	True
-35	norwegian_poultry_carriage	319.0	203.0	3	356	0.8960674157303371	False
-36	neonatal_klebsiella	1930.0		4	2252	0.8570159857904085	False
-37	mdr_surveillance_uk_ireland	379.0	379.0	1	381	0.994750656167979	False
-38	virginia_cpe	129.0	131.0	1	135	0.9555555555555556	False
-39	cpe_surveillance_five_us_hospitals	104.0	258.0	1	730	0.14246575342465753	False
-40	cdc_surveillance	322.0	1232.0	1	12456	0.025850995504174697	False
-41	uk_klebsiella	176.0	417.0	1	176	1.0	False
-42	columbia_irvine_polymyxin_resistance	388.0	340.0	1	340	1.1411764705882352	True
-43	canada_esbl		812.0	1	142		False
-44	singapore_cpe	575.0	715.0	1	799	0.7196495619524406	False
-45	transmission_cluster_detection_chicago	435.0	462.0	1	462	0.9415584415584416	False
-46	cpe_glove_and_gown	166.0	176.0	1	176	0.9431818181818182	False
-47	cpe_crackle2		2046.0	1	1663		False
-48	ethiopian_klebsiella	177.0	190.0	1	192	0.921875	False
-49	new_chinese_neuro_icu	143.0	146.0	1	146	0.9794520547945206	False
-50	bangladesh_child_heatlh_research_foundation	599.0	565.0	1	567	1.056437389770723	True
-51	death_risk_bsis	1088.0	1085.0	1	1110	0.9801801801801802	False
-52	cpe_south_africa	412.0	412.0	1	413	0.9975786924939467	False
-53	finnish_benin_vaccine_trial	300.0		1	372	0.8064516129032258	False
-54	canadian_blaoxa48	270.0	249.0	1	508	0.531496062992126	False
-55	human_and_bovine_culture_collection	148.0	148.0	1	148	1.0	False
-56	greek_cpe	141.0	142.0	1	142	0.9929577464788732	False
-57	texan_esbl	126.0	126.0	1	126	1.0	False
-58	boston_bsis	108.0	108.0	1	108	1.0	False
-59	cpe_southern_europe	687.0	683.0	1	687	1.0	False
-60	blaoxa48_spain	105.0	153.0	1	153	0.6862745098039216	False
-61	nepal_hospital_outbreak	89.0	121.0	1	121	0.7355371900826446	False
-62	capsule_depolymerase_study	422.0	183.0	1	185	2.281081081081081	True
-63	oxfordshire_amr_prediction	69.0	143.0	1	69	1.0	False
-64	klebsiella_diversity_in_Argentina	932.0	913.0	1	926	1.0064794816414686	True
-65	baby_biomes_uk	805.0	234.0	1	237	3.3966244725738397	True
-66	irish_cpe_surveillance	330.0	200.0	9	403	0.8188585607940446	False
-67	northern_italy_ghana_one_health	3482.0	5413.0	1	6354	0.5480012590494177	False
-68	ghana_one_health	573.0	5413.0	1	6354	0.09017941454202077	False
-69	ghru_nigeria	139.0	778.0	1	778	0.17866323907455012	False
-70	columbia_cpe_surveillance	425.0	425.0	1	555	0.7657657657657657	False
-71	european_food_products	131.0	162.0	1	205	0.6390243902439025	False
-72	uganda_and_malawi_amr	6508.0	1595.0	1	1603	4.059887710542732	True
-73	thailand_pig_farms	253.0	253.0	1	253	1.0	False
-74	pakistan_klebsiella	227.0	214.0	1	221	1.0271493212669682	True
-75	pittsburgh_edshat		193.0	1	948		False
-76	australian_cpe_surveillance	1252.0	456.0	1	456	2.745614035087719	True
-77	blakpc_singapore	157.0	157.0	1	157	1.0	False
-78	ratcliffe_hospital_sink_drains	264.0	264.0	1	264	1.0	False
-79	chigago_cpe_ndm	486.0	486.0	1	452	1.075221238938053	True
-80	singapore_cpe_surveillance	532.0	375.0	1	375	1.4186666666666667	True
-81	michigan_matched_colonising_infecting		330.0	1	330		False
-82	nevada_health_lab	1345.0	289.0	1	313	4.297124600638978	True
-83	dutch_cpe_surveillance	307.0	167.0	1	80	3.8375	True
-84	indian_cpe_surveillance	1072.0	400.0	2	1574	0.6810673443456162	False
-85	subsaharan_neonatal_outbreak	16.0	16.0	1	16	1.0	False
-86	oxfordshire_bsi_surveillance	886.0		1	910	0.9736263736263736	False
-87		393.0	271.0	1	403	0.9751861042183623	False
-88		293.0	136.0	1	948	0.3090717299578059	False
-89		177.0		1	177	1.0	False
-90		156.0		1	284	0.5492957746478874	False
-91		143.0		1	209	0.6842105263157895	False
-92		135.0		1	135	1.0	False
-93		112.0	331.0	1	140	0.8	False
-94		106.0	106.0	1	106	1.0	False
-95	CPK nosocomial Europe	2227.0		1	2321	0.959500215424386	False
-96		160.0		1	143	1.118881118881119	True
-97	cenre-sepcific typing	288.0		1	288	1.0	False
-98		356.0		1	44	8.090909090909092	True
-99	Irish point prevelence	192.0		1	193	0.9948186528497409	False
-100		261.0		1	271	0.9630996309963099	False
-101	MDR neonates	224.0		1	224	1.0	False
-102	Norway 2001-15	885.0		1	1063	0.8325493885230479	False
-103		326.0		1	326	1.0	False
-104	long_read_CPE	200.0		1	201	0.9950248756218906	False
-105	MDR NMD	347.0		1	347	1.0	False
-106	CCRE survey	313.0	2767.0	1	2904	0.10778236914600552	False
-107	Gastrointestinal carriage	484.0		1	484	1.0	False
-108	MDR KP Wales	539.0		1	540	0.9981481481481481	False
-109	CG 258 2	167.0		1	167	1.0	False
-110	CG 258	244.0		1	244	1.0	False
-111	Long term accute care	453.0		1	459	0.9869281045751634	False
-112	China colonisation	241.0		1	0	inf	True
-113	Bovine mastitis	180.0		1	180	1.0	False
-114	OXA fitness effect	156.0		1	159	0.9811320754716981	False
-115	Cietnamise ICUs	141.0		1	141	1.0	False
-116	Malawi_neonatal_outbreak	898.0		1	2	449.0	True
-117	CPK Enterobacteriales	213.0		1	213	1.0	False
-118	Manchester_TRACE	769.0		1	832	0.9242788461538461	False
-119	Bactobolize	392.0		1	392	1.0	False
-120	aerobactin in pigs	150.0		1	150	1.0	False
-121	Dutch plasmids	479.0		1	144	3.326388888888889	True
-122	Norway population study	391.0		1	155	2.52258064516129	True
-123	One day in Denmark	111.0		1	155	0.7161290322580646	False
-124	CPK transmission	173.0		1	173	1.0	False
-125	Desinfectant susceptibility	241.0		1	184	1.309782608695652	True
-126	Thailand_CRE	200.0		1	187	1.0695187165775402	True
-127	Germany-Ukrain-NDM_OXA	201.0		1	201	1.0	False
-128	Melbourne_patient_samples	217.0		1	217	1.0	False
-129	CC14 KP clone	457.0		1	1820	0.2510989010989011	False
-130	CPK bloodstream	258.0		1	258	1.0	False
-131	polymixin B KP	275.0		1	237	1.160337552742616	True
-132	cephalosporin Autralia, NZ and Singapore	294.0		1	36	8.166666666666666	True
-133	French West One health	331.0		1	331	1.0	False
-134	Spain CPK	336.0		1	376	0.8936170212765957	False
-135	Netherlands CPK	479.0		1	412	1.162621359223301	True
-136	word diagnostics	457.0		1	498	0.9176706827309237	False
-137	KP carriage low income countries	489.0		1	498	0.9819277108433735	False
-138	CPK chromosome and plasmids	425.0		1	555	0.7657657657657657	False
-139	Viet Nam MDR	1316.0		1	713	1.8457223001402525	True
-140	India KP antigens	1072.0		1	930	1.1526881720430107	True
-141	ESPL KP Texas	1777.0		1	1779	0.9988757729061271	False
-142	One Health Norway	3255.0		1	3261	0.9981600735970562	False
-143	India_enterobacteriaceae	982.0		1	14	70.14285714285714	True
-144	India_enterobacteriaceae	608.0		1	14	43.42857142857143	True
-145	Germany_ESBL	286.0	266.0	1	286	1.0	False
-146	Swiss_kleb	272.0	272.0	1	261	1.0421455938697317	True
-147	CUH_longitudinal	464.0	162.0	1	229	2.0262008733624453	True
-148	Manchester_TRACE	569.0	534.0	1	537	1.0595903165735567	True
-149	Philipines_network	1290.0	259.0	1	365	3.5342465753424657	True
+row_id	paper_short_title	prior_isolates_in_study	prior_kleb_assemblies_in_paper	n_accessions	n_papers_on_this_accession	ena_klebsiella_samples	ena_total_samples	ena_total_runs	n_child_studies	umbrella_suspected	coverage	classification	note
+0	EuSCAPE	1718.0	2162.0	1	2	2321	2691	2699	1	False	0.7401981904351572	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 1718 of 2321 ENA Klebsiella, coverage 0.74)
+1	enterobacterales_japan	1240.0	1240.0	1	1	1482	5144	5387	1	False	0.8367071524966262	subsample	paper is a subsample of a larger project (curated 1240 of 1482 ENA Klebsiella, coverage 0.84) — e.g. rolling-surveillance deposit
+2	klebsiella_phillipines	862.0	259.0	1	1	862	3432	3432	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 862 ≈ ENA Klebsiella 862)
+3	icu_hannoi	3153.0	1316.0	1	1	745	1950	1950	1	False	4.232214765100671	review_prior_exceeds_ena	prior curated 3153 > ENA total 1950 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+4	thailand_cpe	747.0	577.0	1	1	707	965	1158	1	False	1.0565770862800565	ena_underlabels_klebsiella	ENA holds 965 records but labels only 707 as Klebsiella by scientific_name; the curation's 747 are present but under-labelled — taxon sizing is a lower bound here
+5	vetinary_fda	204.0	204.0	1	1	630	1559	1570	1	False	0.3238095238095238	subsample	paper is a subsample of a larger project (curated 204 of 630 ENA Klebsiella, coverage 0.32) — e.g. rolling-surveillance deposit
+6	new_abx_amr_consortium	206.0	200.0	1	1	207	224	225	1	False	0.9951690821256038	whole_project	engine confirms paper ≈ whole project (curated 206 ≈ ENA Klebsiella 207)
+7	greek_cpe	209.0	209.0	1	1	209	209	217	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 209 ≈ ENA Klebsiella 209)
+8	new_abx_amr_consortium	187.0	200.0	1	1	187	200	202	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 187 ≈ ENA Klebsiella 187)
+9	melb_superbugs	190.0	189.0	1	1	0	0	0	0	False	inf	review_no_ena_records	prior curated 190 but ENA has no records under this accession (assembly-only / wrong accession) — manual check
+10	ml_predict_mic	177.0	1668.0	1	1	177	177	177	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 177 ≈ ENA Klebsiella 177)
+11	aminoglycoside_resistance	166.0	158.0	1	1	166	166	166	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 166 ≈ ENA Klebsiella 166)
+12	maternal_amr_low_income_countrie	158.0	161.0	1	1	161	422	422	1	False	0.9813664596273292	whole_project	engine confirms paper ≈ whole project (curated 158 ≈ ENA Klebsiella 161)
+13	auto_amr	155.0	154.0	1	1	155	181	362	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 155 ≈ ENA Klebsiella 155)
+14	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	148.0	365.0	1	1	149	149	150	1	False	0.9932885906040269	whole_project	engine confirms paper ≈ whole project (curated 148 ≈ ENA Klebsiella 149)
+15	kenyan_neonate	138.0	116.0	1	1	138	160	160	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 138 ≈ ENA Klebsiella 138)
+16	melb_surveillance	348.0	362.0	1	1	490	622	647	1	False	0.710204081632653	subsample	paper is a subsample of a larger project (curated 348 of 490 ENA Klebsiella, coverage 0.71) — e.g. rolling-surveillance deposit
+17	melb_surveillance	16.0	362.0	1	1	58	58	59	1	False	0.27586206896551724	subsample	paper is a subsample of a larger project (curated 16 of 58 ENA Klebsiella, coverage 0.28) — e.g. rolling-surveillance deposit
+18	Klebsiella_pneumoniae_longitudinal_study	1147.0	1373.0	1	2	1302	1302	1302	1	False	0.8809523809523809	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 1147 of 1302 ENA Klebsiella, coverage 0.88)
+19	CRKP_China	542.0	542.0	1	1	546	558	563	1	False	0.9926739926739927	whole_project	engine confirms paper ≈ whole project (curated 542 ≈ ENA Klebsiella 546)
+20	Cefiderocol_CRE_China	320.0	320.0	1	1	320	320	320	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 320 ≈ ENA Klebsiella 320)
+21	CRE_NYC	437.0	274.0	1	1	315	434	868	1	False	1.3873015873015873	ena_underlabels_klebsiella	ENA holds 434 records but labels only 315 as Klebsiella by scientific_name; the curation's 437 are present but under-labelled — taxon sizing is a lower bound here
+22	Wastewater_USA_isolates	159.0		1	1	183	314	314	1	False	0.8688524590163934	subsample	paper is a subsample of a larger project (curated 159 of 183 ENA Klebsiella, coverage 0.87) — e.g. rolling-surveillance deposit
+23	Albany_bloodstream_usa	137.0	137.0	1	1	137	137	149	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 137 ≈ ENA Klebsiella 137)
+24	NYC_CRE	143.0	88.0	1	1	284	1422	1461	1	False	0.5035211267605634	subsample	paper is a subsample of a larger project (curated 143 of 284 ENA Klebsiella, coverage 0.50) — e.g. rolling-surveillance deposit
+25	Cambodia_MDRE	130.0	406.0	1	1	130	406	406	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 130 ≈ ENA Klebsiella 130)
+26	Clinical CR-hvKP ST11 strains collection	110.0		1	1	110	110	110	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 110 ≈ ENA Klebsiella 110)
+27	Norway_k_pnuemoniae	868.0	868.0	1	2	1063	1063	1258	1	False	0.8165569143932268	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 868 of 1063 ENA Klebsiella, coverage 0.82)
+28	japanese_surveillance	168.0	154.0	3	1	388	388	388	1	False	0.4329896907216495	subsample	paper is a subsample of a larger project (curated 168 of 388 ENA Klebsiella, coverage 0.43) — e.g. rolling-surveillance deposit
+29	invasive_kilifi	198.0	198.0	1	1	198	198	198	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 198 ≈ ENA Klebsiella 198)
+30	klebsiella_global_diversity	288.0		1	1	348	348	348	1	False	0.8275862068965517	subsample	paper is a subsample of a larger project (curated 288 of 348 ENA Klebsiella, coverage 0.83) — e.g. rolling-surveillance deposit
+31	superiore_di_sanita	157.0	157.0	1	1	157	157	157	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 157 ≈ ENA Klebsiella 157)
+32	malawi_ceftriaxone_esbl_enterobacteriaceae	1485.0	235.0	1	1	238	1485	1485	1	False	6.239495798319328	ena_underlabels_klebsiella	ENA holds 1485 records but labels only 238 as Klebsiella by scientific_name; the curation's 1485 are present but under-labelled — taxon sizing is a lower bound here
+33	malawi_colonisation_dynamics	203.0	221.0	1	1	221	268	268	1	False	0.918552036199095	whole_project	engine confirms paper ≈ whole project (curated 203 ≈ ENA Klebsiella 221)
+34	portuguese_klebsiella	509.0	500.0	1	1	508	508	604	1	False	1.0019685039370079	ena_underlabels_klebsiella	ENA holds 508 records but labels only 508 as Klebsiella by scientific_name; the curation's 509 are present but under-labelled — taxon sizing is a lower bound here
+35	norwegian_poultry_carriage	319.0	203.0	3	1	356	356	417	1	False	0.8960674157303371	subsample	paper is a subsample of a larger project (curated 319 of 356 ENA Klebsiella, coverage 0.90) — e.g. rolling-surveillance deposit
+36	neonatal_klebsiella	1930.0		4	2	2252	3115	3115	1	False	0.8570159857904085	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 1930 of 2252 ENA Klebsiella, coverage 0.86)
+37	mdr_surveillance_uk_ireland	379.0	379.0	1	1	381	1298	1298	1	False	0.994750656167979	whole_project	engine confirms paper ≈ whole project (curated 379 ≈ ENA Klebsiella 381)
+38	virginia_cpe	129.0	131.0	1	1	135	285	285	1	False	0.9555555555555556	whole_project	engine confirms paper ≈ whole project (curated 129 ≈ ENA Klebsiella 135)
+39	cpe_surveillance_five_us_hospitals	104.0	258.0	1	1	730	1219	2800	1	False	0.14246575342465753	subsample	paper is a subsample of a larger project (curated 104 of 730 ENA Klebsiella, coverage 0.14) — e.g. rolling-surveillance deposit
+40	cdc_surveillance	322.0	1232.0	1	1	12456	51951	52644	1	False	0.025850995504174697	subsample	paper is a subsample of a larger project (curated 322 of 12456 ENA Klebsiella, coverage 0.03) — e.g. rolling-surveillance deposit
+41	uk_klebsiella	176.0	417.0	1	1	176	417	417	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 176 ≈ ENA Klebsiella 176)
+42	columbia_irvine_polymyxin_resistance	388.0	340.0	1	1	340	340	340	1	False	1.1411764705882352	review_prior_exceeds_ena	prior curated 388 > ENA total 340 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+43	canada_esbl		812.0	1	1	142	813	814	1	False		no_curated_count	sheet has no isolates_in_study for this row — nothing to compare
+44	singapore_cpe	575.0	715.0	1	1	799	1293	1293	1	False	0.7196495619524406	subsample	paper is a subsample of a larger project (curated 575 of 799 ENA Klebsiella, coverage 0.72) — e.g. rolling-surveillance deposit
+45	transmission_cluster_detection_chicago	435.0	462.0	1	1	462	462	462	1	False	0.9415584415584416	whole_project	engine confirms paper ≈ whole project (curated 435 ≈ ENA Klebsiella 462)
+46	cpe_glove_and_gown	166.0	176.0	1	1	176	176	176	1	False	0.9431818181818182	whole_project	engine confirms paper ≈ whole project (curated 166 ≈ ENA Klebsiella 176)
+47	cpe_crackle2		2046.0	1	1	1663	2540	2659	1	False		no_curated_count	sheet has no isolates_in_study for this row — nothing to compare
+48	ethiopian_klebsiella	177.0	190.0	1	1	192	346	346	1	False	0.921875	whole_project	engine confirms paper ≈ whole project (curated 177 ≈ ENA Klebsiella 192)
+49	new_chinese_neuro_icu	143.0	146.0	1	1	146	146	146	1	False	0.9794520547945206	whole_project	engine confirms paper ≈ whole project (curated 143 ≈ ENA Klebsiella 146)
+50	bangladesh_child_heatlh_research_foundation	599.0	565.0	1	1	567	567	567	1	False	1.056437389770723	review_prior_exceeds_ena	prior curated 599 > ENA total 567 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+51	death_risk_bsis	1088.0	1085.0	1	1	1110	1110	1279	1	False	0.9801801801801802	whole_project	engine confirms paper ≈ whole project (curated 1088 ≈ ENA Klebsiella 1110)
+52	cpe_south_africa	412.0	412.0	1	1	413	413	413	1	False	0.9975786924939467	whole_project	engine confirms paper ≈ whole project (curated 412 ≈ ENA Klebsiella 413)
+53	finnish_benin_vaccine_trial	300.0		1	1	372	7889	7889	1	False	0.8064516129032258	subsample	paper is a subsample of a larger project (curated 300 of 372 ENA Klebsiella, coverage 0.81) — e.g. rolling-surveillance deposit
+54	canadian_blaoxa48	270.0	249.0	1	1	508	2147	2215	1	False	0.531496062992126	subsample	paper is a subsample of a larger project (curated 270 of 508 ENA Klebsiella, coverage 0.53) — e.g. rolling-surveillance deposit
+55	human_and_bovine_culture_collection	148.0	148.0	1	1	148	148	148	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 148 ≈ ENA Klebsiella 148)
+56	greek_cpe	141.0	142.0	1	1	142	142	142	1	False	0.9929577464788732	whole_project	engine confirms paper ≈ whole project (curated 141 ≈ ENA Klebsiella 142)
+57	texan_esbl	126.0	126.0	1	1	126	126	126	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 126 ≈ ENA Klebsiella 126)
+58	boston_bsis	108.0	108.0	1	1	108	108	108	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 108 ≈ ENA Klebsiella 108)
+59	cpe_southern_europe	687.0	683.0	1	1	687	687	687	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 687 ≈ ENA Klebsiella 687)
+60	blaoxa48_spain	105.0	153.0	1	1	153	153	153	1	False	0.6862745098039216	subsample	paper is a subsample of a larger project (curated 105 of 153 ENA Klebsiella, coverage 0.69) — e.g. rolling-surveillance deposit
+61	nepal_hospital_outbreak	89.0	121.0	1	1	121	121	122	1	False	0.7355371900826446	subsample	paper is a subsample of a larger project (curated 89 of 121 ENA Klebsiella, coverage 0.74) — e.g. rolling-surveillance deposit
+62	capsule_depolymerase_study	422.0	183.0	1	1	185	422	422	1	False	2.281081081081081	ena_underlabels_klebsiella	ENA holds 422 records but labels only 185 as Klebsiella by scientific_name; the curation's 422 are present but under-labelled — taxon sizing is a lower bound here
+63	oxfordshire_amr_prediction	69.0	143.0	1	1	69	143	143	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 69 ≈ ENA Klebsiella 69)
+64	klebsiella_diversity_in_Argentina	932.0	913.0	1	1	926	926	932	1	False	1.0064794816414686	ena_underlabels_klebsiella	ENA holds 926 records but labels only 926 as Klebsiella by scientific_name; the curation's 932 are present but under-labelled — taxon sizing is a lower bound here
+65	baby_biomes_uk	805.0	234.0	1	1	237	805	805	1	False	3.3966244725738397	ena_underlabels_klebsiella	ENA holds 805 records but labels only 237 as Klebsiella by scientific_name; the curation's 805 are present but under-labelled — taxon sizing is a lower bound here
+66	irish_cpe_surveillance	330.0	200.0	9	1	403	843	843	1	False	0.8188585607940446	subsample	paper is a subsample of a larger project (curated 330 of 403 ENA Klebsiella, coverage 0.82) — e.g. rolling-surveillance deposit
+67	northern_italy_ghana_one_health	3482.0	5413.0	1	2	6354	6368	6368	1	False	0.5480012590494177	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 3482 of 6354 ENA Klebsiella, coverage 0.55)
+68	ghana_one_health	573.0	5413.0	1	2	6354	6368	6368	1	False	0.09017941454202077	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 573 of 6354 ENA Klebsiella, coverage 0.09)
+69	ghru_nigeria	139.0	778.0	1	1	778	2331	2331	1	False	0.17866323907455012	subsample	paper is a subsample of a larger project (curated 139 of 778 ENA Klebsiella, coverage 0.18) — e.g. rolling-surveillance deposit
+70	columbia_cpe_surveillance	425.0	425.0	1	2	555	555	555	1	False	0.7657657657657657	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 425 of 555 ENA Klebsiella, coverage 0.77)
+71	european_food_products	131.0	162.0	1	1	205	205	205	1	False	0.6390243902439025	subsample	paper is a subsample of a larger project (curated 131 of 205 ENA Klebsiella, coverage 0.64) — e.g. rolling-surveillance deposit
+72	uganda_and_malawi_amr	6508.0	1595.0	1	1	1603	6168	6508	1	False	4.059887710542732	review_prior_exceeds_ena	prior curated 6508 > ENA total 6168 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+73	thailand_pig_farms	253.0	253.0	1	1	253	253	255	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 253 ≈ ENA Klebsiella 253)
+74	pakistan_klebsiella	227.0	214.0	1	1	221	221	227	1	False	1.0271493212669682	review_prior_exceeds_ena	prior curated 227 > ENA total 221 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+75	pittsburgh_edshat		193.0	1	2	948	14702	15052	1	False		no_curated_count	sheet has no isolates_in_study for this row — nothing to compare
+76	australian_cpe_surveillance	1252.0	456.0	1	1	456	1252	1252	1	False	2.745614035087719	ena_underlabels_klebsiella	ENA holds 1252 records but labels only 456 as Klebsiella by scientific_name; the curation's 1252 are present but under-labelled — taxon sizing is a lower bound here
+77	blakpc_singapore	157.0	157.0	1	1	157	157	157	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 157 ≈ ENA Klebsiella 157)
+78	ratcliffe_hospital_sink_drains	264.0	264.0	1	1	264	464	464	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 264 ≈ ENA Klebsiella 264)
+79	chigago_cpe_ndm	486.0	486.0	1	1	452	486	486	1	False	1.075221238938053	ena_underlabels_klebsiella	ENA holds 486 records but labels only 452 as Klebsiella by scientific_name; the curation's 486 are present but under-labelled — taxon sizing is a lower bound here
+80	singapore_cpe_surveillance	532.0	375.0	1	1	375	758	758	1	False	1.4186666666666667	ena_underlabels_klebsiella	ENA holds 758 records but labels only 375 as Klebsiella by scientific_name; the curation's 532 are present but under-labelled — taxon sizing is a lower bound here
+81	michigan_matched_colonising_infecting		330.0	1	1	330	330	562	1	False		no_curated_count	sheet has no isolates_in_study for this row — nothing to compare
+82	nevada_health_lab	1345.0	289.0	1	1	313	1345	1345	1	False	4.297124600638978	ena_underlabels_klebsiella	ENA holds 1345 records but labels only 313 as Klebsiella by scientific_name; the curation's 1345 are present but under-labelled — taxon sizing is a lower bound here
+83	dutch_cpe_surveillance	307.0	167.0	1	1	80	167	167	1	False	3.8375	review_prior_exceeds_ena	prior curated 307 > ENA total 167 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+84	indian_cpe_surveillance	1072.0	400.0	2	2	1574	4735	4735	1	False	0.6810673443456162	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 1072 of 1574 ENA Klebsiella, coverage 0.68)
+85	subsaharan_neonatal_outbreak	16.0	16.0	1	1	16	16	16	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 16 ≈ ENA Klebsiella 16)
+86	oxfordshire_bsi_surveillance	886.0		1	1	910	4090	4090	1	False	0.9736263736263736	whole_project	engine confirms paper ≈ whole project (curated 886 ≈ ENA Klebsiella 910)
+87		393.0	271.0	1	2	403	916	916	1	False	0.9751861042183623	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 393 of 403 ENA Klebsiella, coverage 0.98)
+88		293.0	136.0	1	2	948	14702	15052	1	False	0.3090717299578059	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 293 of 948 ENA Klebsiella, coverage 0.31)
+89		177.0		1	1	177	177	177	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 177 ≈ ENA Klebsiella 177)
+90		156.0		1	1	284	3110	3131	1	False	0.5492957746478874	subsample	paper is a subsample of a larger project (curated 156 of 284 ENA Klebsiella, coverage 0.55) — e.g. rolling-surveillance deposit
+91		143.0		1	1	209	730	750	1	False	0.6842105263157895	subsample	paper is a subsample of a larger project (curated 143 of 209 ENA Klebsiella, coverage 0.68) — e.g. rolling-surveillance deposit
+92		135.0		1	1	135	309	309	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 135 ≈ ENA Klebsiella 135)
+93		112.0	331.0	1	1	140	140	144	1	False	0.8	subsample	paper is a subsample of a larger project (curated 112 of 140 ENA Klebsiella, coverage 0.80) — e.g. rolling-surveillance deposit
+94		106.0	106.0	1	1	106	106	106	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 106 ≈ ENA Klebsiella 106)
+95	CPK nosocomial Europe	2227.0		1	2	2321	2691	2699	1	False	0.959500215424386	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 2227 of 2321 ENA Klebsiella, coverage 0.96)
+96		160.0		1	1	143	162	162	1	False	1.118881118881119	ena_underlabels_klebsiella	ENA holds 162 records but labels only 143 as Klebsiella by scientific_name; the curation's 160 are present but under-labelled — taxon sizing is a lower bound here
+97	cenre-sepcific typing	288.0		1	1	288	1806	1806	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 288 ≈ ENA Klebsiella 288)
+98		356.0		1	1	44	100	100	1	False	8.090909090909092	review_prior_exceeds_ena	prior curated 356 > ENA total 100 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+99	Irish point prevelence	192.0		1	1	193	480	480	1	False	0.9948186528497409	whole_project	engine confirms paper ≈ whole project (curated 192 ≈ ENA Klebsiella 193)
+100		261.0		1	1	271	271	281	1	False	0.9630996309963099	whole_project	engine confirms paper ≈ whole project (curated 261 ≈ ENA Klebsiella 271)
+101	MDR neonates	224.0		1	1	224	224	224	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 224 ≈ ENA Klebsiella 224)
+102	Norway 2001-15	885.0		1	2	1063	1063	1258	1	False	0.8325493885230479	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 885 of 1063 ENA Klebsiella, coverage 0.83)
+103		326.0		1	1	326	326	326	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 326 ≈ ENA Klebsiella 326)
+104	long_read_CPE	200.0		1	1	201	760	845	1	False	0.9950248756218906	whole_project	engine confirms paper ≈ whole project (curated 200 ≈ ENA Klebsiella 201)
+105	MDR NMD	347.0		1	1	347	347	347	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 347 ≈ ENA Klebsiella 347)
+106	CCRE survey	313.0	2767.0	1	1	2904	3434	3434	1	False	0.10778236914600552	subsample	paper is a subsample of a larger project (curated 313 of 2904 ENA Klebsiella, coverage 0.11) — e.g. rolling-surveillance deposit
+107	Gastrointestinal carriage	484.0		1	1	484	484	563	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 484 ≈ ENA Klebsiella 484)
+108	MDR KP Wales	539.0		1	1	540	540	540	1	False	0.9981481481481481	whole_project	engine confirms paper ≈ whole project (curated 539 ≈ ENA Klebsiella 540)
+109	CG 258 2	167.0		1	1	167	167	167	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 167 ≈ ENA Klebsiella 167)
+110	CG 258	244.0		1	1	244	244	244	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 244 ≈ ENA Klebsiella 244)
+111	Long term accute care	453.0		1	1	459	459	459	1	False	0.9869281045751634	whole_project	engine confirms paper ≈ whole project (curated 453 ≈ ENA Klebsiella 459)
+112	China colonisation	241.0		1	1	0	0	0	0	False	inf	review_no_ena_records	prior curated 241 but ENA has no records under this accession (assembly-only / wrong accession) — manual check
+113	Bovine mastitis	180.0		1	1	180	180	180	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 180 ≈ ENA Klebsiella 180)
+114	OXA fitness effect	156.0		1	1	159	249	255	1	False	0.9811320754716981	whole_project	engine confirms paper ≈ whole project (curated 156 ≈ ENA Klebsiella 159)
+115	Cietnamise ICUs	141.0		1	1	141	207	207	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 141 ≈ ENA Klebsiella 141)
+116	Malawi_neonatal_outbreak	898.0		1	1	2	2	2	1	False	449.0	review_prior_exceeds_ena	prior curated 898 > ENA total 2 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+117	CPK Enterobacteriales	213.0		1	1	213	514	514	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 213 ≈ ENA Klebsiella 213)
+118	Manchester_TRACE	769.0		1	1	832	1642	1642	1	False	0.9242788461538461	whole_project	engine confirms paper ≈ whole project (curated 769 ≈ ENA Klebsiella 832)
+119	Bactobolize	392.0		1	1	392	392	392	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 392 ≈ ENA Klebsiella 392)
+120	aerobactin in pigs	150.0		1	1	150	150	192	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 150 ≈ ENA Klebsiella 150)
+121	Dutch plasmids	479.0		1	1	144	144	144	1	False	3.326388888888889	review_prior_exceeds_ena	prior curated 479 > ENA total 144 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+122	Norway population study	391.0		1	1	155	389	389	1	False	2.52258064516129	ena_underlabels_klebsiella	ENA holds 389 records but labels only 155 as Klebsiella by scientific_name; the curation's 391 are present but under-labelled — taxon sizing is a lower bound here
+123	One day in Denmark	111.0		1	1	155	2006	2006	1	False	0.7161290322580646	subsample	paper is a subsample of a larger project (curated 111 of 155 ENA Klebsiella, coverage 0.72) — e.g. rolling-surveillance deposit
+124	CPK transmission	173.0		1	1	173	173	173	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 173 ≈ ENA Klebsiella 173)
+125	Desinfectant susceptibility	241.0		1	1	184	225	241	1	False	1.309782608695652	review_prior_exceeds_ena	prior curated 241 > ENA total 225 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+126	Thailand_CRE	200.0		1	1	187	198	198	1	False	1.0695187165775402	ena_underlabels_klebsiella	ENA holds 198 records but labels only 187 as Klebsiella by scientific_name; the curation's 200 are present but under-labelled — taxon sizing is a lower bound here
+127	Germany-Ukrain-NDM_OXA	201.0		1	1	201	201	201	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 201 ≈ ENA Klebsiella 201)
+128	Melbourne_patient_samples	217.0		1	1	217	217	217	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 217 ≈ ENA Klebsiella 217)
+129	CC14 KP clone	457.0		1	1	1820	1820	1820	1	False	0.2510989010989011	subsample	paper is a subsample of a larger project (curated 457 of 1820 ENA Klebsiella, coverage 0.25) — e.g. rolling-surveillance deposit
+130	CPK bloodstream	258.0		1	1	258	258	258	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 258 ≈ ENA Klebsiella 258)
+131	polymixin B KP	275.0		1	1	237	272	275	1	False	1.160337552742616	ena_underlabels_klebsiella	ENA holds 272 records but labels only 237 as Klebsiella by scientific_name; the curation's 275 are present but under-labelled — taxon sizing is a lower bound here
+132	cephalosporin Autralia, NZ and Singapore	294.0		1	1	36	294	294	1	False	8.166666666666666	ena_underlabels_klebsiella	ENA holds 294 records but labels only 36 as Klebsiella by scientific_name; the curation's 294 are present but under-labelled — taxon sizing is a lower bound here
+133	French West One health	331.0		1	1	331	331	331	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 331 ≈ ENA Klebsiella 331)
+134	Spain CPK	336.0		1	1	376	403	403	1	False	0.8936170212765957	subsample	paper is a subsample of a larger project (curated 336 of 376 ENA Klebsiella, coverage 0.89) — e.g. rolling-surveillance deposit
+135	Netherlands CPK	479.0		1	1	412	891	891	1	False	1.162621359223301	ena_underlabels_klebsiella	ENA holds 891 records but labels only 412 as Klebsiella by scientific_name; the curation's 479 are present but under-labelled — taxon sizing is a lower bound here
+136	word diagnostics	457.0		1	2	498	498	498	1	False	0.9176706827309237	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 457 of 498 ENA Klebsiella, coverage 0.92)
+137	KP carriage low income countries	489.0		1	2	498	498	498	1	False	0.9819277108433735	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 489 of 498 ENA Klebsiella, coverage 0.98)
+138	CPK chromosome and plasmids	425.0		1	2	555	555	555	1	False	0.7657657657657657	shared_accession	accession shared by 2 curated papers; this paper is one slice (curated 425 of 555 ENA Klebsiella, coverage 0.77)
+139	Viet Nam MDR	1316.0		1	1	713	2204	2204	1	False	1.8457223001402525	ena_underlabels_klebsiella	ENA holds 2204 records but labels only 713 as Klebsiella by scientific_name; the curation's 1316 are present but under-labelled — taxon sizing is a lower bound here
+140	India KP antigens	1072.0		1	2	930	3691	3691	1	False	1.1526881720430107	ena_underlabels_klebsiella	ENA holds 3691 records but labels only 930 as Klebsiella by scientific_name; the curation's 1072 are present but under-labelled — taxon sizing is a lower bound here
+141	ESPL KP Texas	1777.0		1	1	1779	1779	1787	1	False	0.9988757729061271	whole_project	engine confirms paper ≈ whole project (curated 1777 ≈ ENA Klebsiella 1779)
+142	One Health Norway	3255.0		1	1	3261	3261	3831	9	True	0.9981600735970562	umbrella	umbrella accession (9 child studies) — one paper cannot cover it; split into substudies
+143	India_enterobacteriaceae	982.0		1	2	14	16	17	1	False	70.14285714285714	review_prior_exceeds_ena	prior curated 982 > ENA total 16 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+144	India_enterobacteriaceae	608.0		1	2	14	16	17	1	False	43.42857142857143	review_prior_exceeds_ena	prior curated 608 > ENA total 16 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+145	Germany_ESBL	286.0	266.0	1	1	286	286	286	1	False	1.0	whole_project	engine confirms paper ≈ whole project (curated 286 ≈ ENA Klebsiella 286)
+146	Swiss_kleb	272.0	272.0	1	1	261	261	272	1	False	1.0421455938697317	review_prior_exceeds_ena	prior curated 272 > ENA total 261 under this accession — isolates likely under other accessions / RefSeq-only / a multi-accession paper; manual check
+147	CUH_longitudinal	464.0	162.0	1	1	229	461	464	1	False	2.0262008733624453	ena_underlabels_klebsiella	ENA holds 461 records but labels only 229 as Klebsiella by scientific_name; the curation's 464 are present but under-labelled — taxon sizing is a lower bound here
+148	Manchester_TRACE	569.0	534.0	1	1	537	569	569	1	False	1.0595903165735567	ena_underlabels_klebsiella	ENA holds 569 records but labels only 537 as Klebsiella by scientific_name; the curation's 569 are present but under-labelled — taxon sizing is a lower bound here
+149	Philipines_network	1290.0	259.0	1	1	365	1284	1290	1	False	3.5342465753424657	ena_underlabels_klebsiella	ENA holds 1284 records but labels only 365 as Klebsiella by scientific_name; the curation's 1290 are present but under-labelled — taxon sizing is a lower bound here

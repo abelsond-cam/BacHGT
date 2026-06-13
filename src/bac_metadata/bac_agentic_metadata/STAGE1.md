@@ -43,14 +43,27 @@ derived from the read_run table.
 **Assembly-only BioProjects** with no portal-visible reads (e.g. `PRJNA565795`) count as zero on
 all units; they surface as anomalies in the validation report rather than being silently dropped.
 
-## Validation semantics
+## Validation semantics — prior (sheet) vs found (ENA)
 
-`ena_taxon_samples` is the project's *Klebsiella* size — the denominator for the later
-`paper_coverage_for_taxon`. `isolates_in_study` (trusted sheet column) is what the curation
-covered. So `coverage = isolates_in_study / ena_taxon_samples`: ≈1 means a whole-project paper,
-≪1 means a subsample. A holding that *exceeds* the project taxon count is a genuine anomaly
-(accession drift, data under other accessions, or zero portal-visible reads) and is listed for
-manual review.
+The validation report is a **per-curation-row comparison of the prior finding** (your Google
+Sheet: `prior_isolates_in_study`) **against what the engine independently found in ENA**
+(`ena_klebsiella_samples`, `ena_total_samples`, `ena_total_runs`, `n_child_studies` — all from
+the live `read_run` interrogation, not the sheet). Each row gets a `classification` + a plain
+`note` saying how the two relate. This is the check that the engine reproduces the manual
+EBI-sizing step.
+
+Two ENA bounds matter: `ena_klebsiella_samples` (scientific_name match) is a **lower bound** — it
+**under-counts** Klebsiella for broad *Enterobacteriaceae* projects where submitters didn't set
+the species — while `ena_total_samples` is the **upper bound**. Classification uses both:
+
+| class | meaning |
+|---|---|
+| `whole_project` | curated ≈ ENA Klebsiella → paper covers the whole project |
+| `subsample` | curated < ENA Klebsiella → paper covers part of a larger project |
+| `shared_accession` | one accession cited by several curated papers (each a slice) |
+| `umbrella` | one accession is many substudies (`n_child_studies` ≥ 3) — needs splitting |
+| `ena_underlabels_klebsiella` | ENA holds the records but labels fewer as Klebsiella; curation is more complete (**not** an error) |
+| `review_prior_exceeds_ena` / `review_no_ena_records` | curated exceeds what ENA holds under the accession — genuine review queue |
 
 ## Outputs (`applications/klebsiella/data/`)
 
@@ -73,18 +86,23 @@ uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_stage1.py
 ```
 
-## Full-split sizing summary (156 accessions / 146 curation rows)
+## Full-split sizing verdict (150 curation rows)
 
-From `stage1_validation_report.md` (read_run-based sizing):
+From `stage1_validation_report.md` (read_run-based sizing), the prior-vs-found classification:
 
-- **median coverage 1.00**; **75%** of rows are whole-project (coverage ≥ 0.9), **7%** are
-  subsamples (< 0.5).
-- **1 umbrella** flagged: `PRJEB74192` (One Health Norway, 9 child studies) — see
-  [`applications/klebsiella/known_cases.md`](applications/klebsiella/known_cases.md).
-- **37 anomalies** (holding > ENA project taxon count): a mix of (a) tiny ±1–2-sample rounding
-  from samples lacking `scientific_name`, and (b) genuine cases needing review — large excesses
-  (`icu_hannoi` 3153 vs 745; `uganda_and_malawi_amr` 6508 vs 1603) and zero-portal-record
-  accessions (`PRJNA565795`/`melb_superbugs`, `China colonisation`). Listed in the report for
-  manual attention rather than silently dropped.
-- True subsamples (distinct from umbrellas) show up as low coverage, e.g. `cdc_surveillance`
-  (curated 322 of 12,456 project Klebsiella).
+| class | rows |
+|---|---:|
+| `whole_project` | 67 |
+| `subsample` | 26 |
+| `ena_underlabels_klebsiella` | 22 |
+| `shared_accession` | 15 |
+| `review_prior_exceeds_ena` | 13 |
+| `no_curated_count` | 4 |
+| `review_no_ena_records` | 2 |
+| `umbrella` | 1 |
+
+So **109 rows are cleanly explained** (67 whole-project + 26 subsample + 15 shared-accession +
+1 umbrella), **22 are ENA under-labelling** (the curation is more complete — *not* errors), and
+**15 genuinely need review** (curated count exceeds what ENA holds under the accession, e.g.
+`Malawi_neonatal_outbreak` 898 vs 2 total, `India_enterobacteriaceae` 982 vs 16 total). The
+report's "Review queue" lists them with per-row notes; nothing is silently dropped.

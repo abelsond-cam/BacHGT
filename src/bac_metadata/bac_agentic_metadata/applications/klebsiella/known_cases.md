@@ -26,6 +26,16 @@ section of `data/stage1_validation_report.md`.
 returns **0** samples for that study, while `result=read_run` returns 3,831 (3,261 distinct
 samples). Stage 1 therefore sizes every project from `read_run` deduplicated to sample level.
 
+## ENA under-labels Klebsiella in broad projects (taxon sizing is a lower bound)
+
+Some accessions are **broad *Enterobacteriaceae* deposits** where submitters left the species
+unset or generic, so `scientific_name`-based counting under-reports Klebsiella. The curation
+(human + Kleborate) is *more* complete than ENA's `scientific_name`. Examples: `PRJEB32655`
+(malawi_ceftriaxone, ENA total 1485 but only 238 labelled Klebsiella; curated 1485),
+`PRJEB22252` (baby_biomes_uk, 805 total / 237 labelled). Hence `ena_klebsiella_samples` is a
+**lower bound** and `ena_total_samples` an **upper bound**; the validation classifies these as
+`ena_underlabels_klebsiella` rather than errors. ~22 rows in the split fall here.
+
 ## Assembly-only / zero-portal-record accessions
 
 A few curated accessions return **no** portal-visible reads or samples (e.g. `PRJNA565795`,

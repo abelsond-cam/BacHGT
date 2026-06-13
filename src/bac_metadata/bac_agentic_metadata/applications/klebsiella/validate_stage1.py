@@ -51,30 +51,93 @@ def _explode_accessions(study_level: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _classify(row: pd.Series) -> tuple[str, str]:
+    """Classify one curation row against ENA, using both the taxon (lower) and total (upper) bound.
+
+    ``ena_klebsiella_samples`` (scientific_name match) under-counts Klebsiella for broad projects,
+    so it is a lower bound; ``ena_total_samples`` is the upper bound. Returns (class, note).
+    """
+    prior = row["prior_isolates_in_study"]
+    taxon = row["ena_klebsiella_samples"]
+    total = row["ena_total_samples"]
+    cov = row["coverage"]  # prior / taxon
+    n_papers = row.get("n_papers_on_this_accession")
+    children = row.get("n_child_studies")
+
+    if str(row.get("umbrella_suspected")).lower() in {"true", "1"}:
+        return "umbrella", (
+            f"umbrella accession ({int(children) if pd.notna(children) else '?'} child studies) — "
+            "one paper cannot cover it; split into substudies"
+        )
+    if pd.isna(prior):
+        return "no_curated_count", "sheet has no isolates_in_study for this row — nothing to compare"
+    if pd.isna(total) or total == 0:
+        return "review_no_ena_records", (
+            f"prior curated {int(prior)} but ENA has no records under this accession "
+            "(assembly-only / wrong accession) — manual check"
+        )
+    if prior > total * 1.02:
+        return "review_prior_exceeds_ena", (
+            f"prior curated {int(prior)} > ENA total {int(total)} under this accession — isolates likely "
+            "under other accessions / RefSeq-only / a multi-accession paper; manual check"
+        )
+    if prior > taxon:  # taxon < prior <= total: ENA holds the records but under-labels Klebsiella
+        return "ena_underlabels_klebsiella", (
+            f"ENA holds {int(total)} records but labels only {int(taxon)} as Klebsiella by scientific_name; "
+            f"the curation's {int(prior)} are present but under-labelled — taxon sizing is a lower bound here"
+        )
+    if pd.notna(n_papers) and n_papers > 1:
+        return "shared_accession", (
+            f"accession shared by {int(n_papers)} curated papers; this paper is one slice "
+            f"(curated {int(prior)} of {int(taxon)} ENA Klebsiella, coverage {cov:.2f})"
+        )
+    if pd.notna(cov) and cov >= 0.9:
+        return "whole_project", f"engine confirms paper ≈ whole project (curated {int(prior)} ≈ ENA Klebsiella {int(taxon)})"
+    return "subsample", (
+        f"paper is a subsample of a larger project (curated {int(prior)} of {int(taxon)} "
+        f"ENA Klebsiella, coverage {cov:.2f}) — e.g. rolling-surveillance deposit"
+    )
+
+
 def _sizing_reconcile(stage1: pd.DataFrame, study_level: pd.DataFrame) -> pd.DataFrame:
-    """Join engine sizing to the trusted columns and compute per-row agreement."""
+    """Reconcile prior curation (sheet) against what the engine found in ENA, per curation row.
+
+    Emits, per row: the prior finding (``prior_*`` from the sheet), the engine finding (``ena_*``
+    from the live ENA interrogation), coverage, ``n_papers_on_this_accession``, and an explicit
+    ``classification`` + ``note`` contrasting the two. This is the validation record.
+    """
     mapping = _explode_accessions(study_level)
-    # Keep only the engine columns the reconcile needs, so split-carried columns
-    # (paper_short_title, ...) don't collide with the mapping's columns on merge.
-    needed = ["study_accession", "ena_taxon_samples", *(["n_held"] if "n_held" in stage1.columns else [])]
+    # How many distinct curation rows cite each accession (an accession shared by >1 paper
+    # explains low per-paper coverage).
+    papers_per_acc = mapping.groupby("study_accession")["row_id"].nunique().rename("n_papers_on_this_accession")
+    mapping = mapping.merge(papers_per_acc, on="study_accession")
+
+    # Keep only the engine columns the reconcile needs, so split-carried columns don't collide.
+    eng_cols = ["ena_taxon_samples", "ena_total_runs", "ena_total_samples", "n_child_studies", "umbrella_suspected"]
+    needed = ["study_accession", *[c for c in eng_cols if c in stage1.columns]]
     merged = stage1[needed].merge(mapping, on="study_accession", how="left")
+
+    def _sum(col: str):
+        return (col, lambda s: pd.to_numeric(s, errors="coerce").sum())
 
     agg = {
         "paper_short_title": ("paper_short_title", "first"),
-        "isolates_in_study": ("isolates_in_study", "first"),
-        "kleb_assemblies_in_paper": ("kleb_assemblies_in_paper", "first"),
+        "prior_isolates_in_study": ("isolates_in_study", "first"),
+        "prior_kleb_assemblies_in_paper": ("kleb_assemblies_in_paper", "first"),
         "n_accessions": ("study_accession", "nunique"),
-        "ena_taxon_samples_sum": ("ena_taxon_samples", lambda s: pd.to_numeric(s, errors="coerce").sum()),
+        "n_papers_on_this_accession": ("n_papers_on_this_accession", "max"),
+        "ena_klebsiella_samples": _sum("ena_taxon_samples"),
+        "ena_total_samples": _sum("ena_total_samples"),
+        "ena_total_runs": _sum("ena_total_runs"),
+        "n_child_studies": ("n_child_studies", lambda s: pd.to_numeric(s, errors="coerce").max()),
+        "umbrella_suspected": ("umbrella_suspected", lambda s: s.astype(str).str.lower().isin({"true", "1"}).any()),
     }
-    if "n_held" in merged.columns:
-        agg["n_held_sum"] = ("n_held", lambda s: pd.to_numeric(s, errors="coerce").sum())
     per_row = merged.groupby("row_id").agg(**agg).reset_index()
-    # ena_taxon_samples = the project's taxon-of-interest size (denominator); isolates_in_study =
-    # what the curation/paper covered. Their ratio is coverage, not an error. A holding that
-    # exceeds the project taxon count is a genuine anomaly worth eyeballing (e.g. RefSeq genomes
-    # under other accessions, or samples whose scientific_name is unset in ENA).
-    per_row["coverage"] = per_row["isolates_in_study"] / per_row["ena_taxon_samples_sum"]
-    per_row["holding_exceeds_project"] = per_row["isolates_in_study"] > per_row["ena_taxon_samples_sum"]
+
+    per_row["coverage"] = per_row["prior_isolates_in_study"] / per_row["ena_klebsiella_samples"]
+    classified = per_row.apply(_classify, axis=1, result_type="expand")
+    per_row["classification"] = classified[0]
+    per_row["note"] = classified[1]
     return per_row
 
 
@@ -132,35 +195,62 @@ def _umbrella_section(stage1: pd.DataFrame) -> list[str]:
     ]
 
 
+_CLASS_BLURB = {
+    "whole_project": "engine confirms the prior paper ≈ the whole ENA project",
+    "subsample": "prior paper covers a subsample of a larger ENA project",
+    "shared_accession": "one ENA accession is split across several prior papers",
+    "umbrella": "one ENA accession is many substudies (needs splitting)",
+    "ena_underlabels_klebsiella": "ENA has the records but labels fewer as Klebsiella by scientific_name; "
+    "curation more complete (taxon sizing is a lower bound) — not a curation error",
+    "review_prior_exceeds_ena": "prior curated MORE than ENA holds under this accession — review",
+    "review_no_ena_records": "ENA has no records under the accession — review",
+    "no_curated_count": "sheet has no isolates_in_study — nothing to compare",
+}
+
+
 def _write_markdown(out_md: Path, per_row: pd.DataFrame, comp: pd.DataFrame, stage1: pd.DataFrame) -> None:
-    """Write a short human-readable agreement summary."""
-    lines = ["# Stage 1 validation summary", "", *_umbrella_section(stage1)]
+    """Write the prior-vs-found validation summary."""
+    n = len(per_row)
+    lines = [
+        "# Stage 1 validation summary",
+        "",
+        "## What this validates",
+        f"For each of the **{n} curated rows** we compare the **prior finding** (your Google Sheet "
+        "curation: `prior_isolates_in_study`) against **what the engine independently found in ENA** "
+        "(`ena_klebsiella_samples`, `ena_total_runs`, `n_child_studies` — all from the live ENA "
+        "`read_run` interrogation, not the sheet). `coverage = prior_isolates / ena_klebsiella`. The "
+        "`classification` + `note` columns in the TSV say, per row, how the two relate. This is the "
+        "check that the engine reproduces the manual EBI-sizing step correctly.",
+        "",
+        "## Verdict — classification breakdown",
+        "```",
+        per_row["classification"].value_counts().to_string(),
+        "```",
+    ]
+    for cls, blurb in _CLASS_BLURB.items():
+        cnt = int((per_row["classification"] == cls).sum())
+        if cnt:
+            lines.append(f"- **{cls}** ({cnt}): {blurb}")
+    lines.append("")
+    lines += _umbrella_section(stage1)
+
     cov = per_row["coverage"].dropna()
     if len(cov):
-        anomalies = per_row[per_row["holding_exceeds_project"].fillna(False)]
+        show = ["paper_short_title", "prior_isolates_in_study", "ena_klebsiella_samples", "ena_total_samples", "coverage", "note"]
         lines += [
-            "## Sizing (curation holding vs ENA project taxon count, per curation row)",
-            "`ena_taxon_samples` is the project's Klebsiella size (paper-coverage denominator); "
-            "`isolates_in_study` is what the curation covered. `coverage = isolates / ena_taxon`.",
-            f"- rows compared: {len(cov)}",
-            f"- median coverage: {cov.median():.2f}",
-            f"- whole-project (coverage >= 0.9): {(cov >= 0.9).mean():.0%}; "
-            f"subsample (< 0.5): {(cov < 0.5).mean():.0%}",
-            f"- anomalies (holding > project taxon count): {len(anomalies)}",
-            "",
-            "### Lowest coverage (most subsampled)",
+            "## Lowest coverage (prior paper vs what ENA holds)",
             "```",
-            per_row.reindex(cov.sort_values().index)
-            .head(10)[["paper_short_title", "isolates_in_study", "ena_taxon_samples_sum", "coverage"]]
-            .to_string(index=False),
+            per_row.reindex(cov.sort_values().index).head(10)[show].to_string(index=False),
             "```",
             "",
         ]
+        anomalies = per_row[per_row["classification"].isin(["review_prior_exceeds_ena", "review_no_ena_records"])]
         if len(anomalies):
             lines += [
-                "### Anomalies — holding exceeds ENA project taxon count",
+                "## Review queue — prior curated count exceeds / disagrees with ENA",
                 "```",
-                anomalies[["paper_short_title", "isolates_in_study", "ena_taxon_samples_sum"]].to_string(index=False),
+                anomalies[["paper_short_title", "prior_isolates_in_study", "ena_klebsiella_samples", "ena_total_samples", "note"]]
+                .to_string(index=False),
                 "```",
                 "",
             ]
