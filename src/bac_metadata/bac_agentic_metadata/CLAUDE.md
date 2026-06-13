@@ -42,7 +42,7 @@ bac_agentic_metadata/
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/make_kleb_splits.py
 ```
 
-Seeded and reproducible; built from the committed frozen CSV snapshot (not the live sheet).
+Seeded and reproducible; built from the committed CSV snapshot of the (stable) curation sheet.
 
 ## Environment
 

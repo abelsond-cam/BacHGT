@@ -4,8 +4,8 @@ Stage 0 deliverable for the agentic-metadata engine. The *project accession*
 (``study_accession``) is the unit of work, but folds are assigned at **paper-group**
 level (all accessions of one paper share a fold) so no paper's text can inform both the
 training material and the sealed test set. The split is seeded and stratified by
-sample-count bucket, and is built from a *frozen* CSV snapshot of the curation sheet so
-the folds never drift under live edits.
+sample-count bucket, and is built from a committed CSV snapshot of the (stable, completed)
+curation sheet so the split is fully reproducible from the repo alone.
 
 Run::
 

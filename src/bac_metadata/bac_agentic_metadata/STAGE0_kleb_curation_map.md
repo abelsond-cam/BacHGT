@@ -22,11 +22,13 @@ The fundamental unit is the **ENA project accession** (`study_accession`, e.g.
    `filter_study_size = 131` in [`../pp/metadata_collation.py`](../pp/metadata_collation.py):
    unreviewed studies above it are dropped from the cohort; reviewed studies (any size)
    are kept.
-3. **Find the best paper** describing each accession's cohort. One paper can describe
+3. **Review EBI project data** - Access the project at https://www.ebi.ac.uk/ena/browser/view/PRJNA339843.  Check how many records are in the project (in https://www.ebi.ac.uk/ena/browser/view/PRJNA339843 is is 225) and how many of these are 'klebsiella' under 'scientific name'.  This means that we know, when finding a paper describing the project, whether the paper is describing all samples in the project or a subsample.
+4. **Find the best paper** describing each accession's cohort. One paper can describe
    several accessions (e.g. `PRJNA339843` + `PRJNA433394` are one ARGONAUT-IV study;
    `neonatal_klebsiella` spans four accessions). The paper is *found per accession*, not
-   the entry point.
-4. **Grade the paper** to assign cohort-level attributes back to the accession (§4).
+   the entry point. The project data is typically referenced at the end of the paper where it will state the repositories the data was deposited under.
+   There may be multiple papers that reference the study.  In this case the ideal paper will be the one that describes the largest part of the study accession (which can be assessed using the numbers in step 3, above)
+5. **Grade the paper** to assign cohort-level attributes back to the accession (§4).
 
 ## 2. The curation record: one Google Sheet, two tabs
 
@@ -38,7 +40,7 @@ The fundamental unit is the **ENA project accession** (`study_accession`, e.g.
   **Column trust map (important):**
   | Columns | Status |
   |---|---|
-  | A–K (`paper_title`, `paper_short_title`, `paper_link`, `Curator`, `kleb_assemblies_in_paper`, `isolates_in_study`, `study_accessions`, `amr_study`/`sample_selection`, `study_setting`, `death_metadata`, `cohort_age`/`newborn_cohort`) | **Usable as ground truth** — but imperfect (paper-title typos, improvable values). |
+  | A–K (`paper_title`, `paper_short_title`, `paper_link`, `Curator`, `kleb_assemblies_in_paper`, `isolates_in_study`, `study_accessions`, `amr_study`, `study_setting`, `death_metadata`, `cohort_age`) | **Usable as ground truth** — but imperfect (paper-title typos, improvable values). |
   | `ATB_*_prop`, `*_added` (`location_added`, `date_added`, …) | **NOT ground truth** — these were David's *work-tracking* of his own progress. |
   | Free-text notes (`Outstanding issues…`, `metadata to check`, `Free-text comments`, …) | Curator notes; useful colour, not gradeable labels. |
 
@@ -47,13 +49,12 @@ The fundamental unit is the **ENA project accession** (`study_accession`, e.g.
   `ATB_*_prop`/`*_added` columns, to judge completeness/backfill). Read at build time via
   the repo's own Sheets API auth (the claude.ai Drive MCP only renders the primary tab).
 
-> **Schema drift to know about.** The frozen snapshot committed for the split
-> (`applications/klebsiella/data/study_level_metadata_all_combined_v1.0_20260105.csv`,
-> 2026-01-05) uses the *older* column names `sample_selection` / `newborn_cohort` /
-> `ATB_location_prop`; the current live sheet uses `amr_study` / `study_setting` /
-> `cohort_age`. The split only needs `study_accessions` + `isolates_in_study` +
-> `paper_short_title`, which are stable across both. Re-freeze a current snapshot before
-> the validation stages so attribute ground truth matches the live sheet.
+> **Source of truth.** The Google Sheet is complete and stable — it is not being further
+> edited, and can itself serve as the source of truth. For reproducibility we additionally
+> committed a frozen CSV snapshot of it
+> (`applications/klebsiella/data/study_level_metadata_all_combined_v1.0_20260105.csv`) and
+> build the split from that. This snapshot is the agreed guide ground truth to train and
+> test against; we may refine it as the model improves, but it is fine as-is for now.
 
 ## 3. How study-level metadata is keyed and ingested (code)
 
