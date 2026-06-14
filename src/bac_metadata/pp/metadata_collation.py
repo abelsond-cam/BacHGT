@@ -393,8 +393,24 @@ def _authenticate_google():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive.file",
     ]
-    CREDENTIALS_FILE = Path("/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/Aaron Weimann's files - project_k/data/raw/google/client_secret_766063885615-5r4chm0o2635kqjc2fe18coak2a70ugc.apps.googleusercontent.com.json")
-    TOKEN_FILE = Path(__file__).parent / "token.json"
+    # Resolve the OAuth client secret OFF OneDrive (OneDrive dehydrates/corrupts files):
+    # env BAC_GOOGLE_CLIENT_SECRET -> ~/.config/bac_metadata/client_secret.json -> legacy OneDrive path.
+    # Shares the config dir + token with bac_agentic_metadata.engine.gsheet so one login serves both.
+    CONFIG_DIR = Path(os.environ.get("BAC_GOOGLE_CONFIG_DIR", Path.home() / ".config" / "bac_metadata"))
+    _LEGACY_ONEDRIVE_SECRET = Path(
+        "/Users/davidabelson/Library/CloudStorage/OneDrive-UniversityofCambridge/"
+        "Aaron Weimann's files - project_k/data/raw/google/"
+        "client_secret_766063885615-5r4chm0o2635kqjc2fe18coak2a70ugc.apps.googleusercontent.com.json"
+    )
+    _env_secret = os.environ.get("BAC_GOOGLE_CLIENT_SECRET")
+    if _env_secret:
+        CREDENTIALS_FILE = Path(_env_secret)
+    elif (CONFIG_DIR / "client_secret.json").exists():
+        CREDENTIALS_FILE = CONFIG_DIR / "client_secret.json"
+    else:
+        CREDENTIALS_FILE = _LEGACY_ONEDRIVE_SECRET
+    TOKEN_FILE = Path(os.environ.get("BAC_GOOGLE_TOKEN", CONFIG_DIR / "token.json"))
+    TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
     
     creds = None
     
