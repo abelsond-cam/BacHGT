@@ -78,10 +78,12 @@ the species — while `ena_total_samples` is the **upper bound**. Classification
 unset VIRTUAL_ENV   # use the project .venv, not a stale system one
 # Sizing only (local, ~a few minutes for the 156-accession split):
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode sizing-only
-# Full (also computes completeness from the local collated ATB data):
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode full \
-  --metadata-file1 <local TSV1> --metadata-file2 <local TSV2> --metadata-file3 <local TSV3> \
-  --qc-excel <local QC.xlsx> --ena-project-dir <local ready_to_merge dir>
+# Full (also computes completeness from the collated ATB data). On the HPC this is zero-config;
+# locally, point the project_k root + user-dir at the OneDrive mirror via two env vars — the same
+# command then resolves all collation inputs identically (no per-file --metadata-* overrides):
+BACHGT_PROJECT_K_ROOT="…/Aaron Weimann's files - project_k" BACHGT_PROJECT_K_USER=data \
+  uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode full
+# (per-file --metadata-file1/2/3 --qc-excel --ena-project-dir overrides still exist for ad-hoc paths)
 # Validate:
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_stage1.py
 ```
@@ -130,5 +132,14 @@ reproduce in later stages. Sanity holds: `base ≤ post-merge` (merge only adds)
 
 The collation inputs are identical on HPC (`<project_k>/david/raw/…`) and the local OneDrive
 mirror (`…/project_k/data/raw/…`) — same sizes/mtimes, 98 `ready_to_merge` files both sides. The
-full run above was local; the only non-uniformity is the path root (a future tidy-up via
-`BACHGT_PROJECT_K_ROOT`, the pattern `path_resolve.resolve_v2_path` already uses).
+only non-uniformity is the path root **and** the per-user segment (`david` on HPC, `data` in the
+OneDrive share). Both are now wired through `path_resolve.project_k_user_dir()`: `metadata_collation.py`'s
+path constants build on `<BACHGT_PROJECT_K_ROOT>/<BACHGT_PROJECT_K_USER>` (defaults
+`/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw` + `david`, so the HPC needs no config). A local
+run sets `BACHGT_PROJECT_K_ROOT=…/project_k` and `BACHGT_PROJECT_K_USER=data`; the identical command
+then resolves every collation input on either machine.
+
+The Google OAuth `client_secret` is resolved **off OneDrive** too — env `BAC_GOOGLE_CLIENT_SECRET`
+→ `~/.config/bac_metadata/client_secret.json` → legacy OneDrive path — by both
+`engine/gsheet.py` and `pp/metadata_collation._authenticate_google`, sharing one token at
+`~/.config/bac_metadata/token.json`.

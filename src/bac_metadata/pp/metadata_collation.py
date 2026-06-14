@@ -23,21 +23,26 @@ from pandas.io.common import dedup_names
 import matplotlib.pyplot as plt
 import numpy as np
 
+from bac_metadata.path_resolve import project_k_user_dir
 from bac_metadata.pp.metadata_curation import report_ena_column
 
 
-METADATA_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata"
+# All collation inputs/outputs live under the project_k per-user data dir. Wiring them
+# through ``project_k_user_dir`` lets the same command run on the HPC (zero config) and on
+# the local OneDrive mirror (set BACHGT_PROJECT_K_ROOT + BACHGT_PROJECT_K_USER=data).
+_DATA_DIR = project_k_user_dir()
+METADATA_DIR = str(_DATA_DIR / "raw" / "metadata")
 ENA_METADATA_FILE1 = f"{METADATA_DIR}/ena_metadata_klebsiella_with_header_filtered.tsv"
 ENA_METADATA_FILE2 = f"{METADATA_DIR}/ena_metadata_klebsiella_with_header_filtered_r02_format.20240801.tsv"
 ENA_METADATA_FILE3 = f"{METADATA_DIR}/bakrep_klebsiella_genus_extra_ena_metadata.tsv"
-ENA_PROJECT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/study_level_metadata/ENA_projects"
-OUTPUT_DIR = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/processed/metadata"
+ENA_PROJECT_DIR = f"{METADATA_DIR}/study_level_metadata/ENA_projects"
+OUTPUT_DIR = str(_DATA_DIR / "processed" / "metadata")
 # Study metadata can be either a CSV file path or a Google Sheet URL/ID
 STUDY_METADATA_GOOGLE_SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 STUDY_METADATA_SHEET_NAME = "study_level"
 STUDY_METADATA_FILE = None  # Set to None to use Google Sheet, or provide CSV file path
-QC_EXCEL_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/klebsiella_qc_NCTC.xlsx"
-KLEBNET_METADATA_FILE = "/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/raw/metadata/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
+QC_EXCEL_FILE = str(_DATA_DIR / "raw" / "klebsiella_qc_NCTC.xlsx")
+KLEBNET_METADATA_FILE = f"{METADATA_DIR}/study_level_metadata/KlebNET-GSP_Metadata_Repository_Database.csv"
 
 KEY_COLUMNS = ["collection_date", "country", "isolation_source", "host"]
 DEBUG_SAMPLE_ACCESSIONS = ["SAMD00112425"]

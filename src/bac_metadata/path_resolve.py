@@ -33,6 +33,11 @@ from pathlib import Path
 # that runs on a local mount or in a container.
 DEFAULT_PROJECT_K_ROOT = Path("/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw")
 
+# Per-user data subdirectory under the project_k root. On the HPC RDS this is
+# ``david``; the local OneDrive mirror of Aaron's share names it ``data`` instead.
+# Override via env ``BACHGT_PROJECT_K_USER`` (e.g. ``data`` for a local run).
+DEFAULT_PROJECT_K_USER = "david"
+
 
 def project_k_root(root: str | Path | None = None) -> Path:
     """Return the project_k root: explicit arg → env var → DEFAULT.
@@ -48,6 +53,25 @@ def project_k_root(root: str | Path | None = None) -> Path:
     if env:
         return Path(env)
     return DEFAULT_PROJECT_K_ROOT
+
+
+def project_k_user_dir(root: str | Path | None = None, user: str | None = None) -> Path:
+    """Return the per-user data dir under project_k (``<root>/<user>``).
+
+    The collation/QC scripts read inputs and write outputs beneath this directory,
+    so wiring their path constants through here lets the *same command* run on the
+    HPC and on a local mirror by setting environment variables only.
+
+    Resolution:
+      * root — see :func:`project_k_root` (``BACHGT_PROJECT_K_ROOT``).
+      * user — ``user`` arg → env ``BACHGT_PROJECT_K_USER`` → ``"david"`` (HPC default).
+
+    HPC needs no configuration. A local run sets both ``BACHGT_PROJECT_K_ROOT``
+    (the OneDrive ``…/project_k`` dir) and ``BACHGT_PROJECT_K_USER=data``.
+    """
+    if user is None:
+        user = os.environ.get("BACHGT_PROJECT_K_USER", DEFAULT_PROJECT_K_USER)
+    return project_k_root(root) / user
 
 
 def resolve_v2_path(value: object, root: str | Path | None = None) -> Path | None:
