@@ -52,6 +52,39 @@ def mine_ids_from_text(text: str, *, cache_dir=None) -> list[Candidate]:
     return cands
 
 
+def _cand_key(c: Candidate) -> str:
+    """Stable dedup/agreement key for a candidate (doi → pmcid → pmid → title prefix)."""
+    return (
+        (c.doi and f"doi:{c.doi.lower()}")
+        or (c.pmcid and c.pmcid.upper())
+        or (c.pmid and f"pmid:{c.pmid}")
+        or c.title.lower()[:80]
+    )
+
+
+def _prefer_published(deduped: dict[str, Candidate], channels: dict[str, set[str]], *, cache_dir) -> None:
+    """Swap every preprint candidate for its published version in place (always favour published).
+
+    For each preprint we resolve the peer-reviewed article (bioRxiv/medRxiv ``published`` DOI, else a
+    title-matched Europe PMC sibling); when found, the preprint is dropped, its channel provenance is
+    carried over to the published id, and ``published_version`` is recorded as a contributing channel.
+    Preprints with no discoverable publication are left untouched.
+    """
+    for key in list(deduped):
+        c = deduped[key]
+        if not europepmc.is_preprint(c):
+            continue
+        pub = europepmc.published_version_of(c, cache_dir=cache_dir)
+        if pub is None:
+            continue
+        pub_key = _cand_key(pub)
+        provenance = channels.pop(key, set())
+        del deduped[key]
+        channels.setdefault(pub_key, set()).update(provenance)
+        channels[pub_key].add("published_version")
+        deduped.setdefault(pub_key, pub)
+
+
 def gather_candidates(
     accession: str,
     ena_title: str,
@@ -61,7 +94,9 @@ def gather_candidates(
 ) -> tuple[list[Candidate], dict[str, set[str]]]:
     """Union the four retrieval channels; dedup by id; return (candidates, id→channels map).
 
-    The channel map records every source that surfaced each id, for cross-source agreement.
+    The channel map records every source that surfaced each id, for cross-source agreement. Preprints
+    are then promoted to their published versions (:func:`_prefer_published`) so the LLM never has to
+    choose a preprint when the peer-reviewed article exists.
     """
     raw: list[Candidate] = []
     raw += mine_ids_from_text(f"{ena_description}\n{ena_title}", cache_dir=cache_dir)
@@ -73,12 +108,11 @@ def gather_candidates(
     deduped: dict[str, Candidate] = {}
     channels: dict[str, set[str]] = {}
     for c in raw:
-        key = (c.doi and f"doi:{c.doi.lower()}") or (c.pmcid and c.pmcid.upper()) or (c.pmid and f"pmid:{c.pmid}")
-        if not key:
-            key = c.title.lower()[:80]
+        key = _cand_key(c)
         if key not in deduped:
             deduped[key] = c
         channels.setdefault(key, set()).add(c.found_via)
+    _prefer_published(deduped, channels, cache_dir=cache_dir)
     # Attach the merged channel set to each kept candidate for display.
     for key, c in deduped.items():
         c.found_via = ",".join(sorted(channels[key]))
@@ -216,7 +250,8 @@ def find_paper(
         "or cite the data. You may ONLY choose from the numbered candidates provided; never invent "
         "a paper or identifier. Choose the one whose scope matches the project: the taxon, the "
         "approximate sample count, and the study description. Prefer the original describing study "
-        "(usually the earliest among several that match). If no candidate plausibly describes this "
+        "(usually the earliest among several that match); but when a preprint and its peer-reviewed "
+        "published version both appear, choose the PUBLISHED version. If no candidate plausibly describes this "
         "project, set none_found=true and chosen_index=null. Use find_confidence honestly: 'high' "
         "only when a candidate clearly describes this exact cohort. Set coverage_estimate to the "
         "number of taxon-of-interest samples the chosen paper describes (null if unclear). flags: "
@@ -254,9 +289,7 @@ def find_paper(
     if chosen is not None:
         verified = verify_pick(chosen, accession, cache_dir=fulltext_cache)
         if channels:
-            key = (chosen.doi and f"doi:{chosen.doi.lower()}") or (chosen.pmcid and chosen.pmcid.upper()) \
-                or (chosen.pmid and f"pmid:{chosen.pmid}") or chosen.title.lower()[:80]
-            sources_agreeing = len(channels.get(key, set()))
+            sources_agreeing = len(channels.get(_cand_key(chosen), set()))
         # `verified` is a trust SIGNAL, not a gate: describing papers often cite the accession only
         # in supplements, which the fetched full-text misses (observed for Genome Medicine/BMC), so
         # verified=False alone must NOT disqualify a pick (it would drop correct matches). Abstain
@@ -312,32 +345,44 @@ def adjudicate_find(
     curated_text: str,
     model: str | None = None,
 ) -> dict:
-    """Adjudicate a finder mismatch: which of the two papers actually describes the project.
+    """Adjudicate a finder mismatch: are the two the same paper, and which describes the project.
 
     Used by the validator when the found paper ≠ the curated ``paper_link``. The curated link is
     NOT assumed correct (it may be wrong, paywalled, or one of several). Returns a dict with
-    ``verdict`` (found_correct / curated_correct / both_describe / neither), a verbatim
-    ``justification_quote``, ``reasoning``, and any ``rule_gap``.
+    ``same_paper`` (the two links are the same work — incl. a preprint vs its published version, or
+    two URLs for one article), ``same_paper_reason``, ``verdict`` (found_correct / curated_correct /
+    both_describe / neither), a verbatim ``justification_quote``, ``reasoning``, and any ``rule_gap``.
+
+    ``same_paper`` is the key signal the validator wants: a "mismatch" that is merely the same paper
+    under a different link/DOI is not a finding error — only a genuinely different (or wrong) paper is.
     """
     sizing_row = sizing_row or {}
     schema = {
         "type": "object",
         "properties": {
+            "same_paper": {"type": "boolean"},
+            "same_paper_reason": {"type": "string"},
             "verdict": {"type": "string", "enum": _FIND_VERDICTS},
             "justification_quote": {"type": "string"},
             "reasoning": {"type": "string"},
             "rule_gap": {"type": "string"},
         },
-        "required": ["verdict", "justification_quote", "reasoning", "rule_gap"],
+        "required": ["same_paper", "same_paper_reason", "verdict", "justification_quote", "reasoning", "rule_gap"],
         "additionalProperties": False,
     }
     system = (
-        "You are an adversarial adjudicator deciding which paper actually DESCRIBES a bacterial-"
-        "genomics project (the primary study that generated/deposited its genomes), vs a paper that "
-        "merely reuses/cites the data. Judge ONLY from the provided text + ENA metadata. Neither "
-        "paper is assumed correct — the hand-curated one may be wrong or one of several. Quote "
-        "verbatim from whichever paper decides it. If the deciding evidence is missing, say so via "
-        "verdict=neither. rule_gap: note any systematic finder weakness this case reveals (else empty)."
+        "You are an adversarial adjudicator comparing two paper references for one bacterial-genomics "
+        "project. Do TWO things. (1) same_paper: decide whether PAPER A and PAPER B are the SAME work "
+        "— identical article, or a preprint and its peer-reviewed publication, or two URLs/DOIs/IDs "
+        "for one article (compare titles, authors, cohort, sample counts, findings — not just the "
+        "link). A different DOI does NOT mean a different paper. Give same_paper_reason briefly. "
+        "(2) verdict: which paper actually DESCRIBES this project (the primary study that "
+        "generated/deposited its genomes) vs one that merely reuses/cites the data — found_correct, "
+        "curated_correct, both_describe (incl. when same_paper), or neither. Judge ONLY from the "
+        "provided text + ENA metadata; neither paper is assumed correct (the hand-curated one may be "
+        "wrong or one of several). Quote verbatim from whichever paper decides it. If the deciding "
+        "evidence is missing, use verdict=neither. rule_gap: note any systematic finder weakness this "
+        "case reveals (else empty)."
     )
     taxon_n = sizing_row.get("ena_taxon_samples")
     user = (
@@ -346,7 +391,7 @@ def adjudicate_find(
         f"ENA taxon samples: {taxon_n}\n\n"
         f"PAPER A — {found_label}\n{(found_text or '(no text)')[:_ADJ_TEXT_CHARS]}\n\n"
         f"PAPER B — {curated_label}\n{(curated_text or '(no text)')[:_ADJ_TEXT_CHARS]}\n\n"
-        "Which paper describes THIS project? Return the structured object."
+        "Are A and B the same paper, and which one describes THIS project? Return the structured object."
     )
     return llm.complete_structured(
         system=system, user=user, json_schema=schema,

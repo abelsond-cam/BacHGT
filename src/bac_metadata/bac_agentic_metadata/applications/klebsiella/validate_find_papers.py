@@ -25,7 +25,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_metadata.bac_agentic_metadata.engine.fulltext import _resolve_identifier
+from bac_metadata.bac_agentic_metadata.engine.fulltext import (
+    _europepmc_search,
+    _resolve_identifier,
+    _search_query,
+)
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
@@ -61,6 +65,38 @@ def _curated_ids(paper_link: str) -> set[str]:
     return out
 
 
+def _epmc_triple(token: str) -> set[str]:
+    """Expand one id token (``pmid:`` / ``pmcid:`` / ``doi:``) to its full {pmid,pmcid,doi} set.
+
+    Cross-id canonicalization: one paper carries a PMID, a PMCID and a DOI, but a curated link
+    usually exposes only one of them. A single cached Europe PMC lookup recovers the other two so a
+    curated PubMed link matches a found DOI (etc.) for the same article.
+    """
+    if ":" not in token:
+        return set()
+    kind, value = token.split(":", 1)
+    query = _search_query(kind, value)
+    rec = _europepmc_search(query, FULLTEXT_CACHE) if query else None
+    if not rec:
+        return set()
+    out: set[str] = set()
+    if rec.get("pmid"):
+        out.add(f"pmid:{rec['pmid']}")
+    if rec.get("pmcid"):
+        out.add(f"pmcid:{str(rec['pmcid']).upper()}")
+    if rec.get("doi"):
+        out.add(f"doi:{str(rec['doi']).lower()}")
+    return out
+
+
+def _expand_via_epmc(tokens: set[str]) -> set[str]:
+    """Union the Europe PMC id-triple of every token (the cross-id canonicalization step)."""
+    out: set[str] = set()
+    for tok in tokens:
+        out |= _epmc_triple(tok)
+    return out
+
+
 def _found_ids(row: pd.Series) -> set[str]:
     """Id tokens for the finder's chosen paper."""
     out = set()
@@ -85,31 +121,71 @@ def _title_sim(a: str, b: str) -> float:
 
 
 def _gt_by_accession() -> dict[str, dict]:
-    """Per-accession curated GT: curated id set + paper_title + raw paper_link."""
+    """Per-accession curated GT, unioned across ALL curated rows for that study.
+
+    A study often has several curated paper rows (different outputs, or the same article under
+    different links). We union their id sets and keep every (title, link) so the finder is scored
+    against the *whole* curated set, not just whichever row happened to come first.
+    """
     snap = pd.read_csv(SNAPSHOT_PATH, dtype=str).fillna("")
     gt: dict[str, dict] = {}
     for _, r in snap.iterrows():
         link = r.get("paper_link", "").strip()
         ids = _curated_ids(link)
-        title = r.get("paper_title", "") or r.get("paper_short_title", "")
+        title = (r.get("paper_title", "") or r.get("paper_short_title", "")).strip()
         has_link = bool(link) and link.lower() not in ("na", "n/a", "none", "")
         for acc in ACCESSION_RE.findall(r.get("study_accessions", "")):
-            gt.setdefault(acc, {"curated_ids": ids, "paper_title": title, "paper_link": link, "has_link": has_link})
+            e = gt.setdefault(acc, {"papers": [], "curated_ids": set(), "has_link": False})
+            e["papers"].append({"title": title, "link": link, "has_link": has_link})
+            e["curated_ids"] |= ids
+            e["has_link"] = e["has_link"] or has_link
     return gt
 
 
 def _classify(row: pd.Series, gt: dict | None) -> str:
-    """Classify one found row against the curated GT."""
+    """Classify one found row against the (unioned) curated GT.
+
+    Match in three escalating ways: (1) raw id intersection against the union of all curated ids;
+    (2) cross-id canonicalization — expand both sides to full {pmid,pmcid,doi} triples via Europe
+    PMC and retry (only when the cheap check misses); (3) soft title match against ANY curated
+    title. Anything else is a true mismatch (handed to the adjudicator).
+    """
     if gt is None or not gt.get("has_link"):
         return "no_curated_link"
     if str(row.get("none_found")).lower() == "true":
         return "not_found"
     found = _found_ids(row)
-    if found & gt["curated_ids"]:
+    cur = gt["curated_ids"]
+    if found & cur:
         return "exact_match"
-    if _title_sim(row.get("chosen_title", ""), gt["paper_title"]) >= _TITLE_MATCH:
+    if (found | _expand_via_epmc(found)) & (cur | _expand_via_epmc(cur)):
+        return "exact_match"
+    chosen_title = row.get("chosen_title", "")
+    if any(_title_sim(chosen_title, p["title"]) >= _TITLE_MATCH for p in gt["papers"]):
         return "title_match"
     return "mismatch"
+
+
+def _curated_links(gt: dict) -> list[str]:
+    """Every curated link recorded for a study (deduped, link-bearing rows only)."""
+    return list(dict.fromkeys(p["link"] for p in gt.get("papers", []) if p["has_link"]))
+
+
+def _best_curated(chosen_title: str, gt: dict) -> dict:
+    """The curated paper (title, link) most title-similar to the found pick — the one to adjudicate."""
+    papers = [p for p in gt.get("papers", []) if p["has_link"]] or gt.get("papers", [])
+    if not papers:
+        return {"title": "", "link": ""}
+    return max(papers, key=lambda p: _title_sim(chosen_title, p["title"]))
+
+
+def _first_id(*vals: object) -> str | None:
+    """First value that is a real, non-empty id string (pandas reads blank TSV cells as NaN/"nan")."""
+    for v in vals:
+        s = str(v).strip()
+        if s and s.lower() != "nan":
+            return s
+    return None
 
 
 def _adjudicate_mismatches(mismatches: list[dict], model: str, backend: str) -> list[dict]:
@@ -124,7 +200,7 @@ def _adjudicate_mismatches(mismatches: list[dict], model: str, backend: str) -> 
     for m in mismatches:
         acc = m["study_accession"]
         study = study_title_and_description(acc, cache_dir=ENA_CACHE)
-        found_ref = m.get("chosen_pmcid") or m.get("chosen_doi") or m.get("chosen_pmid")
+        found_ref = _first_id(m.get("chosen_pmcid"), m.get("chosen_doi"), m.get("chosen_pmid"))
         found_ft = fetch_fulltext(str(found_ref), cache_dir=FULLTEXT_CACHE) if found_ref else None
         cur_ft = fetch_fulltext(m["paper_link"], cache_dir=FULLTEXT_CACHE) if m.get("paper_link") else None
         print(f"[adjudicate-find] {acc} found={found_ref} vs curated={m['paper_link'][:50]}", file=sys.stderr)
@@ -182,21 +258,23 @@ def main() -> None:
 
     # Mismatch + not_found lists (the actionable part).
     mismatch_rows = []
-    md.append("\n## Mismatches (found ≠ curated)\n")
+    md.append("\n## Mismatches (found ≠ any curated paper)\n")
     for _, r in df[df["category"] == "mismatch"].iterrows():
         g = gt.get(r["study_accession"], {})
+        links = _curated_links(g)
+        best = _best_curated(r.get("chosen_title", "") or "", g)
         md.append(f"- `{r['study_accession']}` found={r.get('chosen_doi') or r.get('chosen_pmcid') or r.get('chosen_pmid')} "
-                  f"(via {r.get('chosen_found_via')}, verified={r.get('verified')}) vs curated={g.get('paper_link','')[:60]!r}")
+                  f"(via {r.get('chosen_found_via')}, verified={r.get('verified')}) vs {len(links)} curated: {links}")
         mismatch_rows.append({
             "study_accession": r["study_accession"], "chosen_title": r.get("chosen_title"),
             "chosen_pmid": r.get("chosen_pmid"), "chosen_pmcid": r.get("chosen_pmcid"), "chosen_doi": r.get("chosen_doi"),
-            "paper_title": g.get("paper_title"), "paper_link": g.get("paper_link"),
+            "paper_title": best["title"], "paper_link": best["link"],
             "ena_taxon_samples": r.get("ena_taxon_samples"),
         })
     md.append("\n## Abstained (not_found, with a curated link)\n")
     for _, r in df[df["category"] == "not_found"].iterrows():
         g = gt.get(r["study_accession"], {})
-        md.append(f"- `{r['study_accession']}` (n_candidates={r.get('n_candidates')}) curated={g.get('paper_link','')[:60]!r}")
+        md.append(f"- `{r['study_accession']}` (n_candidates={r.get('n_candidates')}) curated={_curated_links(g)}")
 
     (DATA_DIR / "find_validation_report.md").write_text("\n".join(md) + "\n")
     df[["study_accession", "fold", "category", "chosen_found_via", "verified", "find_confidence",
@@ -207,19 +285,36 @@ def main() -> None:
     if args.adjudicate and mismatch_rows:
         print(f"Adjudicating {len(mismatch_rows)} mismatches with {args.adjudicate_model}", file=sys.stderr)
         adjs = _adjudicate_mismatches(mismatch_rows, args.adjudicate_model, args.adjudicate_backend)
-        amd = ["# Stage 2B find-adjudication — found vs curated on mismatches\n"]
         from collections import Counter
-        amd.append(f"Adjudicated {len(adjs)}. Verdicts: {dict(Counter(a['adj_verdict'] for a in adjs))}.\n")
+
+        def _is_same(a: dict) -> bool:
+            return str(a.get("adj_same_paper")).lower() == "true"
+
+        # A "mismatch" the adjudicator rules is the SAME paper (different link/DOI, or preprint vs
+        # published) is not a finding error — fold it back in for an adjudicated accuracy.
+        same = sum(_is_same(a) for a in adjs)
+        found_or_both = sum(a.get("adj_verdict") in ("found_correct", "both_describe") for a in adjs if not _is_same(a))
+        adj_correct = correct + same + found_or_both
+        adj_acc = adj_correct / denom if denom else float("nan")
+
+        amd = ["# Stage 2B find-adjudication — found vs curated on mismatches\n"]
+        amd.append(f"Adjudicated {len(adjs)}. same_paper={same} (link/DOI variants, not errors); "
+                   f"verdicts: {dict(Counter(a['adj_verdict'] for a in adjs))}.\n")
+        amd.append(f"## Adjudicated find-accuracy: {adj_acc:.2f}  ({adj_correct}/{denom}) — folding in "
+                   f"{same} same-paper variants + {found_or_both} where the found paper is the correct "
+                   "(or a co-)describing study.\n")
         for a in adjs:
-            amd.append(f"\n## `{a['study_accession']}` — verdict {a['adj_verdict']}")
+            same_tag = "SAME PAPER" if _is_same(a) else a["adj_verdict"]
+            amd.append(f"\n## `{a['study_accession']}` — {same_tag}")
             amd.append(f"- found: {a.get('chosen_title')}  |  curated: {a.get('paper_title')}")
+            amd.append(f"- same_paper={a.get('adj_same_paper')} — {a.get('adj_same_paper_reason','')}")
             amd.append(f"- justification: {a.get('adj_justification_quote','')!r}")
             amd.append(f"- reasoning: {a.get('adj_reasoning','')}")
-            if a.get("adj_rule_gap", "").strip():
+            if str(a.get("adj_rule_gap", "")).strip():
                 amd.append(f"- ⚠️ rule_gap: {a['adj_rule_gap']}")
         (DATA_DIR / "find_adjudication_report.md").write_text("\n".join(amd) + "\n")
         pd.DataFrame(adjs).to_csv(DATA_DIR / "find_adjudication_report.tsv", sep="\t", index=False)
-        print(f"Wrote find_adjudication_report.{{md,tsv}} ({len(adjs)} adjudications)", file=sys.stderr)
+        print(f"Wrote find_adjudication_report.{{md,tsv}} (adjudicated accuracy {adj_acc:.2f})", file=sys.stderr)
 
 
 if __name__ == "__main__":

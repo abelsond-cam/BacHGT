@@ -20,10 +20,16 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass
+from difflib import SequenceMatcher
 
 from . import http_utils
 
 EUROPEPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest"
+#: bioRxiv/medRxiv "details" API — exposes a ``published`` DOI once a preprint is published.
+BIORXIV_API = "https://api.biorxiv.org/details"
+_PREPRINT_DOI_RE = re.compile(r"^10\.1101/", re.IGNORECASE)
+#: Title similarity above which a non-preprint Europe PMC hit is accepted as the published version.
+_PUBLISHED_TITLE_SIM = 0.90
 
 
 @dataclass
@@ -121,3 +127,74 @@ def candidates_by_pmids(pmids: list[str], *, cache_dir=None) -> list[Candidate]:
     clause = " OR ".join(f"EXT_ID:{p}" for p in pmids)
     query = f"({clause}) AND SRC:MED"
     return _search(query, cache_dir=cache_dir, page_size=len(pmids), found_via="ncbi_bioproject")
+
+
+# --------------------------------------------------------------------------------------------- #
+# Preprint → published promotion (always favour the peer-reviewed version).
+# --------------------------------------------------------------------------------------------- #
+def is_preprint(c: Candidate) -> bool:
+    """True if a candidate is a preprint (Europe PMC ``source`` PPR, or a bioRxiv/medRxiv DOI)."""
+    return (c.source or "").upper() == "PPR" or bool(c.doi and _PREPRINT_DOI_RE.match(c.doi))
+
+
+def published_doi_for_preprint(doi: str, *, cache_dir=None) -> str | None:
+    """Published DOI for a bioRxiv/medRxiv preprint via the preprint-server API, or ``None``.
+
+    The bioRxiv/medRxiv ``details`` endpoint carries a ``published`` field that becomes the DOI of
+    the peer-reviewed article once the preprint is published (``"NA"`` until then). Result cached.
+    """
+    if not doi:
+        return None
+    cache_path = None
+    if cache_dir is not None:
+        slug = re.sub(r"[^A-Za-z0-9]+", "_", doi)[:120]
+        cache_path = cache_dir / f"preprint_pub_{slug}.json"
+        if cache_path.exists():
+            return json.loads(cache_path.read_text()).get("published")
+
+    published: str | None = None
+    for server in ("biorxiv", "medrxiv"):
+        resp = http_utils.get(f"{BIORXIV_API}/{server}/{doi}")
+        if resp is None:
+            continue
+        coll = resp.json().get("collection", [])
+        if not coll:
+            continue
+        cand = (coll[-1].get("published") or "").strip()
+        if cand and cand.upper() != "NA":
+            published = cand
+            break
+    if cache_path is not None:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps({"published": published}))
+    return published
+
+
+def _title_sim(a: str, b: str) -> float:
+    """Normalised SequenceMatcher ratio over two titles (0 if either is empty)."""
+    na = re.sub(r"[^a-z0-9]+", " ", (a or "").lower()).strip()
+    nb = re.sub(r"[^a-z0-9]+", " ", (b or "").lower()).strip()
+    return SequenceMatcher(None, na, nb).ratio() if na and nb else 0.0
+
+
+def published_version_of(c: Candidate, *, cache_dir=None) -> Candidate | None:
+    """Resolve a preprint candidate to its peer-reviewed published version, or ``None``.
+
+    Two routes: (1) the bioRxiv/medRxiv ``published`` DOI (authoritative), hydrated via Europe PMC;
+    (2) a Europe PMC title search for a non-preprint sibling with a near-identical title. Returns a
+    :class:`Candidate` tagged ``found_via="published_version"``, or ``None`` if the preprint has no
+    discoverable published version.
+    """
+    if not is_preprint(c):
+        return None
+    pub_doi = published_doi_for_preprint(c.doi, cache_dir=cache_dir) if c.doi else None
+    if pub_doi:
+        hits = _search(f'DOI:"{pub_doi}"', cache_dir=cache_dir, page_size=1, found_via="published_version")
+        if hits:
+            return hits[0]
+    if c.title:
+        for cand in search_by_title(c.title, cache_dir=cache_dir):
+            if not is_preprint(cand) and _title_sim(c.title, cand.title) >= _PUBLISHED_TITLE_SIM:
+                cand.found_via = "published_version"
+                return cand
+    return None

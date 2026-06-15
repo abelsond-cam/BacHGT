@@ -123,7 +123,33 @@ matched controls → mixed; selection on non-susceptible R *or* I counts.
 Determinism: every grade is disk-cached (backend-independent key), so reruns are byte-identical and
 free; a 300→600s subprocess timeout + per-accession skip keep one slow paper from killing a batch.
 
+## Stage 2B — paper-finding (built)
+
+`engine/europepmc.py` + `engine/ncbi.py` + `engine/paper_finder.py` find the describing paper from
+the accession alone (`run_find_papers.py` / `validate_find_papers.py`). Finding is a **deterministic
+retrieval problem** — the LLM only picks `chosen_index` among API-retrieved candidates, never an id —
+then the pick is **grounded** (the accession must appear in the paper text) with abstain-over-guess.
+
+**Matching the find to the curated `paper_link` is by paper IDENTITY, not by URL** (one paper has
+many links). Three measures make "same paper, different link" a match rather than a false mismatch:
+
+- **Union of all curated rows.** A study's curated entry unions *every* paper row the sheet lists for
+  it (studies legitimately list several), so the find is scored against the whole set — not whichever
+  row happens to be first. (This alone recovered PRJEB27256, whose correct `PMC8865009` match had been
+  discarded in favour of an id-less OUP link.)
+- **Europe PMC cross-id canonicalization.** Each curated id is expanded to its full `{pmid,pmcid,doi}`
+  triple via a cached EPMC lookup, so a curated PubMed link matches a found DOI for the same article.
+- **Always favour the published version.** `europepmc.published_version_of` promotes every preprint
+  candidate (Europe PMC `source=PPR` or a `10.1101/` DOI) to its peer-reviewed article — via the
+  authoritative bioRxiv/medRxiv `published` DOI, else a title-matched EPMC sibling — *before* the LLM
+  sees the list, so the finder never picks a preprint when the publication exists.
+
+Residual mismatches go to the **opposing adjudicator** (`adjudicate_find`, Opus), which returns
+`same_paper` (the two links are the same work — incl. preprint↔published — so not a finding error) and
+a `verdict` of which paper actually *describes* the project, with a verbatim quote. On the dry-run it
+showed two "mismatches" were in fact the finder being right and the curated link wrong (a data-reuse
+follow-up; an umbrella-program co-paper), lifting adjudicated find-accuracy to 6/8.
+
 ## Out of scope (later)
-Stage 2B paper-finding (`europepmc.py`, `paper_finder.py`); Stage 3 opposing evaluator; Stage 4
-MCP; backfill **method (b)** per-sample table extraction (the deferred `partial` path); the
-small-study tail + the ~7k *M. abscessus* run.
+Stage 3 opposing evaluator (general); Stage 4 MCP; backfill **method (b)** per-sample table
+extraction (the deferred `partial` path); the small-study tail + the ~7k *M. abscessus* run.
