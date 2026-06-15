@@ -356,7 +356,7 @@ class ClaudeCliClient:
         *,
         model: str = DEFAULT_MODEL,
         cache_dir: str | Path | None = None,
-        timeout: int = 300,
+        timeout: int = 600,
     ) -> None:
         self.model = model
         self.cache_dir = Path(cache_dir) if cache_dir is not None else None
@@ -387,7 +387,12 @@ class ClaudeCliClient:
             "--no-session-persistence",
         ]
         # Fixed argv (no shell); inputs are our own prompts.
-        proc = subprocess.run(cmd, input=user, capture_output=True, text=True, cwd=workdir, timeout=self.timeout)
+        try:
+            proc = subprocess.run(cmd, input=user, capture_output=True, text=True, cwd=workdir, timeout=self.timeout)
+        except subprocess.TimeoutExpired as exc:
+            # Surface as a normal error so the batch runner can skip this accession and continue,
+            # rather than crashing the whole run on one slow paper.
+            raise RuntimeError(f"claude -p timed out after {self.timeout}s") from exc
         combined = f"{proc.stdout}\n{proc.stderr}"
         if proc.returncode != 0:
             if _USAGE_LIMIT_RE.search(combined):

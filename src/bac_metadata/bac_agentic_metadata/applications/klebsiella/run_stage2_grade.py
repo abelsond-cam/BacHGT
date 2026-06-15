@@ -130,6 +130,7 @@ def main() -> None:
     FULLTEXT_CACHE.mkdir(parents=True, exist_ok=True)
 
     results: list[grader.GradeResult] = []
+    skipped: list[str] = []
     limited = False
     for i, (_, row) in enumerate(sel.iterrows(), start=1):
         acc = row["study_accession"]
@@ -166,6 +167,11 @@ def main() -> None:
                   "Rerun the same command later to resume — cached grades return instantly.", file=sys.stderr)
             limited = True
             break
+        except (RuntimeError, ValueError) as exc:
+            # One bad/slow paper (timeout, unparseable output) must not kill the batch — skip it.
+            print(f"  [skip {acc}] {exc}", file=sys.stderr)
+            skipped.append(acc)
+            continue
         results.append(result)
 
     jsonl = DATA_DIR / f"{args.output_prefix}.jsonl"
@@ -173,6 +179,9 @@ def main() -> None:
     grader.write_results(results, jsonl, tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {jsonl} and {tsv} ({len(results)} rows, {status})", file=sys.stderr)
+    if skipped:
+        print(f"Skipped {len(skipped)} (errors/timeouts): {skipped} — rerun to retry (cache fills the rest).",
+              file=sys.stderr)
 
 
 if __name__ == "__main__":

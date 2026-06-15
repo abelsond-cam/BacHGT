@@ -96,14 +96,26 @@ attributes:
       values: [amr, mixed, surveillance]
       ground_truth: curated                   # study_level col `amr_study`/`sample_selection`
       definition: |-
-        Why isolates were chosen for sequencing — the sampling rule.
-        - amr: every sequenced isolate was selected specifically for an AMR attribute, i.e. it
-          had a resistant antibiotic-susceptibility-test (AST) result, OR a positive PCR for a
-          pre-defined antibiotic-resistance gene.
-        - surveillance: all isolates meeting a non-AMR sampling rule were sequenced (e.g. all
-          positive blood cultures sequenced, or all patients' rectal/faecal swabs) — in
-          practice usually blood or faecal samples.
-        - mixed: the study contains both AMR-selected and surveillance isolates.
+        Why isolates were chosen for sequencing — the SAMPLING RULE that governed which isolates
+        entered THIS deposited project. Judge on the isolates actually sequenced/deposited under
+        this accession, NOT the parent survey's broader collection design.
+        - amr: every sequenced isolate had to meet an AMR attribute to be selected — a
+          non-susceptible antibiotic-susceptibility-test (AST) result (resistant "R", or
+          intermediate / "increased exposure" "I"), OR a positive PCR for a pre-defined
+          antibiotic-resistance gene.
+        - surveillance: all isolates meeting a NON-AMR sampling rule were sequenced — e.g. all
+          positive blood cultures, all patients' rectal/faecal swabs, or ALL clinical isolates of
+          the taxon (one per patient/episode) across mixed specimen types (blood, urine, sputum,
+          pus). Resistance may be characterised AFTERWARDS; that does not make it amr. Isolates
+          recovered via routine MDRO / infection-control SCREENING of patients are surveillance:
+          the screen is the sampling frame, not a per-isolate AMR-selection gate.
+        - mixed: the deposited set contains both AMR-selected and non-AMR isolates — including the
+          common design of AMR-selected cases PLUS deliberately-added susceptible matched controls
+          (e.g. one carbapenem-susceptible isolate per resistant case).
+        Do NOT infer amr from naming: a project/program/pipeline called "AMR", "AMR surveillance",
+        or "AMR monitoring" does not by itself imply AMR-based selection — the deciding factor is
+        whether EACH sequenced isolate was required to have a resistant phenotype/genotype to enter
+        the set.
     amr_target:
       values: [third_gen_cephalosporin, carbapenem, other]
       applies_when: amr_study in [amr, mixed]
