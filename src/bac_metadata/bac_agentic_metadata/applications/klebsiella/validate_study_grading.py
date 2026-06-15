@@ -17,9 +17,9 @@ get sanity summaries.
 
 With ``--adjudicate``, every primary-check disagreement is sent to a critique agent
 (``engine.adjudicator``) that re-reads the paper, rules which label is correct with a **verbatim
-quote**, and flags rubric **rule gaps** → ``data/stage2_adjudication_report.{md,tsv}``.
+quote**, and flags rubric **rule gaps** → ``data/grading_adjudication_report.{md,tsv}``.
 
-Writes ``data/stage2_validation_report.{tsv,md}``.
+Writes ``data/grading_validation_report.{tsv,md}``.
 """
 
 from __future__ import annotations
@@ -250,17 +250,17 @@ def _write_adjudication_report(adjudications: list) -> None:
     else:
         md.append("_No rule gaps flagged._")
 
-    (DATA_DIR / "stage2_adjudication_report.md").write_text("\n".join(md) + "\n")
+    (DATA_DIR / "grading_adjudication_report.md").write_text("\n".join(md) + "\n")
     pd.DataFrame([a.to_row() for a in adjudications]).to_csv(
-        DATA_DIR / "stage2_adjudication_report.tsv", sep="\t", index=False
+        DATA_DIR / "grading_adjudication_report.tsv", sep="\t", index=False
     )
-    print(f"Wrote {DATA_DIR / 'stage2_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
+    print(f"Wrote {DATA_DIR / 'grading_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
 
 
 def main() -> None:
     """Parse arguments and write the Stage 2A validation report (+ optional adjudication)."""
     parser = argparse.ArgumentParser(description="Validate Stage 2A grades (Klebsiella).")
-    parser.add_argument("--grades", default=str(DATA_DIR / "stage2_grades.tsv"), help="Stage 2A flat TSV.")
+    parser.add_argument("--grades", default=str(DATA_DIR / "study_grades.tsv"), help="Stage 2A flat TSV.")
     parser.add_argument("--study-setting-from-sheet", action="store_true", help="Score study_setting via live sheet.")
     parser.add_argument("--adjudicate", action="store_true", help="Run the critique agent on primary disagreements.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8", help="Adjudicator model (default Opus).")
@@ -356,9 +356,9 @@ def main() -> None:
         "amr_target__value", "amr_method__value", "paper_coverage_for_taxon",
         "needs_manual_download", "fulltext_source",
     ]
-    out_tsv = DATA_DIR / "stage2_validation_report.tsv"
+    out_tsv = DATA_DIR / "grading_validation_report.tsv"
     df[[c for c in keep if c in df.columns]].to_csv(out_tsv, sep="\t", index=False)
-    out_md = DATA_DIR / "stage2_validation_report.md"
+    out_md = DATA_DIR / "grading_validation_report.md"
     out_md.write_text("\n".join(md) + "\n")
     print(f"Wrote {out_tsv} and {out_md}", file=sys.stderr)
 

@@ -65,10 +65,10 @@ reproducibility mechanism (which it is anyway).
   Output → JSONL (full, with evidence quotes) + flat TSV (one row/accession).
 
 ### `applications/klebsiella/`
-- `run_stage2_grade.py` — 2A runner. Maps each accession to its curated `paper_link` (frozen
+- `run_study_grading.py` — 2A runner. Maps each accession to its curated `paper_link` (frozen
   snapshot), fetches text, grades, biggest-first over `--fold train,val`. Flags: `--fold`,
   `--accessions`, `--limit`, `--model`, `--cache-dir`, `--output-prefix`, `--max-chars`.
-- `validate_stage2_grade.py` — agreement vs trusted ground truth (train+val), recording
+- `validate_study_grading.py` — agreement vs trusted ground truth (train+val), recording
   disagreements rather than assuming the sheet is right.
 
 ## Ground-truth mapping (what we score, and what we don't)
@@ -86,22 +86,42 @@ reproducibility mechanism (which it is anyway).
 ```bash
 unset VIRTUAL_ENV
 # Dry-run on contrasting accessions (default backend = subscription, zero API spend):
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage2_grade.py \
-    --accessions PRJEB39943,PRJDB5929,PRJNA845975 --output-prefix stage2_grades_dryrun
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_study_grading.py \
+    --accessions PRJEB39943,PRJDB5929,PRJNA845975 --output-prefix study_grades_dryrun
 # Full train+val pass (biggest-first). Add --backend api to use the paid key instead:
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage2_grade.py --fold train,val
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_study_grading.py --fold train,val
 # Validate (add --study-setting-from-sheet to also score study_setting against the live tab):
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_stage2_grade.py
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_study_grading.py
 ```
 
-Outputs in `applications/klebsiella/data/`: `stage2_grades.{jsonl,tsv}`,
-`stage2_validation_report.{tsv,md}`. The LLM + full-text caches
+Outputs in `applications/klebsiella/data/`: `study_grades.{jsonl,tsv}`,
+`grading_validation_report.{tsv,md}`. The LLM + full-text caches
 (`llm_cache/`, `fulltext_cache/`) and the API key are gitignored.
 
-## Results
+## Results (2A grading, train+val, Sonnet on the subscription backend)
 
-_To be filled after the train+val agreement run (per-attribute accuracy, confusion matrices,
-recorded disagreements)._
+Full train+val population = **109 accessions**. Raw agreement vs the (imperfect) frozen ground
+truth, on the two primary checks (cohort_age is **not scored** — no reliable GT):
+
+| primary check | raw accuracy | n | note |
+|---|---|---|---|
+| `amr_study` | **0.78** | 86 | vs frozen `sample_selection` |
+| `study_setting` | **0.90** | 94 | vs frozen `study_setting_frozen.tsv` |
+
+**Adjudication reframes this upward.** The Opus critique agent (`validate_study_grading
+--adjudicate`) re-reads the paper for each disagreement and rules which label is right with a
+verbatim quote. On the 25-accession iteration set, **8 of 10 disagreements were *sheet* errors**
+(the grader was correct, the gold standard wrong), implying a *true* grader accuracy of **~0.96 on
+both primary checks**, with only 2 genuine grader errors (a hard amr_study case the rubric tweak
+did not flip, and a veterinary study_setting case). Full-population adjudication is the next step.
+
+The `amr_study` definition in `attributes.yaml` was tightened from adjudicator-found rule gaps:
+judge the isolates actually *deposited* (not the parent survey); a project named "AMR" ≠ AMR
+selection; routine MDRO/infection-control screening → surveillance; deliberately-added susceptible
+matched controls → mixed; selection on non-susceptible R *or* I counts.
+
+Determinism: every grade is disk-cached (backend-independent key), so reruns are byte-identical and
+free; a 300→600s subprocess timeout + per-accession skip keep one slow paper from killing a batch.
 
 ## Out of scope (later)
 Stage 2B paper-finding (`europepmc.py`, `paper_finder.py`); Stage 3 opposing evaluator; Stage 4

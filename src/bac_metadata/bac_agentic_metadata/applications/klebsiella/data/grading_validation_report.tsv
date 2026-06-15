@@ -1,0 +1,110 @@
+study_accession	fold	amr_study__value	gt_amr_study	study_setting__value	gt_study_setting	cohort_age__value	amr_target__value	amr_method__value	paper_coverage_for_taxon	needs_manual_download	fulltext_source
+PRJEB74192	val	surveillance	surveillance	mixed					0.9982	False	europepmc_fulltext
+PRJEB39943	val	mixed	amr	hospital	hospital		carbapenem	ast_result	0.0441	False	europepmc_fulltext
+PRJEB36683	val	amr	amr	hospital	hospital	mixed	other	ast_result	0.1802	False	europepmc_fulltext
+PRJEB37378	train	amr	amr	community	community		third_gen_cephalosporin		0.0	False	europepmc_fulltext
+PRJDB10842	val	amr	amr	hospital	hospital		other	ast_result	0.8367	False	europepmc_fulltext
+PRJEB42462	train	surveillance	surveillance	hospital	hospital				0.278	True	pdf
+PRJEB27256	train	surveillance	surveillance	hospital	hospital					True	none
+PRJNA475751	train	surveillance	surveillance	hospital	hospital					True	none
+PRJEB29740	val	surveillance	mixed	hospital	hospital	mixed				False	europepmc_fulltext
+PRJNA604975	val	surveillance	surveillance	mixed	hospital	adult			0.9736	False	europepmc_fulltext
+PRJNA768622	val	amr		hospital	hospital		carbapenem	pcr_gene_presence		True	pdf
+PRJEB28400	train	surveillance	amr	hospital	hospital					False	none
+PRJNA271899	train	mixed	amr	hospital	hospital		carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJDB5929	train	amr	amr	hospital	hospital		carbapenem	ast_result	0.8161	False	europepmc_fulltext
+PRJEB50614	val	surveillance	mixed	hospital	hospital	mixed			1.0	False	europepmc_fulltext
+PRJNA325243	train	surveillance	amr	hospital	community				0.3238	False	europepmc_fulltext
+PRJNA845975	train	surveillance	surveillance	hospital	hospital	newborn_young_child			1.0	False	pdf
+PRJEB29742	val	amr	amr	hospital	hospital		carbapenem	ast_result	0.7658	False	europepmc_fulltext
+PRJNA1028672	train	amr	amr	hospital	hospital		carbapenem	ast_result		True	none
+PRJEB48990	train	mixed		mixed	mixed		other	ast_result	1.0	False	europepmc_fulltext
+PRJNA564424	val	amr	amr	mixed	hospital		carbapenem	pcr_gene_presence	1.0	False	pdf
+PRJNA855907	val	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	0.1634	False	europepmc_fulltext
+PRJEB38289	train	surveillance	surveillance	mixed	mixed				1.002	False	europepmc_fulltext
+PRJEB29143	train	surveillance	surveillance	community	mixed					True	none
+PRJEB6891	train	surveillance	surveillance	hospital	hospital					True	none
+PRJNA603790	train	surveillance	amr	hospital	hospital					False	none
+PRJNA415194	train	amr		hospital	hospital		carbapenem	ast_result		True	abstract
+PRJEB46513	train		surveillance	hospital	hospital	newborn_young_child				False	none
+PRJNA686897	val	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		True	none
+PRJEB63361	train	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	1.0024	True	none
+PRJEB35685	train	amr	amr	hospital	mixed		carbapenem	pcr_gene_presence		True	none
+PRJEB33565	train	surveillance	surveillance	hospital	hospital	newborn_young_child				True	none
+PRJNA777643	train	surveillance		hospital					0.0255	False	europepmc_fulltext
+PRJEB5065	train	amr	surveillance	hospital	hospital		other	ast_result	0.6562	False	europepmc_fulltext
+PRJEB50822	val	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	1.0027	True	none
+PRJEB17615	val	mixed	amr	hospital	hospital	mixed	other	ast_result	0.5863	False	europepmc_fulltext
+PRJNA557275	val	mixed	amr	hospital	hospital		other	ast_result	1.1412	True	abstract
+PRJNA789565	train	surveillance	mixed	hospital	hospital					True	none
+PRJEB28054	train			hospital						True	none
+PRJNA996149	val	amr	amr	hospital	hospital		carbapenem	ast_result	1.0	False	pdf
+PRJNA857686	val	surveillance	amr	hospital						False	none
+PRJEB15226	val	amr		hospital	hospital		third_gen_cephalosporin	ast_result	0.1389	True	europepmc_fulltext
+PRJEB39867	train	mixed	mixed	hospital	hospital	adult	third_gen_cephalosporin	ast_result	0.9301	False	europepmc_fulltext
+PRJNA549322	train	amr	amr	hospital	hospital	adult	carbapenem	ast_result	0.3275	False	pdf
+PRJNA278886	train	amr	amr	hospital	hospital		carbapenem			True	europepmc_fulltext
+PRJEB22903	train									True	none
+PRJNA604910	train	surveillance	surveillance	hospital	hospital				1.0	False	europepmc_fulltext
+PRJNA789336	train	amr	amr	hospital	hospital		carbapenem	ast_result	0.7248	True	abstract
+PRJNA341927	train			hospital	hospital					True	none
+PRJNA544438	train	amr	amr		hospital					True	none
+PRJEB22252	train	surveillance		community		newborn_young_child				True	none
+PRJDB14656	train	surveillance	surveillance	hospital	hospital					False	europepmc_fulltext
+PRJEB24970	train	amr		hospital	hospital	newborn_young_child	third_gen_cephalosporin	ast_result	1.4152	False	europepmc_fulltext
+PRJEB6574	train									True	none
+PRJEB36486	val	amr	amr	hospital	mixed		third_gen_cephalosporin	ast_result		False	none
+PRJNA765801	val	amr			hospital		carbapenem	pcr_gene_presence		True	none
+PRJEB58216	train	amr	amr	hospital	hospital	adult	carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJNA1133624	train		surveillance	hospital						False	none
+PRJEB30134	train	surveillance	amr	hospital	hospital	mixed			0.2836	False	europepmc_fulltext
+PRJEB58018	train	amr	surveillance	hospital	hospital	adult	carbapenem	pcr_gene_presence	0.995	False	europepmc_fulltext
+PRJEB24082	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		False	europepmc_fulltext
+PRJEB1563	val	surveillance	surveillance	hospital	hospital					True	none
+PRJEB21277	train				mixed					True	none
+PRJNA787062	train	amr	surveillance	hospital	hospital		other			True	none
+PRJDB12075	val	amr	amr	community	hospital	adult	other	ast_result	0.0217	False	europepmc_fulltext
+PRJNA982859	train	surveillance	surveillance	community	community					False	europepmc_fulltext
+PRJNA396774	val	mixed	surveillance		hospital		third_gen_cephalosporin			False	none
+PRJNA1048341	train	amr	amr	hospital	mixed		carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
+PRJNA767944	train	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJNA395086	val		surveillance	hospital	hospital					True	none
+PRJEB39293	val	amr	amr	hospital	hospital	mixed	carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
+PRJNA626430	train	amr		hospital	hospital		carbapenem	pcr_gene_presence		True	europepmc_fulltext
+PRJEB22890	train	amr	amr	hospital	hospital		carbapenem	ast_result	1.0	True	abstract
+PRJDB12116	train	surveillance	surveillance	hospital	hospital				0.026	False	europepmc_fulltext
+PRJNA835677	val	surveillance		community	community				1.0	False	europepmc_fulltext
+PRJEB21605	train	surveillance	surveillance	hospital	hospital	mixed			1.0	False	europepmc_fulltext
+PRJNA1052047	train	surveillance	surveillance	mixed	mixed				1.0	False	europepmc_fulltext
+PRJNA634885	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		True	none
+PRJEB12699	train	amr		hospital			third_gen_cephalosporin	ast_result		True	none
+PRJNA564992	train	amr	amr	hospital	hospital		third_gen_cephalosporin	ast_result		True	none
+PRJEB64895	train	amr	amr	hospital	hospital		carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJNA646358	val	surveillance		hospital	hospital	adult			1.0	False	europepmc_fulltext
+PRJEB58136	train	mixed	surveillance	mixed	mixed		other	ast_result	1.0	False	europepmc_fulltext
+PRJNA804332	train	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJNA1054115	train	surveillance	surveillance	hospital	hospital	mixed			1.0	False	europepmc_fulltext
+PRJNA246471	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	0.9556	False	europepmc_fulltext
+PRJNA1087366	train	surveillance	amr	hospital	hospital	newborn_young_child			1.0	False	europepmc_fulltext
+PRJNA885285	val	amr	amr	community	mixed	mixed	third_gen_cephalosporin	ast_result	1.0	False	europepmc_fulltext
+PRJNA648389	train	amr	amr	hospital	hospital		third_gen_cephalosporin	ast_result	1.0	False	europepmc_fulltext
+PRJEB1800	train	surveillance	amr	hospital	hospital	mixed			0.7355	False	europepmc_fulltext
+PRJNA820335	train	amr	amr	hospital	hospital		carbapenem	ast_result		True	none
+PRJNA978102	val	surveillance	surveillance	hospital	hospital	mixed			1.0	False	pdf
+PRJEB74083	train	amr	amr	hospital	hospital	adult	carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
+PRJEB24085	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		False	europepmc_fulltext
+PRJEB19229	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
+PRJEB19322	train	surveillance	surveillance	hospital	hospital					True	none
+PRJEB42331	val	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
+PRJNA351909	train	surveillance	surveillance	hospital	hospital					True	none
+PRJEB20799	train	surveillance		hospital	hospital	newborn_young_child				False	none
+PRJNA398288	train	amr	amr	hospital	hospital		third_gen_cephalosporin	ast_result		True	none
+PRJNA641987	val	surveillance		hospital		mixed			5.375	False	europepmc_fulltext
+PRJEB24086	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		False	europepmc_fulltext
+PRJEB24084	train	amr	amr	hospital	hospital		carbapenem	ast_result		False	europepmc_fulltext
+PRJEB24083	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		False	europepmc_fulltext
+PRJEB22264	train		amr		hospital					False	europepmc_fulltext
+PRJEB19435	train	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence		False	europepmc_fulltext
+PRJEB24087	train	amr	amr	hospital	hospital		carbapenem	ast_result		False	europepmc_fulltext
+PRJNA565795	train	amr	amr	hospital	hospital	adult	third_gen_cephalosporin	ast_result		False	europepmc_fulltext
+PRJDB17849	train	surveillance	surveillance	hospital	hospital					False	europepmc_fulltext

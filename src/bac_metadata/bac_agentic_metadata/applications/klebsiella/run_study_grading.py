@@ -7,7 +7,7 @@ For each project accession in the chosen fold(s) this:
 3. fetches the EBI study title + description (``engine.ena_sizing``),
 4. grades it against ``attributes.yaml`` with the LLM (``engine.grader``),
 
-and writes ``data/stage2_grades.{jsonl,tsv}``. Accessions are processed **biggest-first**
+and writes ``data/study_grades.{jsonl,tsv}``. Accessions are processed **biggest-first**
 (by Stage-1 ``ena_taxon_samples``). All network + LLM responses are cached on disk, so reruns
 are deterministic and offline.
 
@@ -18,10 +18,10 @@ Examples
 --------
 unset VIRTUAL_ENV
 # Dry run on three contrasting accessions:
-uv run python .../run_stage2_grade.py --accessions PRJEB10018,PRJEB58216,PRJDB10842 \
-    --output-prefix stage2_grades_dryrun
+uv run python .../run_study_grading.py --accessions PRJEB10018,PRJEB58216,PRJDB10842 \
+    --output-prefix study_grades_dryrun
 # Full train+val pass:
-uv run python .../run_stage2_grade.py --fold train,val
+uv run python .../run_study_grading.py --fold train,val
 """
 
 from __future__ import annotations
@@ -116,7 +116,7 @@ def main() -> None:
     )
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
     parser.add_argument("--cache-dir", type=Path, default=LLM_CACHE, help="LLM response cache dir.")
-    parser.add_argument("--output-prefix", default="stage2_grades", help="Output basename under data/.")
+    parser.add_argument("--output-prefix", default="study_grades", help="Output basename under data/.")
     parser.add_argument("--max-chars", type=int, default=grader.DEFAULT_MAX_CHARS, help="Paper-text truncation.")
     args = parser.parse_args()
 
