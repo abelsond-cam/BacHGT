@@ -43,9 +43,12 @@ __pycache__/
 # bowtie2 indexes); rebuilt by `bac_ariba.pp.build_ariba_ref`.
 src/bac_ariba/refs/*/prepareref_out/
 
-# bac_agentic_metadata engine — never commit OAuth secrets/tokens or the raw ENA cache.
+# bac_agentic_metadata engine — never commit OAuth secrets/tokens, API keys, or raw caches.
 # (Off-OneDrive credentials live under ~/.config/bac_metadata/ by default; see engine/gsheet.py.)
 **/client_secret*.json
 **/token.json
+**/anthropic_api_key
 src/bac_metadata/bac_agentic_metadata/applications/*/data/ena_cache/
+src/bac_metadata/bac_agentic_metadata/applications/*/data/llm_cache/
+src/bac_metadata/bac_agentic_metadata/applications/*/data/fulltext_cache/
 

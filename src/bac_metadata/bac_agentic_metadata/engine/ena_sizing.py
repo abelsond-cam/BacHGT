@@ -100,6 +100,77 @@ def _fetch_read_run_table(accession: str) -> pd.DataFrame | None:
     return pd.read_csv(StringIO(text), sep="\t", dtype=str)
 
 
+def study_title_and_description(accession: str, *, cache_dir: str | Path | None = None) -> dict:
+    """Return the ENA study title + description for one project (cached).
+
+    The EBI study title/description is one of the two evidence sources the grader uses (the other
+    being the paper): for many accessions a whole-project value (e.g. "all hospital", "all from
+    England") is stated there directly, which is the strongest support for a study-level grade.
+
+    Parameters
+    ----------
+    accession
+        ENA project accession (e.g. ``"PRJNA339843"``).
+    cache_dir
+        If given, the raw ``result=study`` TSV is cached at ``<cache_dir>/<accession>.study.tsv``
+        and reused, making the result deterministic and offline.
+
+    Returns
+    -------
+    dict
+        Keys ``study_accession``, ``study_title``, ``study_description`` (empty strings when ENA
+        has no value), and ``fetch_status`` (``"ok"`` / ``"study_failed"``).
+    """
+    table: pd.DataFrame | None = None
+    cache_path: Path | None = None
+    if cache_dir is not None:
+        cache_path = Path(cache_dir) / f"{accession}.study.tsv"
+        if cache_path.exists():
+            table = pd.read_csv(cache_path, sep="\t", dtype=str)
+
+    if table is None:
+        text = _ena_search(
+            {
+                "result": "study",
+                "query": f'study_accession="{accession}"',
+                "fields": "study_accession,study_title,study_description",
+                "format": "tsv",
+                "limit": 0,
+            }
+        )
+        if text is None:
+            return {
+                "study_accession": accession,
+                "study_title": "",
+                "study_description": "",
+                "fetch_status": "study_failed",
+            }
+        if not text.strip():
+            table = pd.DataFrame(columns=["study_accession", "study_title", "study_description"])
+        else:
+            table = pd.read_csv(StringIO(text), sep="\t", dtype=str)
+        if cache_path is not None:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            table.to_csv(cache_path, sep="\t", index=False)
+
+    if table.empty:
+        return {
+            "study_accession": accession,
+            "study_title": "",
+            "study_description": "",
+            "fetch_status": "ok",
+        }
+    row = table.iloc[0]
+    return {
+        "study_accession": accession,
+        "study_title": (row.get("study_title") or "") if isinstance(row.get("study_title"), str) else "",
+        "study_description": (row.get("study_description") or "")
+        if isinstance(row.get("study_description"), str)
+        else "",
+        "fetch_status": "ok",
+    }
+
+
 def _n_distinct(series: pd.Series) -> int:
     """Count distinct non-empty values in a (possibly absent) string series."""
     if series is None or len(series) == 0:

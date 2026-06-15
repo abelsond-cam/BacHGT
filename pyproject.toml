@@ -25,6 +25,7 @@ classifiers = [
 ]
 dependencies = [
   "anndata",
+  "anthropic>=0.40",
   "biopython>=1.83",
   "gffutils>=0.13",
   "matplotlib>=3.8.0",
