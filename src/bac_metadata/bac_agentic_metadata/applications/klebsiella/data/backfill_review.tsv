@@ -1,0 +1,213 @@
+study_accession	paper_short_title	field	proposed_value	applies_whole_project	paper_coverage_fraction	ena_taxon_samples	evidence_quote
+PRJDB10842	enterobacterales_japan	collection_date	2020-01-01	True		1482	collected in 2019 and 2020 from 175 hospitals
+PRJEB1800	nepal_hospital_outbreak	collection_date	2012-09-01	True		121	The isolates described in this study were obtained from cultures of clinical specimens taken as part of routine clinical care from Patan Hospital inpatients between May and December 2012.
+PRJEB21605	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	collection_date	2016-01-01	True		149	In this pilot project we will sequence 960 isolates from 2015-2016.
+PRJEB22890	superiore_di_sanita	collection_date	2016-05-01	True		157	during the period March-July 2016
+PRJEB24970	MDR neonates	collection_date	2014-03-01	True		224	between September 2013 (when the neonatal unit newly opened) and September 2014
+PRJEB39293	maternal_amr_low_income_countrie	collection_date	2016-11-01	True		161	From November 2015 to November 2017, women in labour (preferably) or immediately post partum were recruited prospectively
+PRJEB39943	CCRE survey	collection_date	2019-07-01	True		2904	the survey of carbapenem-resistant and/or colistin-resistant Enterobacterales (CCRE survey) which collected isolates and data in 36 countries in 2019
+PRJEB50822	Spain CPK	collection_date	2019-04-01	True		376	collected the first 10 isolates (February to May 2019)
+PRJEB58018	Germany-Ukrain-NDM_OXA	collection_date	2022-05-01	True		201	Between January and September 2022, the NRC received 330 non-duplicate NDM-1- and NDM-1/OXA-48-producing K. pneumoniae isolates.
+PRJEB64895	greek_cpe	collection_date	2022-06-14	True		142	The number of isolates included in the final dataset ranged from five to 14 isolates per hospital with sampling dates between 22 February and 3 October 2022
+PRJEB74083		collection_date	2023-02-13	True		106	clinical samples collected from 17 public hospitals between 28 April 2022 and 29 November 2023
+PRJNA544438	polymixin B KP	collection_date	2015-07-01	True		237	Extensively drug-resistant Klebsiella pneumoniae and E. coli from Oman in 2015
+PRJNA565795	melb_superbugs	collection_date	2018-01-01	True		0	a pilot phase (24th April–18th June 2017), and an implementation phase (30th October 2017–30th November 2018), totalling 15 months
+PRJNA604910	ratcliffe_hospital_sink_drains	collection_date	2017-04-01	True		264	we sampled all sink sites using p-trap (U-bend) aspirates across several wards and timepoints in a single UK hospital in 2017... March–May 2017
+PRJNA646358	Cietnamise ICUs	collection_date	2015-06-01	True		141	enrolled patients (≥15 years old) hospitalized in the adult ICU at the HTD from 10 November 2014 to 14 January 2016
+PRJNA767944	CPK transmission	collection_date	2017-02-01	True		173	isolates collected from December 2016 to April 2017 (five months) during a reported outbreak
+PRJNA789336	CPK bloodstream	collection_date	2018-12-01	True		258	A prospective, multicentre observational cohort study was conducted in thirteen tertiary care centres in Turkey from June 2018 to June 2019.
+PRJNA804332	kenyan_neonate	collection_date	2019-03-01	True		138	This was a prospective study conducted in a newborn unit at KNH between January and April 2019.
+PRJNA885285	Cambodia_MDRE	collection_date	2019-10-01	True		130	Faecal samples were collected from community participants of Siem Reap, Cambodia in a cross-sectional study from August to November 2019.
+PRJNA978102	boston_bsis	collection_date	2021-12-01	True		108	WGS was performed on the first K. pneumoniae bloodstream isolate collected from patients between July 2021 and May 2022.
+PRJDB10842	enterobacterales_japan	country	Japan	True		1482	collected in 2019 and 2020 from 175 hospitals...across Japan (covering 45 out of 47 prefectures)
+PRJDB12075	Desinfectant susceptibility	country	Japan	True		184	Genome sequencing of Gram-negative bacteria collected by Hiroshima University and National Institute of Infectious Diseases in Japan
+PRJDB12116	japanese_surveillance	country	Japan	True		154	Whole-genome sequencing of Klebsiella pneumoniae, K. variicola, K. quasipneumoniae, and K. michiganensis clinical isolates from Japan.
+PRJDB14656	japanese_surveillance	country	Japan	True		234	Whole-genome sequencing of Klebsiella pneumoniae, K. variicola, and K. quasipneumoniae isolated from blood culture positive specimens in Japan.
+PRJDB17849	japanese_surveillance	country	Japan	True		0	collected from January 2015 to April 2018 by MIROKU Medical Laboratory, Hiroshima University and Nagoya University Hospital, all located in Japan
+PRJDB5929	thailand_cpe	country	Thailand	True		707	we investigated the epidemiological and genomic characteristics of CRE from 11 provinces in Thailand using whole-genome sequencing (WGS) to understand the evolutionary dynamics of CRE in this region from 2012 to 2017.
+PRJEB12699		country	Spain	True		143	isolates obtained from two multicenter studies in Spain between 2000 and 2006
+PRJEB15226	cenre-sepcific typing	country	Netherlands	True		288	a national collection of 1,798 ESBL-E isolates obtained from patients in Dutch hospitals
+PRJEB1563	invasive_kilifi	country	Kenya	True		198	Molecular_epidemiology_of_Klebsiella_pneumoniae_invasive_isolates_from_Kilifi
+PRJEB17615	Philipines_network	country	Philippines	True		365	We will facilitate the implementation of WGS within AMR surveillance and clinical diagnostics within the laboratory network of the Antimicrobial Resistance Surveillance Program (ARSP) in the Philippines
+PRJEB1800	nepal_hospital_outbreak	country	Nepal	True		121	Patan Hospital is a 450-bed government hospital providing emergency and elective outpatient and inpatient services located within the Kathmandu Valley in the Sub-Metropolitan City of Lalitpur, Nepal.
+PRJEB19229	irish_cpe_surveillance	country	Ireland	True		96	we sequenced the samples collected from 33 hospitals in Ireland during this period
+PRJEB19322	neonatal_klebsiella	country	Malawi	True		92	characterise the population structures...of the ESKAPE pathogens from a single Malawian hospital
+PRJEB19435	irish_cpe_surveillance	country	Ireland	True		0	samples collected from 33 hospitals in Ireland
+PRJEB20799		country	The Gambia	True		44	neonatal unit of the hospital on the MRC Gambia campus
+PRJEB21277	Irish point prevelence	country	Ireland	True		193	Whole genome sequencing and analysis of Enterobacteriaceae isolates from Ireland
+PRJEB22890	superiore_di_sanita	country	Italy	True		157	a countrywide survey was conducted in 2016 to explore the evolution of the phenotypic and genotypic characteristics of CR-KP isolates
+PRJEB24082	irish_cpe_surveillance	country	Ireland	True		200	Geographically, the samples were from hospitals in the following counties: Dublin, Kerry, Galway, Donegal, Mayo, Westmeath, Kildare, Louth, Meath, Sligo, Offaly, Cork, Limerick and Waterford.
+PRJEB24083	irish_cpe_surveillance	country	Ireland	True		0	We sequenced the samples collected from 33 hospitals in Ireland during this period.
+PRJEB24084	irish_cpe_surveillance	country	Ireland	True		0	We sequenced the samples collected from 33 hospitals in Ireland during this period.
+PRJEB24085	irish_cpe_surveillance	country	Ireland	True		104	sequenced the samples collected from 33 hospitals in Ireland during this period
+PRJEB24086	irish_cpe_surveillance	country	Ireland	True		3	we sequenced the samples collected from 33 hospitals in Ireland during this period
+PRJEB24087	irish_cpe_surveillance	country	Ireland	True		0	samples were from hospitals in the following counties: Dublin (n=18), Kerry (n=2), Galway (n=2), Donegal (n=1), Mayo (n=1), Westmeath (n=1), Kildare (n=1), Louth (n=1), Meath (n=1), Sligo (n=1), Offaly (n=1), Cork (n=1), Limerick (n=1) and Waterford (n=1).
+PRJEB24970	MDR neonates	country	Cambodia	True		224	a neonatal intensive care unit in a children's hospital in Siem Reap, Cambodia
+PRJEB27256	Norway_k_pnuemoniae	country	Norway	True		1063	K. pneumoniae isolates from Norway isolated in the period 2001-2015
+PRJEB28400	icu_hannoi	country	Vietnam	True		745	patients admitted to ICUs in Hanoi, Vietnam
+PRJEB29740	indian_cpe_surveillance	country	India	True		930	The collection included 1072 isolates from 38 different hospitals located in 19 different states across India.
+PRJEB29742	columbia_cpe_surveillance	country	Colombia	True		555	bacterial isolates to be collected from several regions around Colombia their genomes assembled and analysed following WGS
+PRJEB30134	long_read_CPE	country	United Kingdom	True		201	This was a prospective observational cohort study conducted at CUH, a 1000 bed secondary and tertiary referral hospital in the UK.
+PRJEB35685	Netherlands CPK	country	Netherlands	True		412	Carbapenemase-producing Enterobacterales in the Netherlands Results of the 2014-2018 national laboratory surveillance
+PRJEB36486	malawi_colonisation_dynamics	country	Malawi	True		221	patients with sepsis admitted to Queen Elizabeth Central Hospital, Blantyre, Malawi
+PRJEB36683	CC14 KP clone	country	Saudi Arabia	True		1820	The isolates were obtained from King Abdulaziz Medical City Jeddah (KAMC-J) and the MNGHA hospitals in Jeddah, Saudi Arabia.
+PRJEB38289	portuguese_klebsiella	country	Portugal	True		508	The isolates (n = 509) were identified between years 1980 and 2019 from 16 hospitals in Lisbon and its metropolitan area (Southern region), Coimbra (Central region), and Porto and Vila Real (Northern Portugal), except for 9 isolates from Beirolas wastewater (Lisbon) and 41 samples from veterinary cl
+PRJEB39867	Germany_ESBL	country	Germany	True		286	Two independent epidemiologic surveys [...] were conducted at six German tertiary care university hospitals in eastern (centre A), western (centre B), south-western (centres C and F), central (centre D), and northern (centre E) Germany.
+PRJEB42331	dutch_cpe_surveillance	country	Netherlands	True		80	537 carbapenemase-producing E. coli and K. pneumoniae isolates carrying blaOXA-48-like alleles (blaOXA-48, blaOXA-181, blaOXA-232) were included and were collected from 1 January 2014 until 31 December 2019 [from the Dutch National CPE Surveillance programme, Netherlands]
+PRJEB46513	neonatal_klebsiella	country	Zambia	True		455	Klebsiella samples from a neonatal unit in Zambia.
+PRJEB48990	MDR KP Wales	country	United Kingdom	True		540	This study describes the retrospective genomic analysis of a collection of Klebsiella isolates (n=540) gathered by SACU between 2007 and 2020 [at Public Health Wales Microbiology in Cardiff].
+PRJEB50614	indian_cpe_surveillance	country	India	True		644	1072 putative K. pneumoniae isolates primarily sourced from hospital infections and obtained from the years 2014 to 2022 across India
+PRJEB50822	Spain CPK	country	Spain	True		376	a comprehensive, multicenter, nationwide study... representing all 50 Spanish provinces
+PRJEB58018	Germany-Ukrain-NDM_OXA	country	Germany	True		201	In a nationwide investigation, we combined epidemiological and genomic analyses to delineate transmission patterns... the NRC received 330 non-duplicate NDM-1- and NDM-1/OXA-48-producing K. pneumoniae isolates.
+PRJEB58136		country	India	True		140	We conducted the study in the Vellore corporation area, located in the Vellore district on the northern side of Tamil Nadu, India.
+PRJEB58216	greek_cpe	country	Greece	True		209	This is a retrospective study conducted between 2003 and 2018 in Laiko General Hospital in Athens, Greece.
+PRJEB63361	cpe_south_africa	country	South Africa	True		413	Carbapenem-resistant Klebsiella pneumoniae South Africa; Tygerberg Hospital (TBH)
+PRJEB64895	greek_cpe	country	Greece	True		142	From July to September 2022, we used a modified CCRE survey protocol to conduct a molecular follow-up survey in 15 Greek hospitals
+PRJEB6891	melb_surveillance	country	Australia	True		490	Hospital_acquired_Klebsiella_pneumoniae_and_the_role_of_colonization_and_transmission__Australia_
+PRJEB74083		country	Lithuania	True		106	These isolates originated from clinical samples collected from 17 public hospitals between 28 April 2022 and 29 November 2023, covering the period of emergence.
+PRJEB74192	One Health Norway	country	Norway	True		3261	Through national surveillance programs in the human and veterinary sectors, and screening of human community carriage, animals and marine samples, >3000 KpSC isolates from across Norway over 20 years have been collected and sequenced.
+PRJNA1028672	CRKP_China	country	China	True		546	multicenter study elucidating the distribution of serotypes, antimicrobial resistance, and virulence determinants among CRKPs in different regions of China
+PRJNA1048341		country	Spain	True		177	The selected isolates came from 18 hospitals located in the eight provinces of Andalusia ... hospitals in Southern Spain
+PRJNA1052047	human_and_bovine_culture_collection	country	Canada	True		148	We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC)... patients at the McGill University Health Centre... Mastitis Pathogen Culture Collection
+PRJNA1054115	Albany_bloodstream_usa	country	USA	True		137	clinical blood cultures submitted to the Department of Pathology and Laboratory Medicine at DHMC, New Hampshire, USA
+PRJNA1133624		country	Spain	True		209	mainly from the A Coruna University Hospital Complex (CHUAC, Galicia, Spain) and associated collections
+PRJNA246471	virginia_cpe	country	USA	True		135	a single institution in Virginia where KPC-producing Gammaproteobacteria are endemic over several years
+PRJNA271899	cpe_surveillance_five_us_hospitals	country	USA	True		730	Beth Israel Deaconess Medical Center (BIDMC), Brigham and Women's Hospital (BWH), and Massachusetts General Hospital (MGH) in Boston, MA, and the University of California Irvine (UCI) Medical Center in Orange, CA
+PRJNA278886		country	USA	True		284	Antimicrobial Surveillance from Brigham & Women's Hospital, Boston MA
+PRJNA325243	vetinary_fda	country	USA	True		630	Isolates were collected from 26 states by a network of 30 Vet-LIRN veterinary diagnostic laboratories; Vet-LIRN is a program within the FDA's Center for Veterinary Medicine, a US federal agency.
+PRJNA341927	CG 258	country	Israel	True		244	Klebsiella pneumoniae in Israeli post-acute care hospitals
+PRJNA351909	melb_surveillance	country	Australia	True		58	Klebsiella pneumoniae isolates from carriage screening and infection cases in an Australian hospital
+PRJNA415194	Long term accute care	country	USA	True		459	statewide patient transfer data
+PRJNA544438	polymixin B KP	country	Oman	True		237	Extensively drug-resistant Klebsiella pneumoniae and E. coli from Oman in 2015
+PRJNA549322	NYC_CRE	country	USA	False		284	8 New York and New Jersey medical centers
+PRJNA564992	canada_esbl	country	Canada	True		142	ESBL-producing Escherichia coli and Klebsiella pneumoniae collected from patients associated with Canadian hospitals
+PRJNA565795	melb_superbugs	country	Australia	True		0	in Melbourne, Australia (population 4·9 million in 2018)
+PRJNA604910	ratcliffe_hospital_sink_drains	country	United Kingdom	True		264	John Radcliffe Hospital, Oxford, UK
+PRJNA604975	oxfordshire_bsi_surveillance	country	United Kingdom	True		910	Whole genome sequencing of Gram-negative bacteremias from Oxfordshire, UK.
+PRJNA626430	OXA fitness effect	country	Spain	True		159	Hospital Universitario Ramon y Cajal (Madrid, Spain)
+PRJNA634885	Dutch plasmids	country	Netherlands	True		144	Dutch national surveillance
+PRJNA641987	subsaharan_neonatal_outbreak	country	Malawi	True		16	Queen Elizabeth Central Hospital (QECH) is the referral hospital in southern Malawi
+PRJNA646358	Cietnamise ICUs	country	Vietnam	True		141	the adult ICU at the Hospital for Tropical Diseases (HTD) (a tertiary infectious diseases referral hospital) in Ho Chi Minh City (HCMC), Vietnam
+PRJNA648389	texan_esbl	country	USA	True		126	The University of Texas MD Anderson Cancer Center (MDACC) in Houston, TX
+PRJNA686897	chigago_cpe_ndm	country	USA	True		452	across Chicago-area hospitals
+PRJNA765801	CPK Enterobacteriales	country	Singapore	True		213	blaNDM Carbapenemase-producing Enterobacterales (CPE) isolates in Singapore from 2010-2015
+PRJNA767944	CPK transmission	country	China	True		173	isolates collected from December 2016 to April 2017 at Huashan Hospital, with more than 1,200 beds... As a tertiary hospital in Shanghai, China
+PRJNA768622	Manchester_TRACE	country	United Kingdom	True		832	Patient and environmental blaKPC-Enterobacterales diversity across six wards in a UK hospital over 6-12 months
+PRJNA777643	Bactobolize	country	Australia	True		392	Whole genome sequencing of clinical Klebsiella pneumoniae isolates from an Australian hospital
+PRJNA787062	ethiopian_klebsiella	country	Ethiopia	True		192	sepsis patients in Ethiopian referral hospitals
+PRJNA789336	CPK bloodstream	country	Turkey	True		258	A prospective, multicentre observational cohort study was conducted in thirteen tertiary care centres in Turkey from June 2018 to June 2019.
+PRJNA804332	kenyan_neonate	country	Kenya	True		138	Sequence data generated in this study was deposited in the NCBI Sequence Read Archive (SRA) under BioProject accession PRJNA804332... Kenyatta National Hospital (KNH) in Nairobi, Kenya
+PRJNA845975	bangladesh_child_heatlh_research_foundation	country	Bangladesh	True		567	blood and/or CSF specimens were collected at four hospitals in Bangladesh
+PRJNA855907	canadian_blaoxa48	country	Canada	True		508	CNISP is a sentinel surveillance system which collects epidemiological and linked microbiology data from 90 Canadian acute-care hospitals across ten provinces and one territory.
+PRJNA857686	nevada_health_lab	country	USA	True		313	sequenced at the Nevada State Public Health Lab
+PRJNA885285	Cambodia_MDRE	country	Cambodia	True		130	Faecal samples were collected from community participants of Siem Reap, Cambodia in a cross-sectional study from August to November 2019.
+PRJNA978102	boston_bsis	country	USA	True		108	The study was conducted at Massachusetts General Hospital in Boston, Massachusetts, a 1000-bed tertiary care hospital
+PRJNA982859	Wastewater_USA_isolates	country	USA	True		183	The U.S. Food and Drug Administration's (FDA) GenomeTrakr Program... This laboratory network comprises 31 federal and state public health laboratories [all US-based].
+PRJNA996149	Cefiderocol_CRE_China	country	China	True		320	A total of 320 non-duplicate CRKp clinical isolates were collected from six hospitals in different cities in China between 2014 and 2022.
+PRJDB10842	enterobacterales_japan	host	Homo sapiens	True		1482	collected in 2019 and 2020 from 175 hospitals based on antimicrobial susceptibility testing results in each hospital across Japan
+PRJDB12075	Desinfectant susceptibility	host	human	True		184	both sets of isolates were obtained from the same 178 residents in LTCFs...collected by Hiroshima University and National Institute of Infectious Diseases in Japan
+PRJDB12116	japanese_surveillance	host	Homo sapiens	True		154	Whole-genome sequencing of Klebsiella pneumoniae, K. variicola, K. quasipneumoniae, and K. michiganensis clinical isolates from Japan.
+PRJDB14656	japanese_surveillance	host	Homo sapiens	True		234	Whole-genome sequencing of Klebsiella pneumoniae, K. variicola, and K. quasipneumoniae isolated from blood culture positive specimens in Japan.
+PRJDB17849	japanese_surveillance	host	Homo sapiens	True		0	Klebsiella pneumoniae clinical isolates were collected in Japan. Whole-genome sequencing was performed and their molecular epidemiological and clinical characteristics were analyzed.
+PRJDB5929	thailand_cpe	host	Homo sapiens	True		707	Isolates were obtained from various clinical specimens of 744 patients (e.g. blood, sputum, urine, abdominal fluid and stool).
+PRJEB12699		host	Homo sapiens	True		143	Selected samples from three collections of Klebsiella pneumoniae (Kpn) have been sequenced. These collections include an extended spectrum beta lactam (ESBL) resistant-collection of isolates obtained from two multicenter studies in Spain
+PRJEB15226	cenre-sepcific typing	host	human	True		288	a national collection of 1,798 ESBL-E isolates obtained from patients in Dutch hospitals
+PRJEB1563	invasive_kilifi	host	human	True		198	Molecular_epidemiology_of_Klebsiella_pneumoniae_invasive_isolates_from_Kilifi
+PRJEB17615	Philipines_network	host	Homo sapiens	True		365	The majority of the isolates were from inpatients (n = 253, 97.7%) and from hospital-acquired infections (n = 171, 66.0%)
+PRJEB1800	nepal_hospital_outbreak	host	Homo sapiens	True		121	The isolates described in this study were obtained from cultures of clinical specimens taken as part of routine clinical care from Patan Hospital inpatients between May and December 2012.
+PRJEB19229	irish_cpe_surveillance	host	Homo sapiens	False		96	Among the 746 samples, 735 were from patient body sites (491 colonizing, 233 invasive and 11 unknown sites) and 11 from the environment that was associated with a patient.
+PRJEB19322	neonatal_klebsiella	host	Homo sapiens	True		92	ESKAPE pathogens...cause opportunistic, hospital-acquired infections...from a single Malawian hospital
+PRJEB19435	irish_cpe_surveillance	host	Homo sapiens	True		0	One isolate per patient of any Enterobacterales species confirmed as a carbapenemase-producer from any specimen type was included. Among the 746 samples, 735 were from patient body sites.
+PRJEB20799		host	Homo sapiens	True		44	neonatal unit of the hospital … isolates collected from cases of disease
+PRJEB21605	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	host	Homo sapiens	True		149	K. pneumoniae isolates obtained from blood cultures derived from hospital- and/or community-associated BSI, following routine diagnostic protocols in each hospital laboratory.
+PRJEB22252	baby_biomes_uk	host	Homo sapiens	True		237	we cultivated bacterial species from human faecal samples
+PRJEB22890	superiore_di_sanita	host	Homo sapiens	True		157	hospital laboratories participating in AR-ISS were requested to provide consecutive, non-duplicated CR-KP from invasive infections
+PRJEB24082	irish_cpe_surveillance	host	human	True		200	735 were from patient body sites (491 colonizing, 233 invasive and 11 unknown sites) and 11 from the environment that was associated with a patient.
+PRJEB24083	irish_cpe_surveillance	host	human	False		0	Among the 746 samples, 735 were from patient body sites (491 colonizing, 233 invasive and 11 unknown sites) and 11 from the environment that was associated with a patient.
+PRJEB24085	irish_cpe_surveillance	host	Homo sapiens	True		104	Colonizing samples were detected on programmes of surveillance culture of rectal swabs or faeces from people admitted to healthcare facilities and identified as at high risk of colonization based on national guidance.
+PRJEB24086	irish_cpe_surveillance	host	Homo sapiens	True		3	We sequenced a total of 840 CPE that were submitted to the National CPE Reference Laboratory, Galway University Hospital, Ireland... Among the 746 samples, 735 were from patient body sites.
+PRJEB24087	irish_cpe_surveillance	host	Homo sapiens	True		0	735 were from patient body sites (491 colonizing, 233 invasive and 11 unknown sites)
+PRJEB27256	Norway_k_pnuemoniae	host	human	True		1063	human clinical K. pneumoniae strains
+PRJEB28054		host	Homo sapiens	True		326	Klebsiella infections — clinical infections context implies human hosts across all 326 samples.
+PRJEB29143	word diagnostics	host	Homo sapiens	True		498	The objectives of this study are to investigate human intestinal carriage of Kp
+PRJEB29740	indian_cpe_surveillance	host	Homo sapiens	True		930	All sequenced isolates in our study represent unique patient infection episodes, with only one isolate per patient.
+PRJEB29742	columbia_cpe_surveillance	host	Homo sapiens	True		555	originating from healthcare-associated infections (HAI)
+PRJEB30134	long_read_CPE	host	Homo sapiens	True		201	Clinical diagnostic samples and screening (rectal swab or stool) samples from hospital inpatients as well as samples referred from local General Practices (GPs), were collected from 1 November 2014 to 31 December 2020.
+PRJEB33565	neonatal_klebsiella	host	Homo sapiens	True		403	neonatal sepsis in low- and middle-income countries; monitor mother and infant wellbeing — all isolates from human neonates
+PRJEB35685	Netherlands CPK	host	Homo sapiens	True		412	national laboratory surveillance
+PRJEB36486	malawi_colonisation_dynamics	host	Homo sapiens	True		221	observational study of patients with sepsis admitted to Queen Elizabeth Central Hospital, Blantyre, Malawi
+PRJEB36683	CC14 KP clone	host	Homo sapiens	True		1820	328 K. pneumoniae isolates and their epidemiological data were collected from 239 patients
+PRJEB39293	maternal_amr_low_income_countrie	host	Homo sapiens	True		161	From 211 isolates from K. pneumoniae, 161 were sequenced (125 BRs, 36 MRs)... women in labour (preferably) or immediately post partum were recruited prospectively... neonates who presented to clinical sites with clinically suspected sepsis
+PRJEB39867	Germany_ESBL	host	Homo sapiens	True		286	patients aged ≥18 years were included [...] at six German tertiary care university hospitals
+PRJEB39943	CCRE survey	host	Homo sapiens	True		2904	Isolates were collected from hospitals and their associated clinical microbiology laboratories in 37 countries during a six-month period.
+PRJEB42331	dutch_cpe_surveillance	host	Homo sapiens	True		80	The bacterial isolates belong to the medical microbiological laboratories participating in the Dutch National CPE Surveillance programme and were obtained as part of routine clinical care in recent years.
+PRJEB42462	Klebsiella_pneumoniae_longitudinal_study	host	Homo sapiens	True		1302	three longitudinal collections each spanning over 10 years sampling in the UK, Malawi and Argentina [clinical hospital collections of K. pneumoniae from human patients for MDR lineage investigation]
+PRJEB46513	neonatal_klebsiella	host	Homo sapiens	True		455	Klebsiella samples from a neonatal unit in Zambia.
+PRJEB48990	MDR KP Wales	host	Homo sapiens	True		540	The clinical and screen isolates were recovered from 405 patients in hospitals and GP surgeries across Wales.
+PRJEB50614	indian_cpe_surveillance	host	Homo sapiens	True		644	The collection included 1072 isolates from 38 different hospitals located in 19 different states across India from 60% (646/1072) male and 40% (426/1072) female population.
+PRJEB5065	mdr_surveillance_uk_ireland	host	Homo sapiens	True		381	The collection was composed of isolates that were submitted to a systematic bacteremia surveillance program between 2001 and 2011 by 28 hospitals across the United Kingdom and Ireland.
+PRJEB50822	Spain CPK	host	Homo sapiens	True		376	Seventy-one hospitals, representing all 50 Spanish provinces, collected the first 10 isolates
+PRJEB58018	Germany-Ukrain-NDM_OXA	host	Homo sapiens	True		201	infections or colonisations with carbapenemase-producing Enterobacterales (CPE) have been notifiable in Germany... cases from Ukraine were younger and tended to be more often colonised
+PRJEB58216	greek_cpe	host	Homo sapiens	True		209	All consecutive K. pneumoniae isolates recovered from patients with bloodstream infection (the first isolate per patient)
+PRJEB63361	cpe_south_africa	host	Homo sapiens	True		413	isolated from adult patients (59%)... neonatal (57%) and paediatric (38%) isolates
+PRJEB64895	greek_cpe	host	Homo sapiens	True		142	the Greek National Reference Laboratory invited the hospitals to submit up to 10 consecutive K. pneumoniae isolates resistant to any carbapenem... from individual patients accompanied by epidemiological and microbiological data
+PRJEB6891	melb_surveillance	host	Homo sapiens	True		490	Hospital_acquired_Klebsiella_pneumoniae_and_the_role_of_colonization_and_transmission__Australia_
+PRJEB74083		host	Homo sapiens	True		106	These isolates originated from clinical samples collected from 17 public hospitals between 28 April 2022 and 29 November 2023
+PRJNA1028672	CRKP_China	host	Homo sapiens	True		546	Carbapenem-resistant Klebsiella pneumoniae (CRKP) represents a critical public health threat due to its high mortality and multidrug resistance
+PRJNA1054115	Albany_bloodstream_usa	host	Homo sapiens	True		137	Bacterial isolates from bloodstream infections in unique pediatric and adult patients were grown from clinical blood cultures submitted to the Department of Pathology and Laboratory Medicine at DHMC.
+PRJNA1087366		host	Homo sapiens	True		135	Hospitalized infants <60 days of age with an episode of clinically suspected sepsis
+PRJNA1133624		host	human	True		209	clinical samples, mainly from the A Coruna University Hospital Complex (CHUAC, Galicia, Spain)
+PRJNA246471	virginia_cpe	host	Homo sapiens	True		135	204 patients infected/colonized with blaKPC-positive Enterobacteriaceae during the prospective sampling period
+PRJNA271899	cpe_surveillance_five_us_hospitals	host	Homo sapiens	True		730	we collected additional samples from symptomatic patients at Beth Israel Deaconess Medical Center (BIDMC), Brigham and Women's Hospital (BWH), and Massachusetts General Hospital (MGH) in Boston, MA, and the University of California Irvine (UCI) Medical Center in Orange, CA
+PRJNA278886		host	Homo sapiens	True		284	clinical isolates with WGS and assess their mobilization potential . The results can support national surveillance of clinically identified pathogens and provide invaluable information to infection control in hospital
+PRJNA341927	CG 258	host	human	True		244	Klebsiella pneumoniae in Israeli post-acute care hospitals
+PRJNA351909	melb_surveillance	host	Homo sapiens	True		58	Klebsiella pneumoniae isolates from carriage screening and infection cases in an Australian hospital
+PRJNA395086	aminoglycoside_resistance	host	Homo sapiens	True		166	Sequencing of clinical strains of Klebsiella pneumoniae
+PRJNA398288	cephalosporin Autralia, NZ and Singapore	host	Homo sapiens	True		36	isolated from patients with bloodstream infections
+PRJNA415194	Long term accute care	host	Homo sapiens	True		459	patients colonized and infected with CRKP in high-transmission facilities
+PRJNA475751	pittsburgh_edshat	host	Homo sapiens	True		948	enhance outbreak detection in hospitals and thereby reduce hospital-associated infections.
+PRJNA549322	NYC_CRE	host	Homo sapiens	False		284	patients with CRE bacteremia from 2016 to 2018 at 8 academic medical centers in NY/NJ
+PRJNA557275	columbia_irvine_polymyxin_resistance	host	Homo sapiens	True		340	We included 88 patients with PR K. pneumoniae from 2011-2018 and collected demographic, antimicrobial exposure, and infection data.
+PRJNA564424	Manchester_TRACE	host	Homo sapiens	True		537	isolates cultured from patients in the Central Manchester University Hospitals NHS Foundation Trust (CMFT; now part of the Manchester University NHS Foundation Trust)
+PRJNA564992	canada_esbl	host	Homo sapiens	True		142	collected from patients associated with Canadian hospitals
+PRJNA565795	melb_superbugs	host	Homo sapiens	True		0	MDRO isolates from four defined species were included from patient samples (clinical or screening samples) collected routinely from hospital inpatients
+PRJNA603790	transmission_cluster_detection_chicago	host	Homo sapiens	True		462	Study of Klebsiella pneumoniae transmission in a long-term acute care hospital
+PRJNA604975	oxfordshire_bsi_surveillance	host	Homo sapiens	True		910	Blood cultures processed by the laboratory were taken as part of routine clinical workup... This work uses data provided by patients and collected by the UK's National Health Service as part of their care and support.
+PRJNA626430	OXA fitness effect	host	Homo sapiens	True		159	recovered from patients in a large hospital in Madrid, Spain
+PRJNA641987	subsaharan_neonatal_outbreak	host	Homo sapiens	True		16	K. pneumoniae bloodstream isolates reported from neonates admitted to the ward...K. pneumoniae bloodstream isolates reported from other paediatric wards in the same hospital
+PRJNA646358	Cietnamise ICUs	host	Homo sapiens	True		141	patients (≥15 years old) hospitalized in the adult ICU at the HTD
+PRJNA648389	texan_esbl	host	Homo sapiens	True		126	we characterized 126 index and 27 recurrent 3GC-R K. pneumoniae bacteraemia isolates collected from 2016 to 2022 at our institution... cancer patients at our institution
+PRJNA686897	chigago_cpe_ndm	host	Homo sapiens	True		452	across Chicago-area hospitals
+PRJNA765801	CPK Enterobacteriales	host	Homo sapiens	True		213	blaNDM Carbapenemase-producing Enterobacterales (CPE) isolates in Singapore from 2010-2015
+PRJNA767944	CPK transmission	host	Homo sapiens	True		173	A total of 173 CP-Kpn isolates were collected from 136 patients from December 2016 to April 2017 at Huashan Hospital
+PRJNA777643	Bactobolize	host	Homo sapiens	True		392	Whole genome sequencing of clinical Klebsiella pneumoniae isolates from an Australian hospital
+PRJNA787062	ethiopian_klebsiella	host	Homo sapiens	True		192	sepsis patients in Ethiopian referral hospitals
+PRJNA789336	CPK bloodstream	host	Homo sapiens	True		258	One hundred eighty-seven patients were recruited.
+PRJNA789565	michigan_matched_colonising_infecting	host	Homo sapiens	True		330	Deposited sequences are those of Klebsiella strains isolated from patient rectal swabs or clinical cultures.
+PRJNA820335	Clinical CR-hvKP ST11 strains collection	host	Homo sapiens	True		110	Clinical CR-hvKP ST11 strains collection
+PRJNA835677	aerobactin in pigs	host	pig	True		150	KpSC isolates from healthy Norwegian pigs were characterized...and compared to KpSC isolates from pigs in Thailand
+PRJNA845975	bangladesh_child_heatlh_research_foundation	host	Homo sapiens	True		567	Children hospitalized in these hospitals who matched the WHO-defined clinical criteria for pneumonia, severe pneumonia, severe disease, and meningitis were evaluated by trained research physicians.
+PRJNA855907	canadian_blaoxa48	host	Homo sapiens	True		508	Enterobacterales organisms isolated from patients between 2010 and 2021 were eligible for inclusion
+PRJNA857686	nevada_health_lab	host	Homo sapiens	True		313	HAI bacteria sequenced at the Nevada State Public Health Lab — HAI (Healthcare-Associated Infections) implies human hosts
+PRJNA885285	Cambodia_MDRE	host	Homo sapiens	True		130	Stool samples were collected from 290 participants in 84 families (42 family units in each arm).
+PRJNA978102	boston_bsis	host	Homo sapiens	True		108	108 clinical isolates of Klebsiella (mostly Klebsiella pneumoniae) from bloodstream infections (BSI) of hospitalized individuals at Massachusetts General Hospital
+PRJNA996149	Cefiderocol_CRE_China	host	Homo sapiens	True		320	A total of 320 non-duplicate CRKp clinical isolates were collected from six hospitals in different cities in China between 2014 and 2022.
+PRJDB14656	japanese_surveillance	isolation_source	blood culture	True		234	Whole-genome sequencing of Klebsiella pneumoniae, K. variicola, and K. quasipneumoniae isolated from blood culture positive specimens in Japan.
+PRJEB21605	Klebsiella_pneumoniae_pan_Asian_genomic_surveillance_network_pilot_	isolation_source	blood	True		149	K. pneumoniae isolates obtained from blood cultures derived from hospital- and/or community-associated BSI, following routine diagnostic protocols in each hospital laboratory.
+PRJEB22252	baby_biomes_uk	isolation_source	feces	True		237	we cultivated bacterial species from human faecal samples on different selective agar media and broth
+PRJEB29143	word diagnostics	isolation_source	stool	True		498	Although human gut carriage of Kp is well documented, its role as a reservoir and primary source of high-risk infections remains to be characterized precisely.
+PRJEB36486	malawi_colonisation_dynamics	isolation_source	stool	True		221	serial stool sampling and selective ESBL-E culture with subsequent whole genome sequencing of isolates
+PRJEB39293	maternal_amr_low_income_countrie	isolation_source	rectal swab	True		161	From 211 isolates from K. pneumoniae, 161 were sequenced (125 BRs, 36 MRs)... rectal samples were to be taken from all mothers on recruitment and from neonates... sterile swabs in Amies Transport Medium with charcoal (Liofilchem) were used
+PRJEB5065	mdr_surveillance_uk_ireland	isolation_source	blood	True		381	We used genomic and phylogenetic approaches to analyze a collection of MDR K. pneumoniae isolates systematically obtained from bloodstream infections in hospitals across the United Kingdom and Ireland.
+PRJEB58216	greek_cpe	isolation_source	blood	True		209	We recovered 392 CRKP bloodstream isolates from patients admitted to a tertiary referral hospital in Athens, Greece, between 2003 and 2018 and analysed 209 of those by whole genome sequencing.
+PRJNA398288	cephalosporin Autralia, NZ and Singapore	isolation_source	blood	True		36	isolated from patients with bloodstream infections
+PRJNA549322	NYC_CRE	isolation_source	blood	False		284	patients with CRE bacteremia ... Bloodstream isolates were shipped to a central laboratory.
+PRJNA604910	ratcliffe_hospital_sink_drains	isolation_source	hospital sink drain aspirate	True		264	autoclaved tubing cut to 10 inches was used to aspirate from sink p-traps via a sterile 50 ml syringe
+PRJNA604975	oxfordshire_bsi_surveillance	isolation_source	blood	True		910	Blood cultures processed by the laboratory were taken as part of routine clinical workup.
+PRJNA626430	OXA fitness effect	isolation_source	rectal swab	True		159	recovered from patients in a large hospital in Madrid, Spain... pOXA-48-carrying enterobacteria recovered from patients in a large hospital... from the gut microbiota of hospitalized patients
+PRJNA641987	subsaharan_neonatal_outbreak	isolation_source	blood	True		16	We studied all K. pneumoniae bloodstream isolates reported from neonates admitted to the ward
+PRJNA648389	texan_esbl	isolation_source	blood	True		126	We defined an index K. pneumoniae bacteraemia isolate as the first occurrence of a positive blood culture
+PRJNA789336	CPK bloodstream	isolation_source	blood	True		258	carbapenem-resistant Klebsiella spp. (CRK) bloodstream infections; A total of 187 patients with CRK bacteraemia were recruited.
+PRJNA885285	Cambodia_MDRE	isolation_source	stool	True		130	The 290 faecal samples were stored at −80°C in tryptone soya broth/10% glycerol medium immediately on receipt at the laboratory.
+PRJNA978102	boston_bsis	isolation_source	blood	True		108	WGS was performed on the first K. pneumoniae bloodstream isolate collected from patients between July 2021 and May 2022.
+PRJNA982859	Wastewater_USA_isolates	isolation_source	wastewater	True		183	Miscellaneous bacteria isolated from wastewater and submitted to the FDA GenomeTrakr project.
