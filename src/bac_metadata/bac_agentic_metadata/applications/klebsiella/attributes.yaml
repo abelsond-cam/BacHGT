@@ -66,6 +66,24 @@ attributes:
     # latter is sometimes enough on its own, e.g. "all hospital", "all AMR"). The value may be
     # applied to all samples in the accession only when we are confident the description covers
     # the whole study accession. The grade records that confidence:
+    sizing_first: |-
+      SIZING SANITY-CHECK — DO THIS FIRST, BEFORE GRADING. Establish the true size of THIS
+      accession from ENA, then reconcile it against the numbers stated in the article. Trust the
+      ENA-derived counts (Stage-1 ena_taxon_samples / total samples); do NOT trust any
+      spreadsheet's samples_in_study / kleb_in_study — those are frequently wrong.
+      Let E = the ENA-deposited count for this accession (E_taxon = the taxon-of-interest subset).
+      Compare E to the article:
+        A) article's SCREENED / COLLECTED cohort is substantially LARGER than E
+             -> substantial SAMPLE SELECTION happened before sequencing: only a subset (often the
+                resistant one) was actually sequenced and deposited. Grade amr_study on that
+                deposited subset (this is the PRJEB28400 pattern: screened ~3100, E=1950 -> amr).
+        B) article's SEQUENCED-genome count is substantially LARGER than E
+             -> the study spans MULTIPLE accessions and this is only one of them (often not stated
+                explicitly); the project values may not cover the whole article.
+        C) article's sequenced count is substantially SMALLER than E
+             -> this is a SHARED / umbrella accession holding more than this one study deposited;
+                a single whole-project value may not be gradeable.
+      Counts always refer to the ENA-deposited set, never the parent/screened cohort.
     grading_basis: |-
       gradeable     — a single value is supported for the WHOLE project, by the EBI study
                       title/description, or by a paper describing all or nearly all (>90%) of

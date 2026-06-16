@@ -153,6 +153,7 @@ def _render_rubric(spec: AttributeSpec) -> str:
     toi = raw["taxon_of_interest"]
     grade_scale = _grade_scale(spec)
     study_level_block = raw.get("attributes", {}).get("study_level", {})
+    sizing_first = study_level_block.get("sizing_first", "")
     grading_basis = study_level_block.get("grading_basis", "")
     coverage_def = (
         raw.get("attributes", {})
@@ -163,6 +164,8 @@ def _render_rubric(spec: AttributeSpec) -> str:
 
     lines: list[str] = []
     lines.append(f"TAXON OF INTEREST: {toi['name']} (rank: {toi['rank']}). Count and grade only records of this taxon.")
+    if sizing_first:
+        lines.append(f"\n{sizing_first}")
     lines.append(f"\nGRADE SCALE: {grade_scale}")
     if grading_basis:
         lines.append(f"\nGRADING BASIS (applies to every study-level attribute):\n{grading_basis}")
