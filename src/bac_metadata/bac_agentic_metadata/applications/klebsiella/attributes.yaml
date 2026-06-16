@@ -246,7 +246,8 @@ attributes:
           meaning: date of sample collection
           whole_project_value: |-
             If no specific dates are given but all collection falls within a <= 2-year period, set
-            the midpoint of that period (e.g. all within 2016-17 -> 2017-01-01).
+            the midpoint of that period (e.g. all within 2016-17 -> 2017-01-01). If the collection
+            period spans MORE than 2 years, leave collection_date blank — do not backfill.
 
 # COHORT FLAGS emitted per accession alongside the attributes above.
 cohort_flags:
