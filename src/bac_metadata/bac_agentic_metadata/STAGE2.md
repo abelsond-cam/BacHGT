@@ -146,9 +146,22 @@ many links). Three measures make "same paper, different link" a match rather tha
 
 Residual mismatches go to the **opposing adjudicator** (`adjudicate_find`, Opus), which returns
 `same_paper` (the two links are the same work — incl. preprint↔published — so not a finding error) and
-a `verdict` of which paper actually *describes* the project, with a verbatim quote. On the dry-run it
-showed two "mismatches" were in fact the finder being right and the curated link wrong (a data-reuse
-follow-up; an umbrella-program co-paper), lifting adjudicated find-accuracy to 6/8.
+a `verdict` of which paper actually *describes* the project, with a verbatim quote.
+
+### Results (full train+val, 109 accessions, Sonnet finder on the subscription backend)
+
+102 accessions have a curated `paper_link` (7 have none). Raw **find-accuracy 0.62** (63/102):
+`exact_match` 54, `title_match` 9, `mismatch` 19, `not_found` 20 (conservative abstentions — 8 of
+which retrieved zero candidates). **Adjudicating the 19 mismatches lifts this to 0.75** (77/102): the
+Opus critic found **12 `found_correct`** (the curated link was wrong — a data-reuse/secondary paper)
++ 1 `same_paper` + 2 `both_describe`, leaving only **5 genuine finder errors** (`curated_correct`:
+PRJDB5929, PRJEB38289, PRJEB15226, PRJNA278886, PRJEB58018). So when finder and curated link
+disagree, the finder is right more than twice as often as it is wrong.
+
+Channel pull-through (winning channel of matched finds): `europepmc_accession` is the workhorse (47
+sole + combos); `ncbi_bioproject` earns its keep with **3 sole wins**; the preprint→published
+promotion (`published_version`) supplied **2** winners; `europepmc_title` 1 sole. Grounded-verify
+confirmed the accession in the paper text for 61/109 picks (confidence high 70 / medium 27 / low 12).
 
 ## Out of scope (later)
 Stage 3 opposing evaluator (general); Stage 4 MCP; backfill **method (b)** per-sample table
