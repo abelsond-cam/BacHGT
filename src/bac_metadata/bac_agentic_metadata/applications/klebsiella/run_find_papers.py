@@ -87,12 +87,15 @@ def main() -> None:
         taxon_n = int(row["ena_taxon_samples"]) if pd.notna(row["ena_taxon_samples"]) else None
         print(f"[find {i}/{len(sel)}] {acc} (taxon={taxon_n})", file=sys.stderr)
 
-        study = study_title_and_description(acc, cache_dir=ENA_CACHE)
-        candidates, channels = paper_finder.gather_candidates(
-            acc, study["study_title"], study["study_description"], cache_dir=FIND_CACHE
-        )
-        sizing_row = {"ena_taxon_samples": taxon_n, "umbrella_suspected": row.get("umbrella_suspected")}
+        # Whole per-accession pipeline (ENA fetch → candidate gathering → LLM pick) is wrapped so a
+        # single bad accession (e.g. an upstream API returning malformed JSON) is skipped, never
+        # fatal to the batch — except a usage-limit, which stops cleanly and writes partial results.
         try:
+            study = study_title_and_description(acc, cache_dir=ENA_CACHE)
+            candidates, channels = paper_finder.gather_candidates(
+                acc, study["study_title"], study["study_description"], cache_dir=FIND_CACHE
+            )
+            sizing_row = {"ena_taxon_samples": taxon_n, "umbrella_suspected": row.get("umbrella_suspected")}
             result = paper_finder.find_paper(
                 spec, llm,
                 accession=acc, ena_title=study["study_title"], ena_description=study["study_description"],
@@ -104,8 +107,8 @@ def main() -> None:
                   "Rerun the same command to resume — cached results return instantly.", file=sys.stderr)
             limited = True
             break
-        except (RuntimeError, ValueError) as exc:
-            print(f"  [skip {acc}] {exc}", file=sys.stderr)
+        except Exception as exc:  # noqa: BLE001 — per-accession isolation; one failure must not kill the batch
+            print(f"  [skip {acc}] {type(exc).__name__}: {exc}", file=sys.stderr)
             skipped.append(acc)
             continue
         results.append(result)

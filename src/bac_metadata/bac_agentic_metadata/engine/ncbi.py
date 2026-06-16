@@ -73,7 +73,7 @@ def bioproject_pmids(accession: str, *, cache_dir=None, api_key: str | None = No
     if esearch is not None:
         try:
             uids = esearch.json().get("esearchresult", {}).get("idlist", []) or []
-        except json.JSONDecodeError:
+        except ValueError:  # stdlib json.JSONDecodeError AND requests/simplejson JSONDecodeError
             uids = []
 
     pmids: list[str] = []
@@ -88,7 +88,7 @@ def bioproject_pmids(accession: str, *, cache_dir=None, api_key: str | None = No
             continue
         try:
             linksets = elink.json().get("linksets", [])
-        except json.JSONDecodeError:
+        except ValueError:  # stdlib json.JSONDecodeError AND requests/simplejson JSONDecodeError
             continue
         for ls in linksets:
             for db in ls.get("linksetdbs", []):
