@@ -73,7 +73,7 @@ is CF status. Each attribute is graded on the `gradeable / partial / not_gradeab
 
 ## 5. Iteration discipline (no overfitting)
 
-The curated Klebsiella accessions are split **train 50 / val 20 / test 30** by accession,
+The curated Klebsiella accessions are split **train 78 / val 31 / test 47** by accession,
 folds assigned at paper-group level to prevent paper leakage
 (`applications/klebsiella/data/kleb_project_splits.tsv`, seeded, reproducible). **All
 rubric/prompt tuning happens on train+val; the test fold stays sealed** until a single
@@ -98,6 +98,70 @@ final measured-agreement run.
   MCP tool; produce the best-paper-per-accession table, the accessible-vs-manual-download
   queue, and the cohort-mixed → needs-raw-tables list. Run end-to-end on the real cohorts
   (Klebsiella small-study tail + ~7,000 *M. abs*).
+
+## 6b. Current status & results (as of 2026-06-16)
+
+Stages 1–2 are **built and validated on train+val** (test fold sealed). Full per-module detail +
+how-to-run is in [`STAGE2.md`](STAGE2.md); this is the summary + measured results.
+
+**Stage 1 — deterministic sizing/completeness (no LLM): done.** Per accession: ENA total + taxon
+sample/run counts, `umbrella_suspected`, fold → `data/stage1_sizing.tsv`. The stable test bed.
+
+**Stage 2A — grading (LLM): done.** The grader renders the rubric *straight from
+`attributes.yaml`* (each attribute `definition` + shared `grading_basis` + a `sizing_first`
+sanity-check that says trust ENA counts over the sheet and reconcile vs the article) into both a
+forced-tool JSON schema and the prompt. Two interchangeable backends behind `engine.llm.LLMClient`:
+**`subscription`** (default — `claude -p`, **zero API spend**, fresh single-turn context per call,
+schema embedded + validated + one retry) and **`api`** (paid, forced tool use). A **backend-
+independent disk cache** makes reruns byte-identical/free. Per accession it emits each study-level
+attribute `{value, grade, evidence_quote}`, `paper_coverage_for_taxon`, method-(a) backfill
+proposals, and `needs_manual_download`.
+*Results (n train+val):* primary checks **amr_study 0.94** (was 0.78) and **study_setting 0.98**
+(was 0.90), after folding adjudicator rule-gaps into the rubric and applying David-verified GT
+corrections. `cohort_age` is **not scored** (no reliable GT). Gains are partly mechanical (truth
+corrected to match verified findings); the pre-correction raw figures were 0.78 / 0.90.
+
+**Adjudication — opposing Opus critic: done.** For every grader-vs-sheet disagreement,
+`engine.adjudicator.adjudicate` re-reads the paper and returns a verdict {model_correct,
+sheet_correct, both_defensible, undetermined} + **verbatim quote** + `rule_gap`. The sheet is *not*
+assumed correct. First full pass: **28 disagreements → 20 model_correct (sheet wrong), 3
+sheet_correct, 5 undetermined**. The verified sheet errors became a **GT-correction overlay**
+(`data/gt_corrections.tsv`, 19 rows, applied at scoring time; snapshot stays immutable); a re-grade
+under the improved rubric left **7** disagreements.
+
+**Stage 2B — paper finding (LLM-picks-among-retrieved, never invents): done.** Deterministic
+retrieval (ENA-description id-mining → NCBI BioProject elink → Europe PMC accession text-mining →
+EPMC title) unions candidates; the LLM only picks an index; the pick is **grounded** (accession must
+appear in the paper) with abstain-over-guess. Matching to the curated `paper_link` is by paper
+**identity** (union of all curated rows + EPMC cross-id `{pmid,pmcid,doi}` canonicalization + a
+`same_paper` adjudicator verdict), and the finder **always prefers the published version** over a
+preprint (`europepmc.published_version_of`).
+*Results (102 train+val with a curated link):* **find-accuracy 0.62 → 0.75 adjudicated**; of 19
+mismatches the Opus critic ruled 12 the curated link wrong (finder right) + 1 same_paper + 2
+both_describe, leaving 5 genuine finder errors. Channels: `europepmc_accession` workhorse, NCBI 3
+sole wins, preprint→published 2 wins; grounded-verify 61/109.
+
+**Sample-level backfill (method-a) — measured.** The grader proposes whole-project values for
+`country` / `collection_date` / `isolation_source` / `host`; `validate_backfill.py` scores
+*targeting/recall* against the live `parsed_per_project` tab (per-field pre/post completeness — value
+correctness needs per-sample `metadata_v2`, deferred). **country 0.78 / host 0.83 recall** (method-a
+strong); **collection_date 0.17 / isolation_source 0.14** (44 residual accession-fields → the
+deferred **method-(b)** per-sample-table path).
+
+### Forward plan (do in order)
+
+1. **Apply** method-(a) `country`/`host` backfill (the covered cases) to the table — first write-back.
+2. **Value-correctness**: bring in per-sample `metadata_v2` to verify proposed raw values (not just
+   targeting).
+3. **Method-(b)**: per-sample-table extraction for the ~44 `collection_date` / `isolation_source`
+   gaps (needs sample-accession↔paper-table mapping; the `partial` path).
+
+Deferred follow-ups: 2 rubric over-steers (`PRJEB58136` mixed→surveillance; `PRJNA604975`
+mixed→hospital — BSI "all blood cultures→hospital" default vs community-facility nuance) + a wording
+tweak; 2 new GT candidates (`PRJNA789565`→surveillance, `PRJEB30134`→mixed); `PRJEB28400` sample
+counts → ENA-deposit (1950) + audit other screened-subset studies; a re-grade *with* `sizing_first`
+(it postdates the last re-grade); multi-organism-umbrella taxon-aware finder rule. **Test fold stays
+sealed** until a single final run.
 
 ## 7. Definition of done
 

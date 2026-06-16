@@ -163,6 +163,26 @@ sole + combos); `ncbi_bioproject` earns its keep with **3 sole wins**; the prepr
 promotion (`published_version`) supplied **2** winners; `europepmc_title` 1 sole. Grounded-verify
 confirmed the accession in the paper text for 61/109 picks (confidence high 70 / medium 27 / low 12).
 
+## Sample-level backfill (method-a) — targeting (train+val)
+
+The grader proposes a whole-project value for `country` / `collection_date` / `isolation_source` /
+`host` when the paper supports one (method-(a)); `validate_backfill.py` scores **targeting + recall**
+against the live `parsed_per_project` tab (per-field non-null fraction *before* curation
+`<field>_pre` vs *after* `<field>_completeness`). That tab has fractions not values, so value
+correctness is **not** checked here (needs per-sample `metadata_v2` — deferred with method-(b)).
+
+| field | needs backfill | covered by method-a | residual (method-b) | recall vs curation |
+|---|---|---|---|---|
+| `country` | 18 | 14 | 4 | **0.78** |
+| `host` | 28 | 22 | 6 | **0.83** |
+| `collection_date` | 20 | 3 | 17 | 0.17 |
+| `isolation_source` | 31 | 4 | 27 | 0.14 |
+
+Confirms the design: method-(a) handles `country`/`host`; `collection_date`/`isolation_source` are
+the per-sample-table (**method-(b)**) backlog (44 residual accession-fields). `collection_date`
+backfill rule: midpoint of a ≤2-year span, else blank. Proposals + completeness in
+`data/backfill_review.tsv` and `data/backfill_validation_report.{md,tsv}`.
+
 ## Out of scope (later)
 Stage 3 opposing evaluator (general); Stage 4 MCP; backfill **method (b)** per-sample table
 extraction (the deferred `partial` path); the small-study tail + the ~7k *M. abscessus* run.

@@ -21,6 +21,30 @@ Source file deposited: `ATB_metadata_Mabs_2025_release.xlsx`.
 
 *Open: David to describe the exact collation method before building anything.*
 
+## 1b. Agentic metadata-curation engine (`bac_agentic_metadata`)
+
+Reusable species-agnostic engine; Klebsiella is the validation site (test fold sealed).
+Stages 1–2 built + validated on train+val — full walkthrough, results and design in
+[`src/bac_metadata/bac_agentic_metadata/PIPELINE_PLAN.md`](src/bac_metadata/bac_agentic_metadata/PIPELINE_PLAN.md)
+§6b and [`STAGE2.md`](src/bac_metadata/bac_agentic_metadata/STAGE2.md). Current results:
+grading **amr_study 0.94 / study_setting 0.98**; finding **0.62→0.75 adjudicated**; method-(a)
+backfill recall **country 0.78 / host 0.83** (date/source → method-b backlog).
+
+Forward plan (in order):
+
+- [ ] **1 — Apply method-(a) `country`/`host` backfill** (the covered cases) to the table — first write-back.
+- [ ] **2 — Value-correctness**: bring in per-sample `metadata_v2` to verify proposed raw values, not just targeting.
+- [ ] **3 — Method-(b)**: per-sample-table extraction for the ~44 `collection_date`/`isolation_source` gaps
+  (needs sample-accession↔paper-table mapping; the deferred `partial` path).
+
+Deferred follow-ups (smaller):
+
+- [ ] 2 rubric over-steers (`PRJEB58136` mixed→surveillance; `PRJNA604975` mixed→hospital) + a study_setting wording tweak.
+- [ ] 2 new GT-correction candidates to verify + add to the overlay (`PRJNA789565`→surveillance, `PRJEB30134`→mixed).
+- [ ] `PRJEB28400` sample counts → ENA-deposit (1950); audit other screened-but-subset-deposited studies.
+- [ ] Re-grade *with* `sizing_first` (postdates the last re-grade); multi-organism-umbrella taxon-aware finder rule.
+- [ ] Eventually: sealed **test-fold** final measured-agreement run; the ~7k *M. abscessus* application (§1).
+
 ## 2. Re-run complete-genome vs short-read analysis (Kleborate, ISEScan, geNomad)
 
 > ⚠️ **Corruption finding.** The assembly + GFF file set used for the CG-vs-SR
