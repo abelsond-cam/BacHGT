@@ -63,7 +63,7 @@ class Adjudication:
     model: str
 
     def to_row(self) -> dict:
-        """Flatten for a TSV row."""
+        """Flatten for a TSV row (self-sufficient for hand-review: carries the verbatim quote)."""
         return {
             "study_accession": self.study_accession,
             "attribute": self.attribute,
@@ -71,6 +71,8 @@ class Adjudication:
             "sheet_value": self.sheet_value,
             "verdict": self.verdict,
             "correct_value": self.correct_value,
+            "justification_quote": self.justification_quote,
+            "reasoning": self.reasoning,
             "rule_gap": self.rule_gap,
         }
 
