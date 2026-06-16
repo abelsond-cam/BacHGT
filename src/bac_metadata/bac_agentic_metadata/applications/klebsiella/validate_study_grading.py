@@ -37,6 +37,7 @@ DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
 SNAPSHOT_PATH = DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
 STUDY_SETTING_FROZEN = DATA_DIR / "study_setting_frozen.tsv"
+GT_CORRECTIONS = DATA_DIR / "gt_corrections.tsv"  # David-verified overlay on the frozen GT
 SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
 FULLTEXT_CACHE = DATA_DIR / "fulltext_cache"
 LLM_CACHE = DATA_DIR / "llm_cache"
@@ -156,6 +157,25 @@ def _study_setting_from_sheet() -> dict[str, str] | None:
             if v:
                 out[acc] = v
     return out
+
+
+def _apply_gt_corrections(df: pd.DataFrame, attribute: str, gtcol: str) -> int:
+    """Overlay David-verified ground-truth corrections onto ``gtcol`` for one attribute.
+
+    The frozen snapshot is left immutable; ``gt_corrections.tsv`` (study_accession, attribute,
+    corrected_value, source) records hand-verified fixes that override the frozen value at scoring
+    time. Returns the number of rows corrected (0 if the overlay file is absent).
+    """
+    if not GT_CORRECTIONS.exists() or gtcol not in df.columns:
+        return 0
+    ov = pd.read_csv(GT_CORRECTIONS, sep="\t", dtype=str).fillna("")
+    fixes = {r["study_accession"]: r["corrected_value"].strip().lower()
+             for _, r in ov.iterrows() if r["attribute"] == attribute and r["corrected_value"].strip()}
+    if not fixes:
+        return 0
+    mask = df["study_accession"].isin(fixes)
+    df.loc[mask, gtcol] = df.loc[mask, "study_accession"].map(fixes)
+    return int(mask.sum())
 
 
 def _agreement(pred: pd.Series, gt: pd.Series) -> tuple[pd.DataFrame, float, int]:
@@ -281,6 +301,11 @@ def main() -> None:
     md.append("Primary accuracy checks: **amr_study** and **study_setting**. `cohort_age` has no "
               "reliable ground truth and is **not scored** (spot-check only).\n")
 
+    # --- Apply David-verified GT corrections (overlay on the frozen snapshot) ---
+    n_amr_fix = _apply_gt_corrections(df, "amr_study", "gt_amr_study")
+    if n_amr_fix:
+        md.append(f"_Applied {n_amr_fix} David-verified amr_study GT corrections (gt_corrections.tsv)._\n")
+
     # --- PRIMARY: amr_study ---
     conf, acc, n = _agreement(df.get("amr_study__value"), df["gt_amr_study"])
     md.append(f"## amr_study  (accuracy {acc:.2f} over n={n}) — PRIMARY\n")
@@ -293,6 +318,9 @@ def main() -> None:
     source = "live sheet" if args.study_setting_from_sheet else "frozen sidecar"
     if ss is not None:
         df["gt_study_setting"] = df["study_accession"].map(ss)
+        n_ss_fix = _apply_gt_corrections(df, "study_setting", "gt_study_setting")
+        if n_ss_fix:
+            md.append(f"_Applied {n_ss_fix} David-verified study_setting GT corrections (gt_corrections.tsv)._\n")
         conf, acc, n = _agreement(df.get("study_setting__value"), df["gt_study_setting"])
         md.append(f"Accuracy {acc:.2f} over n={n} ({source}).\n")
         md.append(_md_table(conf) + "\n")
