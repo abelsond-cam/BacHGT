@@ -148,6 +148,18 @@ correctness needs per-sample `metadata_v2`, deferred). **country 0.78 / host 0.8
 strong); **collection_date 0.17 / isolation_source 0.14** (44 residual accession-fields → the
 deferred **method-(b)** per-sample-table path).
 
+### Open — manual verification of finding (NOT yet done)
+
+Grading was hand-verified by David (→ the 19-row GT overlay); **finding has only been *run*, not yet
+hand-verified.** Outstanding human-in-the-loop pass over the finder tables in
+`applications/klebsiella/data/`: read `find_validation_report.md` (overview), then work
+`paper_link_review.tsv` (12 wrong-link fixes → curated `paper_link`; 3 flagged need care:
+PRJEB5065/PRJNA544438 multi-organism umbrella, PRJNA246471 same-DOI), spot-check the 54+9
+auto-matched picks (id/title match ≠ verified-correct) and the 20 `not_found` abstentions, then write
+the **verified find-accuracy summary** (the finding analogue of the grading write-up).
+`find_adjudication_report.{md,tsv}` holds the per-mismatch verbatim quotes; `found_papers.{jsonl,tsv}`
+the raw picks.
+
 ### Forward plan (do in order)
 
 1. **Apply** method-(a) `country`/`host` backfill (the covered cases) to the table — first write-back.

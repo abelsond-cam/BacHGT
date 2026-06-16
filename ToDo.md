@@ -30,6 +30,12 @@ Stages 1–2 built + validated on train+val — full walkthrough, results and de
 grading **amr_study 0.94 / study_setting 0.98**; finding **0.62→0.75 adjudicated**; method-(a)
 backfill recall **country 0.78 / host 0.83** (date/source → method-b backlog).
 
+Open — **manual verification of paper-finding (NOT yet done)**: code has run, but the picks need
+David's hand-check. Read `data/find_validation_report.md` (overview), work `data/paper_link_review.tsv`
+(12 wrong-link fixes; 3 need care), spot-check the 54+9 auto-matched picks + 20 abstentions, then
+write the **verified find-accuracy summary** (finding analogue of the grading write-up). Tables:
+`find_validation_report.*`, `find_adjudication_report.*`, `found_papers.*`.
+
 Forward plan (in order):
 
 - [ ] **1 — Apply method-(a) `country`/`host` backfill** (the covered cases) to the table — first write-back.
