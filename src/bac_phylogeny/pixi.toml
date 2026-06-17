@@ -1,0 +1,25 @@
+# Standalone pixi environment for the bac_phylogeny variant-extraction toolchain
+# (bcftools for the per-sample snippy re-filter, samtools to faidx the reference).
+# Kept separate from the monorepo's shared uv env so the bioconda toolchain does
+# not perturb library deps, and used instead of `module load` (the spack module
+# leaks python-3.9 onto PYTHONPATH and breaks uv's numpy). Run pixi from here.
+#
+#   cd src/bac_phylogeny
+#   pixi install                       # solve + fetch the toolchain
+#   pixi run bcftools --version
+#   pixi run samtools --version
+#
+# The SLURM scripts call the solved binaries directly at
+#   src/bac_phylogeny/.pixi/envs/default/bin/{bcftools,samtools}
+#
+# Apple Silicon note: bioconda coverage is osx-64, so osx-64 runs under Rosetta 2;
+# linux-64 is kept for HPC reproducibility.
+
+[workspace]
+name = "bac-phylogeny-variants"
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-64", "linux-64"]
+
+[dependencies]
+bcftools = ">=1.18"
+samtools = ">=1.18"

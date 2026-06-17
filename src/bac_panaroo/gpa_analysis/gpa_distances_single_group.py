@@ -1491,6 +1491,7 @@ def run_gpa_analysis(
     reference_top_n: int = 10,
     skip_clustering: bool = False,
     skip_jaccard: bool = False,
+    persist_embedding: bool = False,
 ) -> dict[str, object]:
     df_mode = gpa_df is not None
     dir_mode = (directory_leaf is not None) or (panaroo_dir is not None)
@@ -1796,6 +1797,26 @@ def run_gpa_analysis(
                 log(f"merge summary: genomes reassigned by majority vote: {n_reass}")
                 log(f"merge summary: sub-threshold clusters (<{merge_min_size}) after merge: {n_remain}")
 
+            if persist_embedding:
+                # Persist the per-sample UMAP coords + final (merged) Leiden labels so a
+                # downstream analysis (e.g. bac_phylogeny's variant-vs-GPA comparison) can join
+                # on Sample without re-running. Indexed by Panaroo label (obs_names); callers map
+                # back to metadata Sample via panaroo_genomes.tsv. Off by default.
+                embed_cols = [key] + [
+                    c for c in ("Clonal group", "Sublineage", "K_locus") if c in adata_gpa.obs.columns
+                ]
+                np.savez_compressed(
+                    os.path.join(analysis_dir, f"gpa_umap_embedding_{run_label}.npz"),
+                    coords=adata_gpa.obsm["X_umap"].astype(np.float32),
+                    samples=np.asarray(adata_gpa.obs_names, dtype=object),
+                )
+                adata_gpa.obs[embed_cols].to_csv(
+                    os.path.join(analysis_dir, f"gpa_labels_{run_label}.tsv"),
+                    sep="\t",
+                    index_label="panaroo_label",
+                )
+                log(f"persist-embedding: wrote gpa_umap_embedding_{run_label}.npz + gpa_labels_{run_label}.tsv")
+
             _plot_umap_scatter(
                 adata_gpa,
                 color=key,
@@ -2087,6 +2108,17 @@ def main() -> int:
             "global_ref_in_gpa are still populated as counts (default: False)."
         ),
     )
+    p.add_argument(
+        "--persist-embedding",
+        type=_str2bool,
+        default=False,
+        metavar="BOOL",
+        help=(
+            "Also write gpa_umap_embedding_<run>.npz (UMAP coords) and gpa_labels_<run>.tsv "
+            "(Leiden + Clonal group + Sublineage) for downstream cross-modality comparison "
+            "(default: False)."
+        ),
+    )
     args = p.parse_args()
 
     result = run_gpa_analysis(
@@ -2103,6 +2135,7 @@ def main() -> int:
         reference_top_n=args.reference_top_n,
         skip_clustering=args.skip_clustering,
         skip_jaccard=args.skip_jaccard,
+        persist_embedding=args.persist_embedding,
     )
     return 0 if result.get("status") == "ok" else 1
 

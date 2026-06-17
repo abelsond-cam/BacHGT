@@ -53,3 +53,6 @@ src/bac_metadata/bac_agentic_metadata/applications/*/data/llm_cache/
 src/bac_metadata/bac_agentic_metadata/applications/*/data/fulltext_cache/
 src/bac_metadata/bac_agentic_metadata/applications/*/data/find_cache/
 
+# pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
+.pixi/
+

@@ -38,6 +38,7 @@ dependencies = [
   "igraph>=0.11",
   "leidenalg>=0.10",
   "scipy>=1.12.0",
+  "scikit-learn>=1.4",
   "seaborn>=0.13.2",
   "tqdm>=4.66.0",
   "geopandas>=1.0",
@@ -185,4 +186,4 @@ skip = [
 ]
 
 [tool.hatch.build.targets.wheel]
-packages = [ "src/bac_panaroo", "src/bac_ariba", "src/bac_metadata", "src/bac_data", "src/bac_isescan", "src/bac_complete_genomes" ]
+packages = [ "src/bac_panaroo", "src/bac_ariba", "src/bac_metadata", "src/bac_data", "src/bac_isescan", "src/bac_complete_genomes", "src/bac_phylogeny" ]
