@@ -98,30 +98,17 @@ Outputs in `applications/klebsiella/data/`: `study_grades.{jsonl,tsv}`,
 `grading_validation_report.{tsv,md}`. The LLM + full-text caches
 (`llm_cache/`, `fulltext_cache/`) and the API key are gitignored.
 
-## Results (2A grading, train+val, Sonnet on the subscription backend)
+## Results (2A grading) — see PROGRESS_REPORT
 
-Full train+val population = **109 accessions**. Raw agreement vs the (imperfect) frozen ground
-truth, on the two primary checks (cohort_age is **not scored** — no reliable GT):
+Measured agreement (`amr_study`, `study_setting`), the adjudication pass, and the GT-correction
+overlay are in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. Two method notes kept here:
 
-| primary check | raw accuracy | n | note |
-|---|---|---|---|
-| `amr_study` | **0.78** | 86 | vs frozen `sample_selection` |
-| `study_setting` | **0.90** | 94 | vs frozen `study_setting_frozen.tsv` |
-
-**Adjudication reframes this upward.** The Opus critique agent (`validate_study_grading
---adjudicate`) re-reads the paper for each disagreement and rules which label is right with a
-verbatim quote. On the 25-accession iteration set, **8 of 10 disagreements were *sheet* errors**
-(the grader was correct, the gold standard wrong), implying a *true* grader accuracy of **~0.96 on
-both primary checks**, with only 2 genuine grader errors (a hard amr_study case the rubric tweak
-did not flip, and a veterinary study_setting case). Full-population adjudication is the next step.
-
-The `amr_study` definition in `attributes.yaml` was tightened from adjudicator-found rule gaps:
-judge the isolates actually *deposited* (not the parent survey); a project named "AMR" ≠ AMR
-selection; routine MDRO/infection-control screening → surveillance; deliberately-added susceptible
-matched controls → mixed; selection on non-susceptible R *or* I counts.
-
-Determinism: every grade is disk-cached (backend-independent key), so reruns are byte-identical and
-free; a 300→600s subprocess timeout + per-accession skip keep one slow paper from killing a batch.
+- The `amr_study` definition in `attributes.yaml` was tightened from adjudicator-found rule gaps:
+  judge the isolates actually *deposited* (not the parent survey); a project named "AMR" ≠ AMR
+  selection; routine MDRO/infection-control screening → surveillance; deliberately-added susceptible
+  matched controls → mixed; selection on non-susceptible R *or* I counts.
+- Determinism: every grade is disk-cached (backend-independent key), so reruns are byte-identical and
+  free; a 300→600s subprocess timeout + per-accession skip keep one slow paper from killing a batch.
 
 ## Stage 2B — paper-finding (built)
 
@@ -148,40 +135,21 @@ Residual mismatches go to the **opposing adjudicator** (`adjudicate_find`, Opus)
 `same_paper` (the two links are the same work — incl. preprint↔published — so not a finding error) and
 a `verdict` of which paper actually *describes* the project, with a verbatim quote.
 
-### Results (full train+val, 109 accessions, Sonnet finder on the subscription backend)
+### Results — see PROGRESS_REPORT
 
-102 accessions have a curated `paper_link` (7 have none). Raw **find-accuracy 0.62** (63/102):
-`exact_match` 54, `title_match` 9, `mismatch` 19, `not_found` 20 (conservative abstentions — 8 of
-which retrieved zero candidates). **Adjudicating the 19 mismatches lifts this to 0.75** (77/102): the
-Opus critic found **12 `found_correct`** (the curated link was wrong — a data-reuse/secondary paper)
-+ 1 `same_paper` + 2 `both_describe`, leaving only **5 genuine finder errors** (`curated_correct`:
-PRJDB5929, PRJEB38289, PRJEB15226, PRJNA278886, PRJEB58018). So when finder and curated link
-disagree, the finder is right more than twice as often as it is wrong.
+Find-accuracy (raw + adjudicated), precision-when-committed, the secondary-accession lift, the
+abstention-rescue breakdown, the 5 genuine finder errors, and channel pull-through are in
+[`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2.
 
-Channel pull-through (winning channel of matched finds): `europepmc_accession` is the workhorse (47
-sole + combos); `ncbi_bioproject` earns its keep with **3 sole wins**; the preprint→published
-promotion (`published_version`) supplied **2** winners; `europepmc_title` 1 sole. Grounded-verify
-confirmed the accession in the paper text for 61/109 picks (confidence high 70 / medium 27 / low 12).
+## Sample-level backfill (method-a) — targeting
 
-## Sample-level backfill (method-a) — targeting (train+val)
-
-The grader proposes a whole-project value for `country` / `collection_date` / `isolation_source` /
-`host` when the paper supports one (method-(a)); `validate_backfill.py` scores **targeting + recall**
-against the live `parsed_per_project` tab (per-field non-null fraction *before* curation
-`<field>_pre` vs *after* `<field>_completeness`). That tab has fractions not values, so value
-correctness is **not** checked here (needs per-sample `metadata_v2` — deferred with method-(b)).
-
-| field | needs backfill | covered by method-a | residual (method-b) | recall vs curation |
-|---|---|---|---|---|
-| `country` | 18 | 14 | 4 | **0.78** |
-| `host` | 28 | 22 | 6 | **0.83** |
-| `collection_date` | 20 | 3 | 17 | 0.17 |
-| `isolation_source` | 31 | 4 | 27 | 0.14 |
-
-Confirms the design: method-(a) handles `country`/`host`; `collection_date`/`isolation_source` are
-the per-sample-table (**method-(b)**) backlog (44 residual accession-fields). `collection_date`
-backfill rule: midpoint of a ≤2-year span, else blank. Proposals + completeness in
-`data/backfill_review.tsv` and `data/backfill_validation_report.{md,tsv}`.
+`validate_backfill.py` scores method-(a) whole-project proposals' targeting/recall against the live
+`parsed_per_project` tab (per-field non-null fraction *before* curation `<field>_pre` vs *after*
+`<field>_completeness`). That tab has fractions not values, so value-correctness is **not** checked
+here (needs per-sample `metadata_v2` — deferred with method-(b)). Per-field recall + the residual
+method-(b) backlog are in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. `collection_date` backfill
+rule: midpoint of a ≤2-year span, else blank. Proposals + completeness in `data/backfill_review.tsv`
+and `data/backfill_validation_report.{md,tsv}`.
 
 ## Out of scope (later)
 Stage 3 opposing evaluator (general); Stage 4 MCP; backfill **method (b)** per-sample table

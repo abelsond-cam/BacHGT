@@ -10,6 +10,8 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 >    Klebsiella curation worked (the thing we generalise).
 > 2. [`PIPELINE_PLAN.md`](PIPELINE_PLAN.md) — the engine architecture, attribute-spec
 >    model, ground-truth rule, iteration discipline, and staged build.
+> 3. [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) — **current status + all measured results +
+>    the forward plan** (the single source; STAGE0/1/2 carry method only, not numbers).
 > **Before building any grading step, ask David for the grading definitions — do not
 > invent grading criteria.** The `attributes.yaml` files are name/value scaffolds with
 > definitions marked TBD.

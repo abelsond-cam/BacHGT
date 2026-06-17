@@ -88,45 +88,14 @@ BACHGT_PROJECT_K_ROOT="…/Aaron Weimann's files - project_k" BACHGT_PROJECT_K_U
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_stage1.py
 ```
 
-## Full-split sizing verdict (150 curation rows)
+## Results (sizing + completeness verdicts) — see PROGRESS_REPORT
 
-From `stage1_validation_report.md` (read_run-based sizing), the prior-vs-found classification:
-
-| class | rows |
-|---|---:|
-| `whole_project` | 67 |
-| `subsample` | 26 |
-| `ena_underlabels_klebsiella` | 22 |
-| `shared_accession` | 15 |
-| `review_prior_exceeds_ena` | 13 |
-| `no_curated_count` | 4 |
-| `review_no_ena_records` | 2 |
-| `umbrella` | 1 |
-
-So **109 rows are cleanly explained** (67 whole-project + 26 subsample + 15 shared-accession +
-1 umbrella), **22 are ENA under-labelling** (the curation is more complete — *not* errors), and
-**15 genuinely need review** (curated count exceeds what ENA holds under the accession, e.g.
-`Malawi_neonatal_outbreak` 898 vs 2 total, `India_enterobacteriaceae` 982 vs 16 total). The
-report's "Review queue" lists them with per-row notes; nothing is silently dropped. Review-queue
-rows whose `paper_link` is a Pathogenwatch/KlebNET collection are auto-annotated (the count was
-scraped from the collection, not deposited under the ENA accession — expected, do not chase).
-
-## Completeness verdict (three states, full mode)
-
-Mean per-field completeness over the 150 held accessions (`stage1_ingest.tsv`), from the base ATB
-metadata → after the per-project `ready_to_merge` backfill → after parse/categorise normalisation:
-
-| field | base | post-merge | norm | backfill Δ |
-|---|---:|---:|---:|---:|
-| country | 0.77 | 0.93 | 0.93 | +0.16 |
-| collection_date | 0.73 | 0.83 | 0.79 | +0.10 |
-| isolation_source | 0.58 | 0.72 | 0.67 | +0.14 |
-| host | 0.62 | 0.85 | 0.84 | +0.23 |
-
-The **base→post-merge gain (+10 to +23 pts)** is the manual paper-derived backfill the engine must
-reproduce in later stages. Sanity holds: `base ≤ post-merge` (merge only adds) and
-`norm ≤ post-merge` (normalisation nulls placeholders). The per-project reconcile against the live
-`parsed_per_project` tab is wired but needs `BAC_GOOGLE_CLIENT_SECRET` (off OneDrive) to run.
+The 150-row prior-vs-found classification counts and the three-state completeness table (base →
+post-merge → normalised, with the base→post-merge backfill delta the later stages must reproduce) are
+in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. Two method notes: review-queue rows whose
+`paper_link` is a Pathogenwatch/KlebNET collection are auto-annotated (count scraped from the
+collection, not deposited under the ENA accession — expected, do not chase); completeness sanity must
+hold (`base ≤ post-merge`, `norm ≤ post-merge`).
 
 ## Data location
 
