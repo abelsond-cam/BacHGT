@@ -19,11 +19,12 @@ backfill.** All five steps are built and measured on train+val. Two LLM backends
 `engine.llm.LLMClient`: **`subscription`** (`claude -p`, zero API spend, default) and **`api`** (paid,
 forced tool use); a backend-independent disk cache makes reruns byte-identical and free.
 
-The headline: **grading agreement is ~0.94–0.98** after adjudication+GT-correction; **finding precision
-is ~0.94 when the finder commits**, with the remaining work being **recall** (closing the abstention
-tail) and **per-sample backfill** (method-b). A recurring secondary finding is that the gold-standard
-sheet itself has **~17% wrong/misattributed `paper_link`s** — the engine surfaces these rather than
-trusting them.
+The headline: **grading agreement is ~0.94–0.98** after adjudication+GT-correction; **paper-finding is
+raw 0.70 / adjudicated 0.87** with the full three-tier pipeline (deterministic + secondary-accession +
+web-search fallback) now entirely **inside the finder**, at **~0.94 precision when it commits** and only
+**7 of 102 abstaining**. The remaining major workstream is **per-sample backfill** (method-b). A
+recurring secondary finding: the gold-standard sheet itself has **~20% wrong/misattributed
+`paper_link`s** — the engine surfaces these rather than trusting them.
 
 ---
 
@@ -57,40 +58,44 @@ gain is partly mechanical (truth corrected to match verified findings); raw pre-
 
 ### Stage 2B — paper finding (LLM picks among retrieved candidates; never invents)
 
-102 of 109 accessions have a curated `paper_link` (7 have none). Deterministic retrieval (ENA-desc
-id-mining → NCBI BioProject elink → Europe PMC accession text-mining → EPMC title) unions candidates;
-the LLM only picks an index; the pick is grounded (the accession must appear in the paper) with
-abstain-over-guess.
+102 of 109 accessions have a curated `paper_link` (7 have none). The finder is now a **complete
+three-tier pipeline, all inside the finder**: deterministic retrieval (ENA-desc id-mining → NCBI
+BioProject elink → Europe PMC accession text-mining **incl. the secondary accessions** ERP/SRP → EPMC
+title) → on abstention, a **web-search fallback** (Anthropic API `web_search`, fires only on the tail).
+The LLM only ever picks an index; the pick is **grounded** (the accession or an alias must appear in
+the paper); unconfident picks **abstain**; mismatches are then **adjudicated by the opposing Opus critic**.
 
-- **Raw find-accuracy 0.62 → 0.64** after the secondary-accession fix (65/102 matched).
-- **Adjudicated 0.75 → 0.78** (80/102): folding in the Opus critic's `same_paper`/`found_correct`/
-  `both_describe` verdicts on mismatches.
-- **Precision when the finder commits: ~0.94** (80 of 85 picks correct) — i.e. *when it picks, it is
-  almost always right*. The open problem is **recall** (the abstention tail), not precision.
+- **Raw find-accuracy 0.62 → 0.70** (71/102 matched).
+- **Adjudicated 0.75 → 0.87** (89/102): 24 mismatches → **16 `found_correct` + 2 `both_describe` +
+  1 `same_paper` + 6 genuine finder errors** (`curated_correct`).
+- **Precision when the finder commits: ~0.94** (89 of ~95 picks correct) — when it picks, it is almost
+  always right.
+- **Abstentions 24 → 7.** Of the 7 residual: **6 are findable only with the curated link as a hint**
+  (blind web search — even a direct one — does not surface them from the generic ENA title; e.g.
+  PRJNA271899, PRJEB42462, PRJNA549322, PRJNA396774), and **1 genuinely has no describing paper**
+  (PRJNA982859). This is the honest blind ceiling.
 
-**Matching is by paper IDENTITY, not URL** (one paper has many links): union of all curated rows +
-EPMC cross-id `{pmid,pmcid,doi}` canonicalization + a `same_paper` adjudicator verdict + always
-prefer the published version over a preprint.
+**Matching is by paper IDENTITY, not URL** (one paper has many links): union of all curated rows + EPMC
+cross-id `{pmid,pmcid,doi}` canonicalization + a `same_paper` adjudicator verdict + always prefer the
+published version. Re-running the full pipeline left **all 82 previously-verified picks unchanged** (the
+new tiers only add candidates / fire on abstention), so David's Tier 1–4 hand-verification stands.
 
-**The 19 mismatches, hand-verified by David (Tiers 1–4):** 12 `found_correct` (curated link was a
-data-reuse/secondary paper — finder right), 2 `both_describe`, 5 genuine finder errors
-(`curated_correct`: PRJDB5929, PRJEB38289, PRJEB15226, PRJNA278886, PRJEB58018). So when finder and
-curated link disagree, the finder is right >2× as often as wrong.
+**The 6 genuine finder errors** (`curated_correct`): PRJDB5929, PRJEB38289, PRJEB15226, PRJNA278886,
+PRJEB58018 (the original 5) + PRJEB37378 (the web tier picked the DRUM *protocol* paper; the adjudicator
+correctly preferred the curated cohort paper).
 
-**The 20 abstentions, rescued via web-search agents + the secondary-accession fix:**
+**Recovery of the 24 abstentions, by finder tier:**
 
-| outcome | n | notes |
+| tier (inside the finder) | recovered | examples |
 |---|---|---|
-| recovered by secondary-accession fix | **3** | PRJEB1563, PRJNA767944 (match curated), PRJEB22252 (curated was wrong) |
-| findable but still abstaining → need the **web-search tier** | ~12 | e.g. PRJNA271899, PRJEB28400, PRJNA549322 — EPMC doesn't text-mine their accession→paper link |
-| genuinely unfindable | ~5 | no describing paper (Sanger pre-pub release PRJEB6574; umbrella PRJEB37378; no primary PRJNA982859/PRJEB21277) |
+| secondary-accession (ERP/SRP search + verify) | 3 | PRJEB1563 (ERP002304), PRJNA767944 (SRP340092), PRJEB22252 (ERP024601) |
+| web-search fallback (API `web_search`) | ~11 | PRJEB6574 → **Holt 2015 PNAS**, PRJEB20799 → Okomo, PRJEB28400 → Roberts, PRJNA845975 → medRxiv |
+| still abstaining | 7 | 6 blind-unfindable + PRJNA982859 (no paper) |
 
-So **~15 of 20 abstentions had a findable primary** — the finder was right to abstain rather than guess,
-but recall is recoverable. Per-accession detail + David's GT-decision column:
-`data/abstention_rescue_review.tsv`.
-
-Channel pull-through (matched finds): `europepmc_accession` is the workhorse; `ncbi_bioproject` 3 sole
-wins; preprint→published promotion 2; `europepmc_secondary` (new) 3 rescues.
+Notably the blind web tier **beat the agent proxy** on PRJEB6574 (it found Holt 2015, which the agent
+had marked "not-found"), and the adjudicator **caught its one over-reach** (PRJEB37378). Channel
+pull-through: `europepmc_accession` workhorse; `web_search` 6 winning finds; `europepmc_secondary` 2;
+NCBI 3. Per-mismatch verdicts + verbatim quotes: `data/find_adjudication_report.{md,tsv}`.
 
 ### Sample-level backfill (method-a) — targeting/recall vs `parsed_per_project`
 
@@ -117,38 +122,44 @@ blank.
    its peer-reviewed article before the LLM sees the list.
 3. **Secondary-accession expansion** (commit `4bbd89d`) — describing papers often cite the ENA/SRA
    **secondary** study accession (`ERP…`/`SRP…`), not the BioProject. The finder now searches *and*
-   grounds-verifies on `study_aliases(PRJ) → [PRJ, ERP/SRP]`. **Measured +3 recovered**; confirmed the
-   diagnosis but also showed EPMC's text-mining index is the limiting factor for the rest.
-4. **Abstention rescue + diagnosis** — web-search agents over the 20 abstentions showed ~15 are
-   findable; root causes are (a) secondary-accession blindness [now fixed for the EPMC-indexed subset]
-   and (b) papers EPMC simply doesn't text-mine for the accession [needs the web tier].
-5. **Web-search architecture decided** — the residual-tail fallback will route the **web search
-   through the API** (`web_search` server tool, metered, fires only on the abstaining tail) and the
-   **candidate pick through `claude -p` subscription** (zero API spend). Not yet built.
+   grounds-verifies on `study_aliases(PRJ) → [PRJ, ERP/SRP]`. **+3 recovered** (PRJEB1563, PRJNA767944,
+   PRJEB22252); confirmed the diagnosis, with EPMC's text-mining index the limit for the rest.
+4. **Abstention rescue + diagnosis** — web-search agents over the 20 abstentions showed the recall gap
+   is (a) secondary-accession blindness [fixed] and (b) papers EPMC doesn't text-mine for the accession
+   [needs the web tier]. The agent rescue (which had the curated link as a cross-check) was an
+   *optimistic* proxy — the blind pipeline recovers fewer, which the canonical numbers now report.
+5. **Web-search fallback tier — BUILT and measured.** `engine/websearch.py` runs the **web search on
+   the paid API** (`web_search` server tool, fires only on the abstaining tail) and returns candidates;
+   the **pick stays on the `claude -p` subscription** and still passes grounded-verify. It **recovered
+   ~11 of the residual tail** (abstentions 24 → 7) and lifted adjudicated find-accuracy 0.78 → **0.87**
+   — including PRJEB6574 → Holt 2015 PNAS, which the agent proxy had missed.
 
 ---
 
 ## 4. Ground-truth quality finding
 
 The frozen Klebsiella sheet is the validation target but is **imperfect, and we record disagreements
-rather than trusting it.** Across the mismatch pass (12) + the abstention rescue (≥5), **~17 of 102
-curated `paper_link`s are wrong or misattributed (~17%)** — data-reuse/secondary papers, an unrelated
-SARS-CoV-2 paper (PRJNA982859), an unrelated fosfomycin paper (PRJNA398288), a DOI that resolves to the
-wrong article (PRJEB22252). Verified corrections live in `data/gt_corrections.tsv` (grading) and the
-finding overlay (to be added). **5 new finding GT-corrections** await David's confirm in
-`abstention_rescue_review.tsv`. **Note:** PRJNA767944 was *not* a GT error — its curated mSphere paper
-correctly cites the accession as SRP340092 (a "suspect" flag that turned out to be a false alarm).
+rather than trusting it.** The canonical adjudication ruled **18 of 24 finder/curated mismatches in the
+finder's favour** (16 `found_correct` + 2 `both_describe`), i.e. **~20 of 102 curated `paper_link`s are
+wrong or misattributed (~20%)** — data-reuse/secondary papers, an unrelated SARS-CoV-2 paper
+(PRJNA982859), an unrelated fosfomycin paper (PRJNA398288), a DOI that resolves to the wrong article
+(PRJEB22252). Per-case verdicts + verbatim quotes: `data/find_adjudication_report.{md,tsv}`; verified
+grading corrections in `data/gt_corrections.tsv`. The confirmed finding GT-corrections await David's
+sign-off before folding into a finding overlay. **Note:** PRJNA767944 was *not* a GT error — its curated
+mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that was a false alarm).
 
 ---
 
 ## 5. What's left (forward plan)
 
-**A. Finding — close recall (after current work):**
-- Build the **web-search fallback tier** (API search → subscription pick), firing only on the
-  abstaining tail. Expected to recover ~12 of the 17 remaining abstentions.
-- Fold the **5 confirmed finding GT-corrections** into the overlay (David's calls on
-  `abstention_rescue_review.tsv`).
-- Write the **verified find-accuracy summary** (precision/recall split) once the web tier lands.
+**A. Finding — essentially done; small follow-ups:**
+- ✅ Web-search fallback tier built + measured (raw 0.70 / adjudicated **0.87**; abstentions 24 → 7).
+- Fold the confirmed **finding GT-corrections** into a finding overlay (David signs off the
+  `found_correct` rows in `find_adjudication_report.tsv`).
+- The **7 residual abstentions** are the honest blind ceiling (6 findable only with the curated link
+  as a hint; PRJNA982859 has no paper) — accept as abstentions, revisit only if needed. Two web-tier
+  hygiene items: the title-only degenerate pick (PRJEB22890, no DOI/PMID captured) and tightening the
+  abstention gate for unverified web-only picks.
 
 **B. Sample-level backfill — the NEXT major workstream (per-sample recovery):**
 1. Apply method-(a) `country`/`host` backfill (the covered cases) — first write-back to the table.

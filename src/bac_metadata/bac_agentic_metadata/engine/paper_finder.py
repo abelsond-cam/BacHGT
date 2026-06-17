@@ -131,6 +131,32 @@ def gather_candidates(
     return list(deduped.values()), channels
 
 
+def merge_web_candidates(
+    candidates: list[Candidate],
+    channels: dict[str, set[str]] | None,
+    web_cands: list[Candidate],
+    *,
+    cache_dir=None,
+) -> tuple[list[Candidate], dict[str, set[str]]]:
+    """Fold web-search candidates into an existing candidate set (dedup by id; re-prefer published).
+
+    Used by the runner's web-search fallback: the deterministic channels abstained, so the open-web
+    hits (tagged ``web_search``) are added, deduped against what we already have, any preprint promoted
+    to its published version, and the merged list handed back for a fresh grounded pick.
+    """
+    deduped = {_cand_key(c): c for c in candidates}
+    merged_channels: dict[str, set[str]] = {k: set(v) for k, v in (channels or {}).items()}
+    for c in web_cands:
+        key = _cand_key(c)
+        if key not in deduped:
+            deduped[key] = c
+        merged_channels.setdefault(key, set()).add("web_search")
+    _prefer_published(deduped, merged_channels, cache_dir=cache_dir)
+    for key, c in deduped.items():
+        c.found_via = ",".join(sorted(merged_channels[key]))
+    return list(deduped.values()), merged_channels
+
+
 # --------------------------------------------------------------------------------------------- #
 # LLM pick (confined to retrieved candidates).
 # --------------------------------------------------------------------------------------------- #

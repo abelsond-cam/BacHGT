@@ -25,7 +25,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_metadata.bac_agentic_metadata.engine import paper_finder
+from bac_metadata.bac_agentic_metadata.engine import paper_finder, websearch
 from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_aliases, study_title_and_description
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, UsageLimitError, make_llm
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
@@ -69,6 +69,11 @@ def main() -> None:
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
     parser.add_argument("--cache-dir", type=Path, default=LLM_CACHE, help="LLM response cache dir.")
     parser.add_argument("--output-prefix", default="found_papers", help="Output basename under data/.")
+    parser.add_argument(
+        "--web-fallback", action="store_true",
+        help="On abstention, search the open web (paid API web_search) for candidates, then re-pick "
+             "on the subscription. Fires only on the abstaining tail; cached so reruns don't re-bill.",
+    )
     args = parser.parse_args()
 
     spec = AttributeSpec.from_yaml(SPEC_PATH)
@@ -103,6 +108,24 @@ def main() -> None:
                 sizing_row=sizing_row, candidates=candidates, channels=channels, aliases=aliases,
                 model=args.model, fulltext_cache=FULLTEXT_CACHE,
             )
+            # Web-search fallback: only when the deterministic channels produced no confident pick.
+            # The search is the one paid step (API web_search); the re-pick stays on the subscription.
+            if result.none_found and args.web_fallback:
+                web = websearch.web_search_candidates(
+                    acc, study["study_title"], study["study_description"],
+                    aliases=aliases, cache_dir=FIND_CACHE, model=args.model,
+                )
+                if web:
+                    merged, merged_channels = paper_finder.merge_web_candidates(
+                        candidates, channels, web, cache_dir=FIND_CACHE
+                    )
+                    result = paper_finder.find_paper(
+                        spec, llm,
+                        accession=acc, ena_title=study["study_title"],
+                        ena_description=study["study_description"], sizing_row=sizing_row,
+                        candidates=merged, channels=merged_channels, aliases=aliases,
+                        model=args.model, fulltext_cache=FULLTEXT_CACHE,
+                    )
         except UsageLimitError as exc:
             print(f"\n[usage limit] {exc}\nFound {len(results)}/{len(sel)} before the window was exhausted. "
                   "Rerun the same command to resume — cached results return instantly.", file=sys.stderr)
