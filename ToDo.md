@@ -24,17 +24,19 @@ Source file deposited: `ATB_metadata_Mabs_2025_release.xlsx`.
 ## 1b. Agentic metadata-curation engine (`bac_agentic_metadata`)
 
 Reusable species-agnostic engine; Klebsiella is the validation site (test fold sealed).
-Stages 1–2 built + validated on train+val — full walkthrough, results and design in
-[`src/bac_metadata/bac_agentic_metadata/PIPELINE_PLAN.md`](src/bac_metadata/bac_agentic_metadata/PIPELINE_PLAN.md)
-§6b and [`STAGE2.md`](src/bac_metadata/bac_agentic_metadata/STAGE2.md). Current results:
-grading **amr_study 0.94 / study_setting 0.98**; finding **0.62→0.75 adjudicated**; method-(a)
-backfill recall **country 0.78 / host 0.83** (date/source → method-b backlog).
+Stages 1–2 built + validated on train+val. **All status, results and the forward plan live in
+[`PROGRESS_REPORT.md`](src/bac_metadata/bac_agentic_metadata/PROGRESS_REPORT.md)** — the single source;
+design/why in `PIPELINE_PLAN.md`, method/how-to-run in `STAGE0/1/2.md`. Current results: grading
+**amr_study 0.94 / study_setting 0.98**; finding **raw 0.70 / adjudicated 0.87** (full three-tier finder:
+deterministic + secondary-accession ERP/SRP + web-search fallback; abstentions 24→7;
+precision-when-commits ~0.94); method-(a) backfill recall **country 0.78 / host 0.83** (date/source →
+method-b backlog).
 
-Open — **manual verification of paper-finding (NOT yet done)**: code has run, but the picks need
-David's hand-check. Read `data/find_validation_report.md` (overview), work `data/paper_link_review.tsv`
-(12 wrong-link fixes; 3 need care), spot-check the 54+9 auto-matched picks + 20 abstentions, then
-write the **verified find-accuracy summary** (finding analogue of the grading write-up). Tables:
-`find_validation_report.*`, `find_adjudication_report.*`, `found_papers.*`.
+Finding is **done + measured** (committed `5abfd5e`). Small follow-ups: David signs off the
+`found_correct` rows in `find_adjudication_report.tsv` → fold into a finding GT-overlay; 2 web-tier
+hygiene items (degenerate title-only pick `PRJEB22890`; tighten the abstain-gate for unverified
+web-only picks). The 7 residual abstentions are the honest blind ceiling (6 findable only with the
+curated-link hint; `PRJNA982859` has no paper).
 
 Forward plan (in order):
 
