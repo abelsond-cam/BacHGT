@@ -171,6 +171,64 @@ def study_title_and_description(accession: str, *, cache_dir: str | Path | None 
     }
 
 
+def study_aliases(accession: str, *, cache_dir: str | Path | None = None) -> list[str]:
+    """Return ``[accession]`` plus its ENA/INSDC secondary study accessions (ERP/SRP).
+
+    Papers frequently cite a project by its *secondary* study accession — ENA ``ERPxxxxxx`` or SRA
+    ``SRPxxxxxx`` — rather than the BioProject ``PRJxxxxxx``. Europe PMC text-mines whichever string
+    the authors used, so both accession-keyed retrieval and grounded-verify must consider all of them
+    (e.g. ``PRJNA767944`` is cited in its describing paper only as ``SRP340092``). One cached
+    ENA-portal ``result=study`` lookup; returns just ``[accession]`` when ENA has no secondary or the
+    lookup fails.
+
+    Parameters
+    ----------
+    accession
+        ENA/INSDC project accession (e.g. ``"PRJNA767944"``).
+    cache_dir
+        If given, the raw ``result=study`` TSV is cached at ``<cache_dir>/<accession>.study_xref.tsv``
+        and reused, making the result deterministic and offline.
+
+    Returns
+    -------
+    list[str]
+        ``[accession, *secondary_accessions]`` (deduped, primary first).
+    """
+    table: pd.DataFrame | None = None
+    cache_path: Path | None = None
+    if cache_dir is not None:
+        cache_path = Path(cache_dir) / f"{accession}.study_xref.tsv"
+        if cache_path.exists():
+            table = pd.read_csv(cache_path, sep="\t", dtype=str)
+
+    if table is None:
+        text = _ena_search(
+            {
+                "result": "study",
+                "query": f'study_accession="{accession}"',
+                "fields": "study_accession,secondary_study_accession",
+                "format": "tsv",
+                "limit": 0,
+            }
+        )
+        if text is None:
+            return [accession]
+        if not text.strip():
+            table = pd.DataFrame(columns=["study_accession", "secondary_study_accession"])
+        else:
+            table = pd.read_csv(StringIO(text), sep="\t", dtype=str)
+        if cache_path is not None:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            table.to_csv(cache_path, sep="\t", index=False)
+
+    aliases = [accession]
+    for v in table.get("secondary_study_accession", pd.Series(dtype=str)).fillna(""):
+        token = str(v).strip()
+        if token and token not in aliases:
+            aliases.append(token)
+    return aliases
+
+
 def _n_distinct(series: pd.Series) -> int:
     """Count distinct non-empty values in a (possibly absent) string series."""
     if series is None or len(series) == 0:

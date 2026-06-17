@@ -9,7 +9,8 @@ confidence pick **abstains** (``none_found``) rather than risk poisoning all dow
 Channels (union, deduped by id, in rough precision order):
 1. ENA ``study_description`` DOI/PMID mining — submitters often state the paper id outright.
 2. NCBI BioProject → PubMed links (authoritative when populated; often empty in practice).
-3. Europe PMC accession text-mining — the workhorse (keyed on the accession string).
+3. Europe PMC accession text-mining — the workhorse (keyed on the accession AND its ENA/SRA
+   secondary study accessions, since describing papers often cite the ERP/SRP, not the PRJ).
 4. Europe PMC title search — corroboration / fallback.
 """
 
@@ -90,18 +91,29 @@ def gather_candidates(
     ena_title: str,
     ena_description: str,
     *,
+    aliases: list[str] | None = None,
     cache_dir=None,
 ) -> tuple[list[Candidate], dict[str, set[str]]]:
-    """Union the four retrieval channels; dedup by id; return (candidates, id→channels map).
+    """Union the retrieval channels; dedup by id; return (candidates, id→channels map).
 
-    The channel map records every source that surfaced each id, for cross-source agreement. Preprints
-    are then promoted to their published versions (:func:`_prefer_published`) so the LLM never has to
-    choose a preprint when the peer-reviewed article exists.
+    ``aliases`` is the accession plus its ENA/SRA secondary study accessions (ERP/SRP); Europe PMC
+    accession text-mining is run on every one, since describing papers often cite the secondary
+    accession rather than the BioProject (e.g. ``PRJNA767944`` is cited only as ``SRP340092``). Hits
+    surfaced via a secondary are tagged ``europepmc_secondary``. The channel map records every source
+    that surfaced each id, for cross-source agreement. Preprints are then promoted to their published
+    versions (:func:`_prefer_published`) so the LLM never has to choose a preprint when the
+    peer-reviewed article exists.
     """
+    search_accessions = aliases or [accession]
     raw: list[Candidate] = []
     raw += mine_ids_from_text(f"{ena_description}\n{ena_title}", cache_dir=cache_dir)
     raw += europepmc.candidates_by_pmids(ncbi.bioproject_pmids(accession, cache_dir=cache_dir), cache_dir=cache_dir)
-    raw += europepmc.search_by_accession(accession, cache_dir=cache_dir)
+    for acc in search_accessions:
+        hits = europepmc.search_by_accession(acc, cache_dir=cache_dir)
+        if acc != accession:
+            for h in hits:
+                h.found_via = "europepmc_secondary"
+        raw += hits
     if ena_title:
         raw += europepmc.search_by_title(ena_title, cache_dir=cache_dir)
 
@@ -205,11 +217,15 @@ class FindResult:
         }
 
 
-def verify_pick(candidate: Candidate, accession: str, *, cache_dir=None) -> bool | None:
-    """Confirm the accession actually appears in the chosen paper's text.
+def verify_pick(
+    candidate: Candidate, accession: str, *, aliases: list[str] | None = None, cache_dir=None
+) -> bool | None:
+    """Confirm the accession (or any of its ERP/SRP aliases) appears in the chosen paper's text.
 
-    Returns True if found, False if the text was retrieved but lacks the accession, or ``None`` if
-    no full text was available to check (inconclusive — only an abstract or nothing).
+    Returns True if any alias is found, False if the text was retrieved but lacks them all, or
+    ``None`` if no full text was available to check (inconclusive — only an abstract or nothing).
+    Checking the aliases matters: a describing paper often cites the ENA/SRA secondary accession
+    (ERP/SRP) rather than the BioProject, so a PRJ-only check spuriously fails to verify.
     """
     ref = candidate.pmcid or (candidate.doi and candidate.doi) or (candidate.pmid and candidate.pmid)
     if not ref:
@@ -217,7 +233,8 @@ def verify_pick(candidate: Candidate, accession: str, *, cache_dir=None) -> bool
     ft = fetch_fulltext(str(ref), cache_dir=cache_dir)
     if not ft.is_full_text or not ft.text:
         return None
-    return accession.upper() in ft.text.upper()
+    text_up = ft.text.upper()
+    return any(a.upper() in text_up for a in (aliases or [accession]))
 
 
 def find_paper(
@@ -230,6 +247,7 @@ def find_paper(
     sizing_row: dict | None,
     candidates: list[Candidate],
     channels: dict[str, set[str]] | None = None,
+    aliases: list[str] | None = None,
     model: str | None = None,
     fulltext_cache=None,
 ) -> FindResult:
@@ -287,7 +305,7 @@ def find_paper(
     verified: bool | None = None
     sources_agreeing = 0
     if chosen is not None:
-        verified = verify_pick(chosen, accession, cache_dir=fulltext_cache)
+        verified = verify_pick(chosen, accession, aliases=aliases, cache_dir=fulltext_cache)
         if channels:
             sources_agreeing = len(channels.get(_cand_key(chosen), set()))
         # `verified` is a trust SIGNAL, not a gate: describing papers often cite the accession only

@@ -26,7 +26,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import paper_finder
-from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_title_and_description
+from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_aliases, study_title_and_description
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, UsageLimitError, make_llm
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
@@ -92,14 +92,15 @@ def main() -> None:
         # fatal to the batch — except a usage-limit, which stops cleanly and writes partial results.
         try:
             study = study_title_and_description(acc, cache_dir=ENA_CACHE)
+            aliases = study_aliases(acc, cache_dir=ENA_CACHE)
             candidates, channels = paper_finder.gather_candidates(
-                acc, study["study_title"], study["study_description"], cache_dir=FIND_CACHE
+                acc, study["study_title"], study["study_description"], aliases=aliases, cache_dir=FIND_CACHE
             )
             sizing_row = {"ena_taxon_samples": taxon_n, "umbrella_suspected": row.get("umbrella_suspected")}
             result = paper_finder.find_paper(
                 spec, llm,
                 accession=acc, ena_title=study["study_title"], ena_description=study["study_description"],
-                sizing_row=sizing_row, candidates=candidates, channels=channels,
+                sizing_row=sizing_row, candidates=candidates, channels=channels, aliases=aliases,
                 model=args.model, fulltext_cache=FULLTEXT_CACHE,
             )
         except UsageLimitError as exc:
