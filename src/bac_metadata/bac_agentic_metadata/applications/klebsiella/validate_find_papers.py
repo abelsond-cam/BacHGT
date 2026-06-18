@@ -224,6 +224,9 @@ def main() -> None:
     parser.add_argument("--adjudicate", action="store_true", help="Adjudicate mismatches with the critique agent.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8")
     parser.add_argument("--adjudicate-backend", default="subscription", choices=["subscription", "api"])
+    parser.add_argument("--report-prefix", default="find",
+                        help="Report basename prefix (default 'find' -> find_validation_report.*; use "
+                             "e.g. 'find_opus' to compare finder models without clobbering).")
     args = parser.parse_args()
 
     found = pd.read_csv(args.found, sep="\t", dtype=str)
@@ -276,11 +279,11 @@ def main() -> None:
         g = gt.get(r["study_accession"], {})
         md.append(f"- `{r['study_accession']}` (n_candidates={r.get('n_candidates')}) curated={_curated_links(g)}")
 
-    (DATA_DIR / "find_validation_report.md").write_text("\n".join(md) + "\n")
+    (DATA_DIR / f"{args.report_prefix}_validation_report.md").write_text("\n".join(md) + "\n")
     df[["study_accession", "fold", "category", "chosen_found_via", "verified", "find_confidence",
         "chosen_pmid", "chosen_pmcid", "chosen_doi", "coverage_fraction"]].to_csv(
-        DATA_DIR / "find_validation_report.tsv", sep="\t", index=False)
-    print(f"Wrote find_validation_report.{{md,tsv}} (accuracy {acc:.2f})", file=sys.stderr)
+        DATA_DIR / f"{args.report_prefix}_validation_report.tsv", sep="\t", index=False)
+    print(f"Wrote {args.report_prefix}_validation_report.{{md,tsv}} (accuracy {acc:.2f})", file=sys.stderr)
 
     if args.adjudicate and mismatch_rows:
         print(f"Adjudicating {len(mismatch_rows)} mismatches with {args.adjudicate_model}", file=sys.stderr)
@@ -312,9 +315,9 @@ def main() -> None:
             amd.append(f"- reasoning: {a.get('adj_reasoning','')}")
             if str(a.get("adj_rule_gap", "")).strip():
                 amd.append(f"- ⚠️ rule_gap: {a['adj_rule_gap']}")
-        (DATA_DIR / "find_adjudication_report.md").write_text("\n".join(amd) + "\n")
-        pd.DataFrame(adjs).to_csv(DATA_DIR / "find_adjudication_report.tsv", sep="\t", index=False)
-        print(f"Wrote find_adjudication_report.{{md,tsv}} (adjudicated accuracy {adj_acc:.2f})", file=sys.stderr)
+        (DATA_DIR / f"{args.report_prefix}_adjudication_report.md").write_text("\n".join(amd) + "\n")
+        pd.DataFrame(adjs).to_csv(DATA_DIR / f"{args.report_prefix}_adjudication_report.tsv", sep="\t", index=False)
+        print(f"Wrote {args.report_prefix}_adjudication_report.{{md,tsv}} (adjudicated accuracy {adj_acc:.2f})", file=sys.stderr)
 
 
 if __name__ == "__main__":

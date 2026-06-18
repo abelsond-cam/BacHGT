@@ -244,7 +244,7 @@ def _run_adjudication(disagreements: dict[str, list[dict]], model: str, backend:
     return adjudications
 
 
-def _write_adjudication_report(adjudications: list) -> None:
+def _write_adjudication_report(adjudications: list, report_prefix: str = "grading") -> None:
     """Write the adjudication report (verbatim verdicts + aggregated rule-gap lessons)."""
     from collections import Counter
 
@@ -270,11 +270,11 @@ def _write_adjudication_report(adjudications: list) -> None:
     else:
         md.append("_No rule gaps flagged._")
 
-    (DATA_DIR / "grading_adjudication_report.md").write_text("\n".join(md) + "\n")
+    (DATA_DIR / f"{report_prefix}_adjudication_report.md").write_text("\n".join(md) + "\n")
     pd.DataFrame([a.to_row() for a in adjudications]).to_csv(
-        DATA_DIR / "grading_adjudication_report.tsv", sep="\t", index=False
+        DATA_DIR / f"{report_prefix}_adjudication_report.tsv", sep="\t", index=False
     )
-    print(f"Wrote {DATA_DIR / 'grading_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
+    print(f"Wrote {DATA_DIR / f'{report_prefix}_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
 
 
 def main() -> None:
@@ -285,6 +285,9 @@ def main() -> None:
     parser.add_argument("--adjudicate", action="store_true", help="Run the critique agent on primary disagreements.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8", help="Adjudicator model (default Opus).")
     parser.add_argument("--adjudicate-backend", default="subscription", choices=["subscription", "api"])
+    parser.add_argument("--report-prefix", default="grading",
+                        help="Report basename prefix (default 'grading'; use e.g. 'grading_opus' to "
+                             "compare grader models without clobbering).")
     args = parser.parse_args()
 
     grades = pd.read_csv(args.grades, sep="\t", dtype=str)
@@ -384,9 +387,9 @@ def main() -> None:
         "amr_target__value", "amr_method__value", "paper_coverage_for_taxon",
         "needs_manual_download", "fulltext_source",
     ]
-    out_tsv = DATA_DIR / "grading_validation_report.tsv"
+    out_tsv = DATA_DIR / f"{args.report_prefix}_validation_report.tsv"
     df[[c for c in keep if c in df.columns]].to_csv(out_tsv, sep="\t", index=False)
-    out_md = DATA_DIR / "grading_validation_report.md"
+    out_md = DATA_DIR / f"{args.report_prefix}_validation_report.md"
     out_md.write_text("\n".join(md) + "\n")
     print(f"Wrote {out_tsv} and {out_md}", file=sys.stderr)
 
@@ -394,7 +397,7 @@ def main() -> None:
         total = sum(len(v) for v in disagreements.values())
         print(f"Adjudicating {total} primary disagreements with {args.adjudicate_model}", file=sys.stderr)
         adjudications = _run_adjudication(disagreements, args.adjudicate_model, args.adjudicate_backend)
-        _write_adjudication_report(adjudications)
+        _write_adjudication_report(adjudications, args.report_prefix)
 
 
 if __name__ == "__main__":
