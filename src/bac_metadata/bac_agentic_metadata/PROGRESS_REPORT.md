@@ -6,7 +6,7 @@
 [`STAGE2.md`](STAGE2.md). Those docs no longer carry results — they point here.
 
 _Scope: Klebsiella validation site, **train+val only (109 accessions)**; the 47-accession test fold
-stays sealed until a single final run. Last updated 2026-06-17._
+stays sealed until a single final run. Last updated 2026-06-18._
 
 ---
 
@@ -22,9 +22,13 @@ forced tool use); a backend-independent disk cache makes reruns byte-identical a
 The headline: **grading agreement is ~0.94–0.98** after adjudication+GT-correction; **paper-finding is
 raw 0.70 / adjudicated 0.87** with the full three-tier pipeline (deterministic + secondary-accession +
 web-search fallback) now entirely **inside the finder**, at **~0.94 precision when it commits** and only
-**7 of 102 abstaining**. The remaining major workstream is **per-sample backfill** (method-b). A
-recurring secondary finding: the gold-standard sheet itself has **~20% wrong/misattributed
-`paper_link`s** — the engine surfaces these rather than trusting them.
+**7 of 102 abstaining**. Per-sample backfill **steps 1–2 (gate + whole-field) are now run and
+value-checked** on train+val (`country` 0.99, `host` ~1.0 semantic); **method-b** per-sample extraction
+is the remaining workstream. The engine is also **model-robust**: re-running the finder+grader with an
+**Opus 4.8** agent (vs the default Sonnet 4.6) agrees within noise (adjudicated finding 0.86 vs 0.87) —
+two independent models converge, so the results are not a single-model artifact. A recurring secondary
+finding: the gold-standard sheet itself has **~20% wrong/misattributed `paper_link`s** — the engine
+surfaces these rather than trusting them.
 
 ---
 
@@ -97,19 +101,62 @@ had marked "not-found"), and the adjudicator **caught its one over-reach** (PRJE
 pull-through: `europepmc_accession` workhorse; `web_search` 6 winning finds; `europepmc_secondary` 2;
 NCBI 3. Per-mismatch verdicts + verbatim quotes: `data/find_adjudication_report.{md,tsv}`.
 
-### Sample-level backfill (method-a) — targeting/recall vs `parsed_per_project`
+### Model robustness — Opus 4.8 (agent) vs Sonnet 4.6 (agent)
 
-| field | needs backfill | covered by method-a | recall vs curation |
+To test whether the results depend on the specific agent model — the precondition for trusting the
+engine without per-study oversight — the full finder + grader were re-run with **Opus 4.8** as the
+agent (Opus stays the *independent* adjudicator throughout). The two land within noise of each other:
+
+| metric | Sonnet 4.6 | Opus 4.8 |
+|---|---|---|
+| find-accuracy, raw | 0.70 | 0.70 |
+| **find-accuracy, adjudicated** | **0.87** (89/102) | **0.86** (88/102) |
+| genuine finder errors (`curated_correct`) | 6 | 8 |
+| `amr_study` | 0.94 (n=85) | 0.97 (n=78) |
+| `study_setting` | 0.98 (n=94) | 0.98 (n=88) |
+| genuine grading errors (`sheet_correct`) | 2 | 1 |
+
+Both models do very well and the differences are small — **Sonnet 4.6 is perfectly adequate**. Opus is
+**occasionally more deliberative**: it abstains slightly more (lower scored `n`) and is marginally more
+precise where it commits (`amr_study` 0.97 vs 0.94; one genuine grading error vs two), but it is no
+better on finding — in fact marginally lower (0.86 vs 0.87, two more genuine paper-misses). Crucially,
+two *independent* models — Sonnet as finder/grader, Opus as adjudicator — converge to **~0.86–0.87
+adjudicated finding** and **~0.97 `amr_study`**, so the result is **model-robust, not a Sonnet
+artifact**. **Decision: Sonnet 4.6 stays the default agent; Opus 4.8 stays the independent adjudicator**
+(its judgment is most valuable, and cheapest, where the call volume is low). Opus outputs are the
+`*_opus.*` / `{find,grading}_opus_*` files under `data/`.
+
+### Sample-level backfill — steps 1–2 (gate + whole-field), run + value-checked on train+val
+
+The completeness-gated whole-field pass (`engine/backfill.py`) ran on the **raw, uncurated ENA**
+per-sample table (`load_collated_metadata`; train+val = 45 studies) → **24,351 fills**. A study×field
+goes to whole-field only when ENA is <75% complete (placeholder-stripped); genuinely-varying fields
+fall through to the **method-b** backlog. Coverage matches the Stage-1 prediction — country/host are
+largely whole-field-solvable, date/source mostly vary:
+
+| field | studies covered (whole-field) | studies residual (→ method-b) | cells filled |
 |---|---|---|---|
-| `country` | 18 | 14 | **0.78** |
-| `host` | 28 | 22 | **0.83** |
-| `collection_date` | 20 | 3 | 0.17 |
-| `isolation_source` | 31 | 4 | 0.14 |
+| `host` | 38 | 12 | 14,396 |
+| `country` | 23 | 8 | 5,450 |
+| `collection_date` | 4 | 35 | 3,610 |
+| `isolation_source` | 5 | 48 | 895 |
 
-Method-(a) (whole-project value) handles country/host; collection_date/isolation_source are the
-per-sample-table **method-(b)** backlog (44 residual accession-fields). Value correctness is **not yet
-checked** (needs per-sample `metadata_v2`). `collection_date` rule: midpoint of a ≤2-year span, else
-blank.
+**Value-correctness vs the curated gold** (`metadata_final_curated_all_samples_and_columns.tsv`, via
+`validate_backfill_values.py`). The comparison must be **parse/category-aware** — our fills are RAW and
+the gold is curated (David's alignment point), so a naive raw-string match badly understates host/source:
+
+| field | value-accuracy | reading |
+|---|---|---|
+| `country` | **0.99** (4435/4472 vs `_parsed`) | whole-field country is essentially always right |
+| `host` | **~1.00 semantic** (11,672/11,672 gold = `human`) | every fill is `Homo sapiens` = human; the raw-string 0.11 is a `Homo sapiens`≠`human` **categorisation artifact**, not an error |
+| `isolation_source` | **~0.76 category-level** (stool→faeces, blood→blood; raw-string 0.17) | covered subset mostly right; misses are genuine per-sample variation (whole-field `stool` ≠ per-sample `rectal swab`/organ) → method-b |
+| `collection_date` | 0.00 exact | the ≤2-yr midpoint is a coarse proxy, never equals the exact per-sample date → method-b |
+
+So **where whole-field is the right model (country, host) it is ~99–100% correct**, and where the field
+genuinely varies (date, source) the gate correctly defers most of it to method-b while the fraction it
+does fill is right for the uniform subset — validating the two-step gated design. RAW values only; the
+parse/categorise rule-system stays downstream (a separate later workstream). `collection_date` rule:
+midpoint of a ≤2-year span, else blank.
 
 ---
 
@@ -161,12 +208,15 @@ mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that 
   hygiene items: the title-only degenerate pick (PRJEB22890, no DOI/PMID captured) and tightening the
   abstention gate for unverified web-only picks.
 
-**B. Sample-level backfill — the NEXT major workstream (per-sample recovery):**
-1. Apply method-(a) `country`/`host` backfill (the covered cases) — first write-back to the table.
-2. **Value-correctness**: bring in per-sample `metadata_v2` to verify proposed raw values, not just
-   targeting.
-3. **Method-(b)**: per-sample-table extraction for the ~44 `collection_date`/`isolation_source` gaps
-   (the deferred `partial` path; needs sample-accession ↔ paper-table mapping).
+**B. Sample-level backfill — steps 1–2 DONE; method-b is the remaining workstream:**
+1. ✅ Gate + whole-field fill **run on train+val** (24,351 fills, 45 studies) — `backfill_applied.tsv`.
+2. ✅ **Value-correctness** checked vs the curated gold: `country` **0.99**, `host` **~1.0 semantic**,
+   `isolation_source` ~0.76 category-level, `collection_date` 0.00 exact (coarse proxy). The comparison
+   is parse/category-aware (raw fills vs curated gold).
+3. **Method-(b)** (next): per-sample-table extraction for the residual `collection_date` (35 studies) /
+   `isolation_source` (48 studies) gaps — `engine/supplementary.py` (EPMC OA supplementary tables) + an
+   extraction agent mapping table rows → `sample_accession`, grounded + abstaining.
+4. Optional: write-back of the high-confidence `country`/`host` fills into the table (after sign-off).
 
 **C. Deferred (smaller):** 2 rubric over-steers (`PRJEB58136`, `PRJNA604975`) + a study_setting wording
 tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware finder rule;
@@ -177,11 +227,15 @@ tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware
 
 ## 6. Where things live
 
-- **Engine:** `engine/{ena_sizing,europepmc,ncbi,paper_finder,grader,adjudicator,llm,fulltext}.py`.
+- **Engine:** `engine/{ena_sizing,europepmc,ncbi,paper_finder,grader,adjudicator,llm,fulltext,
+  websearch,backfill,sources}.py`.
 - **Klebsiella runners:** `applications/klebsiella/{run_stage1,run_study_grading,run_find_papers,
-  validate_*}.py`; rubric `attributes.yaml` (**David edits**).
+  run_backfill,validate_*}.py`; rubric `attributes.yaml` (**David edits**).
 - **Key outputs** (`applications/klebsiella/data/`): `stage1_sizing.tsv`, `study_grades.{jsonl,tsv}`,
   `grading_*_report.*`, `found_papers.{jsonl,tsv}`, `find_validation_report.*`,
   `find_adjudication_report.*`, `abstention_rescue_review.tsv`, `gt_corrections.tsv`,
-  `backfill_validation_report.*`.
+  `backfill_applied.tsv`, `backfill_gate_report.tsv`, `backfill_value_report.*` (+ `_raw`).
+- **Opus-comparison outputs** (default model stays Sonnet): `found_papers_opus.{jsonl,tsv}`,
+  `study_grades_opus.{jsonl,tsv}`, `{find,grading}_opus_validation_report.*`,
+  `{find,grading}_opus_adjudication_report.*`.
 - Caches (`llm_cache/`, `fulltext_cache/`, `find_cache/`, `ena_cache/`) and the API key are gitignored.
