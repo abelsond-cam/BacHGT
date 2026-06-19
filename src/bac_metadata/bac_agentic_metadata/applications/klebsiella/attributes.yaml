@@ -39,10 +39,11 @@ attributes:
         accounts for (usually stated clearly in the paper) and project_records_in_taxon is the
         project's taxon-of-interest record count (from the EBI sizing). It gates whether a
         study-level whole-project value (e.g. all blood, all from England) may be applied to
-        every sample: coverage > 90% -> apply to the whole project (study-level attributes can
-        be `gradeable`); <= 90% -> do not apply project-wide (those attributes fall to
-        `partial` / unattributed). It also guides picking the paper that covers the largest
-        part of the project.
+        every sample: coverage > 75% -> apply to the whole project (study-level attributes can
+        be `gradeable`); <= 75% -> do not apply project-wide UNLESS the EBI study
+        title/description itself states it applies to the whole study (those attributes
+        otherwise fall to `partial` / unattributed). It also guides picking the paper that
+        covers the largest part of the project.
 
   # 1) STUDY FILTERS — decide whether the whole study enters the cohort.
   study_filters:
@@ -86,7 +87,7 @@ attributes:
       Counts always refer to the ENA-deposited set, never the parent/screened cohort.
     grading_basis: |-
       gradeable     — a single value is supported for the WHOLE project, by the EBI study
-                      title/description, or by a paper describing all or nearly all (>90%) of
+                      title/description, or by a paper describing most (>75%) of
                       the project's taxon-of-interest records. Applied to every sample.
       partial       — a value applies to only part of the project and CANNOT be attributed to
                       specific samples. Attributing it would require a per-sample table in the
@@ -217,7 +218,7 @@ attributes:
           definition: |-
             When a field is blank but the study implies a single value for every sample, hard-code
             that value for all samples. Allowed only under the whole-project applicability rule
-            (paper_coverage_for_taxon > 90%, or an EBI title/description covering the whole
+            (paper_coverage_for_taxon > 75%, or an EBI title/description covering the whole
             accession). Per-field rules in `fields` below.
         - id: per_sample_table
           summary: per-sample annotation from a table in the paper / Pathogen Watch (harder)

@@ -189,7 +189,7 @@ def _render_rubric(spec: AttributeSpec) -> str:
         lines.append("\n--- WHOLE-PROJECT BACKFILL (method a) for the standard per-sample fields ---")
         lines.append(
             "Propose a single value for ALL samples ONLY when the field is study-wide-constant and "
-            "applicable to the whole project (paper coverage > 90%, or an EBI-wide title/description). "
+            "applicable to the whole project (paper coverage > 75%, or an EBI-wide title/description). "
             "Otherwise set proposed_value null and applies_whole_project false."
         )
         for name, frule in bf.items():

@@ -268,6 +268,34 @@ By field the lever differs: **iso (5,689)** is 59% whole-field-underfired + 35% 
 concrete levers**, only 2% a genuine non-tabular ceiling. Artifacts: `backfill_gap_report.*`,
 `curator_gold_report.*`, `methodb_local_diagnosis.*`.
 
+#### Whole-field bucket, probed (not assumed to be a grader/rubric gap)
+
+The 4,238-sample "whole-field we failed to fire" bucket was the obvious first lever — but rather than
+*assume* it is a rubric problem, we ran the grader inward on those exact declines (David's method): the
+grader **justifies, in its current pitch, why it declined a uniform value** (`engine/whole_field_audit.
+justify_whole_field_decline`, Sonnet), then an **adversarial Opus adjudicator** rules whether the decline
+is a fixable rubric gap or something else (`…adjudicate_whole_field_rule_gap`), anchored on the curator's
+uniform value (gold-but-fallible). Driver `applications/klebsiella/diagnose_whole_field_declines.py` over
+the 13 (study, field) pairs the curator filled uniform but step-a missed → `whole_field_decline_report.*`.
+The split (reconciles exactly to 4,238) is the surprise:
+
+| verdict | pairs | samples | % | meaning |
+|---|---|---|---|---|
+| **fetch_limited** | 9 | **2,259** | **53%** | the grader had **no paper text** (paywalled/HTTP-403/abstract-only) → the *same* fetch barrier as the per-sample bucket, **not** a rubric gap. Can't propose what it can't read |
+| **curator_overcollapsed** | 3 | **1,428** | **34%** | the paper genuinely shows the field **varies** (blood *or* CSF at 0.28 coverage, PRJEB42462; rectal+vaginal+environmental, PRJNA804332; a **6-year** date span 2000–2006, PRJEB12699) and the curator forced one value. The grader was **right** to decline — chasing these would *lower* fidelity (cf. carriage-vs-invasive faithfulness) |
+| **rule_gap** | 1 | **551** | **13%** | the one genuinely actionable rubric fix → PRJNA845975 |
+
+So the "whole-field grader gap" mostly **isn't** one: ~half is fetch (loops into the same access barrier),
+a third is the curator over-collapsing a genuinely-varying field (matching it would hurt fidelity), and
+only **one study (551 samples)** is a true rubric gap. **PRJNA845975**: every isolate is "blood and/or
+CSF" — one invasive-disease cohort (curator = `bacteremia`) — but the iso rule only fires when isolates
+share *one identical source token* and gives no way to collapse a fixed **compound sterile-specimen**
+description to a single whole-field value. Opus drafted the clause (to bring to David — `attributes.yaml`
+changes are his call, never applied here): *"If all isolates are drawn from the same fixed set of sterile
+clinical specimen types describing one invasive-disease cohort (e.g. 'blood and/or CSF'), treat that
+shared specimen description as a single whole-project value."* Net: the largest *rubric*-fixable lever is
+small; the dominant date/source levers remain **fetch** + **per-sample parse**.
+
 ---
 
 ## 3. Improvements made this round
@@ -329,17 +357,27 @@ mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that 
    (10 direct + 1 two-hop), 14,176 fills**; country **0.999**, collection_date **0.999** year-level,
    isolation_source **0.957** fidelity, host 1.0 semantic.
 4. ✅ **Completeness-gap diagnosed** (above) — replaces the "extraction reach" guess. **Candidate fixes
-   for the "decide" phase, prioritised by gap closed** (diagnose-then-decide — none built yet):
-   - **Step-a / grader uniform proposal (45%, ~4,238 samples, easiest).** The grader rarely proposes a
-     whole-project iso/date even when the paper is uniform (all-blood/stool cohort, tight date window).
-     Make the rubric/prompt fire it more readily; re-check against the 9 uniform-iso + 4 uniform-date
-     gold studies.
+   for the "decide" phase, prioritised by gap closed** (diagnose-then-decide):
+   - **Step-a / grader uniform proposal — PROBED, and mostly *not* a rubric lever** (was assumed the
+     easiest 45%). The grader-justification + Opus rule-gap probe (above) split the 4,238 into 53%
+     **fetch** (no paper text — same access barrier), 34% **curator-overcollapsed** (paper genuinely
+     varies → matching it would *hurt* fidelity), and only **13% (one study, 551) a real rubric gap**.
+     **David's calls (2026-06-20):** (i) **coverage gate relaxed 0.90 → 0.75** in `attributes.yaml`
+     (3 spots) + the grader prompt prose (`grader.py`), keeping the "≤ threshold → only if the EBI
+     title/description says it applies to the whole study" escape hatch — takes effect on the next
+     (live) grade run, as it changes the grader system prompt → grade cache invalidates; (ii) the
+     curator-overcollapsed cases below 0.75 stay declined (correct — don't chase, preserves fidelity);
+     (iii) the **invasive compound-specimen clause** for PRJNA845975 ("blood and/or CSF") is still a
+     proposal awaiting an explicit yes/no. No broad "make step-a fire more readily" change.
    - **Parse fixes (29%, ~2,782).** (a) Loosen the value-verification so it stops rejecting valid iso
      columns (PRJEB28400); (b) strengthen the isolate→accession two-hop (fuzzy ID match / pull
      `strain`/`sample_alias` into the identifier set) for the "field-bearing but unanchored" tables.
-   - **Fetch breadth (23%, ~2,212).** Broaden table fetching beyond EPMC OA supplementary (publisher /
-     journal retrieval) — the curator's table was locally present + accession-keyed and our extractor
-     handles it; we just couldn't fetch it.
+   - **Fetch breadth (23%, ~2,212) — David fetches by hand.** This is a publisher-access (paywall)
+     problem, not an engine bug, so the path is manual: `report_missing_papers.py` →
+     `missing_papers_report.*` is the **gap-weighted worklist** of the **37 train+val papers** (≈4,404
+     gapped date/source samples) we could not pull full text for, each with a click-to-fetch DOI/PMID
+     URL. David downloads them with Cambridge access as `<study_accession>.pdf` into one Drive folder;
+     a later local-paper loader (mirroring `parse_local_tables`) then feeds them to a re-grade.
    - Non-tabular (2%) is the genuine ceiling. Curator local files stay a **diagnostic only**.
 5. Optional: write-back of the high-confidence fills into the table (after sign-off).
 
@@ -356,10 +394,14 @@ tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware
   websearch,backfill,sources}.py`.
 - **Klebsiella runners:** `applications/klebsiella/{run_stage1,run_study_grading,run_find_papers,
   run_backfill,run_methodb_extract,validate_*,summarise_agent_vs_manual,run_pipeline.sh}.py`; rubric
-  `attributes.yaml` (**David edits**).
+  `attributes.yaml` (**David edits**; coverage gate now 0.75).
+- **Manual-fetch worklist:** `applications/klebsiella/report_missing_papers.py` →
+  `missing_papers_report.{md,tsv}` (paywalled papers for David to download by hand).
 - **Gap-diagnosis (read-only analysis):** `applications/klebsiella/{assess_backfill_gap,
-  assess_curator_gold,diagnose_methodb_local}.py` + `engine/supplementary.parse_local_tables` (diagnostic
-  only). Reports `backfill_gap_report.*`, `curator_gold_report.*`, `methodb_local_diagnosis.*`.
+  assess_curator_gold,diagnose_methodb_local,diagnose_whole_field_declines}.py` +
+  `engine/{supplementary.parse_local_tables,whole_field_audit}` (diagnostic only). Reports
+  `backfill_gap_report.*`, `curator_gold_report.*`, `methodb_local_diagnosis.*`,
+  `whole_field_decline_report.*`.
 - **Key outputs** (`applications/klebsiella/data/`): `stage1_sizing.tsv`, `study_grades.{jsonl,tsv}`,
   `grading_*_report.*`, `found_papers.{jsonl,tsv}`, `find_validation_report.*`,
   `find_adjudication_report.*`, `abstention_rescue_review.tsv`, `gt_corrections.tsv`,
