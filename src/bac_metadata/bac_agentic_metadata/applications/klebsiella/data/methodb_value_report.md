@@ -4,7 +4,7 @@ Gold = `metadata_final_curated_all_samples_and_columns.tsv`, column suffix `_par
 
 | field | cells filled | with gold | correct | value-accuracy |
 |---|---|---|---|---|
-| country | 4692 | 4413 | 4030 | 0.91 |
+| country | 4292 | 4035 | 4030 | 1.00 |
 | collection_date | 5024 | 4179 | 0 | 0.00 |
 | isolation_source | 4690 | 4170 | 2425 | 0.58 |
 | host | 170 | 143 | 32 | 0.22 |

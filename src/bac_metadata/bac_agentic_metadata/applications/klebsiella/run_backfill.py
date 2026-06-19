@@ -103,7 +103,7 @@ def main() -> None:
                 "n_filled": int(filled_counts.get((f, acc), 0)),
             })
     gate = pd.DataFrame(rows)
-    gate_path = Path(args.output).with_name("backfill_gate_report.tsv")
+    gate_path = Path(args.output).with_name(Path(args.output).name.replace("applied", "gate_report"))
     gate.sort_values(["field", "status", "study_accession"]).to_csv(gate_path, sep="\t", index=False)
 
     print(f"Wrote {args.output} ({len(applied)} per-sample fills) and {gate_path.name}", file=sys.stderr)

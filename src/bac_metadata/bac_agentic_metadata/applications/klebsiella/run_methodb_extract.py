@@ -57,37 +57,34 @@ def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[st
 
 
 def _targets(args: argparse.Namespace) -> list[tuple[str, str]]:
-    """Return ``[(study_accession, pmcid)]`` — explicit accessions, all residual studies, or the joinable list."""
-    feas = pd.read_csv(DATA_DIR / "methodb_feasibility.tsv", sep="\t", dtype=str)
-    pmcid_of = dict(zip(feas["study"], feas["pmcid"], strict=False))
+    """Return ``[(study_accession, pmcid)]`` — explicit accessions, else every residual study with a paper.
+
+    PMCIDs come from the finder output (``--found``); the residual study list from the backfill gate
+    report (``--gate-report``). Pipeline-native: no dependency on the exploratory feasibility/mappability
+    probes, so the same command works on any fold.
+    """
+    found = pd.read_csv(args.found, sep="\t", dtype=str).fillna("")
+    pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
     if args.accessions:
         accs = [a.strip() for a in args.accessions.split(",") if a.strip()]
         return [(a, pmcid_of.get(a, "")) for a in accs]
-    if args.all_residual:
-        # Every residual study with a PMCID — let the extractor decide (it abstains gracefully). This
-        # is the exhaustive sweep now that PDF/DOCX tables + the two-hop join are in.
-        gate = pd.read_csv(DATA_DIR / "backfill_gate_report.tsv", sep="\t", dtype=str)
-        residual = sorted(set(gate[gate["status"] == "residual_method_b"]["study_accession"]))
-        return [(a, pmcid_of.get(a, "")) for a in residual if pmcid_of.get(a, "")]
-    mp = pd.read_csv(DATA_DIR / "methodb_mappability.tsv", sep="\t", dtype=str)
-    if args.joinable_only:
-        mp = mp[mp["joinable"].str.lower() == "true"]
-    return list(zip(mp["study"], mp["pmcid"], strict=False))
+    # Default: every residual study that has a describing paper — the extractor abstains where nothing maps.
+    gate = pd.read_csv(args.gate_report, sep="\t", dtype=str)
+    residual = sorted(set(gate[gate["status"] == "residual_method_b"]["study_accession"]))
+    return [(a, pmcid_of.get(a, "")) for a in residual if pmcid_of.get(a, "")]
 
 
 def main() -> None:
     """Parse args, run method-b extraction over the target studies, write the per-sample fills."""
     p = argparse.ArgumentParser(description="Method-b per-sample extraction from supplementary tables.")
-    p.add_argument("--accessions", default=None, help="Comma-separated studies (overrides the joinable list).")
-    p.add_argument("--joinable-only", action="store_true", help="Restrict to joinable studies (default if no --accessions).")
-    p.add_argument("--all-residual", action="store_true", help="Sweep every residual study (PDF/DOCX-aware; extractor abstains as needed).")
+    p.add_argument("--accessions", default=None, help="Comma-separated studies (else every residual study with a paper).")
+    p.add_argument("--found", default=str(DATA_DIR / "found_papers.tsv"), help="Finder output (source of PMCIDs).")
+    p.add_argument("--gate-report", default=str(DATA_DIR / "backfill_gate_report.tsv"), help="Backfill gate report (residual list).")
     p.add_argument("--fold", default="train,val", help="Folds for the ENA accession sets (default train,val).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--output", default=str(DATA_DIR / "methodb_applied.tsv"))
     args = p.parse_args()
-    if not args.accessions and not args.all_residual:
-        args.joinable_only = True
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
     sets, maps = _study_accession_sets(folds)
