@@ -28,8 +28,9 @@ raw 0.70 / adjudicated 0.87** with the full three-tier pipeline (deterministic +
 web-search fallback) now entirely **inside the finder**, at **~0.94 precision when it commits** and only
 **7 of 102 abstaining**. Per-sample backfill is **run and value-checked** on train+val
 end-to-end: whole-field fills country/host (`country` 0.99, `host` ~1.0 semantic), and **method-b**
-per-sample extraction from OA supplementary tables fills the genuinely-varying date/source (collection_date
-**0.999** year-level, isolation_source **0.959** fidelity, on the 9 of 15 joinable studies recovered). The engine is also **model-robust**: re-running the finder+grader with an
+per-sample extraction from supplementary tables (xlsx/csv + DOCX/PDF, direct + two-hop, value-verified)
+fills the genuinely-varying date/source — **11 studies recovered, 14,176 fills**, collection_date
+**0.999** year-level, isolation_source **0.957** fidelity, country **0.999**, host 1.0 semantic. The engine is also **model-robust**: re-running the finder+grader with an
 **Opus 4.8** agent (vs the default Sonnet 4.6) agrees within noise (adjudicated finding 0.86 vs 0.87) —
 two independent models converge, so the results are not a single-model artifact. A recurring secondary
 finding: the gold-standard sheet itself has **~20% wrong/misattributed `paper_link`s** — the engine
@@ -193,25 +194,37 @@ midpoint of a ≤2-year span, else blank.
 
 ### Sample-level backfill — method-b (per-sample extraction from supplementary tables)
 
-The genuinely-varying residual (`collection_date`/`isolation_source`) is recovered per-sample from the
-paper's OA supplementary tables (`engine/supplementary.py` + `engine/sample_extractor.py`): the **LLM
-maps columns→fields** from a header preview, then **deterministic code joins each table row to a
-`sample_accession`** (via the study's ENA accession set) and copies the cell **verbatim** — grounded,
-faithful, abstaining. Feasibility over the 59 residual studies: 22 have an OA table, **15 directly
-joinable** (table carries ENA accessions). Run on those 15 → **9 recovered, 13,900 per-sample fills**;
-the other 6 correctly abstain (accession-manifest-only tables, several flagging *two-hop* strain-keyed
-field tables → deferred tier). Value-correctness vs the curated gold (the 9 recovered):
+The genuinely-varying residual (`collection_date`/`isolation_source`, + residual country/host) is
+recovered per-sample from the paper's supplementary tables (`engine/supplementary.py` +
+`engine/sample_extractor.py`). The **LLM maps columns→fields** from a header+values preview (matching by
+meaning — `location`→country, `date`/`year`→collection_date, `source`/`specimen`→isolation_source, etc.),
+then **deterministic code joins each table row to a `sample_accession`** and copies the cell
+**verbatim** — grounded, faithful, abstaining. Three robustness features:
+
+- **Accession-column detection is by VALUE, not header**: the join column is the one containing the most
+  of the study's known ENA accessions (any type — `SAM…`/`ERS…`/`ERR…` all resolve to the sample), so
+  header variants (`Sample`/`sample_accession`/…) are irrelevant.
+- **Value-plausibility check**: when a mapping is not high-confidence, the column's actual values are
+  verified to belong to the field (general, all fields) — e.g. a column of site CODES is rejected as
+  `country` (fixed PRJEB33565). Abstain-over-guess.
+- **Two-hop + PDF/DOCX**: tables are read from `.xlsx/.csv` **and** `.docx` (XML) / `.pdf` (pdfplumber);
+  when the accession-bearing table is a bare manifest, a **two-hop** join bridges it to a strain-keyed
+  field table via the shared ID.
+
+Swept all 59 residual studies → **11 recovered (10 direct + 1 two-hop), 14,176 per-sample fills**; the
+rest correctly abstain (no joinable table, or manifest-only with no bridgeable field table). Feasibility:
+22 of 59 have an OA spreadsheet table, +14 have DOCX/PDF supplements. Value-correctness vs the curated gold:
 
 | field | method-b accuracy | reading |
 |---|---|---|
-| `country` | **0.999** (3998/4003) | per-sample country, essentially perfect |
+| `country` | **0.999** (4035) | per-sample country, essentially perfect (code-column false map rejected by the value check) |
 | `collection_date` | **0.999** year-level | the payoff method-a could not give: real per-sample dates (whole-field midpoint was 0.00). Exact-string 0.00 only because the gold parser *imputes* a day/month (`2019`→`2019/06/30`); method-b keeps the true granularity |
-| `isolation_source` | **0.959** fidelity | per-sample specimen matches the gold raw 96%; **carriage-vs-invasive granularity preserved** (`Screen swab`→carriage vs `Wound swab`/`Pus`/`Aspirates`→invasive); +377 fills where the gold itself was blank (new data) |
+| `isolation_source` | **0.957** fidelity | per-sample specimen matches the gold raw 96%; **carriage-vs-invasive granularity preserved** (`Screen swab`→carriage vs `Wound swab`/`Pus`/`Aspirates`→invasive); +377 fills where the gold itself was blank (new data) |
+| `host` | **1.00** semantic | 143/143 gold = `human` |
 
-Method-b is **deterministic + one small LLM call per table** (disk-cached, reruns free). Combined, the
-backfill now fills country/host via whole-field (~0.99 / ~1.0) and date/source via method-b (~1.0 / ~0.96)
-on the recoverable subset. Artifacts: `methodb_{feasibility,mappability,applied}.tsv`,
-`methodb_value_report.*`.
+Method-b is **deterministic + small LLM calls per table** (disk-cached, reruns free). Combined, the
+backfill fills country/host via whole-field (~0.99 / ~1.0) and date/source via method-b (~1.0 / ~0.96).
+Artifacts: `methodb_{feasibility,mappability,applied,outcomes}.tsv`, `methodb_value_report.*`.
 
 ---
 
@@ -268,12 +281,15 @@ mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that 
 2. ✅ **Value-correctness** checked vs the curated gold: `country` **0.99**, `host` **~1.0 semantic**,
    `isolation_source` ~0.76 category-level, `collection_date` 0.00 exact (coarse proxy). The comparison
    is parse/category-aware (raw fills vs curated gold).
-3. ✅ **Method-(b)** built + run: per-sample extraction from OA supplementary tables
-   (`engine/{supplementary,sample_extractor}.py`). 15 joinable studies → 9 recovered (13,900 fills);
-   country **0.999**, collection_date **0.999** year-level, isolation_source **0.959** fidelity.
-4. **Method-b two-hop tier** (next): the 6 abstentions are accession-manifest-only tables; several flag
-   strain-keyed field tables (`mmc6.xlsx`, the `MOESM` set …) that need a **manifest→strain→fields**
-   two-hop join. Plus DOCX/PDF-only supplements (14) and paywalled (13) remain `needs_manual`.
+3. ✅ **Method-(b)** built + run end-to-end: per-sample extraction from supplementary tables
+   (`engine/{supplementary,sample_extractor}.py`) — direct + **two-hop** (manifest→strain→fields) +
+   **DOCX/PDF** readers + a general **value-plausibility check**. Swept all 59 residual → **11 recovered
+   (10 direct + 1 two-hop), 14,176 fills**; country **0.999**, collection_date **0.999** year-level,
+   isolation_source **0.957** fidelity, host 1.0 semantic.
+4. **Remaining method-b backlog**: paywalled / no-PMCID studies (`needs_manual`); strain-keyed tables
+   where the two-hop bridge finds no shared ID (ID-scheme mismatch — fuzzy matching is a future
+   refinement); a possible direct strain/alias match (needs pulling `strain`/`sample_alias` into the ENA
+   identifier set).
 5. Optional: write-back of the high-confidence fills into the table (after sign-off).
 
 **C. Deferred (smaller):** 2 rubric over-steers (`PRJEB58136`, `PRJNA604975`) + a study_setting wording

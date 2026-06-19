@@ -57,12 +57,18 @@ def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[st
 
 
 def _targets(args: argparse.Namespace) -> list[tuple[str, str]]:
-    """Return ``[(study_accession, pmcid)]`` to process (explicit accessions, else the joinable list)."""
+    """Return ``[(study_accession, pmcid)]`` — explicit accessions, all residual studies, or the joinable list."""
     feas = pd.read_csv(DATA_DIR / "methodb_feasibility.tsv", sep="\t", dtype=str)
     pmcid_of = dict(zip(feas["study"], feas["pmcid"], strict=False))
     if args.accessions:
         accs = [a.strip() for a in args.accessions.split(",") if a.strip()]
         return [(a, pmcid_of.get(a, "")) for a in accs]
+    if args.all_residual:
+        # Every residual study with a PMCID — let the extractor decide (it abstains gracefully). This
+        # is the exhaustive sweep now that PDF/DOCX tables + the two-hop join are in.
+        gate = pd.read_csv(DATA_DIR / "backfill_gate_report.tsv", sep="\t", dtype=str)
+        residual = sorted(set(gate[gate["status"] == "residual_method_b"]["study_accession"]))
+        return [(a, pmcid_of.get(a, "")) for a in residual if pmcid_of.get(a, "")]
     mp = pd.read_csv(DATA_DIR / "methodb_mappability.tsv", sep="\t", dtype=str)
     if args.joinable_only:
         mp = mp[mp["joinable"].str.lower() == "true"]
@@ -74,12 +80,13 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Method-b per-sample extraction from supplementary tables.")
     p.add_argument("--accessions", default=None, help="Comma-separated studies (overrides the joinable list).")
     p.add_argument("--joinable-only", action="store_true", help="Restrict to joinable studies (default if no --accessions).")
+    p.add_argument("--all-residual", action="store_true", help="Sweep every residual study (PDF/DOCX-aware; extractor abstains as needed).")
     p.add_argument("--fold", default="train,val", help="Folds for the ENA accession sets (default train,val).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--output", default=str(DATA_DIR / "methodb_applied.tsv"))
     args = p.parse_args()
-    if not args.accessions:
+    if not args.accessions and not args.all_residual:
         args.joinable_only = True
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
@@ -107,10 +114,24 @@ def main() -> None:
     out = pd.DataFrame(fills, columns=["study_accession", "sample_accession", "field", "ena_value",
                                        "applied_value", "method", "evidence"])
     out.to_csv(args.output, sep="\t", index=False)
+
+    # Per-study outcome record (direct / two-hop / abstained + why) — the method-b coverage map.
+    outcomes = pd.DataFrame([{
+        "study_accession": e.study_accession, "pmcid": e.pmcid, "table": e.table,
+        "method": ("two_hop" if any(f["method"] == "per_sample_two_hop" for f in e.fills)
+                   else "direct" if e.fills else "abstained"),
+        "n_samples": e.n_samples_mapped, "n_fills": len(e.fills),
+        "confidence": e.confidence, "note": e.note,
+    } for e in extractions])
+    outcomes_path = Path(args.output).with_name("methodb_outcomes.tsv")
+    outcomes.to_csv(outcomes_path, sep="\t", index=False)
+
     print(f"\nWrote {args.output}: {len(out)} per-sample fills across "
-          f"{out['study_accession'].nunique()} studies.", file=sys.stderr)
+          f"{out['study_accession'].nunique()} studies; + {outcomes_path.name}", file=sys.stderr)
     if len(out):
         print("fills by field:\n" + out["field"].value_counts().to_string(), file=sys.stderr)
+    if len(outcomes):
+        print("\nper-study method:\n" + outcomes["method"].value_counts().to_string(), file=sys.stderr)
     print(f"confidence: {sx.confidence_tally(extractions)}", file=sys.stderr)
 
 

@@ -33,12 +33,24 @@ from .supplementary import ACCESSION_RE, SuppTable
 FIELDS: tuple[str, ...] = ("country", "collection_date", "isolation_source", "host")
 
 SCHEMA_NAME = "map_supplementary_columns"
+VERIFY_SCHEMA_NAME = "verify_field_values"
+
+#: One-line description of what each field's values should look like (used by the value check).
+FIELD_VALUE_GUIDE = {
+    "country": "real country / place names (NOT site codes, sample IDs, or abbreviations)",
+    "collection_date": "years or calendar dates",
+    "isolation_source": "clinical/environmental specimen or sample types (blood, urine, sputum, swab, water…)",
+    "host": "host organisms (human/Homo sapiens, an animal, or a species name)",
+}
 
 #: Minimum distinct ENA accessions a column must contain to be a usable join key.
 MIN_ACCESSION_HITS = 3
 
 #: Most accession-bearing tables to send to the LLM per study (cost cap; ranked by overlap).
 MAX_TABLES_TO_MAP = 6
+
+#: Minimum shared strain/patient IDs for a two-hop bridge between a manifest and a field table.
+MIN_BRIDGE_OVERLAP = 5
 
 #: Header keywords that hint a table carries the per-sample clinical fields (for two-hop detection).
 FIELD_HEADER_RE = re.compile(
@@ -147,17 +159,30 @@ def render_preview(df: pd.DataFrame, *, max_rows: int = 20, max_cell: int = 40) 
 
 
 def _system_prompt() -> str:
-    """System framing for the column-mapping task."""
+    """System framing for the column-mapping task — match by MEANING, with explicit field aliases."""
     return (
         "You map the columns of a scientific paper's supplementary metadata table to four per-sample "
-        "fields: country, collection_date, isolation_source, host. You are shown a preview with "
-        "0-indexed column labels [0], [1], .... Return the 0-based column index for each field, or null "
-        "if that field is not present as its own column. Also return header_rows (how many leading rows "
-        "are header, usually 1).\n"
+        "fields. Tables rarely use our exact field names, so match by MEANING — use both the header "
+        "wording AND the example values in the preview. Common aliases:\n"
+        "- country: 'location', 'geographic origin/location', 'region', 'country of origin', 'origin', "
+        "'place', 'nation', 'geography' — or a column whose values are country/place names.\n"
+        "- collection_date: 'date', 'year', 'collection year', 'sampling/isolation date', 'date "
+        "collected', 'date of collection' — or a column of years/dates.\n"
+        "- isolation_source: 'source', 'specimen', 'sample type', 'specimen type', 'isolate source', "
+        "'material', 'body site', 'anatomical site' — the clinical/environmental sample the isolate came "
+        "from.\n"
+        "- host: 'host species', 'host organism', 'organism', 'source host', 'host type' — or a "
+        "human/animal host designation.\n"
+        "You are shown a preview with 0-indexed column labels [0], [1], .... Return the 0-based column "
+        "index for each field, or null if that field genuinely has no column. Also return header_rows "
+        "(how many leading rows are header, usually 1).\n"
         "Rules: pick the column holding the RAW per-sample value. For isolation_source choose the most "
         "SPECIFIC specimen column (e.g. the actual sample type like 'rectal swab', 'blood', 'sputum'), "
-        "NOT a derived/grouped category column. Do not invent columns; if unsure for a field, return "
-        "null for it. The accession/sample-ID column is handled separately — you do not need to map it."
+        "NOT a derived/grouped category column. Map a field only to a column whose VALUES are genuine "
+        "values of that field (real place names for country, years/dates for collection_date, specimen "
+        "types for isolation_source, host organisms for host) — not opaque site/sample codes or IDs even "
+        "if a header sounds right. Do not invent columns; when unsure, prefer null. The accession/"
+        "sample-ID column is handled separately — you do not need to map it."
     )
 
 
@@ -169,6 +194,48 @@ def _user_prompt(study_accession: str, table: SuppTable, preview: str) -> str:
         f"TABLE PREVIEW (column labels are 0-based indices):\n{preview}\n\n"
         "Map each of country / collection_date / isolation_source / host to a column index or null."
     )
+
+
+def _distinct_values(df: pd.DataFrame, col: int, header_rows: int, *, n: int = 12) -> list[str]:
+    """Up to ``n`` distinct non-empty sample values from a column (for the value-plausibility check)."""
+    seen: list[str] = []
+    for i in range(header_rows, len(df)):
+        v = _cell(df, i, col)
+        if v and v not in seen:
+            seen.append(v)
+            if len(seen) >= n:
+                break
+    return seen
+
+
+def verify_field_values(table: SuppTable, cols: dict[str, int | None], header_rows: int, llm,
+                        *, model: str | None = None) -> tuple[dict[str, int | None], set[str]]:
+    """Drop any field whose mapped column's VALUES are not plausible members of that field.
+
+    A general sanity check (all fields, not a per-field hack): show the model a sample of each mapped
+    column's actual values and ask whether they genuinely belong to the field. Called only when the
+    mapping is not high-confidence. Returns the filtered column map + the set of rejected fields.
+    """
+    mapped = {f: c for f, c in cols.items() if c is not None}
+    if not mapped:
+        return cols, set()
+    samples = {f: _distinct_values(table.df, c, header_rows) for f, c in mapped.items()}
+    guide = "\n".join(f"- {f}: should be {FIELD_VALUE_GUIDE[f]}" for f in mapped)
+    listing = "\n".join(f"{f} (mapped column values): {samples[f]}" for f in mapped)
+    system = ("You verify whether table columns were mapped to the right metadata field by inspecting "
+              "their actual values. For each field return true only if the listed values are genuine RAW "
+              "values OF that field; return false for opaque codes, sample/strain IDs, or values that "
+              "belong to a different field.\n" + guide)
+    schema = {"type": "object", "properties": {f: {"type": "boolean"} for f in mapped},
+              "required": list(mapped)}
+    verdict = llm.complete_structured(
+        system=system, user=f"Sampled values per mapped field:\n{listing}\n\nIs each field's column correct?",
+        json_schema=schema, schema_name=VERIFY_SCHEMA_NAME,
+        schema_description="Confirm each mapped column's values belong to its field.", model=model,
+    )
+    rejected = {f for f in mapped if verdict.get(f) is False}
+    kept = {f: (None if f in rejected else c) for f, c in cols.items()}
+    return kept, rejected
 
 
 def has_field_headers(table: SuppTable, *, scan_rows: int = 3) -> bool:
@@ -188,6 +255,85 @@ def _cell(df: pd.DataFrame, row: int, col: int | None) -> str:
     if v is None or isinstance(v, float):
         return ""
     return str(v).strip()
+
+
+def _col_values(df: pd.DataFrame, col: int, header_rows: int) -> set[str]:
+    """Lower-cased non-empty cell values of one column below the header (a candidate join key)."""
+    return {v.lower() for i in range(header_rows, len(df)) if (v := _cell(df, i, col))}
+
+
+def find_bridge(manifest: pd.DataFrame, acc_col: int, m_header: int,
+                field_df: pd.DataFrame, f_header: int) -> tuple[int | None, int | None, int]:
+    """Find the shared strain/patient-ID column linking a manifest to a field table.
+
+    Returns the (manifest_col, field_col, overlap) pair whose cell values overlap most — the bridge for
+    the two-hop join (the accession column is excluded as a manifest key). ``(None, None, 0)`` if none.
+    """
+    m_sets = {j: _col_values(manifest, j, m_header) for j in range(manifest.shape[1]) if j != acc_col}
+    f_sets = {k: _col_values(field_df, k, f_header) for k in range(field_df.shape[1])}
+    best: tuple[int | None, int | None, int] = (None, None, 0)
+    for j, ms in m_sets.items():
+        if len(ms) < MIN_BRIDGE_OVERLAP:
+            continue
+        for k, fs in f_sets.items():
+            ov = len(ms & fs)
+            if ov > best[2]:
+                best = (j, k, ov)
+    return best
+
+
+def _two_hop_extract(study_accession: str, pmcid: str, manifest: SuppTable, acc_col: int, m_header: int,
+                     field_tables: list[SuppTable], acc_to_sample: dict[str, str], llm,
+                     *, model: str | None) -> StudyExtraction | None:
+    """Chain manifest (accession→ID) to a strain-keyed field table (ID→fields). ``None`` if no bridge."""
+    # hop 1: build strain/patient-ID → sample_accession from the manifest.
+    best: StudyExtraction | None = None
+    for ft in field_tables[:MAX_TABLES_TO_MAP]:
+        mapping = llm.complete_structured(
+            system=_system_prompt(), user=_user_prompt(study_accession, ft, render_preview(ft.df)),
+            json_schema=column_map_schema(), schema_name=SCHEMA_NAME,
+            schema_description="Map supplementary-table columns to per-sample metadata fields.", model=model,
+        )
+        cols = {f: mapping.get(f"{f}_column") for f in FIELDS}
+        if not any(c is not None for c in cols.values()):
+            continue
+        f_header = max(0, int(mapping.get("header_rows", 1)))
+        if mapping.get("confidence", "low") != "high":  # general value-plausibility check
+            cols, _rej = verify_field_values(ft, cols, f_header, llm, model=model)
+            if not any(c is not None for c in cols.values()):
+                continue
+        m_key, f_key, ov = find_bridge(manifest.df, acc_col, m_header, ft.df, f_header)
+        if m_key is None or ov < MIN_BRIDGE_OVERLAP:
+            continue
+        id_to_sample: dict[str, str] = {}
+        for i in range(m_header, len(manifest.df)):
+            am = ACCESSION_RE.search(_cell(manifest.df, i, acc_col))
+            bid = _cell(manifest.df, i, m_key).lower()
+            if am and bid:
+                sample = acc_to_sample.get(am.group(0).upper())
+                if sample:
+                    id_to_sample.setdefault(bid, sample)
+        # hop 2: walk the field table, bridge each row's ID to a sample, copy field cells verbatim.
+        fills: list[dict] = []
+        mapped: set[str] = set()
+        for i in range(f_header, len(ft.df)):
+            sample = id_to_sample.get(_cell(ft.df, i, f_key).lower())
+            if sample is None:
+                continue
+            mapped.add(sample)
+            for f, col in cols.items():
+                val = _cell(ft.df, i, col)
+                if val:
+                    fills.append({
+                        "study_accession": study_accession, "sample_accession": sample, "field": f,
+                        "ena_value": "", "applied_value": val, "method": "per_sample_two_hop",
+                        "evidence": f"{ft.filename}+{manifest.filename} via {ov} shared IDs",
+                    })
+        if fills and (best is None or len(fills) > len(best.fills)):
+            best = StudyExtraction(study_accession, pmcid, f"{ft.filename}+{manifest.filename}", fills,
+                                   len(mapped), cols, mapping.get("confidence", "low"),
+                                   f"two-hop: {len(mapped)} samples via {ov} shared IDs, {len(fills)} cell-fills")
+    return best
 
 
 def extract_study(
@@ -231,9 +377,12 @@ def extract_study(
             joinable.append((hits, t, col))
     joinable.sort(key=lambda x: -x[0])
 
-    two_hop = [t.filename for t in tables if has_field_headers(t) and t not in [j[1] for j in joinable]]
+    join_tables = [j[1] for j in joinable]
+    two_hop_tables = [t for t in tables if has_field_headers(t) and t not in join_tables]
+    two_hop_names = [t.filename for t in two_hop_tables]
     if not joinable:
-        note = "no joinable table" + (f"; field-bearing tables need two-hop join: {two_hop}" if two_hop else "")
+        # No accession-bearing table at all → nothing to ground on (two-hop needs a manifest for hop 1).
+        note = "no joinable table" + (f"; field-bearing tables present but unanchored: {two_hop_names}" if two_hop_names else "")
         return StudyExtraction(study_accession, pmcid, None, [], 0, {}, "none", note)
 
     # 2) LLM maps fields→columns on each accession-bearing table (capped); keep the richest mapping.
@@ -259,10 +408,26 @@ def extract_study(
     cols = {f: mapping.get(f"{f}_column") for f in FIELDS}
     header_rows = max(0, int(mapping.get("header_rows", 1)))
     if best_nfields == 0:
+        # The joinable tables are accession manifests with no field columns. If a strain-keyed field
+        # table exists, chain through it (two-hop) using `table` as the manifest.
+        if two_hop_tables:
+            th = _two_hop_extract(study_accession, pmcid, table, acc_col, header_rows,
+                                  two_hop_tables, acc_to_sample, llm, model=model)
+            if th is not None:
+                return th
         note = ("joinable tables are accession-manifest only (no field columns)"
-                + (f"; fields may be in a strain-keyed table → two-hop: {two_hop}" if two_hop else ""))
+                + (f"; no bridge to field tables {two_hop_names}" if two_hop_names else ""))
         return StudyExtraction(study_accession, pmcid, table.filename, [], 0, cols,
                                mapping.get("confidence", "low"), note)
+
+    # 2b) value-plausibility check (general, all fields) when the mapping is not high-confidence.
+    confidence = mapping.get("confidence", "low")
+    rejected: set[str] = set()
+    if confidence != "high":
+        cols, rejected = verify_field_values(table, cols, header_rows, llm, model=model)
+        if not any(c is not None for c in cols.values()):
+            return StudyExtraction(study_accession, pmcid, table.filename, [], 0, cols, confidence,
+                                   f"all mapped fields failed the value check: {sorted(rejected)}")
 
     # 3) deterministic row-by-row join + verbatim extraction.
     fills: list[dict] = []
@@ -284,9 +449,11 @@ def extract_study(
                     "ena_value": "", "applied_value": val, "method": "per_sample",
                     "evidence": f"{table.filename}:{m.group(0)}",
                 })
+    note = f"mapped {len(mapped_samples)} samples, {len(fills)} cell-fills"
+    if rejected:
+        note += f"; value-check rejected {sorted(rejected)}"
     return StudyExtraction(study_accession, pmcid, table.filename, fills, len(mapped_samples), cols,
-                           mapping.get("confidence", "low"),
-                           f"mapped {len(mapped_samples)} samples, {len(fills)} cell-fills")
+                           confidence, note)
 
 
 def confidence_tally(extractions: list[StudyExtraction]) -> dict[str, int]:

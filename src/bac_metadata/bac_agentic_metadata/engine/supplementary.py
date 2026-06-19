@@ -29,7 +29,12 @@ import pandas as pd
 import requests
 
 EUROPEPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest"
+#: Native-spreadsheet members parsed directly into DataFrames.
 TABLE_SUFFIXES = (".xlsx", ".xls", ".csv", ".tsv")
+#: Document members whose embedded tables we extract (DOCX via XML, PDF via pdfplumber) — no new deps.
+DOC_SUFFIXES = (".docx", ".pdf")
+#: WordprocessingML namespace for DOCX table parsing.
+_W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 
 #: ENA/INSDC accession shapes that let a supplementary-table row join to an ENA sample. Sample
 #: (SAM[END]…), secondary sample (ERS/SRS/DRS), run (ERR/SRR/DRR), study (PRJ…/ERP/SRP/DRP),
@@ -90,6 +95,58 @@ def fetch_supplementary_zip(pmcid: str, *, cache_dir) -> bytes | None:
     return None
 
 
+def _docx_tables(data: bytes) -> list[pd.DataFrame]:
+    """Extract every table embedded in a ``.docx`` as a header-less DataFrame (stdlib only).
+
+    A ``.docx`` is a ZIP whose ``word/document.xml`` holds ``<w:tbl>`` elements; each ``<w:tr>`` is a
+    row and ``<w:tc>`` a cell (text in the descendant ``<w:t>`` runs). No external dependency.
+    """
+    import xml.etree.ElementTree as ET
+
+    try:
+        with zipfile.ZipFile(io.BytesIO(data)) as dz:
+            xml = dz.read("word/document.xml")
+    except (zipfile.BadZipFile, KeyError):
+        return []
+    try:
+        root = ET.fromstring(xml)
+    except ET.ParseError:
+        return []
+    out: list[pd.DataFrame] = []
+    for tbl in root.iter(f"{_W_NS}tbl"):
+        rows = []
+        for tr in tbl.findall(f"{_W_NS}tr"):
+            cells = ["".join(t.text or "" for t in tc.iter(f"{_W_NS}t")).strip()
+                     for tc in tr.findall(f"{_W_NS}tc")]
+            if cells:
+                rows.append(cells)
+        if rows:
+            width = max(len(r) for r in rows)
+            rows = [r + [""] * (width - len(r)) for r in rows]
+            out.append(pd.DataFrame(rows, dtype=str))
+    return out
+
+
+def _pdf_tables(data: bytes) -> list[pd.DataFrame]:
+    """Extract tables from PDF bytes with ``pdfplumber`` (already a dependency); [] on failure."""
+    import pdfplumber
+
+    out: list[pd.DataFrame] = []
+    try:
+        with pdfplumber.open(io.BytesIO(data)) as pdf:
+            for page in pdf.pages:
+                for tbl in page.extract_tables() or []:
+                    rows = [["" if c is None else str(c).replace("\n", " ").strip() for c in row]
+                            for row in tbl if row]
+                    if rows:
+                        width = max(len(r) for r in rows)
+                        rows = [r + [""] * (width - len(r)) for r in rows]
+                        out.append(pd.DataFrame(rows, dtype=str))
+    except Exception:  # noqa: BLE001 - any PDF parse failure → no tables from this file
+        return out
+    return out
+
+
 def parse_tables(pmcid: str, *, cache_dir) -> list[SuppTable]:
     """Parse every spreadsheet/CSV member of the article's supplementary ZIP into :class:`SuppTable`.
 
@@ -119,7 +176,7 @@ def parse_tables(pmcid: str, *, cache_dir) -> list[SuppTable]:
         return []
     for name in zf.namelist():
         low = name.lower()
-        if not low.endswith(TABLE_SUFFIXES):
+        if not low.endswith(TABLE_SUFFIXES + DOC_SUFFIXES):
             continue
         try:
             data = zf.read(name)
@@ -132,7 +189,7 @@ def parse_tables(pmcid: str, *, cache_dir) -> list[SuppTable]:
                 out.append(SuppTable(pmcid, name, None, df))
             except (ValueError, pd.errors.ParserError, UnicodeDecodeError):
                 continue
-        else:
+        elif low.endswith((".xlsx", ".xls")):
             engine = "xlrd" if low.endswith(".xls") else "openpyxl"
             try:
                 sheets = pd.read_excel(io.BytesIO(data), sheet_name=None, dtype=str, header=None, engine=engine)
@@ -140,6 +197,10 @@ def parse_tables(pmcid: str, *, cache_dir) -> list[SuppTable]:
                 continue
             for sheet_name, df in sheets.items():
                 out.append(SuppTable(pmcid, name, str(sheet_name), df))
+        else:  # .docx / .pdf — extract embedded tables (one SuppTable per table found)
+            extractor = _docx_tables if low.endswith(".docx") else _pdf_tables
+            for idx, df in enumerate(extractor(data)):
+                out.append(SuppTable(pmcid, name, f"table{idx + 1}", df))
     return out
 
 
