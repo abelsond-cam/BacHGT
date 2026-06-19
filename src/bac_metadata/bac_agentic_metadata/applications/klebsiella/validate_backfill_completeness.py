@@ -88,7 +88,8 @@ def main() -> None:
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
     base = _load_base(args.input, folds)
-    filled = _filled_samples([args.backfill, args.methodb])
+    step_a = _filled_samples([args.backfill])   # whole-field
+    step_b = _filled_samples([args.methodb])    # method-b
     gold_cols = {f: f"{f}{args.gold_suffix}" for f in FIELDS}
     gold = _read_gold(args.truth, list(gold_cols.values())).drop_duplicates("sample_accession").set_index("sample_accession")
     n = len(base)
@@ -98,33 +99,38 @@ def main() -> None:
     for f in FIELDS:
         base_present = backfill.strip_placeholders(base[f]).notna().to_numpy() if f in base.columns else \
             pd.Series(False, index=base.index).to_numpy()
-        agent_present = base_present | base["sample_accession"].isin(filled[f]).to_numpy()
+        after_a = base_present | base["sample_accession"].isin(step_a[f]).to_numpy()   # +whole-field
+        after_b = after_a | base["sample_accession"].isin(step_b[f]).to_numpy()        # +method-b (= agent)
         gcol = gold_cols[f]
         if gcol in gold.columns:
             gmap = backfill.strip_placeholders(gold[gcol])
             v2_present = base["sample_accession"].map(gmap).notna().to_numpy()
         else:
             v2_present = pd.Series(False, index=base.index).to_numpy()
-        b, a, v = base_present.mean(), agent_present.mean(), v2_present.mean()
-        gap_closed = (a - b) / (v - b) if v > b else float("nan")
+        bl, aa, ab, v = base_present.mean(), after_a.mean(), after_b.mean(), v2_present.mean()
+        gap_closed = (ab - bl) / (v - bl) if v > bl else float("nan")
         rows.append({"field": f, "n_samples": n,
-                     "baseline": round(float(b), 4), "agent": round(float(a), 4), "v2": round(float(v), 4),
-                     "agent_gain": round(float(a - b), 4), "gap_closed": round(float(gap_closed), 4)})
+                     "baseline": round(float(bl), 4), "after_whole_field": round(float(aa), 4),
+                     "agent": round(float(ab), 4), "v2": round(float(v), 4),
+                     "gain_whole_field": round(float(aa - bl), 4), "gain_method_b": round(float(ab - aa), 4),
+                     "residual_gap": round(float(max(0.0, v - ab)), 4),
+                     "gap_closed": round(float(gap_closed), 4)})
     res = pd.DataFrame(rows)
 
     md = [f"# Per-sample backfill completeness vs metadata_v2 ({', '.join(sorted(folds))})\n",
           f"Samples: **{n}**. Completeness = fraction with a real value (placeholder-stripped both sides; "
-          "gold = curated `*_parsed`). **baseline** = ENA as deposited; **agent** = baseline + our backfill "
-          "(whole-field + method-b); **v2** = the manual-curation target; **gap-closed** = "
-          "(agent−baseline)/(v2−baseline).\n",
-          "| field | baseline | agent | v2 (gold) | agent gain | gap-closed |",
-          "|---|---|---|---|---|---|"]
+          "gold = curated `*_parsed`). Cumulative: **baseline** (ENA as deposited) → **+whole-field** "
+          "(step-a) → **+method-b** (step-b, = **agent**) → **v2** (manual target). **gap-closed** = "
+          "(agent−baseline)/(v2−baseline); **residual_gap** = v2−agent (what manual still has and we don't).\n",
+          "| field | baseline | +whole-field | +method-b (agent) | v2 (gold) | gain a | gain b | residual gap | gap-closed |",
+          "|---|---|---|---|---|---|---|---|---|"]
     for _, r in res.iterrows():
         gc = f"{r['gap_closed']:.2f}" if pd.notna(r["gap_closed"]) else "—"
-        md.append(f"| {r['field']} | {r['baseline']:.2f} | **{r['agent']:.2f}** | {r['v2']:.2f} | "
-                  f"+{r['agent_gain']:.2f} | {gc} |")
-    md.append("\n- **agent ≥ v2** means our backfill completed at least as much as the manual curation; "
-              "**gap-closed > 1.0** means we filled more than manual did over baseline.")
+        md.append(f"| {r['field']} | {r['baseline']:.2f} | {r['after_whole_field']:.2f} | "
+                  f"**{r['agent']:.2f}** | {r['v2']:.2f} | +{r['gain_whole_field']:.2f} | "
+                  f"+{r['gain_method_b']:.2f} | {r['residual_gap']:.2f} | {gc} |")
+    md.append("\n- **gain a / gain b** isolate the whole-field vs method-b contribution; **residual gap** "
+              "is the per-field completeness manual curation still has over us — the target of the gap diagnosis.")
 
     (DATA_DIR / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
     res.to_csv(DATA_DIR / f"{args.report_prefix}_report.tsv", sep="\t", index=False)

@@ -1,0 +1,105 @@
+study_accession	n_samples	collection_date_v2	collection_date_we	collection_date_gap	isolation_source_v2	isolation_source_we	isolation_source_gap	total_gap	methodb	methodb_note	curator_folder	src_tables	src_has_date	src_has_source	src_has_accession
+PRJEB42462	1278	1110	0	1110	1167	0	1167	2277	abstained	no joinable table	True	3	True	False	True
+PRJEB28400	827	692	0	692	667	0	667	1359	abstained	no joinable table	True	2	True	True	True
+PRJEB29742	555	423	0	423	404	0	404	827	abstained	no joinable table; field-bearing tables present but unanchored: ['ciab777_suppl_	True	4	True	True	True
+PRJEB6891	513	386	2	386	378	2	378	764	abstained	no joinable table	True	9	True	True	True
+PRJNA845975	567	553	567	0	551	0	551	551	abstained	no joinable table	True	0	False	False	False
+PRJDB5929	631	620	627	1	523	0	523	524	abstained	no joinable table	True	1	True	True	True
+PRJEB29143	498	496	0	496	496	498	0	496	abstained	no joinable table	True	1	True	True	True
+PRJNA603790	462	445	462	0	445	0	445	445	abstained	no joinable table	True	0	False	False	False
+PRJEB33565	400	378	400	0	373	0	373	373	abstained	joinable tables are accession-manifest only (no field columns); no bridge to fie	True	1	False	True	True
+PRJEB24082	200	163	0	163	158	0	158	321	abstained	no joinable table	True	1	True	True	True
+PRJEB46513	281	0	0	0	258	0	258	258	abstained	joinable tables are accession-manifest only (no field columns)	True	1	True	True	True
+PRJNA341927	244	243	244	0	243	0	243	243	abstained	no joinable table	True	1	False	False	False
+PRJEB36486	221	200	0	200	200	221	0	200	abstained	joinable tables are accession-manifest only (no field columns); no bridge to fie	True	1	False	False	True
+PRJEB24085	104	96	0	96	94	0	94	190	abstained	no joinable table	False	0	False	False	False
+PRJEB1563	198	0	0	0	170	0	170	170	abstained	joinable tables are accession-manifest only (no field columns); no bridge to fie	True	1	False	True	True
+PRJNA804332	138	135	138	0	135	0	135	135	abstained	no joinable table; field-bearing tables present but unanchored: ['Table_1.xlsx']	True	1	False	True	False
+PRJEB12699	141	126	0	126	0	0	0	126	abstained	no joinable table	True	0	False	False	False
+PRJEB20799	46	37	0	37	37	0	37	74	abstained	no joinable table	True	1	True	True	True
+PRJNA271899	258	220	255	1	67	4	66	67	abstained	no joinable table	True	1	False	True	True
+PRJEB27256	989	960	977	11	960	977	11	22	no_outcome		True	2	False	True	True
+PRJDB12075	184	117	184	0	9	0	9	9	abstained	no joinable table; field-bearing tables present but unanchored: ['aem.01712-22-s	False	0	False	False	False
+PRJNA557275	340	333	340	0	332	340	0	0	no_outcome		False	0	False	False	False
+PRJNA564992	142	142	142	0	142	142	0	0	no_outcome		False	0	False	False	False
+PRJNA565795	190	190	190	0	158	159	0	0	no_outcome		False	0	False	False	False
+PRJNA564424	537	515	537	0	515	537	0	0	no_outcome		False	0	False	False	False
+PRJDB10842	1483	1397	1482	0	1312	1448	0	0	no_outcome		False	0	False	False	False
+PRJNA549322	223	46	75	0	46	75	0	0	abstained	no joinable table	False	0	False	False	False
+PRJNA544438	237	234	237	0	226	228	0	0	no_outcome		False	0	False	False	False
+PRJNA475751	494	471	494	0	444	478	0	0	no_outcome		False	0	False	False	False
+PRJNA415194	453	450	453	0	450	453	0	0	no_outcome		False	0	False	False	False
+PRJNA604910	264	257	264	0	257	264	0	0	abstained	no joinable table; field-bearing tables present but unanchored: ['mgen-6-391-s00	False	0	False	False	False
+PRJNA396774	177	167	177	0	166	177	0	0	no_outcome		False	0	False	False	False
+PRJNA395086	166	159	161	0	159	161	0	0	no_outcome		False	0	False	False	False
+PRJNA351909	49	37	49	0	37	49	0	0	no_outcome		False	0	False	False	False
+PRJNA325243	242	240	241	0	240	241	0	0	two_hop	two-hop: 9 samples via 9 shared IDs, 10 cell-fills	False	0	False	False	False
+PRJNA278886	281	245	252	0	243	252	0	0	no_outcome		False	0	False	False	False
+PRJNA398288	36	35	36	0	35	36	0	0	no_outcome		False	0	False	False	False
+PRJNA646358	141	130	141	0	130	141	0	0	no_outcome		False	0	False	False	False
+PRJNA604975	43	25	32	0	25	43	0	0	abstained	no joinable table; field-bearing tables present but unanchored: ['13073_2021_947	False	0	False	False	False
+PRJNA626430	159	156	159	0	0	159	0	0	no_outcome		False	0	False	False	False
+PRJNA982859	183	171	174	0	171	174	0	0	abstained	no joinable table	False	0	False	False	False
+PRJNA978102	108	108	108	0	108	108	0	0	no_outcome		False	0	False	False	False
+PRJNA885285	130	129	130	0	129	130	0	0	no_outcome		False	0	False	False	False
+PRJNA857686	313	307	313	0	31	243	0	0	no_outcome		False	0	False	False	False
+PRJNA855907	407	404	407	0	279	281	0	0	abstained	no joinable table	False	0	False	False	False
+PRJNA835677	150	117	150	0	117	150	0	0	no_outcome		False	0	False	False	False
+PRJNA820335	110	106	110	0	106	110	0	0	no_outcome		False	0	False	False	False
+PRJNA789565	330	329	330	0	329	330	0	0	no_outcome		False	0	False	False	False
+PRJNA789336	258	236	258	0	236	258	0	0	no_outcome		False	0	False	False	False
+PRJNA787062	192	175	192	0	175	192	0	0	no_outcome		False	0	False	False	False
+PRJNA777643	392	325	392	0	324	392	0	0	no_outcome		False	0	False	False	False
+PRJNA768622	833	697	833	0	440	833	0	0	no_outcome		False	0	False	False	False
+PRJNA767944	173	162	173	0	0	0	0	0	abstained	no joinable table; field-bearing tables present but unanchored: ['msphere.00143-	False	0	False	False	False
+PRJNA765801	219	0	0	0	0	0	0	0	abstained	no joinable table; field-bearing tables present but unanchored: ['41467_2025_645	False	0	False	False	False
+PRJNA686897	452	164	399	0	164	399	0	0	no_outcome		False	0	False	False	False
+PRJNA648389	126	126	126	0	126	126	0	0	no_outcome		False	0	False	False	False
+PRJNA1133624	145	144	145	0	141	141	0	0	no_outcome		False	0	False	False	False
+PRJNA641987	16	16	16	0	0	16	0	0	no_outcome		False	0	False	False	False
+PRJNA634885	144	0	144	0	0	0	0	0	direct	mapped 144 samples, 144 cell-fills	False	0	False	False	False
+PRJNA246471	131	124	130	0	125	131	0	0	no_outcome		False	0	False	False	False
+PRJEB6574	214	166	178	0	166	178	0	0	no_outcome		False	0	False	False	False
+PRJNA1087366	135	0	0	0	0	0	0	0	abstained	joinable tables are accession-manifest only (no field columns); no bridge to fie	False	0	False	False	False
+PRJEB22890	157	155	157	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB29740	930	789	815	0	731	815	0	0	direct	mapped 815 samples, 2445 cell-fills	False	0	False	False	False
+PRJEB28054	326	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB24970	224	222	224	0	222	224	0	0	no_outcome		False	0	False	False	False
+PRJEB24087	4	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB24086	3	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB24084	3	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB24083	5	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB22903	261	259	260	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB22252	245	202	245	0	202	245	0	0	no_outcome		False	0	False	False	False
+PRJEB35685	412	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB21605	149	147	149	0	147	149	0	0	direct	mapped 148 samples, 296 cell-fills	False	0	False	False	False
+PRJEB21277	194	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB19322	91	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB19229	96	93	96	0	81	96	0	0	no_outcome		False	0	False	False	False
+PRJEB1800	121	85	121	0	83	90	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB17615	342	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB15226	288	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJDB12116	154	148	149	0	53	53	0	0	direct	mapped 53 samples, 54 cell-fills	False	0	False	False	False
+PRJEB30134	201	32	32	0	32	32	0	0	direct	mapped 32 samples, 128 cell-fills	False	0	False	False	False
+PRJEB36683	335	319	335	0	98	335	0	0	no_outcome		False	0	False	False	False
+PRJNA1054115	137	137	137	0	137	137	0	0	no_outcome		False	0	False	False	False
+PRJEB58018	201	200	201	0	196	201	0	0	no_outcome		False	0	False	False	False
+PRJNA1052047	148	148	148	0	148	148	0	0	no_outcome		False	0	False	False	False
+PRJNA1048341	177	175	177	0	175	177	0	0	abstained	no joinable table	False	0	False	False	False
+PRJNA1028672	542	542	542	0	536	537	0	0	no_outcome		False	0	False	False	False
+PRJEB74083	106	106	106	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB64895	142	141	142	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB63361	413	403	413	0	403	413	0	0	no_outcome		False	0	False	False	False
+PRJEB58216	209	209	209	0	209	209	0	0	no_outcome		False	0	False	False	False
+PRJEB58136	138	125	138	0	89	123	0	0	direct	mapped 138 samples, 537 cell-fills	False	0	False	False	False
+PRJEB50822	376	359	376	0	0	376	0	0	no_outcome		False	0	False	False	False
+PRJEB37378	1681	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB5065	383	297	299	0	297	299	0	0	no_outcome		False	0	False	False	False
+PRJEB50614	400	0	256	0	376	400	0	0	direct	mapped 256 samples, 768 cell-fills	False	0	False	False	False
+PRJEB48990	539	396	539	0	410	539	0	0	direct	mapped 539 samples, 1078 cell-fills	False	0	False	False	False
+PRJEB42331	80	20	80	0	0	0	0	0	direct	mapped 80 samples, 80 cell-fills	False	0	False	False	False
+PRJEB39943	3257	2670	3257	0	2608	2861	0	0	direct	mapped 2903 samples, 8636 cell-fills	False	0	False	False	False
+PRJEB39867	286	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False
+PRJEB39293	160	131	160	0	131	160	0	0	no_outcome		False	0	False	False	False
+PRJEB38289	500	480	500	0	151	500	0	0	abstained	no joinable table; field-bearing tables present but unanchored: ['41598_2021_857	False	0	False	False	False
+PRJNA996149	319	0	0	0	0	0	0	0	abstained	no joinable table	False	0	False	False	False

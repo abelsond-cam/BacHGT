@@ -24,6 +24,7 @@ import io
 import re
 import zipfile
 from dataclasses import dataclass
+from pathlib import Path
 
 import pandas as pd
 import requests
@@ -175,32 +176,61 @@ def parse_tables(pmcid: str, *, cache_dir) -> list[SuppTable]:
     except zipfile.BadZipFile:
         return []
     for name in zf.namelist():
-        low = name.lower()
-        if not low.endswith(TABLE_SUFFIXES + DOC_SUFFIXES):
+        if not name.lower().endswith(TABLE_SUFFIXES + DOC_SUFFIXES):
             continue
         try:
             data = zf.read(name)
         except (KeyError, zipfile.BadZipFile):
             continue
-        if low.endswith((".csv", ".tsv")):
-            sep = "\t" if low.endswith(".tsv") else ","
-            try:
-                df = pd.read_csv(io.BytesIO(data), sep=sep, dtype=str, header=None, on_bad_lines="skip")
-                out.append(SuppTable(pmcid, name, None, df))
-            except (ValueError, pd.errors.ParserError, UnicodeDecodeError):
-                continue
-        elif low.endswith((".xlsx", ".xls")):
-            engine = "xlrd" if low.endswith(".xls") else "openpyxl"
-            try:
-                sheets = pd.read_excel(io.BytesIO(data), sheet_name=None, dtype=str, header=None, engine=engine)
-            except Exception:  # noqa: BLE001 - supplementary spreadsheets are arbitrarily malformed
-                continue
-            for sheet_name, df in sheets.items():
-                out.append(SuppTable(pmcid, name, str(sheet_name), df))
-        else:  # .docx / .pdf — extract embedded tables (one SuppTable per table found)
-            extractor = _docx_tables if low.endswith(".docx") else _pdf_tables
-            for idx, df in enumerate(extractor(data)):
-                out.append(SuppTable(pmcid, name, f"table{idx + 1}", df))
+        out.extend(_parse_member(pmcid, name, data))
+    return out
+
+
+def _parse_member(tag: str, name: str, data: bytes) -> list[SuppTable]:
+    """Parse one table-bearing file's bytes (csv/tsv/xlsx/xls/docx/pdf) into :class:`SuppTable`s."""
+    low = name.lower()
+    out: list[SuppTable] = []
+    if low.endswith((".csv", ".tsv")):
+        sep = "\t" if low.endswith(".tsv") else ","
+        try:
+            df = pd.read_csv(io.BytesIO(data), sep=sep, dtype=str, header=None, on_bad_lines="skip")
+            out.append(SuppTable(tag, name, None, df))
+        except (ValueError, pd.errors.ParserError, UnicodeDecodeError):
+            return out
+    elif low.endswith((".xlsx", ".xls")):
+        engine = "xlrd" if low.endswith(".xls") else "openpyxl"
+        try:
+            sheets = pd.read_excel(io.BytesIO(data), sheet_name=None, dtype=str, header=None, engine=engine)
+        except Exception:  # noqa: BLE001 - supplementary spreadsheets are arbitrarily malformed
+            return out
+        out.extend(SuppTable(tag, name, str(sheet_name), df) for sheet_name, df in sheets.items())
+    elif low.endswith((".docx", ".pdf")):
+        extractor = _docx_tables if low.endswith(".docx") else _pdf_tables
+        out.extend(SuppTable(tag, name, f"table{idx + 1}", df) for idx, df in enumerate(extractor(data)))
+    return out
+
+
+def parse_local_tables(dir_path, *, exclude_substr: str = "ready_to_merge") -> list[SuppTable]:
+    """Parse the table files in a LOCAL folder (diagnostic only — e.g. a curator's ENA_projects folder).
+
+    Reuses the same per-format parsers as :func:`parse_tables`. Files whose name contains
+    ``exclude_substr`` are skipped (so a curator's ``*ready_to_merge*`` OUTPUT is never mistaken for an
+    input source table). This is a **diagnostic harness**, not a production source: such files do not
+    exist for unseen data.
+    """
+    d = Path(dir_path)
+    if not d.is_dir():
+        return []
+    out: list[SuppTable] = []
+    for f in sorted(d.iterdir()):
+        low = f.name.lower()
+        if not low.endswith(TABLE_SUFFIXES + DOC_SUFFIXES) or (exclude_substr and exclude_substr in low):
+            continue
+        try:
+            data = f.read_bytes()
+        except OSError:
+            continue
+        out.extend(_parse_member(f.name, f.name, data))
     return out
 
 

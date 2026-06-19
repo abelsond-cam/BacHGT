@@ -6,7 +6,7 @@
 [`STAGE2.md`](STAGE2.md). Those docs no longer carry results — they point here.
 
 _Scope: Klebsiella validation site, **train+val only (109 accessions)**; the 47-accession test fold
-stays sealed until a single final run. Last updated 2026-06-18._
+stays sealed until a single final run. Last updated 2026-06-19._
 
 ---
 
@@ -240,11 +240,33 @@ gold = curated `*_parsed`; `validate_backfill_completeness.py`):
 | isolation_source | 0.45 | **0.59** | 0.67 | +0.15 | 0.67 |
 
 We **match manual on country** (95% of the gap), **beat it on host** (0.87 > 0.79 — confident `human` for
-human cohorts v2 left blank; accuracy 1.0 semantic), and **close 80% / 67% on date / source**. The
-date/source shortfall is **extraction reach, not finding quality**: manual curators mined per-sample
-values from full text/figures/by-hand cross-refs, whereas method-b is bounded by machine-readable
-supplementary tables. The added completeness is trustworthy (accuracy where filled: country 0.999, date
-0.999 yr, iso 0.957, host 1.0). Artifact: `backfill_completeness_report.*`.
+human cohorts v2 left blank; accuracy 1.0 semantic), and **close 80% / 67% on date / source**. The added
+completeness is trustworthy (accuracy where filled: country 0.999, date 0.999 yr, iso 0.957, host 1.0).
+Step-a (whole-field) vs step-b (method-b) split: iso step-a **+0.03** / step-b +0.12; date step-a +0.11 /
+step-b +0.05. Artifact: `backfill_completeness_report.*`.
+
+### Completeness-gap diagnosis (date/source) — measured, not guessed
+
+The earlier "extraction reach" claim was **wrong** and is corrected here. Using the curators' own working
+materials (the `ENA_projects/<acc>/` folders: the reviewed `*ready_to_merge*` output that feeds v2, and
+the `data.csv`/supplementary source tables they used), the **9,431-sample** date+source residual gap was
+attributed per study × field. Tools (read-only): `validate_backfill_completeness.py` (step split),
+`assess_backfill_gap.py` (per-study gap), `assess_curator_gold.py` (categorise each ready_to_merge as
+whole-field-uniform vs per-sample-multiple + check our step-a fired), `diagnose_methodb_local.py` (run
+the existing extractor on the curators' LOCAL tables to split fetch vs parse — diagnostic only, never a
+production source).
+
+| cause | samples | % | the fix |
+|---|---|---|---|
+| **whole-field we failed to fire** (step-a / grader) | **4,238** | **45%** | grader rarely proposes a uniform iso/date even when the curator did — 9 uniform-iso studies (all blood/stool: PRJEB42462, PRJEB33565, PRJEB46513, …) we never filled; step-a fired on only 3/12 uniform-iso and 1/5 uniform-date studies |
+| **per-sample parse** (had the table, extraction failed) | **2,782** | **29%** | (a) our own value-check **over-rejects** valid iso columns (PRJEB28400, 667); (b) isolate-keyed tables where the two-hop bridge finds no shared ID (PRJEB29742, PRJDB5929) |
+| **per-sample fetch** (couldn't get the table) | **2,212** | **23%** | the curator's table was accession-keyed + locally present and our extractor handles it — broaden fetching beyond EPMC OA (publisher/journal) |
+| non-tabular (curator used paper text) | 190 | 2% | genuine ceiling |
+
+By field the lever differs: **iso (5,689)** is 59% whole-field-underfired + 35% parse (only 4% fetch);
+**date (3,742)** is 53% fetch + 23% whole-field + 22% parse. So **~98% of the gap is fixable across three
+concrete levers**, only 2% a genuine non-tabular ceiling. Artifacts: `backfill_gap_report.*`,
+`curator_gold_report.*`, `methodb_local_diagnosis.*`.
 
 ---
 
@@ -306,10 +328,19 @@ mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that 
    **DOCX/PDF** readers + a general **value-plausibility check**. Swept all 59 residual → **11 recovered
    (10 direct + 1 two-hop), 14,176 fills**; country **0.999**, collection_date **0.999** year-level,
    isolation_source **0.957** fidelity, host 1.0 semantic.
-4. **Remaining method-b backlog**: paywalled / no-PMCID studies (`needs_manual`); strain-keyed tables
-   where the two-hop bridge finds no shared ID (ID-scheme mismatch — fuzzy matching is a future
-   refinement); a possible direct strain/alias match (needs pulling `strain`/`sample_alias` into the ENA
-   identifier set).
+4. ✅ **Completeness-gap diagnosed** (above) — replaces the "extraction reach" guess. **Candidate fixes
+   for the "decide" phase, prioritised by gap closed** (diagnose-then-decide — none built yet):
+   - **Step-a / grader uniform proposal (45%, ~4,238 samples, easiest).** The grader rarely proposes a
+     whole-project iso/date even when the paper is uniform (all-blood/stool cohort, tight date window).
+     Make the rubric/prompt fire it more readily; re-check against the 9 uniform-iso + 4 uniform-date
+     gold studies.
+   - **Parse fixes (29%, ~2,782).** (a) Loosen the value-verification so it stops rejecting valid iso
+     columns (PRJEB28400); (b) strengthen the isolate→accession two-hop (fuzzy ID match / pull
+     `strain`/`sample_alias` into the identifier set) for the "field-bearing but unanchored" tables.
+   - **Fetch breadth (23%, ~2,212).** Broaden table fetching beyond EPMC OA supplementary (publisher /
+     journal retrieval) — the curator's table was locally present + accession-keyed and our extractor
+     handles it; we just couldn't fetch it.
+   - Non-tabular (2%) is the genuine ceiling. Curator local files stay a **diagnostic only**.
 5. Optional: write-back of the high-confidence fills into the table (after sign-off).
 
 **C. Deferred (smaller):** 2 rubric over-steers (`PRJEB58136`, `PRJNA604975`) + a study_setting wording
@@ -324,7 +355,11 @@ tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware
 - **Engine:** `engine/{ena_sizing,europepmc,ncbi,paper_finder,grader,adjudicator,llm,fulltext,
   websearch,backfill,sources}.py`.
 - **Klebsiella runners:** `applications/klebsiella/{run_stage1,run_study_grading,run_find_papers,
-  run_backfill,validate_*,summarise_agent_vs_manual}.py`; rubric `attributes.yaml` (**David edits**).
+  run_backfill,run_methodb_extract,validate_*,summarise_agent_vs_manual,run_pipeline.sh}.py`; rubric
+  `attributes.yaml` (**David edits**).
+- **Gap-diagnosis (read-only analysis):** `applications/klebsiella/{assess_backfill_gap,
+  assess_curator_gold,diagnose_methodb_local}.py` + `engine/supplementary.parse_local_tables` (diagnostic
+  only). Reports `backfill_gap_report.*`, `curator_gold_report.*`, `methodb_local_diagnosis.*`.
 - **Key outputs** (`applications/klebsiella/data/`): `stage1_sizing.tsv`, `study_grades.{jsonl,tsv}`,
   `grading_*_report.*`, `found_papers.{jsonl,tsv}`, `find_validation_report.*`,
   `find_adjudication_report.*`, `abstention_rescue_review.tsv`, `gt_corrections.tsv`,

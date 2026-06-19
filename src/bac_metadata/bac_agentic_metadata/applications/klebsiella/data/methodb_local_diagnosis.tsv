@@ -1,0 +1,18 @@
+study_accession	field	gap	recovered	verdict	local_tables	note
+PRJEB42462	collection_date	1110	1110	fetch	8	mapped 1156 samples, 1118 cell-fills
+PRJEB28400	collection_date	692	676	fetch	7	mapped 719 samples, 719 cell-fills; value-check rejected ['isolation_source']
+PRJEB28400	isolation_source	667	0	parse	7	mapped 719 samples, 719 cell-fills; value-check rejected ['isolation_source']
+PRJEB29742	collection_date	423	0	parse	9	no joinable table; field-bearing tables present but unanchored: ['pnas.200340711
+PRJEB29742	isolation_source	404	0	parse	9	no joinable table; field-bearing tables present but unanchored: ['pnas.200340711
+PRJEB6891	collection_date	386	0	parse	8	mapped 246 samples, 492 cell-fills
+PRJEB6891	isolation_source	378	178	parse	8	mapped 246 samples, 492 cell-fills
+PRJDB5929	collection_date	1	0	parse	1	no joinable table; field-bearing tables present but unanchored: ['data.csv']
+PRJDB5929	isolation_source	523	0	parse	1	no joinable table; field-bearing tables present but unanchored: ['data.csv']
+PRJEB24082	collection_date	163	163	fetch	2	mapped 173 samples, 341 cell-fills
+PRJEB24082	isolation_source	158	158	fetch	2	mapped 173 samples, 341 cell-fills
+PRJEB24085	collection_date	96	0	non_tabular_no_table	0	no table
+PRJEB24085	isolation_source	94	0	non_tabular_no_table	0	no table
+PRJNA271899	collection_date	1	1	fetch	20	mapped 104 samples, 311 cell-fills
+PRJNA271899	isolation_source	66	66	fetch	20	mapped 104 samples, 311 cell-fills
+PRJEB27256	collection_date	11	10	fetch	7	mapped 868 samples, 1736 cell-fills
+PRJEB27256	isolation_source	11	10	fetch	7	mapped 868 samples, 1736 cell-fills
