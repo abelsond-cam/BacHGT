@@ -19,7 +19,11 @@ backfill.** All five steps are built and measured on train+val. Two LLM backends
 `engine.llm.LLMClient`: **`subscription`** (`claude -p`, zero API spend, default) and **`api`** (paid,
 forced tool use); a backend-independent disk cache makes reruns byte-identical and free.
 
-The headline: **grading agreement is ~0.94–0.98** after adjudication+GT-correction; **paper-finding is
+The headline, reframed as **agent vs manual curation** (the sheet is curation, not ground truth — so
+agent-vs-sheet is *agreement*): the agent and manual curation **agree 84%**, and on disagreements the
+agent is right **~5× more often (34 vs 7)** → **adjudicated agent accuracy 0.97 vs manual-curation 0.88,
+a +0.10 improvement** (§2 lead table; model-robust — Opus identical). In stage terms: **grading
+agreement is ~0.94–0.98** after adjudication+GT-correction; **paper-finding is
 raw 0.70 / adjudicated 0.87** with the full three-tier pipeline (deterministic + secondary-accession +
 web-search fallback) now entirely **inside the finder**, at **~0.94 precision when it commits** and only
 **7 of 102 abstaining**. Per-sample backfill **steps 1–2 (gate + whole-field) are now run and
@@ -33,6 +37,34 @@ surfaces these rather than trusting them.
 ---
 
 ## 2. Measured results by stage
+
+### Agent vs manual curation — agreement, then adjudicated accuracy of each (headline framing)
+
+The frozen sheet is **manual curation, not ground truth**, so an agent-vs-sheet number is really
+**agreement**, not accuracy. Reframed that way (`summarise_agent_vs_manual.py`), across paper-finding +
+the two primary grading attributes the agent and the manual curation **agree 84%** of the time; on the
+disagreements the opposing **Opus adjudicator** ruled, **the agent is right ~5× more often than the
+manual curation (34 vs 7)**:
+
+**agreement** is observed agreement *n (ratio)*; **Cohen κ** is that agreement corrected for chance
+(categorical raters only — N/A for finding/TOTAL, where there is no fixed shared label set):
+
+| item | N judged | agreement | agent right | manual right | tie | undet | **Cohen κ** | **agent acc** | **manual acc** | **Δ** |
+|---|---|---|---|---|---|---|---|---|---|---|
+| paper-finding | 95 | 71 (0.75) | 16 | 6 | 2 | 0 | — | **0.94** | 0.83 | **+0.11** |
+| amr_study | 85 | 70 (0.82) | 12 | 1 | 1 | 1 | 0.66 | **0.99** | 0.86 | **+0.13** |
+| study_setting | 94 | 88 (0.94) | 6 | 0 | 0 | 0 | 0.74 | **1.00** | 0.94 | **+0.06** |
+| **TOTAL** | **274** | **229 (0.84)** | **34** | **7** | **3** | **1** | — | **0.97** | **0.88** | **+0.10** |
+
+So the engine runs at **~0.97 adjudicated accuracy and improves on the existing manual curation by ~10
+points (0.88 → 0.97)**, correcting 34 curation errors (misattributed `paper_link`s, mis-graded
+`amr_study`/`study_setting`) at the cost of 7. Chance-corrected agreement is **substantial** (Cohen κ
+0.66 / 0.74; κ reads below p₀ on `study_setting` because the `hospital` label dominates — the prevalence
+effect). **Model-robust:** the Opus agent gives the same picture (agent 0.97 / manual 0.87 / Δ +0.10;
+κ 0.68 / 0.70). _Caveat:_ agreements are assumed jointly correct (only disagreements are adjudicated), so
+both accuracies are upper bounds on undetected joint error; the adjudicator is the independent Opus critic
+with verbatim quotes, and the grading manual-errors are David-verified (`gt_corrections.tsv`). Per-item +
+re-runnable on any model/fold: `summarise_agent_vs_manual.py` → `data/agent_vs_manual_{sonnet,opus}.{md,tsv}`.
 
 ### Stage 1 — deterministic sizing & completeness (no LLM)
 
@@ -149,7 +181,7 @@ the gold is curated (David's alignment point), so a naive raw-string match badly
 |---|---|---|
 | `country` | **0.99** (4435/4472 vs `_parsed`) | whole-field country is essentially always right |
 | `host` | **~1.00 semantic** (11,672/11,672 gold = `human`) | every fill is `Homo sapiens` = human; the raw-string 0.11 is a `Homo sapiens`≠`human` **categorisation artifact**, not an error |
-| `isolation_source` | **~0.76 category-level** (stool→faeces, blood→blood; raw-string 0.17) | covered subset mostly right; misses are genuine per-sample variation (whole-field `stool` ≠ per-sample `rectal swab`/organ) → method-b |
+| `isolation_source` | **~0.76 category-level** (stool→faeces, blood→blood; raw-string 0.17) | whole-field fired on only **5 studies** (48 heterogeneous studies correctly gated to method-b); the entire shortfall is **one study (PRJEB36486)** where the grader's `stool` is faithful to the paper ("serial stool sampling") but the gold curated `intestinal`→`invasive gut & organs` — a gold categorisation quirk, not an engine error. Fidelity-to-source on the checkable subset is ~100% |
 | `collection_date` | 0.00 exact | the ≤2-yr midpoint is a coarse proxy, never equals the exact per-sample date → method-b |
 
 So **where whole-field is the right model (country, host) it is ~99–100% correct**, and where the field
@@ -230,11 +262,12 @@ tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware
 - **Engine:** `engine/{ena_sizing,europepmc,ncbi,paper_finder,grader,adjudicator,llm,fulltext,
   websearch,backfill,sources}.py`.
 - **Klebsiella runners:** `applications/klebsiella/{run_stage1,run_study_grading,run_find_papers,
-  run_backfill,validate_*}.py`; rubric `attributes.yaml` (**David edits**).
+  run_backfill,validate_*,summarise_agent_vs_manual}.py`; rubric `attributes.yaml` (**David edits**).
 - **Key outputs** (`applications/klebsiella/data/`): `stage1_sizing.tsv`, `study_grades.{jsonl,tsv}`,
   `grading_*_report.*`, `found_papers.{jsonl,tsv}`, `find_validation_report.*`,
   `find_adjudication_report.*`, `abstention_rescue_review.tsv`, `gt_corrections.tsv`,
-  `backfill_applied.tsv`, `backfill_gate_report.tsv`, `backfill_value_report.*` (+ `_raw`).
+  `backfill_applied.tsv`, `backfill_gate_report.tsv`, `backfill_value_report.*` (+ `_raw`),
+  `agent_vs_manual_{sonnet,opus}.*`, `methodb_feasibility.tsv`, `methodb_mappability.tsv`.
 - **Opus-comparison outputs** (default model stays Sonnet): `found_papers_opus.{jsonl,tsv}`,
   `study_grades_opus.{jsonl,tsv}`, `{find,grading}_opus_validation_report.*`,
   `{find,grading}_opus_adjudication_report.*`.
