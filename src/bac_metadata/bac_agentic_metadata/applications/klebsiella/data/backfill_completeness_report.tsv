@@ -1,0 +1,5 @@
+field	n_samples	baseline	agent	v2	agent_gain	gap_closed
+country	34288	0.6204	0.8685	0.8821	0.2482	0.9483
+collection_date	34288	0.5507	0.7084	0.7473	0.1576	0.8018
+isolation_source	34288	0.445	0.5948	0.6689	0.1498	0.6693
+host	34288	0.4438	0.8677	0.7891	0.4239	1.2277

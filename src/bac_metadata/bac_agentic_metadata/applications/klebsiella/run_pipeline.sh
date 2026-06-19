@@ -45,6 +45,9 @@ run "$APP/run_methodb_extract.py" --fold "$FOLD" --found "$DATA/found_papers_$TA
 # 6. value-correctness vs the curated gold (whole-field + method-b)
 run "$APP/validate_backfill_values.py" --applied "$DATA/backfill_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "backfill_value_$TAG"
 run "$APP/validate_backfill_values.py" --applied "$DATA/methodb_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "methodb_value_$TAG"
+# 6b. completeness vs the curated gold (baseline ENA / agent / v2, per field)
+run "$APP/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$DATA/backfill_applied_$TAG.tsv" \
+    --methodb "$DATA/methodb_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "backfill_completeness_$TAG"
 # 7. the gold answer: agent-vs-manual agreement + adjudicated accuracy (finding + grading)
 run "$APP/summarise_agent_vs_manual.py" --grades "$DATA/study_grades_$TAG.tsv" \
     --find-validation "$DATA/find_${TAG}_validation_report.tsv" \

@@ -226,6 +226,26 @@ Method-b is **deterministic + small LLM calls per table** (disk-cached, reruns f
 backfill fills country/host via whole-field (~0.99 / ~1.0) and date/source via method-b (~1.0 / ~0.96).
 Artifacts: `methodb_{feasibility,mappability,applied,outcomes}.tsv`, `methodb_value_report.*`.
 
+### Backfill COMPLETENESS vs metadata_v2 (how much of each field we filled)
+
+Accuracy answers *are the fills right*; completeness answers *how much did we fill*. Over the **34,288
+train+val samples**, per field (placeholder-stripped both sides — ENA's "not available"/etc. = absent;
+gold = curated `*_parsed`; `validate_backfill_completeness.py`):
+
+| field | ENA baseline | **agent (backfill)** | v2 (manual gold) | gain | gap-closed |
+|---|---|---|---|---|---|
+| country | 0.62 | **0.87** | 0.88 | +0.25 | 0.95 |
+| host | 0.44 | **0.87** | 0.79 | +0.42 | **1.23** |
+| collection_date | 0.55 | **0.71** | 0.75 | +0.16 | 0.80 |
+| isolation_source | 0.45 | **0.59** | 0.67 | +0.15 | 0.67 |
+
+We **match manual on country** (95% of the gap), **beat it on host** (0.87 > 0.79 — confident `human` for
+human cohorts v2 left blank; accuracy 1.0 semantic), and **close 80% / 67% on date / source**. The
+date/source shortfall is **extraction reach, not finding quality**: manual curators mined per-sample
+values from full text/figures/by-hand cross-refs, whereas method-b is bounded by machine-readable
+supplementary tables. The added completeness is trustworthy (accuracy where filled: country 0.999, date
+0.999 yr, iso 0.957, host 1.0). Artifact: `backfill_completeness_report.*`.
+
 ---
 
 ## 3. Improvements made this round
