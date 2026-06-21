@@ -44,11 +44,11 @@ from bac_metadata.bac_agentic_metadata.engine.fulltext import FullText, fetch_fu
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, ESCALATION_MODEL, UsageLimitError, make_llm
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SIZING_PATH = DATA_DIR / "stage1_sizing.tsv"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SIZING_PATH = DATA_DIR / "ena_assessment" / "ena_sizing.tsv"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 FIELDS = ("isolation_source", "collection_date")
 _TRUNC = 200
 
@@ -120,8 +120,8 @@ def _evidence(acc: str, paper_links: dict[str, str], sizing: pd.DataFrame, class
 def main() -> None:
     """Run the whole-field-decline probe over the curator-uniform/step-a-missed pairs and report."""
     p = argparse.ArgumentParser(description="Diagnose whole-field declines for rubric rule gaps (Klebsiella).")
-    p.add_argument("--curator-gold", default=str(DATA_DIR / "curator_gold_report.tsv"))
-    p.add_argument("--grades", default=str(DATA_DIR / "study_grades.jsonl"))
+    p.add_argument("--curator-gold", default=str(DATA_DIR / "diagnostics" / "curator_gold_report.tsv"))
+    p.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.jsonl"))
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--justify-model", default=DEFAULT_MODEL, help="Grader self-justification model (Sonnet).")
     p.add_argument("--adjudicate-model", default=ESCALATION_MODEL, help="Rule-gap adjudication model (Opus).")
@@ -184,8 +184,8 @@ def main() -> None:
         print(f"[{i}/{len(pairs)}] {acc} {field} gap={gap} -> cat={cat} would={would} verdict={verdict}", file=sys.stderr)
 
     res = pd.DataFrame(rows)
-    res.to_csv(DATA_DIR / f"{args.report_prefix}.tsv", sep="\t", index=False)
-    _write_md(res, DATA_DIR / f"{args.report_prefix}.md")
+    res.to_csv(DATA_DIR / "diagnostics" / f"{args.report_prefix}.tsv", sep="\t", index=False)
+    _write_md(res, DATA_DIR / "diagnostics" / f"{args.report_prefix}.md")
     print(f"\nWrote {args.report_prefix}.{{md,tsv}} ({len(res)} declines)", file=sys.stderr)
 
 

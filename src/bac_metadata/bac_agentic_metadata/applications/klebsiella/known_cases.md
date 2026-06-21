@@ -1,7 +1,7 @@
 # Known hard cases (Klebsiella) — explicit training/edge cases
 
 Cases worth holding explicitly so the engine (and its evaluators) are tested against them rather
-than silently mis-handling them. Surfaced by Stage 1; relevant to the paper-finding/grading
+than silently mis-handling them. Surfaced by ENA assessment; relevant to the paper-finding/grading
 stages that follow.
 
 ## Umbrella project accessions (one accession, many substudies)
@@ -15,7 +15,7 @@ the umbrella and split it into its child cohorts.
   cohort, poultry, pigs, etc. ~3,261 *Klebsiella* samples; we hold ~all of them (coverage ≈ 1.0),
   but they span unrelated cohorts.
 
-Stage 1 flags these deterministically: `engine/ena_sizing.py` sets `umbrella_suspected` when the
+ENA assessment flags these deterministically: `engine/ena_sizing.py` sets `umbrella_suspected` when the
 project has `>= UMBRELLA_MIN_CHILD_STUDIES` (3) distinct child studies. See the
 `umbrella_suspected` / `n_child_studies` columns in `data/stage1_sizing.tsv` and the umbrella
 section of `data/stage1_validation_report.md`.
@@ -24,7 +24,7 @@ section of `data/stage1_validation_report.md`.
 
 `PRJEB74192` also exposed that ENA's `result=sample&query=study_accession=X` is unreliable: it
 returns **0** samples for that study, while `result=read_run` returns 3,831 (3,261 distinct
-samples). Stage 1 therefore sizes every project from `read_run` deduplicated to sample level.
+samples). ENA assessment therefore sizes every project from `read_run` deduplicated to sample level.
 
 ## ENA under-labels Klebsiella in broad projects (taxon sizing is a lower bound)
 

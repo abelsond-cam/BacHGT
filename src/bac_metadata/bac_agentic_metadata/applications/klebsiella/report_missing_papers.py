@@ -1,6 +1,6 @@
 """Manual-fetch worklist for the papers we could NOT pull full text for — Klebsiella.
 
-The whole-field-decline probe (`diagnose_whole_field_declines.py`) and the gap diagnosis both land on the
+The whole-field-decline probe (`diagnostics/diagnose_whole_field_declines.py`) and the gap diagnosis both land on the
 same recurring constraint: a large slice of the residual date/source gap is **fetch-limited** — the
 describing paper is paywalled / not Europe-PMC-open-access, so the grader only ever saw an abstract (or
 nothing) and could not propose values it never read. That barrier is a publisher-access problem, not an
@@ -12,11 +12,12 @@ DOI / PMID / PMCID / title — and weights each by the per-study completeness ga
 high-yield papers are fetched first. Studies with **no paper at all** (finder `none_found`, or a known
 wrong/misattributed link) are split out so no effort is wasted on them.
 
-Download convention: save each PDF as ``<study_accession>.pdf`` into one Google-Drive folder. That names
-the file by the study it unblocks, so a later local-paper loader (the fetch-breadth fix) can map the
-folder back to studies exactly as `supplementary.parse_local_tables` does for curator tables.
+Download convention: download each paywalled PDF (any publisher name) into one folder, then run
+`link_local_papers.py` to rename/copy them to ``<study_accession>.pdf`` under
+``data/find_papers/manual_download/``. `engine.local_papers.resolve_local_fulltext` then feeds them to
+the next grading pass (the loop), closing the fetch gap for those studies.
 
-Read-only. Writes ``data/missing_papers_report.{md,tsv}``.
+Read-only. Writes ``data/find_papers/missing_papers_report.{md,tsv}``.
 """
 
 from __future__ import annotations
@@ -54,10 +55,10 @@ def _best_url(doi: str, pmid: str, pmcid: str, paper_link: str) -> str:
 def main() -> None:
     """Build the manual-fetch worklist of paywalled / no-full-text papers, gap-weighted."""
     p = argparse.ArgumentParser(description="Worklist of papers needing manual download (Klebsiella).")
-    p.add_argument("--grades", default=str(DATA_DIR / "study_grades.jsonl"), help="Grader JSONL (fulltext status).")
-    p.add_argument("--found", default=str(DATA_DIR / "found_papers.tsv"), help="Stage 2B finder output (identifiers).")
-    p.add_argument("--gap-report", default=str(DATA_DIR / "backfill_gap_report.tsv"), help="Per-study date/source gap.")
-    p.add_argument("--sizing", default=str(DATA_DIR / "stage1_sizing.tsv"), help="Stage-1 sizing (taxon samples).")
+    p.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.jsonl"), help="Grader JSONL (fulltext status).")
+    p.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="paper finding finder output (identifiers).")
+    p.add_argument("--gap-report", default=str(DATA_DIR / "diagnostics" / "backfill_gap_report.tsv"), help="Per-study date/source gap.")
+    p.add_argument("--sizing", default=str(DATA_DIR / "ena_assessment" / "ena_sizing.tsv"), help="ENA assessment sizing (taxon samples).")
     p.add_argument("--report-prefix", default="missing_papers_report")
     args = p.parse_args()
 
@@ -102,8 +103,9 @@ def main() -> None:
         })
     res = pd.DataFrame(rows).sort_values(["has_paper", "gap_samples", "ena_taxon_samples"],
                                          ascending=[False, False, False])
-    res.to_csv(DATA_DIR / f"{args.report_prefix}.tsv", sep="\t", index=False)
-    _write_md(res, DATA_DIR / f"{args.report_prefix}.md")
+    find_dir = DATA_DIR / "find_papers"
+    res.to_csv(find_dir / f"{args.report_prefix}.tsv", sep="\t", index=False)
+    _write_md(res, find_dir / f"{args.report_prefix}.md")
     fetchable = res[res["has_paper"]]
     print(f"Wrote {args.report_prefix}.{{md,tsv}}: {len(fetchable)} fetchable "
           f"({int(fetchable['gap_samples'].sum())} gap samples), {len(res) - len(fetchable)} no-paper",

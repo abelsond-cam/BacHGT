@@ -1,4 +1,4 @@
-"""Assemble the deterministic Stage 1 table, one row per project accession.
+"""Assemble the deterministic ENA assessment table, one row per project accession.
 
 Joins ENA sizing (per accession) with the three-state per-field completeness (computed once
 over the whole source tables, then looked up per study). No LLM, no paper lookup.
@@ -45,13 +45,13 @@ def _completeness_frames(states: dict[str, pd.DataFrame], fields: tuple[str, ...
     return frames
 
 
-def build_stage1_table(
+def build_ena_assessment_table(
     split_df: pd.DataFrame,
     spec: AttributeSpec,
     states: dict[str, pd.DataFrame],
     sizing_records: dict[str, dict],
 ) -> pd.DataFrame:
-    """Build the per-accession Stage 1 ingestion table.
+    """Build the per-accession ENA assessment ingestion table.
 
     Parameters
     ----------

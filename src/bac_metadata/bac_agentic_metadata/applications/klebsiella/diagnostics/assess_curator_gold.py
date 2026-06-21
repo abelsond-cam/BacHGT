@@ -11,7 +11,7 @@ That is the correct lens on our completeness gap:
 * **whole-field-uniform gold** (curator added & 1 distinct value) → the gold for OUR step-a. Cross-check
   whether `backfill_applied` (whole-field) actually fired for the study. The tiny iso step-a (+0.03)
   predicts we under-fire — this quantifies the whole-field iso we are *missing* (a step-a/grader gap).
-* **per-sample-multiple gold** (curator added & ≥2 distinct values) → genuinely per-sample → method-b's
+* **per-sample-multiple gold** (curator added & ≥2 distinct values) → genuinely per-sample → per-sample's
   job (its fetch/parse reach is then tested separately, only on this bucket).
 * **no-add** → curator didn't improve on ENA → not part of the gap.
 
@@ -29,9 +29,9 @@ import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import backfill
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = APP_DIR / "data"
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
 FIELDS = ("isolation_source", "collection_date")
 
 
@@ -81,8 +81,8 @@ def main() -> None:
     """Categorise each study's curator gold and attribute the iso/date gap to the right cause."""
     p = argparse.ArgumentParser(description="Categorise curator gold (whole-field vs per-sample) — Klebsiella.")
     p.add_argument("--fold", default="train,val")
-    p.add_argument("--backfill", default=str(DATA_DIR / "backfill_applied.tsv"))
-    p.add_argument("--gap-report", default=str(DATA_DIR / "backfill_gap_report.tsv"))
+    p.add_argument("--backfill", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"))
+    p.add_argument("--gap-report", default=str(DATA_DIR / "diagnostics" / "backfill_gap_report.tsv"))
     p.add_argument("--report-prefix", default="curator_gold")
     args = p.parse_args()
 
@@ -117,12 +117,13 @@ def main() -> None:
             rec[f"{f}_gap"] = int(gap.loc[acc, gcol]) if (len(gap) and acc in gap.index and gcol in gap.columns) else 0
         rows.append(rec)
     res = pd.DataFrame(rows)
-    res.to_csv(DATA_DIR / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
+    diag_dir = DATA_DIR / "diagnostics"
+    res.to_csv(diag_dir / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
 
     md = [f"# Curator-gold categorisation: whole-field vs per-sample ({', '.join(sorted(folds))})\n",
           f"{len(res)} studies with a ready_to_merge file. For each field, the curator's pattern (did they "
           "add data over ENA, and is it one value or many) tells us whether their answer was whole-field "
-          "(our step-a's job) or per-sample (method-b's job).\n"]
+          "(our step-a's job) or per-sample (per-sample's job).\n"]
     for f in FIELDS:
         bc = res.groupby(f"{f}_bucket").agg(studies=("study_accession", "count"), gap=(f"{f}_gap", "sum"))
         wf = res[res[f"{f}_bucket"] == "whole_field_uniform"]
@@ -135,9 +136,9 @@ def main() -> None:
         md.append(f"\n- **whole-field-uniform studies: {len(wf)}; our step-a actually fired on "
                   f"{wf_fired}/{len(wf)}** → we MISS {len(wf) - wf_fired} whole-field-fillable studies "
                   f"(gap {int(wf[~wf[f'{f}_step_a_fired']][f'{f}_gap'].sum())} samples) that are a step-a "
-                  "issue, not method-b.\n")
-    (DATA_DIR / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
-    print(f"Wrote {args.report_prefix}_report.{{md,tsv}}", file=sys.stderr)
+                  "issue, not per-sample.\n")
+    (diag_dir / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
+    print(f"Wrote diagnostics/{args.report_prefix}_report.{{md,tsv}}", file=sys.stderr)
     for f in FIELDS:
         print(f"\n{f} buckets:\n{res.groupby(f'{f}_bucket')[f'{f}_gap'].agg(['count','sum']).to_string()}", file=sys.stderr)
 

@@ -1,6 +1,6 @@
-r"""Method-b per-sample extraction runner (Klebsiella) — fill date/source/country/host from supp tables.
+r"""Per-sample per-sample extraction runner (Klebsiella) — fill date/source/country/host from supp tables.
 
-For each residual study with a joinable OA supplementary table (see ``methodb_mappability.tsv``), this
+For each residual study with a joinable OA supplementary table (see ``per_sample_mappability.tsv``), this
 fetches + parses the paper's supplementary tables, lets the extraction agent map columns→fields, and
 deterministically joins table rows to ENA ``sample_accession``s — emitting per-sample fills
 (``method="per_sample"``) in the same long shape as the whole-field backfill. Grounded on the study's
@@ -13,8 +13,8 @@ Examples
 --------
 unset VIRTUAL_ENV
 export BACHGT_PROJECT_K_ROOT="…/Aaron Weimann's files - project_k" BACHGT_PROJECT_K_USER=data
-uv run python .../run_methodb_extract.py --accessions PRJEB36486      # smoke-test one study first
-uv run python .../run_methodb_extract.py --joinable-only              # all joinable residual studies
+uv run python .../run_per_sample_extract.py --accessions PRJEB36486      # smoke-test one study first
+uv run python .../run_per_sample_extract.py --joinable-only              # all joinable residual studies
 """
 
 from __future__ import annotations
@@ -31,8 +31,8 @@ from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, UsageLim
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
-SUPP_CACHE = DATA_DIR / "_methodb_supp_cache"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SUPP_CACHE = DATA_DIR / "cache" / "per_sample_supp"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 AUX = ("sample_accession", "run_accession", "secondary_sample_accession", "accession")
 
 
@@ -41,7 +41,7 @@ def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[st
     from bac_metadata.bac_agentic_metadata.engine.sources import KlebCollationSource
 
     base = KlebCollationSource(keep_columns=AUX).states()["base"]
-    split = pd.read_csv(DATA_DIR / "kleb_project_splits.tsv", sep="\t", dtype=str)[["study_accession", "fold"]]
+    split = pd.read_csv(DATA_DIR / "fold_splits" / "project_splits.tsv", sep="\t", dtype=str)[["study_accession", "fold"]]
     keep = set(split[split["fold"].isin(folds)]["study_accession"])
     base = base[base["study_accession"].isin(keep)]
     acc_cols = [c for c in AUX if c in base.columns]
@@ -75,22 +75,22 @@ def _targets(args: argparse.Namespace) -> list[tuple[str, str]]:
 
 
 def main() -> None:
-    """Parse args, run method-b extraction over the target studies, write the per-sample fills."""
-    p = argparse.ArgumentParser(description="Method-b per-sample extraction from supplementary tables.")
+    """Parse args, run per-sample extraction over the target studies, write the per-sample fills."""
+    p = argparse.ArgumentParser(description="Per-sample per-sample extraction from supplementary tables.")
     p.add_argument("--accessions", default=None, help="Comma-separated studies (else every residual study with a paper).")
-    p.add_argument("--found", default=str(DATA_DIR / "found_papers.tsv"), help="Finder output (source of PMCIDs).")
-    p.add_argument("--gate-report", default=str(DATA_DIR / "backfill_gate_report.tsv"), help="Backfill gate report (residual list).")
+    p.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="Finder output (source of PMCIDs).")
+    p.add_argument("--gate-report", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_gate_report.tsv"), help="Backfill gate report (residual list).")
     p.add_argument("--fold", default="train,val", help="Folds for the ENA accession sets (default train,val).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
-    p.add_argument("--output", default=str(DATA_DIR / "methodb_applied.tsv"))
+    p.add_argument("--output", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"))
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
     sets, maps = _study_accession_sets(folds)
     targets = _targets(args)
     llm = make_llm(args.backend, model=args.model, cache_dir=LLM_CACHE)
-    print(f"Method-b over {len(targets)} studies with {args.model} (backend={args.backend})", file=sys.stderr)
+    print(f"Per-sample over {len(targets)} studies with {args.model} (backend={args.backend})", file=sys.stderr)
 
     fills: list[dict] = []
     extractions = []
@@ -112,7 +112,7 @@ def main() -> None:
                                        "applied_value", "method", "evidence"])
     out.to_csv(args.output, sep="\t", index=False)
 
-    # Per-study outcome record (direct / two-hop / abstained + why) — the method-b coverage map.
+    # Per-study outcome record (direct / two-hop / abstained + why) — the per-sample coverage map.
     outcomes = pd.DataFrame([{
         "study_accession": e.study_accession, "pmcid": e.pmcid, "table": e.table,
         "method": ("two_hop" if any(f["method"] == "per_sample_two_hop" for f in e.fills)
@@ -120,7 +120,7 @@ def main() -> None:
         "n_samples": e.n_samples_mapped, "n_fills": len(e.fills),
         "confidence": e.confidence, "note": e.note,
     } for e in extractions])
-    outcomes_path = Path(args.output).with_name("methodb_outcomes.tsv")
+    outcomes_path = Path(args.output).with_name("per_sample_outcomes.tsv")
     outcomes.to_csv(outcomes_path, sep="\t", index=False)
 
     print(f"\nWrote {args.output}: {len(out)} per-sample fills across "

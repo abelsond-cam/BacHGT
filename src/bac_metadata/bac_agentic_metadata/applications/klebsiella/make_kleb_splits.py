@@ -25,8 +25,8 @@ import numpy as np
 import pandas as pd
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_INPUT = HERE / "data" / "study_level_metadata_all_combined_v1.0_20260105.csv"
-DEFAULT_OUTPUT = HERE / "data" / "kleb_project_splits.tsv"
+DEFAULT_INPUT = HERE / "data" / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
+DEFAULT_OUTPUT = HERE / "data" / "fold_splits" / "project_splits.tsv"
 
 #: Fixed seed — changing it reshuffles every fold, so it is part of the artefact's identity.
 DEFAULT_SEED = 20260612

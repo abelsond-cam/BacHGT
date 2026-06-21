@@ -20,10 +20,22 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 
 ```
 bac_agentic_metadata/
-  engine/                 # application-agnostic engine (built from Stage 1 on; empty now)
+  engine/                 # application-agnostic engine: ena_sizing, paper_finder, grader, fulltext,
+                          #   local_papers, backfill, sample_extractor, escalation, supplementary, …
   applications/
-    klebsiella/           # attributes.yaml, frozen ground truth, split, make_kleb_splits.py
-      data/               # frozen study-sheet snapshot + kleb_project_splits.tsv
+    klebsiella/           # attributes.yaml, run_*/validate_* scripts, run_pipeline.sh (9 stages)
+      diagnostics/        # one-off probes (diagnose_*, assess_*) — not in run_pipeline.sh
+      data/               # task-aligned tree (folders mirror the pipeline steps):
+        inputs/             #   curated study-level snapshot + study_setting_frozen
+        fold_splits/        #   project_splits.tsv
+        ena_assessment/     #   ena_sizing/ingest/assessment_report   (was "Stage 1")
+        find_papers/        #   found_papers*, find_validation/adjudication, missing_papers,
+          manual_download/  #     manually-downloaded <accession>.pdf (paywalled-paper fallback)
+        study_lv_attributes/  # study-level: grading/ , whole_study_backfill/ , escalation/
+        sample_lv_attributes/ # sample-level: per_sample/   (was "method-b")
+        scorecard/          #   agent_vs_manual + completeness (final measurement)
+        diagnostics/        #   curator_gold, gt_corrections, gap/decline reports
+        logs/  cache/       #   run logs; regenerable LLM/ENA/fulltext/find/per_sample caches
     m_abs/                # attributes.yaml, ATB_metadata_Mabs_2025_release.xlsx, CLAUDE.md
   STAGE0_kleb_curation_map.md
   PIPELINE_PLAN.md

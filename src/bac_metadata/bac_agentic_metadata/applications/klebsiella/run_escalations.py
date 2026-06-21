@@ -1,10 +1,10 @@
 """Human-escalation tier runner (Klebsiella) — ask the curator on *tight* whole-field near-misses.
 
-Runs **after** the main pipeline (method-b included) so the batch/overnight run completes untouched, then
+Runs **after** the main pipeline (per-sample included) so the batch/overnight run completes untouched, then
 the curator resolves the queue. Three modes:
 
 * **detect** (default) — for every fold study×field the grader declined whole-field: gate by gap
-  (>``--threshold`` blank ENA cells), gate by method-b coverage (fields already resolved per-sample drop
+  (>``--threshold`` blank ENA cells), gate by per-sample coverage (fields already resolved per-sample drop
   out), then triage tight-cluster-vs-wide-mix; escalate only the tight near-misses
   (:func:`engine.escalation.detect_whole_field_escalations`). Writes ``data/decisions_needed.tsv`` (sorted
   by ``gap_samples`` desc) with empty ``answer`` / ``answer_note`` columns for the curator to fill.
@@ -62,15 +62,15 @@ def _fold_studies(folds: set[str]) -> set[str]:
     return set(split[split["fold"].isin(folds)]["study_accession"])
 
 
-def _methodb_covered(methodb_path: str | None, raw: pd.DataFrame, frac: float) -> set[tuple[str, str]]:
-    """``(study, field)`` pairs per-sample extraction already resolved — method-b runs first.
+def _per_sample_covered(per_sample_path: str | None, raw: pd.DataFrame, frac: float) -> set[tuple[str, str]]:
+    """``(study, field)`` pairs per-sample extraction already resolved — per-sample runs first.
 
-    A field counts as resolved when method-b filled at least ``frac`` of its blank ENA cells: if the
+    A field counts as resolved when per-sample filled at least ``frac`` of its blank ENA cells: if the
     sample-level data is there, the whole-field question is already answered and never escalates.
     """
-    if not methodb_path or not Path(methodb_path).exists():
+    if not per_sample_path or not Path(per_sample_path).exists():
         return set()
-    mb = pd.read_csv(methodb_path, sep="\t", dtype=str)
+    mb = pd.read_csv(per_sample_path, sep="\t", dtype=str)
     if not {"study_accession", "field"} <= set(mb.columns) or not len(mb):
         return set()
     fills = mb.groupby(["study_accession", "field"]).size()
@@ -147,15 +147,15 @@ def _detect(args: argparse.Namespace, folds: set[str], output: Path) -> pd.DataF
     grades = _load_grades(Path(args.grades), keep)
     raw = rbf._load_raw_ena(args.input)
     raw = raw[raw["study_accession"].isin(keep)].copy()
-    covered = _methodb_covered(args.methodb, raw, args.methodb_frac)
+    covered = _per_sample_covered(args.per_sample, raw, args.per_sample_frac)
     print(f"Scanning {len(grades)} graded studies / {len(raw)} ENA rows in {sorted(folds)} "
-          f"(gap threshold {args.threshold}; {len(covered)} field(s) already resolved by method-b)", file=sys.stderr)
+          f"(gap threshold {args.threshold}; {len(covered)} field(s) already resolved by per-sample)", file=sys.stderr)
 
     spec = AttributeSpec.from_yaml(rsg.SPEC_PATH)
     llm = make_llm(args.backend, model=args.model, cache_dir=rsg.LLM_CACHE)
     items = escalation.detect_whole_field_escalations(
         grades, raw, spec, llm, _make_evidence_fn(folds),
-        threshold=args.threshold, methodb_covered=covered, model=args.model,
+        threshold=args.threshold, per_sample_covered=covered, model=args.model,
     )
     frame = _items_to_frame(items)
     frame.to_csv(output, sep="\t", index=False)
@@ -231,17 +231,17 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Human-escalation tier for whole-field backfill (Klebsiella).")
     p.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val; test sealed).")
     p.add_argument("--accessions", default=None, help="Comma-separated accessions to scan (overrides --fold; for smoke tests).")
-    p.add_argument("--grades", default=str(DATA_DIR / "study_grades.jsonl"), help="Grader JSONL (full records).")
+    p.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.jsonl"), help="Grader JSONL (full records).")
     p.add_argument("--input", default=None, help="Explicit raw ENA per-sample TSV (else load_collated_metadata).")
-    p.add_argument("--output", default=str(DATA_DIR / "decisions_needed.tsv"),
+    p.add_argument("--output", default=str(DATA_DIR / "study_lv_attributes" / "escalation" / "decisions_needed.tsv"),
                    help="Queue TSV — written by detect/interactive, read by --apply.")
-    p.add_argument("--applied-output", default=str(DATA_DIR / "escalation_applied.tsv"),
+    p.add_argument("--applied-output", default=str(DATA_DIR / "study_lv_attributes" / "escalation" / "escalation_applied.tsv"),
                    help="Per-sample changes file written by --apply.")
     p.add_argument("--threshold", type=int, default=50, help="Min blank-cell gap to escalate (default 50).")
-    p.add_argument("--methodb", default=str(DATA_DIR / "methodb_applied.tsv"),
-                   help="Method-b per-sample fills — fields it resolved are not escalated (method-b runs first).")
-    p.add_argument("--methodb-frac", type=float, default=0.5,
-                   help="Fraction of a field's gap method-b must fill to count it resolved (default 0.5).")
+    p.add_argument("--per-sample", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"),
+                   help="Per-sample per-sample fills — fields it resolved are not escalated (per-sample runs first).")
+    p.add_argument("--per-sample-frac", type=float, default=0.5,
+                   help="Fraction of a field's gap per-sample must fill to count it resolved (default 0.5).")
     p.add_argument("--interactive", action="store_true", help="Resolve the queue at the prompt after detecting.")
     p.add_argument("--apply", action="store_true", help="Apply a filled queue → escalation_applied.tsv.")
     p.add_argument(

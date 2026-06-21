@@ -1,4 +1,4 @@
-"""Find the paper that DESCRIBES a project accession (the foundation of Stage 2).
+"""Find the paper that DESCRIBES a project accession (the foundation of attribute extraction).
 
 Finding is a **deterministic retrieval problem**: candidates come only from API queries
 (:mod:`europepmc` + :mod:`ncbi` + ENA-description id-mining), and the LLM merely **picks among

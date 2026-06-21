@@ -1,7 +1,7 @@
-# Stage 2 — Paper lookup & structured grading (LLM)
+# attribute extraction — Paper lookup & structured grading (LLM)
 
-The first **LLM** layer of the engine. Stage 1 gave each project accession a deterministic
-context row (sizing + completeness); Stage 2 reads the **paper** and grades the accession into the
+The first **LLM** layer of the engine. ENA assessment gave each project accession a deterministic
+context row (sizing + completeness); attribute extraction reads the **paper** and grades the accession into the
 `attributes.yaml` schema. Built in two parts:
 
 - **2A — grading** (done): grade the *known* curated paper for each accession → earliest
@@ -58,10 +58,10 @@ reproducibility mechanism (which it is anyway).
 - `grader.py` — the core. Renders the rubric **straight from `attributes.yaml`**: both the
   forced-tool JSON schema (enums = the YAML value sets) and the prompt (each attribute's
   `definition` + the shared `grading_basis`). Per accession returns, from the paper text + EBI
-  title/description + Stage-1 sizing only: `study_type` (filter; `exclude_if` → excluded flag);
+  title/description + ENA assessment sizing only: `study_type` (filter; `exclude_if` → excluded flag);
   each study-level attribute `{value, grade, evidence_quote}`; `paper_coverage_for_taxon`
-  (model gives the paper's taxon-sample count → engine divides by Stage-1 `ena_taxon_samples`);
-  method-(a) whole-project backfill proposals for the four standard fields; `needs_manual_download`.
+  (model gives the paper's taxon-sample count → engine divides by ENA assessment `ena_taxon_samples`);
+  whole-field whole-project backfill proposals for the four standard fields; `needs_manual_download`.
   Output → JSONL (full, with evidence quotes) + flat TSV (one row/accession).
 
 ### `applications/klebsiella/`
@@ -79,7 +79,7 @@ reproducibility mechanism (which it is anyway).
 | `cohort_age` | frozen `newborn_cohort` (free text) | parsed → {newborn_young_child, adult, mixed}; "not provided"/unclear → skipped |
 | `study_setting` | **live** `study_level` Google tab | opt-in `--study-setting-from-sheet` (absent from the frozen snapshot); skipped otherwise |
 | `amr_target`, `amr_method` | none (wanted, not curated) | **spot-check list only**, no claimed accuracy |
-| backfill (country/source/host/date) | Stage-1 completeness deltas + `parsed_per_project` | proposal counts + sanity, not scored here |
+| backfill (country/source/host/date) | ENA assessment completeness deltas + `parsed_per_project` | proposal counts + sanity, not scored here |
 
 ## How to run
 
@@ -110,7 +110,7 @@ overlay are in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. Two method notes 
 - Determinism: every grade is disk-cached (backend-independent key), so reruns are byte-identical and
   free; a 300→600s subprocess timeout + per-accession skip keep one slow paper from killing a batch.
 
-## Stage 2B — paper-finding (built)
+## paper finding — paper-finding (built)
 
 `engine/europepmc.py` + `engine/ncbi.py` + `engine/paper_finder.py` find the describing paper from
 the accession alone (`run_find_papers.py` / `validate_find_papers.py`). Finding is a **deterministic
@@ -141,13 +141,13 @@ Find-accuracy (raw + adjudicated), precision-when-committed, the secondary-acces
 abstention-rescue breakdown, the 5 genuine finder errors, and channel pull-through are in
 [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2.
 
-## Sample-level backfill (method-a) — targeting
+## Sample-level backfill (whole-field) — targeting
 
-`validate_backfill.py` scores method-(a) whole-project proposals' targeting/recall against the live
+`validate_backfill.py` scores whole-field whole-project proposals' targeting/recall against the live
 `parsed_per_project` tab (per-field non-null fraction *before* curation `<field>_pre` vs *after*
 `<field>_completeness`). That tab has fractions not values, so value-correctness is **not** checked
-here (needs per-sample `metadata_v2` — deferred with method-(b)). Per-field recall + the residual
-method-(b) backlog are in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. `collection_date` backfill
+here (needs per-sample `metadata_v2` — deferred with per-sample). Per-field recall + the residual
+per-sample backlog are in [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) §2. `collection_date` backfill
 rule: midpoint of a ≤2-year span, else blank. Proposals + completeness in `data/backfill_review.tsv`
 and `data/backfill_validation_report.{md,tsv}`.
 

@@ -1,4 +1,4 @@
-"""Validate Stage 2B paper-finding against the curated ``paper_link`` (train+val only).
+"""Validate paper finding against the curated ``paper_link`` (train+val only).
 
 The finder is fed only the accession; here we score its pick against the held-out curated
 ``paper_link`` (+ ``paper_title`` for publisher URLs with no extractable id). Per the project rule
@@ -34,11 +34,11 @@ from bac_metadata.bac_agentic_metadata.engine.fulltext import (
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SNAPSHOT_PATH = DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
-ENA_CACHE = DATA_DIR / "ena_cache"
-FULLTEXT_CACHE = DATA_DIR / "fulltext_cache"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SNAPSHOT_PATH = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
+ENA_CACHE = DATA_DIR / "cache" / "ena"
+FULLTEXT_CACHE = DATA_DIR / "cache" / "fulltext"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 ACCESSION_RE = re.compile(r"\bPRJ[A-Z]+\d+\b")
 _TITLE_MATCH = 0.82  # SequenceMatcher ratio over normalised titles
 
@@ -218,9 +218,9 @@ def _adjudicate_mismatches(mismatches: list[dict], model: str, backend: str) -> 
 
 
 def main() -> None:
-    """Parse arguments and write the Stage 2B find-validation report."""
-    parser = argparse.ArgumentParser(description="Validate Stage 2B paper-finding (Klebsiella).")
-    parser.add_argument("--found", default=str(DATA_DIR / "found_papers.tsv"), help="found_papers TSV.")
+    """Parse arguments and write the paper finding find-validation report."""
+    parser = argparse.ArgumentParser(description="Validate paper finding (Klebsiella).")
+    parser.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="found_papers TSV.")
     parser.add_argument("--adjudicate", action="store_true", help="Adjudicate mismatches with the critique agent.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8")
     parser.add_argument("--adjudicate-backend", default="subscription", choices=["subscription", "api"])
@@ -231,7 +231,7 @@ def main() -> None:
 
     found = pd.read_csv(args.found, sep="\t", dtype=str)
     split = pd.read_csv(SPLIT_PATH, sep="\t", dtype=str)[["study_accession", "fold"]]
-    sizing = pd.read_csv(DATA_DIR / "stage1_sizing.tsv", sep="\t", dtype=str)[["study_accession", "ena_taxon_samples"]]
+    sizing = pd.read_csv(DATA_DIR / "ena_assessment" / "ena_sizing.tsv", sep="\t", dtype=str)[["study_accession", "ena_taxon_samples"]]
     df = found.merge(split, on="study_accession", how="left").merge(sizing, on="study_accession", how="left")
     df = df[df["fold"].isin(["train", "val"])].copy()
     gt = _gt_by_accession()
@@ -244,7 +244,7 @@ def main() -> None:
     denom = len(scored)
     acc = correct / denom if denom else float("nan")
 
-    md = ["# Stage 2B validation — paper-finding vs curated paper_link (train+val)\n"]
+    md = ["# paper finding validation — paper-finding vs curated paper_link (train+val)\n"]
     md.append(f"Found rows in train+val: **{len(df)}**.\n")
     md.append(f"## Find-accuracy: {acc:.2f}  ({correct}/{denom} matched among accessions with a curated link)\n")
     md.append(f"Category counts: {cats}\n")
@@ -279,10 +279,11 @@ def main() -> None:
         g = gt.get(r["study_accession"], {})
         md.append(f"- `{r['study_accession']}` (n_candidates={r.get('n_candidates')}) curated={_curated_links(g)}")
 
-    (DATA_DIR / f"{args.report_prefix}_validation_report.md").write_text("\n".join(md) + "\n")
+    find_dir = DATA_DIR / "find_papers"
+    (find_dir / f"{args.report_prefix}_validation_report.md").write_text("\n".join(md) + "\n")
     df[["study_accession", "fold", "category", "chosen_found_via", "verified", "find_confidence",
         "chosen_pmid", "chosen_pmcid", "chosen_doi", "coverage_fraction"]].to_csv(
-        DATA_DIR / f"{args.report_prefix}_validation_report.tsv", sep="\t", index=False)
+        find_dir / f"{args.report_prefix}_validation_report.tsv", sep="\t", index=False)
     print(f"Wrote {args.report_prefix}_validation_report.{{md,tsv}} (accuracy {acc:.2f})", file=sys.stderr)
 
     if args.adjudicate and mismatch_rows:
@@ -300,7 +301,7 @@ def main() -> None:
         adj_correct = correct + same + found_or_both
         adj_acc = adj_correct / denom if denom else float("nan")
 
-        amd = ["# Stage 2B find-adjudication — found vs curated on mismatches\n"]
+        amd = ["# paper finding find-adjudication — found vs curated on mismatches\n"]
         amd.append(f"Adjudicated {len(adjs)}. same_paper={same} (link/DOI variants, not errors); "
                    f"verdicts: {dict(Counter(a['adj_verdict'] for a in adjs))}.\n")
         amd.append(f"## Adjudicated find-accuracy: {adj_acc:.2f}  ({adj_correct}/{denom}) — folding in "
@@ -315,8 +316,8 @@ def main() -> None:
             amd.append(f"- reasoning: {a.get('adj_reasoning','')}")
             if str(a.get("adj_rule_gap", "")).strip():
                 amd.append(f"- ⚠️ rule_gap: {a['adj_rule_gap']}")
-        (DATA_DIR / f"{args.report_prefix}_adjudication_report.md").write_text("\n".join(amd) + "\n")
-        pd.DataFrame(adjs).to_csv(DATA_DIR / f"{args.report_prefix}_adjudication_report.tsv", sep="\t", index=False)
+        (find_dir / f"{args.report_prefix}_adjudication_report.md").write_text("\n".join(amd) + "\n")
+        pd.DataFrame(adjs).to_csv(find_dir / f"{args.report_prefix}_adjudication_report.tsv", sep="\t", index=False)
         print(f"Wrote {args.report_prefix}_adjudication_report.{{md,tsv}} (adjudicated accuracy {adj_acc:.2f})", file=sys.stderr)
 
 

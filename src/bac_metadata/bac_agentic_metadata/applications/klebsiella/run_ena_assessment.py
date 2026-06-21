@@ -1,4 +1,4 @@
-"""Stage 1 runner for the Klebsiella application — deterministic ingestion & completeness.
+"""ENA assessment runner for the Klebsiella application — deterministic ingestion & completeness.
 
 Two modes:
 
@@ -12,8 +12,8 @@ Run with ``uv run`` (after ``unset VIRTUAL_ENV``). The ENA cache makes reruns de
 
 Examples
 --------
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode sizing-only
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode full
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_ena_assessment.py --mode sizing-only
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_ena_assessment.py --mode full
 """
 
 from __future__ import annotations
@@ -26,15 +26,15 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_record_counts
-from bac_metadata.bac_agentic_metadata.engine.ingest import build_stage1_table
+from bac_metadata.bac_agentic_metadata.engine.ingest import build_ena_assessment_table
 from bac_metadata.bac_agentic_metadata.engine.sources import KlebCollationSource
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
-DEFAULT_CACHE = DATA_DIR / "ena_cache"
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
+DEFAULT_CACHE = DATA_DIR / "cache" / "ena"
 
 
 def _fetch_sizing(accessions: list[str], match: tuple[str, ...], cache_dir: Path) -> dict[str, dict]:
@@ -48,8 +48,8 @@ def _fetch_sizing(accessions: list[str], match: tuple[str, ...], cache_dir: Path
 
 
 def main() -> None:
-    """Parse arguments and run the requested Stage 1 mode."""
-    parser = argparse.ArgumentParser(description="Stage 1 ingestion & completeness (Klebsiella).")
+    """Parse arguments and run the requested ENA assessment mode."""
+    parser = argparse.ArgumentParser(description="ENA assessment ingestion & completeness (Klebsiella).")
     parser.add_argument("--mode", choices=["sizing-only", "full"], default="full")
     parser.add_argument("--cache-dir", type=Path, default=DEFAULT_CACHE)
     parser.add_argument("--limit", type=int, default=None, help="Process only the first N accessions.")
@@ -61,7 +61,7 @@ def main() -> None:
     parser.add_argument("--ena-project-dir", default=None, help="Local override for the ready_to_merge project dir.")
     parser.add_argument(
         "--study-metadata-file",
-        default=str(DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"),
+        default=str(DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"),
         help="Local study_level CSV for the reviewed flag (keeps collation offline; default: frozen snapshot).",
     )
     args = parser.parse_args()
@@ -78,7 +78,7 @@ def main() -> None:
     sizing = _fetch_sizing(accessions, match, args.cache_dir)
 
     if args.mode == "sizing-only":
-        out = args.output or DATA_DIR / "stage1_sizing.tsv"
+        out = args.output or DATA_DIR / "ena_assessment" / "ena_sizing.tsv"
         table = split.copy()
         table["ena_total_samples"] = [sizing[a]["ena_total_samples"] for a in accessions]
         table["ena_total_runs"] = [sizing[a]["ena_total_runs"] for a in accessions]
@@ -100,8 +100,8 @@ def main() -> None:
         ena_project_dir=args.ena_project_dir,
         study_metadata_file=args.study_metadata_file,
     ).states()
-    table = build_stage1_table(split, spec, states, sizing)
-    out = args.output or DATA_DIR / "stage1_ingest.tsv"
+    table = build_ena_assessment_table(split, spec, states, sizing)
+    out = args.output or DATA_DIR / "ena_assessment" / "ena_ingest.tsv"
     table.to_csv(out, sep="\t", index=False)
     print(f"Wrote {out} ({len(table)} rows)", file=sys.stderr)
 

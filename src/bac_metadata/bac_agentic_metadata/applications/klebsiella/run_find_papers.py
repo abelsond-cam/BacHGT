@@ -1,4 +1,4 @@
-"""Stage 2B runner (Klebsiella) — find the describing paper for each project accession.
+"""paper finding runner (Klebsiella) — find the describing paper for each project accession.
 
 For each accession in the chosen fold(s) this: fetches the ENA study title + description, gathers
 candidate papers from the four retrieval channels (ENA-description mining, NCBI BioProject links,
@@ -33,15 +33,15 @@ from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SIZING_PATH = DATA_DIR / "stage1_sizing.tsv"
-ENA_CACHE = DATA_DIR / "ena_cache"
-FIND_CACHE = DATA_DIR / "find_cache"            # Europe PMC + NCBI search JSON
-FULLTEXT_CACHE = DATA_DIR / "fulltext_cache"    # grounded-verify paper fetches
-LLM_CACHE = DATA_DIR / "llm_cache"
+SIZING_PATH = DATA_DIR / "ena_assessment" / "ena_sizing.tsv"
+ENA_CACHE = DATA_DIR / "cache" / "ena"
+FIND_CACHE = DATA_DIR / "cache" / "find"            # Europe PMC + NCBI search JSON
+FULLTEXT_CACHE = DATA_DIR / "cache" / "fulltext"    # grounded-verify paper fetches
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 
 
 def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
-    """Return Stage-1 sizing rows to process (by --accessions or --fold), biggest-first."""
+    """Return ENA assessment sizing rows to process (by --accessions or --fold), biggest-first."""
     sizing = pd.read_csv(SIZING_PATH, sep="\t")
     if args.accessions:
         wanted = [a.strip() for a in args.accessions.split(",") if a.strip()]
@@ -57,8 +57,8 @@ def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
 
 
 def main() -> None:
-    """Parse arguments and run Stage 2B paper-finding."""
-    parser = argparse.ArgumentParser(description="Stage 2B — find describing papers (Klebsiella).")
+    """Parse arguments and run paper finding."""
+    parser = argparse.ArgumentParser(description="paper finding — find describing papers (Klebsiella).")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val; test sealed).")
     parser.add_argument("--accessions", default=None, help="Comma-separated accessions (overrides --fold).")
     parser.add_argument("--limit", type=int, default=None, help="Process only the first N (biggest-first).")
@@ -137,8 +137,8 @@ def main() -> None:
             continue
         results.append(result)
 
-    jsonl = DATA_DIR / f"{args.output_prefix}.jsonl"
-    tsv = DATA_DIR / f"{args.output_prefix}.tsv"
+    jsonl = DATA_DIR / "find_papers" / f"{args.output_prefix}.jsonl"
+    tsv = DATA_DIR / "find_papers" / f"{args.output_prefix}.tsv"
     paper_finder.write_results(results, jsonl, tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {jsonl} and {tsv} ({len(results)} rows, {status})", file=sys.stderr)

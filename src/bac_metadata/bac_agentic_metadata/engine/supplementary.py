@@ -1,6 +1,6 @@
-"""Fetch + parse a paper's Europe PMC supplementary tables (open-access only) for method-b backfill.
+"""Fetch + parse a paper's Europe PMC supplementary tables (open-access only) for per-sample backfill.
 
-Method-b completes the genuinely per-sample fields (``collection_date`` / ``isolation_source`` and the
+Per-sample completes the genuinely per-sample fields (``collection_date`` / ``isolation_source`` and the
 residual ``country`` / ``host``) by reading the describing paper's **supplementary tables**. This module
 is the deterministic data layer:
 

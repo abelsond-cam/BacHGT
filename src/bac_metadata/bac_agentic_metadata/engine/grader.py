@@ -6,15 +6,15 @@ attribute's ``definition`` plus the shared ``grading_basis``). The YAML stays th
 of truth: add or change an attribute there and the grader follows, no code edit.
 
 Per accession it produces, using only the supplied evidence (paper text + EBI study
-title/description + Stage-1 sizing):
+title/description + ENA assessment sizing):
 
 * ``study_type`` — the filter value (studies in the spec's ``exclude_if`` set are flagged excluded).
 * each **study-level attribute** — ``{value, grade, evidence_quote}`` graded against the rubric's
   ``grade_scale`` and ``grading_basis``.
 * ``paper_coverage_for_taxon`` — the LLM reports how many taxon-of-interest samples the paper
-  describes; the engine divides by the Stage-1 ``ena_taxon_samples`` to get the fraction (the gate
+  describes; the engine divides by the ENA assessment ``ena_taxon_samples`` to get the fraction (the gate
   for whole-project backfill).
-* **method-(a) whole-project backfill** proposals for the four standard fields (country,
+* **whole-field whole-project backfill** proposals for the four standard fields (country,
   isolation_source, host, collection_date).
 * ``needs_manual_download`` — a paper was found but its full text was not reachable.
 
@@ -186,7 +186,7 @@ def _render_rubric(spec: AttributeSpec) -> str:
 
     bf = _backfill_fields(spec)
     if bf:
-        lines.append("\n--- WHOLE-PROJECT BACKFILL (method a) for the standard per-sample fields ---")
+        lines.append("\n--- WHOLE-PROJECT BACKFILL (whole-field) for the standard per-sample fields ---")
         lines.append(
             "Propose a single value for ALL samples ONLY when the field is study-wide-constant and "
             "applicable to the whole project (paper coverage > 75%, or an EBI-wide title/description). "
@@ -221,7 +221,7 @@ def _build_system_prompt(spec: AttributeSpec) -> str:
         "supporting your choice (empty string if not_gradeable).\n"
         "- amr_target and amr_method apply only when amr_study is amr or mixed; otherwise value "
         "null, grade not_gradeable.\n"
-        "- Backfill proposals are method-(a) whole-project values only; never invent per-sample values.\n"
+        "- Backfill proposals are whole-field whole-project values only; never invent per-sample values.\n"
         "- Set needs_manual_download true only if a paper clearly exists but its full text was not "
         "available to you (you were given only an abstract or nothing).\n\n"
         "=== RUBRIC ===\n" + _render_rubric(spec)
@@ -259,7 +259,7 @@ def _build_user_prompt(
         f"PROJECT ACCESSION: {accession}\n\n"
         f"EBI STUDY TITLE: {ena_title or '(none)'}\n"
         f"EBI STUDY DESCRIPTION: {ena_description or '(none)'}\n\n"
-        f"ENA SIZING (deterministic, Stage 1):\n" + ("\n".join(sizing_lines) or "  (none)") + "\n\n"
+        f"ENA SIZING (deterministic, ENA assessment):\n" + ("\n".join(sizing_lines) or "  (none)") + "\n\n"
         f"PAPER TEXT SOURCE: {fulltext.source} (full_text={fulltext.is_full_text})\n"
         f"PAPER TITLE: {fulltext.title or '(none)'}\n"
         f"--- PAPER TEXT START ---\n{paper_text}{truncated}\n--- PAPER TEXT END ---\n\n"
@@ -339,9 +339,9 @@ def grade_accession(
     ena_title, ena_description
         EBI study title / description (the second evidence source).
     ena_taxon_samples
-        Stage-1 distinct taxon-sample count; denominator for ``paper_coverage_for_taxon``.
+        ENA assessment distinct taxon-sample count; denominator for ``paper_coverage_for_taxon``.
     sizing_row
-        Optional Stage-1 sizing row (surfaced to the model as context).
+        Optional ENA assessment sizing row (surfaced to the model as context).
     model
         Per-call model override (e.g. escalate to Opus).
     max_chars

@@ -27,7 +27,7 @@ agreement is ~0.94–0.98** after adjudication+GT-correction; **paper-finding is
 raw 0.70 / adjudicated 0.87** with the full three-tier pipeline (deterministic + secondary-accession +
 web-search fallback) now entirely **inside the finder**, at **~0.94 precision when it commits** and only
 **7 of 102 abstaining**. Per-sample backfill is **run and value-checked** on train+val
-end-to-end: whole-field fills country/host (`country` 0.99, `host` ~1.0 semantic), and **method-b**
+end-to-end: whole-field fills country/host (`country` 0.99, `host` ~1.0 semantic), and **per-sample**
 per-sample extraction from supplementary tables (xlsx/csv + DOCX/PDF, direct + two-hop, value-verified)
 fills the genuinely-varying date/source — **11 studies recovered, 14,176 fills**, collection_date
 **0.999** year-level, isolation_source **0.957** fidelity, country **0.999**, host 1.0 semantic. The engine is also **model-robust**: re-running the finder+grader with an
@@ -68,7 +68,7 @@ both accuracies are upper bounds on undetected joint error; the adjudicator is t
 with verbatim quotes, and the grading manual-errors are David-verified (`gt_corrections.tsv`). Per-item +
 re-runnable on any model/fold: `summarise_agent_vs_manual.py` → `data/agent_vs_manual_{sonnet,opus}.{md,tsv}`.
 
-### Stage 1 — deterministic sizing & completeness (no LLM)
+### ENA assessment — deterministic sizing & completeness (no LLM)
 
 Per accession: ENA total + taxon sample/run counts (from `read_run`, deduped to sample level — the
 calibrated unit, see STAGE1), `umbrella_suspected`, three-state completeness. Of 150 curation rows:
@@ -77,7 +77,7 @@ under-labelling (curation more complete — not errors), 15 genuine review-queue
 completeness gain the later stages must reproduce: country +0.16, collection_date +0.10,
 isolation_source +0.14, host +0.23.
 
-### Stage 2A — grading (LLM) + opposing adjudication
+### study grading — grading (LLM) + opposing adjudication
 
 The grader renders the rubric straight from `attributes.yaml` (definitions are **David's to edit**).
 Primary checks vs the (imperfect) frozen ground truth:
@@ -94,7 +94,7 @@ Primary checks vs the (imperfect) frozen ground truth:
 gain is partly mechanical (truth corrected to match verified findings); raw pre-correction was
 0.78/0.90.
 
-### Stage 2B — paper finding (LLM picks among retrieved candidates; never invents)
+### paper finding — paper finding (LLM picks among retrieved candidates; never invents)
 
 102 of 109 accessions have a curated `paper_link` (7 have none). The finder is now a **complete
 three-tier pipeline, all inside the finder**: deterministic retrieval (ENA-desc id-mining → NCBI
@@ -165,10 +165,10 @@ artifact**. **Decision: Sonnet 4.6 stays the default agent; Opus 4.8 stays the i
 The completeness-gated whole-field pass (`engine/backfill.py`) ran on the **raw, uncurated ENA**
 per-sample table (`load_collated_metadata`; train+val = 45 studies) → **24,351 fills**. A study×field
 goes to whole-field only when ENA is <75% complete (placeholder-stripped); genuinely-varying fields
-fall through to the **method-b** backlog. Coverage matches the Stage-1 prediction — country/host are
+fall through to the **per-sample** backlog. Coverage matches the ENA assessment prediction — country/host are
 largely whole-field-solvable, date/source mostly vary:
 
-| field | studies covered (whole-field) | studies residual (→ method-b) | cells filled |
+| field | studies covered (whole-field) | studies residual (→ per-sample) | cells filled |
 |---|---|---|---|
 | `host` | 38 | 12 | 14,396 |
 | `country` | 23 | 8 | 5,450 |
@@ -183,16 +183,16 @@ the gold is curated (David's alignment point), so a naive raw-string match badly
 |---|---|---|
 | `country` | **0.99** (4435/4472 vs `_parsed`) | whole-field country is essentially always right |
 | `host` | **~1.00 semantic** (11,672/11,672 gold = `human`) | every fill is `Homo sapiens` = human; the raw-string 0.11 is a `Homo sapiens`≠`human` **categorisation artifact**, not an error |
-| `isolation_source` | **~0.76 category-level** (stool→faeces, blood→blood; raw-string 0.17) | whole-field fired on only **5 studies** (48 heterogeneous studies correctly gated to method-b); the entire shortfall is **one study (PRJEB36486)** where the grader's `stool` is faithful to the paper ("serial stool sampling") but the gold curated `intestinal`→`invasive gut & organs` — a gold categorisation quirk, not an engine error. Fidelity-to-source on the checkable subset is ~100% |
-| `collection_date` | 0.00 exact | the ≤2-yr midpoint is a coarse proxy, never equals the exact per-sample date → method-b |
+| `isolation_source` | **~0.76 category-level** (stool→faeces, blood→blood; raw-string 0.17) | whole-field fired on only **5 studies** (48 heterogeneous studies correctly gated to per-sample); the entire shortfall is **one study (PRJEB36486)** where the grader's `stool` is faithful to the paper ("serial stool sampling") but the gold curated `intestinal`→`invasive gut & organs` — a gold categorisation quirk, not an engine error. Fidelity-to-source on the checkable subset is ~100% |
+| `collection_date` | 0.00 exact | the ≤2-yr midpoint is a coarse proxy, never equals the exact per-sample date → per-sample |
 
 So **where whole-field is the right model (country, host) it is ~99–100% correct**, and where the field
-genuinely varies (date, source) the gate correctly defers most of it to method-b while the fraction it
+genuinely varies (date, source) the gate correctly defers most of it to per-sample while the fraction it
 does fill is right for the uniform subset — validating the two-step gated design. RAW values only; the
 parse/categorise rule-system stays downstream (a separate later workstream). `collection_date` rule:
 midpoint of a ≤2-year span, else blank.
 
-### Sample-level backfill — method-b (per-sample extraction from supplementary tables)
+### Sample-level backfill — per-sample (per-sample extraction from supplementary tables)
 
 The genuinely-varying residual (`collection_date`/`isolation_source`, + residual country/host) is
 recovered per-sample from the paper's supplementary tables (`engine/supplementary.py` +
@@ -215,15 +215,15 @@ Swept all 59 residual studies → **11 recovered (10 direct + 1 two-hop), 14,176
 rest correctly abstain (no joinable table, or manifest-only with no bridgeable field table). Feasibility:
 22 of 59 have an OA spreadsheet table, +14 have DOCX/PDF supplements. Value-correctness vs the curated gold:
 
-| field | method-b accuracy | reading |
+| field | per-sample accuracy | reading |
 |---|---|---|
 | `country` | **0.999** (4035) | per-sample country, essentially perfect (code-column false map rejected by the value check) |
-| `collection_date` | **0.999** year-level | the payoff method-a could not give: real per-sample dates (whole-field midpoint was 0.00). Exact-string 0.00 only because the gold parser *imputes* a day/month (`2019`→`2019/06/30`); method-b keeps the true granularity |
+| `collection_date` | **0.999** year-level | the payoff whole-field could not give: real per-sample dates (whole-field midpoint was 0.00). Exact-string 0.00 only because the gold parser *imputes* a day/month (`2019`→`2019/06/30`); per-sample keeps the true granularity |
 | `isolation_source` | **0.957** fidelity | per-sample specimen matches the gold raw 96%; **carriage-vs-invasive granularity preserved** (`Screen swab`→carriage vs `Wound swab`/`Pus`/`Aspirates`→invasive); +377 fills where the gold itself was blank (new data) |
 | `host` | **1.00** semantic | 143/143 gold = `human` |
 
-Method-b is **deterministic + small LLM calls per table** (disk-cached, reruns free). Combined, the
-backfill fills country/host via whole-field (~0.99 / ~1.0) and date/source via method-b (~1.0 / ~0.96).
+Per-sample is **deterministic + small LLM calls per table** (disk-cached, reruns free). Combined, the
+backfill fills country/host via whole-field (~0.99 / ~1.0) and date/source via per-sample (~1.0 / ~0.96).
 Artifacts: `methodb_{feasibility,mappability,applied,outcomes}.tsv`, `methodb_value_report.*`.
 
 ### Backfill COMPLETENESS vs metadata_v2 (how much of each field we filled)
@@ -242,7 +242,7 @@ gold = curated `*_parsed`; `validate_backfill_completeness.py`):
 We **match manual on country** (95% of the gap), **beat it on host** (0.87 > 0.79 — confident `human` for
 human cohorts v2 left blank; accuracy 1.0 semantic), and **close 80% / 67% on date / source**. The added
 completeness is trustworthy (accuracy where filled: country 0.999, date 0.999 yr, iso 0.957, host 1.0).
-Step-a (whole-field) vs step-b (method-b) split: iso step-a **+0.03** / step-b +0.12; date step-a +0.11 /
+Step-a (whole-field) vs step-b (per-sample) split: iso step-a **+0.03** / step-b +0.12; date step-a +0.11 /
 step-b +0.05. Artifact: `backfill_completeness_report.*`.
 
 ### Completeness-gap diagnosis (date/source) — measured, not guessed
@@ -252,7 +252,7 @@ materials (the `ENA_projects/<acc>/` folders: the reviewed `*ready_to_merge*` ou
 the `data.csv`/supplementary source tables they used), the **9,431-sample** date+source residual gap was
 attributed per study × field. Tools (read-only): `validate_backfill_completeness.py` (step split),
 `assess_backfill_gap.py` (per-study gap), `assess_curator_gold.py` (categorise each ready_to_merge as
-whole-field-uniform vs per-sample-multiple + check our step-a fired), `diagnose_methodb_local.py` (run
+whole-field-uniform vs per-sample-multiple + check our step-a fired), `diagnostics/diagnose_per_sample_local.py` (run
 the existing extractor on the curators' LOCAL tables to split fetch vs parse — diagnostic only, never a
 production source).
 
@@ -346,12 +346,12 @@ mSphere paper correctly cites the accession as SRP340092 (a "suspect" flag that 
   hygiene items: the title-only degenerate pick (PRJEB22890, no DOI/PMID captured) and tightening the
   abstention gate for unverified web-only picks.
 
-**B. Sample-level backfill — steps 1–2 DONE; method-b is the remaining workstream:**
+**B. Sample-level backfill — steps 1–2 DONE; per-sample is the remaining workstream:**
 1. ✅ Gate + whole-field fill **run on train+val** (24,351 fills, 45 studies) — `backfill_applied.tsv`.
 2. ✅ **Value-correctness** checked vs the curated gold: `country` **0.99**, `host` **~1.0 semantic**,
    `isolation_source` ~0.76 category-level, `collection_date` 0.00 exact (coarse proxy). The comparison
    is parse/category-aware (raw fills vs curated gold).
-3. ✅ **Method-(b)** built + run end-to-end: per-sample extraction from supplementary tables
+3. ✅ **Per-sample** built + run end-to-end: per-sample extraction from supplementary tables
    (`engine/{supplementary,sample_extractor}.py`) — direct + **two-hop** (manifest→strain→fields) +
    **DOCX/PDF** readers + a general **value-plausibility check**. Swept all 59 residual → **11 recovered
    (10 direct + 1 two-hop), 14,176 fills**; country **0.999**, collection_date **0.999** year-level,
@@ -406,7 +406,7 @@ tweak; a re-grade *with* `sizing_first`; the multi-organism-umbrella taxon-aware
   `grading_*_report.*`, `found_papers.{jsonl,tsv}`, `find_validation_report.*`,
   `find_adjudication_report.*`, `abstention_rescue_review.tsv`, `gt_corrections.tsv`,
   `backfill_applied.tsv`, `backfill_gate_report.tsv`, `backfill_value_report.*` (+ `_raw`),
-  `agent_vs_manual_{sonnet,opus}.*`, `methodb_feasibility.tsv`, `methodb_mappability.tsv`.
+  `agent_vs_manual_{sonnet,opus}.*`, `methodb_feasibility.tsv`, `per_sample_mappability.tsv`.
 - **Opus-comparison outputs** (default model stays Sonnet): `found_papers_opus.{jsonl,tsv}`,
   `study_grades_opus.{jsonl,tsv}`, `{find,grading}_opus_validation_report.*`,
   `{find,grading}_opus_adjudication_report.*`.

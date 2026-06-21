@@ -1,4 +1,4 @@
-"""Stage 2A runner (Klebsiella) — grade the *known* curated papers against the rubric.
+"""study grading runner (Klebsiella) — grade the *known* curated papers against the rubric.
 
 For each project accession in the chosen fold(s) this:
 
@@ -8,11 +8,11 @@ For each project accession in the chosen fold(s) this:
 4. grades it against ``attributes.yaml`` with the LLM (``engine.grader``),
 
 and writes ``data/study_grades.{jsonl,tsv}``. Accessions are processed **biggest-first**
-(by Stage-1 ``ena_taxon_samples``). All network + LLM responses are cached on disk, so reruns
+(by ENA assessment ``ena_taxon_samples``). All network + LLM responses are cached on disk, so reruns
 are deterministic and offline.
 
 Grading-first (2A) deliberately uses the curated paper link as ground-truth input so we measure
-the *grading* step in isolation; independent paper-finding is Stage 2B.
+the *grading* step in isolation; independent paper-finding is paper finding.
 
 Examples
 --------
@@ -38,17 +38,19 @@ from bac_metadata.bac_agentic_metadata.engine import grader
 from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_title_and_description
 from bac_metadata.bac_agentic_metadata.engine.fulltext import FullText, fetch_fulltext
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, UsageLimitError, make_llm
+from bac_metadata.bac_agentic_metadata.engine.local_papers import resolve_local_fulltext
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SIZING_PATH = DATA_DIR / "stage1_sizing.tsv"
-VALIDATION_PATH = DATA_DIR / "stage1_validation_report.tsv"
-SNAPSHOT_PATH = DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
-ENA_CACHE = DATA_DIR / "ena_cache"
-FULLTEXT_CACHE = DATA_DIR / "fulltext_cache"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SIZING_PATH = DATA_DIR / "ena_assessment" / "ena_sizing.tsv"
+VALIDATION_PATH = DATA_DIR / "ena_assessment" / "ena_assessment_report.tsv"
+SNAPSHOT_PATH = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
+MANUAL_PAPERS_DIR = DATA_DIR / "find_papers" / "manual_download"
+ENA_CACHE = DATA_DIR / "cache" / "ena"
+FULLTEXT_CACHE = DATA_DIR / "cache" / "fulltext"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 
 _URL_RE = re.compile(r"https?://\S+")
 
@@ -75,7 +77,7 @@ def _accession_to_paper_link() -> dict[str, str]:
 
 
 def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
-    """Return the Stage-1 sizing rows to grade (by --accessions or --fold), biggest-first."""
+    """Return the ENA assessment sizing rows to grade (by --accessions or --fold), biggest-first."""
     sizing = pd.read_csv(SIZING_PATH, sep="\t")
     if args.accessions:
         wanted = [a.strip() for a in args.accessions.split(",") if a.strip()]
@@ -91,7 +93,7 @@ def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
 
 
 def _classification_lookup() -> dict[str, dict]:
-    """Optional per-accession classification/coverage from the Stage-1 validation report."""
+    """Optional per-accession classification/coverage from the ENA assessment validation report."""
     if not VALIDATION_PATH.exists():
         return {}
     vdf = pd.read_csv(VALIDATION_PATH, sep="\t", dtype=str)
@@ -103,8 +105,8 @@ def _classification_lookup() -> dict[str, dict]:
 
 
 def main() -> None:
-    """Parse arguments and run Stage 2A grading."""
-    parser = argparse.ArgumentParser(description="Stage 2A — grade curated papers (Klebsiella).")
+    """Parse arguments and run study grading."""
+    parser = argparse.ArgumentParser(description="study grading — grade curated papers (Klebsiella).")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val).")
     parser.add_argument("--accessions", default=None, help="Comma-separated accessions (overrides --fold).")
     parser.add_argument("--limit", type=int, default=None, help="Grade only the first N (biggest-first).")
@@ -117,6 +119,8 @@ def main() -> None:
     parser.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
     parser.add_argument("--cache-dir", type=Path, default=LLM_CACHE, help="LLM response cache dir.")
     parser.add_argument("--output-prefix", default="study_grades", help="Output basename under data/.")
+    parser.add_argument("--manual-papers-dir", default=str(MANUAL_PAPERS_DIR),
+                        help="Dir of manually-downloaded <accession>.pdf fallbacks for paywalled papers.")
     parser.add_argument("--max-chars", type=int, default=grader.DEFAULT_MAX_CHARS, help="Paper-text truncation.")
     args = parser.parse_args()
 
@@ -139,6 +143,12 @@ def main() -> None:
         print(f"[grade {i}/{len(sel)}] {acc} (taxon={taxon_n}) <- {link[:70] or '(no paper link)'}", file=sys.stderr)
 
         ft = fetch_fulltext(link, cache_dir=FULLTEXT_CACHE) if link else FullText("", "none", False, False, "")
+        # Paywall fallback: if no openly-fetched full text, use a manually-downloaded <acc>.pdf.
+        if not ft.is_full_text:
+            local = resolve_local_fulltext(acc, args.manual_papers_dir)
+            if local is not None:
+                ft = local
+                print(f"  [local pdf] grading {acc} from manual download ({len(ft.text)} chars)", file=sys.stderr)
         study = study_title_and_description(acc, cache_dir=ENA_CACHE)
         sizing_row = {
             "ena_taxon_samples": taxon_n,
@@ -174,8 +184,8 @@ def main() -> None:
             continue
         results.append(result)
 
-    jsonl = DATA_DIR / f"{args.output_prefix}.jsonl"
-    tsv = DATA_DIR / f"{args.output_prefix}.tsv"
+    jsonl = DATA_DIR / "study_lv_attributes" / "grading" / f"{args.output_prefix}.jsonl"
+    tsv = DATA_DIR / "study_lv_attributes" / "grading" / f"{args.output_prefix}.tsv"
     grader.write_results(results, jsonl, tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {jsonl} and {tsv} ({len(results)} rows, {status})", file=sys.stderr)

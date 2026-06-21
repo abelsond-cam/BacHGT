@@ -8,9 +8,9 @@ different shapes, and only one is worth a human's time:
   accept one representative value;
 * a **genuinely wide mix** — isolates from 37 countries; UK + Malawi + Argentina; blood + urine +
   respiratory + wound; urine + sputum + blood + rectal — which has no single label and belongs to
-  per-sample extraction (method-b), not a whole-field value.
+  per-sample extraction (per-sample), not a whole-field value.
 
-This tier escalates only the first. The order David set is: **method-b runs first** — if per-sample data
+This tier escalates only the first. The order David set is: **per-sample runs first** — if per-sample data
 is available the question is already answered — and the grader **auto-rejects the wide mixes**; only the
 tight near-misses reach a human. Each is packaged as an :class:`EscalationItem` (the grader's quote, a
 paper excerpt, the candidate value, the gap it closes) so the curator decides once; those decisions later
@@ -20,7 +20,7 @@ Detection, per ``(study, field)`` the grader declined whole-field:
 
 1. **Gate by gap** (cheap, deterministic): blank ENA cells for that field, placeholder-stripped. Skip at
    or below the threshold.
-2. **Gate by method-b**: skip if per-sample extraction already resolved the field (sample-level data
+2. **Gate by per-sample**: skip if per-sample extraction already resolved the field (sample-level data
    answers it).
 3. **Classify** (cached LLM, the grader's own pitch): :func:`classify_escalation_candidate` decides
    ``wide_mix_skip`` / ``tight_cluster_escalate`` / ``uniform_propose`` and, for the latter two, the
@@ -122,7 +122,7 @@ class StudyEvidence:
     ena_title, ena_description
         EBI study title / description (the second evidence source).
     sizing_row
-        Stage-1 sizing row surfaced to the model as context (may be empty).
+        ENA assessment sizing row surfaced to the model as context (may be empty).
     """
 
     fulltext: FullText
@@ -287,13 +287,13 @@ def detect_whole_field_escalations(
     *,
     fields: tuple[str, ...] = backfill.FIELDS,
     threshold: int = 50,
-    methodb_covered: set[tuple[str, str]] | None = None,
+    per_sample_covered: set[tuple[str, str]] | None = None,
     model: str | None = None,
 ) -> list[EscalationItem]:
     """Detect tight whole-field near-misses worth a human decision, highest-gap first.
 
     For every ``(study, field)`` the grader declined (see :func:`_declined`): gate by gap (skip if
-    ``gap_samples <= threshold``), gate by method-b coverage (skip if already resolved per-sample), then
+    ``gap_samples <= threshold``), gate by per-sample coverage (skip if already resolved per-sample), then
     triage with :func:`classify_escalation_candidate`; keep only the escalating resolutions
     (:data:`ESCALATE_RESOLUTIONS`). The LLM is only called on declines that clear both deterministic
     gates, so cost scales with the few material, unresolved declines.
@@ -314,8 +314,8 @@ def detect_whole_field_escalations(
         Per-sample fields to consider (default :data:`backfill.FIELDS`).
     threshold
         Minimum blank-cell gap to bother a human (default 50).
-    methodb_covered
-        ``(study, field)`` pairs per-sample extraction already resolved — skipped (method-b runs first).
+    per_sample_covered
+        ``(study, field)`` pairs per-sample extraction already resolved — skipped (per-sample runs first).
     model
         Per-call model override for the classify step (default: the grader's workhorse).
 
@@ -325,7 +325,7 @@ def detect_whole_field_escalations(
         Escalations sorted by ``gap_samples`` descending (highest-impact first).
     """
     gap = field_gap(raw_ena, fields)
-    covered = methodb_covered or set()
+    covered = per_sample_covered or set()
     items: list[EscalationItem] = []
     for g in grades:
         acc = g.get("study_accession")

@@ -1,7 +1,7 @@
-r"""Method-b: per-sample field extraction from a paper's supplementary table (grounded, abstaining).
+r"""Per-sample: per-sample field extraction from a paper's supplementary table (grounded, abstaining).
 
 The residual ``collection_date`` / ``isolation_source`` (and a few ``country`` / ``host``) gaps are
-**genuinely per-sample** — they vary row to row, so a whole-field value cannot fill them. Method-b reads
+**genuinely per-sample** — they vary row to row, so a whole-field value cannot fill them. Per-sample reads
 them from the describing paper's open-access supplementary table (fetched + parsed by
 :mod:`engine.supplementary`).
 
@@ -29,7 +29,7 @@ import pandas as pd
 
 from .supplementary import ACCESSION_RE, SuppTable
 
-#: The four per-sample fields method-b extracts (same set as ``engine.backfill``).
+#: The four per-sample fields per-sample extracts (same set as ``engine.backfill``).
 FIELDS: tuple[str, ...] = ("country", "collection_date", "isolation_source", "host")
 
 SCHEMA_NAME = "map_supplementary_columns"
@@ -81,7 +81,7 @@ def column_map_schema() -> dict:
 
 @dataclass
 class StudyExtraction:
-    """Outcome of method-b for one study: the per-sample fills plus provenance/diagnostics."""
+    """Outcome of per-sample for one study: the per-sample fills plus provenance/diagnostics."""
 
     study_accession: str
     pmcid: str
@@ -346,7 +346,7 @@ def extract_study(
     *,
     model: str | None = None,
 ) -> StudyExtraction:
-    """Run method-b for one study: pick the joinable table, map columns (LLM), extract per-sample rows.
+    """Run per-sample for one study: pick the joinable table, map columns (LLM), extract per-sample rows.
 
     Parameters
     ----------

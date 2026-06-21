@@ -83,15 +83,15 @@ final measured-agreement run.
 
 - **Stage 0 (this round) — DONE here.** Engine skeleton, this plan, the Stage 0 map, the
   attribute-spec scaffolds, and the seeded split.
-- **Stage 1 — Deterministic ingestion & completeness (no LLM).** Group by accession; pull
+- **ENA assessment — Deterministic ingestion & completeness (no LLM).** Group by accession; pull
   ENA/EBI project metadata; read project record counts (total + taxon-of-interest by
   `scientific name`) to size each project; compute completeness for the core + proxy
   fields; resolve best-column ambiguity. Validate completeness against `parsed_per_project`.
   The stable test bed for everything downstream.
-- **Stage 2 — Paper lookup & structured grading (LLM).** Find best paper per accession;
+- **attribute extraction — Paper lookup & structured grading (LLM).** Find best paper per accession;
   extract + grade into the fixed `attributes.yaml` schema; set `cohort_mixed` /
   `needs_manual_download`. Validate on the train+val ground-truth accessions only.
-- **Stage 3 — Opposing evaluator (model-graded review).** Independent agent reviews Stage 2
+- **Stage 3 — Opposing evaluator (model-graded review).** Independent agent reviews attribute extraction
   → structured verdict + feedback; code-graded evals where checkable (does the completeness
   math reconcile? do flags match?). Measure agreement vs the curated labels.
 - **Stage 4 — MCP integration & human handoff.** Wrap the ENA/EBI fetch behind a minimal

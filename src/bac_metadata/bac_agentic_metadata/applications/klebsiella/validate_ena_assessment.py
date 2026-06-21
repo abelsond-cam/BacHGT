@@ -1,4 +1,4 @@
-"""Validate the Stage 1 output against the trusted curation-sheet columns.
+"""Validate the ENA assessment output against the trusted curation-sheet columns.
 
 Two reconciliations (see ``PIPELINE_PLAN.md`` — validate only against the trusted columns,
 record disagreements rather than assuming the sheet is right):
@@ -26,7 +26,7 @@ import pandas as pd
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
-FROZEN_STUDY_LEVEL = DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
+FROZEN_STUDY_LEVEL = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
 SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 ACCESSION_RE = re.compile(r"\bPRJ[A-Z]+\d+\b")
 CLINICAL = ("country", "collection_date", "isolation_source", "host")
@@ -219,7 +219,7 @@ def _write_markdown(out_md: Path, per_row: pd.DataFrame, comp: pd.DataFrame, sta
     """Write the prior-vs-found validation summary."""
     n = len(per_row)
     lines = [
-        "# Stage 1 validation summary",
+        "# ENA assessment validation summary",
         "",
         "## What this validates",
         f"For each of the **{n} curated rows** we compare the **prior finding** (your Google Sheet "
@@ -304,10 +304,10 @@ def _completeness_summary(stage1: pd.DataFrame) -> list[str]:
 
 def main() -> None:
     """Parse arguments, run both reconciliations, and write the report."""
-    parser = argparse.ArgumentParser(description="Validate Stage 1 output vs the curation sheet.")
-    parser.add_argument("--ingest", type=Path, default=DATA_DIR / "stage1_ingest.tsv")
-    parser.add_argument("--out-tsv", type=Path, default=DATA_DIR / "stage1_validation_report.tsv")
-    parser.add_argument("--out-md", type=Path, default=DATA_DIR / "stage1_validation_report.md")
+    parser = argparse.ArgumentParser(description="Validate ENA assessment output vs the curation sheet.")
+    parser.add_argument("--ingest", type=Path, default=DATA_DIR / "ena_assessment" / "ena_ingest.tsv")
+    parser.add_argument("--out-tsv", type=Path, default=DATA_DIR / "ena_assessment" / "ena_assessment_report.tsv")
+    parser.add_argument("--out-md", type=Path, default=DATA_DIR / "ena_assessment" / "ena_assessment_report.md")
     parser.add_argument(
         "--no-completeness", action="store_true", help="Skip the parsed_per_project completeness reconcile."
     )

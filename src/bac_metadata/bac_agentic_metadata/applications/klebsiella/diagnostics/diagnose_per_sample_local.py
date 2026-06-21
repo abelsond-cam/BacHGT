@@ -1,7 +1,7 @@
-"""Fetch-vs-extraction diagnostic: run method-b's extractor on the curators' LOCAL source tables.
+"""Fetch-vs-extraction diagnostic: run per-sample's extractor on the curators' LOCAL source tables.
 
-The per-study gap (`assess_backfill_gap.py`) shows date/source completeness we lack vs v2, concentrated
-on studies where method-b **abstained** — many of which DO have a curator source table (often accession-
+The per-study gap (`diagnostics/assess_backfill_gap.py`) shows date/source completeness we lack vs v2, concentrated
+on studies where per-sample **abstained** — many of which DO have a curator source table (often accession-
 keyed) in their `ENA_projects/<acc>/` folder. This runs the **existing** `engine.sample_extractor.
 extract_study` on those LOCAL tables (bypassing the EPMC fetch) to split the gap:
 
@@ -12,7 +12,7 @@ extract_study` on those LOCAL tables (bypassing the EPMC fetch) to split the gap
 
 Diagnostic harness ONLY — curator files are never a production source (they don't exist for unseen data).
 The only model calls are the cached column-mapping ones inside `extract_study`. Writes
-``data/methodb_local_diagnosis.{md,tsv}``.
+``data/diagnostics/per_sample_local_diagnosis.{md,tsv}``.
 """
 
 from __future__ import annotations
@@ -29,10 +29,10 @@ from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
 from bac_metadata.bac_agentic_metadata.engine import supplementary as supp
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, UsageLimitError, make_llm
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = APP_DIR / "data"
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 GAP_FIELDS = ("collection_date", "isolation_source")
 AUX = ("sample_accession", "run_accession", "secondary_sample_accession", "accession")
 
@@ -60,17 +60,17 @@ def _acc_to_folder(ena_project_dir: Path) -> dict[str, Path]:
 
 def main() -> None:
     """Run the fetch-vs-extraction diagnostic over the gap studies and write the report."""
-    p = argparse.ArgumentParser(description="Method-b fetch-vs-extraction diagnostic on curator local tables.")
+    p = argparse.ArgumentParser(description="Per-sample fetch-vs-extraction diagnostic on curator local tables.")
     p.add_argument("--truth", required=True, help="metadata_v2 gold TSV (to define the gapped samples).")
     p.add_argument("--gold-suffix", default="_parsed")
     p.add_argument("--fold", default="train,val")
-    p.add_argument("--backfill", default=str(DATA_DIR / "backfill_applied.tsv"))
-    p.add_argument("--methodb", default=str(DATA_DIR / "methodb_applied.tsv"))
-    p.add_argument("--curator-gold", default=str(DATA_DIR / "curator_gold_report.tsv"),
-                   help="Restrict to the per-sample-gold bucket (curator did per-sample, so method-b's job).")
+    p.add_argument("--backfill", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"))
+    p.add_argument("--per-sample", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"))
+    p.add_argument("--curator-gold", default=str(DATA_DIR / "diagnostics" / "curator_gold_report.tsv"),
+                   help="Restrict to the per-sample-gold bucket (curator did per-sample, so per-sample's job).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
-    p.add_argument("--report-prefix", default="methodb_local_diagnosis")
+    p.add_argument("--report-prefix", default="per_sample_local_diagnosis")
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
@@ -86,7 +86,7 @@ def main() -> None:
         sets[acc] = s
         maps[acc] = sx.build_accession_to_sample(g)
 
-    # what we already complete (baseline ∪ whole-field ∪ method-b), and what v2 has → the gap sample sets
+    # what we already complete (baseline ∪ whole-field ∪ per-sample), and what v2 has → the gap sample sets
     def _filled(path):
         out = {f: set() for f in GAP_FIELDS}
         if Path(path).exists():
@@ -96,7 +96,7 @@ def main() -> None:
                     out[f] = set(gg["sample_accession"])
         return out
 
-    step_a, step_b = _filled(args.backfill), _filled(args.methodb)
+    step_a, step_b = _filled(args.backfill), _filled(args.per_sample)
     header = pd.read_csv(args.truth, sep="\t", nrows=0).columns.tolist()
     key = "sample_accession" if "sample_accession" in header else "Sample"
     gcols = {f: f"{f}{args.gold_suffix}" for f in GAP_FIELDS}
@@ -118,7 +118,7 @@ def main() -> None:
     acc_folder = _acc_to_folder(Path(mcoll.ENA_PROJECT_DIR))
     gap_studies = sorted([a for a in gap_samples if sum(len(s) for s in gap_samples[a].values()) > 0],
                          key=lambda a: -sum(len(s) for s in gap_samples[a].values()))
-    # Restrict to the per-sample-gold bucket (curator did per-sample → this is method-b's job; the
+    # Restrict to the per-sample-gold bucket (curator did per-sample → this is per-sample's job; the
     # whole-field-uniform studies are a separate step-a issue, not a fetch/parse one).
     if Path(args.curator_gold).exists():
         cg = pd.read_csv(args.curator_gold, sep="\t")
@@ -173,7 +173,7 @@ def main() -> None:
             print(f"[{i}/{len(gap_studies)}] {acc} {field} gap={n} -> {verdict} rec={rec_n}", file=sys.stderr)
 
     res = pd.DataFrame(rows)
-    res.to_csv(DATA_DIR / f"{args.report_prefix}.tsv", sep="\t", index=False)
+    res.to_csv(DATA_DIR / "diagnostics" / f"{args.report_prefix}.tsv", sep="\t", index=False)
     agg = res.groupby("verdict").agg(rows=("study_accession", "count"),
                                      gap_samples=("gap", "sum"), recovered=("recovered", "sum")).reset_index()
     by_field = res.groupby(["field", "verdict"])["gap"].sum().unstack(fill_value=0)
@@ -182,7 +182,7 @@ def main() -> None:
     parse_gap = int(res.loc[res["verdict"] == "parse", "gap"].sum())
 
     md = [f"# Per-sample-gold gap: fetch vs parse vs non-tabular ({', '.join(sorted(folds))})\n",
-          "For the studies the curator did **per-sample** (so method-b's job), we ran the existing extractor "
+          "For the studies the curator did **per-sample** (so per-sample's job), we ran the existing extractor "
           "on their LOCAL source tables to split the gap. **fetch** = local extraction recovers it (broader "
           "fetching would close it; extraction is sound); **parse** = the table has the field but our "
           "map/join/value-check failed (fixable); **non_tabular** = no local table carries it (curator used "
@@ -197,7 +197,7 @@ def main() -> None:
     md.append("|---|" + "---|" * len(by_field.columns))
     for f, r in by_field.iterrows():
         md.append(f"| {f} | " + " | ".join(str(int(x)) for x in r) + " |")
-    (DATA_DIR / f"{args.report_prefix}.md").write_text("\n".join(md) + "\n")
+    (DATA_DIR / "diagnostics" / f"{args.report_prefix}.md").write_text("\n".join(md) + "\n")
     print(f"\nWrote {args.report_prefix}.{{md,tsv}}; per-sample gap {total_gap} → fetch {fetch_gap} parse {parse_gap}", file=sys.stderr)
 
 

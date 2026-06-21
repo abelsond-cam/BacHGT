@@ -122,10 +122,10 @@ def _grading(attr: str, agent_map: dict[str, str], manual_map: dict[str, str],
 def main() -> None:
     """Compute the agent-vs-manual accounting across finding + grading and write the report."""
     p = argparse.ArgumentParser(description="Agent vs manual-curation accounting (Klebsiella).")
-    p.add_argument("--grades", default=str(DATA_DIR / "study_grades.tsv"))
-    p.add_argument("--find-validation", default=str(DATA_DIR / "find_validation_report.tsv"))
-    p.add_argument("--find-adjudication", default=str(DATA_DIR / "find_adjudication_report.tsv"))
-    p.add_argument("--grading-adjudication", default=str(DATA_DIR / "grading_adjudication_report.tsv"))
+    p.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.tsv"))
+    p.add_argument("--find-validation", default=str(DATA_DIR / "find_papers" / "find_validation_report.tsv"))
+    p.add_argument("--find-adjudication", default=str(DATA_DIR / "find_papers" / "find_adjudication_report.tsv"))
+    p.add_argument("--grading-adjudication", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "grading_adjudication_report.tsv"))
     p.add_argument("--prefix", default="sonnet", help="Run tag for the output basename (e.g. sonnet, opus).")
     args = p.parse_args()
 
@@ -175,8 +175,8 @@ def main() -> None:
     md.append("- **agent right** = adjudicated manual-curation errors the agent corrects; "
               "**manual right** = agent errors. When they disagree the agent is right far more often.")
 
-    (DATA_DIR / f"agent_vs_manual_{args.prefix}.md").write_text("\n".join(md) + "\n")
-    res.to_csv(DATA_DIR / f"agent_vs_manual_{args.prefix}.tsv", sep="\t", index=False)
+    (DATA_DIR / "scorecard" / f"agent_vs_manual_{args.prefix}.md").write_text("\n".join(md) + "\n")
+    res.to_csv(DATA_DIR / "scorecard" / f"agent_vs_manual_{args.prefix}.tsv", sep="\t", index=False)
     print(f"Wrote agent_vs_manual_{args.prefix}.{{md,tsv}}", file=sys.stderr)
     print(res.to_string(index=False), file=sys.stderr)
 

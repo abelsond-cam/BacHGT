@@ -1,4 +1,4 @@
-"""Validate Stage 2A grades against the trusted curation columns (train+val only).
+"""Validate study grades against the trusted curation columns (train+val only).
 
 Measures the *grading* step in isolation (it was fed the curated paper link). Per the project
 rule we compare only against trusted ground truth and **record disagreements rather than assume
@@ -35,12 +35,12 @@ import pandas as pd
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
-SNAPSHOT_PATH = DATA_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
-STUDY_SETTING_FROZEN = DATA_DIR / "study_setting_frozen.tsv"
-GT_CORRECTIONS = DATA_DIR / "gt_corrections.tsv"  # David-verified overlay on the frozen GT
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
-FULLTEXT_CACHE = DATA_DIR / "fulltext_cache"
-LLM_CACHE = DATA_DIR / "llm_cache"
+SNAPSHOT_PATH = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
+STUDY_SETTING_FROZEN = DATA_DIR / "inputs" / "study_setting_frozen.tsv"
+GT_CORRECTIONS = DATA_DIR / "diagnostics" / "gt_corrections.tsv"  # David-verified overlay on the frozen GT
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
+FULLTEXT_CACHE = DATA_DIR / "cache" / "fulltext"
+LLM_CACHE = DATA_DIR / "cache" / "llm"
 SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 
 ACCESSION_RE = re.compile(r"\bPRJ[A-Z]+\d+\b")
@@ -248,7 +248,7 @@ def _write_adjudication_report(adjudications: list, report_prefix: str = "gradin
     """Write the adjudication report (verbatim verdicts + aggregated rule-gap lessons)."""
     from collections import Counter
 
-    md = ["# Stage 2A adjudication — critique of grader-vs-sheet disagreements\n"]
+    md = ["# study grading adjudication — critique of grader-vs-sheet disagreements\n"]
     verdicts = Counter(a.verdict for a in adjudications)
     md.append(f"Adjudicated **{len(adjudications)}** disagreements. Verdicts: {dict(verdicts)}.\n")
     md.append("(verdict `sheet_correct` ⇒ likely grader error; `model_correct` ⇒ likely a sheet error.)\n")
@@ -270,17 +270,18 @@ def _write_adjudication_report(adjudications: list, report_prefix: str = "gradin
     else:
         md.append("_No rule gaps flagged._")
 
-    (DATA_DIR / f"{report_prefix}_adjudication_report.md").write_text("\n".join(md) + "\n")
+    grading_dir = DATA_DIR / "study_lv_attributes" / "grading"
+    (grading_dir / f"{report_prefix}_adjudication_report.md").write_text("\n".join(md) + "\n")
     pd.DataFrame([a.to_row() for a in adjudications]).to_csv(
-        DATA_DIR / f"{report_prefix}_adjudication_report.tsv", sep="\t", index=False
+        grading_dir / f"{report_prefix}_adjudication_report.tsv", sep="\t", index=False
     )
-    print(f"Wrote {DATA_DIR / f'{report_prefix}_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
+    print(f"Wrote {grading_dir / f'{report_prefix}_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
 
 
 def main() -> None:
-    """Parse arguments and write the Stage 2A validation report (+ optional adjudication)."""
-    parser = argparse.ArgumentParser(description="Validate Stage 2A grades (Klebsiella).")
-    parser.add_argument("--grades", default=str(DATA_DIR / "study_grades.tsv"), help="Stage 2A flat TSV.")
+    """Parse arguments and write the study grading validation report (+ optional adjudication)."""
+    parser = argparse.ArgumentParser(description="Validate study grades (Klebsiella).")
+    parser.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.tsv"), help="study grading flat TSV.")
     parser.add_argument("--study-setting-from-sheet", action="store_true", help="Score study_setting via live sheet.")
     parser.add_argument("--adjudicate", action="store_true", help="Run the critique agent on primary disagreements.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8", help="Adjudicator model (default Opus).")
@@ -299,7 +300,7 @@ def main() -> None:
     df = df[df["fold"].isin(["train", "val"])].copy()
     print(f"Validating {len(df)} train+val graded accessions", file=sys.stderr)
 
-    md: list[str] = ["# Stage 2A validation — grading vs trusted ground truth (train+val)\n"]
+    md: list[str] = ["# study grading validation — grading vs trusted ground truth (train+val)\n"]
     md.append(f"Graded rows in train+val: **{len(df)}**.\n")
     md.append("Primary accuracy checks: **amr_study** and **study_setting**. `cohort_age` has no "
               "reliable ground truth and is **not scored** (spot-check only).\n")
@@ -362,7 +363,7 @@ def main() -> None:
                   f"amr_method={r.get('amr_method__value')} (gt has_AST_data raw: {str(r.get('gt_has_ast_raw',''))[:50]!r})")
 
     # --- backfill proposals summary ---
-    md.append("\n## Whole-project backfill proposals (method a)\n")
+    md.append("\n## Whole-project backfill proposals (whole-field)\n")
     for fld in ["country", "isolation_source", "host", "collection_date"]:
         col = f"backfill_{fld}__whole_project"
         if col in df.columns:
@@ -387,9 +388,10 @@ def main() -> None:
         "amr_target__value", "amr_method__value", "paper_coverage_for_taxon",
         "needs_manual_download", "fulltext_source",
     ]
-    out_tsv = DATA_DIR / f"{args.report_prefix}_validation_report.tsv"
+    grading_dir = DATA_DIR / "study_lv_attributes" / "grading"
+    out_tsv = grading_dir / f"{args.report_prefix}_validation_report.tsv"
     df[[c for c in keep if c in df.columns]].to_csv(out_tsv, sep="\t", index=False)
-    out_md = DATA_DIR / f"{args.report_prefix}_validation_report.md"
+    out_md = grading_dir / f"{args.report_prefix}_validation_report.md"
     out_md.write_text("\n".join(md) + "\n")
     print(f"Wrote {out_tsv} and {out_md}", file=sys.stderr)
 

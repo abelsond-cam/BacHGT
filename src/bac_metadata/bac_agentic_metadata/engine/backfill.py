@@ -12,7 +12,7 @@ It is **raw-value only**: the ``pp.metadata_curation`` parse/categorise rule-sys
 deliberately NOT used here (it has known-suspect rules and is a separate later workstream). The one
 normalisation is a **standalone placeholder->NA strip** (:func:`strip_placeholders`) so completeness is
 honest — ENA fields carry "Not available"/"not specified"/etc. text that looks populated but is empty.
-Per-sample extraction (method-b, from the paper's tables) is a later stage.
+Per-sample extraction (per-sample, from the paper's tables) is a later stage.
 """
 
 from __future__ import annotations

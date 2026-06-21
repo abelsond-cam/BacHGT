@@ -1,8 +1,8 @@
-# Stage 1 — deterministic ingestion & completeness (notes + calibration)
+# ENA assessment — deterministic ingestion & completeness (notes + calibration)
 
 The first non-LLM layer of the engine. For each project accession it (1) **sizes** the project
 from ENA, and (2) measures per-field **completeness** of the four curated clinical fields across
-three states. See [`PIPELINE_PLAN.md`](PIPELINE_PLAN.md) §6 and the approved Stage 1 plan.
+three states. See [`PIPELINE_PLAN.md`](PIPELINE_PLAN.md) §6 and the approved ENA assessment plan.
 
 Everything runs **locally** (no SLURM). ENA sizing needs only the network; the completeness step
 reads the existing ATB collated data (no remaking).
@@ -21,7 +21,7 @@ reads the existing ATB collated data (no remaking).
   base→post-merge `backfill_delta`).
 - `engine/gsheet.py` — OneDrive-free OAuth reader for the live `study_level` / `parsed_per_project`
   tabs (credential from `BAC_GOOGLE_CLIENT_SECRET`, default `~/.config/bac_metadata/`).
-- `applications/klebsiella/run_stage1.py` — `--mode sizing-only` (ENA only) or `--mode full`.
+- `applications/klebsiella/run_ena_assessment.py` — `--mode sizing-only` (ENA only) or `--mode full`.
 - `applications/klebsiella/validate_stage1.py` — reconcile sizing + completeness vs the sheet.
 
 ## ENA sizing — the record unit (calibration)
@@ -77,12 +77,12 @@ the species — while `ena_total_samples` is the **upper bound**. Classification
 ```bash
 unset VIRTUAL_ENV   # use the project .venv, not a stale system one
 # Sizing only (local, ~a few minutes for the 156-accession split):
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode sizing-only
+uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_ena_assessment.py --mode sizing-only
 # Full (also computes completeness from the collated ATB data). On the HPC this is zero-config;
 # locally, point the project_k root + user-dir at the OneDrive mirror via two env vars — the same
 # command then resolves all collation inputs identically (no per-file --metadata-* overrides):
 BACHGT_PROJECT_K_ROOT="…/Aaron Weimann's files - project_k" BACHGT_PROJECT_K_USER=data \
-  uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_stage1.py --mode full
+  uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_ena_assessment.py --mode full
 # (per-file --metadata-file1/2/3 --qc-excel --ena-project-dir overrides still exist for ad-hoc paths)
 # Validate:
 uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/validate_stage1.py

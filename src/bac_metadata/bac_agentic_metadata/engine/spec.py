@@ -1,7 +1,7 @@
 """Load an application's ``attributes.yaml`` into a typed :class:`AttributeSpec`.
 
 The YAML is the single source of truth for the curation rubric (David edits it directly).
-Stage 1 only needs the deterministic parts: the taxon of interest and the per-sample
+ENA assessment only needs the deterministic parts: the taxon of interest and the per-sample
 completeness fields + their normalisers. The full parsed mapping is retained on
 :attr:`AttributeSpec.raw` for later stages.
 """
@@ -47,13 +47,13 @@ class AttributeSpec:
     taxon_of_interest
         The :class:`TaxonOfInterest` used for sizing and completeness.
     completeness_fields
-        Per-sample fields whose completeness Stage 1 measures, e.g.
+        Per-sample fields whose completeness ENA assessment measures, e.g.
         ``["country", "collection_date", "isolation_source", "host"]``.
     deterministic_normaliser
         Mapping ``field -> [parse_fn, categorise_fn, ...]`` naming the reusable
         ``pp.metadata_curation`` callables. Empty for applications that declare none.
     raw
-        The full parsed YAML document (for attributes Stage 1 does not consume).
+        The full parsed YAML document (for attributes ENA assessment does not consume).
     """
 
     application: str

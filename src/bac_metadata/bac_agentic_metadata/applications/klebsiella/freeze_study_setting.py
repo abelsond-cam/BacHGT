@@ -23,7 +23,7 @@ from bac_metadata.bac_agentic_metadata.engine.gsheet import read_tab
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
-OUT_PATH = DATA_DIR / "study_setting_frozen.tsv"
+OUT_PATH = DATA_DIR / "inputs" / "study_setting_frozen.tsv"
 SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"
 ACCESSION_RE = re.compile(r"\bPRJ[A-Z]+\d+\b")
 

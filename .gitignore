@@ -48,10 +48,10 @@ src/bac_ariba/refs/*/prepareref_out/
 **/client_secret*.json
 **/token.json
 **/anthropic_api_key
-src/bac_metadata/bac_agentic_metadata/applications/*/data/ena_cache/
-src/bac_metadata/bac_agentic_metadata/applications/*/data/llm_cache/
-src/bac_metadata/bac_agentic_metadata/applications/*/data/fulltext_cache/
-src/bac_metadata/bac_agentic_metadata/applications/*/data/find_cache/
+# All regenerable caches now live under data/cache/ (llm, ena, fulltext, find, per_sample_*).
+src/bac_metadata/bac_agentic_metadata/applications/*/data/cache/
+# Manually-downloaded paywalled paper PDFs — copyrighted + large; reproduce with link_local_papers.py.
+src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_download/
 
 # pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
 .pixi/

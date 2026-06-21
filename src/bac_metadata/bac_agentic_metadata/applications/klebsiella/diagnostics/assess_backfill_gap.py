@@ -5,14 +5,14 @@ pins the gap down *per study* and attaches the evidence needed to attribute its 
 train+val study and each of the two hard fields it computes:
 
 * ``v2_has``   — samples whose curated `*_parsed` value is present (placeholder-stripped);
-* ``we_have``  — samples we complete (ENA baseline ∪ whole-field ∪ method-b);
+* ``we_have``  — samples we complete (ENA baseline ∪ whole-field ∪ per-sample);
 * ``residual_gap`` — samples where **v2 has a value and we don't** (the real shortfall).
 
-Each gap study is joined to its method-b outcome (`methodb_outcomes.tsv`: direct/two_hop/abstained + the
+Each gap study is joined to its per-sample outcome (`per_sample_outcomes.tsv`: direct/two_hop/abstained + the
 abstain reason) and a **curator-folder inventory** (the `ENA_projects/<acc>/` folder: a reviewed
 `*ready_to_merge*` file and the curator's source table(s) — with coarse flags for whether the source
 table carries a date/source column and an ENA accession). This sets up the fetch-vs-extraction test
-(`diagnose_methodb_local.py`); curator files are a **diagnostic only**, never a production source.
+(`diagnostics/diagnose_per_sample_local.py`); curator files are a **diagnostic only**, never a production source.
 
 Writes ``data/backfill_gap_report.{md,tsv}``.
 """
@@ -30,9 +30,9 @@ import pandas as pd
 from bac_metadata.bac_agentic_metadata.engine import backfill
 from bac_metadata.bac_agentic_metadata.engine.supplementary import ACCESSION_RE
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = APP_DIR / "data"
-SPLIT_PATH = DATA_DIR / "kleb_project_splits.tsv"
+SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
 GAP_FIELDS = ("collection_date", "isolation_source")
 _ACC_HEADER_RE = re.compile(r"accession|biosample|\brun\b|\bena\b|sample.?id", re.IGNORECASE)
 _DATE_HEADER_RE = re.compile(r"date|year|collect", re.IGNORECASE)
@@ -127,15 +127,15 @@ def main() -> None:
     p.add_argument("--truth", required=True, help="metadata_v2 per-sample gold TSV (local path).")
     p.add_argument("--gold-suffix", default="_parsed")
     p.add_argument("--fold", default="train,val")
-    p.add_argument("--backfill", default=str(DATA_DIR / "backfill_applied.tsv"))
-    p.add_argument("--methodb", default=str(DATA_DIR / "methodb_applied.tsv"))
-    p.add_argument("--outcomes", default=str(DATA_DIR / "methodb_outcomes.tsv"))
+    p.add_argument("--backfill", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"))
+    p.add_argument("--per-sample", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"))
+    p.add_argument("--outcomes", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_outcomes.tsv"))
     p.add_argument("--report-prefix", default="backfill_gap")
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
     base = _load_base(folds)
-    step_a, step_b = _filled(Path(args.backfill)), _filled(Path(args.methodb))
+    step_a, step_b = _filled(Path(args.backfill)), _filled(Path(args.per_sample))
     gold_cols = {f: f"{f}{args.gold_suffix}" for f in GAP_FIELDS}
     header = pd.read_csv(args.truth, sep="\t", nrows=0).columns.tolist()
     key = "sample_accession" if "sample_accession" in header else "Sample"
@@ -164,8 +164,8 @@ def main() -> None:
             total_gap += gap
         rec["total_gap"] = total_gap
         oc = outcomes.loc[acc].to_dict() if (len(outcomes) and acc in outcomes.index) else {}
-        rec["methodb"] = oc.get("method", "no_outcome")
-        rec["methodb_note"] = str(oc.get("note", ""))[:80]
+        rec["per_sample"] = oc.get("method", "no_outcome")
+        rec["per_sample_note"] = str(oc.get("note", ""))[:80]
         rows.append(rec)
 
     # Curator-folder inventory only for the gap studies (avoids scanning irrelevant OneDrive folders).
@@ -181,7 +181,7 @@ def main() -> None:
         rec["src_has_accession"] = inv.get("src_has_accession", False)
 
     res = pd.DataFrame(rows).sort_values("total_gap", ascending=False)
-    res.to_csv(DATA_DIR / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
+    res.to_csv(DATA_DIR / "diagnostics" / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
     gap = res[res["total_gap"] > 0]
     tot = {f: int(res[f"{f}_gap"].sum()) for f in GAP_FIELDS}
 
@@ -189,7 +189,7 @@ def main() -> None:
           f"Total residual gap (samples v2 has & we don't): **collection_date {tot['collection_date']}**, "
           f"**isolation_source {tot['isolation_source']}**, over {len(gap)} studies with any gap.\n",
           "Top gap studies (residual = v2 has a value and we don't):\n",
-          "| study | n | date gap | source gap | method-b | curator src tables | src date col | src source col | src accession |",
+          "| study | n | date gap | source gap | per-sample | curator src tables | src date col | src source col | src accession |",
           "|---|---|---|---|---|---|---|---|---|"]
     for _, r in gap.head(25).iterrows():
         md.append(f"| {r['study_accession']} | {r['n_samples']} | {r['collection_date_gap']} | "
@@ -198,7 +198,7 @@ def main() -> None:
                   f"{'Y' if r['src_has_accession'] else '·'} |")
     md.append("\n- **src date/source col** = a curator source table has a date/source-like column; "
               "**src accession** = it carries an ENA accession (directly joinable) vs isolate-keyed only.")
-    (DATA_DIR / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
+    (DATA_DIR / "diagnostics" / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
     print(f"Wrote {args.report_prefix}_report.{{md,tsv}}; total gap date={tot['collection_date']} "
           f"source={tot['isolation_source']}", file=sys.stderr)
 

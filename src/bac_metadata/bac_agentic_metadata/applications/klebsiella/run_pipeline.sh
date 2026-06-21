@@ -1,13 +1,14 @@
 #!/bin/bash
-# End-to-end agentic-metadata pipeline for one fold set, writing <TAG>-suffixed artifacts so a run
-# never clobbers another fold's outputs. The SAME command does the train+val dress rehearsal and the
-# sealed test-fold one-shot:
+# End-to-end agentic-metadata pipeline for one fold set, writing <TAG>-suffixed artifacts into the
+# task-aligned data/ tree (find_papers / study_lv_attributes / sample_lv_attributes / scorecard).
+# The SAME command does the train+val dress rehearsal and the sealed test-fold one-shot:
 #   bash run_pipeline.sh "train,val" train      # dress rehearsal (cache-warm → fast/cheap)
-#   bash run_pipeline.sh "test"      test       # the sealed final run (open the test fold once)
+#   bash run_pipeline.sh "test"      test        # the sealed final run (open the test fold once)
 #
-# Stage 1 sizing is fold-agnostic (run once already → stage1_sizing.tsv); this driver runs the
-# fold-specific stages: grade → find → adjudicate(find+grading) → backfill(whole-field) →
-# method-b(per-sample) → value-correctness → agent-vs-manual scorecard.
+# Stages map to David's 9-step model (step refs in the comments). Stage 0 — ENA assessment
+# (ena_sizing/ingest) — is fold-agnostic; run once via run_ena_assessment.py. This driver runs the
+# fold-specific stages. Execution order follows data dependencies (whole-field gate → per-sample;
+# per-sample → escalation), which the step refs annotate where they differ from David's numbering.
 set -uo pipefail
 FOLD="${1:-train,val}"
 TAG="${2:-train}"
@@ -25,41 +26,80 @@ GOLD="${BACHGT_GOLD:-$BACHGT_PROJECT_K_ROOT/$BACHGT_PROJECT_K_USER/final/metadat
 cd "$REPO" || exit 1
 unset VIRTUAL_ENV
 
+# Task-aligned subtrees.
+FIND="$DATA/find_papers"
+GRADE="$DATA/study_lv_attributes/grading"
+WSB="$DATA/study_lv_attributes/whole_study_backfill"
+ESC="$DATA/study_lv_attributes/escalation"
+PS="$DATA/sample_lv_attributes/per_sample"
+SCORE="$DATA/scorecard"
+mkdir -p "$FIND/manual_download" "$GRADE" "$WSB" "$ESC" "$PS" "$SCORE" "$DATA/diagnostics" \
+  "$DATA/cache/llm" "$DATA/cache/ena" "$DATA/cache/fulltext" "$DATA/cache/find" "$DATA/cache/per_sample_supp"
+
 ts() { date '+%Y-%m-%d %H:%M:%S'; }
 run() { echo; echo "### [$(ts)] $*"; uv run python "$@" || { echo "FAILED: $*"; exit 1; }; }
 
 echo "=== pipeline: fold='$FOLD' tag='$TAG' ==="
 
-# 1. grade the paper into the attributes.yaml schema
-run "$APP/run_study_grading.py" --fold "$FOLD" --output-prefix "study_grades_$TAG"
-# 2. find the describing paper (3-tier finder incl. web fallback)
+# ── Stage 1 — Find papers + resolve full text (David step 1) ────────────────────────────────────
 run "$APP/run_find_papers.py" --fold "$FOLD" --web-fallback --output-prefix "found_papers_$TAG"
-# 3. opposing-Opus adjudication of finder + grader disagreements
-run "$APP/validate_find_papers.py" --found "$DATA/found_papers_$TAG.tsv" --adjudicate --report-prefix "find_$TAG"
-run "$APP/validate_study_grading.py" --grades "$DATA/study_grades_$TAG.tsv" --adjudicate --report-prefix "grading_$TAG"
-# 4. whole-field backfill (gate + study-wide fills)
-run "$APP/run_backfill.py" --fold "$FOLD" --grades "$DATA/study_grades_$TAG.tsv" --output "$DATA/backfill_applied_$TAG.tsv"
-# 5. method-b per-sample extraction from supplementary tables
-run "$APP/run_methodb_extract.py" --fold "$FOLD" --found "$DATA/found_papers_$TAG.tsv" \
-    --gate-report "$DATA/backfill_gate_report_$TAG.tsv" --output "$DATA/methodb_applied_$TAG.tsv"
-# 6. value-correctness vs the curated gold (whole-field + method-b)
-run "$APP/validate_backfill_values.py" --applied "$DATA/backfill_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "backfill_value_$TAG"
-run "$APP/validate_backfill_values.py" --applied "$DATA/methodb_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "methodb_value_$TAG"
-# 6b. completeness vs the curated gold (baseline ENA / agent / v2, per field)
-run "$APP/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$DATA/backfill_applied_$TAG.tsv" \
-    --methodb "$DATA/methodb_applied_$TAG.tsv" --truth "$GOLD" --report-prefix "backfill_completeness_$TAG"
-# 7. the gold answer: agent-vs-manual agreement + adjudicated accuracy (finding + grading)
-run "$APP/summarise_agent_vs_manual.py" --grades "$DATA/study_grades_$TAG.tsv" \
-    --find-validation "$DATA/find_${TAG}_validation_report.tsv" \
-    --find-adjudication "$DATA/find_${TAG}_adjudication_report.tsv" \
-    --grading-adjudication "$DATA/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"
-# 8. human-escalation tier — detect tight whole-field near-misses for the curator (non-blocking; runs
-#    after method-b so resolved fields drop out, and the grader auto-skips genuinely-wide mixes).
+
+# ── Stage 2 — Adjudicate papers found (David step 2) ────────────────────────────────────────────
+run "$APP/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --adjudicate --report-prefix "find_$TAG"
+
+# ── Stage 3 — Study grading + adjudication (David step 4) ───────────────────────────────────────
+#    Grading falls back to data/find_papers/manual_download/<acc>.pdf for paywalled papers.
+run "$APP/run_study_grading.py" --fold "$FOLD" --output-prefix "study_grades_$TAG"
+run "$APP/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --adjudicate --report-prefix "grading_$TAG"
+
+# ── Stage 4 — Missing-papers worklist (David step 3, the loop) ──────────────────────────────────
+#    Lists studies grading STILL lacks full text for. Human downloads them → link_local_papers.py →
+#    manual_download/ → the NEXT run's grading picks them up (re-run after downloading).
+run "$APP/report_missing_papers.py" --grades "$GRADE/study_grades_$TAG.jsonl" --found "$FIND/found_papers_$TAG.tsv"
+
+# ── Stage 5 — Whole-field backfill (David step 6a) ──────────────────────────────────────────────
+#    Study-wide fills + the gate report (residual study×field = the per-sample backlog feeding Stage 6).
+run "$APP/run_backfill.py" --fold "$FOLD" --grades "$GRADE/study_grades_$TAG.tsv" --output "$WSB/backfill_applied_$TAG.tsv"
+
+# ── Stage 6 — Per-sample extraction (David step 5) ──────────────────────────────────────────────
+#    Per-sample values from supplementary tables, targeting the gate's residual list.
+run "$APP/run_per_sample_extract.py" --fold "$FOLD" --found "$FIND/found_papers_$TAG.tsv" \
+    --gate-report "$WSB/backfill_gate_report_$TAG.tsv" --output "$PS/per_sample_applied_$TAG.tsv"
+
+# ── Stage 7 — Escalation detect (David step 6b) ─────────────────────────────────────────────────
+#    Tight whole-field near-misses → curator queue (whole-study / tightly-linked / diverse). Runs
+#    AFTER per-sample so fields resolved per-sample drop out; the grader auto-skips genuinely-wide mixes.
 echo; echo "### [$(ts)] $APP/run_escalations.py (detect)"
-uv run python "$APP/run_escalations.py" --fold "$FOLD" --grades "$DATA/study_grades_$TAG.jsonl" \
-    --methodb "$DATA/methodb_applied_$TAG.tsv" \
-    --output "$DATA/decisions_needed_$TAG.tsv" || echo "WARN: escalation detect failed (non-blocking)"
+uv run python "$APP/run_escalations.py" --fold "$FOLD" --grades "$GRADE/study_grades_$TAG.jsonl" \
+    --per-sample "$PS/per_sample_applied_$TAG.tsv" --output "$ESC/decisions_needed_$TAG.tsv" \
+    || echo "WARN: escalation detect failed (non-blocking)"
+
+# ── Stage 8 — Apply curator decisions (David step 7) ────────────────────────────────────────────
+#    Apply only if the curator has filled the queue's 'answer' column between runs; else skip (non-blocking).
+QUEUE="$ESC/decisions_needed_$TAG.tsv"
+if [ -f "$QUEUE" ] && awk -F'\t' 'NR==1{for(i=1;i<=NF;i++) if($i=="answer") a=i; next} a && $a!="" {f=1} END{exit !f}' "$QUEUE"; then
+    run "$APP/run_escalations.py" --apply --fold "$FOLD" --output "$QUEUE" \
+        --applied-output "$ESC/escalation_applied_$TAG.tsv"
+else
+    echo "### [$(ts)] Stage 8 skip: $QUEUE has no filled answers yet (fill the 'answer' column + re-run to apply)."
+fi
+# David step 8 (loop): re-run this pipeline after editing attributes.yaml (David's call) to improve rules.
+
+# ── Stage 9 — Outputs / scorecard (David step 9) ────────────────────────────────────────────────
+#    Value-fidelity per method, cumulative completeness (incl. escalation), agent-vs-manual agreement.
+run "$APP/validate_backfill_values.py" --applied "$WSB/backfill_applied_$TAG.tsv" --truth "$GOLD" \
+    --report-prefix "backfill_value_$TAG" --out-dir "$WSB"
+run "$APP/validate_backfill_values.py" --applied "$PS/per_sample_applied_$TAG.tsv" --truth "$GOLD" \
+    --report-prefix "per_sample_value_$TAG" --out-dir "$PS"
+run "$APP/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$WSB/backfill_applied_$TAG.tsv" \
+    --per-sample "$PS/per_sample_applied_$TAG.tsv" --escalation "$ESC/escalation_applied_$TAG.tsv" \
+    --truth "$GOLD" --report-prefix "backfill_completeness_$TAG"
+run "$APP/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades_$TAG.tsv" \
+    --find-validation "$FIND/find_${TAG}_validation_report.tsv" \
+    --find-adjudication "$FIND/find_${TAG}_adjudication_report.tsv" \
+    --grading-adjudication "$GRADE/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"
 
 echo; echo "=== [$(ts)] PIPELINE COMPLETE ($FOLD / $TAG) ==="
-echo "scorecard: $DATA/agent_vs_manual_$TAG.md ; backfill: $DATA/{backfill,methodb}_value_${TAG}_report.md"
-echo "escalations: $DATA/decisions_needed_$TAG.tsv (resolve: run_escalations.py --interactive | --apply)"
+echo "scorecard:   $SCORE/agent_vs_manual_$TAG.md  +  $SCORE/backfill_completeness_${TAG}_report.md"
+echo "value:       $WSB/backfill_value_${TAG}_report.md  +  $PS/per_sample_value_${TAG}_report.md"
+echo "escalation:  $QUEUE  (resolve: run_escalations.py --interactive | fill 'answer' col + --apply)"

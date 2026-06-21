@@ -42,11 +42,13 @@ def _read_gold(truth_path: str, sample_col: str, gold_cols: list[str]) -> pd.Dat
 def main() -> None:
     """Parse arguments and write the value-correctness report (per-field coverage + accuracy)."""
     parser = argparse.ArgumentParser(description="Backfill value-correctness vs metadata_v2 (Klebsiella).")
-    parser.add_argument("--applied", default=str(DATA_DIR / "backfill_applied.tsv"), help="Per-sample fills.")
+    parser.add_argument("--applied", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"), help="Per-sample fills.")
     parser.add_argument("--truth", required=True, help="metadata_v2 per-sample gold TSV (local path).")
     parser.add_argument("--gold-suffix", default="_parsed",
                         help="Gold column suffix per field (default '_parsed' = curated; '' for raw).")
-    parser.add_argument("--report-prefix", default="backfill_value", help="Report basename under data/.")
+    parser.add_argument("--report-prefix", default="backfill_value", help="Report basename.")
+    parser.add_argument("--out-dir", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill"),
+                        help="Directory for the value report (per-method: whole_study_backfill/ or per_sample/).")
     args = parser.parse_args()
 
     applied = pd.read_csv(args.applied, sep="\t", dtype=str)
@@ -67,12 +69,14 @@ def main() -> None:
     md.append("\n- **cells filled** = per-sample whole-field fills proposed; **with gold** = of those, how "
               "many have a value in metadata_v2 to check; **value-accuracy** = fraction of those that match.")
     md.append("- `collection_date` accuracy is expected low here: a single whole-project midpoint rarely "
-              "equals each sample's true date — those mostly belong to the per-sample (method-b) step.")
+              "equals each sample's true date — those mostly belong to the per-sample (per-sample) step.")
 
-    out_md = DATA_DIR / f"{args.report_prefix}_report.md"
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_md = out_dir / f"{args.report_prefix}_report.md"
     out_md.write_text("\n".join(md) + "\n")
-    res.to_csv(DATA_DIR / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
-    print(f"Wrote {out_md.name} + .tsv", file=sys.stderr)
+    res.to_csv(out_dir / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
+    print(f"Wrote {out_md} + .tsv", file=sys.stderr)
     print(res.to_string(index=False), file=sys.stderr)
 
 
