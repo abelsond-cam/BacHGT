@@ -45,12 +45,12 @@ echo "=== pipeline: fold='$FOLD' tag='$TAG' ==="
 run "$APP/run_find_papers.py" --fold "$FOLD" --web-fallback --output-prefix "found_papers_$TAG"
 
 # ── Stage 2 — Adjudicate papers found (David step 2) ────────────────────────────────────────────
-run "$APP/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --adjudicate --report-prefix "find_$TAG"
+run "$APP/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "find_$TAG"
 
 # ── Stage 3 — Study grading + adjudication (David step 4) ───────────────────────────────────────
 #    Grading falls back to data/find_papers/manual_download/<acc>.pdf for paywalled papers.
 run "$APP/run_study_grading.py" --fold "$FOLD" --output-prefix "study_grades_$TAG"
-run "$APP/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --adjudicate --report-prefix "grading_$TAG"
+run "$APP/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "grading_$TAG"
 
 # ── Stage 4 — Missing-papers worklist (David step 3, the loop) ──────────────────────────────────
 #    Lists studies grading STILL lacks full text for. Human downloads them → link_local_papers.py →

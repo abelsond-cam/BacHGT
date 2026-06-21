@@ -221,6 +221,9 @@ def main() -> None:
     """Parse arguments and write the paper finding find-validation report."""
     parser = argparse.ArgumentParser(description="Validate paper finding (Klebsiella).")
     parser.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="found_papers TSV.")
+    parser.add_argument("--folds", default="train,val",
+                        help="Folds to validate against GT (default train,val keeps the test fold sealed; "
+                             "the pipeline passes the run's fold, e.g. 'test', to open it deliberately).")
     parser.add_argument("--adjudicate", action="store_true", help="Adjudicate mismatches with the critique agent.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8")
     parser.add_argument("--adjudicate-backend", default="subscription", choices=["subscription", "api"])
@@ -233,10 +236,11 @@ def main() -> None:
     split = pd.read_csv(SPLIT_PATH, sep="\t", dtype=str)[["study_accession", "fold"]]
     sizing = pd.read_csv(DATA_DIR / "ena_assessment" / "ena_sizing.tsv", sep="\t", dtype=str)[["study_accession", "ena_taxon_samples"]]
     df = found.merge(split, on="study_accession", how="left").merge(sizing, on="study_accession", how="left")
-    df = df[df["fold"].isin(["train", "val"])].copy()
+    folds = [f.strip() for f in args.folds.split(",") if f.strip()]
+    df = df[df["fold"].isin(folds)].copy()
     gt = _gt_by_accession()
     df["category"] = df.apply(lambda r: _classify(r, gt.get(r["study_accession"])), axis=1)
-    print(f"Validating {len(df)} train+val found rows", file=sys.stderr)
+    print(f"Validating {len(df)} {args.folds} found rows", file=sys.stderr)
 
     cats = df["category"].value_counts().to_dict()
     scored = df[df["category"].isin(["exact_match", "title_match", "mismatch", "not_found"])]
@@ -244,8 +248,8 @@ def main() -> None:
     denom = len(scored)
     acc = correct / denom if denom else float("nan")
 
-    md = ["# paper finding validation — paper-finding vs curated paper_link (train+val)\n"]
-    md.append(f"Found rows in train+val: **{len(df)}**.\n")
+    md = [f"# paper finding validation — paper-finding vs curated paper_link ({args.folds})\n"]
+    md.append(f"Found rows in {args.folds}: **{len(df)}**.\n")
     md.append(f"## Find-accuracy: {acc:.2f}  ({correct}/{denom} matched among accessions with a curated link)\n")
     md.append(f"Category counts: {cats}\n")
 
@@ -286,9 +290,9 @@ def main() -> None:
         find_dir / f"{args.report_prefix}_validation_report.tsv", sep="\t", index=False)
     print(f"Wrote {args.report_prefix}_validation_report.{{md,tsv}} (accuracy {acc:.2f})", file=sys.stderr)
 
-    if args.adjudicate and mismatch_rows:
+    if args.adjudicate:
         print(f"Adjudicating {len(mismatch_rows)} mismatches with {args.adjudicate_model}", file=sys.stderr)
-        adjs = _adjudicate_mismatches(mismatch_rows, args.adjudicate_model, args.adjudicate_backend)
+        adjs = _adjudicate_mismatches(mismatch_rows, args.adjudicate_model, args.adjudicate_backend) if mismatch_rows else []
         from collections import Counter
 
         def _is_same(a: dict) -> bool:
@@ -317,7 +321,12 @@ def main() -> None:
             if str(a.get("adj_rule_gap", "")).strip():
                 amd.append(f"- ⚠️ rule_gap: {a['adj_rule_gap']}")
         (find_dir / f"{args.report_prefix}_adjudication_report.md").write_text("\n".join(amd) + "\n")
-        pd.DataFrame(adjs).to_csv(find_dir / f"{args.report_prefix}_adjudication_report.tsv", sep="\t", index=False)
+        # Always emit a headered TSV (even with 0 mismatches) so downstream never sees an empty/missing
+        # file and silently scores 0 — a present-but-empty file honestly means "no disagreements".
+        adj_cols = ["study_accession", "adj_verdict", "adj_same_paper", "adj_same_paper_reason",
+                    "chosen_title", "paper_title", "adj_justification_quote", "adj_reasoning", "adj_rule_gap"]
+        (pd.DataFrame(adjs) if adjs else pd.DataFrame(columns=adj_cols)).to_csv(
+            find_dir / f"{args.report_prefix}_adjudication_report.tsv", sep="\t", index=False)
         print(f"Wrote {args.report_prefix}_adjudication_report.{{md,tsv}} (adjudicated accuracy {adj_acc:.2f})", file=sys.stderr)
 
 

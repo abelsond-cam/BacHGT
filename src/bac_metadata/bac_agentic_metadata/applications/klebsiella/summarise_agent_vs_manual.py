@@ -79,10 +79,25 @@ def _account(agree: int, agent_right: int, manual_right: int, tie: int, undet: i
     }
 
 
+def _read_tsv(path: Path, columns: list[str]) -> pd.DataFrame:
+    """Read a TSV; return an empty frame with ``columns`` if it is missing or empty.
+
+    A fold with zero disagreements writes a header-less adjudication file (grading), or none at all
+    (finding only writes its adjudication report when there are mismatches) — e.g. the test fold.
+    """
+    try:
+        return pd.read_csv(path, sep="\t", dtype=str)
+    except (pd.errors.EmptyDataError, FileNotFoundError) as exc:
+        print(f"WARNING: adjudication file {Path(path).name} is missing/empty ({type(exc).__name__}); "
+              "treating as 0 rows — verify the upstream validator wrote it (paths may be stale).",
+              file=sys.stderr)
+        return pd.DataFrame(columns=columns)
+
+
 def _finding(find_validation: Path, find_adjudication: Path) -> dict:
     """Finding accounting: agreement = exact+title matches; verdicts from the find-adjudication."""
-    fv = pd.read_csv(find_validation, sep="\t", dtype=str)
-    fa = pd.read_csv(find_adjudication, sep="\t", dtype=str)
+    fv = _read_tsv(find_validation, ["category"])
+    fa = _read_tsv(find_adjudication, ["adj_verdict"])
     agree = int(fv["category"].isin(["exact_match", "title_match"]).sum())
     v = fa["adj_verdict"].value_counts().to_dict() if "adj_verdict" in fa.columns else {}
     return {"item": "paper-finding",
@@ -140,7 +155,7 @@ def main() -> None:
     gc = pd.read_csv(vsg.GT_CORRECTIONS, sep="\t", dtype=str).fillna("") if vsg.GT_CORRECTIONS.exists() else \
         pd.DataFrame(columns=["study_accession", "attribute"])
     gc_set = {(r["study_accession"], r["attribute"]) for _, r in gc.iterrows()}
-    ga = pd.read_csv(args.grading_adjudication, sep="\t", dtype=str)
+    ga = _read_tsv(args.grading_adjudication, ["study_accession", "attribute", "verdict"])
     adj_verdict = {(r["study_accession"], r["attribute"]): r["verdict"] for _, r in ga.iterrows()}
 
     rows = [

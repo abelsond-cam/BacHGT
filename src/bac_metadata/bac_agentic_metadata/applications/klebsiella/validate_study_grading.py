@@ -272,7 +272,12 @@ def _write_adjudication_report(adjudications: list, report_prefix: str = "gradin
 
     grading_dir = DATA_DIR / "study_lv_attributes" / "grading"
     (grading_dir / f"{report_prefix}_adjudication_report.md").write_text("\n".join(md) + "\n")
-    pd.DataFrame([a.to_row() for a in adjudications]).to_csv(
+    # Always emit a headered TSV (even with 0 adjudications) so the scorecard never reads an empty
+    # file and silently scores 0 — present-but-empty honestly means "no disagreements to adjudicate".
+    adj_cols = ["study_accession", "attribute", "model_value", "sheet_value", "verdict",
+                "correct_value", "justification_quote", "reasoning", "rule_gap"]
+    rows = [a.to_row() for a in adjudications]
+    (pd.DataFrame(rows) if rows else pd.DataFrame(columns=adj_cols)).to_csv(
         grading_dir / f"{report_prefix}_adjudication_report.tsv", sep="\t", index=False
     )
     print(f"Wrote {grading_dir / f'{report_prefix}_adjudication_report.md'} ({len(adjudications)} adjudications)", file=sys.stderr)
@@ -282,6 +287,9 @@ def main() -> None:
     """Parse arguments and write the study grading validation report (+ optional adjudication)."""
     parser = argparse.ArgumentParser(description="Validate study grades (Klebsiella).")
     parser.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.tsv"), help="study grading flat TSV.")
+    parser.add_argument("--folds", default="train,val",
+                        help="Folds to validate against GT (default train,val keeps the test fold sealed; "
+                             "the pipeline passes the run's fold, e.g. 'test', to open it deliberately).")
     parser.add_argument("--study-setting-from-sheet", action="store_true", help="Score study_setting via live sheet.")
     parser.add_argument("--adjudicate", action="store_true", help="Run the critique agent on primary disagreements.")
     parser.add_argument("--adjudicate-model", default="claude-opus-4-8", help="Adjudicator model (default Opus).")
@@ -297,11 +305,12 @@ def main() -> None:
     gt = _gt_by_accession()
 
     df = grades.merge(gt, on="study_accession", how="left").merge(split, on="study_accession", how="left")
-    df = df[df["fold"].isin(["train", "val"])].copy()
-    print(f"Validating {len(df)} train+val graded accessions", file=sys.stderr)
+    folds = [f.strip() for f in args.folds.split(",") if f.strip()]
+    df = df[df["fold"].isin(folds)].copy()
+    print(f"Validating {len(df)} {args.folds} graded accessions", file=sys.stderr)
 
-    md: list[str] = ["# study grading validation — grading vs trusted ground truth (train+val)\n"]
-    md.append(f"Graded rows in train+val: **{len(df)}**.\n")
+    md: list[str] = [f"# study grading validation — grading vs trusted ground truth ({args.folds})\n"]
+    md.append(f"Graded rows in {args.folds}: **{len(df)}**.\n")
     md.append("Primary accuracy checks: **amr_study** and **study_setting**. `cohort_age` has no "
               "reliable ground truth and is **not scored** (spot-check only).\n")
 
