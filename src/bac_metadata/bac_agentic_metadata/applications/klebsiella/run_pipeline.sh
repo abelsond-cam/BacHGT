@@ -53,6 +53,13 @@ run "$APP/summarise_agent_vs_manual.py" --grades "$DATA/study_grades_$TAG.tsv" \
     --find-validation "$DATA/find_${TAG}_validation_report.tsv" \
     --find-adjudication "$DATA/find_${TAG}_adjudication_report.tsv" \
     --grading-adjudication "$DATA/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"
+# 8. human-escalation tier — detect tight whole-field near-misses for the curator (non-blocking; runs
+#    after method-b so resolved fields drop out, and the grader auto-skips genuinely-wide mixes).
+echo; echo "### [$(ts)] $APP/run_escalations.py (detect)"
+uv run python "$APP/run_escalations.py" --fold "$FOLD" --grades "$DATA/study_grades_$TAG.jsonl" \
+    --methodb "$DATA/methodb_applied_$TAG.tsv" \
+    --output "$DATA/decisions_needed_$TAG.tsv" || echo "WARN: escalation detect failed (non-blocking)"
 
 echo; echo "=== [$(ts)] PIPELINE COMPLETE ($FOLD / $TAG) ==="
 echo "scorecard: $DATA/agent_vs_manual_$TAG.md ; backfill: $DATA/{backfill,methodb}_value_${TAG}_report.md"
+echo "escalations: $DATA/decisions_needed_$TAG.tsv (resolve: run_escalations.py --interactive | --apply)"
