@@ -185,9 +185,19 @@ def apply_whole_field(
     return pd.DataFrame(columns=_APPLIED_COLUMNS)
 
 
-def _cmp_key(series: pd.Series) -> pd.Series:
-    """Case-insensitive, whitespace-collapsed key for raw-value equality (no categorisation)."""
-    return series.astype("string").str.strip().str.replace(r"\s+", " ", regex=True).str.lower()
+def _cmp_key(series: pd.Series, field: str | None = None) -> pd.Series:
+    """Case-insensitive, whitespace-collapsed comparison key; field-aware where granularity differs.
+
+    ``collection_date`` is compared at **year** granularity: a whole-study fill resolves the year
+    (e.g. ``2008``) while the gold carries a full curated date (``2008/06/30`` parsed, ``2008.0`` raw),
+    so a plain string match would spuriously score every year-level fill wrong. All other fields use the
+    raw case/whitespace-folded key — correctness against the raw *or* parsed gold column (see
+    :func:`value_correctness`) then absorbs vocabulary differences like ``Homo sapiens`` vs ``human``.
+    """
+    s = series.astype("string").str.strip().str.replace(r"\s+", " ", regex=True).str.lower()
+    if field == "collection_date":
+        s = s.str.extract(r"(\d{4})", expand=False)  # first 4-digit run = the year, on both sides
+    return s
 
 
 def value_correctness(
@@ -215,25 +225,36 @@ def value_correctness(
     sample_col
         Per-sample join key present in both ``applied`` and ``gold``.
     gold_cols
-        ``{field: gold_column}`` (default: identity — same names as ``fields``).
+        ``{field: gold_column | [gold_columns]}`` — one or more candidate gold columns per field
+        (default: identity). A fill counts as having gold if *any* candidate carries a value, and as
+        correct if it matches *any* candidate's key — so passing both the raw and the curated
+        ``_parsed`` column lets ``Homo sapiens`` match the raw host and ``human`` match the parsed one
+        without the validator needing its own categorisation table.
 
     Returns
     -------
     pandas.DataFrame
         One row per field: ``filled``, ``has_gold``, ``correct``, ``accuracy``.
     """
-    gold_cols = gold_cols or {f: f for f in fields}
+    gold_cols = gold_cols or {f: [f] for f in fields}
+    gidx = gold.drop_duplicates(sample_col).set_index(sample_col)
     rows = []
     for f in fields:
         sub = applied[applied["field"] == f]
-        gcol = gold_cols.get(f, f)
-        if gcol not in gold.columns or len(sub) == 0:
+        cands = gold_cols.get(f, [f])
+        cands = [cands] if isinstance(cands, str) else list(cands)
+        cands = [c for c in cands if c in gold.columns]
+        if not cands or len(sub) == 0:
             rows.append({"field": f, "filled": len(sub), "has_gold": 0, "correct": 0, "accuracy": float("nan")})
             continue
-        gvals = strip_placeholders(gold.drop_duplicates(sample_col).set_index(sample_col)[gcol])
-        merged = sub.assign(gold=sub[sample_col].map(gvals))
-        has_gold = merged["gold"].notna()
-        correct = has_gold & (_cmp_key(merged["applied_value"]) == _cmp_key(merged["gold"]))
+        akey = _cmp_key(sub["applied_value"], f)
+        has_gold = pd.Series(False, index=sub.index)
+        correct = pd.Series(False, index=sub.index)
+        for c in cands:  # a cell is correct if the fill matches the raw OR the parsed gold value
+            gmapped = sub[sample_col].map(strip_placeholders(gidx[c]))
+            present = gmapped.notna()
+            has_gold = has_gold | present
+            correct = correct | (present & (akey == _cmp_key(gmapped, f))).fillna(False).astype(bool)
         n_gold = int(has_gold.sum())
         rows.append(
             {

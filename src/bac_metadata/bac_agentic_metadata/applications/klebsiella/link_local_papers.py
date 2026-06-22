@@ -37,6 +37,9 @@ MANUAL_DIR = DATA_DIR / "find_papers" / "manual_download"
 #: matches the file (e.g. a JAC DOI not recorded in the sheet). Seeded from the verified audit.
 OVERRIDES: dict[str, list[str]] = {
     "dkaa431": ["PRJEB22890"],
+    # Naha 2021 mSphere (10.1128/msphere.01156-20): no DOI in the filename and pdfplumber mangles the
+    # page-1 DOI to garbage, so neither matcher fires — title matches PRJNA548120 exactly.
+    "nahaetal2021oxa181": ["PRJNA548120"],
 }
 
 

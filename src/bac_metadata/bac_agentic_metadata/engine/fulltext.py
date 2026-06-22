@@ -22,6 +22,7 @@ from __future__ import annotations
 import io
 import json
 import re
+import sys
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -172,20 +173,32 @@ def _pdf_url_for(ref: str, record: dict | None) -> str | None:
     return None
 
 
-def _pdf_to_text(data: bytes) -> str:
-    """Extract text from PDF bytes with ``pdfplumber`` (empty string on failure)."""
+def _pdf_to_text(data: bytes, *, attempts: int = 3) -> str:
+    """Extract text from PDF bytes with ``pdfplumber``; retry transient failures, then give up.
+
+    pdfplumber can fail *transiently* under memory/CPU pressure when many large PDFs are parsed
+    back-to-back (e.g. a grading run over a dozen paywalled-paper PDFs). A swallowed failure silently
+    drops that paper from grading, and the cached no-full-text grade then persists across refires — so
+    we retry a few times and, on persistent failure, log loudly rather than returning ``""`` in
+    silence. Returns ``""`` only after all attempts fail.
+    """
     import pdfplumber
 
-    try:
-        out = []
-        with pdfplumber.open(io.BytesIO(data)) as pdf:
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    out.append(t)
-        return "\n".join(out)
-    except Exception:  # noqa: BLE001 — any PDF parse failure means "no text from PDF"
-        return ""
+    for attempt in range(1, attempts + 1):
+        try:
+            out = []
+            with pdfplumber.open(io.BytesIO(data)) as pdf:
+                for page in pdf.pages:
+                    t = page.extract_text()
+                    if t:
+                        out.append(t)
+            return "\n".join(out)
+        except Exception as exc:  # noqa: BLE001 — retry transient parse failures, then give up loudly
+            if attempt == attempts:
+                print(f"  [warn] pdfplumber failed to parse {len(data)} bytes after {attempts} "
+                      f"attempts: {type(exc).__name__}: {exc}", file=sys.stderr)
+                return ""
+    return ""
 
 
 def _fetch_pdf_text(url: str, cache_dir: Path | None) -> str:

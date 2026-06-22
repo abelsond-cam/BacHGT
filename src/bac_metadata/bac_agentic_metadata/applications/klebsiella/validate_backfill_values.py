@@ -44,32 +44,40 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Backfill value-correctness vs metadata_v2 (Klebsiella).")
     parser.add_argument("--applied", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"), help="Per-sample fills.")
     parser.add_argument("--truth", required=True, help="metadata_v2 per-sample gold TSV (local path).")
-    parser.add_argument("--gold-suffix", default="_parsed",
-                        help="Gold column suffix per field (default '_parsed' = curated; '' for raw).")
+    parser.add_argument("--gold-suffix", default=None,
+                        help="Legacy: compare only against the single gold column <field><suffix> "
+                             "(e.g. '_parsed', or '' for raw). Default: match against BOTH raw and _parsed.")
     parser.add_argument("--report-prefix", default="backfill_value", help="Report basename.")
     parser.add_argument("--out-dir", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill"),
                         help="Directory for the value report (per-method: whole_study_backfill/ or per_sample/).")
     args = parser.parse_args()
 
     applied = pd.read_csv(args.applied, sep="\t", dtype=str)
-    gold_cols = {f: f"{f}{args.gold_suffix}" for f in backfill.FIELDS}
-    gold = _read_gold(args.truth, "sample_accession", list(gold_cols.values()))
+    # Default: score each fill against BOTH the raw and curated `_parsed` gold column, counting it
+    # correct if it matches EITHER (so raw `Homo sapiens` and parsed `human` both pass without a
+    # categorisation table here); `collection_date` is matched at year granularity (see _cmp_key).
+    if args.gold_suffix is None:
+        gold_cols = {f: [f, f"{f}_parsed"] for f in backfill.FIELDS}
+    else:
+        gold_cols = {f: [f"{f}{args.gold_suffix}"] for f in backfill.FIELDS}
+    all_cols = sorted({c for cols in gold_cols.values() for c in cols})
+    gold = _read_gold(args.truth, "sample_accession", all_cols)
     print(f"Applied fills: {len(applied)}; gold rows: {len(gold)}", file=sys.stderr)
 
     res = backfill.value_correctness(applied, gold, sample_col="sample_accession", gold_cols=gold_cols)
 
-    md = ["# Backfill value-correctness vs metadata_v2 (train+val whole-field fills)\n"]
-    md.append(f"Gold = `{Path(args.truth).name}`, column suffix `{args.gold_suffix or '(raw)'}` "
-              "(curated value, placeholder-stripped both sides, raw — no categorisation).\n")
+    basis = "raw + curated `_parsed`" if args.gold_suffix is None else f"`{args.gold_suffix or '(raw)'}`"
+    md = ["# Backfill value-correctness vs metadata_v2\n"]
+    md.append(f"Gold = `{Path(args.truth).name}`, matched against {basis} per field (placeholder-stripped "
+              "both sides; case/whitespace-folded; `collection_date` compared at **year** granularity). A "
+              "fill is correct if it matches the raw or the parsed gold value.\n")
     md.append("| field | cells filled | with gold | correct | value-accuracy |")
     md.append("|---|---|---|---|---|")
     for _, r in res.iterrows():
         acc = f"{r['accuracy']:.2f}" if pd.notna(r["accuracy"]) else "—"
         md.append(f"| {r['field']} | {int(r['filled'])} | {int(r['has_gold'])} | {int(r['correct'])} | {acc} |")
-    md.append("\n- **cells filled** = per-sample whole-field fills proposed; **with gold** = of those, how "
-              "many have a value in metadata_v2 to check; **value-accuracy** = fraction of those that match.")
-    md.append("- `collection_date` accuracy is expected low here: a single whole-project midpoint rarely "
-              "equals each sample's true date — those mostly belong to the per-sample (per-sample) step.")
+    md.append("\n- **cells filled** = fills proposed; **with gold** = of those, how many have a value in "
+              "metadata_v2 to check; **value-accuracy** = fraction of those that match (raw or parsed).")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

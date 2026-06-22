@@ -189,6 +189,18 @@ def main() -> None:
     grader.write_results(results, jsonl, tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {jsonl} and {tsv} ({len(results)} rows, {status})", file=sys.stderr)
+
+    # No-fudge audit: manual downloads always land *after* the first run flags a paper missing, so any
+    # refire must pick them up. Every study whose PDF is in manual_download/ MUST have graded from it
+    # (fulltext_source == local_pdf); if not, a (transient) extraction miss graded it without the paper
+    # we have — flag loudly and non-zero so it can never pass silently. Re-running grading retries them.
+    mdir = Path(args.manual_papers_dir)
+    pdf_not_used = sorted(r.study_accession for r in results
+                          if (mdir / f"{r.study_accession}.pdf").exists() and r.fulltext_source != "local_pdf")
+    if pdf_not_used:
+        print(f"[WARN] {len(pdf_not_used)} stud(ies) have a manual_download PDF that grading did NOT use "
+              f"(fulltext_source != local_pdf): {pdf_not_used} — re-run grading to retry (usually a "
+              "transient PDF-parse failure).", file=sys.stderr)
     if skipped:
         print(f"Skipped {len(skipped)} (errors/timeouts): {skipped} — rerun to retry (cache fills the rest).",
               file=sys.stderr)
