@@ -22,6 +22,8 @@ from __future__ import annotations
 
 import io
 import re
+import sys
+import time
 import zipfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -62,7 +64,7 @@ def normalise_pmcid(pmcid: str) -> str:
     return p if p.upper().startswith("PMC") else f"PMC{p}"
 
 
-def fetch_supplementary_zip(pmcid: str, *, cache_dir) -> bytes | None:
+def fetch_supplementary_zip(pmcid: str, *, cache_dir, attempts: int = 4) -> bytes | None:
     """Download (and cache) the Europe PMC supplementary-files ZIP for an OA article.
 
     Parameters
@@ -71,11 +73,15 @@ def fetch_supplementary_zip(pmcid: str, *, cache_dir) -> bytes | None:
         Europe PMC PMCID (with or without the ``PMC`` prefix).
     cache_dir
         Directory for the cached ``<PMCID>.zip`` (and a ``<PMCID>.none`` marker when no OA ZIP exists).
+    attempts
+        Max attempts before giving up on transient failures (5xx / 429 / connection errors), which are
+        retried with backoff and never cached — only a definitive 404 / 200-non-ZIP is cached ``.none``.
 
     Returns
     -------
     bytes | None
-        The ZIP bytes, or ``None`` when the article has no open-access supplementary ZIP.
+        The ZIP bytes, or ``None`` when the article has no open-access supplementary ZIP (or a
+        transient failure persisted, in which case nothing is cached and the next run retries).
     """
     pmcid = normalise_pmcid(pmcid)
     zip_path = cache_dir / f"{pmcid}.zip"
@@ -85,14 +91,28 @@ def fetch_supplementary_zip(pmcid: str, *, cache_dir) -> bytes | None:
     if none_path.exists():
         return None
     cache_dir.mkdir(parents=True, exist_ok=True)
-    try:
-        resp = requests.get(f"{EUROPEPMC}/{pmcid}/supplementaryFiles", timeout=120)
-    except requests.RequestException:
-        return None
-    if resp.status_code == 200 and resp.content[:2] == b"PK":
-        zip_path.write_bytes(resp.content)
-        return resp.content
-    none_path.write_text(str(resp.status_code))
+    # Cache a ``.none`` marker ONLY on a definitive negative (404, or a 200 that is not a ZIP).
+    # Transient failures (connection errors, 5xx, 429) are RETRIED and left uncached — a single 503
+    # cached as permanent ``.none`` would silently drop this study's per-sample table from every later
+    # run (exactly what poisoned the test fold), so transients must never become a permanent miss.
+    last = ""
+    for attempt in range(1, attempts + 1):
+        try:
+            resp = requests.get(f"{EUROPEPMC}/{pmcid}/supplementaryFiles", timeout=120)
+        except requests.RequestException as exc:
+            last = type(exc).__name__
+        else:
+            if resp.status_code == 200 and resp.content[:2] == b"PK":
+                zip_path.write_bytes(resp.content)
+                return resp.content
+            if resp.status_code in (404, 200):  # definitive: no OA supplementary ZIP for this article
+                none_path.write_text(str(resp.status_code))
+                return None
+            last = str(resp.status_code)  # 5xx / 429 — transient
+        if attempt < attempts:
+            time.sleep(min(2 * attempt, 8))
+    print(f"  [warn] EPMC supplementary fetch for {pmcid} failed transiently ({last}) after {attempts} "
+          "attempts; not caching — will retry next run.", file=sys.stderr)
     return None
 
 
