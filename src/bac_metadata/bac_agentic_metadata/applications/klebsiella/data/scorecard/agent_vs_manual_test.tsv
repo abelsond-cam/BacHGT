@@ -1,0 +1,5 @@
+item	N	agreement_n	agreement	agent_right	manual_right	tie	undetermined	cohen_kappa	agent_accuracy	manual_accuracy	improvement
+paper-finding	37	30	0.8108	3	3	1	0		0.9189	0.9189	0.0
+amr_study	38	32	0.8421	3	2	0	1	0.7295	0.9459	0.9189	0.027
+study_setting	42	38	0.9048	3	1	0	0	0.8037	0.9762	0.9286	0.0476
+TOTAL	117	100	0.8547	9	6	1	1		0.9483	0.9224	0.0259

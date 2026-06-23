@@ -1,0 +1,189 @@
+study_accession	field	fold	none_found	chosen_pmcid	fulltext_source	is_full_text	paper_resolved	manual_pdf_present	manual_pdf_readable	supp_present	gate_status	n_blank	per_sample_method	zero_reason	n_whole_field	n_per_sample	n_escalation	remaining_est	escalation_status	resolution_state	recoverability
+PRJEB10018	country	test	False	PMC7244338	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB10018	collection_date	test	False	PMC7244338	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB10018	isolation_source	test	False	PMC7244338	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB10018	host	test	False	PMC7244338	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB1271	country	test	False	PMC6717969	europepmc_fulltext	True	True	False	False	False	residual_method_b	59	direct	field_not_in_table	0	0	0	59	none	EXHAUSTED	field_not_in_table
+PRJEB1271	collection_date	test	False	PMC6717969	europepmc_fulltext	True	True	False	False	False	residual_method_b	59	direct		0	162	0	0	none	FILLED	per_sample_or_escalation
+PRJEB1271	isolation_source	test	False	PMC6717969	europepmc_fulltext	True	True	False	False	False	residual_method_b	224	direct	field_not_in_table	0	162	0	62	none	EXHAUSTED	field_not_in_table
+PRJEB1271	host	test	False	PMC6717969	europepmc_fulltext	True	True	False	False	False	residual_method_b	59	direct	field_not_in_table	0	0	0	59	none	EXHAUSTED	field_not_in_table
+PRJEB1272	country	test	False	PMC4790626	pdf	True	True	False	False	False	covered	48	abstained	no_supp	48	0	0	48	none	FILLED	whole_field
+PRJEB1272	collection_date	test	False	PMC4790626	pdf	True	True	False	False	False	residual_method_b	48	abstained	no_supp	0	0	0	48	none	EXHAUSTED	no_supp
+PRJEB1272	isolation_source	test	False	PMC4790626	pdf	True	True	False	False	False	residual_method_b	49	abstained	no_supp	0	0	0	49	none	EXHAUSTED	no_supp
+PRJEB1272	host	test	False	PMC4790626	pdf	True	True	False	False	False	covered	48	abstained	no_supp	48	0	0	48	none	FILLED	whole_field
+PRJEB19226	country	test	True		none	False	False	False	False	False	not_gated	0	NO_PMCID		0	0	0	0	none	FILLED	not_gated
+PRJEB19226	collection_date	test	True		none	False	False	False	False	False	not_gated	0	NO_PMCID		0	0	0	0	none	FILLED	not_gated
+PRJEB19226	isolation_source	test	True		none	False	False	False	False	False	residual_method_b	184	NO_PMCID	NO_PMCID	0	0	0	184	none	EXHAUSTED	NO_PAPER
+PRJEB19226	host	test	True		none	False	False	False	False	False	not_gated	0	NO_PMCID		0	0	0	0	none	FILLED	not_gated
+PRJEB1963	country	test	False	PMC3772739	europepmc_fulltext	True	True	False	False	False	covered	69	abstained	no_supp	69	0	0	69	none	FILLED	whole_field
+PRJEB1963	collection_date	test	False	PMC3772739	europepmc_fulltext	True	True	False	False	False	residual_method_b	69	abstained		0	0	69	0	applied	FILLED	per_sample_or_escalation
+PRJEB1963	isolation_source	test	False	PMC3772739	europepmc_fulltext	True	True	False	False	False	covered	69	abstained	no_supp	69	0	0	69	none	FILLED	whole_field
+PRJEB1963	host	test	False	PMC3772739	europepmc_fulltext	True	True	False	False	False	covered	69	abstained	no_supp	69	0	0	69	none	FILLED	whole_field
+PRJEB21081	country	test	True		none	False	False	False	False	False	covered	913	NO_PMCID	NO_PMCID	913	0	0	913	none	FILLED	whole_field
+PRJEB21081	collection_date	test	True		none	False	False	False	False	False	residual_method_b	913	NO_PMCID	NO_PMCID	0	0	0	913	none	ACTIONABLE	fetch_paper
+PRJEB21081	isolation_source	test	True		none	False	False	False	False	False	residual_method_b	913	NO_PMCID	NO_PMCID	0	0	0	913	none	ACTIONABLE	fetch_paper
+PRJEB21081	host	test	True		none	False	False	False	False	False	residual_method_b	913	NO_PMCID		0	0	913	0	applied	FILLED	per_sample_or_escalation
+PRJEB2111	country	test	False	PMC4500264	pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB2111	collection_date	test	False	PMC4500264	pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB2111	isolation_source	test	False	PMC4500264	pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB2111	host	test	False	PMC4500264	pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB27342	country	test	False	PMC9712112	local_pdf	True	True	True	True	False	covered	5413	two_hop	field_not_in_table	5413	0	0	5413	none	FILLED	whole_field
+PRJEB27342	collection_date	test	False	PMC9712112	local_pdf	True	True	True	True	False	covered	5413	two_hop	field_not_in_table	5413	3375	0	2038	none	FILLED	whole_field
+PRJEB27342	isolation_source	test	False	PMC9712112	local_pdf	True	True	True	True	False	residual_method_b	5413	two_hop	field_not_in_table	0	3375	0	2038	none	EXHAUSTED	field_not_in_table
+PRJEB27342	host	test	False	PMC9712112	local_pdf	True	True	True	True	False	residual_method_b	5413	two_hop	field_not_in_table	0	2624	0	2789	none	EXHAUSTED	field_not_in_table
+PRJEB29424	country	test	False		local_pdf	True	True	True	True	False	covered	853	NO_PMCID	NO_PMCID	853	0	0	853	none	FILLED	whole_field
+PRJEB29424	collection_date	test	False		local_pdf	True	True	True	True	False	covered	853	NO_PMCID	NO_PMCID	853	0	0	853	none	FILLED	whole_field
+PRJEB29424	isolation_source	test	False		local_pdf	True	True	True	True	False	residual_method_b	853	NO_PMCID	NO_PMCID	0	0	0	853	none	EXHAUSTED	NO_PMCID
+PRJEB29424	host	test	False		local_pdf	True	True	True	True	False	residual_method_b	853	NO_PMCID	NO_PMCID	0	0	0	853	none	EXHAUSTED	NO_PMCID
+PRJEB29738	country	test	False	PMC8634409	local_pdf	True	True	True	True	False	covered	862	abstained	unanchored	862	0	0	862	none	FILLED	whole_field
+PRJEB29738	collection_date	test	False	PMC8634409	local_pdf	True	True	True	True	False	residual_method_b	862	abstained		0	0	862	0	applied	FILLED	per_sample_or_escalation
+PRJEB29738	isolation_source	test	False	PMC8634409	local_pdf	True	True	True	True	False	residual_method_b	862	abstained		0	0	862	0	applied	FILLED	per_sample_or_escalation
+PRJEB29738	host	test	False	PMC8634409	local_pdf	True	True	True	True	False	covered	862	abstained	unanchored	862	0	0	862	none	FILLED	whole_field
+PRJEB29739	country	test	True		europepmc_fulltext	True	True	False	False	False	covered	787	NO_PMCID	NO_PMCID	787	0	0	787	none	FILLED	whole_field
+PRJEB29739	collection_date	test	True		europepmc_fulltext	True	True	False	False	False	residual_method_b	787	NO_PMCID		0	0	787	0	applied	FILLED	per_sample_or_escalation
+PRJEB29739	isolation_source	test	True		europepmc_fulltext	True	True	False	False	False	residual_method_b	787	NO_PMCID	NO_PMCID	0	0	0	787	none	EXHAUSTED	NO_PMCID
+PRJEB29739	host	test	True		europepmc_fulltext	True	True	False	False	False	covered	787	NO_PMCID	NO_PMCID	787	0	0	787	none	FILLED	whole_field
+PRJEB32655	country	test	False	PMC10327512	local_pdf	True	True	True	True	False	covered	288	abstained	no_supp	288	0	0	288	none	FILLED	whole_field
+PRJEB32655	collection_date	test	False	PMC10327512	local_pdf	True	True	True	True	False	residual_method_b	288	abstained	no_supp	0	0	0	288	generated	EXHAUSTED	no_supp
+PRJEB32655	isolation_source	test	False	PMC10327512	local_pdf	True	True	True	True	False	residual_method_b	288	abstained	no_supp	0	0	0	288	none	EXHAUSTED	no_supp
+PRJEB32655	host	test	False	PMC10327512	local_pdf	True	True	True	True	False	covered	288	abstained	no_supp	288	0	0	288	none	FILLED	whole_field
+PRJEB34643	country	test	False	PMC8865463	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	5	0	0	none	FILLED	not_gated
+PRJEB34643	collection_date	test	False	PMC8865463	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	105	0	0	none	FILLED	not_gated
+PRJEB34643	isolation_source	test	False	PMC8865463	europepmc_fulltext	True	True	False	False	False	residual_method_b	74	direct		0	105	0	0	none	FILLED	per_sample_or_escalation
+PRJEB34643	host	test	False	PMC8865463	europepmc_fulltext	True	True	False	False	False	residual_method_b	205	direct	field_not_in_table	0	0	0	205	none	EXHAUSTED	field_not_in_table
+PRJEB37504	country	test	False	PMC12060429	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB37504	collection_date	test	False	PMC12060429	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	generated	FILLED	not_gated
+PRJEB37504	isolation_source	test	False	PMC12060429	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB37504	host	test	False	PMC12060429	europepmc_fulltext	True	True	False	False	False	covered	347		abstained_other	347	0	0	347	none	FILLED	whole_field
+PRJEB37711	country	test	False	PMC8836320	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJEB37711	collection_date	test	False	PMC8836320	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJEB37711	isolation_source	test	False	PMC8836320	europepmc_fulltext	True	True	False	False	False	residual_method_b	142	direct		0	155	0	0	none	FILLED	per_sample_or_escalation
+PRJEB37711	host	test	False	PMC8836320	europepmc_fulltext	True	True	False	False	False	covered	155	direct	field_not_in_table	155	0	0	155	none	FILLED	whole_field
+PRJEB38540	country	test	False	PMC8283727	local_pdf	True	True	True	True	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB38540	collection_date	test	False	PMC8283727	local_pdf	True	True	True	True	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB38540	isolation_source	test	False	PMC8283727	local_pdf	True	True	True	True	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB38540	host	test	False	PMC8283727	local_pdf	True	True	True	True	False	residual_method_b	253	abstained	no_supp	0	0	0	253	none	EXHAUSTED	no_supp
+PRJEB42350	country	test	False	PMC8244762	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB42350	collection_date	test	False	PMC8244762	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB42350	isolation_source	test	False	PMC8244762	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB42350	host	test	False	PMC8244762	europepmc_fulltext	True	True	False	False	False	covered	484		abstained_other	484	0	0	484	none	FILLED	whole_field
+PRJEB43870	country	test	False	PMC8453068	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB43870	collection_date	test	False	PMC8453068	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB43870	isolation_source	test	False	PMC8453068	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJEB43870	host	test	False	PMC8453068	europepmc_fulltext	True	True	False	False	False	residual_method_b	203	abstained		0	0	203	0	applied	FILLED	per_sample_or_escalation
+PRJEB48268	country	test	False	PMC12039103	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB48268	collection_date	test	False	PMC12039103	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB48268	isolation_source	test	False	PMC12039103	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB48268	host	test	False	PMC12039103	local_pdf	True	True	True	True	False	covered	1104		abstained_other	1104	0	0	1104	none	FILLED	whole_field
+PRJEB53835	country	test	True		none	False	False	False	False	False	residual_method_b	363	NO_PMCID	NO_PMCID	0	0	0	363	none	EXHAUSTED	NO_PAPER
+PRJEB53835	collection_date	test	True		none	False	False	False	False	False	residual_method_b	363	NO_PMCID		0	0	363	0	applied	FILLED	per_sample_or_escalation
+PRJEB53835	isolation_source	test	True		none	False	False	False	False	False	residual_method_b	363	NO_PMCID	NO_PMCID	0	0	0	363	none	EXHAUSTED	NO_PAPER
+PRJEB53835	host	test	True		none	False	False	False	False	False	covered	363	NO_PMCID	NO_PMCID	363	0	0	363	none	FILLED	whole_field
+PRJEB56146	country	test	False	PMC10370044	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB56146	collection_date	test	False	PMC10370044	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB56146	isolation_source	test	False	PMC10370044	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB56146	host	test	False	PMC10370044	europepmc_fulltext	True	True	False	False	False	covered	156		abstained_other	156	0	0	156	none	FILLED	whole_field
+PRJEB57159	country	test	False		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB57159	collection_date	test	False		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB57159	isolation_source	test	False		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB57159	host	test	False		europepmc_fulltext	True	True	False	False	False	covered	30		NO_PMCID	30	0	0	30	none	FILLED	whole_field
+PRJEB63349	country	test	False	PMC11178878	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB63349	collection_date	test	False	PMC11178878	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB63349	isolation_source	test	False	PMC11178878	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJEB63349	host	test	False	PMC11178878	local_pdf	True	True	True	True	False	covered	687		abstained_other	687	0	0	687	none	FILLED	whole_field
+PRJNA1133668	country	test	False	PMC11610580	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA1133668	collection_date	test	False	PMC11610580	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA1133668	isolation_source	test	False	PMC11610580	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA1133668	host	test	False	PMC11610580	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA252957	country	test	False	PMC4510304	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA252957	collection_date	test	False	PMC4510304	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA252957	isolation_source	test	False	PMC4510304	europepmc_fulltext	True	True	False	False	False	residual_method_b	167	abstained	unanchored	0	0	0	167	none	ACTIONABLE	fetch_supp_table
+PRJNA252957	host	test	False	PMC4510304	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA288601	country	test	True		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA288601	collection_date	test	True		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	generated	FILLED	not_gated
+PRJNA288601	isolation_source	test	True		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA288601	host	test	True		europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA306133	country	test	False	PMC5049680	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA306133	collection_date	test	False	PMC5049680	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA306133	isolation_source	test	False	PMC5049680	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA306133	host	test	False	PMC5049680	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA339843	country	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA339843	collection_date	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA339843	isolation_source	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA339843	host	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA376414	country	test	False	PMC5433097	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA376414	collection_date	test	False	PMC5433097	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA376414	isolation_source	test	False	PMC5433097	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA376414	host	test	False	PMC5433097	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA433394	country	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA433394	collection_date	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA433394	isolation_source	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA433394	host	test	True		pdf	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA514908	country	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA514908	collection_date	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA514908	isolation_source	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA514908	host	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA529744	country	test	False	PMC6711911	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA529744	collection_date	test	False	PMC6711911	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA529744	isolation_source	test	False	PMC6711911	europepmc_fulltext	True	True	False	False	False	residual_method_b	205	abstained	unanchored	0	0	0	205	none	ACTIONABLE	fetch_supp_table
+PRJNA529744	host	test	False	PMC6711911	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA532291	country	test	False	PMC6898716	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA532291	collection_date	test	False	PMC6898716	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA532291	isolation_source	test	False	PMC6898716	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA532291	host	test	False	PMC6898716	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA543274	country	test	False	PMC8438989	local_pdf	True	True	True	True	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA543274	collection_date	test	False	PMC8438989	local_pdf	True	True	True	True	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA543274	isolation_source	test	False	PMC8438989	local_pdf	True	True	True	True	False	residual_method_b	94	direct		0	259	0	0	none	FILLED	per_sample_or_escalation
+PRJNA543274	host	test	False	PMC8438989	local_pdf	True	True	True	True	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA547865	country	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA547865	collection_date	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA547865	isolation_source	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA547865	host	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA548120	country	test	False	PMC7845606	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA548120	collection_date	test	False	PMC7845606	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA548120	isolation_source	test	False	PMC7845606	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA548120	host	test	False	PMC7845606	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA577535	country	test	False	PMC9602435	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA577535	collection_date	test	False	PMC9602435	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA577535	isolation_source	test	False	PMC9602435	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA577535	host	test	False	PMC9602435	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA594602	country	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA594602	collection_date	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA594602	isolation_source	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA594602	host	test	False		local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA633565	country	test	False	PMC10434059	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA633565	collection_date	test	False	PMC10434059	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA633565	isolation_source	test	False	PMC10434059	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA633565	host	test	False	PMC10434059	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA658369	country	test	False	PMC7473597	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA658369	collection_date	test	False	PMC7473597	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA658369	isolation_source	test	False	PMC7473597	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA658369	host	test	False	PMC7473597	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA684006	country	test	False	PMC10101084	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA684006	collection_date	test	False	PMC10101084	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA684006	isolation_source	test	False	PMC10101084	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA684006	host	test	False	PMC10101084	local_pdf	True	True	True	True	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA757551	country	test	False	PMC9160272	local_pdf	True	True	True	True	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA757551	collection_date	test	False	PMC9160272	local_pdf	True	True	True	True	False	residual_method_b	377	abstained	unanchored	0	0	0	377	generated	ACTIONABLE	fetch_supp_table
+PRJNA757551	isolation_source	test	False	PMC9160272	local_pdf	True	True	True	True	False	residual_method_b	377	abstained	unanchored	0	0	0	377	none	ACTIONABLE	fetch_supp_table
+PRJNA757551	host	test	False	PMC9160272	local_pdf	True	True	True	True	False	covered	377	abstained	unanchored	377	0	0	377	none	FILLED	whole_field
+PRJNA778230	country	test	False	PMC9603589	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA778230	collection_date	test	False	PMC9603589	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA778230	isolation_source	test	False	PMC9603589	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA778230	host	test	False	PMC9603589	europepmc_fulltext	True	True	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA810752	country	test	True		none	False	False	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA810752	collection_date	test	True		none	False	False	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA810752	isolation_source	test	True		none	False	False	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA810752	host	test	True		none	False	False	False	False	False	not_gated	0			0	0	0	0	none	FILLED	not_gated
+PRJNA825705	country	test	False	PMC9393496	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA825705	collection_date	test	False	PMC9393496	europepmc_fulltext	True	True	False	False	False	residual_method_b	155	abstained	unanchored	0	0	0	155	generated	ACTIONABLE	fetch_supp_table
+PRJNA825705	isolation_source	test	False	PMC9393496	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA825705	host	test	False	PMC9393496	europepmc_fulltext	True	True	False	False	False	not_gated	0	abstained		0	0	0	0	none	FILLED	not_gated
+PRJNA839691	country	test	False	PMC9764986	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA839691	collection_date	test	False	PMC9764986	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA839691	isolation_source	test	False	PMC9764986	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	143	0	0	none	FILLED	not_gated
+PRJNA839691	host	test	False	PMC9764986	europepmc_fulltext	True	True	False	False	False	residual_method_b	98	direct		0	143	0	0	none	FILLED	per_sample_or_escalation
+PRJNA922900	country	test	False	PMC10232788	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	0	0	0	none	FILLED	not_gated
+PRJNA922900	collection_date	test	False	PMC10232788	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	111	0	0	none	FILLED	not_gated
+PRJNA922900	isolation_source	test	False	PMC10232788	europepmc_fulltext	True	True	False	False	False	not_gated	0	direct		0	111	0	0	none	FILLED	not_gated
+PRJNA922900	host	test	False	PMC10232788	europepmc_fulltext	True	True	False	False	False	residual_method_b	111	direct		0	111	111	0	applied	FILLED	per_sample_or_escalation
