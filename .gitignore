@@ -52,6 +52,8 @@ src/bac_ariba/refs/*/prepareref_out/
 src/bac_metadata/bac_agentic_metadata/applications/*/data/cache/
 # Manually-downloaded paywalled paper PDFs — copyrighted + large; reproduce with link_local_papers.py.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_download/
+# Manually-downloaded supplementary tables — copyrighted; consumed by engine/local_supplements.py.
+src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/manual_download_supp/
 
 # pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
 .pixi/

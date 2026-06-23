@@ -83,6 +83,22 @@ def _action(opinion: dict, *, paywalled: bool, ps_fills: int, has_text: bool) ->
     return "REVIEW"
 
 
+def _mech_reason(method: str, note: str) -> str:
+    """The mechanical (engine) reason a study yielded 0 per-sample fills, read from its outcome row."""
+    if method in ("NO_PMCID", "NOT_IN_FOLD", "NOT_REACHED", "direct", "two_hop"):
+        return method
+    n = (note or "").lower()
+    if "unanchored" in n:
+        return "unanchored"
+    if "manifest" in n:
+        return "manifest_only"
+    if "value check" in n:
+        return "value_check_failed"
+    if "no joinable table" in n:
+        return "no_supp"
+    return "abstained_other"
+
+
 def main() -> None:
     """Build the per-sample supplementary worklist with the LLM per-sample-table opinion."""
     p = argparse.ArgumentParser(description="Per-sample supplementary-table worklist (Klebsiella).")
@@ -113,6 +129,13 @@ def main() -> None:
     fp_path = FIND / f"found_papers_{args.tag}.tsv"
     fp = pd.read_csv(fp_path, sep="\t", dtype=str).fillna("").set_index("study_accession") \
         if fp_path.exists() else pd.DataFrame()
+    # The per-sample outcomes carry the MECHANICAL reason each study yielded 0 (no_supp/unanchored/…),
+    # shown alongside the LLM opinion so the curator sees both "engine couldn't anchor" and "model thinks
+    # the paper does/doesn't hold per-sample data".
+    out_path = PS / f"per_sample_outcomes_{args.tag}.tsv"
+    outcomes = pd.read_csv(out_path, sep="\t", dtype=str).fillna("").set_index("study_accession") \
+        if out_path.exists() else pd.DataFrame()
+    _supp_exts = (".xlsx", ".xls", ".csv", ".tsv", ".docx", ".pdf")
 
     llm = make_llm(args.backend, model=args.model, cache_dir=rsg.LLM_CACHE)
     rows = []
@@ -131,42 +154,52 @@ def main() -> None:
             break
         pmcid = str(fp.loc[acc, "chosen_pmcid"]) if acc in getattr(fp, "index", []) else ""
         doi = str(fp.loc[acc, "chosen_doi"]) if acc in getattr(fp, "index", []) else ""
+        # Mechanical reason from the per-sample outcome row + re-check whether a manual supp file is
+        # already on disk (added between runs → drops out of the chase list as SUPP_PRESENT).
+        om = outcomes.loc[acc] if (len(outcomes) and acc in outcomes.index) else None
+        mech = _mech_reason(om["method"], om["note"]) if om is not None else ""
+        supp_present = any((SUPP_DIR / f"{acc}{e}").exists() for e in _supp_exts)
+        action = "SUPP_PRESENT" if supp_present else \
+            _action(opinion, paywalled=paywalled, ps_fills=ps_fills.get(acc, 0), has_text=has_text)
         rows.append({
             "study_accession": acc, "gap_samples": gap, "gap_fields": b["fields"],
             "fulltext_source": ft_source, "paywalled": paywalled, "per_sample_fills": ps_fills.get(acc, 0),
+            "mech_reason": mech, "supp_present": supp_present,
             "has_per_sample_table": opinion.get("has_per_sample_table", "" if has_text else "no_text"),
             "table_fields": ",".join(opinion.get("fields_present", [])),
             "accession_keyed": opinion.get("accession_keyed", ""),
             "table_reference": opinion.get("table_reference", ""),
-            "action": _action(opinion, paywalled=paywalled, ps_fills=ps_fills.get(acc, 0), has_text=has_text),
-            "evidence_quote": opinion.get("evidence_quote", ""),
+            "action": action, "evidence_quote": opinion.get("evidence_quote", ""),
             "pmcid": pmcid, "doi": doi, "save_as": f"{acc}.xlsx",
         })
 
     res = pd.DataFrame(rows)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    res.to_csv(OUT_DIR / "persample_supplement_worklist.tsv", sep="\t", index=False)
+    res.to_csv(OUT_DIR / f"persample_supplement_worklist_{args.tag}.tsv", sep="\t", index=False)
 
-    order = {"FETCH_SUPP": 0, "OA_INVESTIGATE": 1, "OA_PARTIAL": 2, "REVIEW": 3, "NO_PAPER": 4, "SKIP": 5}
+    order = {"FETCH_SUPP": 0, "OA_INVESTIGATE": 1, "OA_PARTIAL": 2, "REVIEW": 3, "NO_PAPER": 4,
+             "SKIP": 5, "SUPP_PRESENT": 6}
     res = res.sort_values(["action", "gap_samples"], key=lambda c: c.map(order) if c.name == "action" else -c,
                           ascending=[True, True]) if len(res) else res
     md = ["# Per-sample supplementary worklist — which studies need a manual supp-table fetch\n",
           f"{len(res)} studies with a per-sample backlog > {args.min_gap}. The LLM read the paper we hold "
-          "and judged whether it carries a per-isolate table (iso/host/date keyed by an ID). **Download "
-          f"the supplementary file of the FETCH_SUPP rows as `<acc>.xlsx` into `{SUPP_DIR.name}/`.**\n",
+          "and judged whether it carries a per-isolate table (iso/host/date keyed by an ID); `mech` is the "
+          "engine's mechanical reason per-sample yielded 0. **Download the supplementary file of the "
+          f"FETCH_SUPP rows as `<acc>.xlsx` into `{SUPP_DIR.name}/`.**\n",
           "- **FETCH_SUPP** — paywalled + has a per-isolate table → fetch its supplementary file by hand.",
           "- **OA_INVESTIGATE** — open-access + has a table but per-sample extracted nothing → a fetch/parse bug.",
           "- **SKIP** — paper has no per-isolate table (no per-sample data to recover).",
-          "- **NO_PAPER** — no full text yet (resolve the paper first).\n",
-          "| action | study | gap | fields short | has table | table fields | ref | paper | save as |",
-          "|---|---|---|---|---|---|---|---|---|"]
+          "- **NO_PAPER** — no full text yet (resolve the paper first).",
+          "- **SUPP_PRESENT** — a manual supp file is already on disk; per-sample consumes it next run.\n",
+          "| action | study | gap | fields short | mech | has table | table fields | ref | paper | save as |",
+          "|---|---|---|---|---|---|---|---|---|---|"]
     for _, r in res.iterrows():
         paper = r["fulltext_source"] + (f" / {r['pmcid']}" if r["pmcid"] else "")
         md.append(f"| {r['action']} | {r['study_accession']} | {r['gap_samples']} | {r['gap_fields']} | "
-                  f"{r['has_per_sample_table']} | {r['table_fields']} | {r['table_reference'][:40]} | "
-                  f"{paper} | `{r['save_as']}` |")
-    (OUT_DIR / "persample_supplement_worklist.md").write_text("\n".join(md) + "\n")
-    print(f"\nWrote persample_supplement_worklist.{{md,tsv}} ({len(res)} studies)", file=sys.stderr)
+                  f"{r.get('mech_reason', '')} | {r['has_per_sample_table']} | {r['table_fields']} | "
+                  f"{r['table_reference'][:40]} | {paper} | `{r['save_as']}` |")
+    (OUT_DIR / f"persample_supplement_worklist_{args.tag}.md").write_text("\n".join(md) + "\n")
+    print(f"\nWrote persample_supplement_worklist_{args.tag}.{{md,tsv}} ({len(res)} studies)", file=sys.stderr)
     if len(res):
         print(res["action"].value_counts().to_string(), file=sys.stderr)
 

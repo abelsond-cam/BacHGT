@@ -33,7 +33,8 @@ WSB="$DATA/study_lv_attributes/whole_study_backfill"
 ESC="$DATA/study_lv_attributes/escalation"
 PS="$DATA/sample_lv_attributes/per_sample"
 SCORE="$DATA/scorecard"
-mkdir -p "$FIND/manual_download" "$GRADE" "$WSB" "$ESC" "$PS" "$SCORE" "$DATA/diagnostics" \
+MANUAL_SUPP="$DATA/sample_lv_attributes/manual_download_supp"
+mkdir -p "$FIND/manual_download" "$MANUAL_SUPP" "$GRADE" "$WSB" "$ESC" "$PS" "$SCORE" "$DATA/diagnostics" \
   "$DATA/cache/llm" "$DATA/cache/ena" "$DATA/cache/fulltext" "$DATA/cache/find" "$DATA/cache/per_sample_supp"
 
 ts() { date '+%Y-%m-%d %H:%M:%S'; }
@@ -65,6 +66,13 @@ run "$APP/run_backfill.py" --fold "$FOLD" --grades "$GRADE/study_grades_$TAG.tsv
 #    Per-sample values from supplementary tables, targeting the gate's residual list.
 run "$APP/run_per_sample_extract.py" --fold "$FOLD" --found "$FIND/found_papers_$TAG.tsv" \
     --gate-report "$WSB/backfill_gate_report_$TAG.tsv" --output "$PS/per_sample_applied_$TAG.tsv"
+
+# ── Stage 6b — Per-sample supplementary worklist (manual_table_download) ─────────────────────────
+#    LLM opinion per residual study: does the paper hold a per-isolate table? → FETCH_SUPP / SKIP / …
+#    Read-only + LLM-cached; non-blocking (a worklist failure must not kill the run).
+echo; echo "### [$(ts)] $APP/report_persample_supplements.py (manual-table worklist)"
+uv run python "$APP/report_persample_supplements.py" --tag "$TAG" \
+    || echo "WARN: per-sample supplement worklist failed (non-blocking)"
 
 # ── Stage 7 — Escalation detect (David step 6b) ─────────────────────────────────────────────────
 #    Tight whole-field near-misses → curator queue (whole-study / tightly-linked / diverse). Runs
@@ -99,7 +107,15 @@ run "$APP/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades_$TAG.tsv" 
     --find-adjudication "$FIND/find_${TAG}_adjudication_report.tsv" \
     --grading-adjudication "$GRADE/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"
 
+# ── Stage 10 — Run-health report (the convergence / closure artifact) ────────────────────────────
+#    Aggregates every stage into a per-(study×field) grid + ALL-CLEAR vs N-actionable verdict. Loud,
+#    never blocks (exit 0) — the single front-door artifact for "is the run healthy / curation done?".
+echo; echo "### [$(ts)] $APP/report_run_health.py (run-health / convergence)"
+uv run python "$APP/report_run_health.py" --fold "$FOLD" --tag "$TAG" \
+    || echo "WARN: run-health report failed (non-blocking)"
+
 echo; echo "=== [$(ts)] PIPELINE COMPLETE ($FOLD / $TAG) ==="
-echo "scorecard:   $SCORE/agent_vs_manual_$TAG.md  +  $SCORE/backfill_completeness_${TAG}_report.md"
-echo "value:       $WSB/backfill_value_${TAG}_report.md  +  $PS/per_sample_value_${TAG}_report.md"
-echo "escalation:  $QUEUE  (resolve: run_escalations.py --interactive | fill 'answer' col + --apply)"
+echo "run-health:   $SCORE/run_health_${TAG}_report.md   <- START HERE (verdict + actionable worklist)"
+echo "scorecard:    $SCORE/agent_vs_manual_$TAG.md  +  $SCORE/backfill_completeness_${TAG}_report.md"
+echo "manual-table: $DATA/sample_lv_attributes/persample_supplement_worklist_${TAG}.md"
+echo "escalation:   $QUEUE  (resolve: run_escalations.py --interactive | fill 'answer' col + --apply)"

@@ -30,9 +30,11 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.applications.klebsiella import run_study_grading as rsg
+from bac_metadata.bac_agentic_metadata.engine.local_papers import resolve_local_fulltext
 
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
+MANUAL_DIR = DATA_DIR / "find_papers" / "manual_download"
 
 
 def _clean_link(paper_link: str) -> str:
@@ -110,6 +112,21 @@ def main() -> None:
     print(f"Wrote {args.report_prefix}.{{md,tsv}}: {len(fetchable)} fetchable "
           f"({int(fetchable['gap_samples'].sum())} gap samples), {len(res) - len(fetchable)} no-paper",
           file=sys.stderr)
+
+    # Manual-download re-check (concern #1 — never silent on papers). A manual PDF lands AFTER the first
+    # run flags a paper missing, so split by what is on disk NOW: newly-present (a readable
+    # manual_download/<acc>.pdf exists but grading saw no full text → re-run grading to consume it) vs
+    # still-missing (has a fetchable paper but no usable manual PDF yet).
+    has_paper_of = dict(zip(res["study_accession"], res["has_paper"], strict=False))
+    newly_present = sorted(a for a in missing if resolve_local_fulltext(a, str(MANUAL_DIR)) is not None)
+    still_missing = sorted(a for a in missing
+                           if a not in newly_present and has_paper_of.get(a, False))
+    if newly_present:
+        print(f"[FLAG] {len(newly_present)} manual PDF(s) now present but grading saw no full text — "
+              f"RE-RUN GRADING to consume them: {newly_present}", file=sys.stderr)
+    if still_missing:
+        print(f"[FLAG] {len(still_missing)} studies STILL missing a paper (fetchable, no usable manual PDF "
+              f"yet) — fetch + link_local_papers.py: {still_missing}", file=sys.stderr)
 
 
 def _write_md(res: pd.DataFrame, path: Path) -> None:
