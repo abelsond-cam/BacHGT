@@ -93,11 +93,26 @@ class StudyExtraction:
     note: str
 
 
-def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "sample_accession") -> dict[str, str]:
-    """Map every ENA accession kind (sample/secondary/run/assembly) → the canonical ``sample_accession``.
+#: Identifier columns a supplementary table might key on. Beyond the deposited accessions, authors very
+#: often key on a strain/isolate NAME that ENA carries in ``sample_alias`` / ``sample_title`` (e.g.
+#: ``SPARK_775``, ``Brazil-2008a``, ``7SUS``). We map all of them so the key column is found by VALUE.
+_ID_COLUMNS = ("secondary_sample_accession", "run_accession", "accession", "sample_alias", "sample_title")
+_MIN_ID_LEN = 4  # drop 1–3 char ids (collision-prone) from the strain map
 
-    Supplementary tables key on whichever accession the authors deposited (often the run or the
-    secondary-sample accession), so we resolve any of them back to the sample.
+
+def _norm_id(v: object) -> str:
+    """Normalised identifier key (lowercase, alphanumeric only) for VALUE-based, name-agnostic matching."""
+    return re.sub(r"[^a-z0-9]", "", str(v).lower())
+
+
+def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "sample_accession") -> dict[str, str]:
+    """Map every per-sample identifier the authors might key a table on → canonical ``sample_accession``.
+
+    Supplementary tables key on whatever id the authors used — a deposited accession (sample / secondary /
+    run / assembly) OR a strain/isolate name carried in ENA ``sample_alias`` / ``sample_title``. We map ALL
+    of them (:func:`_norm_id`-normalised) so the table's key column is found by **value** — which cells
+    match a known id — never by column NAME (``Isolate`` / ``SPARK_ID`` / ``Strain`` / … are unbounded).
+    First-write wins on a collision; ids shorter than :data:`_MIN_ID_LEN` are skipped.
 
     Parameters
     ----------
@@ -109,32 +124,42 @@ def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "samp
     Returns
     -------
     dict[str, str]
-        Upper-cased accession → ``sample_accession``.
+        ``_norm_id(identifier)`` → ``sample_accession``.
     """
-    other = [c for c in ("secondary_sample_accession", "run_accession", "accession") if c in study_df.columns]
+    extra = [c for c in _ID_COLUMNS if c in study_df.columns]
     out: dict[str, str] = {}
     for _, r in study_df.iterrows():
         sample = str(r.get(sample_col, "")).strip()
         if not sample:
             continue
-        out[sample.upper()] = sample
-        for c in other:
-            v = str(r.get(c, "")).strip()
-            if v and v.lower() not in ("nan", ""):
-                out[v.upper()] = sample
+        out.setdefault(_norm_id(sample), sample)
+        for c in extra:
+            k = _norm_id(r.get(c, ""))
+            if len(k) >= _MIN_ID_LEN:
+                out.setdefault(k, sample)
     return out
 
 
-def pick_accession_column(table: SuppTable, accession_set: set[str]) -> tuple[int, int]:
-    """Return ``(column_index, n_distinct_hits)`` for the column best matching the study's accessions."""
+def pick_accession_column(table: SuppTable, id_keys: set[str]) -> tuple[int, int]:
+    """Return ``(column_index, n_distinct_hits)`` for the column whose VALUES best match known sample ids.
+
+    Name-agnostic: each cell is normalised (:func:`_norm_id`) and tested for membership in ``id_keys`` (the
+    study's full identifier set — accessions + strain aliases from :func:`build_accession_to_sample`).
+    Accessions embedded in longer text are also matched via :data:`ACCESSION_RE`. The column with the most
+    distinct id matches is the key column, whatever its header is called.
+    """
     best_col, best_hits = -1, 0
     for j in range(table.df.shape[1]):
         found: set[str] = set()
         for val in table.df.iloc[:, j].to_numpy().ravel():
-            if isinstance(val, str):
-                for m in ACCESSION_RE.findall(val):
-                    if m.upper() in accession_set:
-                        found.add(m.upper())
+            if not isinstance(val, str):
+                continue
+            k = _norm_id(val)
+            if k in id_keys:                       # whole-cell id (strain name or accession)
+                found.add(k)
+            for m in ACCESSION_RE.findall(val):    # accession embedded in text
+                if _norm_id(m) in id_keys:
+                    found.add(_norm_id(m))
         if len(found) > best_hits:
             best_col, best_hits = j, len(found)
     return best_col, best_hits
@@ -307,12 +332,14 @@ def _two_hop_extract(study_accession: str, pmcid: str, manifest: SuppTable, acc_
             continue
         id_to_sample: dict[str, str] = {}
         for i in range(m_header, len(manifest.df)):
-            am = ACCESSION_RE.search(_cell(manifest.df, i, acc_col))
+            raw = _cell(manifest.df, i, acc_col)
             bid = _cell(manifest.df, i, m_key).lower()
-            if am and bid:
-                sample = acc_to_sample.get(am.group(0).upper())
-                if sample:
-                    id_to_sample.setdefault(bid, sample)
+            sample = acc_to_sample.get(_norm_id(raw))
+            if sample is None:
+                am = ACCESSION_RE.search(raw)
+                sample = acc_to_sample.get(_norm_id(am.group(0))) if am else None
+            if sample and bid:
+                id_to_sample.setdefault(bid, sample)
         # hop 2: walk the field table, bridge each row's ID to a sample, copy field cells verbatim.
         fills: list[dict] = []
         mapped: set[str] = set()
@@ -434,10 +461,12 @@ def extract_study(
     mapped_samples: set[str] = set()
     for i in range(header_rows, len(table.df)):
         raw_acc = _cell(table.df, i, acc_col)
-        m = ACCESSION_RE.search(raw_acc)
-        if not m:
-            continue
-        sample = acc_to_sample.get(m.group(0).upper())
+        sample = acc_to_sample.get(_norm_id(raw_acc))  # value-based: whole-cell id (strain name or accession)
+        key = raw_acc.strip()
+        if sample is None:                              # fall back to an accession embedded in the cell text
+            m = ACCESSION_RE.search(raw_acc)
+            if m:
+                sample, key = acc_to_sample.get(_norm_id(m.group(0))), m.group(0)
         if sample is None:
             continue
         mapped_samples.add(sample)
@@ -447,7 +476,7 @@ def extract_study(
                 fills.append({
                     "study_accession": study_accession, "sample_accession": sample, "field": f,
                     "ena_value": "", "applied_value": val, "method": "per_sample",
-                    "evidence": f"{table.filename}:{m.group(0)}",
+                    "evidence": f"{table.filename}:{key}",
                 })
     note = f"mapped {len(mapped_samples)} samples, {len(fills)} cell-fills"
     if rejected:

@@ -36,7 +36,8 @@ DATA_DIR = APP_DIR / "data"
 SUPP_CACHE = DATA_DIR / "cache" / "per_sample_supp"
 LLM_CACHE = DATA_DIR / "cache" / "llm"
 MANUAL_SUPP_DIR = DATA_DIR / "sample_lv_attributes" / "manual_download_supp"
-AUX = ("sample_accession", "run_accession", "secondary_sample_accession", "accession")
+AUX = ("sample_accession", "run_accession", "secondary_sample_accession", "accession",
+       "sample_alias", "sample_title")
 
 
 def _zero_bucket(method: str, note: str) -> str:
@@ -63,15 +64,11 @@ def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[st
     split = pd.read_csv(DATA_DIR / "fold_splits" / "project_splits.tsv", sep="\t", dtype=str)[["study_accession", "fold"]]
     keep = set(split[split["fold"].isin(folds)]["study_accession"])
     base = base[base["study_accession"].isin(keep)]
-    acc_cols = [c for c in AUX if c in base.columns]
     sets: dict[str, set[str]] = {}
     maps: dict[str, dict[str, str]] = {}
     for acc, g in base.groupby("study_accession"):
-        s: set[str] = set()
-        for c in acc_cols:
-            s |= set(g[c].dropna().astype(str).str.upper())
-        sets[acc] = s
-        maps[acc] = sx.build_accession_to_sample(g)
+        maps[acc] = sx.build_accession_to_sample(g)  # normalised id → sample (accessions + strain aliases)
+        sets[acc] = set(maps[acc])                   # the id-key set pick_accession_column matches against
     return sets, maps
 
 

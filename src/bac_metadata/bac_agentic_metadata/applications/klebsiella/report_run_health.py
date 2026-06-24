@@ -213,13 +213,12 @@ def main() -> None:
             else:
                 exhausted_reason = zreason
             escalation_pending = (acc, field) in esc_pending and not accepted_cell
-            if accepted_cell:
+            state, recover = _resolution(
+                gate_status=gate_status, remaining=remaining, has_grade=has_grade,
+                escalation_pending=escalation_pending, paper_fetchable=paper_fetchable,
+                table_recoverable=table_recoverable, exhausted_reason=exhausted_reason)
+            if accepted_cell and state != "FILLED":  # curator acceptance never clobbers real data — FILLED wins
                 state, recover = "EXHAUSTED", "curator_accepted"
-            else:
-                state, recover = _resolution(
-                    gate_status=gate_status, remaining=remaining, has_grade=has_grade,
-                    escalation_pending=escalation_pending, paper_fetchable=paper_fetchable,
-                    table_recoverable=table_recoverable, exhausted_reason=exhausted_reason)
             esc_status = ("applied" if nesc > 0 else "pending" if escalation_pending
                           else "generated" if (acc, field) in esc_in_queue else "none") \
                 if esc_in_queue else "not_generated"
