@@ -102,6 +102,12 @@ def _resolution(*, gate_status: str, remaining: int, has_grade: bool, escalation
         return "ACTIONABLE", "fetch_paper"
     if table_recoverable:
         return "ACTIONABLE", "fetch_supp_table"
+    if exhausted_reason == "needs_linkage":
+        # A table with the data exists but can't be joined to our accessions. Not curator-actionable
+        # (fetching it again won't help) but NOT gold-standard either — it's an open engine item
+        # (Phase-2 linkage). BLOCKED keeps it OFF the ALL-CLEAR verdict until linkage recovers it OR the
+        # curator explicitly accepts it as unrecoverable (accepted_unrecoverable file).
+        return "BLOCKED", "needs_linkage"
     return "EXHAUSTED", exhausted_reason
 
 
@@ -127,8 +133,6 @@ def main() -> None:
             if line.strip():
                 r = json.loads(line)
                 grades[r["study_accession"]] = r
-    missing = _read_tsv(FIND / "missing_papers_report.tsv")
-    missing_idx = missing.set_index("study_accession") if len(missing) else pd.DataFrame()
     gate = _read_tsv(WSB / f"backfill_gate_report_{tag}.tsv")
     gate_of = {(r["study_accession"], r["field"]): r for _, r in gate.iterrows()} if len(gate) else {}
     outcomes = _read_tsv(PS / f"per_sample_outcomes_{tag}.tsv")
@@ -149,8 +153,13 @@ def main() -> None:
     esc_generated = len(decisions)
     esc_answered = sum(1 for _, r in decisions.iterrows() if str(r.get("answer", "")).strip()) if len(decisions) else 0
     esc_applied = len(_read_tsv(ESC / f"escalation_applied_{tag}.tsv"))
-    worklist = _read_tsv(PS / f"persample_supplement_worklist_{tag}.tsv")
+    worklist = _read_tsv(PS.parent / f"persample_supplement_worklist_{tag}.tsv")  # written to sample_lv_attributes/
     work_of = worklist.set_index("study_accession") if len(worklist) else pd.DataFrame()
+    # Curator override: (study_accession, field[, reason]) the curator has manually verified as
+    # unrecoverable (no paper findable, paper holds no usable per-isolate table, …) → forced EXHAUSTED,
+    # so the loop can reach ALL CLEAR once the human has checked the genuinely-dead-end gaps.
+    accepted = _read_tsv(ESC / f"accepted_unrecoverable_{tag}.tsv")
+    accepted_unrec = {(r["study_accession"], r["field"]) for _, r in accepted.iterrows()} if len(accepted) else set()
 
     def _get(df, acc, col, default=""):
         return df.loc[acc, col] if (len(df) and acc in df.index and col in df.columns) else default
@@ -163,18 +172,24 @@ def main() -> None:
         is_full_text = bool(g.get("is_full_text", False))
         none_found = str(_get(found, acc, "none_found")).lower() in ("true", "1", "yes")
         pmcid = str(_get(found, acc, "chosen_pmcid")).strip()
-        has_paper = str(_get(missing_idx, acc, "has_paper")).lower() in ("true", "1", "yes")
-        # missing_papers only lists no-full-text studies; a graded full-text study is paper-resolved.
-        paper_resolved = is_full_text or (acc not in missing_idx.index if len(missing_idx) else is_full_text)
+        doi = str(_get(found, acc, "chosen_doi")).strip()
+        pmid = str(_get(found, acc, "chosen_pmid")).strip()
+        title = str(_get(found, acc, "chosen_title")).strip()
+        # A REAL paper needs a resolvable scholarly identifier — an ENA-browser link is NOT a paper.
+        has_real_paper = bool(pmcid or doi or pmid) or is_full_text
+        paper_url = (f"https://doi.org/{doi}" if doi else
+                     f"https://www.ncbi.nlm.nih.gov/pmc/articles/{pmcid}/" if pmcid else
+                     f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else "")
         manual_pdf_present = (MANUAL_PDF / f"{acc}.pdf").exists()
         manual_pdf_readable = manual_pdf_present and resolve_local_fulltext(acc, str(MANUAL_PDF)) is not None
+        paper_resolved = is_full_text or manual_pdf_readable
         supp_present = any((MANUAL_SUPP / f"{acc}{e}").exists() for e in SUPP_EXTS)
         om_method = str(_get(outcome_of, acc, "method"))
         om_note = str(_get(outcome_of, acc, "note"))
         probe_opinion = str(_get(work_of, acc, "has_per_sample_table"))
 
-        # paper fetchable = a paywalled study that still has no usable manual PDF.
-        paper_fetchable = (has_paper and not manual_pdf_readable and not is_full_text)
+        # Paper fetchable = a REAL paper exists but we still have no usable full text/manual PDF.
+        paper_fetchable = has_real_paper and not manual_pdf_readable and not is_full_text
         for field in FIELDS:
             gr = gate_of.get((acc, field), {})
             gate_status = str(gr.get("status", "")) or ("NO_GRADE" if not has_grade else "not_gated")
@@ -183,26 +198,39 @@ def main() -> None:
             remaining = max(0, n_blank - nps - nesc)
             zreason = _zero_reason(om_method, om_note, has_pmcid=bool(pmcid), has_grade=has_grade,
                                    gate_status=gate_status)
-            table_recoverable = (not supp_present) and (
-                zreason in ("unanchored", "manifest_only") or probe_opinion in ("yes", "likely"))
-            exhausted_reason = ("NO_PAPER" if (none_found or not has_paper) and not is_full_text
-                                else "probe_no" if probe_opinion == "no" else zreason)
-            escalation_pending = (acc, field) in esc_pending
-            state, recover = _resolution(
-                gate_status=gate_status, remaining=remaining, has_grade=has_grade,
-                escalation_pending=escalation_pending, paper_fetchable=paper_fetchable,
-                table_recoverable=table_recoverable, exhausted_reason=exhausted_reason)
+            accepted_cell = (acc, field) in accepted_unrec
+            # A table is curator-FETCHABLE only when EPMC lacks the supp ZIP but the paper references a
+            # per-isolate table (no_supp + probe yes/likely) — a manual publisher download could get it.
+            # 'unanchored'/'manifest_only' tables are ALREADY fetched but can't be JOINED → that is the
+            # Phase-2 linkage problem, not a curator fetch (fetching it again wouldn't help).
+            table_recoverable = (not supp_present) and zreason == "no_supp" and probe_opinion in ("yes", "likely")
+            if not has_real_paper and not is_full_text:
+                exhausted_reason = "no_paper_findable"
+            elif zreason in ("unanchored", "manifest_only"):
+                exhausted_reason = "needs_linkage"
+            elif probe_opinion == "no":
+                exhausted_reason = "paper_has_no_table"
+            else:
+                exhausted_reason = zreason
+            escalation_pending = (acc, field) in esc_pending and not accepted_cell
+            if accepted_cell:
+                state, recover = "EXHAUSTED", "curator_accepted"
+            else:
+                state, recover = _resolution(
+                    gate_status=gate_status, remaining=remaining, has_grade=has_grade,
+                    escalation_pending=escalation_pending, paper_fetchable=paper_fetchable,
+                    table_recoverable=table_recoverable, exhausted_reason=exhausted_reason)
             esc_status = ("applied" if nesc > 0 else "pending" if escalation_pending
                           else "generated" if (acc, field) in esc_in_queue else "none") \
                 if esc_in_queue else "not_generated"
             rows.append({
                 "study_accession": acc, "field": field, "fold": args.fold,
                 "none_found": none_found, "chosen_pmcid": pmcid, "fulltext_source": fulltext_source,
-                "is_full_text": is_full_text, "paper_resolved": paper_resolved,
-                "manual_pdf_present": manual_pdf_present, "manual_pdf_readable": manual_pdf_readable,
-                "supp_present": supp_present,
+                "is_full_text": is_full_text, "paper_resolved": paper_resolved, "paper_url": paper_url,
+                "paper_title": title[:60], "manual_pdf_readable": manual_pdf_readable, "supp_present": supp_present,
                 "gate_status": gate_status, "n_blank": n_blank,
-                "per_sample_method": om_method, "zero_reason": zreason if remaining > 0 else "",
+                "per_sample_method": om_method,
+                "zero_reason": zreason if state in ("ACTIONABLE", "EXHAUSTED") else "",
                 "n_whole_field": nwf, "n_per_sample": nps, "n_escalation": nesc, "remaining_est": remaining,
                 "escalation_status": esc_status,
                 "resolution_state": state, "recoverability": recover,
@@ -211,10 +239,11 @@ def main() -> None:
     res = pd.DataFrame(rows)
     SCORE.mkdir(parents=True, exist_ok=True)
     res.to_csv(SCORE / f"run_health_{tag}_report.tsv", sep="\t", index=False)
-    _write_md(res, studies, tag, args.fold, esc_generated, esc_answered, esc_applied,
-              missing_idx, work_of, gate)
+    _write_md(res, studies, tag, args.fold, esc_generated, esc_answered, esc_applied)
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if len(res) else 0
-    verdict = "ALL CLEAR — curated to gold standard" if actionable == 0 else f"{actionable} ACTIONABLE items outstanding"
+    blocked = int((res["resolution_state"] == "BLOCKED").sum()) if len(res) else 0
+    verdict = ("ALL CLEAR — curated to gold standard" if actionable + blocked == 0
+               else f"{actionable} ACTIONABLE + {blocked} BLOCKED(needs-linkage) outstanding")
     print(f"Wrote run_health_{tag}_report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
     if len(res):
         print(res["resolution_state"].value_counts().to_string(), file=sys.stderr)
@@ -222,51 +251,67 @@ def main() -> None:
 
 
 def _write_md(res: pd.DataFrame, studies: list, tag: str, fold: str, esc_generated: int,
-              esc_answered: int, esc_applied: int, missing_idx, work_of, gate) -> None:
+              esc_answered: int, esc_applied: int) -> None:
     """Render the verdict banner + the shrinking actionable worklist + the concern sections."""
     n = len(res)
     filled = int((res["resolution_state"] == "FILLED").sum()) if n else 0
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if n else 0
+    blocked = int((res["resolution_state"] == "BLOCKED").sum()) if n else 0
     exhausted = int((res["resolution_state"] == "EXHAUSTED").sum()) if n else 0
-    verdict = "✅ **ALL CLEAR — curated to gold standard**" if actionable == 0 \
-        else f"⚠️ **{actionable} ACTIONABLE items outstanding — supplement & rerun**"
+    verdict = "✅ **ALL CLEAR — curated to gold standard**" if actionable + blocked == 0 \
+        else f"⚠️ **{actionable} ACTIONABLE + {blocked} BLOCKED outstanding — supplement & rerun**"
     md = [f"# Run-health report ({fold} / {tag})\n", f"## {verdict}\n",
           f"{n} (study × field) cells over {len(studies)} fold studies — "
-          f"**FILLED {filled} · ACTIONABLE {actionable} · EXHAUSTED {exhausted}**. "
-          "The loop closes when ACTIONABLE reaches 0 (every cell FILLED or EXHAUSTED).\n"]
+          f"**FILLED {filled} · ACTIONABLE {actionable} · BLOCKED {blocked} · EXHAUSTED {exhausted}**. "
+          "ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a "
+          "logged reason / curator acceptance).\n"]
 
     act = res[res["resolution_state"] == "ACTIONABLE"] if n else res
     md.append("## Actionable worklist — do these, then rerun\n")
     if not len(act):
-        md.append("Nothing outstanding. ✅\n")
+        md.append("Nothing outstanding — every cell FILLED or EXHAUSTED. ✅\n")
     else:
-        for kind, label in [("fetch_paper", "Fetch papers"), ("fetch_supp_table", "Fetch supplementary tables"),
-                            ("answer_escalation", "Answer escalations"), ("needs_grade", "Re-grade (no grade yet)")]:
+        # fetch_paper / fetch_supp_table: per study, the paper (title + link) + which fields are short +
+        # what per-sample we already have, so the curator can judge each before chasing it.
+        for kind, label, save in [("fetch_paper", "Fetch papers", False),
+                                  ("fetch_supp_table", "Fetch supplementary tables", True)]:
             sub = act[act["recoverability"] == kind]
-            accs = sorted(set(sub["study_accession"]))
-            if not accs:
+            if not len(sub):
                 continue
-            md.append(f"### {label} ({len(accs)})\n")
-            if kind == "fetch_paper":
-                md.append("| study | best URL | gap |")
-                md.append("|---|---|---|")
-                for a in accs:
-                    url = missing_idx.loc[a, "best_url"] if (len(missing_idx) and a in missing_idx.index) else ""
-                    gap = missing_idx.loc[a, "gap_samples"] if (len(missing_idx) and a in missing_idx.index
-                                                               and "gap_samples" in missing_idx.columns) else ""
-                    md.append(f"| {a} | {url} | {gap} |")
-            elif kind == "fetch_supp_table":
-                md.append("| study | save as | table ref |")
-                md.append("|---|---|---|")
-                for a in accs:
-                    ref = work_of.loc[a, "table_reference"] if (len(work_of) and a in work_of.index
-                                                               and "table_reference" in work_of.columns) else ""
-                    md.append(f"| {a} | `manual_download_supp/{a}.xlsx` | {str(ref)[:50]} |")
-            else:
-                fields_by = sub.groupby("study_accession")["field"].apply(lambda s: ",".join(sorted(set(s))))
-                for a in accs:
-                    md.append(f"- {a} ({fields_by.get(a, '')})")
+            md.append(f"### {label} ({sub['study_accession'].nunique()})\n")
+            md.append("| study | fields short | already have (per-sample) | paper |"
+                      + (" save as |" if save else ""))
+            md.append("|---|---|---|---|" + ("---|" if save else ""))
+            for a, gs in sub.groupby("study_accession"):
+                flds = ",".join(sorted(set(gs["field"])))
+                srow = res[res["study_accession"] == a]
+                have = ",".join(f"{f}:{int(srow[srow['field'] == f]['n_per_sample'].iloc[0])}"
+                                for f in ("isolation_source", "host", "collection_date")
+                                if len(srow[srow["field"] == f]))
+                title, url = gs.iloc[0].get("paper_title", ""), gs.iloc[0].get("paper_url", "")
+                paper = f"[{title}]({url})" if url else (title or "(no link)")
+                md.append(f"| {a} | {flds} | {have} | {paper} |" + (f" `manual_download_supp/{a}.xlsx` |" if save else ""))
             md.append("")
+        for kind, label in [("answer_escalation", "Answer escalations"), ("needs_grade", "Re-grade (no grade yet)")]:
+            sub = act[act["recoverability"] == kind]
+            if not len(sub):
+                continue
+            md.append(f"### {label} ({sub['study_accession'].nunique()})\n")
+            for a, gs in sub.groupby("study_accession"):
+                md.append(f"- {a} ({','.join(sorted(set(gs['field'])))})")
+            md.append("")
+
+    # Validated dead-ends — surfaced so the curator can confirm them (no further action will recover them).
+    nopaper = sorted(set(res[res["recoverability"] == "no_paper_findable"]["study_accession"])) if n else []
+    if nopaper:
+        md.append("## No paper could be found — validated, won't be recovered\n"
+                  f"{len(nopaper)} studies have no resolvable paper (finder exhausted; EBI record only). "
+                  f"Marked EXHAUSTED: {', '.join(nopaper)}\n")
+    linkage = sorted(set(res[res["recoverability"] == "needs_linkage"]["study_accession"])) if n else []
+    if linkage:
+        md.append("## Tables present but unjoinable (Phase-2 linkage target)\n"
+                  f"{len(linkage)} studies have a supplementary table with the fields but no joinable "
+                  f"accession key (anchoring): {', '.join(linkage)}\n")
 
     md.append(f"## Escalation status\n- queue generated: {esc_generated} rows; answered: {esc_answered}; "
               f"applied fills: {esc_applied}.\n")
