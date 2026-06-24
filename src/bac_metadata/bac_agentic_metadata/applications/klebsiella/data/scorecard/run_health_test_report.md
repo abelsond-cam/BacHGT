@@ -16,10 +16,11 @@ Nothing outstanding — every cell FILLED or EXHAUSTED. ✅
 
 ## Zero-reason breakdown (per-sample residual)
 
+- field_not_in_table: 9
 - NO_PMCID: 8
-- field_not_in_table: 6
 - no_supp: 5
-- unanchored: 5
+- unanchored: 1
+- manifest_only: 1
 
 
 ## Per-field completeness roll-up (verbatim from completeness report)
@@ -28,6 +29,6 @@ Nothing outstanding — every cell FILLED or EXHAUSTED. ✅
 |---|---|---|---|---|---|---|---|
 | country | 0.9572 | 0.8477 | 0.2921 | 0.0 | 0.0 | 0.0 |  |
 | collection_date | 0.9077 | 0.7636 | 0.1983 | 0.0 | 0.0658 | 0.0 |  |
-| isolation_source | 0.6435 | 0.7016 | 0.0022 | 0.0126 | 0.0273 | 0.058 |  |
-| host | 0.7548 | 0.7655 | 0.1822 | 0.0066 | 0.0353 | 0.0107 |  |
+| isolation_source | 0.7562 | 0.7016 | 0.0022 | 0.1253 | 0.0273 | 0.0 |  |
+| host | 0.8345 | 0.7655 | 0.1822 | 0.0863 | 0.0353 | 0.0 |  |
 

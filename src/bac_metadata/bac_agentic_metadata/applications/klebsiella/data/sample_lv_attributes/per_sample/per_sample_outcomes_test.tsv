@@ -4,7 +4,7 @@ PRJEB1272	PMC4790626		abstained	0	0	none	no joinable table
 PRJEB19226			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB1963	PMC3772739		abstained	0	0	none	no joinable table
 PRJEB21081			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB27342	PMC9712112	41564_2022_1263_MOESM3_ESM.xlsx+41564_2022_1263_MOESM3_ESM.xlsx	two_hop	3375	9374	high	two-hop: 3375 samples via 3483 shared IDs, 9374 cell-fills
+PRJEB27342	PMC9712112	41564_2022_1263_MOESM3_ESM.xlsx	direct	3227	8974	high	mapped 3227 samples, 8974 cell-fills
 PRJEB29424			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB29738	PMC8634409		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['ciab776_suppl_supplementary_material.docx', 'ciab776_suppl_supplementary_material.docx']
 PRJEB29739			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
@@ -14,10 +14,10 @@ PRJEB37711	PMC8836320	pone.0261999.s002.xlsx	direct	155	155	high	mapped 155 samp
 PRJEB38540	PMC8283727		abstained	0	0	none	no joinable table
 PRJEB43870	PMC8453068		abstained	0	0	none	no joinable table
 PRJEB53835			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJNA252957	PMC4510304		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0133727.s004.xlsx', 'pone.0133727.s003.docx']
+PRJNA252957	PMC4510304	pone.0133727.s003.docx+pone.0133727.s004.xlsx	two_hop	5	26	medium	two-hop: 5 samples via 5 shared IDs, 26 cell-fills
 PRJNA529744	PMC6711911		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf']
 PRJNA543274	PMC8438989	13073_2021_960_MOESM2_ESM.xlsx	direct	259	259	high	mapped 259 samples, 259 cell-fills
-PRJNA757551	PMC9160272		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM2_ESM.pdf', '41467_2022_30637_MOESM2_ESM.pdf', '41467_2022_30637_MOESM4_ESM.xlsx']
-PRJNA825705	PMC9393496		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Data_Sheet_1.xlsx', 'Data_Sheet_1.xlsx']
+PRJNA757551	PMC9160272	41467_2022_30637_MOESM4_ESM.xlsx	direct	334	334	high	mapped 334 samples, 334 cell-fills
+PRJNA825705	PMC9393496	Data_Sheet_1.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['Data_Sheet_1.xlsx']
 PRJNA839691	PMC9764986	msystems.00799-22-s0002.xlsx	direct	143	286	high	mapped 143 samples, 286 cell-fills
 PRJNA922900	PMC10232788	Table_1.XLSX	direct	111	333	high	mapped 111 samples, 333 cell-fills
