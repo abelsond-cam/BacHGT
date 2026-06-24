@@ -20,7 +20,6 @@
 | OA_INVESTIGATE | PRJEB29739 | 1574 | collection_date,isolation_source | NO_PMCID | likely | isolation_source,collection_date | Supplementary Table 3 | europepmc_fulltext | `PRJEB29739.xlsx` |
 | OA_INVESTIGATE | PRJEB43870 | 203 | host | no_supp | likely | host,collection_date | Supplementary Table 1 | europepmc_fulltext / PMC8453068 | `PRJEB43870.xlsx` |
 | OA_INVESTIGATE | PRJNA252957 | 167 | isolation_source | unanchored | yes | isolation_source,collection_date | S1 Table, S2 Table | europepmc_fulltext / PMC4510304 | `PRJNA252957.xlsx` |
-| OA_PARTIAL | PRJEB1271 | 342 | collection_date,host,isolation_source | direct | yes | isolation_source,collection_date | Additional file 2: Table S1 and Table S4 | europepmc_fulltext / PMC6717969 | `PRJEB1271.xlsx` |
 | OA_PARTIAL | PRJEB34643 | 279 | host,isolation_source | direct | yes | isolation_source,collection_date | Table S6 | europepmc_fulltext / PMC8865463 | `PRJEB34643.xlsx` |
 | OA_PARTIAL | PRJEB37711 | 142 | isolation_source | direct | yes | isolation_source | S1 Table | europepmc_fulltext / PMC8836320 | `PRJEB37711.xlsx` |
 | OA_PARTIAL | PRJNA922900 | 111 | host | direct | likely | host,collection_date | Supplementary Table 1 | europepmc_fulltext / PMC10232788 | `PRJNA922900.xlsx` |
@@ -32,3 +31,4 @@
 | SKIP | PRJEB29424 | 1706 | host,isolation_source | NO_PMCID | no |  |  | local_pdf | `PRJEB29424.xlsx` |
 | SKIP | PRJNA825705 | 155 | collection_date | unanchored | no |  |  | europepmc_fulltext / PMC9393496 | `PRJNA825705.xlsx` |
 | SKIP | PRJEB1963 | 69 | collection_date | no_supp | no |  |  | europepmc_fulltext / PMC3772739 | `PRJEB1963.xlsx` |
+| SUPP_PRESENT | PRJEB1271 | 342 | collection_date,host,isolation_source | direct | yes | isolation_source,collection_date | Additional file 2: Table S1 and Table S4 | europepmc_fulltext / PMC6717969 | `PRJEB1271.xlsx` |

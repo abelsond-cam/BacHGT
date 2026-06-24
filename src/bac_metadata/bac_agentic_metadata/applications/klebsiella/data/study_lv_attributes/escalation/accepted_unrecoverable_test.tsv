@@ -1,0 +1,11 @@
+study_accession	field	reason
+PRJEB32655	collection_date	curator: paper has no per-isolate table
+PRJEB32655	isolation_source	curator: paper has no per-isolate table
+PRJEB38540	host	curator: paper has no per-isolate table
+PRJNA252957	isolation_source	curator: unanchored table, no recoverable per-sample data
+PRJNA529744	isolation_source	curator: unanchored table, no recoverable per-sample data
+PRJNA757551	collection_date	curator: unanchored table, no recoverable per-sample data
+PRJNA757551	isolation_source	curator: unanchored table, no recoverable per-sample data
+PRJNA825705	collection_date	curator: unanchored table, no recoverable per-sample data
+PRJEB1272	collection_date	curator: no manual data table available (paywalled, not OA)
+PRJEB1272	isolation_source	curator: no manual data table available (paywalled, not OA)

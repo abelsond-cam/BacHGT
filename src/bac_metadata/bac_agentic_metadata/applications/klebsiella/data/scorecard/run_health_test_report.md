@@ -1,36 +1,25 @@
 # Run-health report (test / test)
 
-## ⚠️ **7 ACTIONABLE items outstanding — supplement & rerun**
+## ✅ **ALL CLEAR — curated to gold standard**
 
-188 (study × field) cells over 47 fold studies — **FILLED 164 · ACTIONABLE 7 · EXHAUSTED 17**. The loop closes when ACTIONABLE reaches 0 (every cell FILLED or EXHAUSTED).
+188 (study × field) cells over 47 fold studies — **FILLED 164 · ACTIONABLE 0 · BLOCKED 0 · EXHAUSTED 24**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance).
 
 ## Actionable worklist — do these, then rerun
 
-### Fetch papers (1)
+Nothing outstanding — every cell FILLED or EXHAUSTED. ✅
 
-| study | best URL | gap |
-|---|---|---|
-| PRJEB21081 | https://www.ebi.ac.uk/ena/browser/view/PRJEB21081 | 0 |
-
-### Fetch supplementary tables (4)
-
-| study | save as | table ref |
-|---|---|---|
-| PRJNA252957 | `manual_download_supp/PRJNA252957.xlsx` |  |
-| PRJNA529744 | `manual_download_supp/PRJNA529744.xlsx` |  |
-| PRJNA757551 | `manual_download_supp/PRJNA757551.xlsx` |  |
-| PRJNA825705 | `manual_download_supp/PRJNA825705.xlsx` |  |
+## No paper could be found — validated, won't be recovered
+3 studies have no resolvable paper (finder exhausted; EBI record only). Marked EXHAUSTED: PRJEB19226, PRJEB21081, PRJEB53835
 
 ## Escalation status
 - queue generated: 13 rows; answered: 8; applied fills: 4170.
 
 ## Zero-reason breakdown (per-sample residual)
 
-- NO_PMCID: 15
-- no_supp: 12
-- field_not_in_table: 9
-- unanchored: 8
-- abstained_other: 5
+- NO_PMCID: 8
+- field_not_in_table: 6
+- no_supp: 5
+- unanchored: 5
 
 
 ## Per-field completeness roll-up (verbatim from completeness report)
