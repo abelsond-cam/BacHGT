@@ -138,6 +138,40 @@ def _items_to_frame(items: list[escalation.EscalationItem]) -> pd.DataFrame:
     return pd.DataFrame(rows, columns=QUEUE_COLUMNS)
 
 
+def _preserve_prior_answers(frame: pd.DataFrame, output: Path) -> pd.DataFrame:
+    """Carry curator-filled answers from an existing queue into the freshly-detected one.
+
+    Detect regenerates the queue on every run; without this it would silently wipe answers the curator
+    already gave (breaking the documented fill-then-rerun-applies loop). Answers are matched by
+    ``(study_accession, field)``: a still-escalated question keeps its answer, a question that no longer
+    escalates is dropped (logged loudly, never silently), a brand-new question starts empty.
+    """
+    if not output.exists():
+        return frame
+    prior = pd.read_csv(output, sep="\t", dtype=str).fillna("")
+    if "answer" not in prior.columns:
+        return frame
+    prior_ans = {
+        (r["study_accession"], r["field"]): (r.get("answer", ""), r.get("answer_note", ""))
+        for _, r in prior.iterrows()
+        if str(r.get("answer", "")).strip()
+    }
+    if not prior_ans:
+        return frame
+    new_keys = {(r["study_accession"], r["field"]) for _, r in frame.iterrows()}
+    carried = 0
+    for idx, r in frame.iterrows():
+        k = (r["study_accession"], r["field"])
+        if k in prior_ans:
+            frame.at[idx, "answer"], frame.at[idx, "answer_note"] = prior_ans[k]
+            carried += 1
+    dropped = sorted(k for k in prior_ans if k not in new_keys)
+    print(f"  [preserve] carried {carried} prior curator answer(s) into the regenerated queue; "
+          f"{len(dropped)} previously-answered question(s) no longer escalate"
+          + (f" (dropped: {dropped})" if dropped else ""), file=sys.stderr)
+    return frame
+
+
 def _detect(args: argparse.Namespace, folds: set[str], output: Path) -> pd.DataFrame:
     """Run the detector and write the decision queue; return the queue frame."""
     if args.accessions:
@@ -158,6 +192,7 @@ def _detect(args: argparse.Namespace, folds: set[str], output: Path) -> pd.DataF
         threshold=args.threshold, per_sample_covered=covered, model=args.model,
     )
     frame = _items_to_frame(items)
+    frame = _preserve_prior_answers(frame, output)  # never silently wipe curator answers on re-detect
     frame.to_csv(output, sep="\t", index=False)
     print(f"Wrote {output.name}: {len(frame)} escalation(s) "
           f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)", file=sys.stderr)
