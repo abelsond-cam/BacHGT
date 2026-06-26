@@ -104,10 +104,16 @@ _TRIAGE_GUIDANCE = (
     "- uniform_propose — on reflection the evidence DOES support one whole-project value you should have "
     "proposed.\n\n"
     "For tight_cluster_escalate or uniform_propose, set representative_value to the single value a human "
-    "would most likely accept (e.g. the dominant invasive specimen such as 'blood'; the region; the "
-    "midpoint year of the span). Set representative_value null for wide_mix_skip. Give a one-line "
-    "cluster_theme naming the cluster and why it is tight or wide, plus a verbatim evidence_quote. Judge "
-    "ONLY from the evidence above; do not guess."
+    "would most likely accept — it is the representative of the tight set. It MUST be a SINGLE, PARSEABLE, "
+    "CANONICAL value of that field, never a region, a list, or a concatenation:\n"
+    "    * country: ONE country name as it would appear in metadata (e.g. 'Malawi', 'Guatemala') — NOT a "
+    "region/continent ('Central America', 'East Africa') and NOT a join ('Uganda; Malawi'). If the cluster "
+    "spans a few neighbouring countries, give the single DOMINANT country; if there is no dominant one, "
+    "prefer wide_mix_skip.\n"
+    "    * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human'); "
+    "collection_date: the single midpoint year/date of the span.\n"
+    "Set representative_value null for wide_mix_skip. Give a one-line cluster_theme naming the cluster and "
+    "why it is tight or wide, plus a verbatim evidence_quote. Judge ONLY from the evidence above; do not guess."
 )
 
 
