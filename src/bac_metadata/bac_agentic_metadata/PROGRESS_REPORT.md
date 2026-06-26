@@ -191,11 +191,13 @@ is now **human escalation 0.171** (not silent whole-field that mislabelled ~568 
 date is **per-sample 0.105 + escalation 0.160**; iso/host per-sample-dominated. Run-health: 0 ACTIONABLE,
 172 FILLED, 15 EXHAUSTED, 1 BLOCKED (PRJEB29738 iso — aggregate-only supplement, no per-isolate table).
 
-**Train+val: RE-GATE IN PROGRESS** under the corrected pipeline (per-sample-first + guarded whole-field +
-big-decision escalation). Per-sample filled ~17,908 cells over 68 gated studies; escalation queue regenerated
-(11 big-decision studies) and awaiting David's interactive walk → then apply → completeness/run-health. The
-pre-correction train+val figures (country 0.93 / date 0.82 / iso 0.71 / host 0.86 ≥ v2 via the *old*
-whole-field-first ordering) will be replaced by the re-gated numbers.
+**Train+val (re-gated 2026-06-26 under the corrected pipeline)** — agent ≥ v2 on all four, residual 0.0
+(34,288 samples): country **0.933** (v2 0.882), collection_date **0.867** (v2 0.747), isolation_source
+**0.729** (v2 0.669), host **0.870** (v2 0.789); 10,770 escalation fills from David's 27 decisions. Both
+folds now reproduce above v2 through the same per-sample-first + guarded-whole-field + big-decision-escalation
+pipeline. Run-health (dress rehearsal, not required ALL CLEAR like the sealed test) shows the normal
+convergence worklist: 19 ACTIONABLE (18 fetch-supp-table for the iterate-to-clear loop + 1 big-decision audit
+flag PRJNA604975) + 7 BLOCKED (needs_linkage — the unlinkable-table-adjudicator territory).
 
 ### Backfill value-correctness (where filled, is it right)
 
@@ -242,12 +244,23 @@ silent whole-fill. The original failure — a large silent under-pickup reading 
 impossible. _Forensic assets retained:_ stash at `~/.bachgt_rerun_stash/`, baseline-replay cache at
 `data/cache.basereplay/`, scratch at `~/bachgt_gate_investigation/`.
 
-### Queued enhancement — auto-adjudicate unlinkable tables
+### Queued enhancements
 
-When per-sample anchoring fails, classify WHY: **aggregate_only** (no per-isolate rows / ID column, e.g.
-PRJEB29738) → auto-discard `EXHAUSTED: aggregate_only` with the agent's logged reason; **per_isolate_unlinked**
-(rows are per-isolate but no column matched) → stay BLOCKED (a real linkage target). Clears genuine dead-ends
-without manual curator accepts; serves the no-silent-failures principle; carries over to M.abs AST tables.
+1. **Auto-adjudicate unlinkable tables.** When per-sample anchoring fails, classify WHY: **aggregate_only**
+   (no per-isolate rows / ID column, e.g. PRJEB29738) → auto-discard `EXHAUSTED: aggregate_only` with the
+   agent's logged reason; **per_isolate_unlinked** (rows are per-isolate but no column matched) → stay BLOCKED
+   (a real linkage target). Clears genuine dead-ends without manual curator accepts; carries over to M.abs AST.
+2. **Pathogenwatch collection ingestion as a per-sample source (David, 2026-06-26).** Many Klebsiella studies
+   (esp. NIHR-GHRU / KlebNET) deposit their curated per-isolate metadata in a **Pathogenwatch collection**
+   (`pathogen.watch/collection/<id>`) — a downloadable metadata CSV keyed by sample ID — which is richer than
+   the paper's supplement. The pipeline currently only flags such `paper_link`s as "count scraped, don't
+   chase" (`validate_ena_assessment.py`) and never pulls the per-sample data. Add a Pathogenwatch source:
+   collection URL → metadata CSV → value-anchor by sample ID through the **same** `sample_extractor`
+   machinery. Exemplar: PRJEB29740 — the paper supp gave 815/1072 isolates; the full 1072 (the NIHR-GHRU
+   India collection) is on Pathogenwatch, so its escalated residual would instead fill accurately per-sample.
+3. **Escalation suggestion quality** — `representative_value` must be a single parseable canonical value
+   (a country, not a region like "Central America" or a concatenation like "Uganda; Malawi"); when a study
+   genuinely spans several, suggest the dominant one or leave blank for the human, never an unparseable string.
 
 ---
 
@@ -268,8 +281,9 @@ Do all of this **before** resuming M. abscessus (too complex to run both while s
 - [ ] **5. Categorisation** — run the parse/categorise (the hand step) over the enriched data.
 - [ ] **6. Plots** — `pp/plot_completeness_after_curation_and_collation.py` (runs on HPC where the raw data
       lives) to show the completeness improvement.
-- [ ] **Loose ends:** accept PRJEB29738 iso (aggregate-only) → ALL CLEAR; build the unlinkable-table
-      adjudicator (§9); then **M. abscessus** (`applications/m_abs/`, currently parked).
+- [ ] **Loose ends:** accept PRJEB29738 iso (aggregate-only) → ALL CLEAR; build the queued enhancements
+      (§9: unlinkable-table adjudicator, **Pathogenwatch per-sample ingestion**, escalation-suggestion
+      parseability); then **M. abscessus** (`applications/m_abs/`, currently parked).
 
 ---
 
