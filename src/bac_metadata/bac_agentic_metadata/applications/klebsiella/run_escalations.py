@@ -244,6 +244,9 @@ def _interactive(frame: pd.DataFrame, output: Path) -> None:
             print("\n(no interactive input available — stopping)", file=sys.stderr)
             break
         if ans.lower() == "s":
+            # A skip is a DECISION ("no single whole-field value applies"), not "undecided" — record it so
+            # run-health treats the cell as resolved (curator-rejected), never a perpetual pending ACTIONABLE.
+            frame.at[idx, "answer_note"] = "curator skip: no single whole-field value (genuinely wide / undeterminable)"
             continue
         frame.at[idx, "answer"] = ans or r["suggested_value"]
     frame.to_csv(output, sep="\t", index=False)

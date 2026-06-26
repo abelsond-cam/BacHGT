@@ -1,8 +1,15 @@
 # Reproduction-gate investigation — why whole-field country/date backfill collapsed on the clean rerun
 
-**Status: ROOT-CAUSED (2026-06-26). Fix + re-gate pending.** Blocks Klebsiella sign-off AND all M. abscessus
-work until the holes below are fixed and the test fold re-gates (country + date reproduce; agent ≥ v2 on all
-four fields; the no-silent-failures audit extended to whole-field + escalation pickup).
+**Status: RESOLVED + RE-GATED (2026-06-26).** All five holes fixed (commit `5fc7ee4`); the test fold
+re-gated through the corrected pipeline (per-sample-first → guarded whole-field → human escalation → apply →
+completeness → run-health). **Agent ≥ v2 on ALL FOUR fields, residual_gap 0.0:** country **0.959** (v2 0.848;
+was 0.788 broken), collection_date **0.936** (v2 0.764; was 0.838), isolation_source **0.742** (v2 0.702),
+host **0.836** (v2 0.766). Composition is now honest — country's gain is escalation 0.171 (human-confirmed,
+incl. PRJEB27342 Italy) not silent whole-field; date is per-sample 0.105 + escalation 0.160. Run-health:
+**0 ACTIONABLE**, 172 FILLED, 15 EXHAUSTED, 1 BLOCKED (PRJEB29738 isolation_source — supplement is aggregate-
+only, no per-isolate table ever published; awaiting curator accept-as-unrecoverable). The original failure
+(a 5,413-sample silent drop reading ALL CLEAR) is now structurally impossible. Remaining: Phase D accounting,
+Phase E (`method b`→`per sample`) rename, then resume M. abscessus.
 
 ## Framing (the lens this investigation used)
 
