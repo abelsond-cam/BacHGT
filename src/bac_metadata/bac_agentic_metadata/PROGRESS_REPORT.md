@@ -250,14 +250,19 @@ impossible. _Forensic assets retained:_ stash at `~/.bachgt_rerun_stash/`, basel
    (no per-isolate rows / ID column, e.g. PRJEB29738) → auto-discard `EXHAUSTED: aggregate_only` with the
    agent's logged reason; **per_isolate_unlinked** (rows are per-isolate but no column matched) → stay BLOCKED
    (a real linkage target). Clears genuine dead-ends without manual curator accepts; carries over to M.abs AST.
-2. **Pathogenwatch collection ingestion as a per-sample source (David, 2026-06-26).** Many Klebsiella studies
-   (esp. NIHR-GHRU / KlebNET) deposit their curated per-isolate metadata in a **Pathogenwatch collection**
-   (`pathogen.watch/collection/<id>`) — a downloadable metadata CSV keyed by sample ID — which is richer than
-   the paper's supplement. The pipeline currently only flags such `paper_link`s as "count scraped, don't
-   chase" (`validate_ena_assessment.py`) and never pulls the per-sample data. Add a Pathogenwatch source:
-   collection URL → metadata CSV → value-anchor by sample ID through the **same** `sample_extractor`
-   machinery. Exemplar: PRJEB29740 — the paper supp gave 815/1072 isolates; the full 1072 (the NIHR-GHRU
-   India collection) is on Pathogenwatch, so its escalated residual would instead fill accurately per-sample.
+2. **Pathogenwatch as a per-sample source — INVESTIGATED 2026-06-26, NOT USEFUL (dropped).** Tested whether
+   the per-isolate epi metadata for a study could be pulled from its Pathogenwatch collection (David's idea
+   for PRJEB29740, the NIHR-GHRU India 1072-isolate collection). Findings: public collections ARE reachable
+   programmatically with **no token** — `GET /api/collections/details?uuid=<full-url-slug>` and
+   `GET /api/collections/genomes?uuid=<slug>&page=N` (paginated) both return JSON. BUT the collection holds
+   **only genomic analysis** (AMR phenotypes, Kleborate, Kaptive, MLST, cgMLST, LIN codes, assembly stats) —
+   its `downloads`/`analyses` are all typing jobs, every isolate has `location:null`, and there is **no
+   country/date/source metadata schema**. Pathogenwatch is a genomics-surveillance platform, not an
+   epi-metadata one (the paper's "data on Pathogenwatch" = the genomes/typing, not the epi fields, which are
+   in the paper supp / ENA where we already mine them). We also already run Kleborate ourselves. So there is
+   nothing here for completeness backfill. (David's API token saved off-repo at
+   `~/.config/bac_metadata/pathogenwatch_api_key`, chmod 600, in case the typing data is ever wanted; not
+   needed for public reads.)
 3. **Escalation suggestion quality** — `representative_value` must be a single parseable canonical value
    (a country, not a region like "Central America" or a concatenation like "Uganda; Malawi"); when a study
    genuinely spans several, suggest the dominant one or leave blank for the human, never an unparseable string.
@@ -281,9 +286,9 @@ Do all of this **before** resuming M. abscessus (too complex to run both while s
 - [ ] **5. Categorisation** — run the parse/categorise (the hand step) over the enriched data.
 - [ ] **6. Plots** — `pp/plot_completeness_after_curation_and_collation.py` (runs on HPC where the raw data
       lives) to show the completeness improvement.
-- [ ] **Loose ends:** accept PRJEB29738 iso (aggregate-only) → ALL CLEAR; build the queued enhancements
-      (§9: unlinkable-table adjudicator, **Pathogenwatch per-sample ingestion**, escalation-suggestion
-      parseability); then **M. abscessus** (`applications/m_abs/`, currently parked).
+- [ ] **Loose ends:** accept PRJEB29738 iso (aggregate-only) → ALL CLEAR; build the unlinkable-table
+      adjudicator (§9). _Done: escalation-suggestion parseability (`122aa40`). Investigated + dropped:
+      Pathogenwatch (§9 — genomics-only, no epi metadata)._ Then **M. abscessus** (parked).
 
 ---
 
