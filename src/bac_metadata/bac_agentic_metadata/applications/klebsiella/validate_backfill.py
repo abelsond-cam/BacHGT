@@ -107,7 +107,7 @@ def main() -> None:
                 "post": round(r[f"{f}__post"], 3) if pd.notna(r[f"{f}__post"]) else "",
                 "method_a_proposed": bool(r[f"{f}__proposed"]),
                 "proposed_value": r[f"{f}__value"],
-                "status": "covered" if r[f"{f}__proposed"] else "residual_method_b",
+                "status": "covered" if r[f"{f}__proposed"] else "residual_per_sample",
             })
 
     md.append("\n## Reading it\n")

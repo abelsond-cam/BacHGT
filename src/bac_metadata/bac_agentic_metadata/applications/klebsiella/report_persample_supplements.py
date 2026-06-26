@@ -6,7 +6,7 @@ from Europe PMC **open-access**. Paywalled studies (we hold only the main-text P
 per-sample fills, which is the dominant isolation-source completeness gap.
 
 This builds the manual-fetch worklist for that step. For every study with a per-sample backlog (gate
-report ``status == residual_method_b``) it:
+report ``status == residual_per_sample``) it:
 
 1. resolves the paper text we already hold (open-access full text, or a ``manual_download/<acc>.pdf``),
 2. asks the LLM (:func:`engine.supplement_probe.probe_supplement`) whether that paper actually carries a
@@ -113,7 +113,7 @@ def main() -> None:
 
     gate = pd.read_csv(GATE / f"backfill_gate_report_{args.tag}.tsv", sep="\t", dtype=str).fillna("")
     gate["n_blank"] = pd.to_numeric(gate["n_blank"], errors="coerce").fillna(0).astype(int)
-    resid = gate[(gate["field"].isin(FIELDS)) & (gate["status"] == "residual_method_b") & (gate["n_blank"] > 0)]
+    resid = gate[(gate["field"].isin(FIELDS)) & (gate["status"] == "residual_per_sample") & (gate["n_blank"] > 0)]
     # Per study: total per-sample backlog + the fields that are short.
     backlog = resid.groupby("study_accession").agg(
         gap=("n_blank", "sum"), fields=("field", lambda s: ",".join(sorted(set(s))))).reset_index()

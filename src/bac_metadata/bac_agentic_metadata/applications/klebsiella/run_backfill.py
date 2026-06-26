@@ -113,7 +113,7 @@ def main() -> None:
                 "field": f, "study_accession": acc, "n_records": n,
                 "completeness": round(float(frac), 3) if pd.notna(frac) else "",
                 "n_blank": int(round(n * (1 - (frac if pd.notna(frac) else 0.0)))),
-                "status": "covered" if (f, acc) in covered else "residual_method_b",
+                "status": "covered" if (f, acc) in covered else "residual_per_sample",
                 "n_filled": int(filled_counts.get((f, acc), 0)),
             })
     gate = pd.DataFrame(rows)

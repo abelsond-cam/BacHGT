@@ -32,7 +32,7 @@ bac_agentic_metadata/
         find_papers/        #   found_papers*, find_validation/adjudication, missing_papers,
           manual_download/  #     manually-downloaded <accession>.pdf (paywalled-paper fallback)
         study_lv_attributes/  # study-level: grading/ , whole_study_backfill/ , escalation/
-        sample_lv_attributes/ # sample-level: per_sample/   (was "method-b")
+        sample_lv_attributes/ # sample-level: per_sample/   (per-sample table extraction)
         scorecard/          #   agent_vs_manual + completeness (final measurement)
         diagnostics/        #   curator_gold, gt_corrections, gap/decline reports
         logs/  cache/       #   run logs; regenerable LLM/ENA/fulltext/find/per_sample caches

@@ -96,7 +96,7 @@ def _resolution(*, gate_status: str, remaining: int, has_grade: bool, escalation
     """Return (resolution_state, recoverability) for one (study × field). ACTIONABLE drives the loop."""
     if gate_status == "covered":
         return "FILLED", "whole_field"
-    if gate_status != "residual_method_b":
+    if gate_status != "residual_per_sample":
         return ("ACTIONABLE", "needs_grade") if not has_grade else ("FILLED", "not_gated")
     if remaining <= 0:
         return "FILLED", "per_sample_or_escalation"

@@ -150,6 +150,23 @@ per-sample Ghana country the engine cannot extract from the anchored table.
    variance (self-consistency vote or Opus escalation) — likely unnecessary once 1–4 make every uncertain
    high-leverage call escalate to a human.
 
+## Proposed enhancement (David, 2026-06-26) — auto-adjudicate unlinkable tables
+
+When per-sample anchoring fails, run-health flags `BLOCKED needs_linkage` and waits for a manual curator
+accept. David's idea: **adjudicate WHY linkage failed and auto-clear the genuine dead-ends.** A linkage
+failure is one of two very different things, and only one is recoverable:
+- **aggregate_only** — the supplement has no per-isolate rows / no ID column at all (e.g. PRJEB29738:
+  Sentinel-Site→count, ST counts, resistance-mechanism counts). Never linkable → **auto-discard**
+  `EXHAUSTED: aggregate_only` (write the agent's reason to `accepted_unrecoverable`, auditable not silent).
+- **per_isolate_unlinked** — rows ARE per-isolate but no column matched our identifier set (a real anchoring
+  gap, possibly recoverable) → **keep BLOCKED** as a Phase-2 linkage target.
+
+Design: a deterministic pre-screen (per-isolate-ID-shaped column vs label+count shape) → an agent
+classification (`aggregate_only | per_isolate_unlinked | ambiguous` + reason + verbatim quote) → auto-accept
+only the confident `aggregate_only`. Serves the no-silent-failures principle (evidence-based, logged discard)
+and carries over to M. abscessus AST supplement tables. **To be added to `ToDo.md`; build after the current
+gate wrap-up (Phase D accounting + Phase E rename).**
+
 ## Working rules
 - Never mutate `~/.bachgt_rerun_stash/`; cache replay spends no tokens; commit explicit paths for David to
   review. Production grading stays on `claude -p` (subscription); the `--backend api` no-key trick is only a
