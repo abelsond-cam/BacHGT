@@ -64,6 +64,9 @@ def main() -> None:
     parser.add_argument("--input", default=None, help="Explicit raw ENA per-sample TSV (else load_collated_metadata).")
     parser.add_argument("--grades", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "study_grades.tsv"), help="Grader output with whole-field proposals.")
     parser.add_argument("--output", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied.tsv"), help="Per-sample changes file.")
+    parser.add_argument("--per-sample", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"),
+                        help="Per-sample fills (run FIRST) — the parsimony guard: whole-field never overwrites a "
+                             "per-isolate value and never whole-fills a per-sample-heterogeneous field.")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val; test sealed).")
     parser.add_argument("--threshold", type=float, default=0.75, help="Skip a field already >= this complete in ENA.")
     args = parser.parse_args()
@@ -81,12 +84,23 @@ def main() -> None:
     completeness = backfill.field_completeness(base)
     needs = backfill.gate_fields(completeness, threshold=args.threshold)
     proposals = _load_proposals(Path(args.grades))
-    applied = backfill.apply_whole_field(base, proposals, needs)
+    # Per-sample runs FIRST and is authoritative; load its fills as the parsimony guard (no overwrite, no
+    # whole-fill of a heterogeneous field). Absent file ⇒ no guard (e.g. a whole-field-only smoke run).
+    per_sample = None
+    if args.per_sample and Path(args.per_sample).exists():
+        per_sample = pd.read_csv(args.per_sample, sep="\t", dtype=str)
+        ps_filled, ps_het = backfill.per_sample_guards(per_sample)
+        print(f"Per-sample guard: {sum(len(v) for v in ps_filled.values())} cells already filled; "
+              f"{len(ps_het)} (study×field) blocked as per-sample-heterogeneous", file=sys.stderr)
+    applied = backfill.apply_whole_field(base, proposals, needs, per_sample=per_sample)
     applied.to_csv(args.output, sep="\t", index=False)
 
-    # Gate report: every gated study x field, marked covered (a whole-field value was applied) or
-    # residual (no whole-field value → the per-sample per-sample backlog).
+    # Gate report: every gated study x field, marked covered (a whole-field OR a per-sample value was
+    # applied) or residual (genuinely still unfilled → the curator/escalation backlog). Per-sample runs
+    # FIRST, so a field it already resolved is covered even when whole-field added nothing.
     covered = {(f, s) for f, s in zip(applied["field"], applied["study_accession"], strict=False)}
+    if per_sample is not None and {"field", "study_accession"} <= set(per_sample.columns):
+        covered |= {(f, s) for f, s in zip(per_sample["field"], per_sample["study_accession"], strict=False)}
     filled_counts = applied.groupby(["field", "study_accession"]).size().to_dict()
     rows = []
     for f in backfill.FIELDS:

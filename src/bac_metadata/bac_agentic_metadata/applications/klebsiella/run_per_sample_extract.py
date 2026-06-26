@@ -56,14 +56,18 @@ def _zero_bucket(method: str, note: str) -> str:
     return "abstained_other"
 
 
-def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[str, dict[str, str]]]:
-    """Per-study ENA accession sets + any-accession→sample maps, for the requested folds."""
+def _load_fold_base(folds: set[str]) -> pd.DataFrame:
+    """Raw per-sample ENA table for the requested folds (one source of truth for sets + the gate)."""
     from bac_metadata.bac_agentic_metadata.engine.sources import KlebCollationSource
 
     base = KlebCollationSource(keep_columns=AUX).states()["base"]
     split = pd.read_csv(DATA_DIR / "fold_splits" / "project_splits.tsv", sep="\t", dtype=str)[["study_accession", "fold"]]
     keep = set(split[split["fold"].isin(folds)]["study_accession"])
-    base = base[base["study_accession"].isin(keep)]
+    return base[base["study_accession"].isin(keep)]
+
+
+def _study_accession_sets(base: pd.DataFrame) -> tuple[dict[str, set[str]], dict[str, dict[str, str]]]:
+    """Per-study ENA accession sets + any-accession→sample maps."""
     sets: dict[str, set[str]] = {}
     maps: dict[str, dict[str, str]] = {}
     for acc, g in base.groupby("study_accession"):
@@ -72,23 +76,31 @@ def _study_accession_sets(folds: set[str]) -> tuple[dict[str, set[str]], dict[st
     return sets, maps
 
 
-def _targets(args: argparse.Namespace) -> list[tuple[str, str]]:
-    """Return ``[(study_accession, pmcid)]`` — explicit accessions, else every residual study with a paper.
+def _gated_studies(base: pd.DataFrame, threshold: float) -> set[str]:
+    """Studies with >=1 field ENA leaves incomplete (< ``threshold``) — the per-sample target universe.
 
-    PMCIDs come from the finder output (``--found``); the residual study list from the backfill gate
-    report (``--gate-report``). Pipeline-native: no dependency on the exploratory feasibility/mappability
-    probes, so the same command works on any fold.
+    Per-sample runs FIRST, so its target list is the grade-INDEPENDENT gate (ENA incompleteness), NOT the
+    whole-field residual: the accurate per-isolate step gets first crack at every field a study is short on,
+    and whole-field later fills only what per-sample leaves.
     """
-    found = pd.read_csv(args.found, sep="\t", dtype=str).fillna("")
-    pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
+    from bac_metadata.bac_agentic_metadata.engine import backfill
+
+    needs = backfill.gate_fields(backfill.field_completeness(base), threshold=threshold)
+    any_gated = needs.any(axis=1)
+    return set(any_gated.index[any_gated])
+
+
+def _targets(args: argparse.Namespace, gated_studies: set[str], pmcid_of: dict[str, str]) -> list[tuple[str, str]]:
+    """Return ``[(study_accession, pmcid)]`` — explicit accessions, else every gated study (with a paper).
+
+    PMCIDs come from the finder output (``--found``); the study universe is the ENA-incompleteness gate
+    (:func:`_gated_studies`). The loop records an outcome row for each so a study is never silently dropped;
+    the extractor abstains where nothing maps.
+    """
     if args.accessions:
         accs = [a.strip() for a in args.accessions.split(",") if a.strip()]
         return [(a, pmcid_of.get(a, "")) for a in accs]
-    # Default: EVERY residual study (incl. no-PMCID ones) — the loop records an outcome row for each so a
-    # study is never silently dropped; the extractor abstains where nothing maps.
-    gate = pd.read_csv(args.gate_report, sep="\t", dtype=str)
-    residual = sorted(set(gate[gate["status"] == "residual_method_b"]["study_accession"]))
-    return [(a, pmcid_of.get(a, "")) for a in residual]
+    return [(a, pmcid_of.get(a, "")) for a in sorted(gated_studies)]
 
 
 def main() -> None:
@@ -96,7 +108,7 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Per-sample per-sample extraction from supplementary tables.")
     p.add_argument("--accessions", default=None, help="Comma-separated studies (else every residual study with a paper).")
     p.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="Finder output (source of PMCIDs).")
-    p.add_argument("--gate-report", default=str(DATA_DIR / "study_lv_attributes" / "whole_study_backfill" / "backfill_gate_report.tsv"), help="Backfill gate report (residual list).")
+    p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete (gate; default 0.75).")
     p.add_argument("--fold", default="train,val", help="Folds for the ENA accession sets (default train,val).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
@@ -104,10 +116,15 @@ def main() -> None:
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
-    sets, maps = _study_accession_sets(folds)
-    targets = _targets(args)
+    base = _load_fold_base(folds)
+    sets, maps = _study_accession_sets(base)
+    found = pd.read_csv(args.found, sep="\t", dtype=str).fillna("")
+    pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
+    gated = _gated_studies(base, args.threshold)
+    targets = _targets(args, gated, pmcid_of)
     llm = make_llm(args.backend, model=args.model, cache_dir=LLM_CACHE)
-    print(f"Per-sample over {len(targets)} studies with {args.model} (backend={args.backend})", file=sys.stderr)
+    print(f"Per-sample over {len(targets)} gated studies (of {len(gated)} gated; threshold {args.threshold}) "
+          f"with {args.model} (backend={args.backend})", file=sys.stderr)
 
     fills: list[dict] = []
     extractions = []                 # real StudyExtraction objects (drive confidence_tally)

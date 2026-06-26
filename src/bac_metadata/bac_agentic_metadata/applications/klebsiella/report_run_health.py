@@ -37,6 +37,10 @@ from bac_metadata.bac_agentic_metadata.engine.local_papers import resolve_local_
 APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPLITS = DATA_DIR / "fold_splits" / "project_splits.tsv"
+SIZING = DATA_DIR / "ena_assessment" / "ena_sizing.tsv"
+#: A study at/above this fraction of the whole cohort's taxon samples is a "big decision" — its whole-field
+#: call must always be escalated (mirrors run_escalations.BIG_DECISION_FRAC); run-health flags any that slip.
+BIG_DECISION_FRAC = 0.01
 FIND = DATA_DIR / "find_papers"
 GRADE = DATA_DIR / "study_lv_attributes" / "grading"
 WSB = DATA_DIR / "study_lv_attributes" / "whole_study_backfill"
@@ -122,6 +126,17 @@ def main() -> None:
     # Fold study universe — the authoritative left side of every join.
     split = _read_tsv(SPLITS)
     studies = sorted(split[split["fold"].isin(folds)]["study_accession"]) if len(split) else []
+
+    # Big-decision studies (>= BIG_DECISION_FRAC of the WHOLE cohort): their whole-field declines MUST be
+    # escalated — if one isn't in the queue, run-health flags it ACTIONABLE rather than letting it go
+    # EXHAUSTED (the silent-under-pickup that sank PRJEB27342 country/date). Cohort-wide, run-independent.
+    sizing = _read_tsv(SIZING)
+    big_studies: set[str] = set()
+    if len(sizing) and "ena_taxon_samples" in sizing.columns:
+        n = pd.to_numeric(sizing["ena_taxon_samples"], errors="coerce").fillna(0)
+        cohort_total = float(n.sum())
+        if cohort_total:
+            big_studies = set(sizing.loc[(n / cohort_total) >= BIG_DECISION_FRAC, "study_accession"].astype(str))
 
     # Inputs (each guarded — absent artifact ⇒ empty ⇒ flagged in the stage checklist).
     found = _read_tsv(FIND / f"found_papers_{tag}.tsv").set_index("study_accession") \
@@ -217,6 +232,16 @@ def main() -> None:
                 gate_status=gate_status, remaining=remaining, has_grade=has_grade,
                 escalation_pending=escalation_pending, paper_fetchable=paper_fetchable,
                 table_recoverable=table_recoverable, exhausted_reason=exhausted_reason)
+            # No-silent-failures audit (big decisions): a study >= BIG_DECISION_FRAC of the cohort whose
+            # grader DECLINED a whole-field value, with a real residual, that did NOT reach the escalation
+            # queue and wasn't curator-accepted, is ACTIONABLE — never silently EXHAUSTED. This is the
+            # defense-in-depth that catches a missed escalation even if detect failed to queue it.
+            gbf = (g.get("backfill", {}) or {}).get(field, {}) or {}
+            whole_field_declined = has_grade and not bool(gbf.get("applies_whole_project")) \
+                and not str(gbf.get("proposed_value") or "").strip()
+            if (acc in big_studies and whole_field_declined and remaining > 0 and nesc == 0
+                    and (acc, field) not in esc_in_queue and not accepted_cell):
+                state, recover = "ACTIONABLE", "escalate_big_decision"
             if accepted_cell and state != "FILLED":  # curator acceptance never clobbers real data — FILLED wins
                 state, recover = "EXHAUSTED", "curator_accepted"
             esc_status = ("applied" if nesc > 0 else "pending" if escalation_pending
@@ -291,7 +316,9 @@ def _write_md(res: pd.DataFrame, studies: list, tag: str, fold: str, esc_generat
                 paper = f"[{title}]({url})" if url else (title or "(no link)")
                 md.append(f"| {a} | {flds} | {have} | {paper} |" + (f" `manual_download_supp/{a}.xlsx` |" if save else ""))
             md.append("")
-        for kind, label in [("answer_escalation", "Answer escalations"), ("needs_grade", "Re-grade (no grade yet)")]:
+        for kind, label in [("answer_escalation", "Answer escalations"),
+                            ("escalate_big_decision", "Escalate big-decision whole-field calls (>1% of cohort) — not in queue"),
+                            ("needs_grade", "Re-grade (no grade yet)")]:
             sub = act[act["recoverability"] == kind]
             if not len(sub):
                 continue

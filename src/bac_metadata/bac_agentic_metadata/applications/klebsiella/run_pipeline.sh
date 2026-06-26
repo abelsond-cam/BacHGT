@@ -58,14 +58,17 @@ run "$APP/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --f
 #    manual_download/ → the NEXT run's grading picks them up (re-run after downloading).
 run "$APP/report_missing_papers.py" --grades "$GRADE/study_grades_$TAG.jsonl" --found "$FIND/found_papers_$TAG.tsv"
 
-# ── Stage 5 — Whole-field backfill (David step 6a) ──────────────────────────────────────────────
-#    Study-wide fills + the gate report (residual study×field = the per-sample backlog feeding Stage 6).
-run "$APP/run_backfill.py" --fold "$FOLD" --grades "$GRADE/study_grades_$TAG.tsv" --output "$WSB/backfill_applied_$TAG.tsv"
-
-# ── Stage 6 — Per-sample extraction (David step 5) ──────────────────────────────────────────────
-#    Per-sample values from supplementary tables, targeting the gate's residual list.
+# ── Stage 5 — Per-sample extraction FIRST (David step 5) ────────────────────────────────────────
+#    The ACCURATE per-isolate source runs first, over EVERY ENA-incomplete (gated) study with a paper
+#    (grade-independent gate). Whole-field is only the coarse fallback for what per-sample leaves.
 run "$APP/run_per_sample_extract.py" --fold "$FOLD" --found "$FIND/found_papers_$TAG.tsv" \
-    --gate-report "$WSB/backfill_gate_report_$TAG.tsv" --output "$PS/per_sample_applied_$TAG.tsv"
+    --output "$PS/per_sample_applied_$TAG.tsv"
+
+# ── Stage 6 — Whole-field backfill (David step 6a) ──────────────────────────────────────────────
+#    Study-wide fills for the gaps per-sample LEFT, with the parsimony guard (never overwrite a
+#    per-isolate value; never whole-fill a per-sample-heterogeneous field). Writes the gate report.
+run "$APP/run_backfill.py" --fold "$FOLD" --grades "$GRADE/study_grades_$TAG.tsv" \
+    --per-sample "$PS/per_sample_applied_$TAG.tsv" --output "$WSB/backfill_applied_$TAG.tsv"
 
 # ── Stage 6b — Per-sample supplementary worklist (manual_table_download) ─────────────────────────
 #    LLM opinion per residual study: does the paper hold a per-isolate table? → FETCH_SUPP / SKIP / …

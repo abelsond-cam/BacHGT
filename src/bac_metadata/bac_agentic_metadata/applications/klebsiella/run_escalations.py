@@ -50,10 +50,23 @@ APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 
 QUEUE_COLUMNS = [
-    "study_accession", "field", "gap_samples", "resolution", "cluster_theme",
+    "study_accession", "field", "gap_samples", "escalate_trigger", "resolution", "cluster_theme",
     "suggested_value", "grader_quote", "paper_excerpt", "fulltext_status",
     "answer", "answer_note",
 ]
+
+#: A study at/above this fraction of the WHOLE cohort's taxon samples is a "big decision" — its whole-field
+#: call always escalates to a human (David, 2026-06-26), regardless of the tight/wide triage. Leverage-based,
+#: LLM-free safety net so a single large study can never silently swing the global completeness metric.
+BIG_DECISION_FRAC = 0.01
+
+
+def _cohort_study_samples() -> tuple[dict[str, int], int]:
+    """Return ``({study: taxon_samples}, cohort_total)`` over the WHOLE cohort (all folds) from ENA sizing."""
+    sizing = pd.read_csv(rsg.SIZING_PATH, sep="\t")
+    n = pd.to_numeric(sizing["ena_taxon_samples"], errors="coerce").fillna(0).astype(int)
+    samples = dict(zip(sizing["study_accession"].astype(str), n, strict=False))
+    return samples, int(n.sum())
 
 
 def _fold_studies(folds: set[str]) -> set[str]:
@@ -102,8 +115,9 @@ def _make_evidence_fn(folds: set[str]):
     rsg.FULLTEXT_CACHE.mkdir(parents=True, exist_ok=True)
 
     def evidence_for(acc: str) -> escalation.StudyEvidence:
-        link = paper_links.get(acc, "")
-        ft = rsg.fetch_fulltext(link, cache_dir=rsg.FULLTEXT_CACHE) if link else rsg.FullText("", "none", False, False, "")
+        # SAME fulltext resolution as grading (incl. the manual-PDF fallback) so the triage is never blind
+        # on a paywalled study the grader read from a local PDF.
+        ft = rsg.resolve_fulltext_for_accession(acc, paper_links.get(acc, ""), rsg.MANUAL_PAPERS_DIR)
         study = rsg.study_title_and_description(acc, cache_dir=rsg.ENA_CACHE)
         srow = sizing.loc[acc].to_dict() if acc in sizing.index else {}
         sizing_row = {
@@ -128,7 +142,8 @@ def _items_to_frame(items: list[escalation.EscalationItem]) -> pd.DataFrame:
     rows = [
         {
             "study_accession": it.study_accession, "field": it.field, "gap_samples": it.gap_samples,
-            "resolution": it.resolution, "cluster_theme": it.cluster_theme,
+            "escalate_trigger": it.escalate_trigger, "resolution": it.resolution,
+            "cluster_theme": it.cluster_theme,
             "suggested_value": it.suggested_value, "grader_quote": it.grader_quote,
             "paper_excerpt": it.paper_excerpt, "fulltext_status": it.fulltext_status,
             "answer": "", "answer_note": "",
@@ -182,14 +197,19 @@ def _detect(args: argparse.Namespace, folds: set[str], output: Path) -> pd.DataF
     raw = rbf._load_raw_ena(args.input)
     raw = raw[raw["study_accession"].isin(keep)].copy()
     covered = _per_sample_covered(args.per_sample, raw, args.per_sample_frac)
+    study_samples, cohort_total = _cohort_study_samples()
+    big = sorted(a for a in keep if cohort_total and study_samples.get(a, 0) / cohort_total >= BIG_DECISION_FRAC)
     print(f"Scanning {len(grades)} graded studies / {len(raw)} ENA rows in {sorted(folds)} "
-          f"(gap threshold {args.threshold}; {len(covered)} field(s) already resolved by per-sample)", file=sys.stderr)
+          f"(gap threshold {args.threshold}; {len(covered)} field(s) already resolved by per-sample; "
+          f"cohort total {cohort_total} samples, big-decision (>={BIG_DECISION_FRAC:.0%}) studies in fold: "
+          f"{big or 'none'})", file=sys.stderr)
 
     spec = AttributeSpec.from_yaml(rsg.SPEC_PATH)
     llm = make_llm(args.backend, model=args.model, cache_dir=rsg.LLM_CACHE)
     items = escalation.detect_whole_field_escalations(
         grades, raw, spec, llm, _make_evidence_fn(folds),
         threshold=args.threshold, per_sample_covered=covered, model=args.model,
+        study_samples=study_samples, cohort_total_samples=cohort_total, big_decision_frac=BIG_DECISION_FRAC,
     )
     frame = _items_to_frame(items)
     frame = _preserve_prior_answers(frame, output)  # never silently wipe curator answers on re-detect

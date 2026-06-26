@@ -117,6 +117,49 @@ def gate_fields(
 _APPLIED_COLUMNS = ["study_accession", "sample_accession", "field", "ena_value", "applied_value", "method", "evidence"]
 
 
+def per_sample_guards(
+    per_sample: pd.DataFrame | None,
+    *,
+    fields: tuple[str, ...] = FIELDS,
+    group_col: str = "study_accession",
+    sample_col: str = "sample_accession",
+    value_col: str = "applied_value",
+    field_col: str = "field",
+) -> tuple[dict[str, set[str]], set[tuple[str, str]]]:
+    """Derive the two parsimony guards from per-sample fills: filled cells, and heterogeneous study×fields.
+
+    Per-sample extraction is the ACCURATE, per-isolate source and runs FIRST; whole-field is the coarse
+    study-wide fallback that may only fill the *remaining* genuine gaps and must never contradict the table.
+    This returns:
+
+    * ``filled`` — ``{field: {sample_accession, …}}`` the per-sample step already filled, so whole-field
+      never **overwrites** a per-isolate value (e.g. it can't reassign a Ghana isolate to Italy).
+    * ``heterogeneous`` — ``{(study, field), …}`` where per-sample extracted **>=2 distinct values**, proving
+      the field is genuinely mixed across the study; a single whole-project value is then unjustified and the
+      whole-field fill is **blocked** for that ``(study, field)`` (the residual goes to escalation, not a guess).
+
+    Returns empty guards when ``per_sample`` is None/empty (whole-field then behaves as a pure ENA-blank fill).
+    """
+    filled: dict[str, set[str]] = {f: set() for f in fields}
+    heterogeneous: set[tuple[str, str]] = set()
+    if per_sample is None or not len(per_sample):
+        return filled, heterogeneous
+    if not {group_col, sample_col, field_col} <= set(per_sample.columns):
+        return filled, heterogeneous
+    ps = per_sample.copy()
+    val = ps[value_col] if value_col in ps.columns else pd.Series("", index=ps.index)
+    ps = ps.assign(_val=strip_placeholders(val))
+    real = ps[ps["_val"].notna()]
+    for f, g in real.groupby(field_col):
+        if f in filled:
+            filled[f] = set(g[sample_col].astype(str))
+    distinct = real.groupby([group_col, field_col])["_val"].nunique()
+    for (acc, f), nuniq in distinct.items():
+        if int(nuniq) >= 2:
+            heterogeneous.add((str(acc), str(f)))
+    return filled, heterogeneous
+
+
 def apply_whole_field(
     df: pd.DataFrame,
     proposals: dict[str, dict[str, dict]],
@@ -125,13 +168,17 @@ def apply_whole_field(
     fields: tuple[str, ...] = FIELDS,
     group_col: str = "study_accession",
     sample_col: str = "sample_accession",
+    per_sample: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
     """Fill genuinely-blank per-sample cells of gated fields with the whole-field proposal.
 
     A cell is filled only when ALL hold: (a) the study's field is gated (``needs``), (b) the grader
-    proposed ``applies_whole_project`` with a non-empty value for it, and (c) the sample's current
-    (placeholder-stripped) value is blank. Present values are **never** overwritten. Vectorised per
-    field.
+    proposed ``applies_whole_project`` with a non-empty value for it, (c) the sample's current
+    (placeholder-stripped) value is blank, AND — when ``per_sample`` fills are supplied (the accurate
+    per-isolate source, which runs FIRST) — (d) the per-sample step did not already fill that cell and the
+    ``(study, field)`` is not per-sample-heterogeneous (see :func:`per_sample_guards`). Present values and
+    per-isolate values are **never** overwritten; a single study-wide value is **never** forced onto a
+    genuinely-mixed field. Vectorised per field.
 
     Parameters
     ----------
@@ -143,18 +190,24 @@ def apply_whole_field(
         Output of :func:`gate_fields` (boolean per study x field).
     fields, group_col, sample_col
         Field list and key column names.
+    per_sample
+        The per-sample fills (``per_sample_applied``) — the parsimony guard. When None, whole-field is a pure
+        ENA-blank fill (backward-compatible).
 
     Returns
     -------
     pandas.DataFrame
         Long table of fills, columns :data:`_APPLIED_COLUMNS` (one row per filled cell).
     """
+    ps_filled, ps_heterogeneous = per_sample_guards(
+        per_sample, fields=fields, group_col=group_col, sample_col=sample_col
+    )
     frames: list[pd.DataFrame] = []
     for f in fields:
         if f not in df.columns:
             continue
         gated = needs[f] if f in needs.columns else pd.Series(False, index=needs.index)
-        gated_studies = set(gated.index[gated.fillna(False).astype(bool)])
+        gated_studies = {s for s in gated.index[gated.fillna(False).astype(bool)] if (s, f) not in ps_heterogeneous}
         val_map = {acc: (p.get(f) or {}).get("value", "") for acc, p in proposals.items()}
         wp_map = {acc: bool((p.get(f) or {}).get("whole_project")) for acc, p in proposals.items()}
         ev_map = {acc: (p.get(f) or {}).get("evidence", "") for acc, p in proposals.items()}
@@ -165,6 +218,8 @@ def apply_whole_field(
         sub["_ev"] = sub[group_col].map(ev_map).fillna("")
         sub["_stripped"] = strip_placeholders(sub[f])
         mask = sub[group_col].isin(gated_studies) & sub["_wp"] & (sub["_val"] != "") & sub["_stripped"].isna()
+        if ps_filled.get(f):  # never overwrite a per-isolate value the per-sample step already placed
+            mask &= ~sub[sample_col].astype(str).isin(ps_filled[f])
         hit = sub[mask]
         if len(hit):
             frames.append(

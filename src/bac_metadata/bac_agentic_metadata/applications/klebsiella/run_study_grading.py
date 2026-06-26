@@ -55,6 +55,24 @@ LLM_CACHE = DATA_DIR / "cache" / "llm"
 _URL_RE = re.compile(r"https?://\S+")
 
 
+def resolve_fulltext_for_accession(
+    acc: str, link: str, manual_papers_dir: str | Path, *, fulltext_cache: Path = FULLTEXT_CACHE
+) -> FullText:
+    """Resolve a study's paper text the SAME way for every stage: open full text, else a manual PDF.
+
+    Single source of truth for fulltext resolution so grading and the escalation triage can never diverge
+    on what evidence a study was judged on. Tries :func:`fetch_fulltext` (Europe PMC / abstract / OA PDF),
+    and — when that is not full text — falls back to a manually-downloaded ``<acc>.pdf``
+    (:func:`resolve_local_fulltext`). Returns an empty :class:`FullText` when neither resolves.
+    """
+    ft = fetch_fulltext(link, cache_dir=fulltext_cache) if link else FullText("", "none", False, False, "")
+    if not ft.is_full_text:
+        local = resolve_local_fulltext(acc, str(manual_papers_dir))
+        if local is not None:
+            ft = local
+    return ft
+
+
 def _accession_to_paper_link() -> dict[str, str]:
     """Map each study accession to its first curated ``paper_link`` from the frozen snapshot.
 
@@ -142,13 +160,9 @@ def main() -> None:
         taxon_n = int(row["ena_taxon_samples"]) if pd.notna(row["ena_taxon_samples"]) else None
         print(f"[grade {i}/{len(sel)}] {acc} (taxon={taxon_n}) <- {link[:70] or '(no paper link)'}", file=sys.stderr)
 
-        ft = fetch_fulltext(link, cache_dir=FULLTEXT_CACHE) if link else FullText("", "none", False, False, "")
-        # Paywall fallback: if no openly-fetched full text, use a manually-downloaded <acc>.pdf.
-        if not ft.is_full_text:
-            local = resolve_local_fulltext(acc, args.manual_papers_dir)
-            if local is not None:
-                ft = local
-                print(f"  [local pdf] grading {acc} from manual download ({len(ft.text)} chars)", file=sys.stderr)
+        ft = resolve_fulltext_for_accession(acc, link, args.manual_papers_dir)
+        if ft.source == "local_pdf":
+            print(f"  [local pdf] grading {acc} from manual download ({len(ft.text)} chars)", file=sys.stderr)
         study = study_title_and_description(acc, cache_dir=ENA_CACHE)
         sizing_row = {
             "ena_taxon_samples": taxon_n,
