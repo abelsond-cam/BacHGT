@@ -1,8 +1,9 @@
 # M. abscessus application — project plan
 
-**Status: PAUSED.** This work is parked behind the Klebsiella **reproduction-gate investigation**
-(`../../REPRODUCTION_GATE_INVESTIGATION.md`) — the engine pipeline must be proven sound before a second
-application is built on it. Do not start M.abs build phases until the gate clears.
+**Status: PAUSED.** Parked until the Klebsiella application is *finished* — the engine must be proven sound
+(and Klebsiella wrapped up) before a second application is built on it. The reproduction gate that originally
+blocked this is now cleared (see [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) §9); resume only after
+the Klebsiella finishing plan (§10) completes — David: too complex to run both while still fixing/testing.
 
 Progress so far:
 - **M2 (input pre-scan) — DONE + committed** (`e6b2e62`): `scan_input_availability.py` + `data/diagnostics/

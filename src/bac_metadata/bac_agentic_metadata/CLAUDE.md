@@ -5,13 +5,10 @@ The engine is the product; *Klebsiella* and *M. abscessus* are **application sit
 Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 [`../../../CLAUDE.md`](../../../CLAUDE.md) (monorepo), `~/.claude/CLAUDE.md` (global).
 
-> **Read first**, in order:
-> 1. [`STAGE0_kleb_curation_map.md`](STAGE0_kleb_curation_map.md) — how the manual
->    Klebsiella curation worked (the thing we generalise).
-> 2. [`PIPELINE_PLAN.md`](PIPELINE_PLAN.md) — the engine architecture, attribute-spec
->    model, ground-truth rule, iteration discipline, and staged build.
-> 3. [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) — **current status + all measured results +
->    the forward plan** (the single source; STAGE0/1/2 carry method only, not numbers).
+> **Read first:** [`PROGRESS_REPORT.md`](PROGRESS_REPORT.md) — the **single living doc**: what the engine
+> is, the pipeline, architecture + attribute-spec model, ground-truth discipline, the manual curation it
+> generalises, ENA-sizing calibration, all measured results, the reproduction-test findings + fixes, and the
+> forward plan. (It supersedes the former PIPELINE_PLAN / STAGE0 / STAGE1 / STAGE2 / reproduction-gate docs.)
 > **Before building any grading step, ask David for the grading definitions — do not
 > invent grading criteria.** The `attributes.yaml` files are name/value scaffolds with
 > definitions marked TBD.
@@ -23,7 +20,7 @@ bac_agentic_metadata/
   engine/                 # application-agnostic engine: ena_sizing, paper_finder, grader, fulltext,
                           #   local_papers, backfill, sample_extractor, escalation, supplementary, …
   applications/
-    klebsiella/           # attributes.yaml, run_*/validate_* scripts, run_pipeline.sh (9 stages)
+    klebsiella/           # attributes.yaml, run_*/validate_* scripts, run_pipeline.sh (10 stages, per-sample first)
       diagnostics/        # one-off probes (diagnose_*, assess_*) — not in run_pipeline.sh
       data/               # task-aligned tree (folders mirror the pipeline steps):
         inputs/             #   curated study-level snapshot + study_setting_frozen
@@ -37,8 +34,7 @@ bac_agentic_metadata/
         diagnostics/        #   curator_gold, gt_corrections, gap/decline reports
         logs/  cache/       #   run logs; regenerable LLM/ENA/fulltext/find/per_sample caches
     m_abs/                # attributes.yaml, ATB_metadata_Mabs_2025_release.xlsx, CLAUDE.md
-  STAGE0_kleb_curation_map.md
-  PIPELINE_PLAN.md
+  PROGRESS_REPORT.md      # the single living doc
 ```
 
 ## Core ideas (one line each)

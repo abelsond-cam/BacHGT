@@ -1,6 +1,6 @@
 """Validate the ENA assessment output against the trusted curation-sheet columns.
 
-Two reconciliations (see ``PIPELINE_PLAN.md`` — validate only against the trusted columns,
+Two reconciliations (see ``PROGRESS_REPORT.md`` — validate only against the trusted columns,
 record disagreements rather than assuming the sheet is right):
 
 * **Sizing** — per-accession ENA taxon counts vs the trusted A–K ``isolates_in_study`` /

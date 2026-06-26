@@ -11,47 +11,17 @@ Recorded 2026-06-12. Items are not yet started unless noted.
 
 ---
 
-## 1. M. abscessus metadata — new species, new effort
+## 1. bac_metadata — agentic metadata-curation engine + applications
 
-Lives in [`src/bac_metadata/m_abs/`](src/bac_metadata/m_abs/). First non-KPSC effort.
-Source file deposited: `ATB_metadata_Mabs_2025_release.xlsx`.
+The whole `bac_metadata` plan now lives in its own docs (not duplicated here):
 
-- [ ] Collate **`host_CF`** — CF vs non-CF — from the metadata.
-- [ ] Also target **collection date**, **country**, and **isolation source**.
-
-*Open: David to describe the exact collation method before building anything.*
-
-## 1b. Agentic metadata-curation engine (`bac_agentic_metadata`)
-
-Reusable species-agnostic engine; Klebsiella is the validation site (test fold sealed).
-Stages 1–2 built + validated on train+val. **All status, results and the forward plan live in
-[`PROGRESS_REPORT.md`](src/bac_metadata/bac_agentic_metadata/PROGRESS_REPORT.md)** — the single source;
-design/why in `PIPELINE_PLAN.md`, method/how-to-run in `STAGE0/1/2.md`. Current results: grading
-**amr_study 0.94 / study_setting 0.98**; finding **raw 0.70 / adjudicated 0.87** (full three-tier finder:
-deterministic + secondary-accession ERP/SRP + web-search fallback; abstentions 24→7;
-precision-when-commits ~0.94); method-(a) backfill recall **country 0.78 / host 0.83** (date/source →
-method-b backlog).
-
-Finding is **done + measured** (committed `5abfd5e`). Small follow-ups: David signs off the
-`found_correct` rows in `find_adjudication_report.tsv` → fold into a finding GT-overlay; 2 web-tier
-hygiene items (degenerate title-only pick `PRJEB22890`; tighten the abstain-gate for unverified
-web-only picks). The 7 residual abstentions are the honest blind ceiling (6 findable only with the
-curated-link hint; `PRJNA982859` has no paper).
-
-Forward plan (in order):
-
-- [ ] **1 — Apply method-(a) `country`/`host` backfill** (the covered cases) to the table — first write-back.
-- [ ] **2 — Value-correctness**: bring in per-sample `metadata_v2` to verify proposed raw values, not just targeting.
-- [ ] **3 — Method-(b)**: per-sample-table extraction for the ~44 `collection_date`/`isolation_source` gaps
-  (needs sample-accession↔paper-table mapping; the deferred `partial` path).
-
-Deferred follow-ups (smaller):
-
-- [ ] 2 rubric over-steers (`PRJEB58136` mixed→surveillance; `PRJNA604975` mixed→hospital) + a study_setting wording tweak.
-- [ ] 2 new GT-correction candidates to verify + add to the overlay (`PRJNA789565`→surveillance, `PRJEB30134`→mixed).
-- [ ] `PRJEB28400` sample counts → ENA-deposit (1950); audit other screened-but-subset-deposited studies.
-- [ ] Re-grade *with* `sizing_first` (postdates the last re-grade); multi-organism-umbrella taxon-aware finder rule.
-- [ ] Eventually: sealed **test-fold** final measured-agreement run; the ~7k *M. abscessus* application (§1).
+- **Engine + Klebsiella (the active work):** the single living doc is
+  [`src/bac_metadata/bac_agentic_metadata/PROGRESS_REPORT.md`](src/bac_metadata/bac_agentic_metadata/PROGRESS_REPORT.md)
+  — status, pipeline, architecture, results, the reproduction-test findings + fixes, and **§10 is the
+  bac_metadata to-do** (finish Klebsiella: train/val re-gate → improvement summary → intermediate enriched
+  table → uncurated >10-sample tail → final set → categorisation → plots).
+- **M. abscessus (parked behind Klebsiella):**
+  [`src/bac_metadata/bac_agentic_metadata/applications/m_abs/PROJECT_PLAN.md`](src/bac_metadata/bac_agentic_metadata/applications/m_abs/PROJECT_PLAN.md).
 
 ## 2. Re-run complete-genome vs short-read analysis (Kleborate, ISEScan, geNomad)
 

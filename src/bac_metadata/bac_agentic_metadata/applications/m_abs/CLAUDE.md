@@ -5,9 +5,8 @@ non-KPSC cohort, ~7,000 sequences. The engine, architecture, attribute-spec mode
 truth and staged build now live one level up; **read those first**:
 
 - [`../../CLAUDE.md`](../../CLAUDE.md) — engine orientation.
-- [`../../PIPELINE_PLAN.md`](../../PIPELINE_PLAN.md) — architecture + staged build (Stages 1–4).
-- [`../../STAGE0_kleb_curation_map.md`](../../STAGE0_kleb_curation_map.md) — the Klebsiella
-  curation this generalises.
+- [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) — the single living doc: engine, pipeline,
+  architecture + attribute-spec model, the Klebsiella curation this generalises, results, and the forward plan.
 
 Wider guidance: [`../../../CLAUDE.md`](../../../CLAUDE.md) (bac_metadata),
 [`../../../../../CLAUDE.md`](../../../../../CLAUDE.md) (monorepo),
@@ -17,9 +16,10 @@ Wider guidance: [`../../../CLAUDE.md`](../../../CLAUDE.md) (bac_metadata),
 ## Plan
 
 The full, current M. abscessus build plan lives in [`PROJECT_PLAN.md`](PROJECT_PLAN.md) (phases M0–M5,
-confirmed decisions, the AST panel, risks). **Status: PAUSED** behind the Klebsiella reproduction-gate
-investigation (`../../REPRODUCTION_GATE_INVESTIGATION.md`) — do not start build phases until that gate clears.
-M2 (input pre-scan) is done; M3 (`attributes.yaml`) is a draft awaiting David's sign-off.
+confirmed decisions, the AST panel, risks). **Status: PAUSED** until the Klebsiella application is *finished*
+(David: too complex to run both while still fixing/testing) — the reproduction gate that blocked it is now
+cleared (see [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) §9–10), but the Klebsiella finishing plan
+(§10) runs first. M2 (input pre-scan) is done; M3 (`attributes.yaml`) is a draft awaiting David's sign-off.
 
 ## This application
 

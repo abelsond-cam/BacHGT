@@ -1,7 +1,7 @@
 """Per-field, per-study completeness across the base / post-merge / normalised states.
 
 "Completeness" is the fraction of a study's records that carry a non-empty value for a field.
-We measure it three ways (see ``PIPELINE_PLAN.md``):
+We measure it three ways (see ``PROGRESS_REPORT.md``):
 
 * **base** — raw value on the base ATB metadata (the pre-backfill baseline);
 * **post-merge** — after the per-project ``ready_to_merge`` patches (the *manual* backfill);
