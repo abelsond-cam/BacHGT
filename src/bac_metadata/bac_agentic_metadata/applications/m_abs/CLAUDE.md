@@ -14,11 +14,18 @@ Wider guidance: [`../../../CLAUDE.md`](../../../CLAUDE.md) (bac_metadata),
 `~/.claude/CLAUDE.md` (global). Tracked as item 1 in
 [`../../../../../ToDo.md`](../../../../../ToDo.md).
 
+## Plan
+
+The full, current M. abscessus build plan lives in [`PROJECT_PLAN.md`](PROJECT_PLAN.md) (phases M0–M5,
+confirmed decisions, the AST panel, risks). **Status: PAUSED** behind the Klebsiella reproduction-gate
+investigation (`../../REPRODUCTION_GATE_INVESTIGATION.md`) — do not start build phases until that gate clears.
+M2 (input pre-scan) is done; M3 (`attributes.yaml`) is a draft awaiting David's sign-off.
+
 ## This application
 
 - **Source data:** `ATB_metadata_Mabs_2025_release.xlsx` (in this folder).
-- **Rubric:** [`attributes.yaml`](attributes.yaml) — the M.abs attribute spec (scaffold;
-  grading definitions are David's to supply before Stage 2).
+- **Rubric:** [`attributes.yaml`](attributes.yaml) — the M.abs attribute spec (drafted from David's
+  answers; grading definitions still need his final sign-off before Stage 2).
 - **Headline target:** `host_disease` = **CF vs non-CF** (the species phenotype slot,
   absent from the structured data), plus aspirational `host_smoking_status`, and the four
   core completeness fields (country, collection_date, isolation_source, host).
