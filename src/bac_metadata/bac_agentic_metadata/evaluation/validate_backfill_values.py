@@ -24,7 +24,7 @@ import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import backfill
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DATA_DIR = APP_DIR / "data"
 
 

@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pandas as pd
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DATA_DIR = APP_DIR / "data"
 FROZEN_STUDY_LEVEL = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
 SHEET_ID = "1wfMvlxyPW7zEQ9xD4OfxZWBFenALcEJlo_Fs8YQHnvk"

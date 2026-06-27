@@ -24,7 +24,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DEFAULT_INPUT = HERE / "data" / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"
 DEFAULT_OUTPUT = HERE / "data" / "fold_splits" / "project_splits.tsv"
 

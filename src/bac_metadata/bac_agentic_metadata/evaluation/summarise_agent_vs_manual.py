@@ -33,13 +33,14 @@ from pathlib import Path
 
 import pandas as pd
 
-APP_DIR = Path(__file__).resolve().parent
+SELF_DIR = Path(__file__).resolve().parent  # this evaluation/ dir (for the sibling path-load)
+APP_DIR = SELF_DIR.parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DATA_DIR = APP_DIR / "data"
 
 
 def _load_validator():
     """Import the sibling ``validate_study_grading`` module by path (reuse its frozen-GT loaders)."""
-    spec = importlib.util.spec_from_file_location("_vsg", APP_DIR / "validate_study_grading.py")
+    spec = importlib.util.spec_from_file_location("_vsg", SELF_DIR / "validate_study_grading.py")
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod

@@ -14,6 +14,7 @@ FOLD="${1:-train,val}"
 TAG="${2:-train}"
 REPO=/Users/davidabelson/developer/BacHGT
 APP="$REPO/src/bac_metadata/bac_agentic_metadata/applications/klebsiella"
+EVAL="$REPO/src/bac_metadata/bac_agentic_metadata/evaluation"   # gold/manual-data validation layer
 DATA="$APP/data"
 # Local OneDrive mirror of the raw ENA + the curated gold (override via env on another machine).
 # (plain assignment, not ${:-default}, because the default path contains an apostrophe)
@@ -46,12 +47,12 @@ echo "=== pipeline: fold='$FOLD' tag='$TAG' ==="
 run "$APP/run_find_papers.py" --fold "$FOLD" --web-fallback --output-prefix "found_papers_$TAG"
 
 # ── Stage 2 — Adjudicate papers found (David step 2) ────────────────────────────────────────────
-run "$APP/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "find_$TAG"
+run "$EVAL/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "find_$TAG"
 
 # ── Stage 3 — Study grading + adjudication (David step 4) ───────────────────────────────────────
 #    Grading falls back to data/find_papers/manual_download/<acc>.pdf for paywalled papers.
 run "$APP/run_study_grading.py" --fold "$FOLD" --output-prefix "study_grades_$TAG"
-run "$APP/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "grading_$TAG"
+run "$EVAL/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "grading_$TAG"
 
 # ── Stage 4 — Missing-papers worklist (David step 3, the loop) ──────────────────────────────────
 #    Lists studies grading STILL lacks full text for. Human downloads them → link_local_papers.py →
@@ -98,14 +99,14 @@ fi
 
 # ── Stage 9 — Outputs / scorecard (David step 9) ────────────────────────────────────────────────
 #    Value-fidelity per method, cumulative completeness (incl. escalation), agent-vs-manual agreement.
-run "$APP/validate_backfill_values.py" --applied "$WSB/backfill_applied_$TAG.tsv" --truth "$GOLD" \
+run "$EVAL/validate_backfill_values.py" --applied "$WSB/backfill_applied_$TAG.tsv" --truth "$GOLD" \
     --report-prefix "backfill_value_$TAG" --out-dir "$WSB"
-run "$APP/validate_backfill_values.py" --applied "$PS/per_sample_applied_$TAG.tsv" --truth "$GOLD" \
+run "$EVAL/validate_backfill_values.py" --applied "$PS/per_sample_applied_$TAG.tsv" --truth "$GOLD" \
     --report-prefix "per_sample_value_$TAG" --out-dir "$PS"
-run "$APP/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$WSB/backfill_applied_$TAG.tsv" \
+run "$EVAL/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$WSB/backfill_applied_$TAG.tsv" \
     --per-sample "$PS/per_sample_applied_$TAG.tsv" --escalation "$ESC/escalation_applied_$TAG.tsv" \
     --truth "$GOLD" --report-prefix "backfill_completeness_$TAG"
-run "$APP/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades_$TAG.tsv" \
+run "$EVAL/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades_$TAG.tsv" \
     --find-validation "$FIND/find_${TAG}_validation_report.tsv" \
     --find-adjudication "$FIND/find_${TAG}_adjudication_report.tsv" \
     --grading-adjudication "$GRADE/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"

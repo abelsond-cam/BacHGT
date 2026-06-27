@@ -31,7 +31,7 @@ from bac_metadata.bac_agentic_metadata.engine.fulltext import (
     _search_query,
 )
 
-APP_DIR = Path(__file__).resolve().parent
+APP_DIR = Path(__file__).resolve().parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DATA_DIR = APP_DIR / "data"
 SPEC_PATH = APP_DIR / "attributes.yaml"
 SNAPSHOT_PATH = DATA_DIR / "inputs" / "study_level_metadata_all_combined_v1.0_20260105.csv"

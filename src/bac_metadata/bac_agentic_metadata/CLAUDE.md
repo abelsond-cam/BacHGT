@@ -18,9 +18,12 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 ```
 bac_agentic_metadata/
   engine/                 # application-agnostic engine: ena_sizing, paper_finder, grader, fulltext,
-                          #   local_papers, backfill, sample_extractor, escalation, supplementary, …
+                          #   local_papers, backfill, sample_extractor, escalation, supplementary,
+                          #   run_health_report, missing_papers, persample_supplement_worklist, …
+  evaluation/             # fold + gold/manual-data validation: make_splits, freeze_study_setting,
+                          #   validate_*, summarise_agent_vs_manual (root at the Klebsiella app tree)
   applications/
-    klebsiella/           # attributes.yaml, run_*/validate_* scripts, run_pipeline.sh (10 stages, per-sample first)
+    klebsiella/           # attributes.yaml, run_* stages + report_* shims, run_pipeline.sh (10 stages, per-sample first)
       diagnostics/        # one-off probes (diagnose_*, assess_*) — not in run_pipeline.sh
       data/               # task-aligned tree (folders mirror the pipeline steps):
         inputs/             #   curated study-level snapshot + study_setting_frozen
@@ -49,7 +52,7 @@ bac_agentic_metadata/
 ## Re-running the split
 
 ```bash
-uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/make_kleb_splits.py
+uv run python src/bac_metadata/bac_agentic_metadata/evaluation/make_splits.py
 ```
 
 Seeded and reproducible; built from the committed CSV snapshot of the (stable) curation sheet.
