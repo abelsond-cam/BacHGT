@@ -15,6 +15,8 @@ the production pipeline runs and to keep their verbose logging to a single pass.
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
+
 import pandas as pd
 
 #: field -> the ``*_parsed`` column its normaliser produces.
@@ -26,33 +28,40 @@ PARSED_COLUMN = {
 }
 
 
-def normalise_table(df: pd.DataFrame, fields: tuple[str, ...]) -> pd.DataFrame:
-    """Add ``*_parsed`` columns for ``fields`` using the reusable curation parsers.
+def normalise_table(
+    df: pd.DataFrame,
+    fields: tuple[str, ...],
+    *,
+    normalisers: Mapping[str, Callable[[pd.DataFrame], pd.DataFrame]] | None = None,
+) -> pd.DataFrame:
+    """Add ``*_parsed`` columns for ``fields`` using **injected** per-field value-normalisers.
+
+    The engine stays application-agnostic: the caller supplies a ``field -> callable(df) -> df`` map
+    (e.g. Klebsiella injects ``pp.metadata_curation.parse_*``). Each callable adds that field's
+    ``*_parsed`` column. When no map is given (e.g. M. abscessus declares none), this is a **no-op**
+    — the engine then pulls in no application curation code at all.
 
     Parameters
     ----------
     df
         Per-sample table carrying the raw field columns.
     fields
-        Subset of ``country``/``collection_date``/``isolation_source``/``host`` to normalise.
+        Fields to normalise (a normaliser is applied only if ``normalisers`` provides one).
+    normalisers
+        ``field -> callable`` map of value-parsers; ``None``/empty -> no-op.
 
     Returns
     -------
     pandas.DataFrame
-        A copy of ``df`` with the relevant ``*_parsed`` columns added.
+        A copy of ``df`` with the relevant ``*_parsed`` columns added (unchanged when no normaliser).
     """
-    # Imported lazily: pulls in the heavy curation module only when normalisation is requested.
-    from bac_metadata.pp import metadata_curation as mc
-
+    if not normalisers:
+        return df.copy()
     out = df.copy()
-    if "country" in fields:
-        out = mc.parse_country(out, verbose=False)
-    if "host" in fields:
-        out = mc.parse_host(out, verbose=False)
-    if "isolation_source" in fields:
-        out = mc.parse_isolation_source(out, verbose=False)
-    if "collection_date" in fields:
-        out = mc.parse_collection_date(out, verbose=False)
+    for f in fields:
+        fn = normalisers.get(f)
+        if fn is not None:
+            out = fn(out)
     return out
 
 

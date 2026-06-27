@@ -6,6 +6,8 @@ over the whole source tables, then looked up per study). No LLM, no paper lookup
 
 from __future__ import annotations
 
+from collections.abc import Callable, Mapping
+
 import pandas as pd
 
 from .completeness import PARSED_COLUMN, completeness_by_study, normalise_table
@@ -16,7 +18,11 @@ STATES = ("base", "post-merge", "norm")
 _STATE_TAG = {"base": "base", "post-merge": "postmerge", "norm": "norm"}
 
 
-def _completeness_frames(states: dict[str, pd.DataFrame], fields: tuple[str, ...]) -> dict[str, pd.DataFrame]:
+def _completeness_frames(
+    states: dict[str, pd.DataFrame],
+    fields: tuple[str, ...],
+    normalisers: Mapping[str, Callable[[pd.DataFrame], pd.DataFrame]] | None = None,
+) -> dict[str, pd.DataFrame]:
     """Compute per-study completeness for the base, post-merge and normalised states.
 
     Parameters
@@ -25,6 +31,8 @@ def _completeness_frames(states: dict[str, pd.DataFrame], fields: tuple[str, ...
         Source states (must include ``"base"``; ``"post-merge"`` optional).
     fields
         Clinical fields to score.
+    normalisers
+        Injected per-field value-normalisers for the ``norm`` state (``None`` -> no-op).
 
     Returns
     -------
@@ -37,9 +45,9 @@ def _completeness_frames(states: dict[str, pd.DataFrame], fields: tuple[str, ...
     post = states.get("post-merge")
     if post is not None:
         frames["post-merge"] = completeness_by_study(post, raw_cols)
-        norm_source = normalise_table(post, fields)
+        norm_source = normalise_table(post, fields, normalisers=normalisers)
     else:
-        norm_source = normalise_table(states["base"], fields)
+        norm_source = normalise_table(states["base"], fields, normalisers=normalisers)
     norm_cols = {f: PARSED_COLUMN[f] for f in fields if f in PARSED_COLUMN}
     frames["norm"] = completeness_by_study(norm_source, norm_cols)
     return frames
@@ -50,6 +58,7 @@ def build_ena_assessment_table(
     spec: AttributeSpec,
     states: dict[str, pd.DataFrame],
     sizing_records: dict[str, dict],
+    normalisers: Mapping[str, Callable[[pd.DataFrame], pd.DataFrame]] | None = None,
 ) -> pd.DataFrame:
     """Build the per-accession ENA assessment ingestion table.
 
@@ -71,7 +80,7 @@ def build_ena_assessment_table(
         states per field, the base->post-merge ``backfill_delta`` per field, and ``fetch_status``.
     """
     fields = spec.completeness_fields
-    frames = _completeness_frames(states, fields)
+    frames = _completeness_frames(states, fields, normalisers)
     held = frames["base"]["n_records"]
 
     rows: list[dict] = []

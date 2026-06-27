@@ -19,6 +19,7 @@ uv run python src/bac_metadata/bac_agentic_metadata/applications/klebsiella/run_
 from __future__ import annotations
 
 import argparse
+import functools
 import json
 import sys
 from pathlib import Path
@@ -100,7 +101,15 @@ def main() -> None:
         ena_project_dir=args.ena_project_dir,
         study_metadata_file=args.study_metadata_file,
     ).states()
-    table = build_ena_assessment_table(split, spec, states, sizing)
+    # Inject the Klebsiella value-parsers the engine's normalise step is now agnostic to (the engine
+    # no-ops without them). names[0] is the field's parse_* (the parser that adds the `*_parsed` column).
+    from bac_metadata.pp import metadata_curation as mc
+    normalisers = {
+        field: functools.partial(getattr(mc, names[0]), verbose=False)
+        for field, names in spec.deterministic_normaliser.items()
+        if names
+    }
+    table = build_ena_assessment_table(split, spec, states, sizing, normalisers=normalisers)
     out = args.output or DATA_DIR / "ena_assessment" / "ena_ingest.tsv"
     table.to_csv(out, sep="\t", index=False)
     print(f"Wrote {out} ({len(table)} rows)", file=sys.stderr)
