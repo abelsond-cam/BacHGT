@@ -57,6 +57,66 @@ def strip_placeholders(series: pd.Series) -> pd.Series:
     return norm.mask(norm.isna() | key.isin(PLACEHOLDER_NULLS), other=pd.NA)
 
 
+#: Precedence rank for merging overlapping per-(sample, field) fills (lower wins). Per-sample is the
+#: accurate per-isolate source; the two study-wide sources only ever filled blanks (parsimony guard),
+#: so the only replacement of a real value comes from per-sample. Used by the enriched-table merge.
+PRECEDENCE_DEFAULT: dict[str, int] = {
+    "per_sample": 0, "per_sample_two_hop": 0, "curator_escalation": 1, "whole_field": 2,
+}
+
+
+def apply_precedence_merge(
+    frames: list[pd.DataFrame],
+    *,
+    rank: dict[str, int] | None = None,
+    key: tuple[str, ...] = ("sample_accession", "field"),
+    value_col: str = "applied_value",
+    method_col: str = "method",
+) -> pd.DataFrame:
+    """Resolve overlapping long-format fills to one winning row per ``key`` by source precedence.
+
+    Each input frame is a long-format set of applied fills carrying the ``key`` columns, a
+    ``value_col`` and a ``method_col`` naming the source. Placeholder/blank values are dropped, the
+    remaining rows are ranked by ``rank[method]`` (lower wins; an unknown method ranks last), and the
+    single highest-precedence non-blank fill per ``key`` is kept. Ties break deterministically on
+    ``(_rank, method, value)`` so the result is reproducible. All other columns are preserved.
+
+    Parameters
+    ----------
+    frames
+        Long-format fill tables (e.g. per-sample, escalation, whole-field applied changes).
+    rank
+        ``method -> rank`` map (lower wins); defaults to :data:`PRECEDENCE_DEFAULT`.
+    key
+        Columns identifying a cell (default ``(sample_accession, field)``).
+    value_col, method_col
+        Column names holding the applied value and its source method.
+
+    Returns
+    -------
+    pandas.DataFrame
+        One winning row per ``key`` (plus a ``_rank`` column), or empty if no non-blank fills.
+    """
+    rank = dict(PRECEDENCE_DEFAULT if rank is None else rank)
+    last = max(rank.values(), default=0) + 1
+    parts: list[pd.DataFrame] = []
+    for df in frames:
+        if df is None or len(df) == 0:
+            continue
+        sub = df.copy()
+        sub[value_col] = strip_placeholders(sub[value_col])
+        sub = sub[sub[value_col].notna()]
+        if len(sub) == 0:
+            continue
+        sub["_rank"] = sub[method_col].map(rank).fillna(last).astype(int)
+        parts.append(sub)
+    if not parts:
+        return pd.DataFrame()
+    merged = pd.concat(parts, ignore_index=True)
+    merged = merged.sort_values([*key, "_rank", method_col, value_col])
+    return merged.drop_duplicates(list(key), keep="first").reset_index(drop=True)
+
+
 def field_completeness(
     df: pd.DataFrame, fields: tuple[str, ...] = FIELDS, *, group_col: str = "study_accession"
 ) -> pd.DataFrame:

@@ -60,14 +60,6 @@ FIELDS = list(backfill.FIELDS)
 STUDY_GRADES = {"study_setting": "study_setting__value", "amr_study": "amr_study__value"}
 DEFAULT_STUDY_CSV = INPUTS_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
 
-#: Precedence rank for the merge sources (lower wins). Per-sample is the accurate per-isolate source.
-_SOURCE_RANK = {
-    "per_sample": 0,
-    "per_sample_two_hop": 0,
-    "curator_escalation": 1,
-    "whole_field": 2,
-}
-
 
 def _fold_studies(folds: set[str]) -> set[str]:
     """Return the set of ``study_accession`` assigned to the requested folds."""
@@ -110,19 +102,12 @@ def _load_fills(paths: dict[str, str]) -> pd.DataFrame:
         need = {"sample_accession", "field", "applied_value", "method", "study_accession"}
         if not need <= set(df.columns):
             sys.exit(f"{path} missing columns: {sorted(need - set(df.columns))}")
-        df = df[["study_accession", "sample_accession", "field", "ena_value", "applied_value", "method"]].copy()
-        df["applied_value"] = backfill.strip_placeholders(df["applied_value"])
-        df = df[df["applied_value"].notna()]
-        df["_rank"] = df["method"].map(_SOURCE_RANK).fillna(99).astype(int)
-        frames.append(df)
+        frames.append(df[["study_accession", "sample_accession", "field", "ena_value", "applied_value", "method"]].copy())
     if not frames:
         return pd.DataFrame(columns=["study_accession", "sample_accession", "field", "ena_value",
                                      "applied_value", "method", "_rank"])
-    fills = pd.concat(frames, ignore_index=True)
-    # Deterministic winner: lowest rank, then method then value as tie-breakers (stable, reproducible).
-    fills = fills.sort_values(["sample_accession", "field", "_rank", "method", "applied_value"])
-    fills = fills.drop_duplicates(["sample_accession", "field"], keep="first").reset_index(drop=True)
-    return fills
+    # The precedence pick (per-sample > escalation > whole-field) lives in the engine.
+    return backfill.apply_precedence_merge(frames, rank=backfill.PRECEDENCE_DEFAULT)
 
 
 def _load_grades(path: str, studies: set[str]) -> pd.DataFrame:
