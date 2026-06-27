@@ -34,7 +34,7 @@ from pathlib import Path
 import pandas as pd
 
 SELF_DIR = Path(__file__).resolve().parent  # this evaluation/ dir (for the sibling path-load)
-APP_DIR = SELF_DIR.parents[1] / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
+APP_DIR = SELF_DIR.parent / "applications" / "klebsiella"  # gold-bearing app tree (see evaluation/__init__.py)
 DATA_DIR = APP_DIR / "data"
 
 
