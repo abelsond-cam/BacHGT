@@ -84,18 +84,34 @@ class KlebCollationSource:
         }
 
 
+def _read_table(path: str, sheet: str | int = 0) -> pd.DataFrame:
+    """Read a flat per-sample table by extension: ``.csv``/``.tsv``/``.txt`` as delimited text, else xlsx."""
+    lower = str(path).lower()
+    if lower.endswith((".csv",)):
+        return pd.read_csv(path, dtype=str, low_memory=False)
+    if lower.endswith((".tsv", ".txt", ".tab")):
+        return pd.read_csv(path, sep="\t", dtype=str, low_memory=False)
+    return pd.read_excel(path, sheet_name=sheet, dtype=str)
+
+
 @dataclass
-class GenericXlsxSource:
-    """Single-state per-sample source backed by a flat spreadsheet (e.g. the M.abs release).
+class GenericTableSource:
+    """Single-state per-sample source backed by a flat table (xlsx or a pre-built CSV/TSV).
+
+    Backs the M.abs xlsx release and the unified driver's pre-built concatenated table for any
+    application.
 
     Parameters
     ----------
     path
-        Path to the ``.xlsx`` file.
+        Path to the table (``.csv``/``.tsv`` delimited text, or ``.xlsx``).
     sheet
-        Sheet name (defaults to the first sheet).
+        Sheet name for xlsx inputs (defaults to the first sheet; ignored for CSV/TSV).
     study_col
         Column holding the project accession (renamed to ``study_accession``).
+    clinical
+        Per-sample fields to carry through (the source columns to keep). Defaults to the four
+        Klebsiella clinical fields; an application passes its own set (e.g. + ``cf_status``).
     keep_columns
         Auxiliary columns to retain alongside the clinical fields.
     """
@@ -103,18 +119,20 @@ class GenericXlsxSource:
     path: str
     sheet: str | int = 0
     study_col: str = "study_accession"
+    clinical: tuple[str, ...] = ("country", "collection_date", "isolation_source", "host")
     keep_columns: tuple[str, ...] = DEFAULT_AUX_COLUMNS
-    _clinical: tuple[str, ...] = field(
-        default=("country", "collection_date", "isolation_source", "host"), init=False, repr=False
-    )
 
     def states(self) -> dict[str, pd.DataFrame]:
         """Return ``{"base": df}`` keyed per-sample by ``study_accession``."""
-        df = pd.read_excel(self.path, sheet_name=self.sheet, dtype=str)
+        df = _read_table(self.path, self.sheet)
         if self.study_col != "study_accession":
             df = df.rename(columns={self.study_col: "study_accession"})
-        wanted = ["study_accession", *self._clinical, *self.keep_columns]
+        wanted = ["study_accession", *self.clinical, *self.keep_columns]
         return {"base": _select(df, wanted)}
+
+
+#: Back-compat alias (the source now reads CSV/TSV as well as xlsx).
+GenericXlsxSource = GenericTableSource
 
 
 def _select(df: pd.DataFrame, wanted: list[str]) -> pd.DataFrame:
