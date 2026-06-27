@@ -15,6 +15,10 @@ the agent value **replaces** the ENA-deposited value with precedence
 (by the backfill parsimony guard), so the only replacements of a *real* ENA value come from per-sample.
 Every change is recorded in a long-format provenance sidecar, so nothing is silently overwritten.
 
+It also adds **two new study-level columns** — ``study_setting`` and ``amr_study`` — broadcasting the
+agent's per-study graded value to every sample in the study (blank where ``not_gradeable``). These match
+the metadata_v2 column names; the manual pipeline fills them per-study from the study_level sheet.
+
 Inputs (per fold ``<TAG>`` = ``test`` | ``train``):
   * the full-width collated base table — ``pp.metadata_collation.load_collated_metadata`` run **offline**
     (``google_sheet_id=None`` + the committed ``study_level`` CSV), restricted to the fold's studies;
@@ -43,12 +47,17 @@ APP_DIR = Path(__file__).resolve().parent
 DATA_DIR = APP_DIR / "data"
 SPLIT_PATH = DATA_DIR / "fold_splits" / "project_splits.tsv"
 INPUTS_DIR = DATA_DIR / "inputs"
+GRADING_DIR = DATA_DIR / "study_lv_attributes" / "grading"
 WSB_DIR = DATA_DIR / "study_lv_attributes" / "whole_study_backfill"
 ESC_DIR = DATA_DIR / "study_lv_attributes" / "escalation"
 PS_DIR = DATA_DIR / "sample_lv_attributes" / "per_sample"
 OUT_DIR = DATA_DIR / "sample_lv_attributes" / "enriched"
 
 FIELDS = list(backfill.FIELDS)
+#: Study-level grades broadcast to every sample in the study, as new columns (col name -> grade __value).
+#: Matches the metadata_v2 column names (``amr_study``, ``study_setting``), which the manual pipeline
+#: fills per-study from the study_level sheet; here they carry the AGENT's graded value.
+STUDY_GRADES = {"study_setting": "study_setting__value", "amr_study": "amr_study__value"}
 DEFAULT_STUDY_CSV = INPUTS_DIR / "study_level_metadata_all_combined_v1.0_20260105.csv"
 
 #: Precedence rank for the merge sources (lower wins). Per-sample is the accurate per-isolate source.
@@ -116,6 +125,19 @@ def _load_fills(paths: dict[str, str]) -> pd.DataFrame:
     return fills
 
 
+def _load_grades(path: str, studies: set[str]) -> pd.DataFrame:
+    """Return per-study graded values for the broadcast study-level columns (placeholder-stripped)."""
+    if not path or not Path(path).exists():
+        print(f"  [grades] absent ({path}) — study-level columns will be blank", file=sys.stderr)
+        return pd.DataFrame(columns=["study_accession", *STUDY_GRADES])
+    g = pd.read_csv(path, sep="\t", dtype=str)
+    g = g[g["study_accession"].isin(studies)].drop_duplicates("study_accession")
+    out = pd.DataFrame({"study_accession": g["study_accession"]})
+    for col, src in STUDY_GRADES.items():
+        out[col] = backfill.strip_placeholders(g[src]) if src in g.columns else pd.NA
+    return out.reset_index(drop=True)
+
+
 def main() -> None:
     """Substitute the agent's found values into the fold's collated base table and write the outputs."""
     p = argparse.ArgumentParser(description="Build the intermediate enriched collated table for a fold.")
@@ -126,6 +148,7 @@ def main() -> None:
     p.add_argument("--per-sample", default=None, help="Per-sample applied TSV (default: per_sample_applied_<TAG>.tsv).")
     p.add_argument("--escalation", default=None, help="Escalation applied TSV (default: escalation_applied_<TAG>.tsv).")
     p.add_argument("--backfill", default=None, help="Whole-field applied TSV (default: backfill_applied_<TAG>.tsv).")
+    p.add_argument("--grades", default=None, help="Study grading TSV (default: study_grades_<TAG>.tsv).")
     p.add_argument("--out-dir", default=str(OUT_DIR), help="Output directory.")
     args = p.parse_args()
 
@@ -134,6 +157,7 @@ def main() -> None:
     ps = args.per_sample or str(PS_DIR / f"per_sample_applied_{tag}.tsv")
     esc = args.escalation or str(ESC_DIR / f"escalation_applied_{tag}.tsv")
     wf = args.backfill or str(WSB_DIR / f"backfill_applied_{tag}.tsv")
+    grades_path = args.grades or str(GRADING_DIR / f"study_grades_{tag}.tsv")
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -143,6 +167,7 @@ def main() -> None:
     print(f"Collated base (full width): {len(base)} samples, {len(base.columns)} columns", file=sys.stderr)
 
     fills = _load_fills({"per_sample": ps, "escalation": esc, "whole_field": wf})
+    grades = _load_grades(grades_path, studies)
 
     # Long-format provenance + the wide substitution, built field by field.
     prov_rows: list[pd.DataFrame] = []
@@ -196,6 +221,20 @@ def main() -> None:
             "whole_field": int(by_src.get("whole_field", 0)),
         })
 
+    # Study-level grades broadcast to every sample in the study (new columns; uniform within a study,
+    # so accounted at study level rather than as per-cell provenance rows).
+    grade_map = grades.set_index("study_accession") if not grades.empty else pd.DataFrame()
+    grade_summary: list[dict[str, object]] = []
+    for col in STUDY_GRADES:
+        gser = grade_map[col] if col in grade_map.columns else pd.Series(dtype="string")
+        enriched[col] = enriched["study_accession"].map(gser)
+        filled = enriched[col].notna()
+        graded_studies = int(grade_map[col].notna().sum()) if col in grade_map.columns else 0
+        grade_summary.append({
+            "field": col, "graded_studies": graded_studies, "samples_filled": int(filled.sum()),
+            "values": dict(enriched.loc[filled, col].value_counts()),
+        })
+
     provenance = pd.concat(prov_rows, ignore_index=True) if prov_rows else pd.DataFrame()
     res = pd.DataFrame(summary)
 
@@ -217,8 +256,17 @@ def main() -> None:
         md.append(f"| {r['field']} | {r['base_complete']:.3f} | **{r['enriched_complete']:.3f}** | "
                   f"{r['agent_fills']} | {r['new_fills']} | {r['overrides']} | {r['per_sample']} | "
                   f"{r['curator_escalation']} | {r['whole_field']} |")
+    md += ["\n## Study-level grades (broadcast to every sample in the study)\n",
+           "Two **new** columns (`study_setting`, `amr_study`) carry the agent's per-study graded value, "
+           "filled for every sample in the study (blank where `not_gradeable`). These match the metadata_v2 "
+           "column names; the manual pipeline fills them per-study from the study_level sheet.\n",
+           "| column | graded studies | samples filled | value distribution |",
+           "|---|---|---|---|"]
+    for gs in grade_summary:
+        dist = ", ".join(f"{k} {v}" for k, v in gs["values"].items()) or "—"
+        md.append(f"| {gs['field']} | {gs['graded_studies']} | {gs['samples_filled']} | {dist} |")
     md.append("\nOutputs: full-width `enriched_collated_<TAG>.tsv` (drop-in for `qc_add_metadata`), "
-              "long-format `enriched_provenance_<TAG>.tsv` (every changed cell), this summary.\n")
+              "long-format `enriched_provenance_<TAG>.tsv` (every changed clinical-field cell), this summary.\n")
     md_path.write_text("\n".join(md))
 
     print(res.to_string(index=False), file=sys.stderr)
