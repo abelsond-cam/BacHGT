@@ -288,8 +288,10 @@ Do all of this **before** resuming M. abscessus (too complex to run both while s
       precedence overwrites a real ENA value are **per-sample** overrides, and they agree with gold **more**
       than the ENA value they replace (country +43, date +154, iso +508; host a tie — raw-vs-category
       artifact resolved at Step 5), so the "never overwrite existing data" rule (which targeted coarse
-      whole-study fills) is respected. Large `enriched_collated_*.tsv` are gitignored (regenerable);
-      provenance + summary are tracked.
+      whole-study fills) is respected. It also adds **two new study-level columns** — `study_setting` and
+      `amr_study` (matching metadata_v2) — broadcasting the agent's per-study graded value to every sample
+      in the study (blank where `not_gradeable`), as the manual pipeline does from the study_level sheet.
+      Large `enriched_collated_*.tsv` are gitignored (regenerable); provenance + summary are tracked.
 - [ ] **3. Run on the uncurated tail** — the full pipeline on **all studies >10 samples NOT in
       train/val/test**. Genuine production: find-papers + grading run **live** (not cached for new
       accessions) → real `claude -p` spend, likely multi-day; size the batch before launching.
