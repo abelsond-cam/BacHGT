@@ -277,8 +277,19 @@ Do all of this **before** resuming M. abscessus (too complex to run both while s
       queue → apply → completeness → run-health. Updates §8.
 - [ ] **1. Summarise the improvement vs v2** — completeness AND value-accuracy, for **both** train/val and
       test, in one clean summary.
-- [ ] **2. Build the intermediate enriched table** — a deterministic merge of the agent fills (per-sample >
-      escalation > whole-field precedence) into one per-sample metadata table; the substrate for steps 3–6.
+- [x] **2. Build the intermediate enriched table** — DONE. `build_enriched_table.py` replicates step 1
+      (`pp.metadata_collation` ready_to_merge substitution) with the **agent's found values** as the merge
+      source: it substitutes the four clinical fields in the full-width collated base table, precedence
+      **per-sample > curator-escalation > whole-field > ENA**, and writes a standalone full-width table
+      (drop-in for `qc_add_metadata`) + a long-format provenance sidecar + a summary, both folds
+      (`data/sample_lv_attributes/enriched/`). It never touches `ENA_projects`, so it can't clash with the
+      manual ready_to_merge files for the curated studies. Enriched completeness reproduces §1/§8 (test
+      country 0.959/date 0.935/iso 0.739/host 0.834; train 0.933/0.866/0.729/0.870). The only cells where
+      precedence overwrites a real ENA value are **per-sample** overrides, and they agree with gold **more**
+      than the ENA value they replace (country +43, date +154, iso +508; host a tie — raw-vs-category
+      artifact resolved at Step 5), so the "never overwrite existing data" rule (which targeted coarse
+      whole-study fills) is respected. Large `enriched_collated_*.tsv` are gitignored (regenerable);
+      provenance + summary are tracked.
 - [ ] **3. Run on the uncurated tail** — the full pipeline on **all studies >10 samples NOT in
       train/val/test**. Genuine production: find-papers + grading run **live** (not cached for new
       accessions) → real `claude -p` spend, likely multi-day; size the batch before launching.

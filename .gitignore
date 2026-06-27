@@ -54,6 +54,9 @@ src/bac_metadata/bac_agentic_metadata/applications/*/data/cache/
 src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_download/
 # Manually-downloaded supplementary tables — copyrighted; consumed by engine/local_supplements.py.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/manual_download_supp/
+# Enriched full-width collated tables — large (~50 MB), regenerable from the applied tables +
+# collation via build_enriched_table.py; the provenance sidecar + summary ARE tracked.
+src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/enriched/enriched_collated_*.tsv
 
 # pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
 .pixi/
