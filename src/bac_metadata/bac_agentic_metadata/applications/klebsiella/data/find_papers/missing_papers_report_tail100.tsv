@@ -1,0 +1,5 @@
+study_accession	has_paper	doi	best_url	pmid	pmcid	title
+PRJEB20234	True	10.1016/j.ajic.2017.07.022	https://doi.org/10.1016/j.ajic.2017.07.022	28935481		Stalking a lethal superbug by whole-genome sequencing and phylogenetics: Influence on unraveling a major hospital outbreak of carbapenem-resistant Klebsiella pneumoniae.
+PRJEB36370	True	10.1016/j.ijantimicag.2020.105931	https://doi.org/10.1016/j.ijantimicag.2020.105931	32135203		Investigation of possible clonal transmission of carbapenemase-producing Klebsiella pneumoniae complex member isolates in Denmark using core genome MLST and National Patient Registry Data.
+PRJNA797179	True	10.1093/cid/ciac726	https://doi.org/10.1093/cid/ciac726	36056896		Clinical Implementation of Routine Whole-genome Sequencing for Hospital Infection Control of Multi-drug Resistant Pathogens.
+PRJNA878595	True	10.1016/j.jmii.2023.10.014	https://doi.org/10.1016/j.jmii.2023.10.014	37953085		Multicenter comparative genomic study of Klebsiella oxytoca complex reveals a highly antibiotic-resistant subspecies of Klebsiellamichiganensis.

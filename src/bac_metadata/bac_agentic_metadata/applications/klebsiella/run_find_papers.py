@@ -42,7 +42,7 @@ LLM_CACHE = DATA_DIR / "cache" / "llm"
 
 def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
     """Return ENA assessment sizing rows to process (by --accessions or --fold), biggest-first."""
-    sizing = pd.read_csv(SIZING_PATH, sep="\t")
+    sizing = pd.read_csv(args.sizing, sep="\t")
     if args.accessions:
         wanted = [a.strip() for a in args.accessions.split(",") if a.strip()]
         sel = sizing[sizing["study_accession"].isin(wanted)].copy()
@@ -61,6 +61,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="paper finding — find describing papers (Klebsiella).")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val; test sealed).")
     parser.add_argument("--accessions", default=None, help="Comma-separated accessions (overrides --fold).")
+    parser.add_argument("--sizing", default=str(SIZING_PATH),
+                        help="ENA sizing TSV to select+size from (default the fold sizing; the driver "
+                             "passes a batch-local sizing for the uncurated tail).")
     parser.add_argument("--limit", type=int, default=None, help="Process only the first N (biggest-first).")
     parser.add_argument(
         "--backend", choices=["subscription", "api"], default=os.environ.get("BAC_LLM_BACKEND", "subscription"),

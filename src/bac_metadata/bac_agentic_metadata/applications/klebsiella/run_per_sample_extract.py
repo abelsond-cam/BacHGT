@@ -56,12 +56,12 @@ def _zero_bucket(method: str, note: str) -> str:
     return "abstained_other"
 
 
-def _load_fold_base(folds: set[str]) -> pd.DataFrame:
+def _load_fold_base(folds: set[str], splits_path: str | Path) -> pd.DataFrame:
     """Raw per-sample ENA table for the requested folds (one source of truth for sets + the gate)."""
     from bac_metadata.bac_agentic_metadata.engine.sources import KlebCollationSource
 
     base = KlebCollationSource(keep_columns=AUX).states()["base"]
-    split = pd.read_csv(DATA_DIR / "fold_splits" / "project_splits.tsv", sep="\t", dtype=str)[["study_accession", "fold"]]
+    split = pd.read_csv(splits_path, sep="\t", dtype=str)[["study_accession", "fold"]]
     keep = set(split[split["fold"].isin(folds)]["study_accession"])
     return base[base["study_accession"].isin(keep)]
 
@@ -110,13 +110,16 @@ def main() -> None:
     p.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"), help="Finder output (source of PMCIDs).")
     p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete (gate; default 0.75).")
     p.add_argument("--fold", default="train,val", help="Folds for the ENA accession sets (default train,val).")
+    p.add_argument("--splits", default=str(DATA_DIR / "fold_splits" / "project_splits.tsv"),
+                   help="Fold split TSV mapping study_accession->fold (default the curated split; the driver "
+                        "passes a batch-local split for the uncurated tail).")
     p.add_argument("--backend", default="subscription", choices=["subscription", "api"])
     p.add_argument("--model", default=DEFAULT_MODEL)
     p.add_argument("--output", default=str(DATA_DIR / "sample_lv_attributes" / "per_sample" / "per_sample_applied.tsv"))
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
-    base = _load_fold_base(folds)
+    base = _load_fold_base(folds, args.splits)
     sets, maps = _study_accession_sets(base)
     found = pd.read_csv(args.found, sep="\t", dtype=str).fillna("")
     pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}

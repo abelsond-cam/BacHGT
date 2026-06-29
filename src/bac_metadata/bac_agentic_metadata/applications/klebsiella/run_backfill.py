@@ -68,6 +68,9 @@ def main() -> None:
                         help="Per-sample fills (run FIRST) — the parsimony guard: whole-field never overwrites a "
                              "per-isolate value and never whole-fills a per-sample-heterogeneous field.")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val; test sealed).")
+    parser.add_argument("--splits", default=str(SPLIT_PATH),
+                        help="Fold split TSV mapping study_accession->fold (default the curated split; the "
+                             "driver passes a batch-local split for the uncurated tail).")
     parser.add_argument("--threshold", type=float, default=0.75, help="Skip a field already >= this complete in ENA.")
     args = parser.parse_args()
 
@@ -75,7 +78,7 @@ def main() -> None:
     if "sample_accession" not in base.columns or "study_accession" not in base.columns:
         sys.exit(f"Raw ENA table needs sample_accession + study_accession columns; got {list(base.columns)[:12]}")
 
-    split = pd.read_csv(SPLIT_PATH, sep="\t", dtype=str)[["study_accession", "fold"]]
+    split = pd.read_csv(args.splits, sep="\t", dtype=str)[["study_accession", "fold"]]
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
     keep = set(split[split["fold"].isin(folds)]["study_accession"])
     base = base[base["study_accession"].isin(keep)].copy()

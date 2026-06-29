@@ -94,9 +94,27 @@ def _accession_to_paper_link() -> dict[str, str]:
     return mapping
 
 
+def _finder_paper_links(found_path: str | Path) -> dict[str, str]:
+    """Map each accession to the paper the *finder* picked (``--paper-source finder``).
+
+    The production / tail standard: grade off ``found_papers``, not the curated snapshot, so the
+    validation numbers carry finder error. Prefers the PMCID (Europe PMC full text resolves fastest),
+    then DOI, then PMID — all of which :func:`engine.fulltext.fetch_fulltext` text-mines from a bare id.
+    """
+    f = pd.read_csv(found_path, sep="\t", dtype=str).fillna("")
+    links: dict[str, str] = {}
+    for _, r in f.iterrows():
+        acc = str(r.get("study_accession", "")).strip()
+        ref = (r.get("chosen_pmcid", "").strip() or r.get("chosen_doi", "").strip()
+               or r.get("chosen_pmid", "").strip())
+        if acc and ref:
+            links[acc] = ref
+    return links
+
+
 def _select_accessions(args: argparse.Namespace) -> pd.DataFrame:
     """Return the ENA assessment sizing rows to grade (by --accessions or --fold), biggest-first."""
-    sizing = pd.read_csv(SIZING_PATH, sep="\t")
+    sizing = pd.read_csv(args.sizing, sep="\t")
     if args.accessions:
         wanted = [a.strip() for a in args.accessions.split(",") if a.strip()]
         sel = sizing[sizing["study_accession"].isin(wanted)].copy()
@@ -127,6 +145,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="study grading — grade curated papers (Klebsiella).")
     parser.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val).")
     parser.add_argument("--accessions", default=None, help="Comma-separated accessions (overrides --fold).")
+    parser.add_argument("--sizing", default=str(SIZING_PATH),
+                        help="ENA sizing TSV to select+size from (default the fold sizing; the driver "
+                             "passes a batch-local sizing for the uncurated tail).")
+    parser.add_argument("--paper-source", choices=["curated", "finder"], default="curated",
+                        help="Where the paper to grade comes from: 'curated' (the snapshot paper_link, the "
+                             "grading-in-isolation diagnostic + byte-identical gate) or 'finder' (the paper "
+                             "the finder picked — the production/tail standard; carries finder error).")
+    parser.add_argument("--found", default=str(DATA_DIR / "find_papers" / "found_papers.tsv"),
+                        help="Finder output TSV (source of papers when --paper-source finder).")
     parser.add_argument("--limit", type=int, default=None, help="Grade only the first N (biggest-first).")
     parser.add_argument(
         "--backend",
@@ -143,7 +170,7 @@ def main() -> None:
     args = parser.parse_args()
 
     spec = AttributeSpec.from_yaml(SPEC_PATH)
-    paper_links = _accession_to_paper_link()
+    paper_links = _finder_paper_links(args.found) if args.paper_source == "finder" else _accession_to_paper_link()
     classifications = _classification_lookup()
     sel = _select_accessions(args)
     print(f"Grading {len(sel)} accessions with {args.model} (backend={args.backend})", file=sys.stderr)
