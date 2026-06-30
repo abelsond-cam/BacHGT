@@ -225,14 +225,35 @@ def _detect(args: argparse.Namespace, folds: set[str], output: Path) -> pd.DataF
 
 
 def _interactive(frame: pd.DataFrame, output: Path) -> None:
-    """Walk the queue at the prompt; Enter accepts the suggestion, 's' skips. Write answers back."""
+    """Walk only the *pending* decisions at the prompt; Enter accepts the suggestion, 's' skips.
+
+    Already-resolved rows (answer filled, or a reject/skip note) are preserved untouched and NOT re-walked —
+    re-prompting them would let an Enter (= accept suggested) overwrite a prior curator answer with the
+    engine's suggestion (or blank it, where there is no suggestion). So a partially-answered queue can be
+    resumed safely across runs. Writes the full frame (resolved rows + new answers) back to ``output``.
+    """
     if not len(frame):
         print("No escalations to resolve.", file=sys.stderr)
         return
-    print(f"\n{len(frame)} decision(s) — Enter accepts the suggested value, 's' skips, Ctrl-C stops.\n")
-    for pos, (idx, r) in enumerate(frame.iterrows(), start=1):
+
+    def _resolved(row: pd.Series) -> bool:
+        if str(row.get("answer", "")).strip():
+            return True
+        return any(w in str(row.get("answer_note", "")).lower()
+                   for w in ("reject", "skip", "undeterm", "leave uncoded", "no value"))
+
+    pending = frame[~frame.apply(_resolved, axis=1)]
+    n_resolved = len(frame) - len(pending)
+    if n_resolved:
+        print(f"({n_resolved} already-resolved decision(s) preserved — walking the {len(pending)} pending.)",
+              file=sys.stderr)
+    if not len(pending):
+        print("All escalations already resolved — nothing to walk.", file=sys.stderr)
+        return
+    print(f"\n{len(pending)} decision(s) — Enter accepts the suggested value, 's' skips, Ctrl-C stops.\n")
+    for pos, (idx, r) in enumerate(pending.iterrows(), start=1):
         print("=" * 90)
-        print(f"[{pos}/{len(frame)}] {r['study_accession']} · {r['field']} · gap {r['gap_samples']} samples "
+        print(f"[{pos}/{len(pending)}] {r['study_accession']} · {r['field']} · gap {r['gap_samples']} samples "
               f"· {r['resolution']} · fulltext={r['fulltext_status']}")
         print(f"  cluster theme: {r['cluster_theme']}")
         print(f"  grader quote : {r['grader_quote']}")
