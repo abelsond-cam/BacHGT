@@ -150,6 +150,31 @@ def find_papers(
     return results
 
 
+def curated_paper_links(snapshot_path: str | Path) -> dict[str, str]:
+    """Map each accession to its first curated ``paper_link`` from the application's study-level snapshot.
+
+    The curated-link grading source (the in-isolation diagnostic + the reproduction check). A row may
+    list several comma-separated accessions and several URLs; we take the first URL and attach it to each
+    accession on the row. App-specific only in *which file* + column — the path is supplied by the caller.
+    """
+    import re
+
+    url_re = re.compile(r"https?://\S+")
+    df = pd.read_csv(snapshot_path, dtype=str).fillna("")
+    mapping: dict[str, str] = {}
+    for _, row in df.iterrows():
+        link = row.get("paper_link", "").strip()
+        m = url_re.search(link)
+        first = m.group(0).rstrip(").,") if m else link
+        if not first:
+            continue
+        for acc in re.split(r"[,\s]+", row.get("study_accessions", "")):
+            acc = acc.strip()
+            if acc and acc not in mapping:
+                mapping[acc] = first
+    return mapping
+
+
 def finder_paper_links(found_path: str | Path) -> dict[str, str]:
     """Map each accession to the paper the *finder* picked (the production / tail grading standard).
 
@@ -461,3 +486,550 @@ def backfill_whole_field(
     gate.sort_values(["field", "status", "study_accession"]).to_csv(gate_path, sep="\t", index=False)
     print(f"Wrote {out_path} ({len(applied)} per-sample fills) and {gate_path.name}", file=sys.stderr)
     return applied
+
+
+# ── Escalation tier — ask the curator on tight whole-field near-misses (runs after the main pipeline) ──
+
+#: The decision-queue schema written by escalate_detect and read by escalate_apply (empty answer columns
+#: for the curator to fill).
+ESCALATION_QUEUE_COLUMNS = [
+    "study_accession", "field", "gap_samples", "escalate_trigger", "resolution", "cluster_theme",
+    "suggested_value", "grader_quote", "paper_excerpt", "fulltext_status", "answer", "answer_note",
+]
+
+#: A study at/above this fraction of the WHOLE cohort's taxon samples is a "big decision" — its whole-field
+#: call always escalates (David, 2026-06-26), regardless of the tight/wide triage. A leverage-based, LLM-free
+#: safety net so a single large study can never silently swing the global completeness metric.
+BIG_DECISION_FRAC = 0.01
+
+
+def cohort_study_samples(sizing_path: str | Path) -> tuple[dict[str, int], int]:
+    """Return ``({study: taxon_samples}, cohort_total)`` over the WHOLE cohort from the sizing table."""
+    sizing = pd.read_csv(sizing_path, sep="\t")
+    n = pd.to_numeric(sizing["ena_taxon_samples"], errors="coerce").fillna(0).astype(int)
+    samples = dict(zip(sizing["study_accession"].astype(str), n, strict=False))
+    return samples, int(n.sum())
+
+
+def _per_sample_covered(per_sample_path: str | Path | None, raw: pd.DataFrame, fields: Sequence[str],
+                        frac: float) -> set[tuple[str, str]]:
+    """``(study, field)`` pairs per-sample extraction already resolved (per-sample runs first).
+
+    A field counts as resolved when per-sample filled at least ``frac`` of its blank ENA cells: if the
+    sample-level data is there, the whole-field question is already answered and never escalates.
+    """
+    from bac_metadata.bac_agentic_metadata.engine import escalation
+
+    if not per_sample_path or not Path(per_sample_path).exists():
+        return set()
+    mb = pd.read_csv(per_sample_path, sep="\t", dtype=str)
+    if not {"study_accession", "field"} <= set(mb.columns) or not len(mb):
+        return set()
+    fills = mb.groupby(["study_accession", "field"]).size()
+    gap = escalation.field_gap(raw, tuple(fields))
+    return {(acc, f) for (acc, f), n in fills.items() if gap.get((acc, f), 0) > 0 and n >= frac * gap[(acc, f)]}
+
+
+def _load_grade_records(grades_jsonl: str | Path, keep: set[str]) -> list[dict]:
+    """Read the grader JSONL (full records, with the backfill map) for studies in ``keep``."""
+    import json
+
+    p = Path(grades_jsonl)
+    if not p.exists():
+        sys.exit(f"Grades JSONL not found: {p} (detect needs the full JSONL, not the flat TSV).")
+    records: list[dict] = []
+    with p.open() as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            r = json.loads(line)
+            if r.get("study_accession") in keep:
+                records.append(r)
+    return records
+
+
+def _escalation_evidence_fn(*, paper_links: Mapping[str, str], classifications: Mapping[str, dict],
+                            sizing_path: str | Path, manual_papers_dir: str | Path, caches: StageCaches):
+    """Build ``accession -> StudyEvidence`` reusing the grader's cached fulltext / ENA / sizing lookups."""
+    from bac_metadata.bac_agentic_metadata.engine import escalation
+
+    sizing = pd.read_csv(sizing_path, sep="\t", dtype=str).set_index("study_accession")
+    caches.fulltext.mkdir(parents=True, exist_ok=True)
+
+    def evidence_for(acc: str) -> escalation.StudyEvidence:
+        # SAME fulltext resolution as grading (incl. the manual-PDF fallback) so the triage is never blind
+        # on a paywalled study the grader read from a local PDF.
+        ft = resolve_fulltext_for_accession(acc, paper_links.get(acc, ""), manual_papers_dir,
+                                             fulltext_cache=caches.fulltext)
+        study = study_title_and_description(acc, cache_dir=caches.ena)
+        srow = sizing.loc[acc].to_dict() if acc in sizing.index else {}
+        sizing_row = {
+            "ena_taxon_samples": srow.get("ena_taxon_samples"),
+            "ena_total_samples": srow.get("ena_total_samples"),
+            "ena_total_runs": srow.get("ena_total_runs"),
+            "by_scientific_name": srow.get("by_scientific_name"),
+            **classifications.get(acc, {}),
+        }
+        return escalation.StudyEvidence(fulltext=ft, ena_title=study["study_title"],
+                                        ena_description=study["study_description"], sizing_row=sizing_row)
+
+    return evidence_for
+
+
+def _items_to_queue_frame(items) -> pd.DataFrame:
+    """Render escalation items to the queue TSV schema (empty answer columns for the curator)."""
+    rows = [{
+        "study_accession": it.study_accession, "field": it.field, "gap_samples": it.gap_samples,
+        "escalate_trigger": it.escalate_trigger, "resolution": it.resolution, "cluster_theme": it.cluster_theme,
+        "suggested_value": it.suggested_value, "grader_quote": it.grader_quote,
+        "paper_excerpt": it.paper_excerpt, "fulltext_status": it.fulltext_status, "answer": "", "answer_note": "",
+    } for it in items]
+    return pd.DataFrame(rows, columns=ESCALATION_QUEUE_COLUMNS)
+
+
+def _preserve_prior_answers(frame: pd.DataFrame, output: Path) -> pd.DataFrame:
+    """Carry curator-filled answers from an existing queue into the freshly-detected one.
+
+    Detect regenerates the queue on every run; without this it would silently wipe answers the curator
+    already gave. Answers are matched by ``(study_accession, field)``: a still-escalated question keeps its
+    answer, a question that no longer escalates is dropped (logged loudly), a brand-new question starts empty.
+    """
+    if not output.exists():
+        return frame
+    prior = pd.read_csv(output, sep="\t", dtype=str).fillna("")
+    if "answer" not in prior.columns:
+        return frame
+    prior_ans = {(r["study_accession"], r["field"]): (r.get("answer", ""), r.get("answer_note", ""))
+                 for _, r in prior.iterrows() if str(r.get("answer", "")).strip()}
+    if not prior_ans:
+        return frame
+    new_keys = {(r["study_accession"], r["field"]) for _, r in frame.iterrows()}
+    carried = 0
+    for idx, r in frame.iterrows():
+        k = (r["study_accession"], r["field"])
+        if k in prior_ans:
+            frame.at[idx, "answer"], frame.at[idx, "answer_note"] = prior_ans[k]
+            carried += 1
+    dropped = sorted(k for k in prior_ans if k not in new_keys)
+    print(f"  [preserve] carried {carried} prior curator answer(s) into the regenerated queue; "
+          f"{len(dropped)} previously-answered question(s) no longer escalate"
+          + (f" (dropped: {dropped})" if dropped else ""), file=sys.stderr)
+    return frame
+
+
+def escalate_detect(
+    *,
+    spec: AttributeSpec,
+    base: pd.DataFrame,
+    keep: Sequence[str],
+    grades_jsonl: str | Path,
+    per_sample_path: str | Path | None,
+    sizing_path: str | Path,
+    paper_links: Mapping[str, str],
+    classifications: Mapping[str, dict],
+    manual_papers_dir: str | Path,
+    fields: Sequence[str],
+    out_path: Path,
+    llm,
+    model: str,
+    caches: StageCaches,
+    threshold: int = 50,
+    per_sample_frac: float = 0.5,
+    big_decision_frac: float = BIG_DECISION_FRAC,
+) -> pd.DataFrame:
+    """Detect tight whole-field near-misses worth a human decision; write the curator decision queue.
+
+    Production-safe: uses no curator gold (the test fold / *M. abscessus* have none), only the grader's own
+    tight-vs-wide judgement of its decline plus the leverage-based big-decision rule. ``base`` is the raw
+    per-sample table already restricted to the selection. Writes ``decisions_needed_<tag>.tsv`` (sorted by
+    ``gap_samples`` desc, empty answer columns), preserving any answers a prior queue already held.
+    """
+    from bac_metadata.bac_agentic_metadata.engine import escalation
+
+    caches.ensure()
+    fields = tuple(fields)
+    keep = set(keep)
+    raw = base[base["study_accession"].isin(keep)].copy()
+    grades = _load_grade_records(grades_jsonl, keep)
+    covered = _per_sample_covered(per_sample_path, raw, fields, per_sample_frac)
+    study_samples, cohort_total = cohort_study_samples(sizing_path)
+    big = sorted(a for a in keep if cohort_total and study_samples.get(a, 0) / cohort_total >= big_decision_frac)
+    print(f"Scanning {len(grades)} graded studies / {len(raw)} ENA rows "
+          f"(gap threshold {threshold}; {len(covered)} field(s) already resolved by per-sample; "
+          f"cohort total {cohort_total} samples, big-decision (>={big_decision_frac:.0%}) studies: "
+          f"{big or 'none'})", file=sys.stderr)
+
+    evidence_fn = _escalation_evidence_fn(
+        paper_links=paper_links, classifications=classifications, sizing_path=sizing_path,
+        manual_papers_dir=manual_papers_dir, caches=caches,
+    )
+    items = escalation.detect_whole_field_escalations(
+        grades, raw, spec, llm, evidence_fn, fields=fields, threshold=threshold,
+        per_sample_covered=covered, model=model, study_samples=study_samples,
+        cohort_total_samples=cohort_total, big_decision_frac=big_decision_frac,
+    )
+    frame = _items_to_queue_frame(items)
+    frame = _preserve_prior_answers(frame, Path(out_path))  # never silently wipe curator answers on re-detect
+    frame.to_csv(out_path, sep="\t", index=False)
+    print(f"Wrote {Path(out_path).name}: {len(frame)} escalation(s) "
+          f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)", file=sys.stderr)
+    if len(frame):
+        print("\nTop escalations (study · field · gap · suggested · theme):", file=sys.stderr)
+        for _, r in frame.head(12).iterrows():
+            print(f"  {r['study_accession']:<14} {r['field']:<16} {r['gap_samples']:>5}  "
+                  f"→ {r['suggested_value'] or '(none)':<12} {r['cluster_theme'][:60]}", file=sys.stderr)
+    return frame
+
+
+def escalate_apply(*, base: pd.DataFrame, keep: Sequence[str], queue_path: str | Path, out_path: Path) -> pd.DataFrame:
+    """Apply a curator-filled decision queue as whole-field fills through the existing backfill path.
+
+    Drops blank-answer rows; gates every answered field as "needs backfill" so a curator decision is
+    authoritative regardless of how full ENA already is. Writes ``escalation_applied_<tag>.tsv``
+    (``method="curator_escalation"`` — auditable and distinct from grader ``whole_field``).
+    """
+    from bac_metadata.bac_agentic_metadata.engine import backfill, escalation
+
+    queue_path = Path(queue_path)
+    if not queue_path.exists():
+        print(f"  [escalate-apply] no queue at {queue_path.name}; nothing to apply.", file=sys.stderr)
+        return pd.DataFrame()
+    queue = pd.read_csv(queue_path, sep="\t", dtype=str).fillna("")
+    answered = queue[queue["answer"].astype(str).str.strip() != ""]
+    if not len(answered):
+        print(f"  [escalate-apply] no filled answers in {queue_path.name}; nothing to apply.", file=sys.stderr)
+        return pd.DataFrame()
+
+    keep = set(keep)
+    raw = base[base["study_accession"].isin(keep)].copy()
+    proposals = escalation.answers_to_proposals(answered.to_dict("records"))
+    fields = tuple(sorted({str(f) for f in answered["field"]}))
+    studies = raw["study_accession"].unique()
+    needs = pd.DataFrame(
+        {f: [acc in proposals and f in proposals[acc] for acc in studies] for f in fields},
+        index=pd.Index(studies, name="study_accession"),
+    )
+    applied = backfill.apply_whole_field(raw, proposals, needs, fields=fields)
+    applied["method"] = "curator_escalation"
+    applied.to_csv(out_path, sep="\t", index=False)
+    print(f"Wrote {Path(out_path).name}: {len(applied)} per-sample fills from {len(answered)} curator "
+          f"decision(s).", file=sys.stderr)
+    return applied
+
+
+# ── Fill the metadata table — substitute the agent's found values into the full-width base table ───────
+
+def _load_precedence_fills(paths: Mapping[str, str | Path | None]) -> pd.DataFrame:
+    """Concatenate the applied-fill tables and resolve to one winning fill per (sample, field).
+
+    Each input row carries a ``method`` (``per_sample``/``per_sample_two_hop``/``curator_escalation``/
+    ``whole_field``); strip placeholder applied-values, rank by source precedence, and keep the single
+    highest-precedence non-blank fill per (sample_accession, field).
+    """
+    from bac_metadata.bac_agentic_metadata.engine import backfill
+
+    frames = []
+    for label, path in paths.items():
+        if not path or not Path(path).exists():
+            print(f"  [fills] {label}: absent ({path}) — skipped", file=sys.stderr)
+            continue
+        df = pd.read_csv(path, sep="\t", dtype=str)
+        need = {"sample_accession", "field", "applied_value", "method", "study_accession"}
+        if not need <= set(df.columns):
+            sys.exit(f"{path} missing columns: {sorted(need - set(df.columns))}")
+        frames.append(df[["study_accession", "sample_accession", "field", "ena_value",
+                          "applied_value", "method"]].copy())
+    if not frames:
+        return pd.DataFrame(columns=["study_accession", "sample_accession", "field", "ena_value",
+                                     "applied_value", "method", "_rank"])
+    return backfill.apply_precedence_merge(frames, rank=backfill.PRECEDENCE_DEFAULT)
+
+
+def _load_study_grade_columns(grades_path: str | Path | None, studies: set[str],
+                              study_grade_columns: Mapping[str, str]) -> pd.DataFrame:
+    """Return per-study graded values for the broadcast study-level columns (placeholder-stripped)."""
+    from bac_metadata.bac_agentic_metadata.engine import backfill
+
+    cols = list(study_grade_columns)
+    if not grades_path or not Path(grades_path).exists():
+        print(f"  [grades] absent ({grades_path}) — study-level columns will be blank", file=sys.stderr)
+        return pd.DataFrame(columns=["study_accession", *cols])
+    g = pd.read_csv(grades_path, sep="\t", dtype=str)
+    g = g[g["study_accession"].isin(studies)].drop_duplicates("study_accession")
+    out = pd.DataFrame({"study_accession": g["study_accession"]})
+    for col, src in study_grade_columns.items():
+        out[col] = backfill.strip_placeholders(g[src]) if src in g.columns else pd.NA
+    return out.reset_index(drop=True)
+
+
+def fill_metadata_table(
+    *,
+    base: pd.DataFrame,
+    fields: Sequence[str],
+    fill_paths: Mapping[str, str | Path | None],
+    grades_path: str | Path | None,
+    study_grade_columns: Mapping[str, str],
+    out_path: Path,
+    tag: str,
+    fold_label: str = "",
+) -> pd.DataFrame:
+    """Substitute the agent's found values into the full-width base table — the PRODUCTION output.
+
+    For each per-sample field the agent value REPLACES the ENA-deposited value with precedence
+    ``per-sample > curator-escalation > whole-field > ENA``; the two study-wide sources only ever filled
+    blanks (the backfill parsimony guard), so the only replacements of a real ENA value come from
+    per-sample. Adds the broadcast study-level columns (``study_grade_columns``). ``base`` is the full-width
+    per-sample table already restricted to the selection. Writes ``filled_metadata_<tag>.tsv`` + a
+    long-format provenance sidecar + a summary; nothing is silently overwritten.
+    """
+    from bac_metadata.bac_agentic_metadata.engine import backfill
+
+    fields = list(fields)
+    out_path = Path(out_path)
+    out_dir = out_path.parent
+    out_dir.mkdir(parents=True, exist_ok=True)
+    base = base.drop_duplicates("sample_accession").copy()
+    studies = set(base["study_accession"])
+    print(f"Filling metadata table (full width): {len(base)} samples, {len(base.columns)} columns, "
+          f"{len(studies)} studies", file=sys.stderr)
+
+    fills = _load_precedence_fills(fill_paths)
+    grades = _load_study_grade_columns(grades_path, studies, study_grade_columns)
+
+    prov_rows: list[pd.DataFrame] = []
+    summary: list[dict[str, object]] = []
+    filled = base.copy()
+    base_idx_value = {f: backfill.strip_placeholders(base.set_index("sample_accession")[f])
+                      if f in base.columns else pd.Series(dtype="string") for f in fields}
+
+    for f in fields:
+        ff = fills[fills["field"] == f]
+        val_map = dict(zip(ff["sample_accession"], ff["applied_value"], strict=False))
+        src_map = dict(zip(ff["sample_accession"], ff["method"], strict=False))
+        base_real = base_idx_value[f]
+
+        samp = filled["sample_accession"]
+        fill_val = samp.map(val_map)
+        base_val = samp.map(base_real)
+        final_val = fill_val.where(fill_val.notna(), base_val)
+        filled[f] = final_val
+
+        has_fill = fill_val.notna()
+        prov = pd.DataFrame({
+            "study_accession": filled["study_accession"][has_fill].to_numpy(),
+            "sample_accession": samp[has_fill].to_numpy(),
+            "field": f,
+            "ena_value": base_val[has_fill].to_numpy(),
+            "filled_value": fill_val[has_fill].to_numpy(),
+            "source": samp[has_fill].map(src_map).to_numpy(),
+        })
+        prov_rows.append(prov)
+
+        n = len(filled)
+        base_present = base_val.notna()
+        filled_present = final_val.notna()
+        overrides = int((has_fill & base_present).sum())
+        new_fills = int((has_fill & ~base_present).sum())
+        by_src = prov["source"].value_counts().to_dict()
+        summary.append({
+            "field": f, "n_samples": n,
+            "base_complete": round(float(base_present.mean()), 4),
+            "filled_complete": round(float(filled_present.mean()), 4),
+            "agent_fills": int(has_fill.sum()), "new_fills": new_fills, "overrides": overrides,
+            "per_sample": int(by_src.get("per_sample", 0) + by_src.get("per_sample_two_hop", 0)),
+            "curator_escalation": int(by_src.get("curator_escalation", 0)),
+            "whole_field": int(by_src.get("whole_field", 0)),
+        })
+
+    grade_map = grades.set_index("study_accession") if not grades.empty else pd.DataFrame()
+    grade_summary: list[dict[str, object]] = []
+    for col in study_grade_columns:
+        gser = grade_map[col] if col in grade_map.columns else pd.Series(dtype="string")
+        filled[col] = filled["study_accession"].map(gser)
+        present = filled[col].notna()
+        graded_studies = int(grade_map[col].notna().sum()) if col in grade_map.columns else 0
+        grade_summary.append({"field": col, "graded_studies": graded_studies,
+                              "samples_filled": int(present.sum()),
+                              "values": dict(filled.loc[present, col].value_counts())})
+
+    provenance = pd.concat(prov_rows, ignore_index=True) if prov_rows else pd.DataFrame()
+    res = pd.DataFrame(summary)
+    prov_path = out_dir / f"filled_metadata_provenance_{tag}.tsv"
+    md_path = out_dir / f"filled_metadata_summary_{tag}.md"
+    filled.to_csv(out_path, sep="\t", index=False)
+    provenance.to_csv(prov_path, sep="\t", index=False)
+
+    md = [f"# Filled metadata table — {fold_label or tag} (tag `{tag}`)\n",
+          f"Studies: **{len(studies)}**; samples: **{len(filled)}**. The per-sample clinical fields in the "
+          "full-width base table have been substituted with the agent's found values (precedence "
+          "**per-sample > curator-escalation > whole-field > ENA**). `new_fills` filled a blank ENA cell; "
+          "`overrides` replaced a real ENA value (only per-sample does this). Completeness is "
+          "placeholder-stripped.\n",
+          "| field | base | filled | agent fills | new | overrides | per-sample | escalation | whole-field |",
+          "|---|---|---|---|---|---|---|---|---|"]
+    for _, r in res.iterrows():
+        md.append(f"| {r['field']} | {r['base_complete']:.3f} | **{r['filled_complete']:.3f}** | "
+                  f"{r['agent_fills']} | {r['new_fills']} | {r['overrides']} | {r['per_sample']} | "
+                  f"{r['curator_escalation']} | {r['whole_field']} |")
+    if study_grade_columns:
+        md += ["\n## Study-level grades (broadcast to every sample in the study)\n",
+               "| column | graded studies | samples filled | value distribution |", "|---|---|---|---|"]
+        for gs in grade_summary:
+            dist = ", ".join(f"{k} {v}" for k, v in gs["values"].items()) or "—"
+            md.append(f"| {gs['field']} | {gs['graded_studies']} | {gs['samples_filled']} | {dist} |")
+    md_path.write_text("\n".join(md) + "\n")
+
+    print(res.to_string(index=False), file=sys.stderr)
+    print(f"\nWrote:\n  {out_path}\n  {prov_path}\n  {md_path}", file=sys.stderr)
+    return filled
+
+
+# ── Curator-loop helpers — worklists + attaching hand-downloaded papers ────────────────────────────────
+
+def missing_papers(*, grades_jsonl: Path, found_path: Path, gap_report_path: Path, sizing_path: Path,
+                   manual_papers_dir: Path, out_dir: Path, paper_links: Mapping[str, str],
+                   report_prefix: str = "missing_papers_report") -> pd.DataFrame:
+    """Build the gap-weighted manual-fetch worklist of paywalled / no-full-text papers."""
+    from bac_metadata.bac_agentic_metadata.engine.missing_papers import build_missing_papers
+
+    return build_missing_papers(
+        grades_path=grades_jsonl, found_path=found_path, gap_report_path=gap_report_path,
+        sizing_path=sizing_path, manual_dir=manual_papers_dir, out_dir=out_dir,
+        report_prefix=report_prefix, paper_links=paper_links,
+    )
+
+
+def persample_supplement(*, data_dir: Path, paper_links: Mapping[str, str], caches: StageCaches,
+                         manual_papers_dir: Path, fields: Sequence[str], tag: str, min_gap: int = 50,
+                         backend: str = "subscription", model: str) -> pd.DataFrame:
+    """Build the per-sample supplementary worklist (the manual-table curator queue)."""
+    from bac_metadata.bac_agentic_metadata.engine.persample_supplement_worklist import (
+        build_persample_supplement_worklist,
+    )
+
+    return build_persample_supplement_worklist(
+        data_dir, paper_links=paper_links, fulltext_cache=caches.fulltext,
+        manual_papers_dir=manual_papers_dir, llm_cache=caches.llm, tag=tag, min_gap=min_gap,
+        backend=backend, model=model, fields=tuple(fields),
+    )
+
+
+def run_health(*, data_dir: Path, fields: Sequence[str], fold: str, tag: str) -> str:
+    """Aggregate every stage artifact into the per-(study × field) health grid + convergence verdict."""
+    from bac_metadata.bac_agentic_metadata.engine.run_health_report import build_run_health
+
+    res, verdict = build_run_health(data_dir, tuple(fields), fold=fold, tag=tag)
+    print(f"Wrote run_health_{tag}_report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
+    if len(res):
+        print(res["resolution_state"].value_counts().to_string(), file=sys.stderr)
+    return verdict
+
+
+def _norm_id(s: str) -> str:
+    """Lowercase, alphanumeric-only — a publisher-agnostic key for DOIs/PIIs/filenames."""
+    import re
+
+    return re.sub(r"[^a-z0-9]", "", str(s).lower())
+
+
+def _accession_keys(row: pd.Series) -> set[str]:
+    """Normalised identifier keys for an accession (DOI full + suffix, URL last segment, pmid)."""
+    keys: set[str] = set()
+    doi = str(row.get("doi", "")).strip()
+    if doi:
+        keys.add(_norm_id(doi))
+        keys.add(_norm_id(doi.split("/")[-1]))
+    url = str(row.get("best_url", "")).strip().rstrip("/")
+    if url:
+        keys.add(_norm_id(url.split("/")[-1]))
+    for col in ("pmid", "pmcid"):
+        v = str(row.get(col, "")).strip()
+        if v and v.lower() != "nan":
+            keys.add(_norm_id(v))
+    return {k for k in keys if len(k) >= 5}
+
+
+def _pdf_dois(path: Path, *, pages: int = 1) -> set[str]:
+    """Text-mine DOIs from the first ``pages`` of a PDF (normalised). Page 1 only avoids cited DOIs."""
+    import re
+
+    import pdfplumber
+
+    from bac_metadata.bac_agentic_metadata.engine.fulltext import _DOI_RE
+
+    found: set[str] = set()
+    try:
+        with pdfplumber.open(path) as pdf:
+            for page in pdf.pages[:pages]:
+                txt = page.extract_text() or ""
+                for src in (txt, re.sub(r"\s+", "", txt)):
+                    for m in _DOI_RE.findall(src):
+                        found.add(_norm_id(m.rstrip(").")))
+    except Exception as exc:  # noqa: BLE001 — an unreadable PDF just yields no DOI
+        print(f"  [warn] could not read {path.name}: {type(exc).__name__}", file=sys.stderr)
+    return found
+
+
+def _match_pdf(pdf: Path, acc_keys: dict[str, set[str]], overrides: Mapping[str, list[str]]) -> list[str]:
+    """Return the accession(s) a PDF belongs to (override → filename token → DOI text-mine)."""
+    stem = _norm_id(pdf.stem)
+    if stem in overrides:
+        return overrides[stem]
+    for raw_stem, accs in overrides.items():
+        if raw_stem in stem:
+            return accs
+    hits = {acc for acc, keys in acc_keys.items() if any(k in stem or stem in k for k in keys)}
+    if hits:
+        return sorted(hits)
+    pdf_keys = _pdf_dois(pdf)
+    hits = {acc for acc, keys in acc_keys.items()
+            if any(any(pk == k or k in pk for k in keys) for pk in pdf_keys)}
+    return sorted(hits)
+
+
+def attach_downloaded_papers(*, downloads_dir: str | Path, worklist_path: str | Path,
+                             out_dir: str | Path, overrides: Mapping[str, list[str]] | None = None,
+                             dry_run: bool = False) -> dict[str, Path]:
+    """Match hand-downloaded publisher PDFs to their study accession and copy them into ``manual_download/``.
+
+    Matches each PDF primarily by the DOI text-mined from its first page, then by normalised filename/URL
+    tokens, then by an explicit ``overrides`` map, and copies it to ``<out_dir>/<accession>.pdf`` so
+    grading can pick it up. A PDF may serve several accessions (one paper, >1 project). Idempotent.
+    """
+    import shutil
+
+    overrides = overrides or {}
+    dl = Path(downloads_dir).expanduser()
+    out = Path(out_dir)
+    if not dl.is_dir():
+        sys.exit(f"downloads folder not found: {dl}")
+    rep = pd.read_csv(worklist_path, sep="\t", dtype=str).fillna("")
+    have_paper = rep[rep["has_paper"].str.lower().isin({"true", "1", "yes"})]
+    acc_keys = {r["study_accession"]: _accession_keys(r) for _, r in have_paper.iterrows()}
+
+    pdfs = sorted(q for q in dl.glob("*.pdf"))
+    print(f"{len(pdfs)} PDFs in {dl.name}; {len(acc_keys)} accessions need a paper.\n", file=sys.stderr)
+
+    resolved: dict[str, Path] = {}
+    unmatched: list[str] = []
+    if not dry_run:
+        out.mkdir(parents=True, exist_ok=True)
+    for pdf in pdfs:
+        accs = _match_pdf(pdf, acc_keys, overrides)
+        if not accs:
+            unmatched.append(pdf.name)
+            continue
+        for acc in accs:
+            resolved[acc] = pdf
+            print(f"  {pdf.name}  ->  {acc}.pdf", file=sys.stderr)
+            if not dry_run:
+                shutil.copy2(pdf, out / f"{acc}.pdf")
+
+    missing = sorted(set(acc_keys) - set(resolved))
+    print(f"\nResolved {len(resolved)}/{len(acc_keys)} accessions.", file=sys.stderr)
+    if missing:
+        print(f"STILL MISSING ({len(missing)}): {', '.join(missing)}", file=sys.stderr)
+    if unmatched:
+        print(f"Unmatched PDFs ({len(unmatched)}): {', '.join(unmatched)}", file=sys.stderr)
+    return resolved

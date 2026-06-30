@@ -1,11 +1,13 @@
-"""Unified entry point — run the whole agentic-metadata pipeline against one provided table.
+"""Unified entry point — run the whole agentic-metadata pipeline IN-PROCESS against one provided table.
 
-A thin, application-agnostic orchestrator over the proven stage scripts. It ingests a single pre-built
-per-sample table (the flat CSV/xlsx an application exports once), selects which studies to process — by
-**curated split** *or* by **study-size band** — and runs the production stages in their proven order:
+A thin, application-agnostic orchestrator over the engine stages (``engine.stages``). It ingests a single
+pre-built **full-width** per-sample table (the flat CSV/xlsx an application exports once), selects which
+studies to process — by **curated split** *or* by **study-size band** — and calls the stage functions
+in-process (no subprocess shell-out) in their proven order:
 
     find papers → study grading → per-sample extract (FIRST) → whole-field backfill
-                 → escalation detect → run-health      (escalation + run-health best-effort)
+        → missing-papers worklist → per-sample-supplement worklist
+        → escalation detect → escalation apply → fill metadata table → run-health
 
 Two selection modes (mutually exclusive):
 
@@ -21,29 +23,38 @@ Two selection modes (mutually exclusive):
 Grading defaults to ``--paper-source finder`` (grade the paper the finder picked — the production
 standard, so the numbers carry finder error); ``curated`` grades off the snapshot ``paper_link``.
 
-The driver contains **no** per-application stage logic — it sequences the application's ``run_*`` stage
-scripts (``--stage-dir``), so a new application supplies its own table + stage dir and reuses this driver.
+The driver contains **no** per-application stage logic. Everything application-specific arrives as data:
+the rubric (``--spec``), the per-sample table (``--table``), the data tree (``--data-dir``), the curated
+snapshot (``--snapshot``). A new application supplies those four and reuses this driver unchanged.
 
 Examples
 --------
 unset VIRTUAL_ENV
 export BACHGT_PROJECT_K_ROOT="…/Aaron Weimann's files - project_k" BACHGT_PROJECT_K_USER=data
-# Smoke one uncurated study end-to-end:
-uv run python .../engine/run_full_metadata_agent.py --table .../data/inputs/base_table.csv \
-    --min-study-size 100 --max-study-size 110 --limit 1 --tag tail_smoke --web-fallback
+# Byte-identical regression gate (reproduces run_pipeline.sh "train,val" train):
+uv run python .../engine/run_full_metadata_agent.py \
+    --spec .../klebsiella/attributes.yaml --table .../klebsiella/data/inputs/base_table.csv \
+    --data-dir .../klebsiella/data --splits .../klebsiella/data/fold_splits/project_splits.tsv \
+    --sizing .../klebsiella/data/ena_assessment/ena_sizing.tsv \
+    --snapshot .../klebsiella/data/inputs/study_level_metadata_all_combined_v1.0_20260105.csv \
+    --fold train,val --tag train --paper-source curated
 # The full uncurated >100-sample tail:
-uv run python .../engine/run_full_metadata_agent.py --table .../data/inputs/base_table.csv \
-    --min-study-size 100 --tag tail100 --web-fallback
+uv run python .../engine/run_full_metadata_agent.py \
+    --spec .../klebsiella/attributes.yaml --table .../klebsiella/data/inputs/base_table.csv \
+    --data-dir .../klebsiella/data --min-study-size 100 --tag tail100 --web-fallback
 """
 
 from __future__ import annotations
 
 import argparse
-import subprocess
 import sys
 from pathlib import Path
 
 import pandas as pd
+
+from bac_metadata.bac_agentic_metadata.engine import stages
+from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, make_llm
+from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 #: Synthetic non-study collections in the base table — never selected for the tail.
 SYNTHETIC_STUDIES = {"Refseq_collection", "NCTC_collection"}
@@ -111,41 +122,71 @@ def _write_batch_splits(studies: list[str], sizes: pd.Series, tag: str, out: Pat
     return out
 
 
-def _run(label: str, argv: list[str], *, required: bool) -> bool:
-    """Run one stage as a subprocess; return success. A ``required`` failure aborts the driver."""
-    print(f"\n### [{label}] {' '.join(str(a) for a in argv)}", file=sys.stderr, flush=True)
-    proc = subprocess.run([sys.executable, *[str(a) for a in argv]], check=False)
-    if proc.returncode != 0:
-        msg = f"STAGE FAILED ({label}): exit {proc.returncode}"
-        if required:
-            sys.exit(msg)
-        print(f"WARN: {msg} (non-blocking)", file=sys.stderr)
-        return False
-    return True
+def _classification_lookup(report_path: Path) -> dict[str, dict]:
+    """Optional per-accession classification/coverage from an ENA assessment report (absent → empty).
+
+    Generic: reads whatever ``classification`` / ``coverage`` columns the report holds, keyed by
+    ``study_accession``. The uncurated tail has no assessment report, so this is simply empty there.
+    """
+    if not report_path or not report_path.exists():
+        return {}
+    vdf = pd.read_csv(report_path, sep="\t", dtype=str)
+    key = "study_accession" if "study_accession" in vdf.columns else vdf.columns[0]
+    cols = [c for c in ("classification", "coverage") if c in vdf.columns]
+    return {r[key]: {c: r[c] for c in cols} for _, r in vdf.iterrows()}
+
+
+def _study_grade_columns(spec: AttributeSpec) -> dict[str, str]:
+    """Study-level grades broadcast to every sample as new columns (col name -> ``<field>__value``).
+
+    Spec-driven, not hardcoded: a study-level attribute is broadcast when it is gradeable for the WHOLE
+    project (declares ``ground_truth`` + ``values``) and applies unconditionally (no ``applies_when``,
+    no ``note`` caveat). For Klebsiella this resolves to ``study_setting`` + ``amr_study`` — the two
+    metadata_v2 study-level columns — reproducing the former ``build_enriched_table`` behaviour.
+    """
+    study_level = spec.raw.get("attributes", {}).get("study_level", {})
+    out: dict[str, str] = {}
+    for field, body in study_level.items():
+        if not isinstance(body, dict):
+            continue
+        if {"ground_truth", "values"} <= set(body) and "applies_when" not in body and "note" not in body:
+            out[field] = f"{field}__value"
+    return out
 
 
 def main() -> None:
-    """Parse arguments, select studies, and orchestrate the full pipeline over the provided table."""
-    p = argparse.ArgumentParser(description="Unified agentic-metadata pipeline over one provided table.")
-    p.add_argument("--table", required=True, help="Pre-built per-sample base table (CSV/TSV/xlsx).")
-    p.add_argument("--stage-dir", default=str(Path(__file__).resolve().parents[1] / "applications" / "klebsiella"),
-                   help="Directory holding the application's run_* stage scripts (default the Klebsiella app).")
+    """Parse arguments, select studies, and orchestrate the full pipeline in-process over the table."""
+    p = argparse.ArgumentParser(description="Unified agentic-metadata pipeline (in-process) over one table.")
+    p.add_argument("--spec", required=True, help="Application attributes.yaml (the rubric).")
+    p.add_argument("--table", required=True, help="Pre-built FULL-WIDTH per-sample base table (CSV/TSV).")
+    p.add_argument("--data-dir", required=True, help="Application data tree root (holds find_papers/, cache/, …).")
     p.add_argument("--tag", required=True, help="Run tag — names the synthetic fold and all output artifacts.")
+    p.add_argument("--snapshot", default=None,
+                   help="Curated study-level snapshot CSV (source of paper_link for --paper-source curated).")
     p.add_argument("--paper-source", choices=["finder", "curated"], default="finder",
                    help="Grade off the finder's pick (default, production standard) or the curated snapshot link.")
+    p.add_argument("--classifications", default=None,
+                   help="ENA assessment report TSV for per-study classification/coverage "
+                        "(default <data-dir>/ena_assessment/ena_assessment_report.tsv; absent → none).")
+    p.add_argument("--manual-curation", default=None,
+                   help="Manual-curation TSV. Recorded for the evaluation layer (run_folds.sh runs the "
+                        "agreement comparison when present); the driver itself does not score.")
     # Selection — exactly one of the two modes.
     p.add_argument("--splits", default=None, help="Curated split TSV (with --fold: process curated fold(s)).")
     p.add_argument("--fold", default=None, help="Comma-separated curated fold(s) to process (splits mode).")
+    p.add_argument("--sizing", default=None,
+                   help="Curated ena_sizing TSV (splits mode; default <data-dir>/ena_assessment/ena_sizing.tsv).")
     p.add_argument("--min-study-size", type=int, default=None, help="Tail mode: min distinct-sample count (inclusive).")
     p.add_argument("--max-study-size", type=int, default=None, help="Tail mode: max distinct-sample count (inclusive).")
     p.add_argument("--exclude-splits", default=None,
-                   help="Curated split to exclude in tail mode (default <stage-dir>/data/fold_splits/project_splits.tsv).")
+                   help="Curated split to exclude in tail mode (default <data-dir>/fold_splits/project_splits.tsv).")
     p.add_argument("--limit", type=int, default=None, help="Process only the first N selected studies (biggest-first).")
     p.add_argument("--scratch", default=None, help="Scratch dir for the batch-local sizing/split (default under data/cache).")
     p.add_argument("--web-fallback", action="store_true", help="Enable the finder's paid web-search fallback.")
     p.add_argument("--backend", choices=["subscription", "api"], default="subscription", help="LLM backend.")
-    p.add_argument("--model", default=None, help="LLM model id (default: each stage's default).")
-    p.add_argument("--skip-escalation", action="store_true", help="Skip the escalation-detect stage.")
+    p.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
+    p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete.")
+    p.add_argument("--skip-escalation", action="store_true", help="Skip the escalation detect/apply stages.")
     p.add_argument("--skip-run-health", action="store_true", help="Skip the run-health report.")
     args = p.parse_args()
 
@@ -153,17 +194,31 @@ def main() -> None:
     splits_mode = args.fold is not None
     if size_mode == splits_mode:
         sys.exit("Choose exactly one selection mode: --min-study-size/--max-study-size OR --splits + --fold.")
+    if args.paper_source == "curated" and not args.snapshot:
+        sys.exit("--paper-source curated needs --snapshot (the curated study-level CSV with paper_link).")
 
-    stage = Path(args.stage_dir).resolve()
-    data = stage / "data"
+    data = Path(args.data_dir).resolve()
     find_dir = data / "find_papers"
     grade_dir = data / "study_lv_attributes" / "grading"
     wsb_dir = data / "study_lv_attributes" / "whole_study_backfill"
     esc_dir = data / "study_lv_attributes" / "escalation"
     ps_dir = data / "sample_lv_attributes" / "per_sample"
-    for d in (find_dir, grade_dir, wsb_dir, esc_dir, ps_dir):
+    enriched_dir = data / "sample_lv_attributes" / "enriched"
+    manual_papers_dir = find_dir / "manual_download"
+    manual_supp_dir = data / "sample_lv_attributes" / "manual_download_supp"
+    for d in (find_dir, grade_dir, wsb_dir, esc_dir, ps_dir, enriched_dir, manual_papers_dir, manual_supp_dir):
         d.mkdir(parents=True, exist_ok=True)
-    model_args = ["--model", args.model] if args.model else []
+
+    caches = stages.StageCaches(
+        llm=data / "cache" / "llm", ena=data / "cache" / "ena", find=data / "cache" / "find",
+        fulltext=data / "cache" / "fulltext", per_sample_supp=data / "cache" / "per_sample_supp",
+    )
+    caches.ensure()
+
+    spec = AttributeSpec.from_yaml(args.spec)
+    fields = list(spec.completeness_fields)
+    study_grade_columns = _study_grade_columns(spec)
+    tag = args.tag
 
     sizes = _study_sizes(Path(args.table))
     if size_mode:
@@ -174,67 +229,140 @@ def main() -> None:
         )
         if not selected:
             sys.exit("No uncurated studies match the size band — nothing to do.")
-        scratch = Path(args.scratch) if args.scratch else data / "cache" / f"driver_{args.tag}"
-        sizing_path = _write_batch_sizing(selected, sizes, args.tag, scratch / f"ena_sizing_{args.tag}.tsv")
-        splits_path = _write_batch_splits(selected, sizes, args.tag, scratch / f"project_splits_{args.tag}.tsv")
-        fold = args.tag
+        scratch = Path(args.scratch) if args.scratch else data / "cache" / f"driver_{tag}"
+        sizing_path = _write_batch_sizing(selected, sizes, tag, scratch / f"ena_sizing_{tag}.tsv")
+        _write_batch_splits(selected, sizes, tag, scratch / f"project_splits_{tag}.tsv")
+        fold = tag
+        classifications: dict[str, dict] = {}
         total = int(sum(sizes.get(s, 0) for s in selected))
-        print(f"=== driver: tail mode tag='{args.tag}' — {len(selected)} uncurated studies / {total} samples "
+        print(f"=== driver: tail mode tag='{tag}' — {len(selected)} uncurated studies / {total} samples "
               f"(size band [{args.min_study_size or 0}, {args.max_study_size or '∞'}], biggest "
               f"{selected[0]}={int(sizes.get(selected[0], 0))}) ===", file=sys.stderr)
     else:
         splits_path = Path(args.splits).resolve() if args.splits else data / "fold_splits" / "project_splits.tsv"
-        sizing_path = data / "ena_assessment" / "ena_sizing.tsv"  # curated sizing (stage default)
+        sizing_path = Path(args.sizing) if args.sizing else data / "ena_assessment" / "ena_sizing.tsv"
         fold = args.fold
         sel = pd.read_csv(splits_path, sep="\t", dtype=str)
         selected = list(sel[sel["fold"].isin(set(fold.split(",")))]["study_accession"])
-        print(f"=== driver: splits mode fold='{fold}' tag='{args.tag}' — {len(selected)} curated studies "
+        report = Path(args.classifications) if args.classifications else data / "ena_assessment" / "ena_assessment_report.tsv"
+        classifications = _classification_lookup(report)
+        print(f"=== driver: splits mode fold='{fold}' tag='{tag}' — {len(selected)} curated studies "
               f"(paper-source={args.paper_source}) ===", file=sys.stderr)
 
-    tag = args.tag
+    folds = [f.strip() for f in fold.split(",") if f.strip()]
+    found_jsonl = find_dir / f"found_papers_{tag}.jsonl"
     found_tsv = find_dir / f"found_papers_{tag}.tsv"
-    grades_tsv = grade_dir / f"study_grades_{tag}.tsv"
     grades_jsonl = grade_dir / f"study_grades_{tag}.jsonl"
+    grades_tsv = grade_dir / f"study_grades_{tag}.tsv"
     per_sample_tsv = ps_dir / f"per_sample_applied_{tag}.tsv"
     backfill_tsv = wsb_dir / f"backfill_applied_{tag}.tsv"
-    common = ["--backend", args.backend, *model_args]
+    gate_report_tsv = wsb_dir / f"backfill_gate_report_{tag}.tsv"
+    decisions_tsv = esc_dir / f"decisions_needed_{tag}.tsv"
+    escalation_applied_tsv = esc_dir / f"escalation_applied_{tag}.tsv"
+    filled_tsv = enriched_dir / f"filled_metadata_{tag}.tsv"
 
-    # ── Stage 1 — find papers ───────────────────────────────────────────────────────────────────
-    find_argv = [stage / "run_find_papers.py", "--fold", fold, "--sizing", sizing_path,
-                 "--output-prefix", f"found_papers_{tag}", *common]
-    if args.web_fallback:
-        find_argv.append("--web-fallback")
-    _run("find", find_argv, required=True)
+    # The full-width base table, restricted to the selection — the substrate every per-sample stage reads.
+    # keep_default_na=False preserves literal placeholder strings (e.g. ENA's "NA") exactly as the
+    # in-memory collation base holds them, so apply_whole_field records the original value byte-for-byte.
+    base_full = pd.read_csv(args.table, dtype=str, low_memory=False, keep_default_na=False)
+    if "study_accession" not in base_full.columns or "sample_accession" not in base_full.columns:
+        sys.exit(f"--table needs study_accession + sample_accession; got {list(base_full.columns)[:12]}")
+    base = base_full[base_full["study_accession"].isin(set(selected))].copy()
+    print(f"Base (selection): {len(base)} samples across {base['study_accession'].nunique()} studies "
+          f"({len(base.columns)} columns)", file=sys.stderr)
 
-    # ── Stage 2 — study grading (paper source per --paper-source) ────────────────────────────────
-    _run("grade", [stage / "run_study_grading.py", "--fold", fold, "--sizing", sizing_path,
-                   "--paper-source", args.paper_source, "--found", found_tsv,
-                   "--output-prefix", f"study_grades_{tag}", *common], required=True)
+    llm = make_llm(args.backend, model=args.model, cache_dir=caches.llm)
 
-    # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ───────────────────
-    _run("per-sample", [stage / "run_per_sample_extract.py", "--fold", fold, "--splits", splits_path,
-                        "--found", found_tsv, "--output", per_sample_tsv, *common], required=True)
+    # ── Stage 1 — find papers ─────────────────────────────────────────────────────────────────────
+    print(f"\n### [find] {len(selected)} studies", file=sys.stderr)
+    stages.find_papers(
+        spec=spec, sizing_path=sizing_path, folds=folds, out_jsonl=found_jsonl, out_tsv=found_tsv,
+        llm=llm, model=args.model, caches=caches, web_fallback=args.web_fallback, limit=args.limit,
+    )
 
-    # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ─────────────────
-    _run("backfill", [stage / "run_backfill.py", "--fold", fold, "--splits", splits_path,
-                      "--grades", grades_tsv, "--per-sample", per_sample_tsv,
-                      "--output", backfill_tsv], required=True)
+    # ── Stage 2 — study grading (paper source per --paper-source) ─────────────────────────────────
+    paper_links = (stages.finder_paper_links(found_tsv) if args.paper_source == "finder"
+                   else stages.curated_paper_links(args.snapshot))
+    print("\n### [grade]", file=sys.stderr)
+    stages.grade(
+        spec=spec, sizing_path=sizing_path, folds=folds, paper_links=paper_links,
+        classifications=classifications, manual_papers_dir=manual_papers_dir,
+        out_jsonl=grades_jsonl, out_tsv=grades_tsv, llm=llm, model=args.model, caches=caches,
+        limit=args.limit,
+    )
 
-    # ── Stage 5 — escalation detect (best-effort; the curator-tier near-miss queue) ───────────────
+    # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ────────────────────
+    print("\n### [per-sample]", file=sys.stderr)
+    stages.per_sample(
+        base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
+        manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
+    )
+
+    # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────
+    print("\n### [backfill]", file=sys.stderr)
+    stages.backfill_whole_field(
+        base=base, grades_path=grades_tsv, per_sample_path=per_sample_tsv, fields=fields,
+        out_path=backfill_tsv, threshold=args.threshold,
+    )
+
+    # ── Stage 5 — missing-papers worklist (the manual-fetch loop; best-effort) ─────────────────────
+    try:
+        stages.missing_papers(
+            grades_jsonl=grades_jsonl, found_path=found_tsv, gap_report_path=gate_report_tsv,
+            sizing_path=Path(sizing_path), manual_papers_dir=manual_papers_dir, out_dir=find_dir,
+            paper_links=paper_links,
+        )
+    except Exception as exc:  # noqa: BLE001 — a worklist failure must not kill the run
+        print(f"WARN: missing-papers worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
+
+    # ── Stage 6 — per-sample supplementary worklist (the manual-table curator queue; best-effort) ──
+    try:
+        stages.persample_supplement(
+            data_dir=data, paper_links=paper_links, caches=caches, manual_papers_dir=manual_papers_dir,
+            fields=fields, tag=tag, backend=args.backend, model=args.model,
+        )
+    except Exception as exc:  # noqa: BLE001 — non-blocking worklist
+        print(f"WARN: per-sample supplement worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
+
+    # ── Stage 7 — escalation detect → apply (best-effort; the curator-tier near-miss queue) ────────
     if not args.skip_escalation:
-        _run("escalation", [stage / "run_escalations.py", "--fold", fold, "--accessions", ",".join(selected),
-                            "--grades", grades_jsonl, "--per-sample", per_sample_tsv,
-                            "--output", esc_dir / f"decisions_needed_{tag}.tsv", *common], required=False)
+        try:
+            stages.escalate_detect(
+                spec=spec, base=base, keep=selected, grades_jsonl=grades_jsonl,
+                per_sample_path=per_sample_tsv, sizing_path=sizing_path, paper_links=paper_links,
+                classifications=classifications, manual_papers_dir=manual_papers_dir, fields=fields,
+                out_path=decisions_tsv, llm=llm, model=args.model, caches=caches,
+            )
+            stages.escalate_apply(base=base, keep=selected, queue_path=decisions_tsv,
+                                  out_path=escalation_applied_tsv)
+        except Exception as exc:  # noqa: BLE001 — escalation is best-effort
+            print(f"WARN: escalation failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 
-    # ── Stage 6 — run-health report (the convergence / closure artifact; best-effort) ─────────────
+    # ── Stage 8 — fill the metadata table (PRODUCTION output) ──────────────────────────────────────
+    print("\n### [fill-metadata-table]", file=sys.stderr)
+    stages.fill_metadata_table(
+        base=base, fields=fields,
+        fill_paths={"per_sample": per_sample_tsv, "escalation": escalation_applied_tsv, "whole_field": backfill_tsv},
+        grades_path=grades_tsv, study_grade_columns=study_grade_columns, out_path=filled_tsv,
+        tag=tag, fold_label=fold,
+    )
+
+    # ── Stage 9 — run-health report (the convergence / closure artifact; best-effort) ──────────────
     if not args.skip_run_health:
-        _run("run-health", [stage / "report_run_health.py", "--fold", fold, "--tag", tag], required=False)
+        try:
+            stages.run_health(data_dir=data, fields=fields, fold=fold, tag=tag)
+        except Exception as exc:  # noqa: BLE001 — run-health never blocks
+            print(f"WARN: run-health report failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 
     print(f"\n=== DRIVER COMPLETE (tag={tag}) ===", file=sys.stderr)
     print(f"found:      {found_tsv}", file=sys.stderr)
     print(f"grades:     {grades_tsv}", file=sys.stderr)
     print(f"per-sample: {per_sample_tsv}", file=sys.stderr)
     print(f"backfill:   {backfill_tsv}", file=sys.stderr)
+    print(f"filled:     {filled_tsv}", file=sys.stderr)
+    if args.manual_curation:
+        print(f"manual-curation supplied ({args.manual_curation}); run evaluation/run_folds.sh to score "
+              "agent-vs-manual agreement.", file=sys.stderr)
 
 
 if __name__ == "__main__":
