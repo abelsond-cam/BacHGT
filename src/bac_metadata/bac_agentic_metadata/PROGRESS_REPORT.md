@@ -5,8 +5,9 @@ discipline, the measured results, and the forward plan. (Supersedes the former `
 `STAGE0_kleb_curation_map.md`, `STAGE1.md`, `STAGE2.md`, and `REPRODUCTION_GATE_INVESTIGATION.md`, all now
 folded in here and deleted.) Authoritative metadata_v2 description: [`../METADATA_v2_README.md`](../METADATA_v2_README.md).
 
-_Last updated 2026-06-26. Scope: the Klebsiella validation site. The 47-accession **test fold has been opened
-and re-gated** under the corrected pipeline; train+val is the tuning set (re-gate in progress, §8)._
+_Last updated 2026-06-30. Scope: the Klebsiella validation site. The 47-accession test fold is re-gated; the
+uncurated **>100-sample tail has run** (§12); and a **consolidation into one engine + one entry point is IN
+PROGRESS — see §12 (read it first if you are resuming this work).**_
 
 ---
 
@@ -320,3 +321,130 @@ Do all of this **before** resuming M. abscessus (too complex to run both while s
   `study_lv_attributes/escalation/{decisions_needed,escalation_applied,accepted_unrecoverable}_<TAG>.tsv`;
   `scorecard/{agent_vs_manual,backfill_completeness,run_health,per_level_accounting}_<TAG>…`.
 - **Diagnostics (read-only, not in the pipeline):** `applications/klebsiella/diagnostics/*`.
+
+---
+
+## 12. Consolidation into ONE engine + ONE entry point (IN PROGRESS — 2026-06-30)
+
+**Why.** The pipeline logic already lives in `engine/`, but the stage runners still sit in
+`applications/klebsiella/` and the driver ran them by **subprocess** — not really one pipeline, and the app
+folder is full of generic code. A 3-agent read-only audit (2026-06-30) confirmed **no duplicate/divergent
+copies** (folds and tail ran the same scripts) but the layering is wrong. Decisions locked with David:
+**(a)** promote the stage orchestration into `engine/` as importable functions; the driver calls them
+**in-process**; **(b)** make the engine **attribute-agnostic** (fields come from `attributes.yaml`, not
+hardcoded); **(c)** the Klebsiella app shrinks to four things + a thin shell wrapper; **(d)** every
+behaviour-changing step is checked **byte-for-byte** against a captured reference. Full approved plan:
+`~/.claude/plans/entering-plan-mode-for-cozy-snowglobe.md` (this §12 is the living summary; no separate
+plan doc).
+
+### The split — engine vs Klebsiella (NO acronym/number labels; name things for what they do)
+
+- **engine/** = the whole pipeline + the spec reader + mechanics (grade scale, fill precedence
+  `per-sample > curator > whole-field > ENA`, the ENA-complete gate `0.75`, the big-decision `1%`).
+- **Klebsiella application = only:** `attributes.yaml` (the rubric + each per-sample field's input/output
+  column), `run_klebsiella.sh` (NEW thin wrapper — the human entry point, holds the data-in/out paths),
+  `export_base_table.py` (the ONE genuinely Kleb-specific piece — collates the ENA TSVs into the base
+  table), and `data/`. Everything else moves to the engine.
+- The reference David curated is **manual curation, not gold/truth** (the agent corrects real errors in
+  it). The driver flag is therefore **`--manual-curation`** (NOT `--gold`); supplying it runs the
+  agreement comparison, absent → skipped (e.g. M. abscessus).
+
+### `run_klebsiella.sh` (target) — the only Kleb entry, passes every path to the generic engine
+
+```bash
+uv run python .../engine/run_full_metadata_agent.py \
+  --spec     .../klebsiella/attributes.yaml \
+  --table    .../klebsiella/data/inputs/base_table.csv \      # FULL-WIDTH (all ENA cols) — see remaining work
+  --data-dir .../klebsiella/data \
+  --splits   .../klebsiella/data/fold_splits/project_splits.tsv \
+  --sizing   .../klebsiella/data/ena_assessment/ena_sizing.tsv \
+  --snapshot .../klebsiella/data/inputs/study_level_metadata_all_combined_v1.0_20260105.csv \
+  --manual-curation "$MANUAL" "$@"   # mode: --fold train,val | --min-study-size 101 --tag tail100; +--paper-source finder|curated, --web-fallback
+```
+
+### What moves into `engine/stages.py` (one function per stage; driver calls in-process)
+
+`find_papers`, `grade`, `per_sample`, `backfill_whole_field`, `escalate_detect`/`escalate_apply`,
+`ena_assessment`, `missing_papers`, `persample_supplement`, `run_health`,
+**`fill_metadata_table`** (← `build_enriched_table.py`; writes `filled_metadata_<tag>.tsv` — PRODUCTION
+output, **not** evaluation; merge already `engine.backfill.apply_precedence_merge`),
+**`attach_downloaded_papers`** (← `link_local_papers.py`; match hand-downloaded PDFs → accession, generic).
+
+### KEY FINDING (de-risks the rest): the engine is already mostly attribute-agnostic
+
+- `grader.py` reads **everything** from the spec (`spec.raw` study_level / study_filters /
+  per_sample_completeness.backfill.fields) — no hardcoded field list. `study_grades` is already spec-driven.
+- `backfill.py` functions already take `fields=...` (the constant `FIELDS` is only the default) — `field_completeness`/`gate_fields`/`apply_whole_field`. `backfill_applied` is already parameterised.
+- `spec.completeness_fields` already returns the 4 fields **read from the yaml**.
+- The ONLY gated module still hardcoding the 4 fields is **`sample_extractor.py`** (`FIELDS` + `FIELD_VALUE_GUIDE` in the per-sample column-map prompt). For Klebsiella the defaults reproduce current behaviour (byte-identical), so its parameterisation **only matters to enable M. abscessus** — do it, but it is not on the Kleb byte-identity path.
+- Non-gated field constants (`escalation._FIELD_TERMS`, `completeness.PARSED_COLUMN`,
+  `persample_supplement_worklist.DEFAULT_FIELDS`, `sources` clinical) don't affect the 3 checked outputs;
+  parameterise with the constant as default for M. abscessus.
+
+### Safety net — the exact-match check (the discipline for every step)
+
+`engine/reference_outputs/{study_grades,per_sample_applied,backfill_applied}_train.tsv` are sorted copies
+of the **current** train,val outputs under the **final rubric** (captured by `run_pipeline.sh "train,val"
+train` on 2026-06-30, committed `1d8da89`). Every consolidation step must reproduce these **byte-for-byte**
+(sort rows, then plain file compare). Grading is now **cached under the final rubric**, so the check is
+**fast** (cache hit = prompt unchanged = pass; a cache miss itself signals a prompt drift). Stop & fix on
+any diff.
+
+### DONE & committed
+- `80032fd` — unified driver (`engine/run_full_metadata_agent.py`, size-band + splits selection, writes
+  batch-local sizing/splits to scratch, `project_splits.tsv` read-only) + stage pass-through hooks
+  (`--sizing` / `--paper-source finder` / `--splits` on the app run_*.py) + `export_base_table.py` +
+  **rubric hardening** (below) + tail100 curator artifacts.
+- `1d8da89` — `engine/stages.py` (find_papers, grade, per_sample, backfill_whole_field + helpers
+  `select_sizing_rows`, `resolve_fulltext_for_accession`, `curated_paper_links`, `finder_paper_links`,
+  `StageCaches`) + `engine/reference_outputs/`. **stages.py is additive — nothing imports it yet, so the
+  current pipeline still runs.**
+
+### REMAINING (the close-out, in order)
+1. Add the rest of `engine/stages.py`: `escalate_detect`/`escalate_apply` (from `run_escalations.py` — the
+   complex one: detector + the snapshot-backed `evidence_fn` + apply), `fill_metadata_table` (from
+   `build_enriched_table.py`), `attach_downloaded_papers` (from `link_local_papers.py`). (missing_papers /
+   persample_supplement / run_health already have engine builders — the driver can call them directly.)
+2. **Rewrite `engine/run_full_metadata_agent.py` to call `stages.py` IN-PROCESS** (drop the subprocess
+   shell-out): load spec + full-width base table + caches + llm; selection (splits|size); build
+   `paper_links` (finder from `found_*`, or `curated_paper_links(--snapshot)`); run stages in order; add
+   the four it lacks (ena-sizing, missing-papers worklist, persample-supp worklist, escalation **apply**);
+   end with `fill_metadata_table`. New args: `--spec --data-dir --snapshot --manual-curation`.
+3. **`export_base_table.py` → FULL-WIDTH** (all ENA columns, incl. the per-sample alias cols
+   `secondary_sample_accession`/`accession`/`sample_alias`/`sample_title` that
+   `sample_extractor.build_accession_to_sample` needs) so every stage (incl. `fill_metadata_table`) reads
+   the one `--table`. (Current `base_table.csv` is NARROW — only 4 fields + a few aux.)
+4. **Exact-match check:** driver `--fold train,val --paper-source curated` reproduces
+   `reference_outputs/` byte-for-byte (cache-warm, fast). Then delete the 11 app scripts
+   (`run_*.py` ×5, `report_*.py` ×3, `build_enriched_table.py`, `link_local_papers.py`, +
+   `make_tail_batch.py`) and `run_pipeline.sh`; add `run_klebsiella.sh`; add thin `engine/cli/` per-stage
+   CLIs (curator loop); `evaluation/run_folds.sh` wraps the driver + runs `validate_*`/scorecard when
+   `--manual-curation` present (drop "gold"/"truth" naming inside `evaluation/`).
+5. Parameterise `sample_extractor` (+ the non-gated constants) so **M. abscessus** runs:
+   `run_m_abs.sh --table ATB_…xlsx --spec m_abs --min-study-size … --paper-source finder` (no splits, no
+   `--manual-curation`).
+
+### The rubric hardening applied 2026-06-29/30 (David's definitions — in `attributes.yaml`)
+- **country:** funding agency / language / journal / author affiliation do NOT establish collection country.
+- **isolation_source:** lab/in-vitro is NOT a source (→ blank); a bare "swab" is not useful — name the SITE
+  (rectal/skin-wound/surgical-wound/throat swab); environmental can match host; animal/plant → body specimen.
+- **host:** be specific — human / animal species (cattle, pigs, poultry) / plant / environment (wastewater,
+  clinical surfaces, soil, water); "in vitro"/"lab" → **blank**, never written.
+- **study_type:** `experimental_evolution` is ONLY deliberate engineering (knockout/CRISPR) or induced
+  evolution (serial passage / antibiotic broth); routine lab culture is NOT it.
+- **collection_date:** ≤2 yr → midpoint; 2–5 yr → escalate, fill a midpoint **only if pre-2010**, else
+  blank but still escalated; >5 yr blank.
+
+### tail100 — the uncurated >100-sample tail (DONE via the current driver, will re-run via `run_klebsiella.sh`)
+- **47 studies / 8,327 samples**, selected by `--min-study-size 101` (>100 total rows, not in any fold;
+  0 overlap with test/train/val verified, incl. umbrella/plural-accession check). Largest PRJNA788733=1488.
+- Caveat: sizing is on **total** rows, not Klebsiella-taxon count — a few non-KPSC studies leak in (e.g.
+  PRJEB8667 ≈0 Klebsiella, not in metadata_v2). Decide later whether to size on taxon count. **The pipeline
+  curates ALL samples in the base table (no KPSC filter) — correct, per David.**
+- 4 paywalled PDFs hand-downloaded → linked via `link_local_papers.py` to `manual_download/` (PRJEB20234,
+  PRJEB36370, PRJNA797179, PRJNA878595); all 4 now grade from full text. Worklist with name/link/DOI saved
+  at `data/find_papers/manual_papers_worklist_tail100.{tsv,md}`.
+- Escalation queue (`decisions_needed_tail100.tsv`) = **3** after the rubric hardening (was 5): PRJEB8667
+  host→human (a non-KPSC study), PRJEB20809 + PRJEB36370 collection_date (2–5 yr, post-2010 → escalate but
+  leave blank). The lab-culture host/source escalations are now suppressed.
+- `base_table.csv` (NARROW, 96,291 samples) is **untracked/regenerable** via `export_base_table.py`.

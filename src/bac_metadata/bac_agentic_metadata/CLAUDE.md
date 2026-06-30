@@ -12,6 +12,14 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 > **Before building any grading step, ask David for the grading definitions — do not
 > invent grading criteria.** The `attributes.yaml` files are name/value scaffolds with
 > definitions marked TBD.
+>
+> **⚠️ ACTIVE WORK — read [`PROGRESS_REPORT.md` §12](PROGRESS_REPORT.md) FIRST if resuming.** A consolidation
+> into **one engine + one entry point** is in progress: the stage runners are moving from
+> `applications/klebsiella/run_*.py` into **`engine/stages.py`** (called in-process by the driver
+> `engine/run_full_metadata_agent.py`), the app shrinks to `attributes.yaml` + `run_klebsiella.sh` +
+> `export_base_table.py` + `data/`, and `run_pipeline.sh` will be retired. Done so far is **additive** (the
+> current `run_pipeline.sh` pipeline still runs). §12 has the split, the byte-for-byte reference
+> (`engine/reference_outputs/`), the remaining steps, the rubric hardening, and the tail100 state.
 
 ## Layout
 
