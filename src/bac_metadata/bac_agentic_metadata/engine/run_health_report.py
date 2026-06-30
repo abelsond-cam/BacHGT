@@ -273,7 +273,8 @@ def build_run_health(
                 "study_accession": acc, "field": field, "fold": fold,
                 "none_found": none_found, "chosen_pmcid": pmcid, "fulltext_source": fulltext_source,
                 "is_full_text": is_full_text, "paper_resolved": paper_resolved, "paper_url": paper_url,
-                "paper_title": title[:60], "manual_pdf_readable": manual_pdf_readable, "supp_present": supp_present,
+                "paper_title": title[:60], "manual_pdf_present": manual_pdf_present,
+                "manual_pdf_readable": manual_pdf_readable, "supp_present": supp_present,
                 "gate_status": gate_status, "n_blank": n_blank,
                 "per_sample_method": om_method,
                 "zero_reason": zreason if state in ("ACTIONABLE", "EXHAUSTED") else "",
@@ -285,16 +286,25 @@ def build_run_health(
     res = pd.DataFrame(rows)
     score.mkdir(parents=True, exist_ok=True)
     res.to_csv(score / f"run_health_{tag}_report.tsv", sep="\t", index=False)
-    _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied)
+    _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied, len(esc_pending))
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if len(res) else 0
     blocked = int((res["resolution_state"] == "BLOCKED").sum()) if len(res) else 0
-    verdict = ("ALL CLEAR — curated to gold standard" if actionable + blocked == 0
-               else f"{actionable} ACTIONABLE + {blocked} BLOCKED(needs-linkage) outstanding")
+    base = ("ALL CLEAR — curated to gold standard" if actionable + blocked == 0
+            else f"{actionable} ACTIONABLE + {blocked} BLOCKED(needs-linkage) outstanding")
+    # Curator sign-off (the two human steps) folded into the returned verdict so a partially-curated run is
+    # loud on the console too — not only in the report's end banner. Mirrors the banner's logic exactly.
+    need_paper_n = res[res["recoverability"] == "fetch_paper"]["study_accession"].nunique() if len(res) else 0
+    unreadable_n = (res[res["manual_pdf_present"].apply(bool) & ~res["manual_pdf_readable"].apply(bool)]
+                    ["study_accession"].nunique()) if len(res) else 0
+    curator_ok = need_paper_n == 0 and unreadable_n == 0 and len(esc_pending) == 0
+    sign = ("✅ curator sign-off complete" if curator_ok
+            else f"⛔ CURATOR ACTION: {need_paper_n} paper(s) to add + {len(esc_pending)} escalation(s) to answer")
+    verdict = f"{base}  |  {sign}"
     return res, verdict
 
 
 def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str, esc_generated: int,
-              esc_answered: int, esc_applied: int) -> None:
+              esc_answered: int, esc_applied: int, esc_pending: int) -> None:
     """Render the verdict banner + the shrinking actionable worklist + the concern sections."""
     n = len(res)
     filled = int((res["resolution_state"] == "FILLED").sum()) if n else 0
@@ -380,5 +390,59 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
             md.append(f"| {r['field']} | {r.get('agent', '')} | {r.get('v2', '')} | {gwf} | {gps} | {gesc} | "
                       f"{r.get('residual_gap', '')} | {flag} |")
         md.append("")
+
+    # ── LOUD curator sign-off — the two human-in-the-loop steps, stated unmissably at the very end ──
+    # David's requirement: a run is NOT trustworthy until (1) manual papers are downloaded & added and
+    # (2) every tight-grading escalation is answered. Both numbers come straight from the artifacts, so a
+    # partially-curated run can NEVER read as done — even when the per-cell grid is otherwise satisfied.
+    need_paper = sorted(set(res[res["recoverability"] == "fetch_paper"]["study_accession"])) if n else []
+    added = sorted(set(res[res["manual_pdf_readable"].apply(bool)]["study_accession"])) if n else []
+    present_unreadable = sorted(set(
+        res[res["manual_pdf_present"].apply(bool) & ~res["manual_pdf_readable"].apply(bool)]["study_accession"])
+    ) if n else []
+    papers_ok = not need_paper and not present_unreadable
+    esc_ok = esc_pending == 0
+    paper_mark = "✅ COMPLETE" if papers_ok else "⛔ INCOMPLETE"
+    esc_mark = "✅ COMPLETE" if esc_ok else "⛔ INCOMPLETE"
+    overall = ("✅ CURATOR SIGN-OFF COMPLETE — both human steps done" if (papers_ok and esc_ok)
+               else f"⛔ CURATOR ACTION OUTSTANDING — {len(need_paper)} paper(s) to add, "
+                    f"{esc_pending} escalation(s) to answer")
+
+    md.append("\n---\n")
+    md.append("# ⛔⛔ CURATOR SIGN-OFF — REQUIRED BEFORE THIS RUN IS TRUSTED ⛔⛔\n")
+    md.append("> Two steps only a human can do. **While either is INCOMPLETE the completeness/accuracy "
+              "figures above UNDERSTATE the pipeline — supplement the data and rerun.**\n")
+
+    md.append(f"## 1. Manual papers downloaded & added — {paper_mark}\n")
+    if need_paper:
+        md.append(f"⛔ **{len(need_paper)} stud{'y' if len(need_paper) == 1 else 'ies'} have a real paper but "
+                  "NO usable full text** — download each to `find_papers/manual_download/<acc>.pdf`, then rerun:\n")
+        md.append("| study | paper |")
+        md.append("|---|---|")
+        for a in need_paper:
+            r0 = res[res["study_accession"] == a].iloc[0]
+            t, u = str(r0.get("paper_title", "")), str(r0.get("paper_url", ""))
+            md.append(f"| {a} | {f'[{t}]({u})' if u else (t or '(no link)')} |")
+        md.append("")
+    else:
+        md.append("✅ No outstanding downloads — every findable paper has full text "
+                  f"({len(added)} via a manually-added PDF).\n")
+    if present_unreadable:
+        md.append(f"⚠️ **{len(present_unreadable)} manually-added PDF(s) could NOT be parsed** "
+                  f"(present but unreadable — re-export/replace): {', '.join(present_unreadable)}\n")
+
+    md.append(f"## 2. Escalations answered (tight grading questions) — {esc_mark}\n")
+    md.append(f"Queue `study_lv_attributes/escalation/decisions_needed_{tag}.tsv`: "
+              f"**{esc_generated} generated · {esc_answered} answered · {esc_pending} PENDING** "
+              f"({esc_applied} fills applied).\n")
+    if esc_pending:
+        md.append(f"⛔ **{esc_pending} tight-grading decision(s) are UNANSWERED.** Fill the `answer` column "
+                  "(a blank answer = not decided; a reject/skip note counts as resolved) and rerun `--apply`.\n")
+    elif esc_generated:
+        md.append(f"✅ All {esc_generated} escalation(s) resolved (answered or explicitly rejected).\n")
+    else:
+        md.append("✅ No tight-grading escalations were raised.\n")
+
+    md.append(f"# → {overall}\n")
 
     (score / f"run_health_{tag}_report.md").write_text("\n".join(md) + "\n")
