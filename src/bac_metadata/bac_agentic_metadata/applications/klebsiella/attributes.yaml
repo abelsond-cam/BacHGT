@@ -270,13 +270,14 @@ attributes:
         collection_date:
           meaning: date of sample collection
           whole_project_value: |-
-            If no specific dates are given but all collection falls within a <= 2-year period, set
-            the midpoint of that period (e.g. all within 2016-17 -> 2017-01-01). If the collection
-            period spans MORE than 2 years, do not whole-field backfill it here. A span of about 2–5
-            years is sent to curator escalation (not filled automatically): accept a midpoint there
-            ONLY when the period is before ~2010 — older genomes are scarce, so an approximate date is
-            worth more; for later periods leave the date blank even though it is still escalated for a
-            human to review. Spans wider than ~5 years are left blank.
+            If no specific dates are given but all collection falls within a span of 2 years
+            (24 months) or less, set the midpoint of that period (e.g. all within 2016-17 ->
+            2017-01-01); this is auto-filled, not escalated. If the span is MORE than 2 years, do
+            not whole-field backfill it here. A 2–5-year (24–60-month) span is sent to curator
+            escalation ONLY when its midpoint is before ~2010 — older genomes are scarce, so an
+            approximate date is worth a human's confirmation; a 2–5-year span whose midpoint is
+            2010 or later is left blank and NOT escalated (recent imprecise dates are low-value).
+            Spans wider than ~5 years are left blank.
 
 # COHORT FLAGS emitted per accession alongside the attributes above.
 cohort_flags:
