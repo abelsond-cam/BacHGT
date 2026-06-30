@@ -397,32 +397,37 @@ any diff.
   **rubric hardening** (below) + tail100 curator artifacts.
 - `1d8da89` — `engine/stages.py` (find_papers, grade, per_sample, backfill_whole_field + helpers
   `select_sizing_rows`, `resolve_fulltext_for_accession`, `curated_paper_links`, `finder_paper_links`,
-  `StageCaches`) + `engine/reference_outputs/`. **stages.py is additive — nothing imports it yet, so the
-  current pipeline still runs.**
+  `StageCaches`) + `engine/reference_outputs/`.
+- `7c8884b` — **the one-engine driver, byte-identical to `run_pipeline.sh`** (steps 1–3 + the verification
+  half of 4): `stages.py` finished (escalate_detect/apply, fill_metadata_table, attach_downloaded_papers,
+  + missing_papers/persample_supplement/run_health wrappers); `run_full_metadata_agent.py` rewritten to
+  call `stages.py` **in-process** (data-driven `--spec`/`--table`/`--data-dir`/`--snapshot`, spec-driven
+  `study_grade_columns` + classification lookup, ends with `fill_metadata_table`); `export_base_table.py`
+  → **FULL-WIDTH** (96,291×119, sizing unchanged, 0 dup samples). **Byte-for-byte gate PASSES**: driver
+  `--fold train,val --paper-source curated` reproduces all three `reference_outputs/` exactly
+  (study_grades 110, per_sample_applied 17961, backfill_applied 22456). Key fix: read base with
+  `keep_default_na=False` so ENA's literal `"NA"` survives the CSV round-trip (the only diff the gate caught).
 
-### REMAINING (the close-out, in order)
-1. Add the rest of `engine/stages.py`: `escalate_detect`/`escalate_apply` (from `run_escalations.py` — the
-   complex one: detector + the snapshot-backed `evidence_fn` + apply), `fill_metadata_table` (from
-   `build_enriched_table.py`), `attach_downloaded_papers` (from `link_local_papers.py`). (missing_papers /
-   persample_supplement / run_health already have engine builders — the driver can call them directly.)
-2. **Rewrite `engine/run_full_metadata_agent.py` to call `stages.py` IN-PROCESS** (drop the subprocess
-   shell-out): load spec + full-width base table + caches + llm; selection (splits|size); build
-   `paper_links` (finder from `found_*`, or `curated_paper_links(--snapshot)`); run stages in order; add
-   the four it lacks (ena-sizing, missing-papers worklist, persample-supp worklist, escalation **apply**);
-   end with `fill_metadata_table`. New args: `--spec --data-dir --snapshot --manual-curation`.
-3. **`export_base_table.py` → FULL-WIDTH** (all ENA columns, incl. the per-sample alias cols
-   `secondary_sample_accession`/`accession`/`sample_alias`/`sample_title` that
-   `sample_extractor.build_accession_to_sample` needs) so every stage (incl. `fill_metadata_table`) reads
-   the one `--table`. (Current `base_table.csv` is NARROW — only 4 fields + a few aux.)
-4. **Exact-match check:** driver `--fold train,val --paper-source curated` reproduces
-   `reference_outputs/` byte-for-byte (cache-warm, fast). Then delete the 11 app scripts
-   (`run_*.py` ×5, `report_*.py` ×3, `build_enriched_table.py`, `link_local_papers.py`, +
-   `make_tail_batch.py`) and `run_pipeline.sh`; add `run_klebsiella.sh`; add thin `engine/cli/` per-stage
-   CLIs (curator loop); `evaluation/run_folds.sh` wraps the driver + runs `validate_*`/scorecard when
-   `--manual-curation` present (drop "gold"/"truth" naming inside `evaluation/`).
-5. Parameterise `sample_extractor` (+ the non-gated constants) so **M. abscessus** runs:
+### REMAINING (the close-out, in order) — revised with David 2026-06-30
+1. **Accuracy/completeness regression from the COMBINED base table (David's add — NOT yet done).** Run
+   train/val **and test** through the scorecard *from the new full-width combined base table* (the one
+   `--table`), and confirm the completeness + value-accuracy gains match the previously-measured numbers
+   in **§8**. We have only ever scored the *separate* per-fold pipeline; never the combined base table.
+   Use `validate_backfill_values` / `validate_backfill_completeness` / `summarise_agent_vs_manual` (or
+   `evaluation/run_folds.sh` once it exists, step 2) against the driver outputs + `filled_metadata_<tag>`.
+   ⚠️ **test fold was sealed** — confirm with David before opening it.
+2. **Retire + wrap.** Delete the 11 app scripts (`run_*.py` ×5, `report_*.py` ×3, `build_enriched_table.py`,
+   `link_local_papers.py`, `make_tail_batch.py`) and `run_pipeline.sh`; add the thin **`run_klebsiella.sh`**
+   (the human entry, holds the data paths) + thin `engine/cli/` per-stage CLIs (curator loop);
+   **`evaluation/run_folds.sh`** wraps the driver + runs `validate_*`/scorecard when `--manual-curation`
+   present (drop "gold"/"truth" naming inside `evaluation/`). Place the FULL-WIDTH `base_table.csv` at
+   `data/inputs/` (**local-only — gitignore it, per David; do not commit**).
+3. **Parameterise `sample_extractor`** (+ the non-gated constants) so **M. abscessus** runs:
    `run_m_abs.sh --table ATB_…xlsx --spec m_abs --min-study-size … --paper-source finder` (no splits, no
    `--manual-curation`).
+4. **Klebsiella extraction at scale (David's add).** Run the engine over the uncurated cohort via the new
+   driver: first the **size > 100** tail (tail100 — 47 studies / 8,327 samples, already selected; see
+   below), then **the rest** (smaller studies). `--paper-source finder --web-fallback`, biggest-first.
 
 ### The rubric hardening applied 2026-06-29/30 (David's definitions — in `attributes.yaml`)
 - **country:** funding agency / language / journal / author affiliation do NOT establish collection country.
