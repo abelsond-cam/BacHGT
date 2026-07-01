@@ -408,48 +408,76 @@ any diff.
   (study_grades 110, per_sample_applied 17961, backfill_applied 22456). Key fix: read base with
   `keep_default_na=False` so ENA's literal `"NA"` survives the CSV round-trip (the only diff the gate caught).
 
-### REMAINING (the close-out, in order) — revised with David 2026-06-30
-1. **Accuracy/completeness regression from the COMBINED base table (David's add — NOT yet done).** Run
-   train/val **and test** through the scorecard *from the new full-width combined base table* (the one
-   `--table`), and confirm the completeness + value-accuracy gains match the previously-measured numbers
-   in **§8**. We have only ever scored the *separate* per-fold pipeline; never the combined base table.
-   Use `validate_backfill_values` / `validate_backfill_completeness` / `summarise_agent_vs_manual` (or
-   `evaluation/run_folds.sh` once it exists, step 2) against the driver outputs + `filled_metadata_<tag>`.
-   ⚠️ **test fold was sealed** — confirm with David before opening it.
-2. **Retire + wrap.** Delete the 11 app scripts (`run_*.py` ×5, `report_*.py` ×3, `build_enriched_table.py`,
-   `link_local_papers.py`, `make_tail_batch.py`) and `run_pipeline.sh`; add the thin **`run_klebsiella.sh`**
-   (the human entry, holds the data paths) + thin `engine/cli/` per-stage CLIs (curator loop);
-   **`evaluation/run_folds.sh`** wraps the driver + runs `validate_*`/scorecard when `--manual-curation`
-   present (drop "gold"/"truth" naming inside `evaluation/`). Place the FULL-WIDTH `base_table.csv` at
-   `data/inputs/` (**local-only — gitignore it, per David; do not commit**).
-3. **Parameterise `sample_extractor`** (+ the non-gated constants) so **M. abscessus** runs:
-   `run_m_abs.sh --table ATB_…xlsx --spec m_abs --min-study-size … --paper-source finder` (no splits, no
-   `--manual-curation`).
-4. **Klebsiella extraction at scale (David's add).** Run the engine over the uncurated cohort via the new
-   driver: first the **size > 100** tail (tail100 — 47 studies / 8,327 samples, already selected; see
-   below), then **the rest** (smaller studies). `--paper-source finder --web-fallback`, biggest-first.
+### DONE & committed — session 2026-06-30 → 07-01 (continued)
+- `3c7296b` — §12 doc (byte-identity milestone).
+- `b581a2e` — **run-health LOUD curator sign-off**: `run_health_report.py` ends with an unmissable block +
+  console verdict stating whether the two human steps are COMPLETE — (1) manual papers downloaded & added,
+  (2) tight-grading escalations answered — each ✅/⛔ straight from the artifacts (also flags a manual PDF
+  present-but-unparseable). A partially-curated run can never read as done.
+- `6b5c1a8` — interactive escalation resume-safety: `run_escalations.py --interactive` walks only PENDING
+  rows (never re-prompts a resolved one, so a partial queue resumes without clobbering prior answers).
+- `f7836d3` → refined by `0c2f425` — **collection_date rule hardened** (David): ≤2yr midpoint;
+  2–5yr escalate **only if the span midpoint is pre-2010**, else blank & NOT escalated; >5yr blank. Lives in
+  **`escalation.py` `_TRIAGE_GUIDANCE`** only (the trigger). The `attributes.yaml` grader text was reverted
+  to its exact pre-hardening form (a YAML comment records the rule) because the grader prompt renders
+  `whole_project_value` — editing it busts the grading cache and would force a needless re-grade. Grader FILL
+  behaviour was never changing (≤2yr midpoint, >2yr blank). Folds are NOT re-gated; forward-only.
+- `fa8f9bb` — **train/val curator sign-off complete** (data): escalation queue 34 = 19 answered + 15
+  skipped-wide + 0 pending (8,977 fills); run-health banner ✅ on both steps.
+- `7cae487` + `047409e` — **accumulation engine** (§ below).
+- `0c2f425` — **escalation gate correct for at-scale batches**: grading-cache-safe date rule (above) +
+  **whole-cohort big-decision denominator** (below).
 
-### The rubric hardening applied 2026-06-29/30 (David's definitions — in `attributes.yaml`)
-- **country:** funding agency / language / journal / author affiliation do NOT establish collection country.
-- **isolation_source:** lab/in-vitro is NOT a source (→ blank); a bare "swab" is not useful — name the SITE
-  (rectal/skin-wound/surgical-wound/throat swab); environmental can match host; animal/plant → body specimen.
-- **host:** be specific — human / animal species (cattle, pigs, poultry) / plant / environment (wastewater,
-  clinical surfaces, soil, water); "in vitro"/"lab" → **blank**, never written.
-- **study_type:** `experimental_evolution` is ONLY deliberate engineering (knockout/CRISPR) or induced
-  evolution (serial passage / antibiotic broth); routine lab culture is NOT it.
-- **collection_date:** ≤2 yr → midpoint; 2–5 yr → escalate, fill a midpoint **only if pre-2010**, else
-  blank but still escalated; >5 yr blank.
+### Measured results — regression from the COMBINED base table (David's ask; DONE)
+Scored the in-process driver's outputs *from the single full-width combined base table* (never done before):
+- **Grading (train/val)** — agent accuracy **0.974**, improvement **+0.114** vs manual, N=274 (= §8's 0.97 /
+  +0.10). `amr_study` 0.988, `study_setting` 1.000.
+- **Value-accuracy** — whole-field country **0.99**, host **1.00** (= §8).
+- **Completeness (train/val, after full curator sign-off)** — agent ≥ v2 on all four, residual 0.00:
+  country **0.92**, collection_date **0.87**, isolation_source **0.71**, host **0.89** (host now *exceeds*
+  §8's 0.87; country/iso within ~0.02 — the deliberate rubric hardening substituting more-correct/blank
+  values for §8's pre-hardening fills, not a regression). 8,977 escalation fills from 19 curator decisions.
+- **TEST slot-in (no re-grade)** — confirmed via the accumulation master (the cheap check David wanted):
+  master's test rows reproduce **§8 test** exactly — country **0.959** / date **0.935** / iso **0.739** /
+  host **0.834** (§8: 0.959 / 0.936 / 0.742 / 0.836; Δ≤0.003). The driver's escalation stage is also
+  byte-faithful (`escalate_detect` == `run_escalations.py` detect, identical 34-row queue).
 
-### tail100 — the uncurated >100-sample tail (DONE via the current driver, will re-run via `run_klebsiella.sh`)
-- **47 studies / 8,327 samples**, selected by `--min-study-size 101` (>100 total rows, not in any fold;
-  0 overlap with test/train/val verified, incl. umbrella/plural-accession check). Largest PRJNA788733=1488.
-- Caveat: sizing is on **total** rows, not Klebsiella-taxon count — a few non-KPSC studies leak in (e.g.
-  PRJEB8667 ≈0 Klebsiella, not in metadata_v2). Decide later whether to size on taxon count. **The pipeline
-  curates ALL samples in the base table (no KPSC filter) — correct, per David.**
-- 4 paywalled PDFs hand-downloaded → linked via `link_local_papers.py` to `manual_download/` (PRJEB20234,
-  PRJEB36370, PRJNA797179, PRJNA878595); all 4 now grade from full text. Worklist with name/link/DOI saved
-  at `data/find_papers/manual_papers_worklist_tail100.{tsv,md}`.
-- Escalation queue (`decisions_needed_tail100.tsv`) = **3** after the rubric hardening (was 5): PRJEB8667
-  host→human (a non-KPSC study), PRJEB20809 + PRJEB36370 collection_date (2–5 yr, post-2010 → escalate but
-  leave blank). The lab-culture host/source escalations are now suppressed.
-- `base_table.csv` (NARROW, 96,291 samples) is **untracked/regenerable** via `export_base_table.py`.
+### Accumulation — build curation UP across batches (`engine/accumulate.py` + `engine/cli/accumulate.py`)
+Each batch's fills were siloed per-tag and every run restarted from raw ENA. Now unioned into cumulative
+stores + one master over the FULL base (rebuild: `python -m …engine.cli.accumulate --tags train,test,tail100
+[--canonical <gold>]`). Large outputs gitignored (`curated/.gitignore`); only `curated_escalations.tsv`
+(precious human answers) is versioned. Driver **`--carry-forward`** (build-it-up mode) overlays prior
+curation onto the base (only blanks re-worked) + carries resolved escalations forward (never re-asked).
+Current master (tags train,test,tail100):
+- `metadata_curated_master.tsv` — 96,291 × 121 (base + fills + study_setting/amr_study).
+- `curated_fills.tsv` — **92,656** cells (host 26,721 / date 24,527 / country 23,230 / iso 18,178).
+- `curated_grades.tsv` — 203 studies; `curated_escalations.tsv` — 55 resolved (31 answered, 24 skip).
+- `metadata_curated_master_merged.tsv` — canonical merge (**human > agent > ENA**): agent fills only
+  human-blank cells (country 4,856 / date 9,073 / iso 7,218 / host 7,410); human curation never overwritten.
+
+### tail100 re-run via the new driver (2026-07-01) — cached, `--carry-forward`
+`--min-study-size 101 --paper-source finder --web-fallback`. Grading = **all cache hits** (only escalation
+re-justify wrote cache). Two escalation-gate bugs found + fixed (`0c2f425`):
+- **Big-decision denominator** was the batch-local cohort (8,327 → 1% = 83) → every >100-sample study
+  "big" → **39 spurious escalations**. Now the driver computes whole-cohort taxon counts from the full base
+  (`scientific_name` match, total **90,117** → 1% = **901**) and passes them; escalate_detect uses them for
+  the ≥1% gate (gap threshold stays batch-local). tail100 **39 → 3** (1 big_decision PRJNA788733 + 2
+  uniform_propose; **no spurious collection_date** — the hardened date rule now visibly works). Splits mode
+  unchanged (falls back to the sizing file).
+- Accumulated into the master (above). Its 3 escalations are unanswered (uncurated tail) — the sign-off
+  banner flags them; run-health cell grid is otherwise ALL CLEAR.
+
+### REMAINING (the close-out, in order)
+1. **DONE** — regression from combined base (train/val + test slot-in) + accumulation framework + tail100.
+2. **Retire + wrap (NEXT).** The driver's in-process stages fully cover the batch pipeline; delete the 11 app
+   scripts (`run_*.py` ×5, `report_*.py` ×3, `build_enriched_table.py`, `link_local_papers.py`,
+   `make_tail_batch.py`) and `run_pipeline.sh`. **Preserve the curator-loop tools** — they must move to
+   `engine/cli/` before deletion: **escalate** (`--interactive` queue walk + `--apply`, from
+   `run_escalations.py`), **run_health** (standalone re-check), **attach_papers** (from `link_local_papers.py`).
+   Add thin **`run_klebsiella.sh`** (batch entry, holds data paths → the driver) + **`evaluation/run_folds.sh`**
+   (driver + `validate_*` when `--manual-curation` present). Update the overnight `.sh` (they call
+   `run_pipeline.sh`). Place full-width `base_table.csv` at `data/inputs/` (gitignored). Keep
+   `export_base_table.py` + `run_ena_assessment.py`. `engine/cli/accumulate.py` already exists.
+3. **Parameterise `sample_extractor`** (+ non-gated constants) → **M. abscessus** (`run_m_abs.sh`).
+4. **The REST of the cohort** — smaller (<100-sample) uncurated studies at scale via the driver
+   (`--carry-forward` onto the master, biggest-first); curator answers the now-minimal escalation queues.
