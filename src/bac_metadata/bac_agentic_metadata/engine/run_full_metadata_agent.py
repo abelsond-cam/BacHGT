@@ -274,6 +274,18 @@ def main() -> None:
     print(f"Base (selection): {len(base)} samples across {base['study_accession'].nunique()} studies "
           f"({len(base.columns)} columns)", file=sys.stderr)
 
+    # Whole-cohort taxon counts for the big-decision leverage gate (>=1% of the WHOLE cohort, never the
+    # batch). Computed over the FULL base (all studies) via the spec's taxon match — the batch-local sizing
+    # would otherwise make every >~1%-of-batch study look "big". None if the base lacks scientific_name.
+    cohort_taxon_samples = cohort_taxon_total = None
+    taxon_match = spec.raw.get("taxon_of_interest", {}).get("scientific_name_match", [])
+    if taxon_match and "scientific_name" in base_full.columns:
+        is_taxon = base_full["scientific_name"].str.contains("|".join(taxon_match), case=False, na=False, regex=True)
+        counts = base_full[is_taxon].groupby("study_accession").size()
+        cohort_taxon_samples, cohort_taxon_total = counts.to_dict(), int(counts.sum())
+        print(f"Big-decision gate: whole-cohort taxon total {cohort_taxon_total} "
+              f"(>=1% = {cohort_taxon_total // 100} taxon samples)", file=sys.stderr)
+
     if args.carry_forward:  # feed-forward: pre-fill blanks from prior curation so curated cells aren't re-worked
         cf = Path(args.data_dir) / "curated" / "curated_fills.tsv"
         if cf.exists():
@@ -347,6 +359,7 @@ def main() -> None:
                 classifications=classifications, manual_papers_dir=manual_papers_dir, fields=fields,
                 out_path=decisions_tsv, llm=llm, model=args.model, caches=caches,
                 escalations_master_path=esc_master,
+                cohort_taxon_samples=cohort_taxon_samples, cohort_taxon_total=cohort_taxon_total,
             )
             stages.escalate_apply(base=base, keep=selected, queue_path=decisions_tsv,
                                   out_path=escalation_applied_tsv)

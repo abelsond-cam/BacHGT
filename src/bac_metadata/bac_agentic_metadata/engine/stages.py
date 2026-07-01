@@ -672,6 +672,8 @@ def escalate_detect(
     per_sample_frac: float = 0.5,
     big_decision_frac: float = BIG_DECISION_FRAC,
     escalations_master_path: str | Path | None = None,
+    cohort_taxon_samples: Mapping[str, int] | None = None,
+    cohort_taxon_total: int | None = None,
 ) -> pd.DataFrame:
     """Detect tight whole-field near-misses worth a human decision; write the curator decision queue.
 
@@ -688,7 +690,13 @@ def escalate_detect(
     raw = base[base["study_accession"].isin(keep)].copy()
     grades = _load_grade_records(grades_jsonl, keep)
     covered = _per_sample_covered(per_sample_path, raw, fields, per_sample_frac)
-    study_samples, cohort_total = cohort_study_samples(sizing_path)
+    # Big-decision leverage gate = fraction of the WHOLE cohort. In tail/batch mode sizing_path is
+    # batch-local (its total would make every >1%-of-batch study look "big"), so the driver passes the
+    # whole-cohort taxon counts explicitly; fall back to the sizing file (splits mode, already whole-cohort).
+    if cohort_taxon_samples is not None and cohort_taxon_total:
+        study_samples, cohort_total = dict(cohort_taxon_samples), int(cohort_taxon_total)
+    else:
+        study_samples, cohort_total = cohort_study_samples(sizing_path)
     big = sorted(a for a in keep if cohort_total and study_samples.get(a, 0) / cohort_total >= big_decision_frac)
     print(f"Scanning {len(grades)} graded studies / {len(raw)} ENA rows "
           f"(gap threshold {threshold}; {len(covered)} field(s) already resolved by per-sample; "
