@@ -50,13 +50,15 @@ src/bac_ariba/refs/*/prepareref_out/
 **/anthropic_api_key
 # All regenerable caches now live under data/cache/ (llm, ena, fulltext, find, per_sample_*).
 src/bac_metadata/bac_agentic_metadata/applications/*/data/cache/
-# Manually-downloaded paywalled paper PDFs — copyrighted + large; reproduce with link_local_papers.py.
+# Pre-built full-width per-sample base table — large + regenerable from the collation via export_base_table.py.
+src/bac_metadata/bac_agentic_metadata/applications/*/data/inputs/base_table.csv
+# Manually-downloaded paywalled paper PDFs — copyrighted + large; reproduce with engine.cli.attach_papers.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_download/
 # Manually-downloaded supplementary tables — copyrighted; consumed by engine/local_supplements.py.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/manual_download_supp/
-# Enriched full-width collated tables — large (~50 MB), regenerable from the applied tables +
-# collation via build_enriched_table.py; the provenance sidecar + summary ARE tracked.
-src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/enriched/enriched_collated_*.tsv
+# Filled full-width metadata tables + provenance — large, regenerable (the driver's fill-metadata-table
+# stage substitutes agent values into the whole base row); the small summary .md is kept.
+src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/enriched/filled_metadata_*.tsv
 
 # pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
 .pixi/

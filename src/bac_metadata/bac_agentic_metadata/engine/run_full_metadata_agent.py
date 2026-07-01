@@ -270,6 +270,20 @@ def main() -> None:
     base_full = pd.read_csv(args.table, dtype=str, low_memory=False, keep_default_na=False)
     if "study_accession" not in base_full.columns or "sample_accession" not in base_full.columns:
         sys.exit(f"--table needs study_accession + sample_accession; got {list(base_full.columns)[:12]}")
+    # Guard against a stale/slim base table silently crippling per-sample extraction (2026-07-01). The
+    # per-sample anchorer (sample_extractor.build_accession_to_sample) matches supplementary-table rows to
+    # samples by the strain names carried in these ENA columns; a base missing them can only anchor by
+    # sample_accession and silently under-extracts strain-keyed studies. Fail loud, don't limp along.
+    # (Step 3 / M. abscessus: make the required anchor columns spec-driven — its xlsx base names differ.)
+    anchor_cols = ("secondary_sample_accession", "accession", "sample_alias", "sample_title")
+    missing_anchor = [c for c in anchor_cols if c not in base_full.columns]
+    if missing_anchor:
+        sys.exit(
+            f"Base table {args.table} is missing per-sample anchoring column(s) {missing_anchor} — it looks "
+            "like a stale/slim export. Per-sample extraction anchors supplementary tables on these (strain "
+            "names live in sample_alias/sample_title). Re-export the full-width base:\n"
+            "  uv run python .../applications/<app>/export_base_table.py --output <the --table path>"
+        )
     base = base_full[base_full["study_accession"].isin(set(selected))].copy()
     print(f"Base (selection): {len(base)} samples across {base['study_accession'].nunique()} studies "
           f"({len(base.columns)} columns)", file=sys.stderr)

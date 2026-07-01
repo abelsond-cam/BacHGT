@@ -11,13 +11,14 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 > reproduction-gate docs.) The rubric itself is `applications/klebsiella/attributes.yaml`.
 > **Grading definitions are David's — do not invent grading criteria; change them only with David.**
 >
-> **⚠️ ACTIVE WORK — read [`PROGRESS_REPORT.md` §10 + §12](PROGRESS_REPORT.md) FIRST if resuming.** The
-> engine is consolidated to **one in-process driver** (`engine/run_full_metadata_agent.py`, byte-identical
-> to the legacy `run_pipeline.sh`), and curation now **accumulates across batches** into a growing master
-> (`engine/accumulate.py`). What remains (§12): **retire** the legacy `applications/klebsiella/` stage
-> scripts + `run_pipeline.sh` — moving the curator-loop tools to `engine/cli/` first — and add the thin
-> `run_klebsiella.sh` entry, then run the uncurated tail. Those legacy scripts still physically exist and
-> still run until that step lands.
+> **⚠️ ACTIVE WORK — read [`PROGRESS_REPORT.md` §5](PROGRESS_REPORT.md) if resuming.** The engine is
+> consolidated to **one in-process driver** (`engine/run_full_metadata_agent.py`), fronted by thin wrappers —
+> `applications/klebsiella/run_klebsiella.sh` (curation) and `evaluation/run_folds.sh` (curation + the
+> gold-comparison scorecard) — with the curator tools in `engine/cli/` (`escalate`, `run_health`,
+> `attach_papers`). The legacy per-stage `run_*` / `report_*` scripts + `run_pipeline.sh` are **retired**;
+> curation **accumulates across batches** into a growing master (`engine/accumulate.py`). What remains (§5):
+> the `collection_date` downstream wording, a **tail100 re-run** on the corrected full-width base (see the
+> base-table gotcha below), and Steps 3–4 (M. abscessus; the <100-sample tail at scale).
 
 ## Layout
 
@@ -25,15 +26,14 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 bac_agentic_metadata/
   engine/                 # the engine + the whole pipeline:
                           #   run_full_metadata_agent.py (in-process driver), stages.py (one fn/stage),
-                          #   accumulate.py + cli/ (build-up across batches), run_health_report.py,
+                          #   accumulate.py + cli/ (curator CLIs escalate/run_health/attach_papers + accumulate), run_health_report.py,
                           #   reference_outputs/ (byte-for-byte gate), + mechanics (grader, paper_finder,
                           #   backfill, sample_extractor, escalation, ena_sizing, fulltext, …)
-  evaluation/             # fold + manual-curation validation: make_splits, freeze_study_setting,
-                          #   validate_*, summarise_agent_vs_manual
+  evaluation/             # fold + manual-curation validation + run_folds.sh (driver + scorecard benchmark):
+                          #   make_splits, freeze_study_setting, validate_*, summarise_agent_vs_manual
   applications/
-    klebsiella/           # the app: attributes.yaml (rubric) + export_base_table.py + data/
-                          #   (+ legacy run_*/report_*/run_pipeline.sh — being retired, PROGRESS_REPORT §6)
-      diagnostics/        # one-off probes (diagnose_*, assess_*) — not in the pipeline
+    klebsiella/           # the app: attributes.yaml (rubric), export_base_table.py,
+                          #   run_klebsiella.sh (canonical driver wrapper), data/
       data/               # task-aligned tree (folders mirror the pipeline steps):
         inputs/             #   curated study-level snapshot + base_table (gitignored)
         fold_splits/        #   project_splits.tsv
@@ -68,6 +68,14 @@ One in-process driver runs every stage — `engine/run_full_metadata_agent.py`, 
 `--paper-source finder|curated` + `--web-fallback` control finding. Rebuild the master:
 `python -m …engine.cli.accumulate --tags train,test,tail100 [--canonical <gold>]`.
 
+For Klebsiella use the thin wrappers that inject the app paths — don't call the driver directly:
+`applications/klebsiella/run_klebsiella.sh <driver args>` (curation; the production/tail entry) and
+`evaluation/run_folds.sh <fold> <tag> <paper-source>` (driver **+** the gold-comparison scorecard — the
+train/val/test benchmark; the byte-for-byte gate is `run_folds.sh train,val train curated`). Long runs are
+interactive — on a usage-limit stop, re-run the same command and the disk cache resumes instantly. Curator
+loop: `engine.cli.attach_papers` (hand-downloaded PDFs → `manual_download/`), `engine.cli.escalate
+--interactive|--apply`, `engine.cli.run_health`.
+
 Everything runs on the shared monorepo uv env (`uv run …`). Backends behind `engine.llm.LLMClient`:
 **subscription** (`claude -p`, default, zero API cost) and **api** (paid, forced-tool-use JSON). The disk
 cache key is backend-independent (`temperature=0`), so a result graded once is reused verbatim and reruns are
@@ -81,10 +89,16 @@ Heavy ENA/EBI lookups and model fan-out belong in SLURM, not the login node.
   are the train,val outputs under the final rubric; any behaviour-preserving change must reproduce them
   exactly (sort rows, plain compare) — the driver passes this today. Read the base table with
   `keep_default_na=False` so ENA's literal `"NA"` survives the CSV round-trip.
+- **The base table must be full-width (per-sample anchoring columns).** `base_table.csv` (from
+  `export_base_table.py`) must carry `sample_alias` / `sample_title` / `secondary_sample_accession` /
+  `accession` — per-sample extraction anchors supplementary-table rows to samples **by value** using the
+  strain names in them. A stale/slim export silently under-extracts strain-keyed studies (it cost the
+  tail100 run its strain-keyed fills); the driver now **fails loud** at startup if they're missing. Re-export
+  with `export_base_table.py` to fix.
 - **Editing the rubric re-grades everything.** The grader prompt renders each field's `whole_project_value`,
   so editing those texts in `attributes.yaml` busts the grading cache → a full re-grade. (This is why the
   `collection_date` hardening currently lives only in `engine/escalation.py`; reapplying it to the yaml is a
-  deliberate, accepted re-grade — PROGRESS_REPORT §5–§6.)
+  deliberate, accepted re-grade — PROGRESS_REPORT §5.)
 - **Big-decision denominator is whole-cohort.** The ≥1% leverage gate is measured against the whole-cohort
   taxon count (base `scientific_name` match, ~90,117), NOT the batch-local sizing — the driver computes and
   passes it to `escalate_detect`. A batch-local denominator flags every large tail study.

@@ -106,7 +106,7 @@ byte-identical. New per-field YAML keys (1:1 with current hardcoded structures):
 - `engine/completeness.py` — `normalise_table` no-ops when no normaliser-backed field is requested.
 - Klebsiella `attributes.yaml` — add the new per-field keys with values **copied verbatim** from constants.
 
-**GATE:** cache-warm `run_pipeline.sh "train,val" train` before/after M0+M1 → `study_grades_train.tsv`,
+**GATE:** cache-warm `evaluation/run_folds.sh "train,val" train curated` before/after M0+M1 → `study_grades_train.tsv`,
 `backfill_applied_train.tsv`, `per_sample_applied_train.tsv`, `decisions_needed_train.tsv` **byte-identical**.
 
 ## Phase M2 — Input pre-scan diagnostic — **DONE** (`e6b2e62`)
@@ -120,6 +120,12 @@ taxon `[abscessus]`; verbatim-no-interpret AST; inducible deferred). Awaiting Da
 sign-off before commit. **Do not invent grading criteria** (CLAUDE.md rule).
 
 ## Phase M4 — m_abs ingestion + thin runners
+
+> **Superseded by the one-driver consolidation (2026-07-01):** the engine now runs every stage in-process
+> via `engine/run_full_metadata_agent.py`, and kleb's thin `run_*` / `run_pipeline.sh` scripts are retired
+> (curator tools moved to `engine/cli/`). m_abs should add a thin `run_m_abs.sh` over that driver (like
+> `run_klebsiella.sh`) + `GenericXlsxSource`, **not** copy the retired per-stage scripts. Re-scope this
+> section in Step 3 (parameterise `sample_extractor`); the phase content below is kept as historical intent.
 
 The engine does the heavy lifting (after M0+M1); m_abs gets **thin runner copies** (sources differ —
 `GenericXlsxSource` vs `KlebCollationSource`, no paper-link snapshot, no gold). New under `applications/m_abs/`:

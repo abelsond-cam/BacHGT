@@ -234,9 +234,11 @@ recomputed and discarded each run (the smaller, <100-sample uncurated studies ar
    hardened `collection_date` rule (§4a) so it governs the remaining uncurated studies. The already-curated
    folds and >100-sample tail are **left as they are** — their dates already follow this rule (it is the one
    the manual curator applied), and the difference is far too small to justify re-running them.
-2. **One entry point.** Retire the legacy per-stage scripts in favour of the single in-process driver, behind
-   a thin `run_klebsiella.sh`, and move the curator tools (escalation queue, run-health, paper-attach)
-   alongside the engine.
+2. **Re-run the >100-sample tail on the corrected base.** The per-sample base table must carry the strain-alias
+   anchoring columns (`sample_alias` / `sample_title` / `secondary_sample_accession` / `accession`) the
+   extractor keys supplementary tables on; an earlier tail run used a slim export and under-extracted its
+   strain-keyed studies. Re-run the tail on the full-width base and re-accumulate, so the master regains those
+   per-sample fills. (The driver now fails loud if the base is missing these columns.)
 3. **M. abscessus** — the second application: point the per-sample extractor at that spec's fields (it is the
    one component still hardcoded to the four *Klebsiella* fields) and add `run_m_abs.sh`.
 4. **The rest of the cohort** — run the smaller (<100-sample) uncurated studies at scale, accumulating onto
