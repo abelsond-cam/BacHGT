@@ -173,7 +173,8 @@ def main() -> None:
     def _kappa(v: object) -> str:
         return f"{v:.2f}" if isinstance(v, (int, float)) and v == v else "—"
 
-    md = ["# Agent vs manual curation — agreement, then adjudicated accuracy of each (train+val)\n",
+    fold_label = {"train": "train+val", "test": "test"}.get(args.prefix, args.prefix)
+    md = [f"# Agent vs manual curation — agreement, then adjudicated accuracy of each ({fold_label})\n",
           "The frozen sheet is *manual curation*, not ground truth, so agent-vs-sheet is **agreement**, "
           "not accuracy. **agreement** is observed agreement *n (ratio)*; **Cohen κ** is that agreement "
           "corrected for chance (categorical raters only — finding/TOTAL N/A). On the disagreements the "
