@@ -289,3 +289,40 @@ def merge_into_canonical(master: pd.DataFrame, canonical: pd.DataFrame, fields: 
     merged.to_csv(out_path, sep="\t", index=False)
     print(f"Wrote {out_path}: {len(merged)} rows (human-curated > agent > ENA)", file=sys.stderr)
     return merged
+
+
+def run_accumulation(
+    *,
+    data_dir: Path,
+    base: pd.DataFrame,
+    tags: Sequence[str],
+    fields: Sequence[str],
+    study_grade_columns: Mapping[str, str],
+    out_dir: Path | None = None,
+    canonical_path: str | Path | None = None,
+    gold_suffix: str = "_parsed",
+) -> pd.DataFrame:
+    """Rebuild every cumulative store + the master table (+ optional canonical merge) from the given batches.
+
+    The single entry point: unions fills / escalations / grades across ``tags``, fills the full ``base`` into
+    ``metadata_curated_master.tsv``, and — when ``canonical_path`` is given — overlays the master onto the
+    human-curated table (human winning) as ``metadata_curated_master_merged.tsv``.
+
+    Returns
+    -------
+    pandas.DataFrame
+        The master curated table.
+    """
+    out_dir = out_dir or (data_dir / "curated")
+    accumulate_fills(data_dir, tags, out_dir)
+    accumulate_escalations(data_dir, tags, out_dir)
+    grades_path = accumulate_grades(data_dir, tags, out_dir)
+    master = build_master_table(
+        base=base, curated_fills_path=out_dir / "curated_fills.tsv", curated_grades_path=grades_path,
+        fields=fields, study_grade_columns=study_grade_columns,
+        out_path=out_dir / "metadata_curated_master.tsv")
+    if canonical_path:
+        canonical = pd.read_csv(canonical_path, sep="\t", dtype=str, low_memory=False).fillna("")
+        merge_into_canonical(master, canonical, fields, out_path=out_dir / "metadata_curated_master_merged.tsv",
+                             gold_suffix=gold_suffix)
+    return master

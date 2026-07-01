@@ -188,6 +188,9 @@ def main() -> None:
     p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete.")
     p.add_argument("--skip-escalation", action="store_true", help="Skip the escalation detect/apply stages.")
     p.add_argument("--skip-run-health", action="store_true", help="Skip the run-health report.")
+    p.add_argument("--carry-forward", action="store_true",
+                   help="Build-it-up mode: overlay prior curation (data-dir/curated/) onto the base so the "
+                        "agent only works still-blank cells, and never re-ask an escalation decided earlier.")
     args = p.parse_args()
 
     size_mode = args.min_study_size is not None or args.max_study_size is not None
@@ -271,6 +274,16 @@ def main() -> None:
     print(f"Base (selection): {len(base)} samples across {base['study_accession'].nunique()} studies "
           f"({len(base.columns)} columns)", file=sys.stderr)
 
+    if args.carry_forward:  # feed-forward: pre-fill blanks from prior curation so curated cells aren't re-worked
+        cf = Path(args.data_dir) / "curated" / "curated_fills.tsv"
+        if cf.exists():
+            from bac_metadata.bac_agentic_metadata.engine.accumulate import overlay_master_on_base
+            prior = pd.read_csv(cf, sep="\t", dtype=str, keep_default_na=False)
+            base = overlay_master_on_base(base, prior, fields)
+            print(f"[carry-forward] overlaid prior curation from {cf.name} onto base blanks", file=sys.stderr)
+        else:
+            print(f"[carry-forward] no {cf} yet — first batch, nothing to overlay", file=sys.stderr)
+
     llm = make_llm(args.backend, model=args.model, cache_dir=caches.llm)
 
     # ── Stage 1 — find papers ─────────────────────────────────────────────────────────────────────
@@ -327,11 +340,13 @@ def main() -> None:
     # ── Stage 7 — escalation detect → apply (best-effort; the curator-tier near-miss queue) ────────
     if not args.skip_escalation:
         try:
+            esc_master = (Path(args.data_dir) / "curated" / "curated_escalations.tsv") if args.carry_forward else None
             stages.escalate_detect(
                 spec=spec, base=base, keep=selected, grades_jsonl=grades_jsonl,
                 per_sample_path=per_sample_tsv, sizing_path=sizing_path, paper_links=paper_links,
                 classifications=classifications, manual_papers_dir=manual_papers_dir, fields=fields,
                 out_path=decisions_tsv, llm=llm, model=args.model, caches=caches,
+                escalations_master_path=esc_master,
             )
             stages.escalate_apply(base=base, keep=selected, queue_path=decisions_tsv,
                                   out_path=escalation_applied_tsv)

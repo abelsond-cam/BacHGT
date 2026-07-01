@@ -618,6 +618,40 @@ def _preserve_prior_answers(frame: pd.DataFrame, output: Path) -> pd.DataFrame:
     return frame
 
 
+def _carry_forward_resolved(frame: pd.DataFrame, store_path: str | Path) -> pd.DataFrame:
+    """Carry RESOLVED decisions (answered or reject/skip note) from the cross-batch escalation master.
+
+    So a ``(study, field)`` the curator decided in an EARLIER batch is never re-asked: its answer/note is
+    slotted into this batch's freshly-detected queue. Only still-blank rows of THIS queue are touched (the
+    same-tag preserve ran first). A no-op when the master store is absent (the first batch).
+    """
+    store_path = Path(store_path)
+    if not store_path.exists() or not len(frame):
+        return frame
+    store = pd.read_csv(store_path, sep="\t", dtype=str).fillna("")
+    if not {"study_accession", "field"} <= set(store.columns):
+        return frame
+    markers = ("reject", "skip", "undeterm", "leave uncoded", "no value")
+
+    def _resolved(ans: object, note: object) -> bool:
+        return bool(str(ans).strip()) or any(w in str(note).lower() for w in markers)
+
+    prior = {(r["study_accession"], r["field"]): (r.get("answer", ""), r.get("answer_note", ""))
+             for _, r in store.iterrows() if _resolved(r.get("answer", ""), r.get("answer_note", ""))}
+    carried = 0
+    for idx, r in frame.iterrows():
+        if _resolved(r.get("answer", ""), r.get("answer_note", "")):
+            continue  # this batch's own queue already resolved it (preserve ran first)
+        k = (r["study_accession"], r["field"])
+        if k in prior:
+            frame.at[idx, "answer"], frame.at[idx, "answer_note"] = prior[k]
+            carried += 1
+    if carried:
+        print(f"  [carry-forward] {carried} decision(s) carried from the escalation master "
+              "(decided in an earlier batch — not re-asked)", file=sys.stderr)
+    return frame
+
+
 def escalate_detect(
     *,
     spec: AttributeSpec,
@@ -637,6 +671,7 @@ def escalate_detect(
     threshold: int = 50,
     per_sample_frac: float = 0.5,
     big_decision_frac: float = BIG_DECISION_FRAC,
+    escalations_master_path: str | Path | None = None,
 ) -> pd.DataFrame:
     """Detect tight whole-field near-misses worth a human decision; write the curator decision queue.
 
@@ -671,6 +706,8 @@ def escalate_detect(
     )
     frame = _items_to_queue_frame(items)
     frame = _preserve_prior_answers(frame, Path(out_path))  # never silently wipe curator answers on re-detect
+    if escalations_master_path:  # cross-batch: never re-ask a decision made in an earlier batch
+        frame = _carry_forward_resolved(frame, escalations_master_path)
     frame.to_csv(out_path, sep="\t", index=False)
     print(f"Wrote {Path(out_path).name}: {len(frame)} escalation(s) "
           f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)", file=sys.stderr)
