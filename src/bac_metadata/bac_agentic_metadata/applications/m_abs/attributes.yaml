@@ -244,14 +244,12 @@ attributes:
           meaning: date (or year) of sample collection
           compare: year                                       # year-level comparison (as Klebsiella)
           column_aliases: [collection_year, Sample_date]
-          # M. abscessus-specific: treat a 2-5yr span as a high-value TIGHT older cluster (worth a human
-          # date) when its midpoint predates this year. 2015 (vs the engine default 2010) because ~half of
-          # dated M.abs samples are <2015 and old genomes are scarce/valuable for lineage dating. Drives the
-          # escalation triage only (see engine/escalation.py); Klebsiella keeps the 2010 default.
-          older_span_cutoff_year: 2015
           whole_project_value: |-
-            If no specific dates are given but all collection falls within a <= 2-year period, set the
-            midpoint year. If the period spans MORE than 2 years, leave blank — do not backfill.
+            STRICT 2-year window, no exceptions (David, 2026-07-02). If no specific dates are given but all
+            collection falls within a <= 2-year period, set the midpoint year. If the period spans MORE than
+            2 years, leave blank — do NOT backfill and do NOT escalate. There is no "older/valuable span"
+            leniency: the cohort already has a good spread of true dates, so an imprecise wide-range midpoint
+            would only corrupt fine-grained lineage dating.
         cf_status:
           values: [CF, non_CF, unknown]
           meaning: host cystic-fibrosis status — the primary M. abscessus phenotype axis
