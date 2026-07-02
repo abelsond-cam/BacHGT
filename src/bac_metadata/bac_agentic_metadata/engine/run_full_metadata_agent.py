@@ -220,6 +220,10 @@ def main() -> None:
 
     spec = AttributeSpec.from_yaml(args.spec)
     fields = list(spec.completeness_fields)
+    # Optional AST panel (M. abscessus): the extractor mines per-isolate susceptibility into ast_<drug>_*
+    # long-format fills. Absent for Klebsiella (spec has no ast_panel) -> None -> extractor unchanged.
+    ast_panel = spec.raw.get("attributes", {}).get("per_sample_completeness", {}).get("ast_panel") or {}
+    ast_drugs = list(ast_panel.get("drugs", [])) or None
     study_grade_columns = _study_grade_columns(spec)
     tag = args.tag
 
@@ -335,6 +339,7 @@ def main() -> None:
     stages.per_sample(
         base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
         manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
+        ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
     )
 
     # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────

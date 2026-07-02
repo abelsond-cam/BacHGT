@@ -61,6 +61,7 @@ class AttributeSpec:
     taxon_of_interest: TaxonOfInterest
     completeness_fields: tuple[str, ...]
     deterministic_normaliser: dict[str, tuple[str, ...]]
+    sample_identifier_columns: tuple[str, ...]
     raw: dict
 
     @classmethod
@@ -92,6 +93,10 @@ class AttributeSpec:
             field: tuple(funcs)
             for field, funcs in (completeness.get("deterministic_normaliser") or {}).items()
         }
+        # Per-sample identifier columns the extractor may anchor supplementary tables on (empty -> the
+        # extractor's default Klebsiella id set). Reviewing the input for ALL per-sample identifiers is the
+        # first onboarding step for a new species (see PROGRESS_REPORT + the yaml note).
+        id_columns = tuple(completeness.get("sample_identifier_columns", []))
 
         return cls(
             application=doc["application"],
@@ -99,5 +104,6 @@ class AttributeSpec:
             taxon_of_interest=taxon,
             completeness_fields=fields,
             deterministic_normaliser=normaliser,
+            sample_identifier_columns=id_columns,
             raw=doc,
         )

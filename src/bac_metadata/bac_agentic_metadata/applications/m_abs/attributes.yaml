@@ -83,6 +83,31 @@ attributes:
     ground_truth: none
     deterministic_normaliser: {}              # no M.abs parsers (Klebsiella-only; engine no-ops when empty)
 
+    # ⚠️ CRITICAL FIRST STEP FOR ANY NEW SPECIES — the per-sample identifier columns the engine anchors
+    # supplementary tables on. The extractor is anchor-AGNOSTIC: it builds an id→sample map from these base
+    # columns and finds whichever supp-table column matches BY VALUE (never by column name). If this set is
+    # too thin, per-isolate extraction (AST, cf_status, dates from paper tables) silently yields NOTHING —
+    # the M.abs first pass produced 0 fills until strain/lane were added. So when onboarding a new species,
+    # REVIEW EVERY column of the input table and list here ALL that are per-sample identifiers a paper might
+    # key a table on: deposited accessions, ENA aliases, strain/isolate names, sequencing lane IDs, etc.
+    # EXCLUDE per-patient / per-study identifiers (e.g. a Patient column) — they collide across samples.
+    # (Klebsiella declares none → the engine's built-in default id set; see PROGRESS_REPORT.md.)
+    sample_identifier_columns:
+      - run_accession
+      - sample_accession
+      - secondary_sample_accession
+      - accession
+      - experiment_accession
+      - sample_alias
+      - run_alias
+      - experiment_alias
+      - sample_title
+      - strain
+      - isolate
+      - library_name
+      - lane
+      - lane_sanitised
+
     # ── ANTIBIOTIC SUSCEPTIBILITY PANEL ───────────────────────────────────────────────────────────────
     # Expands to TWO per-sample fields per drug (the engine generates these from `drugs`):
     #   ast_<drug>_mic          the MIC string EXACTLY as reported  ('8', '>64', '<=0.25', or a bare S/R)
@@ -217,9 +242,15 @@ attributes:
             - unknown: not stated; OR the sample is non-human (Animal / Environmental) — those are coded by
               the `host` field, not forced into the CF binary.
           whole_project_value: |-
-            If cf_status is blank but the WHOLE cohort is described as CF (or as a single non-CF condition),
-            set all samples accordingly — e.g. a study entirely of CF-patient isolates -> all CF. Same
-            whole-project applicability rule as country/host.
+            If cf_status is blank, set it from the study-wide CF composition, applying a 95% MAJORITY rule:
+            when AT LEAST 95% of the samples with a KNOWN status are one category (CF or non-CF), propose
+            that category as the whole-project value and fill every blank with it. This deliberately tolerates
+            mislabelling the <5% minority in exchange for far more complete cf_status for phenotyping / GWAS —
+            it is safe because whole-field fill only ever writes BLANK cells and NEVER overwrites a sample's
+            own known value (so the minority's real labels survive). Below 95% (a 50/50 or 70/30 mix) do NOT
+            whole-fill — leave the blanks for per-sample extraction / escalation. Example: a cohort described
+            as 208/210 non-CF (99%) → propose non-CF for all; a genuine 50/50 CF/non-CF split → propose
+            nothing. Same whole-project applicability rule (paper coverage) as country/host.
         smoking_status:
           values: [smoker, non_smoker, unknown]
           aspirational: true                                  # likely sparse; paper-derived only

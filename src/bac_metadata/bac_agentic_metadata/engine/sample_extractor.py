@@ -29,19 +29,51 @@ import pandas as pd
 
 from .supplementary import ACCESSION_RE, SuppTable
 
-#: The four per-sample fields per-sample extracts (same set as ``engine.backfill``).
+#: The four core per-sample fields (the Klebsiella set). The spec-driven ``fields`` argument threaded
+#: through this module DEFAULTS to these, so the Klebsiella path is byte-identical: an application (e.g.
+#: M. abscessus) passing extra fields only ever APPENDS to the schema/prompt (see :func:`_system_prompt`).
 FIELDS: tuple[str, ...] = ("country", "collection_date", "isolation_source", "host")
 
 SCHEMA_NAME = "map_supplementary_columns"
 VERIFY_SCHEMA_NAME = "verify_field_values"
 
-#: One-line description of what each field's values should look like (used by the value check).
+#: One-line description of what each field's values should look like (used by the value check). Extra,
+#: non-core fields are additive — they are only consulted when an application maps them, so the four core
+#: entries and the Klebsiella prompts are unchanged.
 FIELD_VALUE_GUIDE = {
     "country": "real country / place names (NOT site codes, sample IDs, or abbreviations)",
     "collection_date": "years or calendar dates",
     "isolation_source": "clinical/environmental specimen or sample types (blood, urine, sputum, swab, water…)",
     "host": "host organisms (human/Homo sapiens, an animal, or a species name)",
+    "cf_status": "cystic-fibrosis status of the host (CF, non-CF / bronchiectasis / another condition)",
+    "smoking_status": "host smoking status (smoker, former smoker, never-smoker / non-smoker)",
 }
+
+#: The per-field alias bullet the column-mapping system prompt lists under "Common aliases". Held as a
+#: map (not inline prose) so extra fields append cleanly; the four core bullets are byte-for-byte the
+#: former hardcoded text, so the Klebsiella prompt is unchanged.
+_FIELD_ALIAS_BULLETS: dict[str, str] = {
+    "country": ("- country: 'location', 'geographic origin/location', 'region', 'country of origin', "
+                "'origin', 'place', 'nation', 'geography' — or a column whose values are country/place "
+                "names.\n"),
+    "collection_date": ("- collection_date: 'date', 'year', 'collection year', 'sampling/isolation date', "
+                        "'date collected', 'date of collection' — or a column of years/dates.\n"),
+    "isolation_source": ("- isolation_source: 'source', 'specimen', 'sample type', 'specimen type', "
+                         "'isolate source', 'material', 'body site', 'anatomical site' — the clinical/"
+                         "environmental sample the isolate came from.\n"),
+    "host": ("- host: 'host species', 'host organism', 'organism', 'source host', 'host type' — or a "
+             "human/animal host designation.\n"),
+    "cf_status": ("- cf_status: 'CF', 'CF status', 'cystic fibrosis', 'CF/non-CF', 'underlying disease', "
+                  "'diagnosis', 'patient group', 'comorbidity', 'cohort' — whether the host has cystic "
+                  "fibrosis vs another condition.\n"),
+    "smoking_status": ("- smoking_status: 'smoking', 'smoker', 'smoking status', 'tobacco', 'pack-years', "
+                       "'smoking history' — the host's smoking status.\n"),
+}
+
+#: Cardinal-number words so the prompt reads naturally ("four"/"six per-sample fields"); the count word
+#: for the four core fields is "four", preserving the former literal text exactly.
+_NUM_WORDS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight",
+              9: "nine", 10: "ten"}
 
 #: Minimum distinct ENA accessions a column must contain to be a usable join key.
 MIN_ACCESSION_HITS = 3
@@ -60,23 +92,56 @@ FIELD_HEADER_RE = re.compile(
 )
 
 
-def column_map_schema() -> dict:
-    """JSON schema for the field→column-index mapping the model returns (null = field absent)."""
+def _norm_drug(name: str, panel: tuple[str, ...] | list[str]) -> str | None:
+    """Match a reported antibiotic name to a canonical panel drug, or ``None`` if off-panel.
+
+    Normalises punctuation/whitespace (``co-trimoxazole`` / ``trimethoprim/sulfamethoxazole`` →
+    ``trimethoprim_sulfamethoxazole`` style) and matches against the spec's canonical drug list. Off-panel
+    drugs return ``None`` — the caller records those verbatim in ``ast_other`` rather than dropping them.
+    """
+    key = re.sub(r"[^a-z0-9]+", "_", str(name).strip().lower()).strip("_")
+    if not key:
+        return None
+    canon = {re.sub(r"[^a-z0-9]+", "_", d.lower()).strip("_"): d for d in panel}
+    return canon.get(key)
+
+
+def column_map_schema(fields: tuple[str, ...] = FIELDS, *, ast_drugs: tuple[str, ...] | list[str] | None = None) -> dict:
+    """JSON schema for the field→column-index mapping the model returns (null = field absent).
+
+    ``fields`` defaults to the four core fields, giving the exact former schema (the disk-cache key hashes
+    schema *content*, order-independent, so Klebsiella keys are unchanged). Extra fields add
+    ``<field>_column`` properties; when ``ast_drugs`` is given an ``ast_columns`` list captures the AST
+    panel as (drug, mic_column, resistance_column) triples — a compact sub-schema that keeps the panel's
+    ~40 drugs from ballooning into ~80 fixed properties.
+    """
     col = {"type": ["integer", "null"]}
-    return {
-        "type": "object",
-        "properties": {
-            "header_rows": {"type": "integer", "description": "Number of leading rows that are header (often 1)."},
-            "country_column": col,
-            "collection_date_column": col,
-            "isolation_source_column": col,
-            "host_column": col,
-            "confidence": {"enum": ["high", "medium", "low"]},
-            "notes": {"type": "string"},
-        },
-        "required": ["header_rows", "country_column", "collection_date_column",
-                     "isolation_source_column", "host_column", "confidence"],
+    properties: dict = {
+        "header_rows": {"type": "integer", "description": "Number of leading rows that are header (often 1)."},
     }
+    for f in fields:
+        properties[f"{f}_column"] = col
+    properties["confidence"] = {"enum": ["high", "medium", "low"]}
+    properties["notes"] = {"type": "string"}
+    if ast_drugs:
+        properties["ast_columns"] = {
+            "type": "array",
+            "description": ("One entry per antibiotic whose per-isolate susceptibility this table reports "
+                            "(empty list if none). drug = the antibiotic name as printed; mic_column = the "
+                            "0-based column of its MIC value; resistance_column = the 0-based column of its "
+                            "S/I/R call. Give whichever column(s) exist, null for the other."),
+            "items": {
+                "type": "object",
+                "properties": {
+                    "drug": {"type": "string"},
+                    "mic_column": col,
+                    "resistance_column": col,
+                },
+                "required": ["drug", "mic_column", "resistance_column"],
+            },
+        }
+    required = ["header_rows", *[f"{f}_column" for f in fields], "confidence"]
+    return {"type": "object", "properties": properties, "required": required}
 
 
 @dataclass
@@ -105,14 +170,21 @@ def _norm_id(v: object) -> str:
     return re.sub(r"[^a-z0-9]", "", str(v).lower())
 
 
-def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "sample_accession") -> dict[str, str]:
+def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "sample_accession",
+                              id_columns: tuple[str, ...] = _ID_COLUMNS) -> dict[str, str]:
     """Map every per-sample identifier the authors might key a table on → canonical ``sample_accession``.
 
     Supplementary tables key on whatever id the authors used — a deposited accession (sample / secondary /
-    run / assembly) OR a strain/isolate name carried in ENA ``sample_alias`` / ``sample_title``. We map ALL
-    of them (:func:`_norm_id`-normalised) so the table's key column is found by **value** — which cells
-    match a known id — never by column NAME (``Isolate`` / ``SPARK_ID`` / ``Strain`` / … are unbounded).
-    First-write wins on a collision; ids shorter than :data:`_MIN_ID_LEN` are skipped.
+    run / assembly) OR a strain/isolate name carried in ENA ``sample_alias`` / ``sample_title`` / ``strain``
+    / sequencing ``lane``. We map ALL of the given ``id_columns`` (:func:`_norm_id`-normalised) so the
+    table's key column is found by **value** — which cells match a known id — never by column NAME
+    (``Isolate`` / ``SPARK_ID`` / ``Strain`` / … are unbounded). First-write wins on a collision; ids
+    shorter than :data:`_MIN_ID_LEN` are skipped.
+
+    ``id_columns`` defaults to the four core Klebsiella identifier columns (:data:`_ID_COLUMNS`), so the
+    Klebsiella path is unchanged. Other applications pass their full per-sample identifier set from the spec
+    (``per_sample_completeness.sample_identifier_columns``) — see the critical note in that yaml: reviewing
+    the input table for ALL per-sample identifiers is the first step when onboarding a new species.
 
     Parameters
     ----------
@@ -120,13 +192,16 @@ def build_accession_to_sample(study_df: pd.DataFrame, *, sample_col: str = "samp
         The study's rows from the raw ENA table.
     sample_col
         Canonical per-sample key column.
+    id_columns
+        Base columns whose values may key a supplementary table (in addition to ``sample_accession``,
+        which is always mapped). Only those present in ``study_df`` are used.
 
     Returns
     -------
     dict[str, str]
         ``_norm_id(identifier)`` → ``sample_accession``.
     """
-    extra = [c for c in _ID_COLUMNS if c in study_df.columns]
+    extra = [c for c in id_columns if c in study_df.columns]
     out: dict[str, str] = {}
     for _, r in study_df.iterrows():
         sample = str(r.get(sample_col, "")).strip()
@@ -183,21 +258,20 @@ def render_preview(df: pd.DataFrame, *, max_rows: int = 20, max_cell: int = 40) 
     return "\n".join(lines)
 
 
-def _system_prompt() -> str:
-    """System framing for the column-mapping task — match by MEANING, with explicit field aliases."""
-    return (
-        "You map the columns of a scientific paper's supplementary metadata table to four per-sample "
+def _system_prompt(fields: tuple[str, ...] = FIELDS, *, ast_drugs: tuple[str, ...] | list[str] | None = None) -> str:
+    """System framing for the column-mapping task — match by MEANING, with explicit field aliases.
+
+    With the four core ``fields`` and no ``ast_drugs`` this reproduces the former prompt byte-for-byte
+    (so the Klebsiella disk-cache keys are unchanged). Extra fields append their alias bullet; an AST
+    panel appends a trailing paragraph naming the canonical drugs — Klebsiella appends neither.
+    """
+    n_word = _NUM_WORDS.get(len(fields), str(len(fields)))
+    aliases = "".join(_FIELD_ALIAS_BULLETS.get(f, f"- {f}: match by meaning.\n") for f in fields)
+    prompt = (
+        f"You map the columns of a scientific paper's supplementary metadata table to {n_word} per-sample "
         "fields. Tables rarely use our exact field names, so match by MEANING — use both the header "
         "wording AND the example values in the preview. Common aliases:\n"
-        "- country: 'location', 'geographic origin/location', 'region', 'country of origin', 'origin', "
-        "'place', 'nation', 'geography' — or a column whose values are country/place names.\n"
-        "- collection_date: 'date', 'year', 'collection year', 'sampling/isolation date', 'date "
-        "collected', 'date of collection' — or a column of years/dates.\n"
-        "- isolation_source: 'source', 'specimen', 'sample type', 'specimen type', 'isolate source', "
-        "'material', 'body site', 'anatomical site' — the clinical/environmental sample the isolate came "
-        "from.\n"
-        "- host: 'host species', 'host organism', 'organism', 'source host', 'host type' — or a "
-        "human/animal host designation.\n"
+        + aliases +
         "You are shown a preview with 0-indexed column labels [0], [1], .... Return the 0-based column "
         "index for each field, or null if that field genuinely has no column. Also return header_rows "
         "(how many leading rows are header, usually 1).\n"
@@ -209,15 +283,28 @@ def _system_prompt() -> str:
         "if a header sounds right. Do not invent columns; when unsure, prefer null. The accession/"
         "sample-ID column is handled separately — you do not need to map it."
     )
+    if ast_drugs:
+        drug_list = ", ".join(ast_drugs)
+        prompt += (
+            "\n\nANTIBIOTIC SUSCEPTIBILITY (AST): many isolate tables also report per-drug susceptibility. "
+            "For EACH antibiotic column, add an ast_columns entry with the drug name as printed plus the "
+            "0-based column index of its MIC value (mic_column) and/or its S/I/R call (resistance_column), "
+            "null for whichever is absent. Record values VERBATIM — do not interpret MICs or apply "
+            "breakpoints; that is a separate downstream job. Canonical drug names: "
+            + drug_list + ". Use the closest canonical name; keep an off-panel drug's printed name as-is."
+        )
+    return prompt
 
 
-def _user_prompt(study_accession: str, table: SuppTable, preview: str) -> str:
+def _user_prompt(study_accession: str, table: SuppTable, preview: str, fields: tuple[str, ...] = FIELDS,
+                 *, ast_drugs: tuple[str, ...] | list[str] | None = None) -> str:
     """Per-study user prompt: the table identity + the preview grid."""
+    tail = "; also list any antibiotic-susceptibility (AST) columns in ast_columns" if ast_drugs else ""
     return (
         f"STUDY: {study_accession}\nSUPPLEMENTARY FILE: {table.filename}"
         f"{' (sheet ' + table.sheet + ')' if table.sheet else ''}\n\n"
         f"TABLE PREVIEW (column labels are 0-based indices):\n{preview}\n\n"
-        "Map each of country / collection_date / isolation_source / host to a column index or null."
+        f"Map each of {' / '.join(fields)} to a column index or null{tail}."
     )
 
 
@@ -309,17 +396,17 @@ def find_bridge(manifest: pd.DataFrame, acc_col: int, m_header: int,
 
 def _two_hop_extract(study_accession: str, pmcid: str, manifest: SuppTable, acc_col: int, m_header: int,
                      field_tables: list[SuppTable], acc_to_sample: dict[str, str], llm,
-                     *, model: str | None) -> StudyExtraction | None:
+                     *, model: str | None, fields: tuple[str, ...] = FIELDS) -> StudyExtraction | None:
     """Chain manifest (accession→ID) to a strain-keyed field table (ID→fields). ``None`` if no bridge."""
     # hop 1: build strain/patient-ID → sample_accession from the manifest.
     best: StudyExtraction | None = None
     for ft in field_tables[:MAX_TABLES_TO_MAP]:
         mapping = llm.complete_structured(
-            system=_system_prompt(), user=_user_prompt(study_accession, ft, render_preview(ft.df)),
-            json_schema=column_map_schema(), schema_name=SCHEMA_NAME,
+            system=_system_prompt(fields), user=_user_prompt(study_accession, ft, render_preview(ft.df), fields),
+            json_schema=column_map_schema(fields), schema_name=SCHEMA_NAME,
             schema_description="Map supplementary-table columns to per-sample metadata fields.", model=model,
         )
-        cols = {f: mapping.get(f"{f}_column") for f in FIELDS}
+        cols = {f: mapping.get(f"{f}_column") for f in fields}
         if not any(c is not None for c in cols.values()):
             continue
         f_header = max(0, int(mapping.get("header_rows", 1)))
@@ -372,6 +459,8 @@ def extract_study(
     llm,
     *,
     model: str | None = None,
+    fields: tuple[str, ...] = FIELDS,
+    ast_drugs: tuple[str, ...] | list[str] | None = None,
 ) -> StudyExtraction:
     """Run per-sample for one study: pick the joinable table, map columns (LLM), extract per-sample rows.
 
@@ -389,6 +478,11 @@ def extract_study(
         An :class:`engine.llm.LLMClient`.
     model
         Optional per-call model override.
+    fields
+        Per-sample fields to map (default the four core fields → byte-identical Klebsiella behaviour).
+    ast_drugs
+        Canonical antibiotic panel; when given, the extractor also maps AST columns and emits per-drug
+        ``ast_<drug>_mic`` / ``ast_<drug>_resistance`` fills (off-panel drugs go to ``ast_other``).
 
     Returns
     -------
@@ -419,27 +513,30 @@ def extract_study(
     best_nfields = -1
     for _hits, t, col in joinable[:MAX_TABLES_TO_MAP]:
         mapping = llm.complete_structured(
-            system=_system_prompt(),
-            user=_user_prompt(study_accession, t, render_preview(t.df)),
-            json_schema=column_map_schema(),
+            system=_system_prompt(fields, ast_drugs=ast_drugs),
+            user=_user_prompt(study_accession, t, render_preview(t.df), fields, ast_drugs=ast_drugs),
+            json_schema=column_map_schema(fields, ast_drugs=ast_drugs),
             schema_name=SCHEMA_NAME,
             schema_description="Map supplementary-table columns to per-sample metadata fields.",
             model=model,
         )
-        nfields = sum(mapping.get(f"{f}_column") is not None for f in FIELDS)
+        nfields = sum(mapping.get(f"{f}_column") is not None for f in fields)
         if nfields > best_nfields:
             best_map, best_table, best_acc_col, best_nfields = mapping, t, col, nfields
-        if nfields == len(FIELDS):
+        if nfields == len(fields):
             break
     mapping, table, acc_col = best_map, best_table, best_acc_col
-    cols = {f: mapping.get(f"{f}_column") for f in FIELDS}
+    cols = {f: mapping.get(f"{f}_column") for f in fields}
     header_rows = max(0, int(mapping.get("header_rows", 1)))
-    if best_nfields == 0:
+    # AST triples on the chosen table (empty unless the spec enabled a panel). A table carrying only AST
+    # (no core fields) must NOT fall through to the manifest branch, so it is part of the has-content test.
+    ast_map = (mapping.get("ast_columns") or []) if ast_drugs else []
+    if best_nfields == 0 and not ast_map:
         # The joinable tables are accession manifests with no field columns. If a strain-keyed field
         # table exists, chain through it (two-hop) using `table` as the manifest.
         if two_hop_tables:
             th = _two_hop_extract(study_accession, pmcid, table, acc_col, header_rows,
-                                  two_hop_tables, acc_to_sample, llm, model=model)
+                                  two_hop_tables, acc_to_sample, llm, model=model, fields=fields)
             if th is not None:
                 return th
         note = ("joinable tables are accession-manifest only (no field columns)"
@@ -452,11 +549,11 @@ def extract_study(
     rejected: set[str] = set()
     if confidence != "high":
         cols, rejected = verify_field_values(table, cols, header_rows, llm, model=model)
-        if not any(c is not None for c in cols.values()):
+        if not any(c is not None for c in cols.values()) and not ast_map:
             return StudyExtraction(study_accession, pmcid, table.filename, [], 0, cols, confidence,
                                    f"all mapped fields failed the value check: {sorted(rejected)}")
 
-    # 3) deterministic row-by-row join + verbatim extraction.
+    # 3) deterministic row-by-row join + verbatim extraction (core/extra fields, then the AST panel).
     fills: list[dict] = []
     mapped_samples: set[str] = set()
     for i in range(header_rows, len(table.df)):
@@ -478,11 +575,53 @@ def extract_study(
                     "ena_value": "", "applied_value": val, "method": "per_sample",
                     "evidence": f"{table.filename}:{key}",
                 })
+        fills.extend(_ast_fills_for_row(study_accession, sample, table, i, ast_map, ast_drugs, key))
+    n_ast = sum(1 for x in fills if x["field"].startswith("ast_"))
     note = f"mapped {len(mapped_samples)} samples, {len(fills)} cell-fills"
+    if n_ast:
+        note += f" ({n_ast} AST)"
     if rejected:
         note += f"; value-check rejected {sorted(rejected)}"
     return StudyExtraction(study_accession, pmcid, table.filename, fills, len(mapped_samples), cols,
                            confidence, note)
+
+
+def _ast_fills_for_row(study_accession: str, sample: str, table: SuppTable, row: int,
+                       ast_map: list[dict], ast_drugs: tuple[str, ...] | list[str] | None, key: str) -> list[dict]:
+    """Emit verbatim per-drug AST fills for one joined row (``[]`` when no panel / no values).
+
+    Each ``ast_columns`` entry names a drug plus its MIC and/or S-I-R column. Values are copied AS-IS
+    (no breakpoint interpretation). Panel drugs land in ``ast_<drug>_mic`` / ``ast_<drug>_resistance``;
+    an off-panel drug's value is preserved verbatim in ``ast_other`` as ``drug=value``.
+    """
+    if not ast_map or not ast_drugs:
+        return []
+    out: list[dict] = []
+    for entry in ast_map:
+        drug_raw = str(entry.get("drug", "")).strip()
+        if not drug_raw:
+            continue
+        mic = _cell(table.df, row, entry.get("mic_column"))
+        res = _cell(table.df, row, entry.get("resistance_column"))
+        if not mic and not res:
+            continue
+        canon = _norm_drug(drug_raw, ast_drugs)
+
+        def _add(field: str, value: str) -> None:
+            out.append({
+                "study_accession": study_accession, "sample_accession": sample, "field": field,
+                "ena_value": "", "applied_value": value, "method": "per_sample",
+                "evidence": f"{table.filename}:{key}",
+            })
+
+        if canon:
+            if mic:
+                _add(f"ast_{canon}_mic", mic)
+            if res:
+                _add(f"ast_{canon}_resistance", res)
+        else:  # off-panel drug — keep the reading verbatim so nothing is silently dropped
+            _add("ast_other", f"{drug_raw}={mic or res}")
+    return out
 
 
 def confidence_tally(extractions: list[StudyExtraction]) -> dict[str, int]:

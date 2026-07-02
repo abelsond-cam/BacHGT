@@ -220,30 +220,60 @@ recomputed and discarded each run (the smaller, <100-sample uncurated studies ar
 
 - **master table** — 96,291 samples × 121 columns (the full base + the backfilled fields +
   `study_setting`/`amr_study`).
-- **92,656 cells filled** (host 26,721 / collection_date 24,527 / country 23,230 / isolation_source 18,178)
-  across **203 graded studies**.
+- **92,704 cells filled** (host 26,721 / collection_date 24,575 / country 23,230 / isolation_source 18,178)
+  across **206 graded studies**.
 - **55 curator decisions** resolved so far (31 answered, 24 skipped-as-wide) — versioned and carried forward.
 - a **canonical merge onto the manual gold** (`human > agent > ENA`): the agent fills only cells the human
-  left blank (country 4,856 / date 9,073 / iso 7,218 / host 7,410); human curation is never overwritten.
+  left blank (country 4,856 / date 9,121 / iso 7,218 / host 7,410); human curation is never overwritten
+  (merged table 90,903 rows).
 
 ---
 
 ## 5. Forward plan
 
+The benchmarked folds + the whole >100-sample tail are done and accumulated (§4b, §4c). Active work, in order:
+
 1. **Collection-date rule for the downstream cohort.** Bring the `attributes.yaml` wording into line with the
-   hardened `collection_date` rule (§4a) so it governs the remaining uncurated studies. The already-curated
-   folds and >100-sample tail are **left as they are** — their dates already follow this rule (it is the one
-   the manual curator applied), and the difference is far too small to justify re-running them.
-2. **Re-run the >100-sample tail on the corrected base.** The per-sample base table must carry the strain-alias
-   anchoring columns (`sample_alias` / `sample_title` / `secondary_sample_accession` / `accession`) the
-   extractor keys supplementary tables on; an earlier tail run used a slim export and under-extracted its
-   strain-keyed studies. Re-run the tail on the full-width base and re-accumulate, so the master regains those
-   per-sample fills. (The driver now fails loud if the base is missing these columns.)
-3. **M. abscessus** — the second application: point the per-sample extractor at that spec's fields (it is the
-   one component still hardcoded to the four *Klebsiella* fields) and add `run_m_abs.sh`.
-4. **The rest of the cohort** — run the smaller (<100-sample) uncurated studies at scale, accumulating onto
-   the master, biggest-first; the curator answers the (now much smaller) escalation queues.
-5. **Downstream** — run the deterministic parse/categorise step over the master, then regenerate the
+   hardened `collection_date` rule (§4a) so it governs the remaining uncurated studies. Small but *gating* —
+   editing the rubric re-grades everything, so it is applied **before** the at-scale runs below, so they grade
+   under the hardened rule once. The already-curated folds and >100-sample tail are **left as they are** —
+   their dates already follow this rule (it is the one the manual curator applied), and the difference is far
+   too small to justify re-running them.
+2. **M. abscessus — first exploratory pass.** The second application, now running (biggest studies first) to
+   **iron out / refine the `applications/m_abs/attributes.yaml` definitions** (CF status, smoking, the AST
+   panel) before scaling to all ~133. Engine work done: the per-sample extractor is now **spec-driven** over
+   the fields (was hardcoded to the four *Klebsiella* fields), with an AST **compact-list sub-schema**
+   (`ast_columns: [{drug, mic_column, resistance_column}]` → verbatim `ast_<drug>_*` long-format fills;
+   off-panel → `ast_other`) that keeps the ~40-drug panel from ballooning into fixed columns; `run_m_abs.sh`
+   + an `export_base_table.py` (xlsx → full-width base) added; all **Klebsiella byte-identical** (gate green).
+
+   > **⚠️ CRITICAL FIRST STEP FOR ANY NEW SPECIES — per-sample identifier (anchor) columns.** The extractor
+   > is anchor-**agnostic**: it builds an id→`sample_accession` map from a declared set of base columns and
+   > finds whichever supplementary-table column matches **by value** (never by column name). That column set
+   > is now **spec-driven** (`per_sample_completeness.sample_identifier_columns` in `attributes.yaml`;
+   > *Klebsiella* declares none → the engine's built-in default). **If the set is too thin, per-isolate
+   > extraction silently yields NOTHING** — the M.abs first pass produced **0 fills** until we reviewed *all*
+   > input columns and added strain / isolate / sequencing-lane IDs alongside the accessions/aliases. So the
+   > first onboarding step for a new species is: **review every column of the input table and declare ALL
+   > per-sample identifiers a paper might key a table on** (deposited accessions, ENA aliases, strain/isolate
+   > names, lane IDs). **Exclude per-patient / per-study identifiers** (e.g. a `Patient` column) — they
+   > collide across samples. Verified on M.abs PRJDB10566: with strain added, its per-isolate table
+   > (`Isolate | Country | Diagnosed Year | Disease status | Isolated from`) anchors 217/217 rows.
+
+   *cf_status backfill uses a 95% majority rule* (fill all blanks with the majority category when ≥95% of the
+   known set is one way — tolerates mislabelling <5% for much more complete cf_status for phenotyping/GWAS;
+   never overwrites a sample's own known value). *AST design: keep the wide canonical drug panel and prove
+   per-isolate extraction works on an AST-reporting study before thinning — the panel width is near-free.*
+3. **Klebsiella — a publishable per-study-accession table.** One consolidated row per study accession for
+   release: paper link · number of *Klebsiella* samples · total study size · the study-wide grades
+   (`amr_study`, `study_setting`, `experimental_study`) · and the **pre- and post-fill completeness** of each
+   per-sample field. The publication-facing summary of what the engine achieved per study.
+4. **Klebsiella — collaborator plots.** Figures for this report showing the **raw → manual-curated →
+   agent-curated** stepwise improvement in both **completeness** and **accuracy**, to send to collaborators.
+5. **The rest of the cohort at scale.** Run the smaller uncurated studies, accumulating onto the master,
+   biggest-first — the **[50, 99] band (95 studies / ~6.8k samples) runs overnight** (small, relatively), then
+   the <50-sample studies; the curator answers the (now much smaller) escalation queues.
+6. **Downstream** — run the deterministic parse/categorise step over the master, then regenerate the
    completeness plots.
 
 *Loose ends:* accept the one aggregate-only study (no per-isolate table) as complete → ALL CLEAR; build the

@@ -323,6 +323,8 @@ def per_sample(
     model: str,
     caches: StageCaches,
     threshold: float = 0.75,
+    ast_drugs: Sequence[str] | None = None,
+    id_columns: Sequence[str] | None = None,
 ) -> pd.DataFrame:
     """Per-sample extraction from supplementary tables — the accurate per-isolate source, runs FIRST.
 
@@ -340,16 +342,18 @@ def per_sample(
     from bac_metadata.bac_agentic_metadata.engine import supplementary as supp
 
     caches.ensure()
+    id_cols = tuple(id_columns) if id_columns else sx._ID_COLUMNS
     sets: dict[str, set[str]] = {}
     maps: dict[str, dict[str, str]] = {}
     for acc, g in base.groupby("study_accession"):
-        maps[acc] = sx.build_accession_to_sample(g)
+        maps[acc] = sx.build_accession_to_sample(g, id_columns=id_cols)
         sets[acc] = set(maps[acc])
 
     found = pd.read_csv(found_path, sep="\t", dtype=str).fillna("")
     pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
 
-    needs = backfill.gate_fields(backfill.field_completeness(base, fields=tuple(fields)), threshold=threshold)
+    needs = backfill.gate_fields(backfill.field_completeness(base, fields=tuple(fields)),
+                                 fields=tuple(fields), threshold=threshold)
     any_gated = needs.any(axis=1)
     gated = set(any_gated.index[any_gated])
     if accessions:
@@ -383,7 +387,8 @@ def per_sample(
         if local:
             tables = (tables or []) + local
         try:
-            ex = sx.extract_study(acc, pmcid, tables, sets[acc], maps[acc], llm, model=model)
+            ex = sx.extract_study(acc, pmcid, tables, sets[acc], maps[acc], llm, model=model,
+                                  fields=tuple(fields), ast_drugs=tuple(ast_drugs) if ast_drugs else None)
         except UsageLimitError as e:
             print(f"[{i}/{len(targets)}] {acc} — usage limit; stopping (cache holds the rest): {e}",
                   file=sys.stderr)
@@ -453,14 +458,14 @@ def backfill_whole_field(
         }
 
     completeness = backfill.field_completeness(base, fields=fields)
-    needs = backfill.gate_fields(completeness, threshold=threshold)
+    needs = backfill.gate_fields(completeness, fields=fields, threshold=threshold)
     per_sample_df = None
     if per_sample_path and Path(per_sample_path).exists():
         per_sample_df = pd.read_csv(per_sample_path, sep="\t", dtype=str)
-        ps_filled, ps_het = backfill.per_sample_guards(per_sample_df)
+        ps_filled, ps_het = backfill.per_sample_guards(per_sample_df, fields=fields)
         print(f"Per-sample guard: {sum(len(v) for v in ps_filled.values())} cells already filled; "
               f"{len(ps_het)} (study×field) blocked as per-sample-heterogeneous", file=sys.stderr)
-    applied = backfill.apply_whole_field(base, proposals, needs, per_sample=per_sample_df)
+    applied = backfill.apply_whole_field(base, proposals, needs, fields=fields, per_sample=per_sample_df)
     applied.to_csv(out_path, sep="\t", index=False)
 
     covered = {(f, s) for f, s in zip(applied["field"], applied["study_accession"], strict=False)}
