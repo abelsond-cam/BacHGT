@@ -264,6 +264,10 @@ attributes:
               structured `cf_status` = Non-CF.
             - unknown: not stated; OR the sample is non-human (Animal / Environmental) — those are coded by
               the `host` field, not forced into the CF binary.
+            NB immune status is ORTHOGONAL to CF and is NOT evidence either way: CF is a CFTR channelopathy,
+            not an immunodeficiency, so "immunocompetent" does not imply non-CF (nor does "immunocompromised"
+            imply CF). Do not infer cf_status from immune status — the whole-field call still ESCALATES for a
+            human when a study is a big decision, just without a guessed value.
           whole_project_value: |-
             If cf_status is blank, set it from the study-wide CF composition, applying a 95% MAJORITY rule:
             when AT LEAST 95% of the samples with a KNOWN status are one category (CF or non-CF), propose
@@ -274,6 +278,12 @@ attributes:
             whole-fill — leave the blanks for per-sample extraction / escalation. Example: a cohort described
             as 208/210 non-CF (99%) → propose non-CF for all; a genuine 50/50 CF/non-CF split → propose
             nothing. Same whole-project applicability rule (paper coverage) as country/host.
+            CRITICAL — do NOT infer CF status from IMMUNE status: "immunocompetent" / "immunocompromised" is
+            ORTHOGONAL to CF (CF is a CFTR channelopathy, NOT an immunodeficiency), so it is no evidence of CF
+            or non-CF either way. Only an explicit CF-vs-non-CF description supports a value — a CF clinic /
+            centre / registry / "CF patients" (→ CF), or a named non-CF condition such as bronchiectasis
+            without CF, COPD, post-surgical / skin-soft-tissue / disseminated infection (→ non-CF). "Patients
+            were immunocompetent" alone → propose nothing.
         smoking_status:
           values: [smoker, non_smoker, unknown]
           aspirational: true                                  # likely sparse; paper-derived only
