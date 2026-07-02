@@ -62,6 +62,7 @@ class AttributeSpec:
     completeness_fields: tuple[str, ...]
     deterministic_normaliser: dict[str, tuple[str, ...]]
     sample_identifier_columns: tuple[str, ...]
+    date_older_span_cutoff_year: int
     raw: dict
 
     @classmethod
@@ -97,6 +98,11 @@ class AttributeSpec:
         # extractor's default Klebsiella id set). Reviewing the input for ALL per-sample identifiers is the
         # first onboarding step for a new species (see PROGRESS_REPORT + the yaml note).
         id_columns = tuple(completeness.get("sample_identifier_columns", []))
+        # Escalation "older span" cutoff: a 2-5yr collection_date span whose midpoint predates this year is
+        # treated as a high-value tight cluster worth a human date (default 2010 -> Klebsiella unchanged;
+        # M. abscessus uses 2015). Read from the collection_date backfill field.
+        cd_rule = (completeness.get("backfill", {}) or {}).get("fields", {}).get("collection_date", {}) or {}
+        cutoff_year = int(cd_rule.get("older_span_cutoff_year", 2010))
 
         return cls(
             application=doc["application"],
@@ -105,5 +111,6 @@ class AttributeSpec:
             completeness_fields=fields,
             deterministic_normaliser=normaliser,
             sample_identifier_columns=id_columns,
+            date_older_span_cutoff_year=cutoff_year,
             raw=doc,
         )

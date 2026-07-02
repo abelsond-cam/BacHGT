@@ -83,41 +83,45 @@ _FIELD_TERMS: dict[str, str] = {
 _SENTENCE_RE = re.compile(r"[^.!?]*[.!?]")
 
 #: The triage criteria — David's "tight cluster vs wide mix" rule, field by field. Encodes the research
-#: priors (invasiveness as the primary phenotype axis; old dates are high-value for lineage dating).
-_TRIAGE_GUIDANCE = (
-    "We only ask a human to confirm a value when the field, though it does not fit one clean rubric "
-    "label, is a TIGHT, CLOSELY-RELATED cluster a human could reasonably collapse to one representative "
-    "value. When it is a genuinely WIDE, unrelated mix, do NOT ask — per-sample extraction handles it.\n\n"
-    "Resolutions:\n"
-    "- tight_cluster_escalate — closely related, worth a human's confirmation. By field:\n"
-    "    * isolation_source: all specimens share the INVASIVENESS theme — e.g. all invasive (blood and "
-    "CSF; blood and deep-tissue/abscess). WIDE (skip) if it mixes invasive sites with carriage/screening "
-    "(rectal, stool) OR spans many unrelated sites (e.g. blood + urine + respiratory + wound).\n"
-    "    * country: all countries lie in ONE close region (e.g. all Nordic, all East Africa). WIDE (skip) "
-    "across continents (e.g. UK + Malawi + Argentina) or dozens of countries (e.g. '37 countries').\n"
-    "    * collection_date: escalate ONLY a mid-range OLDER span — a 2–5-year (24–60-month) span whose "
-    "MIDPOINT is before 2010 is tight (old genomes are scarce and high-value for lineage dating; a pre-2000 "
-    "span stays tight even up to ~6–7 years). Everything else is NOT escalated, so use wide_mix_skip: a span "
-    "of 2 years (24 months) or less is auto-filled with its midpoint (skip it); a 2–5-year span whose "
-    "midpoint is 2010 or later is recent and low-value (skip it, leave the date blank); spans wider than ~5 "
-    "years (a decade or more) are WIDE (skip).\n"
-    "    * host: closely-related hosts (e.g. all human clinical) are tight; mixing human + animal + "
-    "environmental is WIDE.\n"
-    "- wide_mix_skip — a genuinely wide, unrelated mix; do not escalate.\n"
-    "- uniform_propose — on reflection the evidence DOES support one whole-project value you should have "
-    "proposed.\n\n"
-    "For tight_cluster_escalate or uniform_propose, set representative_value to the single value a human "
-    "would most likely accept — it is the representative of the tight set. It MUST be a SINGLE, PARSEABLE, "
-    "CANONICAL value of that field, never a region, a list, or a concatenation:\n"
-    "    * country: ONE country name as it would appear in metadata (e.g. 'Malawi', 'Guatemala') — NOT a "
-    "region/continent ('Central America', 'East Africa') and NOT a join ('Uganda; Malawi'). If the cluster "
-    "spans a few neighbouring countries, give the single DOMINANT country; if there is no dominant one, "
-    "prefer wide_mix_skip.\n"
-    "    * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human'); "
-    "collection_date: the single midpoint year/date of the span.\n"
-    "Set representative_value null for wide_mix_skip. Give a one-line cluster_theme naming the cluster and "
-    "why it is tight or wide, plus a verbatim evidence_quote. Judge ONLY from the evidence above; do not guess."
-)
+#: priors (invasiveness as the primary phenotype axis; old dates are high-value for lineage dating). The
+#: collection_date "older span" cutoff year is spec-driven (default 2010 → Klebsiella text byte-identical;
+#: M. abscessus passes 2015 because roughly half its dated samples predate 2015 and are dating-valuable).
+def _triage_guidance(cutoff_year: int = 2010) -> str:
+    """Render the tight-vs-wide triage guidance, with the collection_date older-span cutoff year injected."""
+    return (
+        "We only ask a human to confirm a value when the field, though it does not fit one clean rubric "
+        "label, is a TIGHT, CLOSELY-RELATED cluster a human could reasonably collapse to one representative "
+        "value. When it is a genuinely WIDE, unrelated mix, do NOT ask — per-sample extraction handles it.\n\n"
+        "Resolutions:\n"
+        "- tight_cluster_escalate — closely related, worth a human's confirmation. By field:\n"
+        "    * isolation_source: all specimens share the INVASIVENESS theme — e.g. all invasive (blood and "
+        "CSF; blood and deep-tissue/abscess). WIDE (skip) if it mixes invasive sites with carriage/screening "
+        "(rectal, stool) OR spans many unrelated sites (e.g. blood + urine + respiratory + wound).\n"
+        "    * country: all countries lie in ONE close region (e.g. all Nordic, all East Africa). WIDE (skip) "
+        "across continents (e.g. UK + Malawi + Argentina) or dozens of countries (e.g. '37 countries').\n"
+        f"    * collection_date: escalate ONLY a mid-range OLDER span — a 2–5-year (24–60-month) span whose "
+        f"MIDPOINT is before {cutoff_year} is tight (old genomes are scarce and high-value for lineage dating; "
+        f"a pre-2000 span stays tight even up to ~6–7 years). Everything else is NOT escalated, so use "
+        f"wide_mix_skip: a span of 2 years (24 months) or less is auto-filled with its midpoint (skip it); a "
+        f"2–5-year span whose midpoint is {cutoff_year} or later is recent and low-value (skip it, leave the "
+        f"date blank); spans wider than ~5 years (a decade or more) are WIDE (skip).\n"
+        "    * host: closely-related hosts (e.g. all human clinical) are tight; mixing human + animal + "
+        "environmental is WIDE.\n"
+        "- wide_mix_skip — a genuinely wide, unrelated mix; do not escalate.\n"
+        "- uniform_propose — on reflection the evidence DOES support one whole-project value you should have "
+        "proposed.\n\n"
+        "For tight_cluster_escalate or uniform_propose, set representative_value to the single value a human "
+        "would most likely accept — it is the representative of the tight set. It MUST be a SINGLE, PARSEABLE, "
+        "CANONICAL value of that field, never a region, a list, or a concatenation:\n"
+        "    * country: ONE country name as it would appear in metadata (e.g. 'Malawi', 'Guatemala') — NOT a "
+        "region/continent ('Central America', 'East Africa') and NOT a join ('Uganda; Malawi'). If the cluster "
+        "spans a few neighbouring countries, give the single DOMINANT country; if there is no dominant one, "
+        "prefer wide_mix_skip.\n"
+        "    * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human'); "
+        "collection_date: the single midpoint year/date of the span.\n"
+        "Set representative_value null for wide_mix_skip. Give a one-line cluster_theme naming the cluster and "
+        "why it is tight or wide, plus a verbatim evidence_quote. Judge ONLY from the evidence above; do not guess."
+    )
 
 
 @dataclass
@@ -225,7 +229,8 @@ def classify_escalation_candidate(
     follow_up = (
         "\n\n=== FOLLOW-UP: escalation triage (this supersedes the grading instruction above) ===\n"
         f"Earlier you declined a single whole-project value for `{field}` (proposed_value="
-        f"{prior_proposed!r}, evidence quote {prior_quote!r}).\n\n" + _TRIAGE_GUIDANCE
+        f"{prior_proposed!r}, evidence quote {prior_quote!r}).\n\n"
+        + _triage_guidance(spec.date_older_span_cutoff_year)
     )
     return llm.complete_structured(
         system=system,
