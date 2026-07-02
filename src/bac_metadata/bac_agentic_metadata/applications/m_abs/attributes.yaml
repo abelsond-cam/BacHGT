@@ -80,7 +80,7 @@ attributes:
     # retrieve (paywalled, PDF-only, or genotypic-only). This flag records WHICH studies are worth David's
     # manual effort, so per-isolate AST can be added by hand where it exists. Please refine wording.
     per_sample_AST:
-      values: ["retrievable", "possible", "null"]
+      values: [retrievable, possible, none]
       ground_truth: none
       definition: |-
         Whether a PER-ISOLATE (per-sample) PHENOTYPIC AST table for this study can be obtained — the flag
@@ -91,9 +91,9 @@ attributes:
           table keyed to isolate/sample identifiers we can map to accessions.
         - possible: per-isolate phenotypic AST appears to exist but is NOT readily machine-retrievable —
           it is paywalled, PDF-/image-only, or keyed to identifiers not linkable without manual work.
-        - "null": no per-isolate phenotypic AST at all (aggregate-only AST, genotypic-only, or none).
-        When reports_AST=no this is `null`. Grade `gradeable` when an accessible paper makes it clear;
-        `not_gradeable` when no paper is accessible.
+        - none: no per-isolate phenotypic AST at all (aggregate-only AST, genotypic-only, or none).
+        When reports_AST=no this is `none` (never blank). Grade `gradeable` when an accessible paper makes
+        it clear; `not_gradeable` when no paper is accessible.
 
   # 3) PER-SAMPLE VARIABLES — the bulk of the task. The four core fields PLUS the M. abscessus phenotype
   #    fields (cf_status, smoking_status) and the AST panel. All per-sample, each with a whole-study
