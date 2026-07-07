@@ -465,6 +465,7 @@ def make_llm(
     *,
     model: str = DEFAULT_MODEL,
     cache_dir: str | Path | None = None,
+    timeout: int | None = None,
 ) -> LLMClient:
     """Construct an :class:`LLMClient` for the chosen backend.
 
@@ -477,6 +478,9 @@ def make_llm(
         Model id / alias.
     cache_dir
         Shared disk cache directory.
+    timeout
+        Per-call subprocess timeout in seconds for the subscription backend (ignored for ``api``).
+        ``None`` keeps the client default.
 
     Returns
     -------
@@ -484,7 +488,8 @@ def make_llm(
         The backend client.
     """
     if backend == "subscription":
-        return ClaudeCliClient(model=model, cache_dir=cache_dir)
+        kw = {"timeout": timeout} if timeout is not None else {}
+        return ClaudeCliClient(model=model, cache_dir=cache_dir, **kw)
     if backend == "api":
         return AnthropicClient(model=model, cache_dir=cache_dir)
     raise ValueError(f"Unknown backend {backend!r} (expected 'subscription' or 'api').")

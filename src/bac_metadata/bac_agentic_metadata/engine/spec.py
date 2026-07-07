@@ -62,6 +62,7 @@ class AttributeSpec:
     completeness_fields: tuple[str, ...]
     deterministic_normaliser: dict[str, tuple[str, ...]]
     sample_identifier_columns: tuple[str, ...]
+    categorisation: dict[str, dict]
     raw: dict
 
     @classmethod
@@ -98,6 +99,14 @@ class AttributeSpec:
         # first onboarding step for a new species (see PROGRESS_REPORT + the yaml note).
         id_columns = tuple(completeness.get("sample_identifier_columns", []))
 
+        # Agentic-categorisation config (per-field null_tokens / categories / cross_column). Empty for
+        # applications that declare no `attributes.categorisation` block. Stored as plain nested dicts;
+        # consumers (preclean, induce/apply, reconcile) read the sub-keys they need.
+        categorisation = {
+            field: dict(cfg or {})
+            for field, cfg in ((doc.get("attributes", {}).get("categorisation", {}) or {}).get("fields", {}) or {}).items()
+        }
+
         return cls(
             application=doc["application"],
             species=doc.get("species", ""),
@@ -105,5 +114,6 @@ class AttributeSpec:
             completeness_fields=fields,
             deterministic_normaliser=normaliser,
             sample_identifier_columns=id_columns,
+            categorisation=categorisation,
             raw=doc,
         )

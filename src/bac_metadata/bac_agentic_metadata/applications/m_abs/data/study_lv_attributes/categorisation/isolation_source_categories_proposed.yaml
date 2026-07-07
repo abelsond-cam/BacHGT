@@ -1,0 +1,728 @@
+field: isolation_source
+n_distinct_values: 162
+n_samples: 5542
+categories:
+- name: sputum
+  definition: Expectorated or induced sputum samples from the lower respiratory tract, including sputum
+    slants, cough swabs producing sputum, and values explicitly labelled 'sputum-expectorated'.
+  includes: 'Values that explicitly name the specimen as sputum, in any capitalisation, whether standing
+    alone or embedded in a longer compound descriptor. This covers: (1) bare labels ''sputum'' and ''Sputum'';
+    (2) ''Sputum Slant'' — a solid/semi-solid microbiological culture preparation made from a sputum specimen,
+    explicitly listed in the definition; (3) compound descriptors that contain the word ''sputum-expectorated''
+    or ''Sputum-Expectorated'', such as ''Respiratory, Lower, Sputum-Expectorated'' and ''Respiratory,
+    Lower, Sputum-Expectorated Collected 8/20/2021''; (4) host-qualified sputum labels such as ''Human,
+    sputum''; (5) ''Cough Swab'' — a swab obtained during active coughing that yields lower-airway secretions
+    (the definition explicitly includes cough swabs producing sputum). The key criterion is that the value
+    must unambiguously name the specimen as sputum or as an expectorated/cough-derived secretion. Partial
+    abbreviation ''Sp'' alone (e.g. ''Sp in pox1'') is too ambiguous and must NOT be coded here.'
+  excludes: 'The following superficially similar values are excluded and must be sent to other categories:
+    (a) Bronchoalveolar lavage and variants — ''BAL'', ''BAL Slant'', ''bronchoalveolar lavage'', ''Bronchoalveolar
+    lavage'', ''bronchoalveolar lavage fluid'', ''Bronchoalveolar lavage fluid'', ''bronchoalveolar fluid'',
+    ''Bronchial Alveolar Lavage'', ''Bronchial Washings'', ''Bronl asp'' (bronchial aspirate), ''Lavage''
+    (when clearly BAL context), ''tracheal aspirate'', ''Trachl asp'', ''ETT asp'' (endotracheal tube
+    aspirate) — all go to lower_respiratory_bronchoscopy. (b) Generic/unspecified respiratory labels that
+    do not name the specimen as sputum — ''Respiratory system'', ''respiratory'', ''Respiratory'', ''respiratory
+    tract'', ''respiratory specimen'', ''pulmonary'', ''Pulmonary'', ''CF patient'', ''Non-CF patient'',
+    ''extrapulmonary'', ''Extrapulmonary-Other'' — go to respiratory_unspecified. (c) Lung parenchyma/tissue
+    — ''lung'', ''Lung tissue'' — go to lung_tissue. (d) Pleural and thoracic cavity fluids — ''Pleural
+    Fluid'', ''Pleural fluid'', ''Pleurl fl'', ''hydrothorax'', ''Fluid - empyema'', ''Thoracic Drain
+    Fluid'' — go to pleural_body_fluid. (e) Skin, wound, and soft-tissue specimens — ''swabbed skin lesions
+    or skin biopsy'', ''Chest wound swab'', ''Skin lesion'', ''skin/soft tissue'', ''Pus swab'', ''pus'',
+    ''Pus'', ''skin biopsy'', ''chest wound'', ''wound'' — go to skin_soft_tissue_wound. (f) Bone/joint/deep-tissue
+    specimens — ''Sternum'', ''bone'', tissue biopsies from limbs — go to bone_joint_deep_tissue. (g)
+    Blood — ''Blood'', ''blood'', ''Bld vein'' — go to blood. (h) Environmental water specimens — ''Bathroom
+    shower'', ''Fridge water tap'', ''Environmental'', ''environmental'', ''Water sink'' — go to water_environment.
+    (i) Uninterpretable, strain, or administrative labels — ''clinical sample'', ''human'', ''other'',
+    ''ATCC'', ''Isolate'', ''NS'', ''Homo Sapiens clinical'' — go to NA.'
+  examples:
+  - sputum
+  - Sputum
+  - Sputum Slant
+  - Respiratory, Lower, Sputum-Expectorated
+  - Respiratory, Lower, Sputum-Expectorated Collected 8/20/2021
+  - Human, sputum
+  - Cough Swab
+- name: lower_respiratory_bronchoscopy
+  definition: 'Bronchoscopically- or endotracheally-collected lower respiratory specimens: bronchoalveolar
+    lavage and its variants (BAL, BAL slant, bronchial alveolar lavage), bronchial aspirates, tracheal
+    aspirates, endotracheal tube aspirates, and bronchial washings.'
+  includes: 'Values that name a bronchoscopically- or endotracheally-collected lower-respiratory fluid
+    specimen. This covers all surface forms of bronchoalveolar lavage (BAL): ''BAL'', ''BAL Slant'', ''bronchoalveolar
+    lavage'', ''Bronchoalveolar lavage'', ''bronchoalveolar lavage fluid'', ''Bronchoalveolar lavage fluid'',
+    ''bronchoalveolar fluid'', ''Bronchial Alveolar Lavage''. It also covers bronchial aspirates (''Bronl
+    asp''), tracheal aspirates (''tracheal aspirate'', ''Trachl asp''), endotracheal-tube aspirates (''ETT
+    asp''), and bronchial washings (''Bronchial Washings''). Abbreviations such as ''BAL'', ''Bronl asp'',
+    ''ETT asp'', and ''Trachl asp'' are included. Case variation (upper/lower/mixed) does not affect assignment.
+    The unifying criterion is that the specimen was collected via a bronchoscope, endotracheal tube, or
+    direct tracheal suction — not expectorated or coughed up by the patient.'
+  excludes: sputum ('sputum', 'Sputum', 'Sputum Slant', 'Human, sputum', 'Respiratory, Lower, Sputum-Expectorated',
+    'Respiratory, Lower, Sputum-Expectorated Collected 8/20/2021', 'Cough Swab') → sputum, because these
+    are voluntarily expectorated or coughed specimens, not bronchoscopically collected. Unqualified or
+    ambiguous respiratory terms ('Respiratory system', 'respiratory', 'Respiratory', 'respiratory tract',
+    'respiratory specimen', 'pulmonary', 'Pulmonary', 'extrapulmonary', 'Extrapulmonary-Other', 'CF patient',
+    'Non-CF patient') → respiratory_unspecified, because they lack the bronchoscopic/endotracheal qualifier.
+    'Lavage' alone (n=13) → respiratory_unspecified, because without a bronchial/alveolar qualifier it
+    is ambiguous (cf. 'gastric lavage' below). 'gastric lavage' → gastrointestinal_urinary, as this is
+    a GI procedure. 'Lung tissue', 'lung' → lung_tissue, because these are solid biopsies/tissue samples
+    rather than fluid collections. 'Pleural Fluid', 'Pleural fluid', 'Pleurl fl', 'Fluid - empyema', 'hydrothorax',
+    'Thoracic Drain Fluid' → pleural_body_fluid, as they come from the pleural space, not the bronchial/tracheal
+    lumen. 'PDfl (BTA)' → pleural_body_fluid (peritoneal/pleural dialysis fluid). Patient-descriptor strings
+    ('CF patient', 'Non-CF patient', 'human', 'clinical sample', 'Homo Sapiens clinical', 'Isolate', 'NS',
+    'Sp in pox1', 'ATCC', 'ATCC Strain', 'ATCC Isolate') → NA, as they do not describe a specimen type.
+  examples:
+  - BAL
+  - bronchoalveolar lavage
+  - bronchoalveolar lavage fluid
+  - tracheal aspirate
+  - Bronchial Alveolar Lavage
+  - BAL Slant
+  - Bronchial Washings
+  - ETT asp
+- name: respiratory_unspecified
+  definition: Generic respiratory or pulmonary labels where the collection method is not specified, including
+    'Respiratory system', 'respiratory tract', 'pulmonary', unspecified 'lung', nasopharyngeal and upper-airway
+    entries without further detail, and 'respiratory specimen'.
+  includes: 'All generic respiratory or pulmonary labels where the specimen type and collection procedure
+    are NOT specified. This covers: (1) bare terms naming the respiratory system as a whole, in any capitalisation
+    — ''Respiratory system'', ''respiratory'', ''Respiratory'', ''respiratory tract'', ''respiratory specimen'';
+    (2) pulmonary synonyms without further qualification — ''pulmonary'', ''Pulmonary''; (3) unqualified
+    lung labels that do not indicate tissue, biopsy, or fluid — ''lung''; (4) nasopharyngeal and upper-airway
+    anatomical entries without procedural or specimen-type detail — e.g. ''Neck - posterior nasopharynx'';
+    (5) unspecified respiratory swab or collection descriptors such as ''Cough Swab''. The defining criterion
+    is that the value names the respiratory tract (or a recognised synonym) without identifying the specimen
+    type (sputum, BAL, tissue) or collection procedure (bronchoscopy, aspiration, biopsy). Case variants
+    of the same generic term are all coded here.'
+  excludes: 'Sputum-labelled values → sputum: ''sputum'', ''Sputum'', ''Sputum Slant'', ''Respiratory,
+    Lower, Sputum-Expectorated'', ''Respiratory, Lower, Sputum-Expectorated Collected 8/20/2021'', ''Human,
+    sputum'' (any value that names sputum, regardless of accompanying respiratory qualifier). BAL, bronchoscopy,
+    lavage, and aspiration specimens → lower_respiratory_bronchoscopy: ''BAL'', ''BAL Slant'', ''bronchoalveolar
+    lavage'', ''Bronchoalveolar lavage'', ''bronchoalveolar lavage fluid'', ''Bronchoalveolar lavage fluid'',
+    ''Bronchial Alveolar Lavage'', ''Bronchial Washings'', ''bronchoalveolar fluid'', ''Lavage'', ''tracheal
+    aspirate'', ''Trachl asp'', ''ETT asp'', ''Bronl asp'' (any value specifying a procedural lower-respiratory
+    collection). Lung tissue or biopsy → lung_tissue: ''Lung tissue''. Pleural fluid, empyema, and thoracic
+    effusions → pleural_body_fluid: ''Pleural Fluid'', ''Pleural fluid'', ''Pleurl fl'', ''hydrothorax'',
+    ''Fluid - empyema'', ''Thoracic Drain Fluid''. Values stating extrapulmonary origin → NA: ''extrapulmonary'',
+    ''Extrapulmonary-Other'' (these explicitly exclude a lung/airway source). Non-anatomical patient or
+    strain descriptors with no usable source information → NA: ''CF patient'', ''Non-CF patient'', ''clinical
+    sample'', ''human'', ''Isolate'', ''NS'', ''other'', ''ATCC'', ''ATCC Strain'', ''ATCC Isolate'',
+    ''swab'' (no anatomical site given), ''Homo Sapiens clinical''.'
+  examples:
+  - Respiratory system
+  - respiratory
+  - pulmonary
+  - Respiratory
+  - respiratory tract
+  - respiratory specimen
+  - lung
+  - Pulmonary
+- name: lung_tissue
+  definition: Lung parenchymal tissue obtained surgically or by biopsy.
+  includes: 'Values that belong to lung_tissue are those explicitly designating the lung as a physical
+    tissue specimen — parenchyma, lobe, or nodule — obtained by surgical resection, CT-guided or open
+    biopsy, or autopsy, rather than as a secretion, washing, or aspirate. Specifically: (1) explicit ''Lung
+    tissue'' labels in any capitalisation; (2) bare ''lung'' used as the isolation source field, which
+    in clinical-bacteriology context denotes the organ/tissue rather than a secretion; (3) any value combining
+    ''lung'' or ''pulmonary'' with qualifiers such as ''biopsy'', ''resection'', ''tissue'', or ''parenchyma''.
+    The critical distinguishing feature is that the specimen is a solid tissue piece removed from the
+    lung organ, not a fluid, secretion, or lavage recovered from the airway lumen.'
+  excludes: 'The following superficially related values do NOT belong here: (1) ''sputum'', ''Sputum'',
+    ''Sputum Slant'', ''Human, sputum'', ''Respiratory, Lower, Sputum-Expectorated'', ''Cough Swab'' →
+    sputum (expectorated airway secretions, not parenchymal tissue). (2) ''BAL'', ''bronchoalveolar lavage'',
+    ''bronchoalveolar lavage fluid'', ''Bronchoalveolar lavage fluid'', ''Bronchial Alveolar Lavage'',
+    ''Bronchial Washings'', ''Lavage'', ''BAL Slant'', ''Bronl asp'', ''bronchoalveolar fluid'', ''tracheal
+    aspirate'', ''ETT asp'', ''Trachl asp'', ''gastric lavage'' → lower_respiratory_bronchoscopy (bronchoscopic
+    washings, lavage fluid, or tracheal/endotracheal aspirates — recovered from the airway lumen, not
+    excised lung tissue). (3) ''Respiratory system'', ''respiratory'', ''Respiratory'', ''respiratory
+    tract'', ''respiratory specimen'', ''pulmonary'', ''Pulmonary'', ''extrapulmonary'', ''Extrapulmonary-Other'',
+    ''CF patient'', ''Non-CF patient'', ''Respiratory, Lower, Sputum-Expectorated'' → respiratory_unspecified
+    (generic or ambiguous respiratory-system labels that do not specify tissue biopsy; ''pulmonary''/''Pulmonary''
+    at n=226+5 are overwhelmingly associated with secretion-type specimens in this dataset and must not
+    be inferred to be biopsies). (4) ''Pleural Fluid'', ''Pleural fluid'', ''Fluid - empyema'', ''hydrothorax'',
+    ''Thoracic Drain Fluid'', ''Pleurl fl'' → pleural_body_fluid (pleural cavity fluid, not lung parenchyma).
+    (5) ''Abscess - Chest wall'', ''chest wound'', ''Chest wound swab'', ''Chest wound drainage'' → skin_soft_tissue_wound
+    (chest-wall structures, not lung tissue). (6) Generic ''Biopsy'' or ''Tissue'' without a lung qualifier,
+    and anatomically specific biopsies from non-lung sites (''breast biopsy'', ''mammary cyst biopsy'',
+    ''Biopsy finger/skin'', ''leg biopsy'', ''skin biopsy'', ''Biopsy - submandibular swelling'') → bone_joint_deep_tissue,
+    skin_soft_tissue_wound, lymph_node, or NA depending on the named site.'
+  examples:
+  - Lung tissue
+  - lung
+- name: skin_soft_tissue_wound
+  definition: Skin lesions, skin biopsies, superficial and subcutaneous soft tissue, wounds, abscesses,
+    pus collections, drain-site swabs, breast/mammary tissue, and anatomically labelled body-surface or
+    soft-tissue samples (leg, thigh, forearm, shin, foot, finger, cheek, abdomen, chest wall, etc.).
+  includes: 'This category covers specimens from skin, superficial or subcutaneous soft tissue, wounds,
+    abscesses/pus collections, breast/mammary tissue, drain-site swabs, and anatomically labelled body-surface
+    or extremity samples. Specifically:
+
+
+    1. SKIN-SURFACE samples — all capitalisation variants: ''swabbed skin lesions or skin biopsy'', ''Skin
+    lesion'', ''skin'', ''skin biopsy'', ''skin/soft tissue'', ''Skin/Soft tissue''.
+
+
+    2. WOUNDS and wound drainage: ''wound'', ''Wound sw'' (wound swab), ''chest wound'', ''Chest wound
+    swab'', ''Chest wound drainage'', ''Wound, Cheek, Left'', ''Abdominal wall sinus'' (sinus tract through
+    abdominal wall soft tissue).
+
+
+    3. ABSCESSES and PUS collections at any body-surface or subcutaneous location: ''pus'', ''Pus'', ''Pus
+    swab'', ''Pus (Ankle)'', ''breast abscess'', ''Abscess - left neck'', ''Abscess - Chest wall'', ''Abscess
+    - Ischiorectal'' (perirectal soft-tissue abscess), ''Tissue - abdominal wall abscess''. Pus or fluid
+    from these subcutaneous collections is included regardless of how it is described (swab, tissue, fluid).
+
+
+    4. BREAST and MAMMARY tissue: ''breast'', ''breast biopsy'', ''mammary cyst biopsy'', ''Left brea''
+    (truncated ''Left breast'').
+
+
+    5. ANATOMICALLY LABELLED body-surface and extremity soft tissue — applies when an external body site
+    is named without reference to bone, joint, or synovium: ''leg'', ''Leg, left'', ''Tissue- leg'', ''thigh'',
+    ''Tissue - thigh'', ''Tissue thigh'', ''Forearm lf'' (left forearm), ''Shin rt'' (right shin), ''Foot,
+    rgt'' (right foot), ''Finger'', ''abdomen'', ''Left lower abdomen'', ''Tissue - right arm'', ''Tissue
+    - cheek''.
+
+
+    6. DRAIN-SITE and CATHETER-SITE swabs or collections at the skin/subcutaneous level: ''Drain site
+    swab'', ''Portacath site swab'' (skin around port, not the device tip itself), ''Pus PD catheter''
+    (pus at peritoneal-dialysis catheter exit site on skin), ''Fluid - infecte pacemaker pocket'' (infected
+    subcutaneous pocket, not the device itself).
+
+
+    7. SOFT-TISSUE SWELLINGS and biopsies not identifiable as lymph node: ''Biopsy - submandibular swelling'',
+    ''Tissue - Submental mass''.
+
+
+    8. BIOPSY specimens with an explicit skin/soft-tissue qualifier: ''Biopsy finger/skin'', ''soft tissue
+    (knee)'' — the explicit ''soft tissue'' descriptor takes precedence over the anatomical locator.
+
+
+    Key inclusion rule: assign here if (a) the value explicitly mentions skin, soft tissue, wound, abscess,
+    or pus, OR (b) the value names an external body site (limb segment, cheek, abdomen, chest wall) without
+    any qualifier indicating bone, joint, synovium, or a named bony structure.'
+  excludes: '1. BONE-associated tissue → bone_joint_deep_tissue: ''Sternum'' (flat bone), ''Tissue - tibia''
+    (tibia = long bone), ''Tissue - metacarpal'' (metacarpal = hand bone), ''Calcaneous Tissue'' (calcaneus
+    = heel bone), ''bone''. Even when labelled ''tissue'', an explicit named bone routes to bone_joint_deep_tissue.
+
+
+    2. JOINT and TENDON-SHEATH tissue → bone_joint_deep_tissue: ''Synovium'' (joint-lining), ''Tissue
+    - tenosynovium'' (tendon sheath), ''Tissue - wrist'' (wrist = joint), ''Tissue - knee'' (knee = joint
+    without a ''soft tissue'' qualifier). NOTE: ''soft tissue (knee)'' stays here because the specimen
+    type is explicitly soft tissue, not joint tissue.
+
+
+    3. DEEP RETROPERITONEAL abscess drainage → bone_joint_deep_tissue: ''Drain fl - iliopsoas fluid''
+    (iliopsoas abscess is a deep paraspinal/retroperitoneal muscle-space infection, not superficial or
+    subcutaneous).
+
+
+    4. PELVIC MASS without a qualifying soft-tissue descriptor → NA: ''Tissue - pelvic mass'' (internal
+    mass of indeterminate tissue type; insufficient evidence that it is skin or subcutaneous).
+
+
+    5. LYMPH NODE samples → lymph_node: ''Lymph node tissue'', ''lymph node'', ''Left cervical lymph node'',
+    ''left cervical lymph node'', ''Tissue - LN'', ''Tissue - Cervical LN''. Any explicit lymph-node mention
+    overrides an apparent anatomical-site label.
+
+
+    6. BLOOD and vascular samples → blood: ''Blood'', ''blood'', ''Bld vein''.
+
+
+    7. PLEURAL and body-cavity fluids → pleural_body_fluid: ''Pleural Fluid'', ''Pleural fluid'', ''Pleurl
+    fl'', ''hydrothorax'', ''Fluid - empyema'', ''Thoracic Drain Fluid'', ''PDfl (BTA)'', ''Petnl dial''
+    (peritoneal dialysis fluid), ''Peritoneal fluid'', ''CSF''. Note: thoracic drain fluid and empyema
+    fluid are pleural-space collections, NOT wound drainage.
+
+
+    8. MEDICAL DEVICE tips and implant surfaces → clinical_device_surface: ''Tip - Portacath'' (the port-catheter
+    tip itself, as opposed to ''Portacath site swab'' which is the surrounding skin).
+
+
+    9. EYE and EAR samples → eye_ear: ''eye'', ''Eye type, Cornea'', ''Conju lft'' (left conjunctiva),
+    ''ear'', ''Ear sw,lft''.
+
+
+    10. GASTROINTESTINAL and URINARY samples → gastrointestinal_urinary: ''urine'', ''Faeces'', ''gastric
+    lavage''.
+
+
+    11. RESPIRATORY samples → sputum / lower_respiratory_bronchoscopy / respiratory_unspecified / lung_tissue
+    as appropriate. Do NOT confuse anatomical ''chest'' with respiratory: ''Chest wound swab'' and ''Chest
+    wound drainage'' describe a chest-wall skin/soft-tissue wound (included here), not a respiratory specimen.
+
+
+    12. GENERIC unlabelled specimens without an anatomical or specimen-type qualifier → NA: ''Tissue''
+    (no site), ''Biopsy'' (no site), ''Fluid drainage'' (no site), ''Infected at a commercial stem cell
+    injection clinic'' (describes infection context, not specimen source).'
+  examples:
+  - swabbed skin lesions or skin biopsy
+  - Chest wound swab
+  - Pus swab
+  - skin biopsy
+  - breast abscess
+  - Abscess - Chest wall
+  - Wound, Cheek, Left
+  - Shin rt
+- name: bone_joint_deep_tissue
+  definition: Bone tissue (sternum, tibia, calcaneous, metacarpal, etc.), synovial and tenosynovial tissue,
+    and other deep osteoarticular or joint-space biopsies (knee joint, wrist joint, synovium).
+  includes: 'Specimens explicitly identified as bone tissue (any named bone: sternum, tibia, calcaneus/calcaneous,
+    metacarpal, and the unqualified term ''bone''), synovial tissue (''Synovium''), tenosynovial tissue
+    (''Tissue - tenosynovium''), or biopsies/tissue from a named joint space (knee joint: ''Tissue - knee'',
+    ''soft tissue (knee)''; wrist joint: ''Tissue - wrist''; ankle: ''Pus (Ankle)''). Includes all spellings
+    and abbreviations that unambiguously resolve to bone or osteoarticular structures, e.g. ''Calcaneous
+    Tissue'' (misspelling of calcaneus). The key criterion is that the specimen type or anatomical site
+    is explicitly bone, synovium/tenosynovium, or a named joint — not merely a limb segment or soft-tissue
+    wound that happens to be near a joint.'
+  excludes: 1. Limb-segment or anatomical-region labels that lack an explicit bone/joint qualifier — 'leg',
+    'thigh', 'Shin rt', 'Foot, rgt', 'Finger', 'Forearm lf', 'Leg, left', 'leg biopsy', 'Tissue - thigh',
+    'Tissue thigh', 'Tissue- leg', 'Tissue - right arm' — go to skin_soft_tissue_wound because the label
+    describes a body region rather than a specific bone or joint space. 2. Wound swabs, skin lesions,
+    abscesses in non-osteoarticular sites, and general soft-tissue biopsies — 'Tissue - cheek', 'Tissue
+    - abdominal wall abscess', 'Tissue - Submental mass', 'Abscess - Chest wall', 'Abscess - left neck',
+    'Abscess - Ischiorectal', 'breast biopsy', 'breast abscess', 'breast', 'Biopsy finger/skin' — go to
+    skin_soft_tissue_wound. 3. Lymph node tissue — 'Tissue - LN', 'Tissue - Cervical LN', 'Tissue - Cervical
+    LN' — goes to lymph_node. 4. Abdominal or pelvic mass tissue ('Tissue - pelvic mass') goes to gastrointestinal_urinary
+    or skin_soft_tissue_wound depending on exact site. 5. Unqualified generic labels — bare 'Tissue',
+    bare 'Biopsy' — go to NA (too vague). 6. 'Pus', 'Pus swab', 'pus' without a joint/bone qualifier go
+    to skin_soft_tissue_wound. 7. Chest wound specimens ('Chest wound swab', 'chest wound', 'Abscess -
+    Chest wall') go to skin_soft_tissue_wound, not bone_joint_deep_tissue, because 'chest wound' refers
+    to a superficial wound rather than a sternal or costal bone biopsy (contrast with the explicitly named
+    'Sternum' which does belong here).
+  examples:
+  - Sternum
+  - bone
+  - Tissue - tibia
+  - Calcaneous Tissue
+  - Tissue - metacarpal
+  - Synovium
+  - Tissue - tenosynovium
+  - Tissue - knee
+- name: lymph_node
+  definition: Lymph node tissue or aspirates from any anatomical lymph node station (cervical, submandibular,
+    etc.), including entries labelled 'Tissue - LN' or 'Tissue - Cervical LN'.
+  includes: 'Values that explicitly name a lymph node or use the ''LN'' abbreviation in a tissue/aspirate
+    context, or that name a recognised anatomical lymph node station as the biopsy/tissue source. Concretely:
+
+
+    1. Exact ''lymph node'' strings in any case: ''Lymph node tissue'', ''lymph node''.
+
+    2. The ''Tissue - LN'' and ''Tissue - Cervical LN'' patterns cited in the definition — any ''Tissue
+    - LN'' or ''Tissue - [station] LN'' token qualifies regardless of case or minor spacing variation.
+
+    3. Lateralised or station-specific lymph node labels: ''Left cervical lymph node'', ''left cervical
+    lymph node'' (cervical station, explicit ''lymph node'' noun).
+
+    4. Biopsy entries whose anatomical site is a recognised lymph node station: ''Biopsy - submandibular
+    swelling'' (submandibular is explicitly listed in the definition as an example station; a submandibular
+    swelling biopsy represents lymphadenopathy work-up).
+
+    5. Borderline-but-included: ''Tissue - Submental mass'' — submental is a well-defined cervical lymph
+    node station; a submental mass in a clinical microbiology context almost always denotes lymph node
+    tissue.
+
+
+    In summary: the discriminating signal is the word ''lymph node'' / abbreviation ''LN'' in a tissue/aspirate
+    label, OR an anatomical site that is exclusively or near-exclusively a lymph node station (cervical,
+    submandibular, submental) qualified as tissue/biopsy.'
+  excludes: '1. Other ''Tissue - [body part]'' entries that are NOT lymph node stations — ''Tissue - metacarpal'',
+    ''Tissue - wrist'', ''Tissue - tibia'', ''Tissue - right arm'', ''Tissue - tenosynovium'', ''Tissue
+    - knee'', ''Tissue - cheek'', ''Tissue - thigh'', ''Tissue - pelvic mass'', ''Tissue - abdominal wall
+    abscess'', ''Tissue - tibia'', ''Calcaneous Tissue'', ''Tissue thigh'', ''Tissue- leg'' — these go
+    to bone_joint_deep_tissue (bone/joint/tendon sites) or skin_soft_tissue_wound (soft-tissue/wound/abscess
+    sites).
+
+    2. Neck abscesses without explicit lymph node identification: ''Abscess - left neck'' — goes to skin_soft_tissue_wound
+    (a neck abscess may be peritonsillar, dental, or soft-tissue, not necessarily a lymph node).
+
+    3. Generic biopsy labels with no lymph node indicator: ''Biopsy'', ''skin biopsy'', ''Biopsy finger/skin'',
+    ''breast biopsy'', ''mammary cyst biopsy'', ''leg biopsy'' — go to skin_soft_tissue_wound.
+
+    4. ''Neck - posterior nasopharynx'' — goes to respiratory_unspecified (nasopharynx is an upper respiratory
+    site, not a lymph node).
+
+    5. ''Tissue - Submental mass'' is included here (see includes), but if evidence of non-lymphoid origin
+    were present, the correct destination would be skin_soft_tissue_wound.
+
+    6. Generic ''Tissue'', ''Biopsy'', ''Homo Sapiens clinical'', ''clinical sample'', ''human'', ''other'',
+    ''NS'', ''Isolate'', ''ATCC'' — go to NA (insufficiently specified).
+
+    7. Pleural, peritoneal, pericardial, CSF, and other body-cavity fluids — go to pleural_body_fluid.
+
+    8. Blood-stream entries (''Blood'', ''blood'', ''Bld vein'') — go to blood.'
+  examples:
+  - Lymph node tissue
+  - lymph node
+  - Tissue - LN
+  - Tissue - Cervical LN
+  - Left cervical lymph node
+  - left cervical lymph node
+  - Biopsy - submandibular swelling
+  - Tissue - Submental mass
+- name: blood
+  definition: Blood samples obtained by venepuncture or through a vascular access device.
+  includes: 'Specimens that are explicitly identified as blood drawn by venepuncture from a peripheral
+    or central vein, or aspirated through an indwelling vascular access device (e.g. a central line or
+    implanted port). In this dataset the category is represented by three distinct surface forms: (1)
+    the bare word ''Blood'' (any capitalisation: ''Blood'', ''blood''); (2) the abbreviation ''Bld vein''
+    (short for ''blood from vein'', explicitly denoting venepuncture). No synonyms for bacteraemia, septicaemia,
+    or bloodstream infection appear as separate values in the data; if they did they would also belong
+    here. The definition requires that the *primary specimen type* is blood — not a fluid that happens
+    to be in contact with the vasculature (e.g. a catheter tip, a pacemaker-pocket fluid, or a drain fluid).'
+  excludes: '''Tip - Portacath'' → clinical_device_surface: this is the physical tip of an implanted venous
+    port removed for culture, not a blood draw through the device. ''Fluid - infecte pacemaker pocket''
+    → clinical_device_surface: fluid aspirated from the subcutaneous pocket around an implanted cardiac
+    device, not venous blood. ''Portacath site swab'' → clinical_device_surface: a skin/exit-site swab
+    around the port, not blood. ''CSF'' → pleural_body_fluid: cerebrospinal fluid is a distinct sterile
+    body-fluid compartment. ''Pleural Fluid'', ''Pleural fluid'', ''Pleurl fl'', ''hydrothorax'', ''Fluid
+    - empyema'', ''Thoracic Drain Fluid'' → pleural_body_fluid: pleural-space fluids are not blood. ''Peritoneal
+    fluid'', ''PDfl (BTA)'', ''Petnl dial'', ''Drain fl - iliopsoas fluid'' → pleural_body_fluid: peritoneal/abdominal
+    fluids. ''Pus'', ''Abscess'', wound swabs, tissue biopsies → skin_soft_tissue_wound or bone_joint_deep_tissue
+    depending on depth. Respiratory specimens (''sputum'', ''BAL'', ''tracheal aspirate'', etc.) → sputum
+    / lower_respiratory_bronchoscopy / respiratory_unspecified. Vague or non-specific terms (''clinical
+    sample'', ''human'', ''Homo Sapiens clinical'', ''Isolate'', ''NS'', ''ATCC'', ''other'', ''swab'')
+    → NA.'
+  examples:
+  - Blood
+  - blood
+  - Bld vein
+- name: pleural_body_fluid
+  definition: 'Sterile-site body fluids and closed-space effusions: pleural fluid, hydrothorax, empyema
+    fluid, peritoneal fluid, peritoneal dialysis fluid, CSF, iliopsoas drain fluid, thoracic drain fluid,
+    and other non-purulent drainage fluids from body cavities.'
+  includes: 'This category captures all sterile-site body fluids collected from closed body cavities and
+    serous spaces. Specifically:
+
+
+    1. PLEURAL FLUID — any spelling or abbreviation indicating fluid sampled from the pleural space: ''Pleural
+    Fluid'', ''Pleural fluid'', ''Pleurl fl''. These are the most common values in this category.
+
+
+    2. HYDROTHORAX — non-inflammatory fluid accumulation in the pleural cavity: ''hydrothorax''.
+
+
+    3. EMPYEMA FLUID — purulent fluid from within the pleural cavity (note: empyema is a STERILE-SITE
+    infection even though purulent; the cavity itself is normally sterile): ''Fluid - empyema''.
+
+
+    4. PERITONEAL FLUID — free fluid from the peritoneal cavity: ''Peritoneal fluid''.
+
+
+    5. PERITONEAL DIALYSIS FLUID — fluid exchanged via peritoneal dialysis, including coded and abbreviated
+    forms: ''PDfl (BTA)'' (peritoneal dialysis fluid, BTA likely a lab code), ''Petnl dial'' (abbreviation
+    for peritoneal dialysis).
+
+
+    6. CEREBROSPINAL FLUID (CSF) — fluid sampled from the subarachnoid space: ''CSF''.
+
+
+    7. THORACIC / PLEURAL DRAIN FLUID — fluid collected via a chest or thoracic drain (the cavity origin
+    is sterile, even if surgically accessed): ''Thoracic Drain Fluid''.
+
+
+    8. ILIOPSOAS DRAIN FLUID — fluid drained from the iliopsoas compartment (a deep, normally sterile
+    anatomical space): ''Drain fl - iliopsoas fluid''.
+
+
+    Key principle: membership is determined by the ANATOMICAL ORIGIN being a normally sterile body cavity
+    (pleural space, peritoneal cavity, subarachnoid space, iliopsoas compartment), not by whether the
+    fluid is macroscopically clear or purulent. Empyema and infected peritoneal fluid are still included
+    because their source cavity is normally sterile.'
+  excludes: 'The following superficially similar values are explicitly EXCLUDED from this category:
+
+
+    1. CHEST WOUND SWABS AND CHEST WOUND DRAINAGE → skin_soft_tissue_wound. Values like ''Chest wound
+    swab'' (n=10), ''chest wound'' (n=1), and ''Chest wound drainage'' (n=1) originate from a traumatic
+    or surgical wound on/through the chest wall, not from within the pleural cavity itself. The word ''wound''
+    or ''swab'' signals a surface or percutaneous specimen, not a closed-cavity fluid.
+
+
+    2. DRAIN SITE SWABS → skin_soft_tissue_wound. ''Drain site swab'' (n=2) is a swab taken from the skin
+    around a drain exit point, not the drain fluid itself. Similarly ''Portacath site swab'' (n=1) is
+    a surface swab.
+
+
+    3. PUS SPECIMENS NOT FROM BODY CAVITIES → skin_soft_tissue_wound or bone_joint_deep_tissue. ''Pus
+    swab'' (n=4), ''pus'' (n=1), ''Pus'' (n=1), ''Pus (Ankle)'' (n=1) are purulent collections from superficial
+    abscesses or deep soft-tissue/joint spaces, not from normally sterile serous cavities. ''Abscess -
+    Ischiorectal'' (n=1) and ''Abscess - left neck'' (n=1) and ''Abscess - Chest wall'' (n=1) → skin_soft_tissue_wound.
+    ''Tissue - abdominal wall abscess'' → skin_soft_tissue_wound.
+
+
+    4. PERITONEAL DIALYSIS CATHETER SITE → clinical_device_surface or skin_soft_tissue_wound. ''PD catheter
+    site'' (n=1) is a swab of the catheter insertion site on the skin, not peritoneal dialysis fluid.
+    ''Pus PD catheter'' (n=1) is purulent material at the catheter site — also excluded.
+
+
+    5. INFECTED DEVICE POCKET FLUID → clinical_device_surface. ''Fluid - infecte pacemaker pocket'' (n=1)
+    is fluid from around an implanted device, not from a naturally occurring body cavity.
+
+
+    6. GASTRIC LAVAGE → gastrointestinal_urinary. ''gastric lavage'' (n=2) is fluid from the gastrointestinal
+    tract, not a sterile serous cavity.
+
+
+    7. ABDOMINAL/SOFT TISSUE WOUND DRAINAGE → skin_soft_tissue_wound. ''Abdominal wall sinus'' (n=1) is
+    a sinus tract, not peritoneal fluid. ''Left lower abdomen'' (n=1) is too unspecific and surface-oriented.
+
+
+    8. RESPIRATORY TRACT LAVAGE/FLUIDS → lower_respiratory_bronchoscopy. ''BAL'', ''bronchoalveolar lavage'',
+    ''Bronchial Washings'', ''tracheal aspirate'' etc. are airway/lung-space specimens, not pleural (outside
+    the lung parenchyma). Even though the pleural space is adjacent to the lung, BAL samples the airways,
+    not the pleural cavity.
+
+
+    9. LUNG TISSUE, SPUTUM, AND RESPIRATORY SPECIMENS → lung_tissue, sputum, lower_respiratory_bronchoscopy,
+    or respiratory_unspecified, as appropriate. These are intrapulmonary, not pleural.'
+  examples:
+  - Pleural Fluid
+  - hydrothorax
+  - CSF
+  - Thoracic Drain Fluid
+  - Peritoneal fluid
+  - Fluid - empyema
+  - Drain fl - iliopsoas fluid
+  - Petnl dial
+- name: eye_ear
+  definition: Ocular samples (conjunctival swabs, corneal scrapes) and auricular samples (ear swabs).
+  includes: 'Ocular and auricular specimens only. This category captures swabs, scrapings, washings, or
+    other samples taken directly from the eye (conjunctiva, cornea, anterior chamber, eyelid) or the ear
+    (external auditory canal, middle ear, periauricular). Includes: conjunctival swabs (e.g. ''Conju lft''),
+    corneal scrapes or tissue (e.g. ''Eye type, Cornea''), generic eye samples (e.g. ''eye''), and ear
+    swabs or aspirates (e.g. ''ear'', ''Ear sw,lft''). Synonyms and abbreviations in scope: ''conj'',
+    ''conjunctival'', ''corneal'', ''ocular'', ''ophthalmic'', ''ear swab'', ''aural'', ''otic''. Both
+    left/right laterality qualifiers (e.g. ''Ear sw,lft'', ''Conju lft'') belong here.'
+  excludes: All non-ocular, non-auricular specimens are excluded. Nasal, nasopharyngeal, or throat swabs
+    (even if near the eye/ear anatomically) go to respiratory_unspecified. Skin lesion swabs, wound swabs,
+    and soft-tissue specimens (e.g. 'swabbed skin lesions', 'Wound sw', 'Pus swab') go to skin_soft_tissue_wound.
+    Deep tissue biopsies, bone, joint, or tendon specimens (e.g. 'Tissue - knee', 'Synovium', 'bone')
+    go to bone_joint_deep_tissue. Lymph node specimens (e.g. 'Lymph node tissue', 'Left cervical lymph
+    node') go to lymph_node. Blood specimens (e.g. 'Blood', 'Bld vein') go to blood. Pleural, peritoneal,
+    or other body-cavity fluids (e.g. 'Pleural Fluid', 'Peritoneal fluid') go to pleural_body_fluid. Respiratory
+    specimens (sputum, BAL, tracheal aspirate, bronchial washings) go to sputum or lower_respiratory_bronchoscopy.
+    Urine and gastrointestinal specimens go to gastrointestinal_urinary. Environmental and water samples
+    go to water_environment. Neck/nasopharyngeal swabs (e.g. 'Neck - posterior nasopharynx') go to respiratory_unspecified.
+    Vague or unclassifiable values (e.g. 'clinical sample', 'swab', 'human', 'NS', 'Isolate') go to NA.
+  examples:
+  - eye
+  - ear
+  - Eye type, Cornea
+  - Ear sw,lft
+  - Conju lft
+- name: gastrointestinal_urinary
+  definition: Gastrointestinal samples (faeces, gastric lavage) and urinary samples (urine).
+  includes: 'Specimens that are direct outputs or lavages of the gastrointestinal tract, or voided/catheterised
+    urine from the urinary tract. Concretely: (1) Faecal/stool specimens — any spelling of faeces, feces,
+    stool, rectal swab, anal swab; (2) Gastric/intestinal lavage specimens — gastric lavage, gastric washings,
+    gut lavage; (3) Urine specimens — urine (any qualifier: mid-stream, catheter, clean-catch), urinalysis
+    specimen. These are the only three specimen classes in scope. The category is intentionally narrow:
+    it covers luminal GI content exiting the body and voided urine, not surgical or anatomical tissues
+    of those organ systems.'
+  excludes: Peritoneal fluid, peritoneal dialysis fluid ('Petnl dial', 'PDfl (BTA)'), and ascites → pleural_body_fluid
+    (they are sterile body-cavity fluids, not luminal GI output). PD-catheter site swab or tip ('Pus PD
+    catheter', 'PD catheter site') → clinical_device_surface (catheter-associated specimens). Abdominal
+    wall sinus, abdominal abscess ('Tissue - abdominal wall abscess', 'Abdominal wall sinus', 'Left lower
+    abdomen', 'abdomen') → skin_soft_tissue_wound or bone_joint_deep_tissue depending on depth — these
+    are wound/tissue specimens, not luminal GI content. Ischiorectal abscess ('Abscess - Ischiorectal')
+    → skin_soft_tissue_wound (perianal soft-tissue abscess, not a faecal specimen). Pelvic mass tissue
+    → bone_joint_deep_tissue. Iliac/iliopsoas fluid ('Drain fl - iliopsoas fluid') → pleural_body_fluid
+    (sterile deep body fluid). Any vague labels such as 'clinical sample', 'human', 'Homo Sapiens clinical',
+    'Isolate', 'NS', or 'Tissue' that give no GI/urinary signal → NA.
+  examples:
+  - Faeces
+  - gastric lavage
+  - urine
+- name: water_environment
+  definition: Water from domestic or healthcare plumbing (taps, sinks, kitchen/bathroom fixtures, showerheads,
+    aerators, water fountains, water-feed interiors) and other environmental water or non-clinical environmental
+    sources (well water, sewer water, volcanic ash); generic 'Environmental', 'environmental', and 'Environment'
+    labels are included here.
+  includes: 'Values describing water drawn from domestic or healthcare plumbing fixtures, environmental
+    water sources, and non-clinical environmental materials. Specifically: (1) Plumbing fixtures and fittings
+    — taps of any type (''Bathroom tap'', ''Kitchen sink tap'', ''Fridge water tap'', ''Public water tap''),
+    sinks (''Kitchen Sink'', ''Kitchen-sink'', ''Water sink'', ''Sink''), showerheads and shower units
+    (''Showerhead'', ''Bathroom shower''), aerators (''Aerator''), water-feed pipe interiors (''water
+    feed interior (at valve)''), and drinking-water dispensers (''Water-fountain''). (2) Environmental
+    water sources — well water (''Well Water''), sewer water (''sewer water''). (3) Non-clinical, non-patient
+    environmental materials — volcanic ash (''Volcanic Ash''), which carries no plumbing or clinical meaning
+    but fits the ''other environmental'' residual. (4) Generic, unspecified ''environmental'' labels with
+    no qualifying clinical context — the exact strings ''Environmental'', ''environmental'', and ''Environment''.
+    All of these share the defining characteristic of being non-clinical, non-patient-derived, abiotic
+    or infrastructure-associated source material.'
+  excludes: 'Any specimen collected from a patient or clinical procedure, regardless of whether the word
+    ''wash'', ''fluid'', or ''drain'' appears: ''gastric lavage'' and ''Lavage'' are clinical gastrointestinal/respiratory
+    wash procedures → gastrointestinal_urinary or respiratory_unspecified; ''Bronchial Washings'', ''bronchoalveolar
+    lavage'', ''BAL'' and variants are lower-respiratory clinical specimens → lower_respiratory_bronchoscopy;
+    ''Drain site swab'' and ''Drain fl - iliopsoas fluid'' are surgical/wound drain samples → skin_soft_tissue_wound
+    or bone_joint_deep_tissue. Clinical devices used on patients do not belong here: ''CPAP machine''
+    → clinical_device_surface; ''Tip - Portacath'' and ''Portacath site swab'' → clinical_device_surface;
+    ''PD catheter site'' and ''Pus PD catheter'' → clinical_device_surface or gastrointestinal_urinary.
+    ''Glass ampule'' is a laboratory/pharmaceutical container → clinical_device_surface or NA. Generic
+    labels that carry an explicit clinical qualifier (''Homo Sapiens clinical'', ''clinical sample'',
+    ''CF patient'', ''Non-CF patient'') do not belong here → appropriate clinical categories. ''ATCC'',
+    ''ATCC Strain'', ''ATCC Isolate'', ''Isolate'', ''NS'', and similar laboratory-strain or unknown-provenance
+    labels → NA. ''other'' and ''Biopsy'' without any environmental qualifier → NA or the specific tissue
+    category.'
+  examples:
+  - Bathroom shower
+  - Fridge water tap
+  - Kitchen sink tap
+  - Showerhead
+  - Well Water
+  - Environmental
+  - sewer water
+  - Water-fountain
+- name: clinical_device_surface
+  definition: 'Swabs or tips from clinical equipment and implanted or intravascular devices in healthcare
+    or home-healthcare settings: CPAP machines, portacath tips, portacath site swabs, peritoneal dialysis
+    catheter exit sites.'
+  includes: 'Values where the isolation source is explicitly a named clinical device, implanted device,
+    intravascular port, or home-healthcare machine — specifically: (1) CPAP machines and their internal
+    surfaces/swabs (value: ''CPAP machine''); (2) portacath tips removed from the patient (''Tip - Portacath'')
+    and swabs taken at the portacath skin insertion/exit site (''Portacath site swab''); (3) peritoneal
+    dialysis (PD) catheter exit sites and specimens collected directly at that site, including pus at
+    the catheter–skin interface — covers the abbreviated forms ''PD catheter site'', ''Petnl dial'' (=
+    peritoneal dialysis catheter site), and ''Pus PD catheter''; (4) fluid or swabs from implanted device
+    pockets, such as a pacemaker pocket (''Fluid - infecte pacemaker pocket''). The unifying criterion
+    is that the specimen was taken FROM the device itself or from the skin/tissue interface where a chronically
+    implanted or regularly used clinical device contacts the body — not merely from a nearby anatomical
+    site.'
+  excludes: '''Drain site swab'' and ''Tench site'': wound drain exit sites from temporary surgical drains
+    are not chronic implanted devices → assign to skin_soft_tissue_wound. ''PDfl (BTA)'': peritoneal dialysis
+    fluid/effluent (the dialysate liquid itself, not the catheter exit site) → assign to pleural_body_fluid.
+    ''Peritoneal fluid'' and ''Petnl dial'' ONLY when clearly referring to native peritoneal body fluid
+    rather than a dialysis catheter site → pleural_body_fluid. ''Fluid drainage'' and ''Drain fl - iliopsoas
+    fluid'': drainage fluid from abscess or body cavity without device attribution → pleural_body_fluid.
+    Any urinary catheter or central line tip not explicitly named (e.g. generic ''swab'', ''Tissue'')
+    — insufficient information to distinguish from the wound → skin_soft_tissue_wound or NA. ''Glass ampule''
+    and ''ATCC''/''ATCC Strain''/''ATCC Isolate'': laboratory/reference strains, not patient isolates
+    → NA. Environmental water taps, sinks, showerheads, and fridge water taps do not represent clinical
+    devices in a healthcare setting → water_environment.'
+  examples:
+  - CPAP machine
+  - Tip - Portacath
+  - Portacath site swab
+  - PD catheter site
+  - Pus PD catheter
+  - Petnl dial
+  - Fluid - infecte pacemaker pocket
+- name: NA
+  definition: 'Values with no usable isolation-source information: overly generic labels (clinical sample,
+    other, swab, isolate, extrapulmonary/Extrapulmonary-Other), host or condition descriptors (human,
+    CF patient, Non-CF patient, Homo Sapiens clinical), ATCC/laboratory reference-strain designations,
+    storage or collection artefacts (glass ampule), and uninterpretable codes or abbreviations (NS, Sp
+    in pox1, Tench site).'
+  includes: 'Values belonging to NA share a single property: they convey NO usable information about the
+    anatomical location, body fluid, or environmental source of the isolate. Seven distinct sub-types
+    are captured:
+
+
+    1. OVERLY GENERIC CLINICAL / SPECIMEN LABELS — values that describe the sample class without naming
+    any body site or fluid: ''clinical sample'' (n=206), ''other'' (n=33), ''Isolate'' (n=1). No information
+    in these strings permits assignment to any specific body-site category.
+
+
+    2. GENERIC SWAB WITH NO LOCATION — ''swab'' (n=1) alone, with no body-site modifier. A swab string
+    that carries a site name (e.g. ''Wound sw'', ''Ear sw,lft'', ''Cough Swab'', ''Drain site swab'',
+    ''Portacath site swab'') is NOT NA — it goes to the appropriate body-site category.
+
+
+    3. HOST / PATIENT / CONDITION DESCRIPTORS — ''human'' (n=46), ''CF patient'' (n=10), ''Non-CF patient''
+    (n=1), ''Homo Sapiens clinical'' (n=3). These identify the host organism or patient group, not an
+    isolation site. Even though they may appear alongside clinical isolates, they provide zero body-site
+    resolution.
+
+
+    4. ATCC AND LABORATORY REFERENCE-STRAIN DESIGNATIONS — ''ATCC'' (n=2), ''ATCC Strain'' (n=1), ''ATCC
+    Isolate'' (n=1), ''TZD-resistant strain induced by ATCC19977, sample T1'' (n=1). The isolate originates
+    from a culture collection or induced laboratory passage, not from a clinical or environmental specimen
+    collected at a defined site. Any value containing ''ATCC'' as the primary source descriptor belongs
+    here.
+
+
+    5. STORAGE / COLLECTION ARTEFACTS — ''Glass ampule'' (n=2): describes the physical container used
+    to store the strain, not a biological source tissue or environment.
+
+
+    6. UNINTERPRETABLE CODES AND SITE-LESS ABBREVIATIONS — ''NS'' (n=1) (abbreviation with no recoverable
+    body-site meaning); ''Sp in pox1'' (n=1) (no standard anatomical or environmental meaning); ''Tench
+    site'' (n=2) (tench is a freshwater fish species — the phrase is not a recognized human, animal, or
+    environmental isolation-source label).
+
+
+    7. NEGATING ANATOMICAL TERMS THAT NAME NO SITE — ''extrapulmonary'' (n=10) and ''Extrapulmonary-Other''
+    (n=1): indicate only that the source is NOT the lung without specifying any alternative anatomical
+    location, leaving no assignable category.
+
+
+    8. ENTIRELY UNQUALIFIED TISSUE / BIOPSY LABELS — ''Biopsy'' (n=3) and ''Tissue'' (n=3) where no body-site
+    qualifier appears in the string. Distinguished from ''Lung tissue'', ''skin biopsy'', ''Tissue - tibia'',
+    etc., which carry an identifiable body-site term and go to the corresponding category.'
+  excludes: 'The following values look superficially generic or non-specific but carry enough anatomical
+    signal to be assigned to a real category and must NOT be coded as NA:
+
+
+    - ''respiratory'', ''Respiratory'', ''Respiratory system'', ''pulmonary'', ''Pulmonary'' — despite
+    being generic, these NAME a recognised body system → respiratory_unspecified.
+
+    - ''lung'' → respiratory_unspecified (or lung_tissue if explicitly described as a tissue specimen).
+
+    - ''Environmental'', ''environmental'', ''Environment'' — name a non-host environmental origin; go
+    to water_environment. Do not confuse with ''other'', which has no origin information at all.
+
+    - Cough Swab → respiratory_unspecified (implies respiratory collection even though the word ''swab''
+    appears).
+
+    - Any swab WITH a named body site: ''Wound sw'', ''Drain site swab'', ''Chest wound swab'', ''Portacath
+    site swab'', ''Ear sw,lft'' → respective body-site categories (skin_soft_tissue_wound, clinical_device_surface,
+    eye_ear, etc.), NOT NA.
+
+    - Tissue / biopsy values WITH a body-site qualifier: ''Lung tissue'' → lung_tissue; ''skin biopsy'',
+    ''Biopsy finger/skin'', ''swabbed skin lesions or skin biopsy'' → skin_soft_tissue_wound; ''Tissue
+    - tibia'', ''Tissue - metacarpal'', ''Tissue - wrist'', ''Calcaneous Tissue'' → bone_joint_deep_tissue;
+    ''Lymph node tissue'', ''Tissue - Cervical LN'', ''Tissue - LN'', ''Left cervical lymph node'' → lymph_node.
+
+    - ''PDfl (BTA)'' — an interpretable abbreviation for peritoneal dialysis fluid → pleural_body_fluid
+    or gastrointestinal_urinary; not NA despite the cryptic notation.
+
+    - ''Biopsy - submandibular swelling'' — biopsy WITH a site qualifier → lymph_node (not NA).
+
+    - ''Human, sputum'' — even though ''human'' alone is NA, the combined string names sputum as the site
+    → sputum.
+
+    - ''Infected at a commercial stem cell injection clinic'' — describes an unusual acquisition context
+    but implies a soft-tissue/wound infection → skin_soft_tissue_wound (not NA).'
+  examples:
+  - clinical sample
+  - human
+  - CF patient
+  - ATCC
+  - Glass ampule
+  - NS
+  - Isolate
+  - Sp in pox1
+cross_column:
+- value_pattern: CF patient / Non-CF patient
+  implies_field: host_disease_status
+  implies_value: cystic fibrosis status of host
+  rationale: These values describe the host's underlying disease (cystic fibrosis vs. non-CF), not the
+    anatomical or environmental source of the isolate; they belong in a host-condition or disease-status
+    field.
+- value_pattern: human / Homo Sapiens clinical
+  implies_field: host
+  implies_value: Homo sapiens
+  rationale: These values name the host species rather than the isolation source and belong in a host/organism
+    field.
+- value_pattern: Infected at a commercial stem cell injection clinic
+  implies_field: infection_setting
+  implies_value: healthcare-associated / cosmetic stem cell clinic
+  rationale: This describes the exposure context where infection was acquired (iatrogenic injection),
+    not the anatomical or environmental source; the actual isolation site (likely skin/soft tissue at
+    injection site) is not recorded in this value.
+notes: The dataset is dominated by respiratory samples (>70%), consistent with a pulmonary M. abscessus
+  cohort. 'Lavage' (n=13) without qualification is assigned to lower_respiratory_bronchoscopy as BAL is
+  the overwhelmingly likely referent; confirmed gastric lavages should be reclassified to gastrointestinal_urinary.
+  'Gastric lavage' (n=2) is placed in gastrointestinal_urinary but could alternatively belong in lower_respiratory_bronchoscopy
+  if used for mycobacterial recovery from swallowed secretions in paediatric cases. CSF (n=3) sits in
+  pleural_body_fluid as a rare sterile-site fluid. 'Pus PD catheter' (n=1) is placed in skin_soft_tissue_wound
+  as a purulent pericatheter collection rather than in clinical_device_surface. Volcanic Ash (n=1) is
+  placed in water_environment as the nearest non-clinical environmental category.

@@ -1,0 +1,20 @@
+source_field	source_value	count	target_field	target_value	action
+host	CF332	1	cf_status	CF	fill
+host	CF333	1	cf_status	CF	fill
+host	CF334	1	cf_status	CF	fill
+host	CF335	3	cf_status	CF	fill
+host	CF40	8	cf_status	CF	fill
+host	CF505	2	cf_status	CF	fill
+host	CF70	1	cf_status	CF	fill
+host	BX502	2	cf_status	non-CF	fill
+host	BX503	1	cf_status	non-CF	fill
+host	BX504	2	cf_status	non-CF	fill
+host	BX506	2	cf_status	non-CF	fill
+host	BX507	3	cf_status	non-CF	fill
+host	COPD500	2	cf_status	non-CF	fill
+host	NCF19	1	cf_status	non-CF	fill
+host	NON4	1	cf_status	non-CF	fill
+isolation_source_category	water_environment	82	host_category	environment	set
+cf_status	Non-CF	320	cf_status	non-CF	normalise
+cf_status	?	16	cf_status		normalise
+cf_status	Environmental	2	cf_status		normalise

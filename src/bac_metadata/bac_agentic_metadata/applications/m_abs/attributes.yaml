@@ -297,6 +297,40 @@ attributes:
           whole_project_value: |-
             Rarely whole-study; set for all samples only if the paper states the cohort's smoking status.
 
+  # AGENTIC CATEGORISATION — data-driven replacement for the hardcoded parse/categorise, scoped to the
+  # two messy fields (host, isolation_source). Same block as Klebsiella. null_tokens/null_patterns are
+  # blanked IN-MEMORY before the fill stages (laboratory is a tautology, not a source -> NA pre-grading);
+  # the induced+approved category scheme lives in the reviewable
+  # data/study_lv_attributes/categorisation/<field>_categories_approved.yaml (loaded by `categorise apply`).
+  # M.abs isolation_source is respiratory-dominant with environmental + culture-artefact vocabulary.
+  categorisation:
+    fields:
+      host:
+        null_tokens: ["not host-associated", "not aplicable"]
+        null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']
+        categories: []
+        # Phase D — decode the CF/non-CF signal buried in host strain codes into `cf_status`.
+        # mode: fill sets `cf_status` only where it is BLANK; a code implying a value that
+        # conflicts with an existing cf_status is escalated (never silently overwritten). Binary
+        # per David: bronchiectasis (BX) / COPD / NCF / NON all fold to non-CF. Site-only codes
+        # (CON/HOSP/*TAP/MACH) carry no disease -> no rule -> cf_status stays blank.
+        cross_column:
+          - {source_pattern: '^CF\d',                target_field: cf_status, target_value: CF,     mode: fill}
+          - {source_pattern: '^(BX|COPD|NCF|NON)\d', target_field: cf_status, target_value: non-CF, mode: fill}
+      isolation_source:
+        null_tokens: ["culture or similar", "Laboratory mutation", "MGIT"]  # culture artefacts, not a body/env source
+        null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']
+        categories: []
+        # Phase D — water/plumbing isolates are environmental; the host categoriser wrongly
+        # defaulted their strain codes to human. mode: set relabels host_category -> environment
+        # (the cf_status decode above still runs on the code, so CF-household water keeps cf_status=CF).
+        cross_column:
+          - {source_category: [water_environment], target_field: host_category, target_value: environment, mode: set}
+      cf_status:
+        # Post-hoc value canonicalisation to a single binary. Non-CF -> non-CF (case), and the
+        # non-informative tokens `?` / `Environmental` -> blank.
+        normalise: {'Non-CF': 'non-CF', '?': '', 'Environmental': ''}
+
 # COHORT FLAGS emitted per accession. Carried from Klebsiella. [keep]
 cohort_flags:
   needs_manual_download:

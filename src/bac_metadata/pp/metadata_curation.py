@@ -705,6 +705,7 @@ def parse_country(df, verbose=True):
         {"search": "spain", "replace": "Spain"},
         {"search": "italy", "replace": "Italy"},
         {"search": "netherlands", "replace": "Netherlands"},
+        {"search": "holland", "replace": "Netherlands"},
         {"search": "bergium", "replace": "Belgium"},
         {"search": "switzerland", "replace": "Switzerland"},
         {"search": "austria", "replace": "Austria"},

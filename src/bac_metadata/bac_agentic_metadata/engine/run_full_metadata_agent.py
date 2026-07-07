@@ -292,6 +292,18 @@ def main() -> None:
     print(f"Base (selection): {len(base)} samples across {base['study_accession'].nunique()} studies "
           f"({len(base.columns)} columns)", file=sys.stderr)
 
+    # Pre-clean: wipe field-specific null tokens (attributes.yaml `categorisation.*.null_tokens`) to
+    # blank IN-MEMORY, so the fill agent gets a chance to recover them. Base on disk stays verbatim.
+    from bac_metadata.bac_agentic_metadata.engine.categorise.preclean import preclean_base
+    base, precleaned = preclean_base(base, spec)
+    if precleaned:
+        summary = {f: sum(vals.values()) for f, vals in precleaned.items()}
+        print(f"[preclean] blanked field-specific null tokens/patterns: {summary}", file=sys.stderr)
+        for f, vals in precleaned.items():
+            top = sorted(vals.items(), key=lambda kv: -kv[1])[:8]
+            print(f"[preclean]   {f}: " + ", ".join(f"{v!r}×{c}" for v, c in top)
+                  + (f" (+{len(vals) - 8} more)" if len(vals) > 8 else ""), file=sys.stderr)
+
     # Whole-cohort taxon counts for the big-decision leverage gate (>=1% of the WHOLE cohort, never the
     # batch). Computed over the FULL base (all studies) via the spec's taxon match — the batch-local sizing
     # would otherwise make every >~1%-of-batch study look "big". None if the base lacks scientific_name.

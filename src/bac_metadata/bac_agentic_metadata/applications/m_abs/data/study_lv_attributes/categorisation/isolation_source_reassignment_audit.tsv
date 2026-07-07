@@ -1,0 +1,163 @@
+value	count	parsed	category	poor_fit	na_reason
+sputum	2204	Sputum	sputum	False	
+Respiratory system	1313	Respiratory system	respiratory_unspecified	False	
+respiratory	370	Respiratory	respiratory_unspecified	False	
+pulmonary	226	Pulmonary	respiratory_unspecified	False	
+clinical sample	206	Clinical sample	NA	False	uninformative
+Sputum	188	Sputum	sputum	False	
+swabbed skin lesions or skin biopsy	188	Swabbed skin lesions or skin biopsy	skin_soft_tissue_wound	False	
+Respiratory	138	Respiratory	respiratory_unspecified	False	
+respiratory tract	86	Respiratory tract	respiratory_unspecified	False	
+Sputum Slant	65	Sputum slant	sputum	False	
+human	46	Human	NA	False	uninformative
+Pleural Fluid	35	Pleural fluid	pleural_body_fluid	False	
+other	33	Other	NA	False	uninformative
+respiratory specimen	32	Respiratory specimen	respiratory_unspecified	False	
+BAL	25	BAL (bronchoalveolar lavage)	lower_respiratory_bronchoscopy	False	
+bronchoalveolar lavage	17	Bronchoalveolar lavage	lower_respiratory_bronchoscopy	False	
+Bathroom shower	14	Bathroom shower	water_environment	False	
+Lung tissue	13	Lung tissue	lung_tissue	False	
+Lavage	13	Lavage (unspecified)	respiratory_unspecified	False	
+ear	13	Ear	eye_ear	False	
+bronchoalveolar lavage fluid	12	Bronchoalveolar lavage fluid	lower_respiratory_bronchoscopy	False	
+CF patient	10	CF patient	NA	False	uninformative
+extrapulmonary	10	Extrapulmonary	extrapulmonary_unspecified	False	
+Chest wound swab	10	Chest wound swab	skin_soft_tissue_wound	False	
+Fridge water tap	9	Fridge water tap	water_environment	False	
+Environmental	9	Environmental	water_environment	False	
+Bathroom tap	8	Bathroom tap	water_environment	False	
+Kitchen sink tap	8	Kitchen sink tap	water_environment	False	
+Lymph node tissue	8	Lymph node tissue	lymph_node	False	
+Skin lesion	8	Skin lesion	skin_soft_tissue_wound	False	
+lung	7	Lung	lung_tissue	False	
+Showerhead	7	Showerhead	water_environment	False	
+Kitchen Sink	5	Kitchen sink	water_environment	False	
+Pulmonary	5	Pulmonary	respiratory_unspecified	False	
+Bronchoalveolar lavage fluid	5	Bronchoalveolar lavage fluid	lower_respiratory_bronchoscopy	False	
+lymph node	5	Lymph node	lymph_node	False	
+Kitchen-sink	4	Kitchen sink	water_environment	False	
+tracheal aspirate	4	Tracheal aspirate	lower_respiratory_bronchoscopy	False	
+Infected at a commercial stem cell injection clinic	4	Infected, commercial stem cell injection clinic	skin_soft_tissue_wound	True	
+skin/soft tissue	4	Skin/soft tissue	skin_soft_tissue_wound	False	
+skin	4	Skin	skin_soft_tissue_wound	False	
+environmental	4	Environmental	water_environment	False	
+Bronchial Alveolar Lavage	4	Bronchial alveolar lavage (BAL)	lower_respiratory_bronchoscopy	False	
+Pus swab	4	Pus swab	skin_soft_tissue_wound	False	
+Homo Sapiens clinical	3	Homo sapiens (clinical)	NA	False	uninformative
+Tissue	3	Tissue	NA	False	uninformative
+blood	3	Blood	blood	False	
+Public water tap	3	Public water tap	water_environment	False	
+Biopsy	3	Biopsy (unspecified site)	NA	False	uninformative
+PDfl (BTA)	3	Peritoneal dialysis fluid (BTA)	pleural_body_fluid	False	
+Blood	3	Blood	blood	False	
+CSF	3	Cerebrospinal fluid (CSF)	pleural_body_fluid	False	
+Sternum	3	Sternum	bone_joint_deep_tissue	False	
+BAL Slant	3	BAL slant	lower_respiratory_bronchoscopy	False	
+Bronchoalveolar lavage	3	Bronchoalveolar lavage	lower_respiratory_bronchoscopy	False	
+Bld vein	3	Blood (venepuncture)	blood	False	
+hydrothorax	3	Hydrothorax	pleural_body_fluid	False	
+ATCC	2	ATCC	NA	False	laboratory
+gastric lavage	2	Gastric lavage	gastrointestinal_urinary	False	
+Respiratory, Lower, Sputum-Expectorated	2	Respiratory, lower, sputum-expectorated	sputum	False	
+Tench site	2	Tench site	NA	False	uninformative
+leg	2	Leg	skin_soft_tissue_wound	False	
+Skin/Soft tissue	2	Skin/soft tissue	skin_soft_tissue_wound	False	
+skin biopsy	2	Skin biopsy	skin_soft_tissue_wound	False	
+Drain site swab	2	Drain site swab	skin_soft_tissue_wound	False	
+Glass ampule	2	Glass ampule	NA	False	laboratory
+Bronl asp	2	Bronchial aspirate	lower_respiratory_bronchoscopy	False	
+Well Water	2	Well water	water_environment	False	
+Faeces	2	Faeces	gastrointestinal_urinary	False	
+Fluid drainage	2	Fluid drainage (unspecified site)	NA	False	uninformative
+Bronchial Washings	2	Bronchial washings	lower_respiratory_bronchoscopy	False	
+Water sink	2	Water sink	water_environment	False	
+Tissue - thigh	1	Tissue - thigh	skin_soft_tissue_wound	False	
+Foot, rgt	1	Foot, right	skin_soft_tissue_wound	False	
+Tissue - cheek	1	Tissue - cheek	skin_soft_tissue_wound	False	
+Trachl asp	1	Tracheal aspirate	lower_respiratory_bronchoscopy	False	
+Abscess - Ischiorectal	1	Abscess - ischiorectal	skin_soft_tissue_wound	False	
+ETT asp	1	Endotracheal tube aspirate	lower_respiratory_bronchoscopy	False	
+Tissue - tenosynovium	1	Tissue - tenosynovium	bone_joint_deep_tissue	False	
+Pleural fluid	1	Pleural fluid	pleural_body_fluid	False	
+Environment	1	Environment	water_environment	False	
+Isolate	1	Isolate	NA	False	uninformative
+Pus	1	Pus	skin_soft_tissue_wound	False	
+Tissue thigh	1	Tissue - thigh	skin_soft_tissue_wound	False	
+Cough Swab	1	Cough swab	sputum	False	
+Thoracic Drain Fluid	1	Thoracic drain fluid	pleural_body_fluid	False	
+NS	1	NS	NA	False	uninformative
+Calcaneous Tissue	1	Calcaneus tissue (heel bone)	bone_joint_deep_tissue	False	
+Pus (Ankle)	1	Pus (ankle)	bone_joint_deep_tissue	False	
+Human, sputum	1	Sputum (human)	sputum	False	
+Tip - Portacath	1	Portacath tip	clinical_device_surface	False	
+Tissue - right arm	1	Tissue - right arm	skin_soft_tissue_wound	False	
+Tissue - pelvic mass	1	Tissue - pelvic mass	NA	True	uninformative
+left cervical lymph node	1	Left cervical lymph node	lymph_node	False	
+Leg, left	1	Left leg	skin_soft_tissue_wound	False	
+Finger	1	Finger (soft tissue)	skin_soft_tissue_wound	False	
+Tissue - abdominal wall abscess	1	Tissue - abdominal wall abscess	skin_soft_tissue_wound	False	
+Tissue - Cervical LN	1	Tissue - cervical lymph node	lymph_node	False	
+Fluid - empyema	1	Empyema fluid	pleural_body_fluid	False	
+Petnl dial	1	Peritoneal dialysis	pleural_body_fluid	False	
+Sp in pox1	1	Sp in pox1	NA	False	uninformative
+Tissue- leg	1	Tissue - leg	skin_soft_tissue_wound	False	
+Pus PD catheter	1	Pus at PD catheter site	clinical_device_surface	False	
+Peritoneal fluid	1	Peritoneal fluid	pleural_body_fluid	False	
+Abdominal wall sinus	1	Abdominal wall sinus	skin_soft_tissue_wound	False	
+Abscess - Chest wall	1	Abscess - chest wall	skin_soft_tissue_wound	False	
+Synovium	1	Synovium	bone_joint_deep_tissue	False	
+Tissue - Submental mass	1	Tissue - submental mass	lymph_node	False	
+sewer water	1	Sewer water	water_environment	False	
+Abscess - left neck	1	Abscess - left neck	skin_soft_tissue_wound	False	
+swab	1	Swab	NA	False	uninformative
+Portacath site swab	1	Portacath site swab	clinical_device_surface	False	
+Forearm lf	1	Forearm, left	skin_soft_tissue_wound	False	
+Tissue - knee	1	Tissue - knee	bone_joint_deep_tissue	False	
+Pleurl fl	1	Pleural fluid	pleural_body_fluid	False	
+Left cervical lymph node	1	Left cervical lymph node	lymph_node	False	
+chest wound	1	Chest wound	skin_soft_tissue_wound	False	
+Tissue - tibia	1	Tissue - tibia	bone_joint_deep_tissue	False	
+Sink	1	Sink	water_environment	False	
+Aerator	1	Aerator	water_environment	False	
+Chest wound drainage	1	Chest wound drainage	skin_soft_tissue_wound	False	
+leg biopsy	1	Leg biopsy	skin_soft_tissue_wound	False	
+Wound, Cheek, Left	1	Wound, left cheek	skin_soft_tissue_wound	False	
+CPAP machine	1	CPAP machine	clinical_device_surface	False	
+eye	1	Eye	eye_ear	False	
+abdomen	1	Abdomen	skin_soft_tissue_wound	False	
+TZD-resistant strain induced by ATCC19977, sample T1	1	TZD-resistant strain induced by ATCC19977, sample T1	NA	False	laboratory
+breast	1	Breast	skin_soft_tissue_wound	False	
+breast abscess	1	Breast abscess	skin_soft_tissue_wound	False	
+thigh	1	Thigh	skin_soft_tissue_wound	False	
+Water-fountain	1	Water fountain	water_environment	False	
+pus	1	Pus	skin_soft_tissue_wound	False	
+mammary cyst biopsy	1	Mammary cyst biopsy	skin_soft_tissue_wound	False	
+breast biopsy	1	Breast biopsy	skin_soft_tissue_wound	False	
+Extrapulmonary-Other	1	Extrapulmonary (other)	extrapulmonary_unspecified	False	
+soft tissue (knee)	1	Soft tissue (knee)	skin_soft_tissue_wound	False	
+Volcanic Ash	1	Volcanic ash	water_environment	False	
+bronchoalveolar fluid	1	Bronchoalveolar fluid	lower_respiratory_bronchoscopy	False	
+Left lower abdomen	1	Left lower abdomen	skin_soft_tissue_wound	False	
+ATCC Strain	1	ATCC Strain	NA	False	laboratory
+Shin rt	1	Right shin	skin_soft_tissue_wound	False	
+water feed interior (at valve)	1	Water feed interior (at valve)	water_environment	False	
+Tissue - wrist	1	Tissue - wrist	bone_joint_deep_tissue	False	
+Tissue - metacarpal	1	Tissue - metacarpal	bone_joint_deep_tissue	False	
+bone	1	Bone	bone_joint_deep_tissue	False	
+Neck - posterior nasopharynx	1	Neck - posterior nasopharynx	respiratory_unspecified	False	
+PD catheter site	1	PD catheter site	clinical_device_surface	False	
+Drain fl - iliopsoas fluid	1	Iliopsoas drain fluid	pleural_body_fluid	False	
+Ear sw,lft	1	Ear swab, left	eye_ear	False	
+Conju lft	1	Conjunctiva, left	eye_ear	False	
+Fluid - infecte pacemaker pocket	1	Infected pacemaker pocket fluid	clinical_device_surface	False	
+urine	1	Urine	gastrointestinal_urinary	False	
+Wound sw	1	Wound swab	skin_soft_tissue_wound	False	
+wound	1	Wound	skin_soft_tissue_wound	False	
+Tissue - LN	1	Tissue - lymph node	lymph_node	False	
+Biopsy - submandibular swelling	1	Biopsy - submandibular swelling	lymph_node	False	
+Left brea	1	Left breast	skin_soft_tissue_wound	False	
+Biopsy finger/skin	1	Biopsy, finger/skin	skin_soft_tissue_wound	False	
+Non-CF patient	1	Non-CF patient	NA	False	uninformative
+Eye type, Cornea	1	Eye - cornea	eye_ear	False	
+Respiratory, Lower, Sputum-Expectorated Collected 8/20/2021	1	Respiratory, lower, sputum-expectorated, collected 8/20/2021	sputum	False	
+ATCC Isolate	1	ATCC Isolate	NA	False	laboratory

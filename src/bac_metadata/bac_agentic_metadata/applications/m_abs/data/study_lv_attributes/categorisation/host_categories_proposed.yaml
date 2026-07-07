@@ -1,0 +1,116 @@
+field: host
+n_distinct_values: 31
+n_samples: 6169
+categories:
+- name: human
+  definition: Host is Homo sapiens, whether recorded by scientific name ('Homo sapiens', 'Homo sapien'),
+    common name ('human'), or a human-qualified body-site descriptor ('Human lung', 'Human abscess').
+  includes: 'All values that identify the host as Homo sapiens, in any of the following forms: (1) Scientific
+    binomial — ''Homo sapiens'' (canonical) and ''Homo sapien'' (one-word misspelling, treat identically).
+    (2) Common name — ''human'' (case-insensitive; covers ''human'' and ''Human''). (3) Human-qualified
+    anatomical/clinical descriptor — a string beginning with ''Human'' followed by a body-site or lesion
+    type, e.g. ''Human lung'', ''Human abscess''. (4) Opaque alphanumeric patient/study-cohort identifiers
+    whose prefixes unambiguously mark a human clinical context in this M. abscessus dataset: CF-prefixed
+    codes such as CF40, CF70, CF332, CF333, CF334, CF335, CF505 are cystic-fibrosis patient identifiers;
+    NCF19 is a non-CF human patient code; HOSP1, HOSP2, HOSP3 are hospital-patient codes; COPD500 is a
+    chronic-obstructive-pulmonary-disease patient code; BX502, BX503, BX504, BX506, BX507, NQ-TAP-1, NQ-TAP-2,
+    SEQ-TAP-1, CON5, NON4, ND501, and MACH-HUM are further human clinical-study identifiers in this cohort.
+    In short: any value that either names Homo sapiens explicitly or represents a coded human patient/hospital
+    ID with no plausible non-human referent belongs here.'
+  excludes: '''seakrait'' (sea krait, Laticauda sp., a marine reptile) → goes to ''wild animals''. ''Not
+    applicable - Environmental'' (non-host environmental isolate) → goes to ''NA''. No value in this dataset
+    should be assigned to both ''human'' and another category: the only non-human host is the sea krait,
+    and the only non-host record is the environmental one.'
+  examples:
+  - Homo sapiens
+  - human
+  - Human lung
+  - Human abscess
+  - Homo sapien
+  - CF40
+  - HOSP1
+  - COPD500
+- name: wild animals
+  definition: Host is a non-human, non-domesticated animal identified by recognisable species or common
+    name (e.g. sea krait).
+  includes: Any host value that names a non-human, non-domesticated animal by its common name, scientific
+    (Latin) binomial, or a recognisable abbreviation/variant thereof. This covers wild mammals, birds,
+    reptiles, amphibians, fish, invertebrates, and marine animals in any life stage. Compound common names
+    are included (e.g. 'seakrait' or 'sea krait' for the venomous marine snake Laticauda spp.). Informal
+    or concatenated spellings of species common names (e.g. 'seakrait' as one word instead of 'sea krait')
+    still belong here as long as the referent is unambiguously a recognisable wild animal taxon. The category
+    does NOT require a formally correct taxonomic name — a colloquial name that unambiguously identifies
+    a non-human, non-domesticated animal species is sufficient.
+  excludes: '1) Human host values → go to ''human'': includes the Latin binomial ''Homo sapiens'' and
+    its misspellings/variants (''Homo sapien''), the plain English word ''human'', anatomical qualifiers
+    that still describe a human source (''Human lung'', ''Human abscess''), and all alphanumeric patient/study
+    codes that implicitly refer to human subjects (e.g. CON5, CF40, CF335, CF332, CF333, CF334, CF70,
+    CF505, BX502, BX503, BX504, BX506, BX507, HOSP1, HOSP2, HOSP3, COPD500, NCF19, NON4, NQ-TAP-1, NQ-TAP-2,
+    SEQ-TAP-1, ND501, MACH-HUM). 2) Environmental / non-host values → go to ''NA'': e.g. ''Not applicable
+    - Environmental'', which indicates no animal host at all.'
+  examples:
+  - seakrait
+- name: NA
+  definition: Value is an opaque coded identifier (patient, cohort, or institution code such as CF40,
+    BX507, HOSP1, COPD500, CON5, MACH-HUM, NQ-TAP-1), a generic 'not applicable' statement, or any string
+    that does not name a recognisable host organism.
+  includes: 'Any value that is an opaque alphanumeric code (patient ID, cohort label, or institution identifier)
+    rather than a named organism, plus explicit ''not applicable'' or environmental-context strings. Specific
+    patterns present in the data: (1) CF-prefixed codes (CF40, CF70, CF332, CF333, CF334, CF335, CF505)
+    — cystic-fibrosis patient/cohort identifiers; (2) BX-prefixed codes (BX502, BX503, BX504, BX506, BX507)
+    — opaque patient or sample identifiers; (3) HOSP-prefixed codes (HOSP1, HOSP2, HOSP3) — institution
+    identifiers; (4) COPD/CON/NON/NCF/ND-prefixed codes (COPD500, CON5, NON4, NCF19, ND501) — disease-cohort
+    or control-group labels; (5) hyphenated study/tap codes (NQ-TAP-1, NQ-TAP-2, SEQ-TAP-1, MACH-HUM)
+    — project or sequencing-run identifiers; (6) free-text strings that explicitly state non-applicability
+    or name an environment rather than an organism (e.g. ''Not applicable - Environmental''). The unifying
+    rule: the value cannot be resolved to a recognised taxonomic name or common-name organism — it is
+    either a code, an institution label, a study identifier, or an explicit negation.'
+  excludes: 'Values that name a recognisable host organism must NOT be coded NA, even when they carry
+    extra anatomical or clinical detail. Specifically: ''Homo sapiens'', ''human'', ''Human lung'', ''Human
+    abscess'', and the misspelling ''Homo sapien'' all go to the **human** category, because the host
+    organism (Homo sapiens) is unambiguously identified regardless of the appended site or specimen type.
+    The value ''seakrait'' (a venomous marine snake, genus Laticauda) goes to the **wild animals** category,
+    because it names a recognisable non-human organism. Any future values that are common names, binomial
+    Latin names, or clearly resolve to an animal taxon (vertebrate or invertebrate) should be directed
+    to **human** or **wild animals** as appropriate, not to NA.'
+  examples:
+  - CON5
+  - CF40
+  - HOSP1
+  - BX507
+  - COPD500
+  - MACH-HUM
+  - NQ-TAP-1
+  - Not applicable - Environmental
+cross_column:
+- value_pattern: Human lung
+  implies_field: isolation_source
+  implies_value: lung
+  rationale: The body-site qualifier 'lung' is isolation-source information embedded in the host field;
+    the host itself is human and maps to the human category.
+- value_pattern: Human abscess
+  implies_field: isolation_source
+  implies_value: abscess
+  rationale: The body-site qualifier 'abscess' is isolation-source information embedded in the host field;
+    the host itself is human and maps to the human category.
+- value_pattern: CF[0-9]+ (CF40, CF70, CF332, CF333, CF334, CF335, CF505)
+  implies_field: clinical_condition
+  implies_value: cystic fibrosis
+  rationale: CF-prefixed codes appear to be cystic-fibrosis patient identifiers; the disease context (CF)
+    belongs in a clinical condition or patient-cohort field, not the host field.
+- value_pattern: COPD500
+  implies_field: clinical_condition
+  implies_value: COPD
+  rationale: COPD-prefixed code likely denotes a chronic-obstructive-pulmonary-disease patient identifier;
+    disease context belongs in a clinical condition field.
+- value_pattern: HOSP[0-9]+ (HOSP1, HOSP2, HOSP3)
+  implies_field: institution
+  rationale: HOSP-prefixed codes appear to be hospital or institution identifiers, which belong in a location
+    or institution field rather than the host field.
+notes: The dataset is overwhelmingly human-host (>99 % of informative samples). Only one non-human animal
+  (seakrait / sea krait) is present. The large block of coded values (CON*, CF*, BX*, HOSP*, COPD*, NQ-TAP-*,
+  NON*, SEQ-TAP-*, ND*, MACH-HUM) are opaque identifiers that do not name a host organism and must fall
+  in NA; subsets appear to encode disease condition (CF, COPD) or institution (HOSP), which should be
+  extracted to dedicated fields. Because only two biologically meaningful host groupings exist in the
+  actual data, fewer than the guideline 6–15 categories are proposed — adding artificial bins for taxa
+  absent from this dataset would be misleading.

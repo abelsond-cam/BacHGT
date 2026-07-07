@@ -1,0 +1,32 @@
+value	count	parsed	category	poor_fit	na_reason
+Homo sapiens	5126	Homo sapiens	human	False	
+human	907	human	human	False	
+Human lung	67	Human lung	human	False	
+CON5	21	CON5	human	False	
+CF40	8	CF40	human	False	
+HOSP1	3	HOSP1	human	False	
+CF335	3	CF335	human	False	
+BX507	3	BX507	human	False	
+CF505	2	CF505	human	False	
+HOSP3	2	HOSP3	human	False	
+BX506	2	BX506	human	False	
+Human abscess	2	Human abscess	human	False	
+BX502	2	BX502	human	False	
+HOSP2	2	HOSP2	human	False	
+BX504	2	BX504	human	False	
+COPD500	2	COPD500	human	False	
+SEQ-TAP-1	1	SEQ-TAP-1	human	False	
+Not applicable - Environmental	1	Not applicable - Environmental	NA	False	uninformative
+Homo sapien	1	Homo sapiens	human	False	
+MACH-HUM	1	MACH-HUM	human	False	
+CF334	1	CF334	human	False	
+BX503	1	BX503	human	False	
+ND501	1	ND501	human	False	
+NQ-TAP-1	1	NQ-TAP-1	human	False	
+NON4	1	NON4	human	False	
+CF332	1	CF332	human	False	
+CF70	1	CF70	human	False	
+CF333	1	CF333	human	False	
+NCF19	1	NCF19	human	False	
+NQ-TAP-2	1	NQ-TAP-2	human	False	
+seakrait	1	sea krait	wild animals	False	
