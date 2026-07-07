@@ -3,18 +3,12 @@ PRJEB10018	country		curator skip: no single whole-field value (genuinely wide / 
 PRJEB10018	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB12699	collection_date	2003-01-01		train
 PRJEB1563	isolation_source	blood		train
-PRJEB17615	collection_date	2016-01-01		train
-PRJEB19322	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
 PRJEB1963	collection_date	2009-09-01	curator accept	test
 PRJEB21081	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB21081	host	human	curator accept	test
 PRJEB21081	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
-PRJEB21277	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
-PRJEB21277	host	human		train
 PRJEB22890	isolation_source	blood		train
 PRJEB22903	host	Homo sapiens		train
-PRJEB24082	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
-PRJEB24085	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
 PRJEB27342	collection_date	2018-01-01		test
 PRJEB27342	country	Italy		test
 PRJEB27342	host		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
@@ -23,34 +17,22 @@ PRJEB29143	isolation_source	faeces		train
 PRJEB29738	collection_date	2016-07-01	curator accept	test
 PRJEB29738	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB29739	collection_date	2017-01-01	curator accept	test
-PRJEB29740	collection_date		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB29740	isolation_source		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
 PRJEB32655	collection_date	2018-01-01		test
-PRJEB35685	collection_date	2016-01-01		train
 PRJEB37378	collection_date	2020-03-01	 [curator-corrected]	train
 PRJEB37378	country	Malawi	 [curator-corrected]	train
-PRJEB37378	host		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB37378	isolation_source		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB39867	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
-PRJEB39943	country		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB39943	isolation_source		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB42462	collection_date		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
-PRJEB42462	country		curator skip: wide mix (David) — no single whole-field value applies; per-sample handles per-isolate cells	train
+PRJEB39942	host	wastewater	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB42462	isolation_source	blood		train
 PRJEB43870	host	poultry	curator accept	test
 PRJEB48268	host		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
-PRJEB48990	host	human		train
 PRJEB5065	country	United Kingdom		train
+PRJEB51676	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB53835	collection_date	2019-01-01	curator accept	test
 PRJEB53835	isolation_source	stool		test
+PRJEB5495	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB6891	collection_date	2013-10-01		train
-PRJNA1087366	collection_date	2019-01-01		train
 PRJNA1087366	isolation_source	blood		train
 PRJNA288601	collection_date	2015-02-01		test
 PRJNA288601	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
-PRJNA549322	collection_date	2017-04-01		train
-PRJNA686897	collection_date	2018-01-01		train
-PRJNA765801	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
 PRJNA825705	collection_date	2018-01-01		test
 PRJNA845975	isolation_source	blood		train
-PRJNA996149	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
+PRJNA918858	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
