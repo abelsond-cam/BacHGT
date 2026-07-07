@@ -1,5 +1,5 @@
 study_accession	has_paper	date_gap	source_gap	gap_samples	ena_taxon_samples	fulltext_status	best_url	doi	pmid	pmcid	paper_link	title	save_as
-PRJEB21081	True	0	0	0	926	none	https://www.ebi.ac.uk/ena/browser/view/PRJEB21081				https://www.ebi.ac.uk/ena/browser/view/PRJEB21081		PRJEB21081.pdf
-PRJEB53835	False	0	0	0	372	none							PRJEB53835.pdf
-PRJNA810752	False	0	0	0	217	none							PRJNA810752.pdf
-PRJEB19226	False	0	0	0	185	none							PRJEB19226.pdf
+PRJEB28054	False	0	0	0	326	none							PRJEB28054.pdf
+PRJEB22903	False	0	0	0	271	none							PRJEB22903.pdf
+PRJEB12699	False	0	0	0	143	none							PRJEB12699.pdf
+PRJNA820335	False	0	0	0	110	none							PRJNA820335.pdf

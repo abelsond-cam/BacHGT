@@ -1,42 +1,18 @@
 study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
-PRJDB12075	PMC9888285		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['aem.01712-22-s0007.xlsx', 'aem.01712-22-s0006.xlsx', 'aem.01712-22-s0006.xlsx', 'aem.01712-22-s0005.xlsx', 'aem.01712-22-s0001.xlsx', 'aem.01712-22-s0001.xlsx', 'aem.01712-22-s0001.xlsx', 'aem.01712-22-s0001.xlsx']
-PRJDB12116	PMC11571079	mgen-10-01295-s002.xlsx	direct	53	54	high	mapped 53 samples, 54 cell-fills
-PRJDB5929	PMC6256778		abstained	0	0	none	no joinable table
-PRJEB15226	PMC5121380		abstained	0	0	none	no joinable table
-PRJEB1563	PMC5615107	mmc6.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mmc6.xlsx']
-PRJEB17615	PMC7264328		abstained	0	0	none	no joinable table
-PRJEB1800	PMC4364942		abstained	0	0	none	no joinable table
-PRJEB19322	PMC8743538		abstained	0	0	none	no joinable table
-PRJEB21277	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB21605	PMC6966826	13073_2019_706_MOESM1_ESM.xlsx	direct	148	296	high	mapped 148 samples, 296 cell-fills
-PRJEB24082	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24083	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24084	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24085	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24086	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24087	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB29740	PMC11316559	mgen-10-01271-s002.xlsx	direct	815	2445	high	mapped 815 samples, 2445 cell-fills
-PRJEB29742	PMC8634422		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['ciab777_suppl_supplementary_table_1.xlsx', 'ciab777_suppl_supplementary_table_2.xlsx']
-PRJEB30134	PMC10438816	mgen-9-1048-s001.pdf	direct	32	128	high	mapped 32 samples, 128 cell-fills
-PRJEB37378	PMC11137479		abstained	0	0	none	no joinable table
-PRJEB38289	PMC7985491		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41598_2021_85724_MOESM2_ESM.docx', '41598_2021_85724_MOESM1_ESM.xlsx']
-PRJEB39867	PMC9598256		abstained	0	0	none	no joinable table
-PRJEB39943	PMC13259977	mmc2.xlsx	direct	2903	8636	high	mapped 2903 samples, 8636 cell-fills
-PRJEB42331	PMC8209719	mgen-7-0512-s001.xlsx	direct	80	80	high	mapped 80 samples, 80 cell-fills
-PRJEB48990	PMC10272877	mgen-9-1016-s001.xlsx	direct	539	1078	high	mapped 539 samples, 1078 cell-fills
-PRJEB50614	PMC11316559	mgen-10-01271-s002.xlsx	direct	256	768	high	mapped 256 samples, 768 cell-fills
-PRJEB58136	PMC11652666	44197_2024_323_MOESM6_ESM.csv	direct	138	537	high	mapped 138 samples, 537 cell-fills
-PRJEB64895	PMC10668257		abstained	0	0	none	no joinable table
-PRJEB6891	PMC5850561		abstained	0	0	none	no joinable table
-PRJEB74083	PMC11027475		abstained	0	0	none	no joinable table
-PRJNA1048341	PMC10917868		abstained	0	0	none	no joinable table
-PRJNA1087366	PMC11087563	41467_2024_48296_MOESM5_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf']
-PRJNA325243	PMC12247286	12917_2025_4686_MOESM6_ESM.xlsx+12917_2025_4686_MOESM1_ESM.xlsx	two_hop	9	10	medium	two-hop: 9 samples via 9 shared IDs, 10 cell-fills
-PRJNA604910	PMC7478627		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mgen-6-391-s001.pdf', 'mgen-6-391-s001.pdf', 'mgen-6-391-s001.pdf']
-PRJNA604975	PMC8414751		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13073_2021_947_MOESM1_ESM.docx', '13073_2021_947_MOESM1_ESM.docx']
-PRJNA634885	PMC7546619	41598_2020_73440_MOESM2_ESM.xlsx	direct	144	144	high	mapped 144 samples, 144 cell-fills
-PRJNA765801	PMC12569050		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2025_64515_MOESM1_ESM.pdf', '41467_2025_64515_MOESM1_ESM.pdf', '41467_2025_64515_MOESM1_ESM.pdf', '41467_2025_64515_MOESM1_ESM.pdf', '41467_2025_64515_MOESM1_ESM.pdf', '41467_2025_64515_MOESM1_ESM.pdf']
-PRJNA767944	PMC9241541		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['msphere.00143-22-st001.docx', 'msphere.00143-22-st004.docx']
-PRJNA804332	PMC9452910		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.xlsx']
-PRJNA855907	PMC9430190		abstained	0	0	none	no joinable table
-PRJNA996149	PMC10720542		abstained	0	0	none	no joinable table
+PRJEB1271	PMC6717969	13059_2019_1785_MOESM2_ESM.xlsx	direct	162	324	high	mapped 162 samples, 324 cell-fills
+PRJEB1272	PMC4790626		abstained	0	0	none	no joinable table
+PRJEB1963	PMC3772739		abstained	0	0	none	no joinable table
+PRJEB27342	PMC9712112		abstained	0	0	none	no joinable table
+PRJEB29738	PMC8634409		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['ciab776_suppl_supplementary_material.docx', 'ciab776_suppl_supplementary_material.docx']
+PRJEB32655	PMC10327512		abstained	0	0	none	no joinable table
+PRJEB34643	PMC8865463	spectrum02376-21_supp_1_seq6.xlsx	direct	131	215	high	mapped 131 samples, 215 cell-fills
+PRJEB37711	PMC8836320	pone.0261999.s002.xlsx	direct	155	155	high	mapped 155 samples, 155 cell-fills
+PRJEB38540	PMC8283727		abstained	0	0	none	no joinable table
+PRJEB43870	PMC8453068		abstained	0	0	none	no joinable table
+PRJNA252957	PMC4510304		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0133727.s004.xlsx', 'pone.0133727.s003.docx']
+PRJNA529744	PMC6711911		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf']
+PRJNA543274	PMC8438989	13073_2021_960_MOESM2_ESM.xlsx	direct	259	259	high	mapped 259 samples, 259 cell-fills
+PRJNA757551	PMC9160272		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM1_ESM.pdf', '41467_2022_30637_MOESM2_ESM.pdf', '41467_2022_30637_MOESM2_ESM.pdf', '41467_2022_30637_MOESM4_ESM.xlsx']
+PRJNA825705	PMC9393496		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Data_Sheet_1.xlsx', 'Data_Sheet_1.xlsx']
+PRJNA839691	PMC9764986	msystems.00799-22-s0002.xlsx	direct	143	286	high	mapped 143 samples, 286 cell-fills
+PRJNA922900	PMC10232788	Table_1.XLSX	direct	111	333	high	mapped 111 samples, 333 cell-fills

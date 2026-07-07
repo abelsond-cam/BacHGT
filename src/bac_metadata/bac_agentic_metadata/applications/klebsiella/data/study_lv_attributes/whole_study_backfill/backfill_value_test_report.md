@@ -4,9 +4,9 @@ Gold = `metadata_final_curated_all_samples_and_columns.tsv`, matched against raw
 
 | field | cells filled | with gold | correct | value-accuracy |
 |---|---|---|---|---|
-| country | 9233 | 7202 | 6634 | 0.92 |
-| collection_date | 6266 | 4461 | 2775 | 0.62 |
+| country | 3879 | 3289 | 3289 | 1.00 |
+| collection_date | 853 | 548 | 498 | 0.91 |
 | isolation_source | 69 | 69 | 0 | 0.00 |
-| host | 5757 | 4944 | 2981 | 0.60 |
+| host | 4682 | 3820 | 1702 | 0.45 |
 
 - **cells filled** = fills proposed; **with gold** = of those, how many have a value in metadata_v2 to check; **value-accuracy** = fraction of those that match (raw or parsed).

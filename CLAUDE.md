@@ -62,11 +62,18 @@ Production scripts run on Slurm: each subpackage keeps its own
 
 ## HPC
 
-See `~/.claude/CLAUDE.md` for the HPC connection and the four storage roots.
-Code at `/home/dca36/workspace/BacHGT`. Hard-coded `/home/dca36/rds/...` data
-paths across `src/bac_*/slurm_scripts/*.sh` and `src/bac_*/` are deliberately
-not centralised; their literal paths use the vocabulary in
-`~/.claude/hpc_storage_overview.md`.
+**Cluster guidance lives at the `~/.claude` level** — the user says which cluster each session:
+- [`~/.claude/CLAUDE.md`](~/.claude/CLAUDE.md) → **"Working on HPC clusters"** — the agnostic rules
+  (storage discipline, no-`du`, logs/caches/envs off `$HOME`, code-via-git-not-scp, generous `--time`).
+- [`~/.claude/cluster_uohpc.md`](~/.claude/cluster_uohpc.md) (CSD3 — most BacHGT data lives here on
+  RDS `project_k`; storage vocabulary in [`~/.claude/hpc_storage_overview.md`](~/.claude/hpc_storage_overview.md))
+  · [`~/.claude/cluster_isambard.md`](~/.claude/cluster_isambard.md) (BacHGT is also checked out on
+  Isambard `$HOME`).
+
+> **CSD3 (UoHPC) is down since 27 Jun 2026** — its RDS data (most of BacHGT's) is stranded.
+
+Hard-coded `/home/dca36/rds/...` data paths across `src/bac_*/slurm_scripts/*.sh` and `src/bac_*/`
+are CSD3/`project_k` paths, deliberately not centralised; resolve them via the UoHPC storage doc.
 
 ## Code style
 

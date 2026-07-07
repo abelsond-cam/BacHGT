@@ -15,10 +15,14 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 > consolidated to **one in-process driver** (`engine/run_full_metadata_agent.py`), fronted by thin wrappers —
 > `applications/klebsiella/run_klebsiella.sh` (curation) and `evaluation/run_folds.sh` (curation + the
 > gold-comparison scorecard) — with the curator tools in `engine/cli/` (`escalate`, `run_health`,
-> `attach_papers`). The legacy per-stage `run_*` / `report_*` scripts + `run_pipeline.sh` are **retired**;
-> curation **accumulates across batches** into a growing master (`engine/accumulate.py`). What remains (§5):
-> the `collection_date` downstream wording, a **tail100 re-run** on the corrected full-width base (see the
-> base-table gotcha below), and Steps 3–4 (M. abscessus; the <100-sample tail at scale).
+> `attach_papers`, `accumulate`). The legacy per-stage `run_*` / `report_*` scripts + `run_pipeline.sh` are
+> **retired**; curation **accumulates across batches** into a growing master (`engine/accumulate.py`). The
+> benchmarked folds + the whole >100-sample tail are **done and accumulated**. What remains (§5): the
+> `collection_date` downstream wording (gating — apply *before* the at-scale runs so they grade under the
+> hardened rule); the **M. abscessus** first exploratory pass (10 biggest studies → refine
+> `m_abs/attributes.yaml`); a **publishable Klebsiella per-study table** + **collaborator plots**
+> (raw→manual→agent completeness/accuracy); and the rest of the cohort at scale (the [50,99] band overnight,
+> then <50).
 
 ## Layout
 
@@ -81,7 +85,25 @@ Everything runs on the shared monorepo uv env (`uv run …`). Backends behind `e
 cache key is backend-independent (`temperature=0`), so a result graded once is reused verbatim and reruns are
 free/deterministic; caches + `manual_download/` + the API key are gitignored. Locally, point at the OneDrive
 data mirror with `BACHGT_PROJECT_K_ROOT="…/project_k" BACHGT_PROJECT_K_USER=data` (HPC needs no config).
-Heavy ENA/EBI lookups and model fan-out belong in SLURM, not the login node.
+Under that root (ask-don't-dig): raw ENA TSVs at `data/raw/metadata/`; the manual gold `metadata_v2` at
+`data/final/metadata/metadata_final_curated_all_samples_and_columns.tsv` — its `*_parsed` columns are what
+scoring compares against, and `run_folds.sh`'s `GOLD` / `accumulate --canonical` default to it. Heavy ENA/EBI
+lookups and model fan-out belong in SLURM, not the login node.
+
+## Run-health closes the curator loop
+
+`engine.cli.run_health` grades every (study × field) as **FILLED / ACTIONABLE / BLOCKED / EXHAUSTED** and
+emits **"ALL CLEAR — curated to gold standard"** only when ACTIONABLE *and* BLOCKED are both 0 (it always
+exits 0 — the verdict is the signal, never a hard block). ACTIONABLE drives an iterate-until-clear loop: fetch
+a paper (`manual_download/<acc>.pdf`, via `attach_papers`), add a per-sample supplementary table
+(`manual_download_supp/<acc>.{xlsx,csv,docx}`, parsed by `local_supplements.py` and consumed by the per-sample
+stage), or answer an escalation (`escalate`). A genuinely dead-end gap is retired only by an explicit,
+auditable `study_lv_attributes/escalation/accepted_unrecoverable_<tag>.tsv` — never by code assuming it.
+
+**David's requirement — test the manual-supp-table workflow explicitly; never trust a silent 0.** Whenever it
+is exercised, assert all three outcomes visibly: added+joinable → **FILLED** (manual filename shown in the
+per_sample outcome `table`); added+unparseable → loud `[WARN]`, stays **ACTIONABLE**; added+parses-but-
+unanchored → outcome note `…unanchored…`, run-health **BLOCKED `needs_linkage`**.
 
 ## Editing the engine or rubric — gotchas
 
@@ -92,9 +114,12 @@ Heavy ENA/EBI lookups and model fan-out belong in SLURM, not the login node.
 - **The base table must be full-width (per-sample anchoring columns).** `base_table.csv` (from
   `export_base_table.py`) must carry `sample_alias` / `sample_title` / `secondary_sample_accession` /
   `accession` — per-sample extraction anchors supplementary-table rows to samples **by value** using the
-  strain names in them. A stale/slim export silently under-extracts strain-keyed studies (it cost the
-  tail100 run its strain-keyed fills); the driver now **fails loud** at startup if they're missing. Re-export
-  with `export_base_table.py` to fix.
+  strain names in them. A stale/slim export silently under-extracts strain-keyed studies: it cost the
+  **train-fold gate** its strain-keyed fills (the 12,937-line divergence, since fixed & verified green). It did
+  **not** affect the >100 tail — the tail re-run on the full-width base confirmed zero recovery; the tail's
+  "field-bearing but unanchored" studies fail for genuine reasons (PDF-only tables, strain IDs absent from
+  ENA, manifest-only two-table joins). The driver now **fails loud** at startup if the anchor cols are
+  missing; re-export with `export_base_table.py` to fix.
 - **Editing the rubric re-grades everything.** The grader prompt renders each field's `whole_project_value`,
   so editing those texts in `attributes.yaml` busts the grading cache → a full re-grade. (This is why the
   `collection_date` hardening currently lives only in `engine/escalation.py`; reapplying it to the yaml is a

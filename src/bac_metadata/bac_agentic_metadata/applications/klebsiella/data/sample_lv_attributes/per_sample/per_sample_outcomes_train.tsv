@@ -1,7 +1,7 @@
 study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
 PRJDB12075	PMC9465067		abstained	0	0	none	no joinable table
 PRJDB12116	PMC11571079	mgen-10-01295-s002.xlsx	direct	53	54	high	mapped 53 samples, 54 cell-fills
-PRJDB5929	PMC9769800		abstained	0	0	none	no joinable table
+PRJDB5929			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB12699			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB15226	PMC5121380		abstained	0	0	none	no joinable table
 PRJEB1563	PMC5615107	mmc6.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mmc6.xlsx']
@@ -9,7 +9,7 @@ PRJEB17615	PMC7264328		abstained	0	0	none	no joinable table
 PRJEB1800	PMC4364942		abstained	0	0	none	no joinable table
 PRJEB19322	PMC8743538		abstained	0	0	none	no joinable table
 PRJEB20799			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB21277	PMC10132065		abstained	0	0	none	no joinable table
+PRJEB21277			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB21605	PMC6966826	13073_2019_706_MOESM1_ESM.xlsx	direct	148	296	high	mapped 148 samples, 296 cell-fills
 PRJEB22890			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB22903			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
@@ -30,7 +30,7 @@ PRJEB33565	PMC8007471	41564_2021_870_MOESM4_ESM.xlsx	abstained	0	0	high	joinable
 PRJEB35685			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB36486	PMC9519460	EMS151721-supplement-Sample_accession_numbers.csv	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['EMS151721-supplement-Supplementary_Data.pdf', 'EMS151721-supplement-Supplementary_Data.pdf']
 PRJEB36683	PMC11025284	13073_2024_1332_MOESM1_ESM.xlsx	direct	328	656	high	mapped 328 samples, 656 cell-fills
-PRJEB37378	PMC11137479		abstained	0	0	none	no joinable table
+PRJEB37378			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB38289	PMC7985491		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41598_2021_85724_MOESM2_ESM.docx', '41598_2021_85724_MOESM1_ESM.xlsx']
 PRJEB39293	PMC9417982	41564_2022_1184_MOESM9_ESM.xlsx	direct	158	473	high	mapped 158 samples, 473 cell-fills
 PRJEB39867	PMC9598256		abstained	0	0	none	no joinable table

@@ -1,17 +1,17 @@
-# study grading validation — grading vs trusted ground truth (train+val)
+# study grading validation — grading vs trusted ground truth (train,val)
 
-Graded rows in train+val: **109**.
+Graded rows in train,val: **109**.
 
 Primary accuracy checks: **amr_study** and **study_setting**. `cohort_age` has no reliable ground truth and is **not scored** (spot-check only).
 
 _Applied 13 David-verified amr_study GT corrections (gt_corrections.tsv)._
 
-## amr_study  (accuracy 0.93 over n=85) — PRIMARY
+## amr_study  (accuracy 0.93 over n=86) — PRIMARY
 
 ```
 predicted     amr  mixed  surveillance
 ground_truth                          
-amr            46      2             1
+amr            47      2             1
 mixed           0      5             1
 surveillance    1      1            28
 ```
@@ -20,14 +20,14 @@ surveillance    1      1            28
 
 _Applied 6 David-verified study_setting GT corrections (gt_corrections.tsv)._
 
-Accuracy 0.96 over n=94 (frozen sidecar).
+Accuracy 0.98 over n=95 (frozen sidecar).
 
 ```
 predicted     community  hospital  mixed
 ground_truth                            
-community             6         0      0
-hospital              0        77      2
-mixed                 0         2      7
+community             7         0      0
+hospital              0        78      1
+mixed                 0         1      8
 ```
 
 ## Disagreements (verbatim; record, do not assume the sheet is right)
@@ -40,24 +40,20 @@ mixed                 0         2      7
 - `PRJEB27256` grader=**mixed** sheet=**surveillance** (raw: 'Surveillance')
   - grader quote: 'All putative ESBL-producing KpSC blood (n=149) and urine isolates (n=91) from 2001–15 registered in the NORM database were included in the study. For comparison, a subset of non-ESBL blood culture iso'
 - `PRJEB17615` grader=**mixed** sheet=**amr** (raw: 'AMR')
-  - grader quote: 'sequencing of retrospective susceptible and resistant isolates (to be undertaken at The Sanger Institute)'
+  - grader quote: '1)Establishment of genomic background – sequencing of retrospective susceptible and resistant isolates (to be undertaken at The Sanger Institute). 2)Prospective sequencing (within ARSRL) – isolates wi'
 - `PRJNA789565` grader=**surveillance** sheet=**mixed** (raw: 'AMR plus control')
-  - grader quote: '44 of 85 (51.8%) of the clinical isolates from cases were pan-sensitive apart from intrinsic ampicillin resistance.'
+  - grader quote: 'patient rectal swabs were screened for the presence of Klebsiella. If a patient was colonized with Klebsiella, up to three rectal isolates were banked, and the patient was enrolled in the study.'
 - `PRJNA787062` grader=**surveillance** sheet=**amr** (raw: 'surveillance')
   - grader quote: 'All Enterobacteriaceae isolates (n = 301) were subjected to WGS regardless of their meropenem susceptibility status performed at each study site to avoid any phenotypic screening limitations.'
 - `PRJNA395086` grader=**amr** sheet=**surveillance** (raw: 'Surveillance')
   - grader quote: 'A total of 174 K. pneumoniae clinical isolates recovered from patients at Northwestern Memorial Hospital between October 2010 and February 2016 were identified as being resistant to at least one carba'
 
-### study_setting (4 disagreements)
+### study_setting (2 disagreements)
 
-- `PRJNA604975` grader=**hospital** sheet=**mixed** (raw: 'mixed')
-  - grader quote: 'Blood cultures processed by the laboratory were taken as part of routine clinical workup... clinical microbiology laboratory at the John Radcliffe Hospital, Oxford, UK'
 - `PRJNA686897` grader=**mixed** sheet=**hospital** (raw: 'hospital')
   - grader quote: '20 medical intensive care units (ICUs) in 20 short-term acute care hospitals, 7 LTACHs, and 8 vSNFs in the Chicago region were invited to participate in serial 1-day point-prevalence surveys of reside'
-- `PRJEB30134` grader=**mixed** sheet=**hospital** (raw: 'hospital')
-  - grader quote: 'Clinical diagnostic samples and screening (rectal swab or stool) samples from hospital inpatients as well as samples referred from local General Practices (GPs), were collected from 1 November 2014 to'
 - `PRJEB21277` grader=**hospital** sheet=**mixed** (raw: 'mixed')
-  - grader quote: 'sequenced the samples collected from 33 hospitals in Ireland during this period'
+  - grader quote: 'We sequenced the samples collected from 33 hospitals in Ireland during this period. Colonizing samples were detected on programmes of surveillance culture of rectal swabs or faeces from people admitte'
 
 ## Spot-check (no clean ground truth — NOT scored)
 
@@ -71,7 +67,6 @@ mixed                 0         2      7
 - `PRJEB50614` grader=mixed (newborn_cohort raw: 'Neonate, children, and adults; sample level age data are ava')
 - `PRJNA845975` grader=newborn_young_child (newborn_cohort raw: 'Neonates, age info summarized in table S1, sample level age ')
 - `PRJNA1028672` grader=adult (newborn_cohort raw: 'Adults only, age from 14-94, sample level age info available')
-- `PRJNA855907` grader=mixed (newborn_cohort raw: 'patient age not provided')
 - `PRJEB29143` grader=adult (newborn_cohort raw: 'patient age not provided')
 - `PRJEB6891` grader=adult (newborn_cohort raw: 'Adult, has PatientAge and Sex and Hosp acquired')
 - `PRJNA415194` grader=adult (newborn_cohort raw: 'Adults only, age 63-82; age info summarized in table S2, sam')
@@ -95,6 +90,7 @@ mixed                 0         2      7
 - `PRJEB58018` grader=adult (newborn_cohort raw: 'Adults, median age of 40+; age info summarized in table, sam')
 - `PRJEB1563` grader=mixed (newborn_cohort raw: '197 isolates from neonates and children (0-14 years) and 24 ')
 - `PRJNA787062` grader=mixed (newborn_cohort raw: 'Neonate, children, and adults')
+- `PRJDB12075` grader=adult (newborn_cohort raw: 'Older adults, 90+ years old; age info summarized in table 5,')
 - `PRJNA767944` grader=mixed (newborn_cohort raw: 'patient age not provided')
 - `PRJEB39293` grader=mixed (newborn_cohort raw: 'Linked mother-newborn child - provided on indiv basis?')
 - `PRJEB21605` grader=mixed (newborn_cohort raw: 'patient age not provided')
@@ -110,16 +106,15 @@ mixed                 0         2      7
 - `PRJEB19322` grader=newborn_young_child (newborn_cohort raw: 'neonatal meta-analysis')
 - `PRJNA351909` grader=adult (newborn_cohort raw: 'Adult, has PatientAge and Sex and Hosp acquired')
 - `PRJEB20799` grader=newborn_young_child (newborn_cohort raw: 'part Pathogenwatch neonatal collection')
-- `PRJNA398288` grader=adult (newborn_cohort raw: 'Adults, mean age of 70; age info summarized in table 1, samp')
-- `PRJNA641987` grader=newborn_young_child (newborn_cohort raw: 'neonatal BSI (62) and paediatric (n=32)')
-- `PRJNA565795` grader=mixed (newborn_cohort raw: 'Adults, median age of 65 (IQR 47-...), age info summarized i')
+- `PRJNA641987` grader=mixed (newborn_cohort raw: 'neonatal BSI (62) and paediatric (n=32)')
+- `PRJNA565795` grader=adult (newborn_cohort raw: 'Adults, median age of 65 (IQR 47-...), age info summarized i')
 
 ### amr_target / amr_method where amr_study in {amr,mixed}
 
 - `PRJEB39943` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJEB36683` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJEB37378` amr_target=third_gen_cephalosporin amr_method=nan (gt has_AST_data raw: 'ESBLs')
-- `PRJDB10842` amr_target=other amr_method=pcr_gene_presence (gt has_AST_data raw: 'MIC for 4195 kleb and ecoli')
+- `PRJDB10842` amr_target=other amr_method=ast_result (gt has_AST_data raw: 'MIC for 4195 kleb and ecoli')
 - `PRJEB27256` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: 'PRJEB42350, PRJEB48268 and PRJEB27256, all include')
 - `PRJNA768622` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJEB28400` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
@@ -130,7 +125,7 @@ mixed                 0         2      7
 - `PRJEB48990` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA564424` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJNA855907` amr_target=carbapenem amr_method=nan (gt has_AST_data raw: 'no')
-- `PRJNA603790` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
+- `PRJNA603790` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA415194` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA686897` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: 'CPE plus NDM focus (ST147 outbreak suspected)')
 - `PRJEB63361` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
@@ -140,7 +135,7 @@ mixed                 0         2      7
 - `PRJEB17615` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA557275` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA996149` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
-- `PRJEB15226` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
+- `PRJEB15226` amr_target=third_gen_cephalosporin amr_method=nan (gt has_AST_data raw: '')
 - `PRJEB39867` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA549322` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA278886` amr_target=carbapenem amr_method=nan (gt has_AST_data raw: '')
@@ -150,14 +145,15 @@ mixed                 0         2      7
 - `PRJEB24970` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJEB36486` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA765801` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
-- `PRJEB58216` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
-- `PRJEB30134` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
+- `PRJEB58216` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
+- `PRJEB30134` amr_target=nan amr_method=nan (gt has_AST_data raw: '')
 - `PRJEB58018` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJEB24082` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJEB21277` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
+- `PRJDB12075` amr_target=other amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA396774` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: 'yes, 3200 results')
 - `PRJNA1048341` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
-- `PRJNA767944` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
+- `PRJNA767944` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA395086` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: 'yes')
 - `PRJEB39293` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJNA626430` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
@@ -167,7 +163,7 @@ mixed                 0         2      7
 - `PRJNA564992` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJEB64895` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: 'no')
 - `PRJEB58136` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
-- `PRJNA804332` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
+- `PRJNA804332` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA246471` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJNA885285` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJNA648389` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: 'yes')
@@ -180,18 +176,18 @@ mixed                 0         2      7
 - `PRJNA398288` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 - `PRJEB24086` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJEB24084` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
-- `PRJEB24083` amr_target=carbapenem amr_method=ast_result (gt has_AST_data raw: '')
+- `PRJEB24087` amr_target=carbapenem amr_method=pcr_gene_presence (gt has_AST_data raw: '')
 - `PRJNA565795` amr_target=third_gen_cephalosporin amr_method=ast_result (gt has_AST_data raw: '')
 
 ## Whole-project backfill proposals (whole-field)
 
-- **country**: 87/109 accessions proposed a whole-project value.
-- **isolation_source**: 25/109 accessions proposed a whole-project value.
-- **host**: 84/109 accessions proposed a whole-project value.
-- **collection_date**: 29/109 accessions proposed a whole-project value.
+- **country**: 88/109 accessions proposed a whole-project value.
+- **isolation_source**: 23/109 accessions proposed a whole-project value.
+- **host**: 87/109 accessions proposed a whole-project value.
+- **collection_date**: 30/109 accessions proposed a whole-project value.
 
 ## Coverage & retrieval sanity
 
-- paper_coverage_for_taxon: median 1.00, >0.9 in 63/91 with a value.
-- needs_manual_download: 4/109 accessions.
+- paper_coverage_for_taxon: median 1.00, >0.9 in 63/92 with a value.
+- needs_manual_download: 6/109 accessions.
 - fulltext source mix: {'europepmc_fulltext': 61, 'local_pdf': 37, 'pdf': 7, 'none': 4}

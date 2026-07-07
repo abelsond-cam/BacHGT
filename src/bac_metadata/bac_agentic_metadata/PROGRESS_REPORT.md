@@ -279,3 +279,63 @@ The benchmarked folds + the whole >100-sample tail are done and accumulated (§4
 *Loose ends:* accept the one aggregate-only study (no per-isolate table) as complete → ALL CLEAR; build the
 "unlinkable-table" classifier that separates a genuinely aggregate supplement (auto-discard) from a
 per-isolate table we simply failed to link (a real linkage target).
+
+## 6. Agentic categorisation sub-engine (replaces hardcoded parse/categorise) + current workstream
+
+**Why.** Running the M.abs master through the Klebsiella `pp/metadata_curation.py` (~860 hardcoded parse/
+categorise rules) exposed two problems on the two messy fields (`host`, `isolation_source`): (a) field-
+specific placeholder junk (`0`, `unclear`, `others`, `laboratory` variants) survives into the base table
+and *blocks* the fill agent (it looks like a real value); (b) real signal is discarded (strain codes leaked
+into `host` encode disease/cf_status; uncategorised iso values like `volcanic ash` carry info, some implying
+*another* column). Replaced the hardcoded rules with a **data-driven agentic categoriser** — one scheme per
+species, induced + human-approved, not 860 hand rules.
+
+**Built — `engine/categorise/`** (+ `engine/cli/categorise.py` `induce`|`apply`; `spec.py` parses
+`attributes.categorisation`; `llm.make_llm(timeout=…)`):
+- `preclean.py` — in-memory wipe of per-field `null_tokens` (whole-cell) + `null_patterns` (regex, incl.
+  `\blaborator`/`\blab\b`/`\bin[ -]?vitro\b`) **before** the fill stages so the agent gets an honest blank.
+  Verified byte-for-byte safe on the Klebsiella train,val gate (per_sample/grades/backfill unchanged; junk →
+  honest blanks). Wired into `run_full_metadata_agent.py` right after base selection.
+- `value_frequencies.py` — distinct informative values + counts (shared null handling).
+- `induce_categories.py` — **two-stage** induction (names → per-category detail) so large fields don't time
+  out; each category gets detailed `includes`/`excludes` boundary rules + examples; seeded (non-binding) by
+  the existing scheme; emits `cross_field_notes` (leakage detection). Writes `*_categories_proposed.yaml`.
+- `apply_categories.py` — maps each **distinct** value → `{parsed, category, na_reason}` (batched, cached,
+  temperature=0 → deterministic) and joins back; emits a full **reassignment audit** (every value → category,
+  NA reason, poor-fit flags — nothing silently dropped).
+
+**Approval mechanism.** David reviews `*_categories_proposed.yaml`; the approved scheme is saved as
+`study_lv_attributes/categorisation/<field>_categories_approved.yaml` (verbose scheme kept in its own file so
+`attributes.yaml` stays hand-editable). `categorise apply` loads it (yaml inline `categories` win if present).
+`attributes.yaml categorisation.fields.<field>` holds only `null_tokens`/`null_patterns`/`cross_column`.
+
+**Decisions (David).** Keep the agent's split of **`sterile_body_fluid`** (bile/CSF/pleural/peritoneal/joint)
+vs **`wound_abscess_tissue`** (solid tissue/organ abscess incl. liver) — he explicitly likes not collapsing
+sterile fluids onto the tissue axis. `laboratory` → NA pre-grading (tautology). Cross-column fills = hybrid
+(auto-fill blank target, escalate overrides) — **deferred** to a second pass. Induction = from-scratch, seeded.
+
+**State (2026-07-07).**
+- Klebsiella schemes **induced + approved**: host 15 cats, isolation_source 12 cats (with includes/excludes +
+  cross-field notes). Saved as `*_categories_approved.yaml`.
+- **M.abs categorisation DONE** (first new-species proof): host 3 cats (human/wild/NA; strain codes → human,
+  their cf_status signal left for Phase D), isolation_source **15 cats** (respiratory split sputum/bronch/
+  unspecified/lung_tissue; disseminated skin/bone_joint/lymph_node/blood/pleural_body_fluid/eye_ear/GI-urinary;
+  water_environment incl. volcanic ash; clinical_device; **extrapulmonary_unspecified** — David's add; NA).
+  **100% of iso values placed** — 5,221/5,542 (94.2%) into a real category, 321 (5.8%) → NA with reasons; vs
+  the hardcoded Klebsiella rules that stranded 579 in 30 ad-hoc "Other" + 1,232 not-filled. Output:
+  `applications/m_abs/data/study_lv_attributes/categorisation/{categorised_mabs.tsv,*_reassignment_audit.tsv}`.
+
+**Remaining plan** (full detail: `~/.claude/plans/hidden-wiggling-stream.md`):
+- **Klebsiella size-≥10 tail** (436 studies / 14,592 samples not yet done — `[50,99]` 87/6.2k · `[25,49]`
+  142/5.1k · `[10,24]` 207/3.3k; `<10` = 1,106 studies/2.5k excluded). Run three **carry-forward** bands
+  overnight (subscription): `run_klebsiella.sh --min-study-size {50/25/10} --max-study-size {99/49/24}
+  --tag tail{50_99/25_49/10_24} --web-fallback --carry-forward`. Answer escalations (incl. 3 pending tail100).
+- **Accumulate** all tags (`accumulate --tags train,test,tail100,tail50_99,tail25_49,tail10_24 --canonical
+  <gold>`) → run `validate_backfill_completeness.py` for the **final whole-cohort completeness number**
+  (raw ENA → agent → metadata_v2 gold). Prior per-fold: test host .53→.84, country .67→.96, date .64→.94,
+  iso .60→.74.
+- **Apply** approved schemes over the final Klebsiella master (~1,900 iso distinct → ~32 cached batches);
+  **build `evaluation/validate_categories.py`** to benchmark agent `host_category`/`isolation_source_category`
+  vs metadata_v2 gold category columns (bulk agreement, uncategorised-tail reduction, adjudicated diffs).
+- **Deferred Phase D — `reconcile_cross_column.py`** (hybrid): M.abs host codes `CF*`/`COPD*`/`NCF` →
+  `cf_status`; env iso (`volcanic ash`, taps) → `host=environment`; normalise `Non-CF`→`non-CF`.
