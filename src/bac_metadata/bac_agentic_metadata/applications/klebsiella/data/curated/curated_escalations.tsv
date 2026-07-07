@@ -29,10 +29,13 @@ PRJEB51676	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB53835	collection_date	2019-01-01	curator accept	test
 PRJEB53835	isolation_source	stool		test
 PRJEB5495	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
+PRJEB63210	isolation_source		curator skip: lab-evolved lines; isolation_source left blank per rubric (2026-07-07)	tail100
 PRJEB6891	collection_date	2013-10-01		train
+PRJEB8667	host	human	curator-accepted suggested value (2026-07-07)	tail100
 PRJNA1087366	isolation_source	blood		train
 PRJNA288601	collection_date	2015-02-01		test
 PRJNA288601	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
+PRJNA788733	isolation_source		curator skip: specimen types span multiple sites; no single whole-field isolation_source (2026-07-07)	tail100
 PRJNA825705	collection_date	2018-01-01		test
 PRJNA845975	isolation_source	blood		train
 PRJNA918858	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
