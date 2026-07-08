@@ -1,0 +1,1097 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJEB3255	SAMEA1711398	collection_date		1932	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711441	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711441	isolation_source		Sputum/pneumonia	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711406	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711406	isolation_source		Appendix abscess	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711424	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711461	collection_date		1941	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711461	isolation_source		Pneumonia	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711411	collection_date		1935	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1572908	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1572908	isolation_source		Bile in obstructive jaundice and cholestasis	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1572905	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1572905	isolation_source		Stool, same case as M296	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2056910	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2056910	isolation_source		Surgical wound in fection, same case as M295	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1968457	collection_date		1949	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1968457	isolation_source		Fatal pneumonia	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004061	collection_date		1946	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2046730	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2046730	isolation_source		Abdomen	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004869	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004870	collection_date		1949	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2003024	collection_date		1949	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2046735	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2046735	isolation_source		Right antral washout, atrophic rhinitis, sinusitis, GIBBS	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1964881	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1964881	isolation_source		Right antral washout, atrophic rhinitis, sinusitis, GIBBS	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004150	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004150	isolation_source		Right antral washout, atrophic rhinitis, sinusitis, GIBBS	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004976	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004976	isolation_source		Pneumonia; Gardnier, Samos	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903597	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903597	isolation_source		Pneumonia; Gardnier, Samos	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004151	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711463	collection_date		1935	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711463	isolation_source		Fatal case	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004977	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004977	isolation_source		Urine	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711397	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711397	isolation_source		Pus from nasopharynx	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004978	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2004978	isolation_source		Tonsil	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711408	collection_date		1937	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711408	isolation_source		Blood culture	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711435	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903591	collection_date		ND	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903589	collection_date		ND	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903569	collection_date		1932	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903569	isolation_source		case from Ment. Gen. Hosp.	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903567	collection_date		1932	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903567	isolation_source		case from Ment. Gen. Hosp.	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2059653	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA2059653	isolation_source		Abdominal exudate	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903568	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903568	isolation_source		Abdominal exudate	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903564	collection_date		1947	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903566	collection_date		1947	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903620	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903618	collection_date		1940	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903618	isolation_source		Acute cholecystitis	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903617	collection_date		ND	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903608	collection_date		1935	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1903608	isolation_source		Fatal case	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711409	collection_date		1920	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB3255	SAMEA1711409	isolation_source		Left antral washout, meningitis	per_sample_two_hop	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx via 370 shared IDs
+PRJEB44864	SAMEA8720018	collection_date		2019-10-15	per_sample	spectrum.01009-22-s0001.pdf:ERR5908336
+PRJEB44864	SAMEA8720027	collection_date		2019-09-20	per_sample	spectrum.01009-22-s0001.pdf:ERR5908337
+PRJEB44864	SAMEA8720028	collection_date		2019-08-16	per_sample	spectrum.01009-22-s0001.pdf:ERR5908338
+PRJEB44864	SAMEA8720029	collection_date		2019-11-01	per_sample	spectrum.01009-22-s0001.pdf:ERR5908339
+PRJEB44864	SAMEA8720030	collection_date		2019-10-28	per_sample	spectrum.01009-22-s0001.pdf:ERR5908340
+PRJEB44864	SAMEA8720031	collection_date		2019-10-29	per_sample	spectrum.01009-22-s0001.pdf:ERR5908341
+PRJEB44864	SAMEA8720032	collection_date		2019-11-04	per_sample	spectrum.01009-22-s0001.pdf:ERR5908342
+PRJEB44864	SAMEA8720033	collection_date		2019-11-04	per_sample	spectrum.01009-22-s0001.pdf:ERR5908343
+PRJEB44864	SAMEA8720034	collection_date		2019-09-27	per_sample	spectrum.01009-22-s0001.pdf:ERR5908344
+PRJEB44864	SAMEA8720019	collection_date		2019-10-21	per_sample	spectrum.01009-22-s0001.pdf:ERR5908347
+PRJEB44864	SAMEA8720036	collection_date		2019-09-17	per_sample	spectrum.01009-22-s0001.pdf:ERR5908346
+PRJEB44864	SAMEA8720037	collection_date		2019-09-17	per_sample	spectrum.01009-22-s0001.pdf:ERR5908348
+PRJEB44864	SAMEA8720020	collection_date		2019-10-03	per_sample	spectrum.01009-22-s0001.pdf:ERR5908358
+PRJEB44864	SAMEA8720021	collection_date		2019-09-09	per_sample	spectrum.01009-22-s0001.pdf:ERR5908360
+PRJEB44864	SAMEA8720023	collection_date		2019-09-17	per_sample	spectrum.01009-22-s0001.pdf:ERR5908362
+PRJEB44864	SAMEA8720024	collection_date		2019-10-08	per_sample	spectrum.01009-22-s0001.pdf:ERR5908363
+PRJEB44864	SAMEA8720025	collection_date		2019-10-22	per_sample	spectrum.01009-22-s0001.pdf:ERR5908364
+PRJEB44864	SAMEA8720026	collection_date		2019-08-12	per_sample	spectrum.01009-22-s0001.pdf:ERR5908365
+PRJEB62836	SAMEA113574955	country		Portugal	per_sample	Table_1.XLSX:ERS15569884
+PRJEB62836	SAMEA113574955	collection_date		2020	per_sample	Table_1.XLSX:ERS15569884
+PRJEB62836	SAMEA113574955	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569884
+PRJEB62836	SAMEA113574955	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569884
+PRJEB62836	SAMEA113574960	country		Portugal	per_sample	Table_1.XLSX:ERS15569889
+PRJEB62836	SAMEA113574960	collection_date		2020	per_sample	Table_1.XLSX:ERS15569889
+PRJEB62836	SAMEA113574960	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569889
+PRJEB62836	SAMEA113574960	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569889
+PRJEB62836	SAMEA113574961	country		Portugal	per_sample	Table_1.XLSX:ERS15569890
+PRJEB62836	SAMEA113574961	collection_date		2020	per_sample	Table_1.XLSX:ERS15569890
+PRJEB62836	SAMEA113574961	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569890
+PRJEB62836	SAMEA113574961	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569890
+PRJEB62836	SAMEA113574962	country		Portugal	per_sample	Table_1.XLSX:ERS15569891
+PRJEB62836	SAMEA113574962	collection_date		2020	per_sample	Table_1.XLSX:ERS15569891
+PRJEB62836	SAMEA113574962	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569891
+PRJEB62836	SAMEA113574962	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569891
+PRJEB62836	SAMEA113574963	country		Portugal	per_sample	Table_1.XLSX:ERS15569892
+PRJEB62836	SAMEA113574963	collection_date		2019	per_sample	Table_1.XLSX:ERS15569892
+PRJEB62836	SAMEA113574963	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569892
+PRJEB62836	SAMEA113574963	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569892
+PRJEB62836	SAMEA113574956	country		Portugal	per_sample	Table_1.XLSX:ERS15569885
+PRJEB62836	SAMEA113574956	collection_date		2022	per_sample	Table_1.XLSX:ERS15569885
+PRJEB62836	SAMEA113574956	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569885
+PRJEB62836	SAMEA113574956	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569885
+PRJEB62836	SAMEA113574957	country		Portugal	per_sample	Table_1.XLSX:ERS15569886
+PRJEB62836	SAMEA113574957	collection_date		2022	per_sample	Table_1.XLSX:ERS15569886
+PRJEB62836	SAMEA113574957	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569886
+PRJEB62836	SAMEA113574957	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569886
+PRJEB62836	SAMEA113574958	country		Portugal	per_sample	Table_1.XLSX:ERS15569887
+PRJEB62836	SAMEA113574958	collection_date		2022	per_sample	Table_1.XLSX:ERS15569887
+PRJEB62836	SAMEA113574958	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569887
+PRJEB62836	SAMEA113574958	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569887
+PRJEB62836	SAMEA113574959	country		Portugal	per_sample	Table_1.XLSX:ERS15569888
+PRJEB62836	SAMEA113574959	collection_date		2022	per_sample	Table_1.XLSX:ERS15569888
+PRJEB62836	SAMEA113574959	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569888
+PRJEB62836	SAMEA113574959	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569888
+PRJEB62836	SAMEA113574964	country		Portugal	per_sample	Table_1.XLSX:ERS15569893
+PRJEB62836	SAMEA113574964	collection_date		2019	per_sample	Table_1.XLSX:ERS15569893
+PRJEB62836	SAMEA113574964	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569893
+PRJEB62836	SAMEA113574964	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569893
+PRJEB62836	SAMEA113574965	country		Portugal	per_sample	Table_1.XLSX:ERS15569894
+PRJEB62836	SAMEA113574965	collection_date		2022	per_sample	Table_1.XLSX:ERS15569894
+PRJEB62836	SAMEA113574965	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569894
+PRJEB62836	SAMEA113574965	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569894
+PRJEB62836	SAMEA113574966	country		Portugal	per_sample	Table_1.XLSX:ERS15569895
+PRJEB62836	SAMEA113574966	collection_date		2022	per_sample	Table_1.XLSX:ERS15569895
+PRJEB62836	SAMEA113574966	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569895
+PRJEB62836	SAMEA113574966	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569895
+PRJEB62836	SAMEA113574967	country		Portugal	per_sample	Table_1.XLSX:ERS15569896
+PRJEB62836	SAMEA113574967	collection_date		2022	per_sample	Table_1.XLSX:ERS15569896
+PRJEB62836	SAMEA113574967	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569896
+PRJEB62836	SAMEA113574967	host		Farm environment	per_sample	Table_1.XLSX:ERS15569896
+PRJEB62836	SAMEA113574968	country		Portugal	per_sample	Table_1.XLSX:ERS15569897
+PRJEB62836	SAMEA113574968	collection_date		2022	per_sample	Table_1.XLSX:ERS15569897
+PRJEB62836	SAMEA113574968	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569897
+PRJEB62836	SAMEA113574968	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569897
+PRJEB62836	SAMEA113574969	country		Portugal	per_sample	Table_1.XLSX:ERS15569898
+PRJEB62836	SAMEA113574969	collection_date		2019	per_sample	Table_1.XLSX:ERS15569898
+PRJEB62836	SAMEA113574969	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569898
+PRJEB62836	SAMEA113574969	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569898
+PRJEB62836	SAMEA113574972	country		Portugal	per_sample	Table_1.XLSX:ERS15569901
+PRJEB62836	SAMEA113574972	collection_date		2020	per_sample	Table_1.XLSX:ERS15569901
+PRJEB62836	SAMEA113574972	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569901
+PRJEB62836	SAMEA113574972	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569901
+PRJEB62836	SAMEA113574970	country		Portugal	per_sample	Table_1.XLSX:ERS15569899
+PRJEB62836	SAMEA113574970	collection_date		2022	per_sample	Table_1.XLSX:ERS15569899
+PRJEB62836	SAMEA113574970	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569899
+PRJEB62836	SAMEA113574970	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569899
+PRJEB62836	SAMEA113574971	country		Portugal	per_sample	Table_1.XLSX:ERS15569900
+PRJEB62836	SAMEA113574971	collection_date		2022	per_sample	Table_1.XLSX:ERS15569900
+PRJEB62836	SAMEA113574971	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569900
+PRJEB62836	SAMEA113574971	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569900
+PRJEB62836	SAMEA113574973	country		Portugal	per_sample	Table_1.XLSX:ERS15569902
+PRJEB62836	SAMEA113574973	collection_date		2019	per_sample	Table_1.XLSX:ERS15569902
+PRJEB62836	SAMEA113574973	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569902
+PRJEB62836	SAMEA113574973	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569902
+PRJEB62836	SAMEA113574974	country		Portugal	per_sample	Table_1.XLSX:ERS15569903
+PRJEB62836	SAMEA113574974	collection_date		2022	per_sample	Table_1.XLSX:ERS15569903
+PRJEB62836	SAMEA113574974	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569903
+PRJEB62836	SAMEA113574974	host		Farm environment	per_sample	Table_1.XLSX:ERS15569903
+PRJEB62836	SAMEA113574975	country		Portugal	per_sample	Table_1.XLSX:ERS15569904
+PRJEB62836	SAMEA113574975	collection_date		2022	per_sample	Table_1.XLSX:ERS15569904
+PRJEB62836	SAMEA113574975	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569904
+PRJEB62836	SAMEA113574975	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569904
+PRJEB62836	SAMEA113574976	country		Portugal	per_sample	Table_1.XLSX:ERS15569905
+PRJEB62836	SAMEA113574976	collection_date		2022	per_sample	Table_1.XLSX:ERS15569905
+PRJEB62836	SAMEA113574976	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569905
+PRJEB62836	SAMEA113574976	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569905
+PRJEB62836	SAMEA113574977	country		Portugal	per_sample	Table_1.XLSX:ERS15569906
+PRJEB62836	SAMEA113574977	collection_date		2022	per_sample	Table_1.XLSX:ERS15569906
+PRJEB62836	SAMEA113574977	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569906
+PRJEB62836	SAMEA113574977	host		Farm environment	per_sample	Table_1.XLSX:ERS15569906
+PRJEB62836	SAMEA113574978	country		Portugal	per_sample	Table_1.XLSX:ERS15569907
+PRJEB62836	SAMEA113574978	collection_date		2022	per_sample	Table_1.XLSX:ERS15569907
+PRJEB62836	SAMEA113574978	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569907
+PRJEB62836	SAMEA113574978	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569907
+PRJEB62836	SAMEA113574979	country		Portugal	per_sample	Table_1.XLSX:ERS15569908
+PRJEB62836	SAMEA113574979	collection_date		2022	per_sample	Table_1.XLSX:ERS15569908
+PRJEB62836	SAMEA113574979	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569908
+PRJEB62836	SAMEA113574979	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569908
+PRJEB62836	SAMEA113574980	country		Portugal	per_sample	Table_1.XLSX:ERS15569909
+PRJEB62836	SAMEA113574980	collection_date		2022	per_sample	Table_1.XLSX:ERS15569909
+PRJEB62836	SAMEA113574980	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569909
+PRJEB62836	SAMEA113574980	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569909
+PRJEB62836	SAMEA113574981	country		Portugal	per_sample	Table_1.XLSX:ERS15569910
+PRJEB62836	SAMEA113574981	collection_date		2019	per_sample	Table_1.XLSX:ERS15569910
+PRJEB62836	SAMEA113574981	isolation_source		Poultry house feed	per_sample	Table_1.XLSX:ERS15569910
+PRJEB62836	SAMEA113574981	host		Feed	per_sample	Table_1.XLSX:ERS15569910
+PRJEB62836	SAMEA113574982	country		Portugal	per_sample	Table_1.XLSX:ERS15569911
+PRJEB62836	SAMEA113574982	collection_date		2020	per_sample	Table_1.XLSX:ERS15569911
+PRJEB62836	SAMEA113574982	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569911
+PRJEB62836	SAMEA113574982	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569911
+PRJEB62836	SAMEA113574983	country		Portugal	per_sample	Table_1.XLSX:ERS15569912
+PRJEB62836	SAMEA113574983	collection_date		2019	per_sample	Table_1.XLSX:ERS15569912
+PRJEB62836	SAMEA113574983	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569912
+PRJEB62836	SAMEA113574983	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569912
+PRJEB62836	SAMEA113574984	country		Portugal	per_sample	Table_1.XLSX:ERS15569913
+PRJEB62836	SAMEA113574984	collection_date		2022	per_sample	Table_1.XLSX:ERS15569913
+PRJEB62836	SAMEA113574984	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569913
+PRJEB62836	SAMEA113574984	host		Farm environment	per_sample	Table_1.XLSX:ERS15569913
+PRJEB62836	SAMEA113574985	country		Portugal	per_sample	Table_1.XLSX:ERS15569914
+PRJEB62836	SAMEA113574985	collection_date		2022	per_sample	Table_1.XLSX:ERS15569914
+PRJEB62836	SAMEA113574985	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569914
+PRJEB62836	SAMEA113574985	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569914
+PRJEB62836	SAMEA113574986	country		Portugal	per_sample	Table_1.XLSX:ERS15569915
+PRJEB62836	SAMEA113574986	collection_date		2022	per_sample	Table_1.XLSX:ERS15569915
+PRJEB62836	SAMEA113574986	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569915
+PRJEB62836	SAMEA113574986	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569915
+PRJEB62836	SAMEA113574987	country		Portugal	per_sample	Table_1.XLSX:ERS15569916
+PRJEB62836	SAMEA113574987	collection_date		2022	per_sample	Table_1.XLSX:ERS15569916
+PRJEB62836	SAMEA113574987	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569916
+PRJEB62836	SAMEA113574987	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569916
+PRJEB62836	SAMEA113574988	country		Portugal	per_sample	Table_1.XLSX:ERS15569917
+PRJEB62836	SAMEA113574988	collection_date		2020	per_sample	Table_1.XLSX:ERS15569917
+PRJEB62836	SAMEA113574988	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569917
+PRJEB62836	SAMEA113574988	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569917
+PRJEB62836	SAMEA113574989	country		Portugal	per_sample	Table_1.XLSX:ERS15569918
+PRJEB62836	SAMEA113574989	collection_date		2022	per_sample	Table_1.XLSX:ERS15569918
+PRJEB62836	SAMEA113574989	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569918
+PRJEB62836	SAMEA113574989	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569918
+PRJEB62836	SAMEA113574990	country		Portugal	per_sample	Table_1.XLSX:ERS15569919
+PRJEB62836	SAMEA113574990	collection_date		2022	per_sample	Table_1.XLSX:ERS15569919
+PRJEB62836	SAMEA113574990	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569919
+PRJEB62836	SAMEA113574990	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569919
+PRJEB62836	SAMEA113574991	country		Portugal	per_sample	Table_1.XLSX:ERS15569920
+PRJEB62836	SAMEA113574991	collection_date		2022	per_sample	Table_1.XLSX:ERS15569920
+PRJEB62836	SAMEA113574991	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569920
+PRJEB62836	SAMEA113574991	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569920
+PRJEB62836	SAMEA113574992	country		Portugal	per_sample	Table_1.XLSX:ERS15569921
+PRJEB62836	SAMEA113574992	collection_date		2022	per_sample	Table_1.XLSX:ERS15569921
+PRJEB62836	SAMEA113574992	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569921
+PRJEB62836	SAMEA113574992	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569921
+PRJEB62836	SAMEA113574993	country		Portugal	per_sample	Table_1.XLSX:ERS15569922
+PRJEB62836	SAMEA113574993	collection_date		2022	per_sample	Table_1.XLSX:ERS15569922
+PRJEB62836	SAMEA113574993	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569922
+PRJEB62836	SAMEA113574993	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569922
+PRJEB62836	SAMEA113574994	country		Portugal	per_sample	Table_1.XLSX:ERS15569923
+PRJEB62836	SAMEA113574994	collection_date		2019	per_sample	Table_1.XLSX:ERS15569923
+PRJEB62836	SAMEA113574994	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569923
+PRJEB62836	SAMEA113574994	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569923
+PRJEB62836	SAMEA113574995	country		Portugal	per_sample	Table_1.XLSX:ERS15569924
+PRJEB62836	SAMEA113574995	collection_date		2019	per_sample	Table_1.XLSX:ERS15569924
+PRJEB62836	SAMEA113574995	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569924
+PRJEB62836	SAMEA113574995	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569924
+PRJEB62836	SAMEA113574996	country		Portugal	per_sample	Table_1.XLSX:ERS15569925
+PRJEB62836	SAMEA113574996	collection_date		2022	per_sample	Table_1.XLSX:ERS15569925
+PRJEB62836	SAMEA113574996	isolation_source		Chicken meat	per_sample	Table_1.XLSX:ERS15569925
+PRJEB62836	SAMEA113574996	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569925
+PRJEB62836	SAMEA113574997	country		Portugal	per_sample	Table_1.XLSX:ERS15569926
+PRJEB62836	SAMEA113574997	collection_date		2022	per_sample	Table_1.XLSX:ERS15569926
+PRJEB62836	SAMEA113574997	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569926
+PRJEB62836	SAMEA113574997	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569926
+PRJEB62836	SAMEA113575001	country		Portugal	per_sample	Table_1.XLSX:ERS15569930
+PRJEB62836	SAMEA113575001	collection_date		2022	per_sample	Table_1.XLSX:ERS15569930
+PRJEB62836	SAMEA113575001	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569930
+PRJEB62836	SAMEA113575001	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569930
+PRJEB62836	SAMEA113574998	country		Portugal	per_sample	Table_1.XLSX:ERS15569927
+PRJEB62836	SAMEA113574998	collection_date		2022	per_sample	Table_1.XLSX:ERS15569927
+PRJEB62836	SAMEA113574998	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569927
+PRJEB62836	SAMEA113574998	host		Farm environment	per_sample	Table_1.XLSX:ERS15569927
+PRJEB62836	SAMEA113575000	country		Portugal	per_sample	Table_1.XLSX:ERS15569929
+PRJEB62836	SAMEA113575000	collection_date		2020	per_sample	Table_1.XLSX:ERS15569929
+PRJEB62836	SAMEA113575000	isolation_source		Pre-slaughter chicken	per_sample	Table_1.XLSX:ERS15569929
+PRJEB62836	SAMEA113575000	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569929
+PRJEB62836	SAMEA113574999	country		Portugal	per_sample	Table_1.XLSX:ERS15569928
+PRJEB62836	SAMEA113574999	collection_date		2022	per_sample	Table_1.XLSX:ERS15569928
+PRJEB62836	SAMEA113574999	isolation_source		Cleaned poultry house	per_sample	Table_1.XLSX:ERS15569928
+PRJEB62836	SAMEA113574999	host		Farm environment	per_sample	Table_1.XLSX:ERS15569928
+PRJEB62836	SAMEA113575002	country		Portugal	per_sample	Table_1.XLSX:ERS15569931
+PRJEB62836	SAMEA113575002	collection_date		2020	per_sample	Table_1.XLSX:ERS15569931
+PRJEB62836	SAMEA113575002	isolation_source		One-day-old chicks	per_sample	Table_1.XLSX:ERS15569931
+PRJEB62836	SAMEA113575002	host		Animal (chicken)	per_sample	Table_1.XLSX:ERS15569931
+PRJEB67940	SAMEA114568017	collection_date		2018-01-23 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-01
+PRJEB67940	SAMEA114568017	isolation_source		BAL	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-01
+PRJEB67940	SAMEA114568018	collection_date		2018-01-24 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-02
+PRJEB67940	SAMEA114568018	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-02
+PRJEB67940	SAMEA114568019	collection_date		2018-03-12 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-03
+PRJEB67940	SAMEA114568019	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-03
+PRJEB67940	SAMEA114568020	collection_date		2018-04-23 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-04
+PRJEB67940	SAMEA114568020	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-04
+PRJEB67940	SAMEA114568021	collection_date		2020-09-04 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-05
+PRJEB67940	SAMEA114568021	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-18-05
+PRJEB67940	SAMEA114568022	collection_date		2019-02-07 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-01
+PRJEB67940	SAMEA114568022	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-01
+PRJEB67940	SAMEA114568023	collection_date		2019-03-03 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-02
+PRJEB67940	SAMEA114568023	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-02
+PRJEB67940	SAMEA114568024	collection_date		2019-05-24 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-03
+PRJEB67940	SAMEA114568024	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-03
+PRJEB67940	SAMEA114568025	collection_date		2019-08-08 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-04
+PRJEB67940	SAMEA114568025	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-04
+PRJEB67940	SAMEA114568026	collection_date		2019-10-09 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-05
+PRJEB67940	SAMEA114568026	isolation_source		throat/rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-05
+PRJEB67940	SAMEA114568027	collection_date		2019-11-29 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-06
+PRJEB67940	SAMEA114568027	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-19-06
+PRJEB67940	SAMEA114568028	collection_date		2020-01-17 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-01
+PRJEB67940	SAMEA114568028	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-01
+PRJEB67940	SAMEA114568029	collection_date		2020-01-20 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-02
+PRJEB67940	SAMEA114568029	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-02
+PRJEB67940	SAMEA114568030	collection_date		2020-01-22 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-03
+PRJEB67940	SAMEA114568030	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-03
+PRJEB67940	SAMEA114568031	collection_date		2020-02-02 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-04
+PRJEB67940	SAMEA114568031	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-04
+PRJEB67940	SAMEA114568032	collection_date		2020-02-03 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-05
+PRJEB67940	SAMEA114568032	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-05
+PRJEB67940	SAMEA114568033	collection_date		2020-02-12 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-06
+PRJEB67940	SAMEA114568033	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-06
+PRJEB67940	SAMEA114568034	collection_date		2020-02-25 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-07
+PRJEB67940	SAMEA114568034	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-07
+PRJEB67940	SAMEA114568035	collection_date		2020-03-09 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-08
+PRJEB67940	SAMEA114568035	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-08
+PRJEB67940	SAMEA114568036	collection_date		2020-03-12 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-09
+PRJEB67940	SAMEA114568036	isolation_source		tissue	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-09
+PRJEB67940	SAMEA114568037	collection_date		2020-03-12 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-10
+PRJEB67940	SAMEA114568037	isolation_source		throat/rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-10
+PRJEB67940	SAMEA114568038	collection_date		2020-03-23 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-11
+PRJEB67940	SAMEA114568038	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-11
+PRJEB67940	SAMEA114568039	collection_date		2020-03-26 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-12
+PRJEB67940	SAMEA114568039	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-12
+PRJEB67940	SAMEA114568040	collection_date		2020-04-07 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-13
+PRJEB67940	SAMEA114568040	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-13
+PRJEB67940	SAMEA114568041	collection_date		2020-05-14 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-14
+PRJEB67940	SAMEA114568041	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-14
+PRJEB67940	SAMEA114568042	collection_date		2020-07-07 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-15
+PRJEB67940	SAMEA114568042	isolation_source		blood culture	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-15
+PRJEB67940	SAMEA114568043	collection_date		2020-07-09 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-16
+PRJEB67940	SAMEA114568043	isolation_source		blood culture	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-16
+PRJEB67940	SAMEA114568044	collection_date		2020-07-16 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-17
+PRJEB67940	SAMEA114568044	isolation_source		throat/rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-17
+PRJEB67940	SAMEA114568045	collection_date		2020-08-10 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-18
+PRJEB67940	SAMEA114568045	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-18
+PRJEB67940	SAMEA114568046	collection_date		2020-08-12 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-19
+PRJEB67940	SAMEA114568046	isolation_source		throat/rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-19
+PRJEB67940	SAMEA114568047	collection_date		2020-08-31 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-20
+PRJEB67940	SAMEA114568047	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-20
+PRJEB67940	SAMEA114568048	collection_date		2020-09-17 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-21
+PRJEB67940	SAMEA114568048	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-21
+PRJEB67940	SAMEA114568049	collection_date		2020-10-14 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-22
+PRJEB67940	SAMEA114568049	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-22
+PRJEB67940	SAMEA114568050	collection_date		2020-11-01 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-23
+PRJEB67940	SAMEA114568050	isolation_source		rectal swab	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-23
+PRJEB67940	SAMEA114568051	collection_date		2020-12-06 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-24
+PRJEB67940	SAMEA114568051	isolation_source		urine	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-24
+PRJEB67940	SAMEA114568052	collection_date		2020-12-11 00:00:00	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-25
+PRJEB67940	SAMEA114568052	isolation_source		other	per_sample	13756_2024_1386_MOESM1_ESM.xlsx:klepne-UMCG-20-25
+PRJEB76256	SAMEA115670461	collection_date		03/2022	per_sample	mmc1.xlsx:kreshist0052
+PRJEB76256	SAMEA115670461	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0052
+PRJEB76256	SAMEA115670462	collection_date		02/2020	per_sample	mmc1.xlsx:kreshist0053
+PRJEB76256	SAMEA115670462	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0053
+PRJEB76256	SAMEA115670463	collection_date		03/2019	per_sample	mmc1.xlsx:kreshist0054
+PRJEB76256	SAMEA115670463	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0054
+PRJEB76256	SAMEA115670464	collection_date		10/2019	per_sample	mmc1.xlsx:kreshist0055
+PRJEB76256	SAMEA115670464	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0055
+PRJEB76256	SAMEA115670465	collection_date		02/2022	per_sample	mmc1.xlsx:kreshist0056
+PRJEB76256	SAMEA115670465	isolation_source		Toilet room A	per_sample	mmc1.xlsx:kreshist0056
+PRJEB76256	SAMEA115670466	collection_date		06/2022	per_sample	mmc1.xlsx:kreshist0057
+PRJEB76256	SAMEA115670466	isolation_source		Toilet water room B	per_sample	mmc1.xlsx:kreshist0057
+PRJEB76256	SAMEA115670467	collection_date		06/2022	per_sample	mmc1.xlsx:kreshist0058
+PRJEB76256	SAMEA115670467	isolation_source		Shower drain room C	per_sample	mmc1.xlsx:kreshist0058
+PRJEB76256	SAMEA115670468	collection_date		06/2022	per_sample	mmc1.xlsx:kreshist0059
+PRJEB76256	SAMEA115670468	isolation_source		Toilet water room D	per_sample	mmc1.xlsx:kreshist0059
+PRJEB76256	SAMEA115670469	collection_date		10/2021	per_sample	mmc1.xlsx:kreshist0060
+PRJEB76256	SAMEA115670469	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0060
+PRJEB76256	SAMEA115670470	collection_date		11/2021	per_sample	mmc1.xlsx:kreshist0061
+PRJEB76256	SAMEA115670470	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0061
+PRJEB76256	SAMEA115670471	collection_date		02/2021	per_sample	mmc1.xlsx:kreshist0062
+PRJEB76256	SAMEA115670471	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0062
+PRJEB76256	SAMEA115670472	collection_date		12/2019	per_sample	mmc1.xlsx:kreshist0063
+PRJEB76256	SAMEA115670472	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0063
+PRJEB76256	SAMEA115670473	collection_date		02/2022	per_sample	mmc1.xlsx:kreshist0064
+PRJEB76256	SAMEA115670473	isolation_source		Toilet corridor	per_sample	mmc1.xlsx:kreshist0064
+PRJEB76256	SAMEA115670474	collection_date		08/2021	per_sample	mmc1.xlsx:kreshist0065
+PRJEB76256	SAMEA115670474	isolation_source		Feces	per_sample	mmc1.xlsx:kreshist0065
+PRJEB76256	SAMEA115670475	collection_date		08/2021	per_sample	mmc1.xlsx:kreshist0066
+PRJEB76256	SAMEA115670475	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0066
+PRJEB76256	SAMEA115670476	collection_date		08/2021	per_sample	mmc1.xlsx:kreshist0067
+PRJEB76256	SAMEA115670476	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0067
+PRJEB76256	SAMEA115670477	collection_date		01/2021	per_sample	mmc1.xlsx:kreshist0068
+PRJEB76256	SAMEA115670477	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0068
+PRJEB76256	SAMEA115670478	collection_date		11/2021	per_sample	mmc1.xlsx:kreshist0069
+PRJEB76256	SAMEA115670478	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0069
+PRJEB76256	SAMEA115670479	collection_date		02/2022	per_sample	mmc1.xlsx:kreshist0070
+PRJEB76256	SAMEA115670479	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0070
+PRJEB76256	SAMEA115670480	collection_date		02/2022	per_sample	mmc1.xlsx:kreshist0071
+PRJEB76256	SAMEA115670480	isolation_source		Toilet room E	per_sample	mmc1.xlsx:kreshist0071
+PRJEB76256	SAMEA115670481	collection_date		06/2022	per_sample	mmc1.xlsx:kreshist0072
+PRJEB76256	SAMEA115670481	isolation_source		Toilet water room F	per_sample	mmc1.xlsx:kreshist0072
+PRJEB76256	SAMEA115670482	collection_date		01/2021	per_sample	mmc1.xlsx:kreshist0073
+PRJEB76256	SAMEA115670482	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0073
+PRJEB76256	SAMEA115670483	collection_date		09/2021	per_sample	mmc1.xlsx:kreshist0074
+PRJEB76256	SAMEA115670483	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0074
+PRJEB76256	SAMEA115670484	collection_date		10/2021	per_sample	mmc1.xlsx:kreshist0075
+PRJEB76256	SAMEA115670484	isolation_source		Urine	per_sample	mmc1.xlsx:kreshist0075
+PRJEB76256	SAMEA115670485	collection_date		08/2021	per_sample	mmc1.xlsx:kreshist0076
+PRJEB76256	SAMEA115670485	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0076
+PRJEB76256	SAMEA115670486	collection_date		11/2021	per_sample	mmc1.xlsx:kreshist0077
+PRJEB76256	SAMEA115670486	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0077
+PRJEB76256	SAMEA115670487	collection_date		12/2021	per_sample	mmc1.xlsx:kreshist0078
+PRJEB76256	SAMEA115670487	isolation_source		Feces	per_sample	mmc1.xlsx:kreshist0078
+PRJEB76256	SAMEA115670488	collection_date		02/2022	per_sample	mmc1.xlsx:kreshist0079
+PRJEB76256	SAMEA115670488	isolation_source		Toilet room A	per_sample	mmc1.xlsx:kreshist0079
+PRJEB76256	SAMEA115670489	collection_date		06/2022	per_sample	mmc1.xlsx:kreshist0080
+PRJEB76256	SAMEA115670489	isolation_source		Shower drain room E	per_sample	mmc1.xlsx:kreshist0080
+PRJEB76256	SAMEA115670490	collection_date		07/2021	per_sample	mmc1.xlsx:kreshist0081
+PRJEB76256	SAMEA115670490	isolation_source		Blood	per_sample	mmc1.xlsx:kreshist0081
+PRJEB76311	SAMEA115709865	collection_date		14/8/2021	per_sample	mmc1.xlsx:22RX24782
+PRJEB76311	SAMEA115709865	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24782
+PRJEB76311	SAMEA115709865	host		Human	per_sample	mmc1.xlsx:22RX24782
+PRJEB76311	SAMEA115709866	collection_date		14/8/2021	per_sample	mmc1.xlsx:22RX24783
+PRJEB76311	SAMEA115709866	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24783
+PRJEB76311	SAMEA115709866	host		Human	per_sample	mmc1.xlsx:22RX24783
+PRJEB76311	SAMEA115709868	collection_date		17/8/2021	per_sample	mmc1.xlsx:22RX24786
+PRJEB76311	SAMEA115709868	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24786
+PRJEB76311	SAMEA115709868	host		Human	per_sample	mmc1.xlsx:22RX24786
+PRJEB76311	SAMEA115709869	collection_date		18/8/2021	per_sample	mmc1.xlsx:22RX24787
+PRJEB76311	SAMEA115709869	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24787
+PRJEB76311	SAMEA115709869	host		Human	per_sample	mmc1.xlsx:22RX24787
+PRJEB76311	SAMEA115709873	collection_date		27/8/2021	per_sample	mmc1.xlsx:22RX24792
+PRJEB76311	SAMEA115709873	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24792
+PRJEB76311	SAMEA115709873	host		Human	per_sample	mmc1.xlsx:22RX24792
+PRJEB76311	SAMEA115709908	collection_date		16/8/2021	per_sample	mmc1.xlsx:22RX24849
+PRJEB76311	SAMEA115709908	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24849
+PRJEB76311	SAMEA115709908	host		Dog	per_sample	mmc1.xlsx:22RX24849
+PRJEB76311	SAMEA115709874	collection_date		2021-12-09 00:00:00	per_sample	mmc1.xlsx:22RX24796
+PRJEB76311	SAMEA115709874	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24796
+PRJEB76311	SAMEA115709874	host		Human	per_sample	mmc1.xlsx:22RX24796
+PRJEB76311	SAMEA115709880	collection_date		2021-11-10 00:00:00	per_sample	mmc1.xlsx:22RX24807
+PRJEB76311	SAMEA115709880	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24807
+PRJEB76311	SAMEA115709880	host		Human	per_sample	mmc1.xlsx:22RX24807
+PRJEB76311	SAMEA115709881	collection_date		2021-10-10 00:00:00	per_sample	mmc1.xlsx:22RX24808
+PRJEB76311	SAMEA115709881	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24808
+PRJEB76311	SAMEA115709881	host		Human	per_sample	mmc1.xlsx:22RX24808
+PRJEB76311	SAMEA115709883	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24810
+PRJEB76311	SAMEA115709883	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24810
+PRJEB76311	SAMEA115709883	host		Human	per_sample	mmc1.xlsx:22RX24810
+PRJEB76311	SAMEA115709884	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24811
+PRJEB76311	SAMEA115709884	isolation_source		Blood	per_sample	mmc1.xlsx:22RX24811
+PRJEB76311	SAMEA115709884	host		Human	per_sample	mmc1.xlsx:22RX24811
+PRJEB76311	SAMEA115709910	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24853
+PRJEB76311	SAMEA115709910	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24853
+PRJEB76311	SAMEA115709910	host		Human	per_sample	mmc1.xlsx:22RX24853
+PRJEB76311	SAMEA115709876	collection_date		18/9/2021	per_sample	mmc1.xlsx:22RX24799
+PRJEB76311	SAMEA115709876	isolation_source		Blood	per_sample	mmc1.xlsx:22RX24799
+PRJEB76311	SAMEA115709876	host		Human	per_sample	mmc1.xlsx:22RX24799
+PRJEB76311	SAMEA115709877	collection_date		20/9/20221	per_sample	mmc1.xlsx:22RX24800
+PRJEB76311	SAMEA115709877	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24800
+PRJEB76311	SAMEA115709877	host		Human	per_sample	mmc1.xlsx:22RX24800
+PRJEB76311	SAMEA115709878	collection_date		18/9/2021	per_sample	mmc1.xlsx:22RX24801
+PRJEB76311	SAMEA115709878	isolation_source		Blood	per_sample	mmc1.xlsx:22RX24801
+PRJEB76311	SAMEA115709878	host		Human	per_sample	mmc1.xlsx:22RX24801
+PRJEB76311	SAMEA115709879	collection_date		2021-11-10 00:00:00	per_sample	mmc1.xlsx:22RX24805
+PRJEB76311	SAMEA115709879	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24805
+PRJEB76311	SAMEA115709879	host		Human	per_sample	mmc1.xlsx:22RX24805
+PRJEB76311	SAMEA115709894	collection_date		29/8/2021	per_sample	mmc1.xlsx:22RX24825
+PRJEB76311	SAMEA115709894	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24825
+PRJEB76311	SAMEA115709894	host		Cat	per_sample	mmc1.xlsx:22RX24825
+PRJEB76311	SAMEA115709903	collection_date		19/9/2021	per_sample	mmc1.xlsx:22RX24836
+PRJEB76311	SAMEA115709903	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24836
+PRJEB76311	SAMEA115709903	host		Cat	per_sample	mmc1.xlsx:22RX24836
+PRJEB76311	SAMEA115709905	collection_date		21/9/2021	per_sample	mmc1.xlsx:22RX24840
+PRJEB76311	SAMEA115709905	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24840
+PRJEB76311	SAMEA115709905	host		Dog	per_sample	mmc1.xlsx:22RX24840
+PRJEB76311	SAMEA115709913	collection_date		29/8/2021	per_sample	mmc1.xlsx:22RX24856
+PRJEB76311	SAMEA115709913	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24856
+PRJEB76311	SAMEA115709913	host		Cat	per_sample	mmc1.xlsx:22RX24856
+PRJEB76311	SAMEA115709886	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24813
+PRJEB76311	SAMEA115709886	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24813
+PRJEB76311	SAMEA115709886	host		Human	per_sample	mmc1.xlsx:22RX24813
+PRJEB76311	SAMEA115709888	collection_date		25/10/2021	per_sample	mmc1.xlsx:22RX24816
+PRJEB76311	SAMEA115709888	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24816
+PRJEB76311	SAMEA115709888	host		Human	per_sample	mmc1.xlsx:22RX24816
+PRJEB76311	SAMEA115709889	collection_date		27/10/2021	per_sample	mmc1.xlsx:22RX24817
+PRJEB76311	SAMEA115709889	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24817
+PRJEB76311	SAMEA115709889	host		Human	per_sample	mmc1.xlsx:22RX24817
+PRJEB76311	SAMEA115709871	collection_date		19/8/2021	per_sample	mmc1.xlsx:22RX24789
+PRJEB76311	SAMEA115709871	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24789
+PRJEB76311	SAMEA115709871	host		Human	per_sample	mmc1.xlsx:22RX24789
+PRJEB76311	SAMEA115709892	collection_date		17/8/2021	per_sample	mmc1.xlsx:22RX24820
+PRJEB76311	SAMEA115709892	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24820
+PRJEB76311	SAMEA115709892	host		Dog	per_sample	mmc1.xlsx:22RX24820
+PRJEB76311	SAMEA115709875	collection_date		2021-11-09 00:00:00	per_sample	mmc1.xlsx:22RX24797
+PRJEB76311	SAMEA115709875	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24797
+PRJEB76311	SAMEA115709875	host		Human	per_sample	mmc1.xlsx:22RX24797
+PRJEB76311	SAMEA115709882	collection_date		17/10/2021	per_sample	mmc1.xlsx:22RX24809
+PRJEB76311	SAMEA115709882	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24809
+PRJEB76311	SAMEA115709882	host		Human	per_sample	mmc1.xlsx:22RX24809
+PRJEB76311	SAMEA115709885	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24812
+PRJEB76311	SAMEA115709885	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24812
+PRJEB76311	SAMEA115709885	host		Human	per_sample	mmc1.xlsx:22RX24812
+PRJEB76311	SAMEA115709887	collection_date		18/10/2021	per_sample	mmc1.xlsx:22RX24814
+PRJEB76311	SAMEA115709887	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24814
+PRJEB76311	SAMEA115709887	host		Human	per_sample	mmc1.xlsx:22RX24814
+PRJEB76311	SAMEA115709890	collection_date		31/10/2021	per_sample	mmc1.xlsx:22RX24818
+PRJEB76311	SAMEA115709890	isolation_source		Sputum	per_sample	mmc1.xlsx:22RX24818
+PRJEB76311	SAMEA115709890	host		Human	per_sample	mmc1.xlsx:22RX24818
+PRJEB76311	SAMEA115709891	collection_date		31/10/2021	per_sample	mmc1.xlsx:22RX24819
+PRJEB76311	SAMEA115709891	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24819
+PRJEB76311	SAMEA115709891	host		Human	per_sample	mmc1.xlsx:22RX24819
+PRJEB76311	SAMEA115709870	collection_date		18/8/2021	per_sample	mmc1.xlsx:22RX24788
+PRJEB76311	SAMEA115709870	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24788
+PRJEB76311	SAMEA115709870	host		Human	per_sample	mmc1.xlsx:22RX24788
+PRJEB76311	SAMEA115709911	collection_date		18/9/2021	per_sample	mmc1.xlsx:22RX24854
+PRJEB76311	SAMEA115709911	isolation_source		Blood	per_sample	mmc1.xlsx:22RX24854
+PRJEB76311	SAMEA115709911	host		Human	per_sample	mmc1.xlsx:22RX24854
+PRJEB76311	SAMEA115709867	collection_date		17/8/2021	per_sample	mmc1.xlsx:22RX24784
+PRJEB76311	SAMEA115709867	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24784
+PRJEB76311	SAMEA115709867	host		Human	per_sample	mmc1.xlsx:22RX24784
+PRJEB76311	SAMEA115709893	collection_date		16/8/2021	per_sample	mmc1.xlsx:22RX24821
+PRJEB76311	SAMEA115709893	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24821
+PRJEB76311	SAMEA115709893	host		Dog	per_sample	mmc1.xlsx:22RX24821
+PRJEB76311	SAMEA115709898	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24829
+PRJEB76311	SAMEA115709898	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24829
+PRJEB76311	SAMEA115709898	host		Dog	per_sample	mmc1.xlsx:22RX24829
+PRJEB76311	SAMEA115709899	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24830
+PRJEB76311	SAMEA115709899	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24830
+PRJEB76311	SAMEA115709899	host		Dog	per_sample	mmc1.xlsx:22RX24830
+PRJEB76311	SAMEA115709907	collection_date		2021-04-10 00:00:00	per_sample	mmc1.xlsx:22RX24846
+PRJEB76311	SAMEA115709907	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24846
+PRJEB76311	SAMEA115709907	host		Dog	per_sample	mmc1.xlsx:22RX24846
+PRJEB76311	SAMEA115709909	collection_date		14/10/2021	per_sample	mmc1.xlsx:22RX24850
+PRJEB76311	SAMEA115709909	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24850
+PRJEB76311	SAMEA115709909	host		Dog	per_sample	mmc1.xlsx:22RX24850
+PRJEB76311	SAMEA115709912	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24855
+PRJEB76311	SAMEA115709912	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24855
+PRJEB76311	SAMEA115709912	host		Dog	per_sample	mmc1.xlsx:22RX24855
+PRJEB76311	SAMEA115709897	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24828
+PRJEB76311	SAMEA115709897	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24828
+PRJEB76311	SAMEA115709897	host		Dog	per_sample	mmc1.xlsx:22RX24828
+PRJEB76311	SAMEA115709872	collection_date		27/8/2021	per_sample	mmc1.xlsx:22RX24791
+PRJEB76311	SAMEA115709872	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24791
+PRJEB76311	SAMEA115709872	host		Human	per_sample	mmc1.xlsx:22RX24791
+PRJEB76311	SAMEA115709895	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24826
+PRJEB76311	SAMEA115709895	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24826
+PRJEB76311	SAMEA115709895	host		Dog	per_sample	mmc1.xlsx:22RX24826
+PRJEB76311	SAMEA115709896	collection_date		30/8/2021	per_sample	mmc1.xlsx:22RX24827
+PRJEB76311	SAMEA115709896	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24827
+PRJEB76311	SAMEA115709896	host		Dog	per_sample	mmc1.xlsx:22RX24827
+PRJEB76311	SAMEA115709900	collection_date		31/8/2021	per_sample	mmc1.xlsx:22RX24831
+PRJEB76311	SAMEA115709900	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24831
+PRJEB76311	SAMEA115709900	host		Cat	per_sample	mmc1.xlsx:22RX24831
+PRJEB76311	SAMEA115709901	collection_date		2021-05-09 00:00:00	per_sample	mmc1.xlsx:22RX24833
+PRJEB76311	SAMEA115709901	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24833
+PRJEB76311	SAMEA115709901	host		Dog	per_sample	mmc1.xlsx:22RX24833
+PRJEB76311	SAMEA115709902	collection_date		19/9/2021	per_sample	mmc1.xlsx:22RX24835
+PRJEB76311	SAMEA115709902	isolation_source		Nasal swab	per_sample	mmc1.xlsx:22RX24835
+PRJEB76311	SAMEA115709902	host		Dog	per_sample	mmc1.xlsx:22RX24835
+PRJEB76311	SAMEA115709904	collection_date		2021-05-09 00:00:00	per_sample	mmc1.xlsx:22RX24838
+PRJEB76311	SAMEA115709904	isolation_source		Urine	per_sample	mmc1.xlsx:22RX24838
+PRJEB76311	SAMEA115709904	host		Dog	per_sample	mmc1.xlsx:22RX24838
+PRJEB76311	SAMEA115709906	collection_date		2021-03-10 00:00:00	per_sample	mmc1.xlsx:22RX24843
+PRJEB76311	SAMEA115709906	isolation_source		Pus	per_sample	mmc1.xlsx:22RX24843
+PRJEB76311	SAMEA115709906	host		Dog	per_sample	mmc1.xlsx:22RX24843
+PRJEB76496	SAMEA115720004	collection_date		2021-09-28 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb001
+PRJEB76496	SAMEA115720004	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb001
+PRJEB76496	SAMEA115720005	collection_date		2021-12-06 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb002
+PRJEB76496	SAMEA115720005	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb002
+PRJEB76496	SAMEA115720006	collection_date		2021-10-12 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb003
+PRJEB76496	SAMEA115720006	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb003
+PRJEB76496	SAMEA115720007	collection_date		2021-09-01 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb004
+PRJEB76496	SAMEA115720007	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb004
+PRJEB76496	SAMEA115720008	collection_date		2021-12-21 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb005
+PRJEB76496	SAMEA115720008	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb005
+PRJEB76496	SAMEA115720009	collection_date		2022-02-04 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb006
+PRJEB76496	SAMEA115720009	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb006
+PRJEB76496	SAMEA115720010	collection_date		2022-01-27 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb007
+PRJEB76496	SAMEA115720010	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb007
+PRJEB76496	SAMEA115720011	collection_date		2022-03-04 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb008
+PRJEB76496	SAMEA115720011	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb008
+PRJEB76496	SAMEA115720012	collection_date		2022-02-14 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb009
+PRJEB76496	SAMEA115720012	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb009
+PRJEB76496	SAMEA115720013	collection_date		2022-03-10 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb010
+PRJEB76496	SAMEA115720013	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb010
+PRJEB76496	SAMEA115720014	collection_date		2022-02-22 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb011
+PRJEB76496	SAMEA115720014	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb011
+PRJEB76496	SAMEA115720015	collection_date		2022-01-28 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb012
+PRJEB76496	SAMEA115720015	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb012
+PRJEB76496	SAMEA115720016	collection_date		2022-01-28 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb013
+PRJEB76496	SAMEA115720016	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb013
+PRJEB76496	SAMEA115720017	collection_date		2022-03-02 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb014
+PRJEB76496	SAMEA115720017	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb014
+PRJEB76496	SAMEA115720018	collection_date		2022-03-29 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb015
+PRJEB76496	SAMEA115720018	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb015
+PRJEB76496	SAMEA115720019	collection_date		2022-04-02 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb016
+PRJEB76496	SAMEA115720019	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb016
+PRJEB76496	SAMEA115720020	collection_date		2022-03-14 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb017
+PRJEB76496	SAMEA115720020	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb017
+PRJEB76496	SAMEA115720021	collection_date		2022-03-01 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb018
+PRJEB76496	SAMEA115720021	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb018
+PRJEB76496	SAMEA115720022	collection_date		2022-03-10 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb019
+PRJEB76496	SAMEA115720022	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb019
+PRJEB76496	SAMEA115720023	collection_date		2022-03-01 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb020
+PRJEB76496	SAMEA115720023	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb020
+PRJEB76496	SAMEA115720024	collection_date		2022-04-05 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb021
+PRJEB76496	SAMEA115720024	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb021
+PRJEB76496	SAMEA115720025	collection_date		2022-03-22 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb022
+PRJEB76496	SAMEA115720025	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb022
+PRJEB76496	SAMEA115720026	collection_date		2022-04-11 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb023
+PRJEB76496	SAMEA115720026	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb023
+PRJEB76496	SAMEA115720027	collection_date		2022-04-11 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb024
+PRJEB76496	SAMEA115720027	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb024
+PRJEB76496	SAMEA115720028	collection_date		2022-04-19 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb025
+PRJEB76496	SAMEA115720028	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb025
+PRJEB76496	SAMEA115720029	collection_date		2022-02-21 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb026
+PRJEB76496	SAMEA115720029	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb026
+PRJEB76496	SAMEA115720030	collection_date		2022-04-26 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb027
+PRJEB76496	SAMEA115720030	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb027
+PRJEB76496	SAMEA115720031	collection_date		2022-04-09 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb028
+PRJEB76496	SAMEA115720031	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb028
+PRJEB76496	SAMEA115720032	collection_date		2022-04-16 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb029
+PRJEB76496	SAMEA115720032	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb029
+PRJEB76496	SAMEA115720033	collection_date		2022-04-22 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb030
+PRJEB76496	SAMEA115720033	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb030
+PRJEB76496	SAMEA115720034	collection_date		2022-03-01 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb031
+PRJEB76496	SAMEA115720034	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb031
+PRJEB76496	SAMEA115720035	collection_date		2022-04-11 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb032
+PRJEB76496	SAMEA115720035	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb032
+PRJEB76496	SAMEA115720036	collection_date		2022-05-06 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb033
+PRJEB76496	SAMEA115720036	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb033
+PRJEB76496	SAMEA115720037	collection_date		2022-04-11 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb034
+PRJEB76496	SAMEA115720037	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb034
+PRJEB76496	SAMEA115720038	collection_date		2020-08-24 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb035
+PRJEB76496	SAMEA115720038	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb035
+PRJEB76496	SAMEA115720039	collection_date		2021-06-28 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb036
+PRJEB76496	SAMEA115720039	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb036
+PRJEB76496	SAMEA115720040	collection_date		2021-09-23 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb037
+PRJEB76496	SAMEA115720040	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb037
+PRJEB76496	SAMEA115720041	collection_date		2021-04-13 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb038
+PRJEB76496	SAMEA115720041	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb038
+PRJEB76496	SAMEA115720042	collection_date		2021-10-04 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb039
+PRJEB76496	SAMEA115720042	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb039
+PRJEB76496	SAMEA115720043	collection_date		2022-05-03 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb041
+PRJEB76496	SAMEA115720043	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb041
+PRJEB76496	SAMEA115720044	collection_date		2022-05-03 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb042
+PRJEB76496	SAMEA115720044	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb042
+PRJEB76496	SAMEA115720045	collection_date		2022-05-02 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb043
+PRJEB76496	SAMEA115720045	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb043
+PRJEB76496	SAMEA115720046	collection_date		2022-05-12 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb044
+PRJEB76496	SAMEA115720046	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb044
+PRJEB76496	SAMEA115720047	collection_date		2022-03-23 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb045
+PRJEB76496	SAMEA115720047	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb045
+PRJEB76496	SAMEA115720048	collection_date		2022-05-06 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb046
+PRJEB76496	SAMEA115720048	isolation_source		clinical sample	per_sample	msystems.01128-24-s0008.xlsx:Zagreb046
+PRJEB76496	SAMEA115720049	collection_date		2022-01-28 00:00:00	per_sample	msystems.01128-24-s0008.xlsx:Zagreb047
+PRJEB76496	SAMEA115720049	isolation_source		surveillance swab	per_sample	msystems.01128-24-s0008.xlsx:Zagreb047
+PRJEB8766	SAMEA3304003	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972062
+PRJEB8766	SAMEA3304008	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972067
+PRJEB8766	SAMEA3304009	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972068
+PRJEB8766	SAMEA3304010	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972069
+PRJEB8766	SAMEA3303993	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972052
+PRJEB8766	SAMEA3304011	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972070
+PRJEB8766	SAMEA3304013	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972072
+PRJEB8766	SAMEA3304016	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972075
+PRJEB8766	SAMEA3304019	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972078
+PRJEB8766	SAMEA3304020	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972079
+PRJEB8766	SAMEA3304021	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972080
+PRJEB8766	SAMEA3303995	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972054
+PRJEB8766	SAMEA3303997	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR972056
+PRJEB8766	SAMEA3531564	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216256
+PRJEB8766	SAMEA3531565	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216257
+PRJEB8766	SAMEA3531566	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216258
+PRJEB8766	SAMEA3531567	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216259
+PRJEB8766	SAMEA3531570	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216262
+PRJEB8766	SAMEA3531572	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216264
+PRJEB8766	SAMEA3531573	isolation_source		Hospital Sewage	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216265
+PRJEB8766	SAMEA3531574	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216266
+PRJEB8766	SAMEA3531575	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216267
+PRJEB8766	SAMEA3531576	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216268
+PRJEB8766	SAMEA3531577	isolation_source		Municipal Wastewater	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216269
+PRJNA1114318	SAMN41500080	collection_date		2022	per_sample	mmc2.xlsx:SRR29152545
+PRJNA1114318	SAMN41500081	collection_date		2022	per_sample	mmc2.xlsx:SRR29152336
+PRJNA1114318	SAMN41500109	collection_date		2022	per_sample	mmc2.xlsx:SRR29152334
+PRJNA1114318	SAMN41499860	collection_date		2022	per_sample	mmc2.xlsx:SRR29152333
+PRJNA1114318	SAMN41500082	collection_date		2022	per_sample	mmc2.xlsx:SRR29152332
+PRJNA1114318	SAMN41500083	collection_date		2022	per_sample	mmc2.xlsx:SRR29152330
+PRJNA1114318	SAMN41500110	collection_date		2022	per_sample	mmc2.xlsx:SRR29152328
+PRJNA1114318	SAMN41500084	collection_date		2022	per_sample	mmc2.xlsx:SRR29152327
+PRJNA1114318	SAMN41500098	collection_date		2023	per_sample	mmc2.xlsx:SRR29152537
+PRJNA1114318	SAMN41500096	collection_date		2023	per_sample	mmc2.xlsx:SRR29152547
+PRJNA1114318	SAMN41500102	collection_date		2023	per_sample	mmc2.xlsx:SRR29152518
+PRJNA1114318	SAMN41500097	collection_date		2023	per_sample	mmc2.xlsx:SRR29152538
+PRJNA1114318	SAMN41500101	collection_date		2023	per_sample	mmc2.xlsx:SRR29152520
+PRJNA1114318	SAMN41500099	collection_date		2023	per_sample	mmc2.xlsx:SRR29152536
+PRJNA1114318	SAMN41500106	collection_date		2023	per_sample	mmc2.xlsx:SRR29152513
+PRJNA1114318	SAMN41500100	collection_date		2023	per_sample	mmc2.xlsx:SRR29152524
+PRJNA1114318	SAMN41500108	collection_date		2023	per_sample	mmc2.xlsx:SRR29152339
+PRJNA1114318	SAMN41500104	collection_date		2023	per_sample	mmc2.xlsx:SRR29152516
+PRJNA1114318	SAMN41500105	collection_date		2023	per_sample	mmc2.xlsx:SRR29152515
+PRJNA1114318	SAMN41500103	collection_date		2023	per_sample	mmc2.xlsx:SRR29152517
+PRJNA1114318	SAMN41500112	collection_date		2023	per_sample	mmc2.xlsx:SRR29152340
+PRJNA1114318	SAMN41500107	collection_date		2023	per_sample	mmc2.xlsx:SRR29152510
+PRJNA1114318	SAMN41500085	collection_date		2022	per_sample	mmc2.xlsx:SRR29152320
+PRJNA1114318	SAMN41500086	collection_date		2022	per_sample	mmc2.xlsx:SRR29152319
+PRJNA1114318	SAMN41500087	collection_date		2022	per_sample	mmc2.xlsx:SRR29152317
+PRJNA1114318	SAMN41500088	collection_date		2022	per_sample	mmc2.xlsx:SRR29152316
+PRJNA1114318	SAMN41500089	collection_date		2022	per_sample	mmc2.xlsx:SRR29152386
+PRJNA1114318	SAMN41500090	collection_date		2022	per_sample	mmc2.xlsx:SRR29152385
+PRJNA1114318	SAMN41500091	collection_date		2023	per_sample	mmc2.xlsx:SRR29152303
+PRJNA1114318	SAMN41500092	collection_date		2023	per_sample	mmc2.xlsx:SRR29152301
+PRJNA1114318	SAMN41500111	collection_date		2023	per_sample	mmc2.xlsx:SRR29152297
+PRJNA1114318	SAMN41500093	collection_date		2023	per_sample	mmc2.xlsx:SRR29152293
+PRJNA1114318	SAMN41500094	collection_date		2023	per_sample	mmc2.xlsx:SRR29152292
+PRJNA1114318	SAMN41500095	collection_date		2023	per_sample	mmc2.xlsx:SRR29152507
+PRJNA1122997	SAMN41796989	collection_date		2014-11-04 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C000108
+PRJNA1122997	SAMN41796989	isolation_source		Wound fluid	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C000108
+PRJNA1122997	SAMN41796952	collection_date		2013-06-23 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C008131
+PRJNA1122997	SAMN41796952	isolation_source		Unknown	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C008131
+PRJNA1122997	SAMN41796958	collection_date		2013-10-31 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C008553
+PRJNA1122997	SAMN41796958	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C008553
+PRJNA1122997	SAMN41796993	collection_date		2014-12-11 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C009719
+PRJNA1122997	SAMN41796993	isolation_source		Faeces	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C009719
+PRJNA1122997	SAMN41797025	collection_date		2016-03-22 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C011335
+PRJNA1122997	SAMN41797025	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C011335
+PRJNA1122997	SAMN41797027	collection_date		2016-04-19 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C011425
+PRJNA1122997	SAMN41797027	isolation_source		Urine	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C011425
+PRJNA1122997	SAMN41797041	collection_date		2016-10-28 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C012155
+PRJNA1122997	SAMN41797041	isolation_source		Faeces	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C012155
+PRJNA1122997	SAMN41797042	collection_date		2016-10-26 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C012228
+PRJNA1122997	SAMN41797042	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C012228
+PRJNA1122997	SAMN41797130	collection_date		2018-12-27 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C017939
+PRJNA1122997	SAMN41797130	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C017939
+PRJNA1122997	SAMN41797136	collection_date		2019-04-11 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C018734
+PRJNA1122997	SAMN41797136	isolation_source		Abdominal wound smear	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C018734
+PRJNA1122997	SAMN41797138	collection_date		2019-03-18 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C018926
+PRJNA1122997	SAMN41797138	isolation_source		Urine	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C018926
+PRJNA1122997	SAMN41797142	collection_date		2019-05-09 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C019088
+PRJNA1122997	SAMN41797142	isolation_source		Urine	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C019088
+PRJNA1122997	SAMN41797156	collection_date		2019-09-20 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C019597
+PRJNA1122997	SAMN41797156	isolation_source		Wound fluid	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C019597
+PRJNA1122997	SAMN41797167	collection_date		2019-11-25 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C028933
+PRJNA1122997	SAMN41797167	isolation_source		Throat and/or nasal and/or perineum swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C028933
+PRJNA1122997	SAMN41797181	collection_date		2020-04-23 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C034180
+PRJNA1122997	SAMN41797181	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C034180
+PRJNA1122997	SAMN41797184	collection_date		2020-05-11 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C035426
+PRJNA1122997	SAMN41797184	isolation_source		Sputum	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C035426
+PRJNA1122997	SAMN41797198	collection_date		2020-11-12 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C037836
+PRJNA1122997	SAMN41797198	isolation_source		Blood	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C037836
+PRJNA1122997	SAMN41797210	collection_date		2021-01-25 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C038032
+PRJNA1122997	SAMN41797210	isolation_source		Pus	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C038032
+PRJNA1122997	SAMN41797222	collection_date		2021-07-27 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C040643
+PRJNA1122997	SAMN41797222	isolation_source		Throat swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C040643
+PRJNA1122997	SAMN41797236	collection_date		2021-10-11 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C041579
+PRJNA1122997	SAMN41797236	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C041579
+PRJNA1122997	SAMN41797258	collection_date		2022-02-27 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C043921
+PRJNA1122997	SAMN41797258	isolation_source		Wound fluid	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C043921
+PRJNA1122997	SAMN41797265	collection_date		2022-05-23 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C044848
+PRJNA1122997	SAMN41797265	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C044848
+PRJNA1122997	SAMN41797280	collection_date		2022-08-02 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C046884
+PRJNA1122997	SAMN41797280	isolation_source		Urine from catheter use	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C046884
+PRJNA1122997	SAMN41797286	collection_date		2022-08-24 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C048067
+PRJNA1122997	SAMN41797286	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C048067
+PRJNA1122997	SAMN41797294	collection_date		2022-11-16 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C049233
+PRJNA1122997	SAMN41797294	isolation_source		Urine	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C049233
+PRJNA1122997	SAMN41797323	collection_date		2023-07-17 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060530
+PRJNA1122997	SAMN41797323	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060530
+PRJNA1122997	SAMN41797324	collection_date		2023-09-14 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060534
+PRJNA1122997	SAMN41797324	isolation_source		Rectal swab	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060534
+PRJNA1122997	SAMN41797325	collection_date		2023-09-20 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060557
+PRJNA1122997	SAMN41797325	isolation_source		Urine from catheter use	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C060557
+PRJNA1122997	SAMN41797330	collection_date		2023-11-02 00:00:00	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C065359
+PRJNA1122997	SAMN41797330	isolation_source		Urine	per_sample	12866_2026_4741_MOESM1_ESM.xlsx:RIVM_C065359
+PRJNA449293	SAMN08895676	collection_date		2013	per_sample	Data_Sheet_1.xlsx:1707099
+PRJNA449293	SAMN08895676	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707099
+PRJNA449293	SAMN08895677	collection_date		2014	per_sample	Data_Sheet_1.xlsx:1707100
+PRJNA449293	SAMN08895677	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707100
+PRJNA449293	SAMN08895678	collection_date		2014	per_sample	Data_Sheet_1.xlsx:1707101
+PRJNA449293	SAMN08895678	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707101
+PRJNA449293	SAMN08895679	collection_date		2014	per_sample	Data_Sheet_1.xlsx:1707102
+PRJNA449293	SAMN08895679	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707102
+PRJNA449293	SAMN08895680	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707103
+PRJNA449293	SAMN08895680	isolation_source		SS	per_sample	Data_Sheet_1.xlsx:1707103
+PRJNA449293	SAMN08895681	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707104
+PRJNA449293	SAMN08895681	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707104
+PRJNA449293	SAMN08895682	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707105
+PRJNA449293	SAMN08895682	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707105
+PRJNA449293	SAMN08895683	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707106
+PRJNA449293	SAMN08895683	isolation_source		SS	per_sample	Data_Sheet_1.xlsx:1707106
+PRJNA449293	SAMN08895684	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707107
+PRJNA449293	SAMN08895684	isolation_source		SS	per_sample	Data_Sheet_1.xlsx:1707107
+PRJNA449293	SAMN08895685	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707108
+PRJNA449293	SAMN08895685	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707108
+PRJNA449293	SAMN08895686	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707109
+PRJNA449293	SAMN08895686	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707109
+PRJNA449293	SAMN08895687	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707110
+PRJNA449293	SAMN08895687	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707110
+PRJNA449293	SAMN08895688	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707111
+PRJNA449293	SAMN08895688	isolation_source		BA	per_sample	Data_Sheet_1.xlsx:1707111
+PRJNA449293	SAMN08895689	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707112
+PRJNA449293	SAMN08895689	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707112
+PRJNA449293	SAMN08895690	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707113
+PRJNA449293	SAMN08895690	isolation_source		SS	per_sample	Data_Sheet_1.xlsx:1707113
+PRJNA449293	SAMN08895691	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707114
+PRJNA449293	SAMN08895691	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707114
+PRJNA449293	SAMN08895692	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707116
+PRJNA449293	SAMN08895692	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707116
+PRJNA449293	SAMN08895693	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707117
+PRJNA449293	SAMN08895693	isolation_source		BS/CVC	per_sample	Data_Sheet_1.xlsx:1707117
+PRJNA449293	SAMN08895694	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707118
+PRJNA449293	SAMN08895694	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707118
+PRJNA449293	SAMN08895695	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707119
+PRJNA449293	SAMN08895695	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707119
+PRJNA449293	SAMN08895696	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707120
+PRJNA449293	SAMN08895696	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707120
+PRJNA449293	SAMN08895697	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707121
+PRJNA449293	SAMN08895697	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707121
+PRJNA449293	SAMN08895698	collection_date		2015	per_sample	Data_Sheet_1.xlsx:1707122
+PRJNA449293	SAMN08895698	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707122
+PRJNA449293	SAMN08895699	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707123
+PRJNA449293	SAMN08895699	isolation_source		BA	per_sample	Data_Sheet_1.xlsx:1707123
+PRJNA449293	SAMN08895700	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707124
+PRJNA449293	SAMN08895700	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707124
+PRJNA449293	SAMN08895701	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707125
+PRJNA449293	SAMN08895701	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707125
+PRJNA449293	SAMN08895702	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707126
+PRJNA449293	SAMN08895702	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707126
+PRJNA449293	SAMN08895703	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707127
+PRJNA449293	SAMN08895703	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707127
+PRJNA449293	SAMN08895704	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707128
+PRJNA449293	SAMN08895704	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707128
+PRJNA449293	SAMN08895705	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707129
+PRJNA449293	SAMN08895705	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707129
+PRJNA449293	SAMN08895706	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707130
+PRJNA449293	SAMN08895706	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707130
+PRJNA449293	SAMN08895707	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707131
+PRJNA449293	SAMN08895707	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707131
+PRJNA449293	SAMN08895708	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707132
+PRJNA449293	SAMN08895708	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707132
+PRJNA449293	SAMN08895709	collection_date		2016	per_sample	Data_Sheet_1.xlsx:1707133
+PRJNA449293	SAMN08895709	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707133
+PRJNA449293	SAMN08895710	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707134
+PRJNA449293	SAMN08895710	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707134
+PRJNA449293	SAMN08895711	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707135
+PRJNA449293	SAMN08895711	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707135
+PRJNA449293	SAMN08895712	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707136
+PRJNA449293	SAMN08895712	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707136
+PRJNA449293	SAMN08895713	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707137
+PRJNA449293	SAMN08895713	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707137
+PRJNA449293	SAMN08895714	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707138
+PRJNA449293	SAMN08895714	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707138
+PRJNA449293	SAMN08895715	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707139
+PRJNA449293	SAMN08895715	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707139
+PRJNA449293	SAMN08895716	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707140
+PRJNA449293	SAMN08895716	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707140
+PRJNA449293	SAMN08895717	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707142
+PRJNA449293	SAMN08895717	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707142
+PRJNA449293	SAMN08895718	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707143
+PRJNA449293	SAMN08895718	isolation_source		WS	per_sample	Data_Sheet_1.xlsx:1707143
+PRJNA449293	SAMN08895719	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707144
+PRJNA449293	SAMN08895719	isolation_source		BS	per_sample	Data_Sheet_1.xlsx:1707144
+PRJNA449293	SAMN08895720	collection_date		2017	per_sample	Data_Sheet_1.xlsx:1707145
+PRJNA449293	SAMN08895720	isolation_source		UR	per_sample	Data_Sheet_1.xlsx:1707145
+PRJNA497126	SAMN10249193	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KO_365
+PRJNA497126	SAMN10249123	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_008
+PRJNA497126	SAMN10249050	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_017
+PRJNA497126	SAMN10249153	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_030
+PRJNA497126	SAMN10249092	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_040
+PRJNA497126	SAMN10249025	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_044
+PRJNA497126	SAMN10249207	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_046
+PRJNA497126	SAMN10248966	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_063
+PRJNA497126	SAMN10249156	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_084
+PRJNA497126	SAMN10249108	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_089
+PRJNA497126	SAMN10249081	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_093
+PRJNA497126	SAMN10248951	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_109
+PRJNA497126	SAMN10249225	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_116
+PRJNA497126	SAMN10249080	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_121
+PRJNA497126	SAMN10248999	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_123
+PRJNA497126	SAMN10249170	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_135
+PRJNA497126	SAMN10248935	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_136
+PRJNA497126	SAMN10249138	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_144
+PRJNA497126	SAMN10249056	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_158
+PRJNA497126	SAMN10249009	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_160
+PRJNA497126	SAMN10248952	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_184
+PRJNA497126	SAMN10249007	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_195
+PRJNA497126	SAMN10249000	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_208
+PRJNA497126	SAMN10249172	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_215
+PRJNA497126	SAMN10249030	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_241
+PRJNA497126	SAMN10249146	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_280
+PRJNA497126	SAMN10249119	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_301
+PRJNA497126	SAMN10249090	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_307
+PRJNA497126	SAMN10249038	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_310
+PRJNA497126	SAMN10248982	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_317
+PRJNA497126	SAMN10249141	isolation_source		nursing call button	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_320
+PRJNA497126	SAMN10249192	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_328
+PRJNA497126	SAMN10249165	isolation_source		washroom sink	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_343
+PRJNA497126	SAMN10248967	isolation_source		alcohol foam dispenser	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_346
+PRJNA497126	SAMN10249082	isolation_source		bedside rail	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KQ_146
+PRJNA497126	SAMN10249009	isolation_source		bedside light switch	per_sample	41467_2019_12563_MOESM4_ESM.xlsx:KP_160
+PRJNA575579	SAMN12886343	isolation_source		bile	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223899
+PRJNA575579	SAMN12886344	isolation_source		pus	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223898
+PRJNA575579	SAMN12886345	isolation_source		pus	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223887
+PRJNA575579	SAMN12886346	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223876
+PRJNA575579	SAMN12886347	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223865
+PRJNA575579	SAMN12886348	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223855
+PRJNA575579	SAMN12886349	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223854
+PRJNA575579	SAMN12886350	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223853
+PRJNA575579	SAMN12886351	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223852
+PRJNA575579	SAMN12886352	isolation_source		BALF	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223851
+PRJNA575579	SAMN12886353	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223897
+PRJNA575579	SAMN12886354	isolation_source		wound	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223896
+PRJNA575579	SAMN12886355	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223895
+PRJNA575579	SAMN12886356	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223894
+PRJNA575579	SAMN12886357	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223893
+PRJNA575579	SAMN12886358	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223892
+PRJNA575579	SAMN12886359	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223891
+PRJNA575579	SAMN12886360	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223890
+PRJNA575579	SAMN12886361	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223889
+PRJNA575579	SAMN12886362	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223888
+PRJNA575579	SAMN12886363	isolation_source		bile	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223886
+PRJNA575579	SAMN12886364	isolation_source		pus	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223885
+PRJNA575579	SAMN12886365	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223884
+PRJNA575579	SAMN12886366	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223883
+PRJNA575579	SAMN12886367	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223882
+PRJNA575579	SAMN12886368	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223881
+PRJNA575579	SAMN12886369	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223880
+PRJNA575579	SAMN12886370	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223879
+PRJNA575579	SAMN12886371	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223878
+PRJNA575579	SAMN12886372	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223877
+PRJNA575579	SAMN12886373	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223875
+PRJNA575579	SAMN12886374	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223874
+PRJNA575579	SAMN12886375	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223873
+PRJNA575579	SAMN12886376	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223872
+PRJNA575579	SAMN12886377	isolation_source		bile	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223871
+PRJNA575579	SAMN12886378	isolation_source		bile	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223870
+PRJNA575579	SAMN12886379	isolation_source		bile	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223869
+PRJNA575579	SAMN12886380	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223868
+PRJNA575579	SAMN12886381	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223867
+PRJNA575579	SAMN12886382	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223866
+PRJNA575579	SAMN12886383	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223864
+PRJNA575579	SAMN12886384	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223863
+PRJNA575579	SAMN12886385	isolation_source		urine	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223862
+PRJNA575579	SAMN12886386	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223861
+PRJNA575579	SAMN12886387	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223860
+PRJNA575579	SAMN12886388	isolation_source		pus	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223859
+PRJNA575579	SAMN12886389	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223858
+PRJNA575579	SAMN12886390	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223857
+PRJNA575579	SAMN12886391	isolation_source		sputum	per_sample	KVIR_A_1809322_SM9175.xlsx:SRR10223856
+PRJNA741123	SAMN19855423	isolation_source		InRoom_Sink_drain	per_sample	43856_2022_124_MOESM2_ESM.xlsx:7822-44-C2
+PRJNA741123	SAMN19855439	isolation_source		Bathroom_Sink_drain	per_sample	43856_2022_124_MOESM2_ESM.xlsx:7824-22-E4
+PRJNA741123	SAMN19855089	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK8-015
+PRJNA741123	SAMN19855088	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK8-014
+PRJNA741123	SAMN19855112	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK37-036
+PRJNA741123	SAMN19855083	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK0-009
+PRJNA741123	SAMN19855160	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK7-066
+PRJNA741123	SAMN19855087	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK7-013
+PRJNA741123	SAMN19855090	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK8-016
+PRJNA741123	SAMN19855092	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK8-018
+PRJNA741123	SAMN19855094	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK11-020
+PRJNA741123	SAMN19855095	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK14-021
+PRJNA741123	SAMN19855097	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK23-023
+PRJNA741123	SAMN19855108	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK34-033
+PRJNA741123	SAMN19855110	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK37-034
+PRJNA741123	SAMN19855111	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK37-035
+PRJNA741123	SAMN19855115	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK38-0782
+PRJNA741123	SAMN19855117	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK42-039
+PRJNA741123	SAMN19855118	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK45-040
+PRJNA741123	SAMN19855119	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK45-041
+PRJNA741123	SAMN19855124	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK51-044
+PRJNA741123	SAMN19855142	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK57-054
+PRJNA741123	SAMN19855143	isolation_source		Blood	per_sample	43856_2022_124_MOESM2_ESM.xlsx:Blood-WK58-055
+PRJNA741123	SAMN19855542	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:NewBuildingStools-30-ST1Org2
+PRJNA741123	SAMN19855552	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:NewBuildingStools-51-ST2Org1
+PRJNA741123	SAMN19855546	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:NewBuildingStools-44-ST3Org1
+PRJNA741123	SAMN19855585	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:WK14-ST3-3
+PRJNA741123	SAMN19855562	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:OldBuildingStools-01-ST4Org2
+PRJNA741123	SAMN19855538	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:NewBuildingStools-22-ST4Org2
+PRJNA741123	SAMN19855564	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:OldBuildingStools-01-ST4Org4
+PRJNA741123	SAMN19855565	isolation_source		Stool	per_sample	43856_2022_124_MOESM2_ESM.xlsx:OldBuildingStools-01-ST4Org6
+PRJNA744003	SAMN20064863	country		Australia	per_sample	21-1265-Techapp-s1.pdf:N1130
+PRJNA744003	SAMN20064867	country		UAE	per_sample	21-1265-Techapp-s1.pdf:N1154
+PRJNA744003	SAMN20064868	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1159
+PRJNA744003	SAMN20064869	country		Czechia	per_sample	21-1265-Techapp-s1.pdf:N1184
+PRJNA744003	SAMN20064870	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1202
+PRJNA744003	SAMN20064871	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1232
+PRJNA744003	SAMN20064876	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1259
+PRJNA744003	SAMN20064878	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1381
+PRJNA744003	SAMN20064882	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1418
+PRJNA744003	SAMN20064949	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1436
+PRJNA744003	SAMN20064884	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1437
+PRJNA744003	SAMN20064887	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1448
+PRJNA744003	SAMN20064894	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1498
+PRJNA744003	SAMN20064938	country		USA	per_sample	21-1265-Techapp-s1.pdf:N1605
+PRJNA744003	SAMN20064900	country		USA	per_sample	21-1265-Techapp-s1.pdf:N1626
+PRJNA744003	SAMN20064904	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1672
+PRJNA744003	SAMN20064947	country		USA	per_sample	21-1265-Techapp-s1.pdf:N1683
+PRJNA744003	SAMN20064940	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1692
+PRJNA744003	SAMN20064941	country		China	per_sample	21-1265-Techapp-s1.pdf:N1694
+PRJNA744003	SAMN20064942	country		Australia	per_sample	21-1265-Techapp-s1.pdf:N1696
+PRJNA744003	SAMN20064944	country		Myanmar	per_sample	21-1265-Techapp-s1.pdf:N1712
+PRJNA744003	SAMN20064936	country		ND	per_sample	21-1265-Techapp-s1.pdf:N1723
+PRJNA768294	SAMN22024779	country		Senegal	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024779
+PRJNA768294	SAMN22024779	collection_date		2016	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024779
+PRJNA768294	SAMN22024779	isolation_source		Feces	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024779
+PRJNA768294	SAMN22024779	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024779
+PRJNA768294	SAMN22024780	country		Martinique	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024780
+PRJNA768294	SAMN22024780	collection_date		2003	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024780
+PRJNA768294	SAMN22024780	isolation_source		Anal abscess	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024780
+PRJNA768294	SAMN22024780	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024780
+PRJNA768294	SAMN22024781	country		France	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024781
+PRJNA768294	SAMN22024781	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024781
+PRJNA768294	SAMN22024781	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024781
+PRJNA768294	SAMN22024781	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024781
+PRJNA768294	SAMN22024782	country		France	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024782
+PRJNA768294	SAMN22024782	collection_date		2011	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024782
+PRJNA768294	SAMN22024782	isolation_source		Liver abscess	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024782
+PRJNA768294	SAMN22024782	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024782
+PRJNA768294	SAMN22024789	country		France	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024789
+PRJNA768294	SAMN22024789	collection_date		2008	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024789
+PRJNA768294	SAMN22024789	isolation_source		Blood/pneumoniae	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024789
+PRJNA768294	SAMN22024789	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024789
+PRJNA768294	SAMN22024790	country		France	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024790
+PRJNA768294	SAMN22024790	collection_date		2008	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024790
+PRJNA768294	SAMN22024790	isolation_source		Liver abscess	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024790
+PRJNA768294	SAMN22024790	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024790
+PRJNA768294	SAMN22024791	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024791
+PRJNA768294	SAMN22024791	collection_date		2002	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024791
+PRJNA768294	SAMN22024791	isolation_source		Feces	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024791
+PRJNA768294	SAMN22024791	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024791
+PRJNA768294	SAMN22024792	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024792
+PRJNA768294	SAMN22024792	collection_date		2002	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024792
+PRJNA768294	SAMN22024792	isolation_source		Feces	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024792
+PRJNA768294	SAMN22024792	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024792
+PRJNA768294	SAMN22024793	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024793
+PRJNA768294	SAMN22024793	collection_date		2002	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024793
+PRJNA768294	SAMN22024793	isolation_source		Feces	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024793
+PRJNA768294	SAMN22024793	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024793
+PRJNA768294	SAMN22024794	country		Curacao	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024794
+PRJNA768294	SAMN22024794	collection_date		2002	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024794
+PRJNA768294	SAMN22024794	isolation_source		Urinary tract	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024794
+PRJNA768294	SAMN22024794	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024794
+PRJNA768294	SAMN22024795	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024795
+PRJNA768294	SAMN22024795	collection_date		2000	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024795
+PRJNA768294	SAMN22024795	host		Water	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024795
+PRJNA768294	SAMN22024796	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024796
+PRJNA768294	SAMN22024796	collection_date		2000	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024796
+PRJNA768294	SAMN22024796	host		Water	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024796
+PRJNA768294	SAMN22024797	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024797
+PRJNA768294	SAMN22024797	collection_date		2000	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024797
+PRJNA768294	SAMN22024797	host		Water	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024797
+PRJNA768294	SAMN22024798	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024798
+PRJNA768294	SAMN22024798	collection_date		2000	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024798
+PRJNA768294	SAMN22024798	host		Water	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024798
+PRJNA768294	SAMN22024799	country		France	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024799
+PRJNA768294	SAMN22024799	collection_date		2010	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024799
+PRJNA768294	SAMN22024799	isolation_source		Liver abscess	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024799
+PRJNA768294	SAMN22024799	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024799
+PRJNA768294	SAMN22024800	country		Austria	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024800
+PRJNA768294	SAMN22024800	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024800
+PRJNA768294	SAMN22024800	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024800
+PRJNA768294	SAMN22024800	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024800
+PRJNA768294	SAMN22024801	country		Spain	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024801
+PRJNA768294	SAMN22024801	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024801
+PRJNA768294	SAMN22024801	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024801
+PRJNA768294	SAMN22024801	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024801
+PRJNA768294	SAMN22024802	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024802
+PRJNA768294	SAMN22024802	collection_date		2002	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024802
+PRJNA768294	SAMN22024802	host		Water (environment)	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024802
+PRJNA768294	SAMN22024803	country		unknown	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024803
+PRJNA768294	SAMN22024803	collection_date		unknown	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024803
+PRJNA768294	SAMN22024803	host		Environment	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024803
+PRJNA768294	SAMN22024804	country		Germany	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024804
+PRJNA768294	SAMN22024804	collection_date		1990	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024804
+PRJNA768294	SAMN22024804	host		Environment	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024804
+PRJNA768294	SAMN22024805	country		Germany	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024805
+PRJNA768294	SAMN22024805	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024805
+PRJNA768294	SAMN22024805	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024805
+PRJNA768294	SAMN22024805	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024805
+PRJNA768294	SAMN22024806	country		Greece	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024806
+PRJNA768294	SAMN22024806	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024806
+PRJNA768294	SAMN22024806	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024806
+PRJNA768294	SAMN22024806	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024806
+PRJNA768294	SAMN22024807	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024807
+PRJNA768294	SAMN22024807	collection_date		1998	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024807
+PRJNA768294	SAMN22024807	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024807
+PRJNA768294	SAMN22024807	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024807
+PRJNA768294	SAMN22024808	country		China	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024808
+PRJNA768294	SAMN22024808	collection_date		2010	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024808
+PRJNA768294	SAMN22024808	host		Soil (polluted)	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024808
+PRJNA768294	SAMN22024809	country		Netherlands	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024809
+PRJNA768294	SAMN22024809	collection_date		2000	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024809
+PRJNA768294	SAMN22024809	host		Water (environment)	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024809
+PRJNA768294	SAMN22024810	country		Germany	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024810
+PRJNA768294	SAMN22024810	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024810
+PRJNA768294	SAMN22024810	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024810
+PRJNA768294	SAMN22024810	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024810
+PRJNA768294	SAMN22024811	country		unknown	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024811
+PRJNA768294	SAMN22024811	collection_date		unknown	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024811
+PRJNA768294	SAMN22024811	host		Environment	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024811
+PRJNA768294	SAMN22024812	country		Austria	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024812
+PRJNA768294	SAMN22024812	collection_date		1997	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024812
+PRJNA768294	SAMN22024812	isolation_source		Blood	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024812
+PRJNA768294	SAMN22024812	host		Human	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024812
+PRJNA768294	SAMN22024815	country		Mexico	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024815
+PRJNA768294	SAMN22024815	collection_date		unknown	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024815
+PRJNA768294	SAMN22024815	isolation_source		Root	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024815
+PRJNA768294	SAMN22024815	host		Banana	per_sample	supp_gr.276289.121_Supplemental_Table_S1.xlsx:SAMN22024815

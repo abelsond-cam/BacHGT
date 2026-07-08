@@ -1,0 +1,94 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJDB11603	PMC10327500	mgen-9-1043-s002.xlsx	abstained	0	0	medium	all mapped fields failed the value check: ['isolation_source']
+PRJDB14712	PMC10715227		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.02188-23-s0001.pdf']
+PRJDB17160			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJDB5126	PMC6395922		abstained	0	0	none	no joinable table
+PRJDB5317			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJDB6565			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJDB8975	PMC9431462		abstained	0	0	none	no joinable table
+PRJDB9036			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB14100	PMC10234813		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41564_2023_1385_MOESM6_ESM.xlsx', '41564_2023_1385_MOESM11_ESM.xlsx', '41564_2023_1385_MOESM3_ESM.xlsx', '41564_2023_1385_MOESM3_ESM.xlsx', '41564_2023_1385_MOESM3_ESM.xlsx', '41564_2023_1385_MOESM5_ESM.xlsx', '41564_2023_1385_MOESM5_ESM.xlsx', '41564_2023_1385_MOESM5_ESM.xlsx', '41564_2023_1385_MOESM5_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM8_ESM.xlsx', '41564_2023_1385_MOESM7_ESM.xlsx', '41564_2023_1385_MOESM7_ESM.xlsx', '41564_2023_1385_MOESM4_ESM.xlsx', '41564_2023_1385_MOESM4_ESM.xlsx', '41564_2023_1385_MOESM9_ESM.xlsx', '41564_2023_1385_MOESM9_ESM.xlsx', '41564_2023_1385_MOESM10_ESM.xlsx']
+PRJEB14854	PMC13148723		abstained	0	0	none	no joinable table
+PRJEB19808			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB20875	PMC6171784		abstained	0	0	none	no joinable table
+PRJEB21015			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB21292	PMC5527415		abstained	0	0	none	no joinable table
+PRJEB25080	PMC6117087	pone.0203338.s002.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJEB27508	PMC7005014	Data_Sheet_1.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['Data_Sheet_2.xlsx', 'Data_Sheet_2.xlsx']
+PRJEB3255	PMC4584482	13073_2015_222_MOESM1_ESM.xlsx+13073_2015_222_MOESM7_ESM.xlsx	two_hop	40	65	medium	two-hop: 40 samples via 370 shared IDs, 65 cell-fills
+PRJEB32657	PMC12612273		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2025_65266_MOESM4_ESM.xlsx', '41467_2025_65266_MOESM4_ESM.xlsx', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM3_ESM.pdf', '41467_2025_65266_MOESM1_ESM.pdf', '41467_2025_65266_MOESM1_ESM.pdf', '41467_2025_65266_MOESM1_ESM.pdf', '41467_2025_65266_MOESM1_ESM.pdf', '41467_2025_65266_MOESM1_ESM.pdf']
+PRJEB32863	PMC7153892		abstained	0	0	none	no joinable table
+PRJEB34532	PMC3381403		abstained	0	0	none	no joinable table
+PRJEB34793	PMC7005322		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2020_14570_MOESM1_ESM.pdf', '41467_2020_14570_MOESM1_ESM.pdf', '41467_2020_14570_MOESM2_ESM.pdf', '41467_2020_14570_MOESM2_ESM.pdf', '41467_2020_14570_MOESM2_ESM.pdf', '41467_2020_14570_MOESM4_ESM.xlsx']
+PRJEB35248	PMC8598304		abstained	0	0	none	no joinable table
+PRJEB36171	PMC6987216	41598_2020_57742_MOESM1_ESM.pdf	abstained	0	0	medium	all mapped fields failed the value check: ['country']
+PRJEB36919			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB37523	PMC7192099		abstained	0	0	none	no joinable table
+PRJEB40571	PMC8477410		abstained	0	0	none	no joinable table
+PRJEB41225	PMC8849082		abstained	0	0	none	no joinable table
+PRJEB42370	PMC12164281		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['2400590_SupplementaryMaterial_1.pdf']
+PRJEB43549	PMC12164281		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['2400590_SupplementaryMaterial_1.pdf']
+PRJEB43550	PMC12164281		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['2400590_SupplementaryMaterial_1.pdf']
+PRJEB44852			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB44864	PMC9430602	spectrum.01009-22-s0001.pdf	direct	18	18	medium	mapped 18 samples, 18 cell-fills; value-check rejected ['isolation_source']
+PRJEB47075	PMC8605564	12866_2021_2388_MOESM2_ESM.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['12866_2021_2388_MOESM1_ESM.xlsx']
+PRJEB50270	PMC9007738		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM3_ESM.xlsx', '41592_2022_1431_MOESM7_ESM.tsv', '41592_2022_1431_MOESM8_ESM.tsv', '41592_2022_1431_MOESM6_ESM.tsv']
+PRJEB5132			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB54568	PMC9554532	Table_1.XLSX	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJEB56212	PMC9960421		abstained	0	0	none	no joinable table
+PRJEB59013			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB59858	PMC10021837		abstained	0	0	none	no joinable table
+PRJEB60478	PMC8060595		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc3.xlsx', 'mmc2.docx', 'mmc2.docx']
+PRJEB60743			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB62836	PMC11092894	Table_1.XLSX	direct	48	192	high	mapped 48 samples, 192 cell-fills
+PRJEB64632	PMC10915899		abstained	0	0	none	no joinable table
+PRJEB64775	PMC10829384	13756_2024_1370_MOESM1_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['13756_2024_1370_MOESM2_ESM.xlsx']
+PRJEB6688	PMC4214299		abstained	0	0	none	no joinable table
+PRJEB67940	PMC10924313	13756_2024_1386_MOESM1_ESM.xlsx	direct	36	72	high	mapped 36 samples, 72 cell-fills
+PRJEB73547			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB76256	PMC11760810	mmc1.xlsx	direct	30	60	high	mapped 30 samples, 60 cell-fills
+PRJEB76311	PMC11471225	mmc1.xlsx	direct	49	147	medium	mapped 49 samples, 147 cell-fills
+PRJEB76496	PMC11834398	msystems.01128-24-s0008.xlsx	direct	46	92	high	mapped 46 samples, 92 cell-fills
+PRJEB8766	PMC6938978	ciz174_suppl_supplementary_table_1.xlsx	direct	24	24	medium	mapped 24 samples, 24 cell-fills; value-check rejected ['host']
+PRJEB9147	PMC4896371		abstained	0	0	none	no joinable table
+PRJNA1000963	PMC8084501		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['20-3662-Techapp-s1.pdf']
+PRJNA1071125	PMC11492754		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['12864_2024_10661_MOESM2_ESM.xlsx']
+PRJNA1092272	PMC11369815		abstained	0	0	none	no joinable table
+PRJNA1092662			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA1114318	PMC11616059	mmc2.xlsx	direct	34	34	high	mapped 34 samples, 34 cell-fills
+PRJNA1122997	PMC12951928	12866_2026_4741_MOESM1_ESM.xlsx	direct	29	58	high	mapped 29 samples, 58 cell-fills
+PRJNA261540	PMC4451916		abstained	0	0	none	no joinable table
+PRJNA278293			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA292902			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA292904	PMC5442553		abstained	0	0	none	no joinable table
+PRJNA351910	PMC4942785		abstained	0	0	none	no joinable table
+PRJNA390933			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA449293	PMC7047997	Data_Sheet_1.xlsx	direct	45	90	high	mapped 45 samples, 90 cell-fills
+PRJNA497126	PMC6783542	41467_2019_12563_MOESM4_ESM.xlsx	direct	35	36	medium	mapped 35 samples, 36 cell-fills; value-check rejected ['collection_date']
+PRJNA508406	PMC8072773		abstained	0	0	none	no joinable table
+PRJNA527021			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA552297	PMC6867876	mSystems.00465-19-st009.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mSystems.00465-19-st005.xlsx', 'mSystems.00465-19-st008.pdf', 'mSystems.00465-19-st008.pdf']
+PRJNA552385	PMC8049106		abstained	0	0	none	no joinable table
+PRJNA563817			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA575579	PMC7549996	KVIR_A_1809322_SM9175.xlsx	direct	49	49	high	mapped 49 samples, 49 cell-fills
+PRJNA631924			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA646592	PMC9790207		abstained	0	0	none	no joinable table
+PRJNA715470	PMC6986821		abstained	0	0	none	no joinable table
+PRJNA728968			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA739636			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA741123	PMC9160058	43856_2022_124_MOESM2_ESM.xlsx	direct	31	31	medium	mapped 31 samples, 31 cell-fills; value-check rejected ['collection_date']
+PRJNA744003	PMC8462332	21-1265-Techapp-s1.pdf	direct	22	22	high	mapped 22 samples, 22 cell-fills
+PRJNA744405	PMC8760991		abstained	0	0	none	no joinable table
+PRJNA744889			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA767190	PMC8597650		abstained	0	0	none	no joinable table
+PRJNA768294	PMC9104693	supp_gr.276289.121_Supplemental_Table_S1.xlsx	direct	29	106	high	mapped 29 samples, 106 cell-fills
+PRJNA770840	PMC9798552		abstained	0	0	none	no joinable table
+PRJNA814816			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA842739			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA857525			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA868296	PMC10469867		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['msystems.00206-23-s0008.docx', 'reviewer-comments.pdf', 'reviewer-comments.pdf', 'reviewer-comments.pdf', 'reviewer-comments.pdf', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx', 'msystems.00206-23-s0010.xlsx']
+PRJNA890192	PMC10019205		abstained	0	0	none	no joinable table
+PRJNA922161	PMC9862994		abstained	0	0	none	no joinable table
+PRJNA925315	PMC10193520		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['media-1.pdf', 'media-1.pdf', 'media-1.pdf']
+PRJNA984451	PMC10532110		abstained	0	0	none	no joinable table
+PRJNA986308			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
