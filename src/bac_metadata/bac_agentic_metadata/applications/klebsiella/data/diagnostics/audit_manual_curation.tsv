@@ -1,0 +1,81 @@
+severity	check	accession	detail	path
+OK	paper_downloaded	PRJEB1563	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB1563.pdf
+OK	paper_downloaded	PRJEB19322	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB19322.pdf
+OK	paper_downloaded	PRJEB20234	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB20234.pdf
+OK	paper_downloaded	PRJEB20799	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB20799.pdf
+OK	paper_downloaded	PRJEB21277	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB21277.pdf
+OK	paper_downloaded	PRJEB22252	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB22252.pdf
+OK	paper_downloaded	PRJEB22890	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB22890.pdf
+OK	paper_downloaded	PRJEB27256	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB27256.pdf
+OK	paper_downloaded	PRJEB27342	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB27342.pdf
+OK	paper_downloaded	PRJEB28400	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB28400.pdf
+OK	paper_downloaded	PRJEB29143	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB29143.pdf
+OK	paper_downloaded	PRJEB29424	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB29424.pdf
+OK	paper_downloaded	PRJEB29738	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB29738.pdf
+OK	paper_downloaded	PRJEB32655	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB32655.pdf
+OK	paper_downloaded	PRJEB33565	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB33565.pdf
+OK	paper_downloaded	PRJEB35685	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB35685.pdf
+OK	paper_downloaded	PRJEB36370	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB36370.pdf
+OK	paper_downloaded	PRJEB36486	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB36486.pdf
+OK	paper_downloaded	PRJEB38540	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB38540.pdf
+OK	paper_downloaded	PRJEB46513	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB46513.pdf
+OK	paper_downloaded	PRJEB48268	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB48268.pdf
+OK	paper_downloaded	PRJEB50822	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB50822.pdf
+OK	paper_downloaded	PRJEB63349	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB63349.pdf
+OK	paper_downloaded	PRJEB63361	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB63361.pdf
+OK	paper_downloaded	PRJEB6574	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB6574.pdf
+OK	paper_downloaded	PRJEB6891	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJEB6891.pdf
+OK	paper_downloaded	PRJNA1028672	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA1028672.pdf
+OK	paper_downloaded	PRJNA1133624	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA1133624.pdf
+OK	paper_downloaded	PRJNA306133	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA306133.pdf
+OK	paper_downloaded	PRJNA341927	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA341927.pdf
+OK	paper_downloaded	PRJNA351909	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA351909.pdf
+OK	paper_downloaded	PRJNA395086	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA395086.pdf
+OK	paper_downloaded	PRJNA396774	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA396774.pdf
+OK	paper_downloaded	PRJNA398288	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA398288.pdf
+OK	paper_downloaded	PRJNA415194	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA415194.pdf
+OK	paper_downloaded	PRJNA475751	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA475751.pdf
+OK	paper_downloaded	PRJNA514908	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA514908.pdf
+OK	paper_downloaded	PRJNA532291	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA532291.pdf
+OK	paper_downloaded	PRJNA543274	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA543274.pdf
+OK	paper_downloaded	PRJNA544438	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA544438.pdf
+OK	paper_downloaded	PRJNA547865	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA547865.pdf
+OK	paper_downloaded	PRJNA548120	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA548120.pdf
+OK	paper_downloaded	PRJNA557275	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA557275.pdf
+OK	paper_downloaded	PRJNA564992	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA564992.pdf
+OK	paper_downloaded	PRJNA594602	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA594602.pdf
+OK	paper_downloaded	PRJNA603790	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA603790.pdf
+OK	paper_downloaded	PRJNA634885	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA634885.pdf
+OK	paper_downloaded	PRJNA658369	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA658369.pdf
+OK	paper_downloaded	PRJNA684006	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA684006.pdf
+OK	paper_downloaded	PRJNA686897	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA686897.pdf
+OK	paper_downloaded	PRJNA757551	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA757551.pdf
+OK	paper_downloaded	PRJNA765801	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA765801.pdf
+OK	paper_downloaded	PRJNA787062	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA787062.pdf
+OK	paper_downloaded	PRJNA789336	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA789336.pdf
+OK	paper_downloaded	PRJNA789565	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA789565.pdf
+OK	paper_downloaded	PRJNA797179	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA797179.pdf
+OK	paper_downloaded	PRJNA857686	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA857686.pdf
+OK	paper_downloaded	PRJNA878595	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA878595.pdf
+OK	supp_table	PRJEB1271	consumed (per_sample_outcomes method=direct/two_hop or table set)	data/sample_lv_attributes/manual_download_supp/PRJEB1271.xlsx
+FAIL	projectk_table	PRJDB5929	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJDB5929/data.csv
+FAIL	projectk_table	PRJEB10018	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB10018/data.csv
+OK	projectk_table	PRJEB1271	wired via supp dir (['PRJEB1271'])	ENA_projects/PRJEB1271/data.csv
+FAIL	projectk_table	PRJEB21605	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB21605/data.csv
+FAIL	projectk_table	PRJEB24970	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB24970/data.csv
+FAIL	projectk_table	PRJEB27342	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB27342/data.csv
+FAIL	projectk_table	PRJEB28400	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB28400/data.csv
+FAIL	projectk_table	PRJEB29143	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB29143/data.csv
+FAIL	projectk_table	PRJEB29738	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB29738/data.csv
+FAIL	projectk_table	PRJEB29740_PRJEB50614	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB29740_PRJEB50614/data.csv
+FAIL	projectk_table	PRJEB39567	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB39567/data.csv
+FAIL	projectk_table	PRJEB42462	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB42462/data.csv
+FAIL	projectk_table	PRJEB48990	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB48990/data.csv
+FAIL	projectk_table	PRJEB58136	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB58136/data.csv
+FAIL	projectk_table	PRJEB6891	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB6891/data.csv
+FAIL	projectk_table	PRJNA514908	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA514908/data.csv
+FAIL	projectk_table	PRJNA548120	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA548120/data.csv
+FAIL	projectk_table	PRJNA564424	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA564424/data.csv
+FAIL	projectk_table	PRJNA633565	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA633565/data.csv
+FAIL	projectk_table	PRJNA684006	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA684006/data.csv
+FAIL	projectk_table	PRJNA778230	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA778230/data.csv
