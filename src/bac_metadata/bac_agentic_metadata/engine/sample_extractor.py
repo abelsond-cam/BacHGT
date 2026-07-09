@@ -23,9 +23,12 @@ from __future__ import annotations
 
 import re
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 
 import pandas as pd
+import yaml
 
 from .supplementary import ACCESSION_RE, SuppTable
 
@@ -36,6 +39,8 @@ FIELDS: tuple[str, ...] = ("country", "collection_date", "isolation_source", "ho
 
 SCHEMA_NAME = "map_supplementary_columns"
 VERIFY_SCHEMA_NAME = "verify_field_values"
+RESCUE_SCHEMA_NAME = "rescue_unresolved_columns"
+DECODE_SCHEMA_NAME = "decode_coded_column"
 
 #: One-line description of what each field's values should look like (used by the value check). Extra,
 #: non-core fields are additive — they are only consulted when an application maps them, so the four core
@@ -450,6 +455,167 @@ def _two_hop_extract(study_accession: str, pmcid: str, manifest: SuppTable, acc_
     return best
 
 
+def load_category_vocabs(categorisation_dir: str | Path, fields: tuple[str, ...] | list[str]) -> dict[str, str]:
+    """Compact per-field controlled vocabulary from the approved category yamls (for the no-paper rescue).
+
+    Reads ``<field>_categories_approved.yaml`` (as produced by the categorise sub-engine) and summarises
+    each as ``name (e.g. ex1, ex2); …`` so the Tier-2 rescue can recognise a renamed/coded column by
+    whether its values are consistent with our vocabulary. Fields without an approved yaml (e.g.
+    ``country`` / ``collection_date``) are simply omitted — the rescue falls back to :data:`FIELD_VALUE_GUIDE`.
+
+    Parameters
+    ----------
+    categorisation_dir
+        Directory holding ``<field>_categories_approved.yaml`` files.
+    fields
+        Fields to load vocabularies for.
+
+    Returns
+    -------
+    dict[str, str]
+        ``field -> compact vocabulary summary`` (only fields with a readable approved yaml).
+    """
+    out: dict[str, str] = {}
+    d = Path(categorisation_dir)
+    for f in fields:
+        p = d / f"{f}_categories_approved.yaml"
+        if not p.exists():
+            continue
+        try:
+            spec = yaml.safe_load(p.read_text()) or {}
+        except yaml.YAMLError:
+            continue
+        parts = []
+        for c in spec.get("categories", []) or []:
+            name = str(c.get("name", "")).strip()
+            if not name:
+                continue
+            ex = [str(x) for x in (c.get("examples") or [])][:4]
+            parts.append(f"{name} (e.g. {', '.join(ex)})" if ex else name)
+        if parts:
+            out[f] = "; ".join(parts)
+    return out
+
+
+def _columns_digest(table: SuppTable, header_rows: int, *, exclude_col: int, max_vals: int = 10) -> str:
+    """Header + distinct example values for every column except the join key — the rescue's evidence grid."""
+    lines = []
+    for j in range(table.df.shape[1]):
+        if j == exclude_col:
+            continue
+        header = " ".join(_cell(table.df, r, j) for r in range(max(1, header_rows))).strip()
+        vals = _distinct_values(table.df, j, header_rows, n=max_vals)
+        lines.append(f"[{j}] header='{header[:60]}' values={vals}")
+    return "\n".join(lines)
+
+
+def _rescue_schema(fields: list[str]) -> dict:
+    """Schema for the Tier-2 rescue: per unresolved field a column + needs_paper flag + a code→value list."""
+    item = {"type": "object", "properties": {"code": {"type": "string"}, "value": {"type": "string"}},
+            "required": ["code", "value"]}
+    per = {"type": "object", "properties": {
+               "column": {"type": ["integer", "null"]},
+               "needs_paper": {"type": "boolean"},
+               "codebook": {"type": "array", "items": item}},
+           "required": ["column", "needs_paper", "codebook"]}
+    return {"type": "object", "properties": dict.fromkeys(fields, per), "required": list(fields)}
+
+
+def rescue_unresolved(study_accession: str, table: SuppTable, unresolved: list[str], header_rows: int, *,
+                      acc_col: int, category_vocab: dict[str, str] | None, llm,
+                      model: str | None = None) -> dict[str, dict]:
+    """Tier-2 (no paper): re-map + light-decode fields the first pass missed, grounded in our vocabulary.
+
+    For each unresolved field, inspect ALL columns (headers + example values) plus the field's controlled
+    vocabulary and return: the column that actually holds it (or ``None``); a ``codebook`` of code→raw-value
+    pairs decodable WITHOUT the paper (``clinical→human``, ``env→environmental``, or empty when values are
+    already plain → copy verbatim); and ``needs_paper`` when the column is clearly the field but its values
+    are OPAQUE codes (``PS``/``UR``/``ST``) only the paper's legend can decode (→ Tier 3).
+
+    Returns ``{field: {"column": int|None, "needs_paper": bool, "codebook": {code: value}}}``.
+    """
+    vocab = category_vocab or {}
+    guide = "\n".join(
+        f"- {f}: controlled vocabulary — {vocab[f]}" if f in vocab
+        else f"- {f}: should be {FIELD_VALUE_GUIDE.get(f, f)}" for f in unresolved)
+    digest = _columns_digest(table, header_rows, exclude_col=acc_col)
+    system = (
+        "You RESCUE per-sample metadata fields that a first-pass column mapping missed. For EACH field, use "
+        "the columns' headers + example values and the field's controlled vocabulary to decide:\n"
+        "- column: the 0-based index of the column that actually holds this field, or null if none does.\n"
+        "- codebook: code→raw-value pairs you can decode from the VOCABULARY or obvious meaning WITHOUT the "
+        "paper (e.g. 'clinical'->'human', 'env'->'environmental'; leave empty when the values are already "
+        "plain field values, so the caller copies them verbatim). Keep decoded values RAW and SPECIFIC (the "
+        "exact specimen/host term, never a grouped category) — faithfulness is required.\n"
+        "- needs_paper: true ONLY when the column is clearly this field but its values are OPAQUE codes/"
+        "abbreviations (e.g. 'PS','UR','ST') you cannot decode without the paper's legend.\n"
+        "Never map a field to the sample/accession id column. Prefer column=null over a wrong guess.\n"
+        + guide)
+    user = (f"STUDY: {study_accession}\nCOLUMNS (index, header, example values):\n{digest}\n\n"
+            f"Rescue these fields: {', '.join(unresolved)}.")
+    out = llm.complete_structured(system=system, user=user, json_schema=_rescue_schema(list(unresolved)),
+                                  schema_name=RESCUE_SCHEMA_NAME,
+                                  schema_description="Re-map + light-decode unresolved per-sample fields.",
+                                  model=model)
+    res: dict[str, dict] = {}
+    for f in unresolved:
+        r = out.get(f) or {}
+        col = r.get("column")
+        cb = {str(e.get("code", "")).strip(): str(e.get("value", "")).strip()
+              for e in (r.get("codebook") or []) if str(e.get("code", "")).strip() and str(e.get("value", "")).strip()}
+        res[f] = {"column": col if isinstance(col, int) else None,
+                  "needs_paper": bool(r.get("needs_paper")), "codebook": cb}
+    return res
+
+
+def _decode_schema() -> dict:
+    """Schema for the Tier-3 paper decode: a code→value list (value nullable = 'could not decode')."""
+    item = {"type": "object",
+            "properties": {"code": {"type": "string"}, "value": {"type": ["string", "null"]}},
+            "required": ["code", "value"]}
+    return {"type": "object", "properties": {"codebook": {"type": "array", "items": item}}, "required": ["codebook"]}
+
+
+def decode_codes_from_paper(study_accession: str, field: str, header: str, codes: list[str], paper_text: str, llm,
+                            *, model: str | None = None, max_chars: int = 60000) -> dict[str, str]:
+    """Tier-3 (paper): decode a strong-alias column's OPAQUE codes to raw values using the paper's legend.
+
+    Read only as a last resort (the first-pass mapping and the no-paper vocab rescue could not decode the
+    values). Returns ``{code: raw_value}`` for codes the paper explains; a code left unexplained is dropped
+    (abstain over guess). Decoded values are the SPECIFIC raw specimen/host term (never a grouped category),
+    so the carriage-vs-invasive distinction survives and categorisation stays downstream.
+    """
+    excerpt = paper_text[:max_chars]
+    system = (
+        f"A supplementary-table column (header '{header}') holds the per-sample {field}, but its values are "
+        "abbreviations/codes. Using the paper text, decode EACH listed code to the RAW, SPECIFIC "
+        f"{FIELD_VALUE_GUIDE.get(field, field)} it denotes (the exact term, e.g. 'sputum', 'urine', 'rectal "
+        "swab' — never a grouped category). Return value=null for any code the paper does not clearly "
+        "define; do NOT guess.")
+    user = (f"STUDY: {study_accession}\nCODES TO DECODE: {list(codes)}\n\n"
+            f"PAPER TEXT (may be truncated):\n{excerpt}")
+    out = llm.complete_structured(system=system, user=user, json_schema=_decode_schema(),
+                                  schema_name=DECODE_SCHEMA_NAME,
+                                  schema_description=f"Decode {field} codes using the paper legend.", model=model)
+    cb: dict[str, str] = {}
+    for e in out.get("codebook") or []:
+        code = str(e.get("code", "")).strip()
+        val = e.get("value")
+        if code and val is not None and str(val).strip():
+            cb[code] = str(val).strip()
+    return cb
+
+
+def _decode_lookup(codebook: dict[str, str], raw: str) -> str:
+    """Case/space-insensitive codebook lookup for a coded cell ('' when the code has no decode)."""
+    if not raw:
+        return ""
+    key = raw.strip()
+    if key in codebook:
+        return codebook[key]
+    return {k.strip().lower(): v for k, v in codebook.items()}.get(key.lower(), "")
+
+
 def extract_study(
     study_accession: str,
     pmcid: str,
@@ -461,8 +627,18 @@ def extract_study(
     model: str | None = None,
     fields: tuple[str, ...] = FIELDS,
     ast_drugs: tuple[str, ...] | list[str] | None = None,
+    category_vocab: dict[str, str] | None = None,
+    get_fulltext: Callable[[], str | None] | None = None,
 ) -> StudyExtraction:
     """Run per-sample for one study: pick the joinable table, map columns (LLM), extract per-sample rows.
+
+    The mapping is a 3-tier cascade that reads the paper only as a last resort (to save usage): (1) the
+    first-pass column mapping (:func:`_system_prompt`) + value-plausibility check; (2) for any field left
+    UNRESOLVED (unmapped or value-check-rejected), a vocabulary-grounded rescue (:func:`rescue_unresolved`,
+    NO paper) that re-maps renamed columns and light-decodes values consistent with our controlled
+    vocabulary (``location``→country, ``clinical``→human); (3) only for a strong-alias column whose values
+    are opaque codes, a minimal paper decode (:func:`decode_codes_from_paper`). A study whose first pass
+    resolves every field skips tiers 2–3 entirely.
 
     Parameters
     ----------
@@ -483,6 +659,12 @@ def extract_study(
     ast_drugs
         Canonical antibiotic panel; when given, the extractor also maps AST columns and emits per-drug
         ``ast_<drug>_mic`` / ``ast_<drug>_resistance`` fills (off-panel drugs go to ``ast_other``).
+    category_vocab
+        ``field -> controlled-vocabulary summary`` (from :func:`load_category_vocabs`) grounding the Tier-2
+        rescue. ``None`` disables vocab grounding (rescue then leans on :data:`FIELD_VALUE_GUIDE`).
+    get_fulltext
+        Zero-arg callable returning the study's paper text (or ``None``) — invoked lazily ONLY when a
+        Tier-3 decode is needed. ``None`` disables Tier 3 (opaque-coded columns then stay unresolved).
 
     Returns
     -------
@@ -546,14 +728,48 @@ def extract_study(
 
     # 2b) value-plausibility check (general, all fields) when the mapping is not high-confidence.
     confidence = mapping.get("confidence", "low")
+    orig_cols = dict(cols)            # mapping BEFORE the value check — tells 'unmapped' apart from 'rejected'
     rejected: set[str] = set()
     if confidence != "high":
         cols, rejected = verify_field_values(table, cols, header_rows, llm, model=model)
-        if not any(c is not None for c in cols.values()) and not ast_map:
-            return StudyExtraction(study_accession, pmcid, table.filename, [], 0, cols, confidence,
-                                   f"all mapped fields failed the value check: {sorted(rejected)}")
 
-    # 3) deterministic row-by-row join + verbatim extraction (core/extra fields, then the AST panel).
+    # 2c) rescue cascade (ADDITIVE; fires only for UNRESOLVED fields — never mapped by pass 1, OR dropped by
+    #     the value check). Tier 2 re-maps + light-decodes from our controlled vocabulary (NO paper); Tier 3
+    #     reads a minimal paper excerpt ONLY for a strong-alias column whose values are opaque codes. A study
+    #     whose first pass resolved every field skips this entirely (behaviour/cache unchanged).
+    decoded: dict[str, tuple[int, dict]] = {}   # field -> (column, codebook), applied during the join
+    rescued: list[str] = []
+    unresolved = {f for f in fields if orig_cols.get(f) is None} | rejected
+    if unresolved and (category_vocab or get_fulltext is not None):
+        rescue = rescue_unresolved(study_accession, table, sorted(unresolved), header_rows,
+                                   acc_col=acc_col, category_vocab=category_vocab, llm=llm, model=model)
+        paper_text: str | None = None
+        for f in sorted(unresolved):
+            r = rescue.get(f) or {}
+            col = r.get("column")
+            if not isinstance(col, int) or col == acc_col or col < 0 or col >= table.df.shape[1]:
+                continue
+            cb = r.get("codebook") or {}
+            if r.get("needs_paper") and get_fulltext is not None:   # Tier 3 — decode opaque codes from paper
+                if paper_text is None:
+                    paper_text = get_fulltext() or ""
+                if paper_text:
+                    header = " ".join(_cell(table.df, rr, col) for rr in range(max(1, header_rows))).strip()
+                    codes = _distinct_values(table.df, col, header_rows, n=40)
+                    cb = decode_codes_from_paper(study_accession, f, header, codes, paper_text, llm, model=model)
+            if cb:                          # decode path (Tier-2 vocab decode or Tier-3 paper decode)
+                decoded[f] = (col, cb)
+                rescued.append(f"{f}={'paper' if r.get('needs_paper') else 'vocab'}")
+            elif not r.get("needs_paper"):  # verbatim rescue: values already plain, copy as-is
+                cols[f] = col
+                rescued.append(f"{f}=verbatim")
+
+    if not any(c is not None for c in cols.values()) and not decoded and not ast_map:
+        note = (f"no per-sample fields resolved; value-check rejected {sorted(rejected)}"
+                if rejected else "no per-sample field columns found")
+        return StudyExtraction(study_accession, pmcid, table.filename, [], 0, cols, confidence, note)
+
+    # 3) deterministic row-by-row join + verbatim/decoded extraction (core/extra fields, then the AST panel).
     fills: list[dict] = []
     mapped_samples: set[str] = set()
     for i in range(header_rows, len(table.df)):
@@ -575,11 +791,21 @@ def extract_study(
                     "ena_value": "", "applied_value": val, "method": "per_sample",
                     "evidence": f"{table.filename}:{key}",
                 })
+        for f, (col, cb) in decoded.items():           # decoded/rescued fields: map the cell's code -> value
+            val = _decode_lookup(cb, _cell(table.df, i, col))
+            if val:
+                fills.append({
+                    "study_accession": study_accession, "sample_accession": sample, "field": f,
+                    "ena_value": "", "applied_value": val, "method": "per_sample",
+                    "evidence": f"{table.filename}:{key} (rescued {_cell(table.df, i, col)!r})",
+                })
         fills.extend(_ast_fills_for_row(study_accession, sample, table, i, ast_map, ast_drugs, key))
     n_ast = sum(1 for x in fills if x["field"].startswith("ast_"))
     note = f"mapped {len(mapped_samples)} samples, {len(fills)} cell-fills"
     if n_ast:
         note += f" ({n_ast} AST)"
+    if rescued:
+        note += f"; rescued {rescued}"
     if rejected:
         note += f"; value-check rejected {sorted(rejected)}"
     return StudyExtraction(study_accession, pmcid, table.filename, fills, len(mapped_samples), cols,

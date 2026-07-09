@@ -325,6 +325,8 @@ def per_sample(
     threshold: float = 0.75,
     ast_drugs: Sequence[str] | None = None,
     id_columns: Sequence[str] | None = None,
+    manual_papers_dir: str | Path | None = None,
+    category_vocab: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     """Per-sample extraction from supplementary tables — the accurate per-isolate source, runs FIRST.
 
@@ -351,6 +353,18 @@ def per_sample(
 
     found = pd.read_csv(found_path, sep="\t", dtype=str).fillna("")
     pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
+    # Best scholarly identifier per study (DOI > PMCID > PMID) for the LAZY Tier-3 fulltext fetch — only
+    # ever called when the extractor needs to decode a strong-alias column's opaque codes from the paper.
+    link_of = {r["study_accession"]: (str(r.get("chosen_doi", "")).strip() or str(r.get("chosen_pmcid", "")).strip()
+                                      or str(r.get("chosen_pmid", "")).strip()) for _, r in found.iterrows()}
+
+    def _fulltext_thunk(a: str):
+        """Return a zero-arg getter for study ``a``'s paper text (same resolver as grading; None if none)."""
+        def _get() -> str | None:
+            ft = resolve_fulltext_for_accession(a, link_of.get(a, ""), str(manual_papers_dir or ""),
+                                                fulltext_cache=caches.fulltext)
+            return ft.text if (ft and ft.text) else None
+        return _get
 
     needs = backfill.gate_fields(backfill.field_completeness(base, fields=tuple(fields)),
                                  fields=tuple(fields), threshold=threshold)
@@ -393,7 +407,8 @@ def per_sample(
                   + ("" if pmcid else " (NO_PMCID; local supp only)"), file=sys.stderr)
         try:
             ex = sx.extract_study(acc, pmcid, tables, sets[acc], maps[acc], llm, model=model,
-                                  fields=tuple(fields), ast_drugs=tuple(ast_drugs) if ast_drugs else None)
+                                  fields=tuple(fields), ast_drugs=tuple(ast_drugs) if ast_drugs else None,
+                                  category_vocab=category_vocab, get_fulltext=_fulltext_thunk(acc))
         except UsageLimitError as e:
             print(f"[{i}/{len(targets)}] {acc} — usage limit; stopping (cache holds the rest): {e}",
                   file=sys.stderr)

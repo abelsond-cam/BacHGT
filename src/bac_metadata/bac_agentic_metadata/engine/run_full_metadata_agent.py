@@ -52,6 +52,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
 from bac_metadata.bac_agentic_metadata.engine import stages
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, make_llm
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
@@ -225,6 +226,10 @@ def main() -> None:
 
     spec = AttributeSpec.from_yaml(args.spec)
     fields = list(spec.completeness_fields)
+    # Controlled-vocabulary summaries grounding the per-sample rescue cascade (Tier 2, no paper). Built from
+    # the approved categorise yamls; absent files (a new application, or country/date which have none) are
+    # simply omitted — the rescue then leans on the built-in per-field value guide.
+    category_vocab = sx.load_category_vocabs(data / "study_lv_attributes" / "categorisation", fields)
     # Optional AST panel (M. abscessus): the extractor mines per-isolate susceptibility into ast_<drug>_*
     # long-format fills. Absent for Klebsiella (spec has no ast_panel) -> None -> extractor unchanged.
     ast_panel = spec.raw.get("attributes", {}).get("per_sample_completeness", {}).get("ast_panel") or {}
@@ -357,6 +362,7 @@ def main() -> None:
         base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
         manual_supp_dir=manual_supp_dirs, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
         ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
+        manual_papers_dir=manual_papers_dir, category_vocab=category_vocab,
     )
 
     # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────
