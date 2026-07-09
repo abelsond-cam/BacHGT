@@ -377,15 +377,20 @@ def per_sample(
                                            "study not in the per-sample selection accession sets"))
             print(f"[{i}/{len(targets)}] {acc} — NOT_IN_FOLD; skip", file=sys.stderr)
             continue
-        if not pmcid:
-            outcome_rows.append(_synthetic(acc, "", "NO_PMCID",
-                "no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp"))
-            print(f"[{i}/{len(targets)}] {acc} — NO_PMCID (cannot fetch OA supp)", file=sys.stderr)
-            continue
-        tables = supp.parse_tables(pmcid, cache_dir=caches.per_sample_supp)
+        # Resolve any curator-provided supplementary table FIRST, so a manually-downloaded table can rescue
+        # a paywalled (no-PMCID) study. Only skip when there is NEITHER an OA PMCID NOR a local supp table —
+        # the previous `if not pmcid: continue` silently dropped local tables for exactly those studies.
         local = lsupp.resolve_local_supp_tables(acc, manual_supp_dir)
+        if not pmcid and not local:
+            outcome_rows.append(_synthetic(acc, "", "NO_PMCID",
+                "no PMCID and no manual_download_supp table — cannot fetch supplementary; see missing-papers"))
+            print(f"[{i}/{len(targets)}] {acc} — NO_PMCID (no OA + no local supp)", file=sys.stderr)
+            continue
+        tables = supp.parse_tables(pmcid, cache_dir=caches.per_sample_supp) if pmcid else []
         if local:
             tables = (tables or []) + local
+            print(f"[{i}/{len(targets)}] {acc} — using {len(local)} local manual_download_supp table(s)"
+                  + ("" if pmcid else " (NO_PMCID; local supp only)"), file=sys.stderr)
         try:
             ex = sx.extract_study(acc, pmcid, tables, sets[acc], maps[acc], llm, model=model,
                                   fields=tuple(fields), ast_drugs=tuple(ast_drugs) if ast_drugs else None)

@@ -2,7 +2,7 @@
 
 ## ⚠️ **0 ACTIONABLE + 1 BLOCKED outstanding — supplement & rerun**
 
-188 (study × field) cells over 47 fold studies — **FILLED 172 · ACTIONABLE 0 · BLOCKED 1 · EXHAUSTED 15**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance).
+188 (study × field) cells over 47 studies — **FILLED 172 · ACTIONABLE 0 · BLOCKED 1 · EXHAUSTED 15**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance), and at least one study evaluated.
 
 ## Actionable worklist — do these, then rerun
 
@@ -33,4 +33,23 @@ Nothing outstanding — every cell FILLED or EXHAUSTED. ✅
 | collection_date | 0.9359 | 0.7636 | 0.027 | 0.1051 | 0.1602 | 0.0 |  |
 | isolation_source | 0.7417 | 0.7016 | 0.0022 | 0.1266 | 0.0115 | 0.0 |  |
 | host | 0.8356 | 0.7655 | 0.1481 | 0.1214 | 0.0353 | 0.0 |  |
+
+
+---
+
+# ⛔⛔ CURATOR SIGN-OFF — REQUIRED BEFORE THIS RUN IS TRUSTED ⛔⛔
+
+> Two steps only a human can do. **While either is INCOMPLETE the completeness/accuracy figures above UNDERSTATE the pipeline — supplement the data and rerun.**
+
+## 1. Manual papers downloaded & added — ✅ COMPLETE
+
+✅ No outstanding downloads — every findable paper has full text (17 via a manually-added PDF).
+
+## 2. Escalations answered (tight grading questions) — ✅ COMPLETE
+
+Queue `study_lv_attributes/escalation/decisions_needed_test.tsv`: **21 generated · 12 answered · 0 PENDING** (15182 fills applied).
+
+✅ All 21 escalation(s) resolved (answered or explicitly rejected).
+
+# → ✅ CURATOR SIGN-OFF COMPLETE — both human steps done
 

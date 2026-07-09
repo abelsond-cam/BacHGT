@@ -148,6 +148,14 @@ def build_run_health(
     # Fold study universe — the authoritative left side of every join.
     split = _read_tsv(splits)
     studies = sorted(split[split["fold"].isin(folds)]["study_accession"]) if len(split) else []
+    if not studies:
+        # Size-band / tail runs use a synthetic fold=tag that is absent from the main project_splits
+        # (it lives only in the batch-local splits). Fall back to the tag's own graded-study universe so
+        # run-health never evaluates an empty set and emits a hollow "ALL CLEAR" (the tail-band gap that
+        # let <100-sample studies skip the manual-download loop unnoticed).
+        graded = _read_tsv(grade / f"study_grades_{tag}.tsv")
+        if len(graded) and "study_accession" in graded.columns:
+            studies = sorted(set(graded["study_accession"].astype(str)))
 
     # Big-decision studies (>= big_decision_frac of the WHOLE cohort): their whole-field declines MUST be
     # escalated — if one isn't in the queue, run-health flags it ACTIONABLE rather than letting it go
@@ -289,8 +297,15 @@ def build_run_health(
     _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied, len(esc_pending))
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if len(res) else 0
     blocked = int((res["resolution_state"] == "BLOCKED").sum()) if len(res) else 0
-    base = ("ALL CLEAR — curated to gold standard" if actionable + blocked == 0
-            else f"{actionable} ACTIONABLE + {blocked} BLOCKED(needs-linkage) outstanding")
+    if not studies:
+        # A health check over zero studies is NOT clear — the study universe failed to resolve (e.g. a
+        # synthetic-fold tag missing from project_splits AND from grades). Fail loud so a hollow
+        # "ALL CLEAR" can never again mask an un-run curator loop.
+        base = (f"⛔ NO STUDIES EVALUATED (tag='{tag}', fold='{fold}') — study universe empty; run-health "
+                "cannot certify. Check the tag's study_grades_<tag>.tsv / project_splits.")
+    else:
+        base = ("ALL CLEAR — curated to gold standard" if actionable + blocked == 0
+                else f"{actionable} ACTIONABLE + {blocked} BLOCKED(needs-linkage) outstanding")
     # Curator sign-off (the two human steps) folded into the returned verdict so a partially-curated run is
     # loud on the console too — not only in the report's end banner. Mirrors the banner's logic exactly.
     need_paper_n = res[res["recoverability"] == "fetch_paper"]["study_accession"].nunique() if len(res) else 0
@@ -311,13 +326,17 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if n else 0
     blocked = int((res["resolution_state"] == "BLOCKED").sum()) if n else 0
     exhausted = int((res["resolution_state"] == "EXHAUSTED").sum()) if n else 0
-    verdict = "✅ **ALL CLEAR — curated to gold standard**" if actionable + blocked == 0 \
-        else f"⚠️ **{actionable} ACTIONABLE + {blocked} BLOCKED outstanding — supplement & rerun**"
+    if not len(studies):
+        verdict = "⛔ **NO STUDIES EVALUATED — study universe empty; run-health cannot certify**"
+    elif actionable + blocked == 0:
+        verdict = "✅ **ALL CLEAR — curated to gold standard**"
+    else:
+        verdict = f"⚠️ **{actionable} ACTIONABLE + {blocked} BLOCKED outstanding — supplement & rerun**"
     md = [f"# Run-health report ({fold} / {tag})\n", f"## {verdict}\n",
-          f"{n} (study × field) cells over {len(studies)} fold studies — "
+          f"{n} (study × field) cells over {len(studies)} studies — "
           f"**FILLED {filled} · ACTIONABLE {actionable} · BLOCKED {blocked} · EXHAUSTED {exhausted}**. "
           "ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a "
-          "logged reason / curator acceptance).\n"]
+          "logged reason / curator acceptance), and at least one study evaluated.\n"]
 
     act = res[res["resolution_state"] == "ACTIONABLE"] if n else res
     md.append("## Actionable worklist — do these, then rerun\n")

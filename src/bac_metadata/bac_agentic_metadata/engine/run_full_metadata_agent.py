@@ -366,7 +366,7 @@ def main() -> None:
         stages.missing_papers(
             grades_jsonl=grades_jsonl, found_path=found_tsv, gap_report_path=gate_report_tsv,
             sizing_path=Path(sizing_path), manual_papers_dir=manual_papers_dir, out_dir=find_dir,
-            paper_links=paper_links,
+            paper_links=paper_links, report_prefix=f"missing_papers_report_{tag}",
         )
     except Exception as exc:  # noqa: BLE001 — a worklist failure must not kill the run
         print(f"WARN: missing-papers worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
