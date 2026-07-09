@@ -57,25 +57,45 @@ OK	paper_downloaded	PRJNA789565	consumed (fulltext_source=local_pdf)	data/find_p
 OK	paper_downloaded	PRJNA797179	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA797179.pdf
 OK	paper_downloaded	PRJNA857686	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA857686.pdf
 OK	paper_downloaded	PRJNA878595	consumed (fulltext_source=local_pdf)	data/find_papers/manual_download/PRJNA878595.pdf
+WARN	supp_table	PRJDB5929	wired but table won't anchor to our accessions — Phase-2 linkage, not a loss	manual_supp_tables/PRJDB5929.csv
+OK	supp_table	PRJEB10018	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB10018.csv
 OK	supp_table	PRJEB1271	consumed (per_sample_outcomes method=direct/two_hop or table set)	data/sample_lv_attributes/manual_download_supp/PRJEB1271.xlsx
-FAIL	projectk_table	PRJDB5929	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJDB5929/data.csv
-FAIL	projectk_table	PRJEB10018	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB10018/data.csv
+OK	supp_table	PRJEB21605	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB21605.csv
+OK	supp_table	PRJEB24970	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB24970.csv
+OK	supp_table	PRJEB27342	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB27342.csv
+OK	supp_table	PRJEB28400	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB28400.csv
+OK	supp_table	PRJEB29143	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB29143.csv
+OK	supp_table	PRJEB29738	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB29738.csv
+OK	supp_table	PRJEB29740	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB29740.csv
+WARN	supp_table	PRJEB39567	wired but table won't anchor to our accessions — Phase-2 linkage, not a loss	manual_supp_tables/PRJEB39567.csv
+OK	supp_table	PRJEB42462	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB42462.csv
+OK	supp_table	PRJEB48990	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB48990.csv
+OK	supp_table	PRJEB58136	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB58136.csv
+OK	supp_table	PRJEB6891	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJEB6891.csv
+WARN	supp_table	PRJNA514908	wired but study not in the processed cohort yet (no per_sample outcome)	manual_supp_tables/PRJNA514908.csv
+OK	supp_table	PRJNA548120	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJNA548120.csv
+WARN	supp_table	PRJNA564424	wired but table won't anchor to our accessions — Phase-2 linkage, not a loss	manual_supp_tables/PRJNA564424.csv
+OK	supp_table	PRJNA633565	consumed (per_sample_outcomes method=direct/two_hop or table set)	manual_supp_tables/PRJNA633565.csv
+WARN	supp_table	PRJNA684006	wired but table won't anchor to our accessions — Phase-2 linkage, not a loss	manual_supp_tables/PRJNA684006.csv
+WARN	supp_table	PRJNA778230	wired but table won't anchor to our accessions — Phase-2 linkage, not a loss	manual_supp_tables/PRJNA778230.csv
+OK	projectk_table	PRJDB5929	wired via supp dir (['PRJDB5929'])	ENA_projects/PRJDB5929/data.csv
+OK	projectk_table	PRJEB10018	wired via supp dir (['PRJEB10018'])	ENA_projects/PRJEB10018/data.csv
 OK	projectk_table	PRJEB1271	wired via supp dir (['PRJEB1271'])	ENA_projects/PRJEB1271/data.csv
-FAIL	projectk_table	PRJEB21605	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB21605/data.csv
-FAIL	projectk_table	PRJEB24970	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB24970/data.csv
-FAIL	projectk_table	PRJEB27342	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB27342/data.csv
-FAIL	projectk_table	PRJEB28400	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB28400/data.csv
-FAIL	projectk_table	PRJEB29143	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB29143/data.csv
-FAIL	projectk_table	PRJEB29738	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB29738/data.csv
-FAIL	projectk_table	PRJEB29740_PRJEB50614	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB29740_PRJEB50614/data.csv
-FAIL	projectk_table	PRJEB39567	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB39567/data.csv
-FAIL	projectk_table	PRJEB42462	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB42462/data.csv
-FAIL	projectk_table	PRJEB48990	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB48990/data.csv
-FAIL	projectk_table	PRJEB58136	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJEB58136/data.csv
-FAIL	projectk_table	PRJEB6891	data.csv present but not wired into manual_supp_tables/ [HIGH-VALUE: extraction victim]	ENA_projects/PRJEB6891/data.csv
-FAIL	projectk_table	PRJNA514908	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA514908/data.csv
-FAIL	projectk_table	PRJNA548120	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA548120/data.csv
-FAIL	projectk_table	PRJNA564424	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA564424/data.csv
-FAIL	projectk_table	PRJNA633565	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA633565/data.csv
-FAIL	projectk_table	PRJNA684006	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA684006/data.csv
-FAIL	projectk_table	PRJNA778230	data.csv present but not wired into manual_supp_tables/	ENA_projects/PRJNA778230/data.csv
+OK	projectk_table	PRJEB21605	wired via supp dir (['PRJEB21605'])	ENA_projects/PRJEB21605/data.csv
+OK	projectk_table	PRJEB24970	wired via supp dir (['PRJEB24970'])	ENA_projects/PRJEB24970/data.csv
+OK	projectk_table	PRJEB27342	wired via supp dir (['PRJEB27342'])	ENA_projects/PRJEB27342/data.csv
+OK	projectk_table	PRJEB28400	wired via supp dir (['PRJEB28400'])	ENA_projects/PRJEB28400/data.csv
+OK	projectk_table	PRJEB29143	wired via supp dir (['PRJEB29143'])	ENA_projects/PRJEB29143/data.csv
+OK	projectk_table	PRJEB29738	wired via supp dir (['PRJEB29738'])	ENA_projects/PRJEB29738/data.csv
+OK	projectk_table	PRJEB29740_PRJEB50614	wired via supp dir (['PRJEB29740', 'PRJEB50614'])	ENA_projects/PRJEB29740_PRJEB50614/data.csv
+OK	projectk_table	PRJEB39567	wired via supp dir (['PRJEB39567'])	ENA_projects/PRJEB39567/data.csv
+OK	projectk_table	PRJEB42462	wired via supp dir (['PRJEB42462'])	ENA_projects/PRJEB42462/data.csv
+OK	projectk_table	PRJEB48990	wired via supp dir (['PRJEB48990'])	ENA_projects/PRJEB48990/data.csv
+OK	projectk_table	PRJEB58136	wired via supp dir (['PRJEB58136'])	ENA_projects/PRJEB58136/data.csv
+OK	projectk_table	PRJEB6891	wired via supp dir (['PRJEB6891'])	ENA_projects/PRJEB6891/data.csv
+OK	projectk_table	PRJNA514908	wired via supp dir (['PRJNA514908'])	ENA_projects/PRJNA514908/data.csv
+OK	projectk_table	PRJNA548120	wired via supp dir (['PRJNA548120'])	ENA_projects/PRJNA548120/data.csv
+OK	projectk_table	PRJNA564424	wired via supp dir (['PRJNA564424'])	ENA_projects/PRJNA564424/data.csv
+OK	projectk_table	PRJNA633565	wired via supp dir (['PRJNA633565'])	ENA_projects/PRJNA633565/data.csv
+OK	projectk_table	PRJNA684006	wired via supp dir (['PRJNA684006'])	ENA_projects/PRJNA684006/data.csv
+OK	projectk_table	PRJNA778230	wired via supp dir (['PRJNA778230'])	ENA_projects/PRJNA778230/data.csv

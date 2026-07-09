@@ -4,9 +4,7 @@ PRJEB1272	PMC4790626		abstained	0	0	none	no joinable table
 PRJEB19226			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB1963	PMC3772739		abstained	0	0	none	no joinable table
 PRJEB21081			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB27342	PMC9712112	41564_2022_1263_MOESM3_ESM.xlsx	direct	3227	8974	high	mapped 3227 samples, 8974 cell-fills
 PRJEB29424			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB29738	PMC8634409		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['ciab776_suppl_supplementary_material.docx', 'ciab776_suppl_supplementary_material.docx']
 PRJEB29739			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB32655	PMC10327512		abstained	0	0	none	no joinable table
 PRJEB34643	PMC8865463	spectrum02376-21_supp_1_seq6.xlsx	direct	131	215	high	mapped 131 samples, 215 cell-fills
@@ -27,3 +25,10 @@ PRJNA757551	PMC9160272	41467_2022_30637_MOESM4_ESM.xlsx	direct	334	334	high	mapp
 PRJNA825705	PMC9393496	Data_Sheet_1.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['Data_Sheet_1.xlsx']
 PRJNA839691	PMC9764986	msystems.00799-22-s0002.xlsx	direct	143	286	high	mapped 143 samples, 286 cell-fills
 PRJNA922900	PMC10232788	Table_1.XLSX	direct	111	333	high	mapped 111 samples, 333 cell-fills
+PRJEB10018	PMC7244338	EMS83227-supplement-Supplementary_Table_6.xlsx	direct	236	944	high	mapped 236 samples, 944 cell-fills
+PRJEB27342	PMC9712112	41564_2022_1263_MOESM3_ESM.xlsx	direct	3227	8974	high	mapped 3227 samples, 8974 cell-fills
+PRJEB29738	PMC8634409	PRJEB29738.csv	direct	147	441	high	mapped 147 samples, 441 cell-fills
+PRJNA548120	PMC7845606	PRJNA548120.csv	direct	4	16	high	mapped 4 samples, 16 cell-fills
+PRJNA633565	PMC10434059	PRJNA633565.csv	direct	166	498	high	mapped 166 samples, 498 cell-fills
+PRJNA684006	PMC10101084		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.04121-22-s0001.pdf', 'spectrum.04121-22-s0001.pdf', 'spectrum.04121-22-s0001.pdf', 'PRJNA684006.csv']
+PRJNA778230	PMC9603589		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.01242-22-s0004.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'PRJNA778230.csv']

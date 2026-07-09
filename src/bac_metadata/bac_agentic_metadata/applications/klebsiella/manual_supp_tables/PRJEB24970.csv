@@ -1,0 +1,318 @@
+id,day,month,year,type,species,ST,latitude,longitude
+ERR2303512,3,2,2014,carriage,Klebsiella pneumoniae,ST1322,13.358427,103.856237
+ERR2303513,3,2,2014,carriage,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303514,3,2,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303515,3,2,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303516,3,2,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303517,3,2,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303518,3,2,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303519,3,2,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303520,3,2,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303521,3,2,2014,environmental,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303522,3,2,2014,environmental,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303523,3,2,2014,environmental,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303524,3,2,2014,environmental,Klebsiella pneumoniae,ST1322,13.358427,103.856237
+ERR2303525,3,2,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303526,4,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303527,4,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303528,4,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303529,6,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303530,6,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303531,6,2,2014,carriage,Klebsiella pneumoniae,ST307,13.358427,103.856237
+ERR2303532,6,2,2014,carriage,Klebsiella pneumoniae,ST17,13.358427,103.856237
+ERR2303533,6,2,2014,carriage,Klebsiella pneumoniae,ST307,13.358427,103.856237
+ERR2303534,6,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303535,6,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303536,6,2,2014,carriage,Klebsiella pneumoniae,ST289-1LV,13.358427,103.856237
+ERR2303537,7,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303538,7,2,2014,carriage,Klebsiella pneumoniae,ST289-1LV,13.358427,103.856237
+ERR2303539,9,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303540,9,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303541,10,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303542,10,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303543,10,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303544,10,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303545,10,2,2014,environmental,Klebsiella pneumoniae,ST469,13.358427,103.856237
+ERR2303546,11,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303547,17,2,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303548,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+ERR2303549,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303550,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303551,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+ERR2303552,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303553,17,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303554,17,2,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+ERR2303555,20,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303556,20,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST480-2LV,13.358427,103.856237
+ERR2303557,20,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+ERR2303558,20,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303559,21,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+ERR2303560,21,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1822,13.358427,103.856237
+ERR2303561,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST480-2LV,13.358427,103.856237
+ERR2303562,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303563,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST477,13.358427,103.856237
+ERR2303564,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303565,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303566,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1031,13.358427,103.856237
+ERR2303567,24,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1031,13.358427,103.856237
+ERR2303568,24,2,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303569,24,2,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1031,13.358427,103.856237
+ERR2303570,25,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303571,25,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303572,27,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303573,27,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303574,27,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303575,27,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303576,27,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303577,28,2,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303578,3,3,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1308,13.358427,103.856237
+ERR2303579,3,3,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303580,3,3,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303581,3,3,2014,environmental,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303582,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303583,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303584,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303585,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303586,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+ERR2303587,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+ERR2303588,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+ERR2303589,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+ERR2303590,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303591,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+ERR2303592,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1308,13.358427,103.856237
+ERR2303593,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1697,13.358427,103.856237
+ERR2303594,3,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303595,4,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303596,4,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303597,5,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303598,5,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303599,5,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1697,13.358427,103.856237
+ERR2303600,5,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303601,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1697,13.358427,103.856237
+ERR2303602,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303603,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303604,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303605,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+ERR2303606,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1308,13.358427,103.856237
+ERR2303607,6,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST283-2LV,13.358427,103.856237
+ERR2303608,7,3,2014,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST283-2LV,13.358427,103.856237
+ERR2303609,10,3,2014,carriage,Klebsiella variicola,ST1210-1LV,13.358427,103.856237
+ERR2303610,10,3,2014,carriage,Klebsiella variicola,ST368-2LV,13.358427,103.856237
+ERR2303611,10,3,2014,carriage,Klebsiella variicola,ST368-2LV,13.358427,103.856237
+ERR2303412,6,1,2014,environmental,Klebsiella pneumoniae,ST15,13.358427,103.856237
+ERR2303413,6,1,2014,environmental,Klebsiella pneumoniae,ST17-1LV,13.358427,103.856237
+ERR2303414,6,1,2014,environmental,Klebsiella pneumoniae,ST17,13.358427,103.856237
+ERR2303415,6,1,2014,environmental,Klebsiella pneumoniae,ST15,13.358427,103.856237
+ERR2303416,6,1,2014,environmental,Klebsiella pneumoniae,ST950,13.358427,103.856237
+ERR2303417,8,1,2014,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+ERR2303418,8,1,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303419,8,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303420,9,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303421,9,1,2014,carriage,Klebsiella pneumoniae,ST17,13.358427,103.856237
+ERR2303422,11,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303423,11,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303424,12,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303425,12,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303426,12,1,2014,carriage,Klebsiella pneumoniae,ST626,13.358427,103.856237
+ERR2303427,13,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303428,13,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303429,13,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303430,13,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303431,13,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303432,13,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303433,13,1,2014,environmental,Klebsiella pneumoniae,ST20,13.358427,103.856237
+ERR2303434,14,1,2014,carriage,Klebsiella pneumoniae,ST626,13.358427,103.856237
+ERR2303435,14,1,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303436,14,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303437,14,1,2014,carriage,Klebsiella pneumoniae,ST244,13.358427,103.856237
+ERR2303438,14,1,2014,carriage,Klebsiella pneumoniae,ST626,13.358427,103.856237
+ERR2303439,14,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303440,15,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303441,15,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303442,16,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303443,16,1,2014,carriage,Klebsiella pneumoniae,ST76,13.358427,103.856237
+ERR2303444,16,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303445,16,1,2014,carriage,Klebsiella pneumoniae,ST17,13.358427,103.856237
+ERR2303446,16,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303447,16,1,2014,carriage,Klebsiella pneumoniae,ST432,13.358427,103.856237
+ERR2303448,16,1,2014,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+ERR2303449,16,1,2014,carriage,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303450,17,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303451,20,1,2014,carriage,Klebsiella pneumoniae,ST17-1LV,13.358427,103.856237
+ERR2303452,20,1,2014,carriage,Klebsiella pneumoniae,ST490,13.358427,103.856237
+ERR2303453,20,1,2014,carriage,Klebsiella pneumoniae,ST17,13.358427,103.856237
+ERR2303454,20,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303455,20,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303456,20,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303457,20,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303458,20,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303459,20,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303460,20,1,2014,carriage,Klebsiella pneumoniae,ST626,13.358427,103.856237
+ERR2303461,20,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303462,20,1,2014,environmental,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303463,20,1,2014,environmental,Klebsiella pneumoniae,ST1035,13.358427,103.856237
+ERR2303464,21,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303465,21,1,2014,carriage,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303466,21,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303467,21,1,2014,carriage,Klebsiella pneumoniae,ST432,13.358427,103.856237
+ERR2303468,21,1,2014,carriage,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303469,21,1,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303470,23,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303471,23,1,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303472,23,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303473,23,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303474,23,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303475,23,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303476,23,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303477,24,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303478,27,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303479,27,1,2014,carriage,Klebsiella pneumoniae,ST563-1LV,13.358427,103.856237
+ERR2303480,27,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303481,27,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303482,27,1,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303483,27,1,2014,carriage,Klebsiella pneumoniae,ST432,13.358427,103.856237
+ERR2303484,27,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303485,27,1,2014,carriage,Klebsiella pneumoniae,ST896,13.358427,103.856237
+ERR2303486,27,1,2014,environmental,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303487,27,1,2014,environmental,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303488,27,1,2014,environmental,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303489,27,1,2014,environmental,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303490,27,1,2014,environmental,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303491,27,1,2014,environmental,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303492,28,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303493,28,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303494,30,1,2014,carriage,Klebsiella pneumoniae,ST1035,13.358427,103.856237
+ERR2303495,30,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303496,30,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303497,30,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303498,30,1,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303499,30,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303500,30,1,2014,carriage,Klebsiella pneumoniae,ST45,13.358427,103.856237
+ERR2303501,30,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303502,30,1,2014,carriage,Klebsiella pneumoniae,ST37,13.358427,103.856237
+ERR2303503,30,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303504,30,1,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303505,30,1,2014,carriage,Klebsiella pneumoniae,ST1322,13.358427,103.856237
+ERR2303506,30,1,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303507,31,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303508,31,1,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303509,1,2,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303510,3,2,2014,carriage,Klebsiella pneumoniae,ST101,13.358427,103.856237
+ERR2303511,3,2,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303388,10,3,2014,carriage,Klebsiella pneumoniae,ST502,13.358427,103.856237
+ERR2303389,2,1,2014,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+ERR2303390,2,1,2014,carriage,Klebsiella pneumoniae,ST309,13.358427,103.856237
+ERR2303391,2,1,2014,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+ERR2303392,2,1,2014,carriage,Klebsiella pneumoniae,ST309,13.358427,103.856237
+ERR2303393,2,1,2014,carriage,Klebsiella pneumoniae,ST1411,13.358427,103.856237
+ERR2303394,2,1,2014,carriage,Klebsiella pneumoniae,ST950,13.358427,103.856237
+ERR2303395,2,1,2014,carriage,Klebsiella pneumoniae,ST950,13.358427,103.856237
+ERR2303396,2,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303397,2,1,2014,carriage,Klebsiella pneumoniae,ST1035,13.358427,103.856237
+ERR2303398,2,1,2014,carriage,Klebsiella pneumoniae,ST163,13.358427,103.856237
+ERR2303399,3,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303400,3,1,2014,carriage,Klebsiella pneumoniae,ST950,13.358427,103.856237
+ERR2303401,4,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303402,5,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303403,6,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303404,6,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303405,6,1,2014,carriage,Klebsiella pneumoniae,ST244,13.358427,103.856237
+ERR2303406,6,1,2014,carriage,Klebsiella pneumoniae,ST394,13.358427,103.856237
+ERR2303407,6,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303408,6,1,2014,carriage,Klebsiella pneumoniae,ST1074-1LV,13.358427,103.856237
+ERR2303409,6,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+ERR2303410,6,1,2014,carriage,Klebsiella pneumoniae,ST626,13.358427,103.856237
+ERR2303411,6,1,2014,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+SRR5877447,16,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877448,28,9,2013,carriage,Klebsiella pneumoniae,ST234,13.358427,103.856237
+SRR5877449,13,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191-1LV,13.358427,103.856237
+SRR5877450,8,10,2013,carriage,Klebsiella pneumoniae,ST307,13.358427,103.856237
+SRR5877451,8,10,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877452,10,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1504,13.358427,103.856237
+SRR5877453,12,9,2013,carriage,Klebsiella pneumoniae,ST11,13.358427,103.856237
+SRR5877454,21,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST283,13.358427,103.856237
+SRR5877455,25,9,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877456,7,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877457,12,9,2013,carriage,Klebsiella pneumoniae,ST268,13.358427,103.856237
+SRR5877458,18,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1473,13.358427,103.856237
+SRR5877459,30,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1115-2LV,13.358427,103.856237
+SRR5877460,10,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877461,16,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST138,13.358427,103.856237
+SRR5877462,7,10,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877463,10,10,2013,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+SRR5877464,14,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877465,14,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+SRR5877466,5,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877467,14,10,2013,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+SRR5877468,18,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST283,13.358427,103.856237
+SRR5877469,14,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877470,1,10,2013,carriage,Klebsiella pneumoniae,ST2353,13.358427,103.856237
+SRR5877471,10,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877472,24,10,2013,carriage,Klebsiella pneumoniae,ST1,13.358427,103.856237
+SRR5877473,16,10,2013,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+SRR5877474,11,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877475,26,9,2013,carriage,Klebsiella pneumoniae,ST234,13.358427,103.856237
+SRR5877476,16,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877477,12,9,2013,carriage,Klebsiella pneumoniae,ST76,13.358427,103.856237
+SRR5877478,21,10,2013,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+SRR5877479,24,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+SRR5877480,21,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+SRR5877481,7,10,2013,carriage,Klebsiella pneumoniae,ST20,13.358427,103.856237
+SRR5877482,1,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877483,26,9,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877484,10,10,2013,carriage,Klebsiella pneumoniae,ST20,13.358427,103.856237
+SRR5877485,21,10,2013,carriage,Klebsiella pneumoniae,ST70,13.358427,103.856237
+SRR5877486,23,9,2013,carriage,Klebsiella pneumoniae,ST656,13.358427,103.856237
+SRR5877487,17,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877488,16,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877489,8,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST283-3LV,13.358427,103.856237
+SRR5877490,5,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1115-2LV,13.358427,103.856237
+SRR5877491,10,10,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877492,23,9,2013,carriage,Klebsiella pneumoniae,ST20,13.358427,103.856237
+SRR5877493,21,10,2013,carriage,Klebsiella pneumoniae,ST25,13.358427,103.856237
+SRR5877494,27,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+SRR5877495,18,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877496,13,10,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877497,10,10,2013,carriage,Klebsiella pneumoniae,ST307,13.358427,103.856237
+SRR5877498,10,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877499,16,10,2013,carriage,Klebsiella pneumoniae,ST16,13.358427,103.856237
+SRR5877500,18,10,2013,carriage,Klebsiella pneumoniae,ST502-1LV,13.358427,103.856237
+SRR5877501,17,10,2013,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+SRR5877502,10,10,2013,carriage,Klebsiella pneumoniae,ST17,13.358427,103.856237
+SRR5877503,8,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5877504,19,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+SRR5877505,17,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+SRR5877506,17,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877507,19,9,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877508,27,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1473,13.358427,103.856237
+SRR5877509,16,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877510,10,10,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877511,13,9,2013,carriage,Klebsiella pneumoniae,ST656,13.358427,103.856237
+SRR5877512,23,9,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877513,14,10,2013,carriage,Klebsiella pneumoniae,ST16,13.358427,103.856237
+SRR5877514,24,10,2013,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+SRR5877515,23,9,2013,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+SRR5877516,23,9,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877517,14,10,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877518,14,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877519,21,10,2013,carriage,Klebsiella pneumoniae,ST502-1LV,13.358427,103.856237
+SRR5877520,12,9,2013,carriage,Klebsiella pneumoniae,ST36,13.358427,103.856237
+SRR5877521,21,10,2013,carriage,Klebsiella pneumoniae,ST409,13.358427,103.856237
+SRR5877522,14,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1504,13.358427,103.856237
+SRR5877523,14,10,2013,carriage,Klebsiella pneumoniae,ST252,13.358427,103.856237
+SRR5877524,14,9,2013,carriage,Klebsiella pneumoniae,ST15,13.358427,103.856237
+SRR5877525,17,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1834-2LV,13.358427,103.856237
+SRR5877526,16,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST334,13.358427,103.856237
+SRR5877527,21,10,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST477,13.358427,103.856237
+SRR5877528,24,10,2013,carriage,Klebsiella pneumoniae,ST29,13.358427,103.856237
+SRR5877529,30,9,2013,carriage,Klebsiella pneumoniae,ST2353,13.358427,103.856237
+SRR5877530,16,9,2013,carriage,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5877531,24,9,2013,carriage,Klebsiella pneumoniae,ST76,13.358427,103.856237
+SRR5877532,17,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST1191,13.358427,103.856237
+SRR5877533,25,9,2013,carriage,Klebsiella quasipneumoniae subsp. similipneumoniae,ST414,13.358427,103.856237
+SRR5878374,7,10,2013,environmental,Klebsiella pneumoniae,ST20,13.358427,103.856237
+SRR5878375,14,10,2013,environmental,Klebsiella pneumoniae,ST309,13.358427,103.856237
+SRR5878376,23,9,2013,environmental,Klebsiella pneumoniae,ST22,13.358427,103.856237
+SRR5878377,21,10,2013,environmental,Klebsiella pneumoniae,ST20,13.358427,103.856237
+SRR5878378,14,10,2013,environmental,Klebsiella pneumoniae,ST883-1LV,13.358427,103.856237
+SRR5878379,14,10,2013,environmental,Klebsiella pneumoniae,ST101,13.358427,103.856237

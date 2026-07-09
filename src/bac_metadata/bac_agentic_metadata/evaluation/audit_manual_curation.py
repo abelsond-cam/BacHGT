@@ -45,6 +45,9 @@ _OA_SOURCES = {"europepmc_fulltext", "pdf"}
 _TABLE_METHODS = {"direct", "two_hop"}
 #: outcome methods that mark a study whose table the agent could NOT fetch itself (a recovery target).
 _VICTIM_METHODS = {"NO_PMCID", "abstained"}
+#: outcome-note markers for a table that IS wired but can't be joined to our accessions (Phase-2 linkage,
+#: not a silent loss) — so it reads as WARN, not FAIL.
+_LINKAGE_MARKERS = ("unanchor", "no joinable", "needs_linkage", "needs linkage", "manifest")
 _ACC_RE = re.compile(r"PRJ[A-Z]+\d+")
 #: tag suffixes to ignore when auto-discovering per-tag artifacts.
 _TAG_DENYLIST = {"", "opus", "tail_smoke", "test_basecache", "basecache"}
@@ -113,8 +116,12 @@ def audit(app: str, data_dir: Path, pk_root: Path) -> tuple[list[dict], list[str
         src_by_study.setdefault(r["study_accession"], set()).add((r.get("fulltext_source") or "").strip())
     used_table_studies: set[str] = set()
     victim_studies: set[str] = set()
+    outcome_seen: set[str] = set()
+    outcome_note: dict[str, str] = {}
     for _, r in outcomes.iterrows():
         acc, meth, tbl = r["study_accession"], (r.get("method") or "").strip(), (r.get("table") or "").strip()
+        outcome_seen.add(acc)
+        outcome_note[acc] = (r.get("note") or "").lower()
         if meth in _TABLE_METHODS or tbl:
             used_table_studies.add(acc)
         if meth in _VICTIM_METHODS:
@@ -145,8 +152,12 @@ def audit(app: str, data_dir: Path, pk_root: Path) -> tuple[list[dict], list[str
         rel = ", ".join(str(f.relative_to(data_dir.parent)) for f in files)
         if acc in used_table_studies:
             sev, detail = "OK", "consumed (per_sample_outcomes method=direct/two_hop or table set)"
+        elif any(m in outcome_note.get(acc, "") for m in _LINKAGE_MARKERS):
+            sev, detail = "WARN", "wired but table won't anchor to our accessions — Phase-2 linkage, not a loss"
+        elif acc not in outcome_seen:
+            sev, detail = "WARN", "wired but study not in the processed cohort yet (no per_sample outcome)"
         else:
-            sev, detail = "FAIL", "local supp table present but never used in per_sample_outcomes"
+            sev, detail = "FAIL", "local supp table present but not consumed — re-run per_sample / check format"
         findings.append({"check": "supp_table", "severity": sev, "accession": acc, "path": rel, "detail": detail})
 
     # ---- Check 3: recoverable project_k tables wired? ----

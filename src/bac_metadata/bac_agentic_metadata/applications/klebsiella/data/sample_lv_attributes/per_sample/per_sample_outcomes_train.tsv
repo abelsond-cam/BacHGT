@@ -1,7 +1,6 @@
 study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
 PRJDB12075	PMC9465067		abstained	0	0	none	no joinable table
 PRJDB12116	PMC11571079	mgen-10-01295-s002.xlsx	direct	53	54	high	mapped 53 samples, 54 cell-fills
-PRJDB5929			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB12699			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB15226	PMC5121380		abstained	0	0	none	no joinable table
 PRJEB1563	PMC5615107	mmc6.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mmc6.xlsx']
@@ -10,7 +9,6 @@ PRJEB1800	PMC4364942		abstained	0	0	none	no joinable table
 PRJEB19322	PMC8743538		abstained	0	0	none	no joinable table
 PRJEB20799			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB21277			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB21605	PMC6966826	13073_2019_706_MOESM1_ESM.xlsx	direct	148	296	high	mapped 148 samples, 296 cell-fills
 PRJEB22890			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB22903			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB24082	PMC10132065		abstained	0	0	none	no joinable table
@@ -21,9 +19,6 @@ PRJEB24086	PMC10132065		abstained	0	0	none	no joinable table
 PRJEB24087	PMC10132065		abstained	0	0	none	no joinable table
 PRJEB27256	PMC8865009		abstained	0	0	none	no joinable table
 PRJEB28054			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB28400			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB29143	PMC7527070		abstained	0	0	none	no joinable table
-PRJEB29740	PMC11316559	mgen-10-01271-s002.xlsx	direct	815	2445	high	mapped 815 samples, 2445 cell-fills
 PRJEB29742	PMC8634422	ciab777_suppl_supplementary_table_2.xlsx	direct	425	850	high	mapped 425 samples, 850 cell-fills
 PRJEB30134	PMC10438816	mgen-9-1048-s001.pdf	direct	32	128	high	mapped 32 samples, 128 cell-fills
 PRJEB33565	PMC8007471	41564_2021_870_MOESM4_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM6_ESM.xlsx', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf']
@@ -36,17 +31,13 @@ PRJEB39293	PMC9417982	41564_2022_1184_MOESM9_ESM.xlsx	direct	158	473	high	mapped
 PRJEB39867	PMC9598256		abstained	0	0	none	no joinable table
 PRJEB39943	PMC13259977	mmc2.xlsx	direct	2903	8636	high	mapped 2903 samples, 8636 cell-fills
 PRJEB42331	PMC8209719	mgen-7-0512-s001.xlsx	direct	80	80	high	mapped 80 samples, 80 cell-fills
-PRJEB42462			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJEB46513	PMC12885268	pgph.0005965.s002.tsv	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
-PRJEB48990	PMC10272877	mgen-9-1016-s001.xlsx	direct	539	1078	high	mapped 539 samples, 1078 cell-fills
 PRJEB50614	PMC11316559	mgen-10-01271-s002.xlsx	direct	339	1017	high	mapped 339 samples, 1017 cell-fills
 PRJEB50822	PMC9279682		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_4.pdf']
 PRJEB58018	PMC12862290		abstained	0	0	none	no joinable table
-PRJEB58136	PMC11652666	44197_2024_323_MOESM6_ESM.csv	direct	138	537	high	mapped 138 samples, 537 cell-fills
 PRJEB58216	PMC10483420	mgen-9-1082-s002.xlsx	direct	209	418	high	mapped 209 samples, 418 cell-fills
 PRJEB63361	PMC12810914	ppat.1013859.s006.xlsx	direct	412	826	high	mapped 412 samples, 826 cell-fills
 PRJEB64895	PMC10668257		abstained	0	0	none	no joinable table
-PRJEB6891	PMC5850561		abstained	0	0	none	no joinable table
 PRJEB74083	PMC11027475		abstained	0	0	none	no joinable table
 PRJNA1048341	PMC10917868		abstained	0	0	none	no joinable table
 PRJNA1087366	PMC11087563	41467_2024_48296_MOESM5_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf']
@@ -67,3 +58,14 @@ PRJNA855907	PMC9430190		abstained	0	0	none	no joinable table
 PRJNA857686	PMC9934365	pone.0277575.s009.xlsx	direct	3	4	high	mapped 3 samples, 4 cell-fills
 PRJNA982859			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
 PRJNA996149	PMC10720542		abstained	0	0	none	no joinable table
+PRJDB5929			abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['PRJDB5929.csv']
+PRJEB21605	PMC6966826	PRJEB21605.csv	direct	148	592	high	mapped 148 samples, 592 cell-fills; rescued ['host=vocab']
+PRJEB24970	PMC6977969	PRJEB24970.csv	direct	224	672	medium	mapped 224 samples, 672 cell-fills; rescued ['host=vocab']
+PRJEB28400		PRJEB28400.csv	direct	719	2154	medium	mapped 719 samples, 2154 cell-fills; rescued ['host=vocab', 'isolation_source=paper']
+PRJEB29143	PMC7527070	PRJEB29143.csv	direct	496	992	high	mapped 496 samples, 992 cell-fills
+PRJEB29740	PMC11316559	mgen-10-01271-s002.xlsx	direct	815	2445	high	mapped 815 samples, 2445 cell-fills
+PRJEB42462		PRJEB42462.csv	direct	1156	1118	high	mapped 1156 samples, 1118 cell-fills
+PRJEB48990	PMC10272877	mgen-9-1016-s001.xlsx	direct	539	1613	high	mapped 539 samples, 1613 cell-fills; rescued ['host=vocab']
+PRJEB58136	PMC11652666	44197_2024_323_MOESM6_ESM.csv	direct	138	537	high	mapped 138 samples, 537 cell-fills
+PRJEB6891	PMC5850561	PRJEB6891.csv	direct	84	170	high	mapped 84 samples, 170 cell-fills
+PRJNA564424	PMC7179641		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['PRJNA564424.csv']

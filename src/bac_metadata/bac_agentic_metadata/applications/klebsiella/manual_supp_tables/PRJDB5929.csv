@@ -1,0 +1,751 @@
+﻿Strain ID,Species,Specimen,Date collected,Province,"Short-read
+sequencer",DDBJ_short_accession,"Long-read
+sequencer",DDBJ_long_accession,Sequence type,"Carbapenemase
+genotype"
+C001,Klebsiella pneumoniae,Ascitic fluid,9/9/2015,Sakon Nakhon,HiSeq,DRX115297,-,-,ST147,NDM-1
+C002,Klebsiella pneumoniae,Sputum,9/9/2015,Sakon Nakhon,-,-,PacBio,DRX187456,ST340,OXA-181
+C003,Klebsiella pneumoniae,Sputum,2/9/2015,Sakon Nakhon,HiSeq,DRX115299,-,-,ST147,NDM-1
+C004,Klebsiella pneumoniae,Sputum,18/9/2015,Sakon Nakhon,HiSeq,DRX115300,-,-,ST147,NDM-1
+C005,Klebsiella pneumoniae,Bile,28/9/2015,Sakon Nakhon,-,-,PacBio,DRX187457,ST340,OXA-181
+C006,Klebsiella pneumoniae,Sputum,16/10/2015,Sakon Nakhon,-,-,PacBio,DRX187458,ST340,OXA-181
+C007,Klebsiella pneumoniae,Urine,16/10/2015,Sakon Nakhon,HiSeq,DRX115303,-,-,ST336,NDM-1
+C008,Klebsiella pneumoniae,Sputum,5/10/2015,Sakon Nakhon,HiSeq,DRX115304,-,-,ST340,OXA-181
+C009,Klebsiella pneumoniae,Swab from amputated leg,11/10/2015,Sakon Nakhon,HiSeq,DRX187450,-,-,ST336,NDM-1
+C010,Klebsiella pneumoniae,Sputum,29/10/2015,Sakon Nakhon,HiSeq,DRX115305,-,-,ST340,OXA-181
+C011,Klebsiella pneumoniae,Sputum,29/10/2015,Sakon Nakhon,HiSeq,DRX115306,-,-,ST340,OXA-181
+C012,Klebsiella pneumoniae,Sputum,27/10/2015,Sakon Nakhon,HiSeq,DRX115307,-,-,ST340,OXA-181
+C013,Klebsiella pneumoniae,Sputum,24/10/2015,Sakon Nakhon,HiSeq,DRX115308,-,-,ST15,NDM-1
+C014,Klebsiella pneumoniae,Sputum,21/10/2015,Sakon Nakhon,HiSeq,DRX115309,-,-,ST340,OXA-181
+C015,Escherichia coli,Urine,19/10/2015,Sakon Nakhon,HiSeq,DRX115310,-,-,ST410,NDM-5
+C016,Escherichia coli,Wound,18/9/2015,Sakon Nakhon,HiSeq,DRX115311,-,-,ST410,NDM-5
+C018,Klebsiella pneumoniae,Sputum,22/11/2015,Nakhon Phanom,-,-,PacBio,DRX187459,ST147,NDM-1
+C020,Klebsiella pneumoniae,Sputum,9/11/2015,Sakon Nakhon,HiSeq,DRX115314,-,-,ST147,NDM-1
+C022,Klebsiella pneumoniae,Ascitic fluid,5/11/2015,Sakon Nakhon,HiSeq,DRX115315,-,-,ST340,OXA-181
+C024,Escherichia coli,Urine,22/1/2016,Sakon Nakhon,HiSeq,DRX115317,-,-,ST410,NDM-1
+C025,Klebsiella pneumoniae,Sputum,30/11/2015,Sakon Nakhon,HiSeq,DRX115318,-,-,ST340,OXA-181
+C026,Klebsiella pneumoniae,Urine,29/11/2015,Sakon Nakhon,HiSeq,DRX115319,-,-,ST340,OXA-181
+C027,Klebsiella pneumoniae,Sputum,24/11/2015,Sakon Nakhon,HiSeq,DRX115320,-,-,ST340,OXA-181
+C028,Klebsiella pneumoniae,Sputum,15/1/2016,Sakon Nakhon,HiSeq,DRX115321,-,-,ST147,NDM-1 OXA-181
+C029,Klebsiella pneumoniae,Sputum,2/1/2016,Sakon Nakhon,HiSeq,DRX115322,-,-,ST147,NDM-1 OXA-181
+C031,Klebsiella pneumoniae,Sputum,28/12/2015,Sakon Nakhon,HiSeq,DRX115323,-,-,ST340,OXA-181
+C032,Escherichia coli,Urine,29/1/2016,Sakon Nakhon,HiSeq,DRX115324,-,-,ST361,NDM-5
+C033,Klebsiella pneumoniae,Sputum,29/12/2015,Sakon Nakhon,HiSeq,DRX115325,-,-,ST340,OXA-181
+C034,Klebsiella pneumoniae,Wound,14/1/2016,Sakon Nakhon,HiSeq,DRX115326,-,-,ST334,NDM-1
+C035,Klebsiella pneumoniae,Sputum,21/11/2015,Sakon Nakhon,HiSeq,DRX115327,-,-,ST340,OXA-181
+C036,Klebsiella pneumoniae,Sputum,3/1/2016,Sakon Nakhon,HiSeq,DRX115328,-,-,ST340,OXA-181
+C037,Klebsiella pneumoniae,Sputum,6/1/2016,Sakon Nakhon,HiSeq,DRX115329,-,-,ST147,NDM-1 OXA-181
+C038,Klebsiella pneumoniae,Pleural fluid,7/1/2016,Sakon Nakhon,HiSeq,DRX187451,-,-,ST340,OXA-181
+C042,Escherichia coli,Urine,6/3/2015,Udon Thani,HiSeq,DRX115332,-,-,ST46,NDM-5
+C043,Klebsiella pneumoniae,Sputum,13/3/2015,Udon Thani,HiSeq,DRX115333,-,-,ST336,NDM-1
+C044,Escherichia coli,Urine,21/3/2015,Udon Thani,HiSeq,DRX115334,-,-,ST354,NDM-1
+C045,Klebsiella pneumoniae,Blood,22/3/2015,Udon Thani,HiSeq,DRX115335,PacBio,DRX187460,ST231,NDM-1
+C046,Klebsiella pneumoniae,Blood,23/3/2015,Udon Thani,HiSeq,DRX115336,-,-,ST273,NDM-1
+C047,Klebsiella pneumoniae,Blood,19/4/2015,Udon Thani,HiSeq,DRX115337,-,-,ST231,NDM-1
+C048,Klebsiella pneumoniae,Sputum,21/4/2015,Udon Thani,HiSeq,DRX115338,GridION,DRX187481,ST231,NDM-1
+C049,Escherichia coli,Urine,29/4/2015,Udon Thani,HiSeq,DRX115339,-,-,ST354,NDM-1
+C052,Escherichia coli,Urine,25/8/2015,Udon Thani,HiSeq,DRX115340,-,-,ST361,NDM-5
+C053,Escherichia coli,Urine,23/8/2015,Udon Thani,-,-,PacBio,DRX187461,ST361,NDM-5
+C055,Klebsiella pneumoniae,Sputum,5/9/2015,Udon Thani,HiSeq,DRX115343,-,-,ST120,NDM-1
+C056,Klebsiella pneumoniae,Sputum,11/9/2015,Udon Thani,HiSeq,DRX115344,-,-,ST147,NDM-1
+C057,Klebsiella pneumoniae,Pleural fluid,11/9/2015,Udon Thani,-,-,PacBio,DRX187462,ST48,NDM-1
+C058,Klebsiella pneumoniae,Urine,19/9/2015,Udon Thani,HiSeq,DRX115346,-,-,ST101,NDM-1
+C059,Escherichia coli,Blood,24/6/2015,Udon Thani,HiSeq,DRX115347,-,-,ST10,NDM-1
+C060,Escherichia coli,Blood,29/11/2015,Udon Thani,HiSeq,DRX115348,-,-,ST361,NDM-5
+C062,Escherichia coli,Urine,5/1/2016,Udon Thani,HiSeq,DRX115349,-,-,ST361,NDM-5
+C063,Klebsiella pneumoniae,Urine,19/1/2016,Udon Thani,-,-,PacBio,DRX187463,ST1089,NDM-5
+C064,Escherichia coli,Blood,28/1/2016,Udon Thani,HiSeq,DRX115351,-,-,ST3910,NDM-1
+C068,Escherichia coli,Urine,16/3/2016,Sakon Nakhon,HiSeq,DRX115354,-,-,ST361,NDM-5
+C069,Klebsiella pneumoniae,Sputum,4/3/2016,Sakon Nakhon,HiSeq,DRX115355,-,-,ST147,NDM-1
+C070,Klebsiella pneumoniae,Sputum,2/3/2016,Sakon Nakhon,-,-,PacBio,DRX187464,ST147,NDM-1
+C071,Klebsiella pneumoniae,Sputum,1/3/2016,Sakon Nakhon,HiSeq,DRX115357,-,-,ST147,NDM-1
+C072,Klebsiella pneumoniae,Sputum,29/3/2016,Sakon Nakhon,-,-,PacBio,DRX187465,ST147,OXA-181
+C073,Klebsiella pneumoniae,Sputum,15/2/2016,Sakon Nakhon,HiSeq,DRX115359,-,-,ST16,NDM-1 OXA-232
+C074,Klebsiella pneumoniae,Urine,24/2/2016,Sakon Nakhon,HiSeq,DRX115360,PacBio,DRX187466,ST147,NDM-1 OXA-181
+C075,Klebsiella pneumoniae,Sputum,14/2/2016,Sakon Nakhon,HiSeq,DRX115361,-,-,ST147,NDM-1
+C077,Escherichia coli,Bedsore,4/2/2016,Sakon Nakhon,HiSeq,DRX115363,-,-,ST4219,NDM-1
+C078,Klebsiella pneumoniae,Urine,21/2/2016,Sakon Nakhon,HiSeq,DRX115364,-,-,ST231,NDM-1
+C079,Escherichia coli,Urine,20/2/2016,Sakon Nakhon,HiSeq,DRX115365,-,-,ST361,NDM-5
+C080,Klebsiella pneumoniae,Urine,21/2/2016,Sakon Nakhon,HiSeq,DRX115366,-,-,ST147,NDM-1
+C081,Klebsiella pneumoniae,Sputum,23/2/2016,Sakon Nakhon,HiSeq,DRX115367,-,-,ST340,OXA-181
+C082,Klebsiella pneumoniae,Sputum,13/4/2016,Sakon Nakhon,HiSeq,DRX115368,-,-,ST340,OXA-181
+C083,Klebsiella pneumoniae,Urine,11/4/2016,Sakon Nakhon,HiSeq,DRX115369,-,-,ST147,NDM-1
+C084,Klebsiella pneumoniae,Blood,16/4/2016,Sakon Nakhon,-,-,PacBio,DRX187467,ST340,OXA-181
+C085,Klebsiella pneumoniae,Sputum,17/4/2016,Sakon Nakhon,HiSeq,DRX115371,-,-,ST334,NDM-1
+C086,Klebsiella pneumoniae,Sputum,7/4/2016,Sakon Nakhon,HiSeq,DRX115372,-,-,ST340,OXA-181
+C090,Klebsiella pneumoniae,Sputum,15/4/2016,Nakhon Phanom,HiSeq,DRX187452,-,-,ST101,NDM-1
+C092,Klebsiella pneumoniae,Urine,15/3/2016,Nakhon Phanom,HiSeq,DRX187453,-,-,ST340,NDM-1
+C094,Escherichia coli,Urine,19/4/2016,Surin,HiSeq,DRX115374,-,-,ST1193,NDM-1
+C095,Klebsiella pneumoniae,Sputum,2/4/2016,Surin,HiSeq,DRX115375,-,-,ST2673,NDM-1
+C097,Klebsiella pneumoniae,Sputum,6/4/2016,Surin,HiSeq,DRX115377,-,-,ST736,NDM-1
+C098,Escherichia coli,Pus,16/5/2016,Surin,HiSeq,DRX115378,-,-,ST48,NDM-1
+C099,Klebsiella pneumoniae,Sputum,16/5/2016,Surin,HiSeq,DRX115379,-,-,ST11,NDM-1
+C100,Escherichia coli,Sputum,16/5/2016,Surin,HiSeq,DRX115380,-,-,ST410,NDM-1
+C101,Klebsiella pneumoniae,Pus,25/5/2016,Surin,HiSeq,DRX115381,-,-,ST147,NDM-1
+C102,Klebsiella pneumoniae,Urine,3/6/2016,Surin,HiSeq,DRX115382,-,-,ST1740,IMP-14
+C103,Klebsiella pneumoniae,Sputum,4/6/2016,Surin,-,-,PacBio,DRX115383,ST15,NDM-1
+C105,Escherichia coli,Blood,29/5/2016,Surin,HiSeq,DRX115386,-,-,ST1236,NDM-1
+C106,Klebsiella pneumoniae,Urine,28/5/2016,Nakhon Phanom,HiSeq,DRX115387,-,-,ST677,NDM-1
+C107,Klebsiella pneumoniae,Sputum,18/5/2016,Nakhon Phanom,HiSeq,DRX115388,-,-,ST147,NDM-1
+C110,Klebsiella pneumoniae,Sputum,4/5/2016,Sakon Nakhon,HiSeq,DRX115389,-,-,ST1859,NDM-1 OXA-181
+C111,Klebsiella pneumoniae,Urine,3/5/2016,Sakon Nakhon,HiSeq,DRX115390,-,-,ST147,NDM-1
+C112,Escherichia coli,Urine,3/5/2016,Sakon Nakhon,HiSeq,DRX187454,-,-,ST361,NDM-5
+C113,Klebsiella pneumoniae,Sputum,4/5/2016,Sakon Nakhon,HiSeq,DRX115391,-,-,ST340,OXA-181
+C114,Klebsiella pneumoniae,Sputum,21/4/2016,Sakon Nakhon,HiSeq,DRX115392,-,-,ST340,OXA-181
+C115,Klebsiella pneumoniae,Sputum,7/6/2016,Sakon Nakhon,HiSeq,DRX115393,-,-,ST340,OXA-181
+C116,Klebsiella pneumoniae,Sputum,3/6/2016,Sakon Nakhon,HiSeq,DRX115394,-,-,ST340,OXA-181
+C117,Klebsiella pneumoniae,Sputum,21/5/2016,Sakon Nakhon,HiSeq,DRX115395,-,-,ST147,OXA-181
+C119,Klebsiella pneumoniae,Sputum,8/5/2016,Sakon Nakhon,HiSeq,DRX115397,-,-,ST340,OXA-181
+C120,Klebsiella pneumoniae,Urine,16/5/2016,Sakon Nakhon,HiSeq,DRX115398,-,-,ST340,OXA-181
+C121,Klebsiella pneumoniae,Sputum,6/6/2016,Sakon Nakhon,HiSeq,DRX115399,-,-,ST340,OXA-181
+C122,Klebsiella pneumoniae,Sputum,5/6/2016,Sakon Nakhon,HiSeq,DRX115400,-,-,ST147,OXA-181
+C123,Klebsiella pneumoniae,Sputum,22/4/2016,Sakon Nakhon,HiSeq,DRX115401,-,-,ST147,OXA-181
+C124,Klebsiella pneumoniae,Urine,26/4/2016,Sakon Nakhon,HiSeq,DRX115402,-,-,ST147,NDM-1
+C125,Escherichia coli,Urine,25/4/2016,Sakon Nakhon,HiSeq,DRX115403,-,-,ST410,NDM-5
+C126,Klebsiella pneumoniae,Urine,24/4/2016,Sakon Nakhon,HiSeq,DRX115404,-,-,ST16,NDM-1 OXA-232
+C127,Klebsiella pneumoniae,Sputum,14/5/2016,Sakon Nakhon,HiSeq,DRX115405,GridION,DRX187482,ST1859,NDM-1
+C128,Klebsiella pneumoniae,Sputum,25/4/2016,Sakon Nakhon,HiSeq,DRX115406,-,-,ST540,NDM-1
+C129,Escherichia coli,Pus from foot,19/7/2016,Nakhon Phanom,HiSeq,DRX115407,-,-,ST2659,NDM-5
+C130,Klebsiella pneumoniae,Sputum,15/7/2016,Nakhon Phanom,HiSeq,DRX115408,-,-,ST147,NDM-1
+C134,Klebsiella pneumoniae,Sputum,17/7/2016,Nakhon Phanom,HiSeq,DRX115411,-,-,ST656,NDM-1
+C135,Klebsiella pneumoniae,Urine,25/6/2016,Surin,HiSeq,DRX187455,-,-,ST2673,NDM-1
+C136,Klebsiella pneumoniae,Blood,27/6/2016,Surin,HiSeq,DRX115412,-,-,ST11,NDM-1
+C137,Klebsiella pneumoniae,Sputum,1/7/2016,Surin,HiSeq,DRX115413,-,-,ST39,NDM-1
+C138,Klebsiella pneumoniae,Sputum,3/7/2016,Surin,HiSeq,DRX115414,-,-,ST16,NDM-1 OXA-232
+C139,Klebsiella pneumoniae,Sputum,3/7/2016,Surin,HiSeq,DRX115415,-,-,ST17,NDM-1
+C140,Escherichia coli,Urine,7/7/2016,Surin,HiSeq,DRX115416,-,-,ST410,NDM-5
+C141,Klebsiella pneumoniae,Urine,2/8/2016,Surin,HiSeq,DRX115417,-,-,ST101,NDM-1
+C142,Escherichia coli,Urine,4/8/2016,Surin,HiSeq,DRX115418,-,-,ST410,NDM-5
+C143,Klebsiella pneumoniae,Sputum,7/8/2016,Surin,HiSeq,DRX115419,-,-,ST231,OXA-232
+C145,Klebsiella pneumoniae,Urine,4/8/2016,Surin,HiSeq,DRX115420,-,-,ST11,NDM-1
+C146,Klebsiella pneumoniae,Sputum,6/8/2016,Surin,HiSeq,DRX115421,-,-,ST11,NDM-1
+C147,Escherichia coli,Urine,6/8/2016,Surin,HiSeq,DRX115422,-,-,ST167,NDM-5
+C148,Klebsiella pneumoniae,Sputum,2/8/2016,Surin,HiSeq,DRX115423,-,-,ST534,NDM-1
+C149,Escherichia coli,Sputum,10/8/2016,Surin,HiSeq,DRX115424,-,-,ST2144,NDM-1
+C153,Escherichia coli,Urine,12/8/2016,Tak,HiSeq,DRX141043,-,-,ST448,NDM-7
+C154,Escherichia coli,Urine,16/8/2016,Tak,HiSeq,DRX141044,-,-,ST167,NDM-5
+C156,Escherichia coli,Sputum,4/2/2015,Surat Thani,HiSeq,DRX141046,-,-,ST448,NDM-4
+C157,Escherichia coli,Pus from foot,12/2/2015,Surat Thani,HiSeq,DRX141047,-,-,ST410,OXA-181
+C158,Escherichia coli,Pus from foot,18/2/2015,Surat Thani,HiSeq,DRX141048,-,-,ST1193,NDM-1
+C159,Klebsiella pneumoniae,Urine,20/2/2015,Surat Thani,HiSeq,DRX141049,-,-,ST11,NDM-1
+C160,Klebsiella pneumoniae,Sputum,10/3/2015,Surat Thani,HiSeq,DRX141050,-,-,ST11,NDM-1
+C161,Escherichia coli,Urine,27/5/2015,Surat Thani,HiSeq,DRX141051,-,-,ST410,OXA-181
+C163,Escherichia coli,Wound,30/5/2015,Surat Thani,HiSeq,DRX141052,-,-,ST410,NDM-1 OXA-181
+C164,Klebsiella pneumoniae,Blood,1/6/2015,Surat Thani,HiSeq,DRX141053,-,-,ST16,NDM-1
+C166,Klebsiella pneumoniae,Pleural fluid,2/6/2015,Surat Thani,HiSeq,DRX141056,-,-,ST16,NDM-1
+C167,Klebsiella pneumoniae,Blood,10/6/2015,Surat Thani,HiSeq,DRX141057,-,-,ST16,OXA-181
+C169,Klebsiella pneumoniae,Ascitic fluid,17/7/2015,Surat Thani,HiSeq,DRX141060,-,-,ST11,NDM-1
+C170,Klebsiella pneumoniae,Urine,28/1/2015,Surat Thani,HiSeq,DRX141061,-,-,ST11,NDM-1
+C171,Escherichia coli,Blood,27/1/2015,Surat Thani,HiSeq,DRX141062,-,-,ST448,NDM-4
+C172,Escherichia coli,Urine,4/8/2015,Surat Thani,HiSeq,DRX141063,-,-,ST448,NDM-4
+C176,Escherichia coli,Pus from foot,5/8/2015,Surat Thani,HiSeq,DRX141066,-,-,ST1340,OXA-181
+C177,Klebsiella pneumoniae,Sputum,6/8/2015,Surat Thani,HiSeq,DRX141067,-,-,ST147,NDM-1
+C178,Klebsiella pneumoniae,Urine,16/8/2015,Surat Thani,HiSeq,DRX141068,-,-,ST147,NDM-1
+C182,Klebsiella pneumoniae,Urine,14/11/2015,Surat Thani,HiSeq,DRX141075,-,-,ST477,NDM-1
+C183,Klebsiella pneumoniae,Sputum,16/11/2015,Surat Thani,HiSeq,DRX141076,-,-,ST477,NDM-1
+C184,Klebsiella pneumoniae,Blood,27/12/2015,Surat Thani,HiSeq,DRX141077,-,-,ST11,NDM-1
+C186,Klebsiella pneumoniae,Urine,7/1/2016,Surat Thani,HiSeq,DRX141080,-,-,ST101,NDM-1
+C187,Klebsiella pneumoniae,Urine,13/1/2016,Surat Thani,HiSeq,DRX141081,-,-,ST101,NDM-1
+C188,Escherichia coli,Urine,18/1/2016,Surat Thani,HiSeq,DRX141082,-,-,ST410,OXA-181
+C189,Klebsiella pneumoniae,Sputum,22/1/2016,Surat Thani,HiSeq,DRX141083,-,-,ST277,NDM-1
+C193,Klebsiella pneumoniae,Ascitic fluid,11/2/2016,Surat Thani,HiSeq,DRX141087,-,-,ST221,NDM-1
+C195,Klebsiella pneumoniae,Blood,27/12/2015,Surat Thani,HiSeq,DRX141088,-,-,ST101,NDM-1
+C201,Klebsiella pneumoniae,Sputum,12/2/2016,Surat Thani,HiSeq,DRX141090,-,-,ST2133,NDM-1
+C202,Klebsiella pneumoniae,Sputum,15/2/2016,Surat Thani,HiSeq,DRX141091,-,-,ST336,OXA-181
+C203,Klebsiella pneumoniae,Sputum,17/2/2016,Surat Thani,HiSeq,DRX141092,-,-,ST15,NDM-1
+C204,Klebsiella pneumoniae,Sputum,19/2/2016,Surat Thani,HiSeq,DRX141093,-,-,ST336,OXA-181
+C205,Klebsiella pneumoniae,Sputum,22/2/2016,Surat Thani,HiSeq,DRX141094,-,-,ST336,OXA-181
+C210,Klebsiella pneumoniae,Sputum,7/3/2016,Surat Thani,HiSeq,DRX141096,-,-,ST16,NDM-1 OXA-232
+C213,Klebsiella pneumoniae,Sputum,12/3/2016,Surat Thani,HiSeq,DRX141099,-,-,ST336,OXA-181
+C214,Escherichia coli,Pus,24/3/2016,Surat Thani,HiSeq,DRX141100,-,-,ST410,OXA-181
+C219,Klebsiella pneumoniae,Blood,7/4/2016,Surat Thani,HiSeq,DRX141101,-,-,ST336,OXA-181
+C222,Klebsiella pneumoniae,Pus,1/5/2016,Surat Thani,HiSeq,DRX141102,-,-,ST16,NDM-1 OXA-232
+C225,Klebsiella pneumoniae,Sputum,30/6/2016,Surat Thani,HiSeq,DRX141105,-,-,ST16,NDM-1 OXA-232
+C228,Klebsiella pneumoniae,Blood,8/7/2016,Surat Thani,HiSeq,DRX141107,-,-,ST16,NDM-1 OXA-232
+C229,Klebsiella pneumoniae,Blood,17/7/2016,Surat Thani,HiSeq,DRX141108,-,-,ST16,NDM-1 OXA-232
+C230,Klebsiella pneumoniae,Urine,1/7/2016,Surat Thani,HiSeq,DRX141109,-,-,ST16,NDM-1 OXA-232
+C233,Klebsiella pneumoniae,Urine,19/7/2016,Surat Thani,HiSeq,DRX141112,-,-,ST16,NDM-1 OXA-232
+C234,Klebsiella pneumoniae,Urine,17/6/2016,Surat Thani,HiSeq,DRX141113,-,-,ST16,NDM-1 OXA-232
+C235,Escherichia coli,Urine,20/7/2016,Surat Thani,HiSeq,DRX141114,-,-,ST405,NDM-1
+C236,Klebsiella pneumoniae,Urine,27/6/2016,Surat Thani,HiSeq,DRX141115,-,-,ST16,NDM-1 OXA-232
+C239,Klebsiella pneumoniae,Sputum,2/7/2016,Surat Thani,HiSeq,DRX141119,-,-,ST16,NDM-1 OXA-232
+C240,Klebsiella pneumoniae,Sputum,2/7/2016,Surat Thani,HiSeq,DRX141120,-,-,ST16,OXA-232
+C242,Klebsiella pneumoniae,Sputum,9/7/2016,Surat Thani,HiSeq,DRX141122,-,-,ST16,NDM-1 OXA-232
+C244,Klebsiella pneumoniae,Sputum,13/7/2016,Surat Thani,HiSeq,DRX141124,-,-,ST16,NDM-1
+C245,Klebsiella pneumoniae,Sputum,25/7/2016,Surat Thani,HiSeq,DRX141125,-,-,ST231,OXA-232
+C246,Klebsiella pneumoniae,Sputum,27/7/2016,Surat Thani,HiSeq,DRX141126,-,-,ST16,NDM-1 OXA-232
+C247,Klebsiella pneumoniae,Sputum,29/6/2016,Surat Thani,HiSeq,DRX141127,-,-,ST16,NDM-1 OXA-232
+C250,Klebsiella pneumoniae,Pus,16/7/2016,Surat Thani,HiSeq,DRX141129,-,-,ST16,NDM-1 OXA-232
+C251,Klebsiella pneumoniae,Urine,1/8/2016,Surat Thani,HiSeq,DRX141130,-,-,ST16,NDM-1 OXA-232
+C252,Klebsiella pneumoniae,Urine,1/8/2016,Surat Thani,HiSeq,DRX141131,-,-,ST16,NDM-1 OXA-232
+C254,Klebsiella pneumoniae,Urine,13/8/2016,Surat Thani,HiSeq,DRX141133,-,-,ST101,NDM-1
+C257,Klebsiella pneumoniae,Urine,30/7/2016,Surat Thani,HiSeq,DRX141136,-,-,ST101,NDM-1
+C258,Klebsiella pneumoniae,Urine,31/7/2016,Surat Thani,HiSeq,DRX141137,-,-,ST101,NDM-1
+C260,Escherichia coli,Pus,13/8/2016,Surat Thani,HiSeq,DRX141139,-,-,ST410,NDM-1
+C262,Klebsiella pneumoniae,Pus,23/8/2016,Surat Thani,HiSeq,DRX141140,-,-,ST16,NDM-1 OXA-232
+C263,Klebsiella pneumoniae,Sputum,12/8/2016,Surat Thani,HiSeq,DRX141141,-,-,ST16,NDM-1 OXA-232
+C264,Klebsiella pneumoniae,Sputum,26/8/2016,Surat Thani,HiSeq,DRX141142,-,-,ST11,OXA-232
+C267,Klebsiella pneumoniae,Blood,29/8/2016,Surat Thani,HiSeq,DRX141145,-,-,ST16,NDM-1 OXA-232
+C268,Klebsiella pneumoniae,Urine,29/8/2016,Surat Thani,HiSeq,DRX141146,-,-,ST16,NDM-1 OXA-232
+C277,Klebsiella pneumoniae,Blood,19/2/2016,Udon Thani,HiSeq,DRX141147,-,-,ST231,NDM-1
+C278,Escherichia coli,Urine,23/3/2016,Udon Thani,HiSeq,DRX141148,GridION,DRX187483,ST131,NDM-5
+C280,Escherichia coli,Blood,31/3/2016,Udon Thani,HiSeq,DRX141149,-,-,ST131,NDM-1
+C281,Escherichia coli,Urine,7/4/2016,Udon Thani,HiSeq,DRX141150,GridION,DRX187484,ST405,NDM-5
+C282,Escherichia coli,Urine,6/4/2016,Udon Thani,HiSeq,DRX141151,-,-,ST405,NDM-5
+C284,Klebsiella pneumoniae,Urine,2/5/2016,Udon Thani,HiSeq,DRX141153,-,-,ST14,NDM-1 OXA-232
+C285,Escherichia coli,Blood,21/5/2016,Udon Thani,HiSeq,DRX141154,-,-,ST410,NDM-1
+C286,Klebsiella pneumoniae,Pus from sternum,31/5/2016,Udon Thani,HiSeq,DRX141155,-,-,ST48,NDM-1
+C287,Klebsiella pneumoniae,Blood,22/6/2016,Udon Thani,HiSeq,DRX141156,-,-,ST48,NDM-1
+C288,Escherichia coli,Blood,26/6/2016,Udon Thani,HiSeq,DRX141157,-,-,ST410,NDM-5
+C290,Escherichia coli,Urine,26/6/2016,Udon Thani,HiSeq,DRX141160,GridION,DRX187485,ST405,NDM-5
+C291,Escherichia coli,Urine,30/6/2016,Udon Thani,HiSeq,DRX141161,-,-,ST2011,NDM-1
+C292,Escherichia coli,Blood,8/7/2016,Udon Thani,HiSeq,DRX141162,-,-,ST167,NDM-5
+C293,Escherichia coli,Pleural fluid,8/7/2016,Udon Thani,HiSeq,DRX141163,-,-,ST361,NDM-5
+C294,Klebsiella pneumoniae,Urine,18/7/2016,Udon Thani,HiSeq,DRX141164,-,-,ST273,NDM-1
+C295,Escherichia coli,Urine,29/7/2016,Udon Thani,HiSeq,DRX141165,-,-,ST405,NDM-5
+C297,Escherichia coli,Blood,6/8/2016,Udon Thani,HiSeq,DRX141167,-,-,ST410,NDM-5
+C298,Escherichia coli,Blood,3/8/2016,Udon Thani,HiSeq,DRX141168,-,-,ST410,NDM-5
+C300,Escherichia coli,Urine,18/9/2016,Chumphon,HiSeq,DRX141170,-,-,ST410,NDM-5
+C302,Escherichia coli,Urine,8/10/2016,Surin,HiSeq,DRX141171,-,-,ST410,NDM-1
+C303,Escherichia coli,Urine,3/10/2016,Surin,HiSeq,DRX141172,-,-,ST410,NDM-1
+C304,Escherichia coli,Urine,13/10/2016,Surin,HiSeq,DRX141173,-,-,ST10210,NDM-5
+C305,Escherichia coli,Blood,12/10/2016,Surin,HiSeq,DRX141174,-,-,ST410,NDM-5
+C306,Klebsiella pneumoniae,Sputum,13/10/2016,Surin,HiSeq,DRX141175,-,-,ST231,OXA-232
+C307,Klebsiella pneumoniae,Sputum,27/8/2016,Sakon Nakhon,HiSeq,DRX141176,-,-,ST340,OXA-181
+C308,Klebsiella pneumoniae,Sputum,29/8/2016,Sakon Nakhon,HiSeq,DRX141177,-,-,ST147,NDM-1
+C309,Klebsiella pneumoniae,Sputum,29/8/2016,Sakon Nakhon,HiSeq,DRX141178,-,-,ST11,OXA-181
+C311,Klebsiella pneumoniae,Sputum,21/8/2016,Sakon Nakhon,HiSeq,DRX141180,-,-,ST11,OXA-181
+C312,Klebsiella pneumoniae,Sputum,28/6/2016,Sakon Nakhon,HiSeq,DRX141181,-,-,ST147,NDM-1
+C313,Klebsiella pneumoniae,Urine,7/7/2016,Sakon Nakhon,HiSeq,DRX141182,-,-,ST340,OXA-181
+C314,Klebsiella pneumoniae,Sputum,19/8/2016,Sakon Nakhon,HiSeq,DRX141183,-,-,ST11,OXA-181
+C315,Klebsiella pneumoniae,Sputum,31/7/2016,Sakon Nakhon,HiSeq,DRX141184,-,-,ST340,OXA-181
+C316,Klebsiella pneumoniae,Sputum,2/7/2016,Sakon Nakhon,HiSeq,DRX141185,-,-,ST340,OXA-181
+C317,Klebsiella pneumoniae,Sputum,18/8/2016,Sakon Nakhon,HiSeq,DRX141186,-,-,ST147,NDM-1
+C318,Klebsiella pneumoniae,Sputum,20/8/2016,Sakon Nakhon,HiSeq,DRX141187,-,-,ST340,OXA-181
+C320,Klebsiella pneumoniae,Urine,1/7/2016,Sakon Nakhon,HiSeq,DRX141189,-,-,ST340,OXA-181
+C321,Klebsiella pneumoniae,Sputum,15/6/2016,Sakon Nakhon,HiSeq,DRX141190,-,-,ST340,OXA-181
+C322,Klebsiella pneumoniae,Sputum,4/7/2016,Sakon Nakhon,HiSeq,DRX141191,-,-,ST340,OXA-181
+C323,Klebsiella pneumoniae,Sputum,18/6/2016,Sakon Nakhon,HiSeq,DRX141192,-,-,ST147,NDM-1
+C324,Klebsiella pneumoniae,Sputum,30/8/2016,Sakon Nakhon,HiSeq,DRX141193,-,-,ST11,OXA-181
+C325,Klebsiella pneumoniae,Sputum,29/8/2016,Sakon Nakhon,HiSeq,DRX141194,-,-,ST336,OXA-181
+C326,Klebsiella pneumoniae,Sputum,27/8/2016,Sakon Nakhon,HiSeq,DRX141195,-,-,ST11,OXA-181
+C327,Klebsiella pneumoniae,Urine,9/7/2016,Sakon Nakhon,HiSeq,DRX141196,-,-,ST340,OXA-181
+C328,Klebsiella pneumoniae,Sputum,11/7/2016,Sakon Nakhon,HiSeq,DRX141197,-,-,ST340,OXA-181
+C330,Escherichia coli,Urine,5/9/2016,Sakon Nakhon,HiSeq,DRX141198,-,-,ST38,NDM-1
+C331,Klebsiella pneumoniae,Sputum,2/9/2016,Sakon Nakhon,HiSeq,DRX141199,-,-,ST340,OXA-181
+C334,Escherichia coli,Sputum,5/8/2016,Sakon Nakhon,HiSeq,DRX141202,-,-,ST410,NDM-5
+C336,Klebsiella pneumoniae,Sputum,22/7/2016,Sakon Nakhon,HiSeq,DRX141204,-,-,ST340,OXA-181
+C337,Klebsiella pneumoniae,Sputum,15/7/2016,Sakon Nakhon,HiSeq,DRX141205,-,-,ST340,OXA-181
+C340,Escherichia coli,Urine,5/11/2016,Surin,HiSeq,DRX141206,-,-,ST167,NDM-5
+C341,Klebsiella pneumoniae,Sputum,28/10/2016,Surin,HiSeq,DRX141207,-,-,ST2673,NDM-1
+C342,Klebsiella pneumoniae,Sputum,2/11/2016,Surin,HiSeq,DRX141208,-,-,ST1318,IMP-14
+C343,Klebsiella pneumoniae,Blood,1/11/2016,Surin,HiSeq,DRX141209,-,-,ST16,NDM-1 OXA-232
+C345,Klebsiella pneumoniae,Urine,5/11/2016,Surin,HiSeq,DRX141210,-,-,ST101,NDM-1
+C346,Escherichia coli,Urine,10/11/2016,Surin,HiSeq,DRX141211,-,-,ST410,NDM-5
+C347,Klebsiella pneumoniae,Sputum,11/11/2016,Surin,HiSeq,DRX141212,-,-,ST656,OXA-48
+C348,Escherichia coli,Pus,10/11/2016,Surin,HiSeq,DRX141213,-,-,ST1722,NDM-1
+C349,Klebsiella pneumoniae,Sputum,17/10/2016,Nakhon Phanom,HiSeq,DRX141214,-,-,ST37,NDM-1
+C350,Escherichia coli,Wound at leg,16/10/2016,Nakhon Phanom,HiSeq,DRX141215,-,-,ST131,OXA-48
+C351,Klebsiella pneumoniae,Sputum,24/8/2016,Nakhon Phanom,HiSeq,DRX141216,-,-,ST11,OXA-181
+C353,Klebsiella pneumoniae,Sputum,10/9/2016,Nakhon Phanom,HiSeq,DRX141218,-,-,ST11,OXA-181
+C354,Klebsiella pneumoniae,Urine,12/9/2016,Nakhon Phanom,HiSeq,DRX141219,-,-,ST147,NDM-1
+C355,Klebsiella pneumoniae,Sputum,25/9/2016,Nakhon Phanom,HiSeq,DRX141220,-,-,ST147,NDM-1
+C356,Klebsiella pneumoniae,Sputum,30/9/2016,Nakhon Phanom,HiSeq,DRX141221,-,-,ST147,NDM-1
+C357,Escherichia coli,Pus,1/10/2016,Nakhon Phanom,HiSeq,DRX141222,-,-,ST405,NDM-1
+C358,Klebsiella pneumoniae,Sputum,2/10/2016,Nakhon Phanom,HiSeq,DRX141223,-,-,ST11,OXA-181
+C359,Escherichia coli,Urine,2/10/2016,Nakhon Phanom,HiSeq,DRX141224,-,-,ST410,NDM-5
+C360,Klebsiella pneumoniae,Sputum,6/10/2016,Nakhon Phanom,HiSeq,DRX141225,-,-,ST11,OXA-181
+C361,Klebsiella pneumoniae,Urine,11/10/2016,Nakhon Phanom,HiSeq,DRX141226,-,-,ST147,NDM-1
+C363,Klebsiella pneumoniae,Sputum,12/10/2016,Nakhon Phanom,HiSeq,DRX141227,-,-,ST11,OXA-181
+C368,Klebsiella pneumoniae,Sputum,1/11/2016,Nakhon Phanom,HiSeq,DRX141231,-,-,ST11,OXA-181
+C369,Klebsiella pneumoniae,Urine,14/11/2016,Nakhon Phanom,HiSeq,DRX141232,-,-,ST11,OXA-181
+C370,Klebsiella pneumoniae,Pus,12/11/2016,Nakhon Phanom,HiSeq,DRX141233,-,-,ST70,NDM-1
+C371,Klebsiella pneumoniae,Urine,20/11/2016,Nakhon Phanom,HiSeq,DRX141234,-,-,ST147,NDM-1
+C372,Klebsiella pneumoniae,Urine,5/11/2016,Nakhon Phanom,HiSeq,DRX141235,-,-,ST147,NDM-1
+C373,Klebsiella pneumoniae,Sputum,8/11/2016,Nakhon Phanom,HiSeq,DRX141236,-,-,ST11,OXA-181
+C374,Klebsiella pneumoniae,Sputum,10/11/2016,Nakhon Phanom,HiSeq,DRX141237,-,-,ST340,OXA-181
+C375,Klebsiella pneumoniae,Urine,10/9/2016,Sakon Nakhon,HiSeq,DRX141238,-,-,ST147,NDM-1
+C376,Klebsiella pneumoniae,Sputum,13/9/2016,Sakon Nakhon,HiSeq,DRX141239,-,-,ST147,NDM-1
+C377,Klebsiella pneumoniae,Sputum,11/9/2016,Sakon Nakhon,HiSeq,DRX141240,-,-,ST336,OXA-181
+C378,Escherichia coli,Sputum,10/9/2016,Sakon Nakhon,HiSeq,DRX141241,-,-,ST410,NDM-5
+C379,Escherichia coli,Sputum,13/9/2016,Sakon Nakhon,HiSeq,DRX141242,-,-,ST410,NDM-5
+C380,Klebsiella pneumoniae,Sputum,8/9/2016,Sakon Nakhon,HiSeq,DRX141243,-,-,ST11,OXA-181
+C381,Klebsiella pneumoniae,Blood,6/10/2016,Sakon Nakhon,HiSeq,DRX141244,-,-,ST147,NDM-1
+C382,Klebsiella pneumoniae,Sputum,13/10/2016,Sakon Nakhon,HiSeq,DRX141245,-,-,ST11,OXA-181
+C383,Klebsiella pneumoniae,Pus,4/10/2016,Sakon Nakhon,HiSeq,DRX141246,-,-,ST147,NDM-1 OXA-181
+C384,Escherichia coli,Urine,4/10/2016,Sakon Nakhon,HiSeq,DRX141247,-,-,ST410,NDM-5
+C385,Escherichia coli,Urine,11/10/2016,Sakon Nakhon,HiSeq,DRX141248,-,-,ST410,NDM-5
+C386,Escherichia coli,Urine,11/10/2016,Sakon Nakhon,HiSeq,DRX141249,-,-,ST410,NDM-5
+C387,Klebsiella pneumoniae,Sputum,31/10/2016,Sakon Nakhon,HiSeq,DRX141250,-,-,ST11,OXA-181
+C388,Klebsiella pneumoniae,Sputum,1/10/2016,Sakon Nakhon,HiSeq,DRX141251,-,-,ST340,OXA-181
+C389,Klebsiella pneumoniae,Sputum,29/10/2016,Sakon Nakhon,HiSeq,DRX141252,-,-,ST11,OXA-181
+C390,Klebsiella pneumoniae,Sputum,1/11/2016,Sakon Nakhon,HiSeq,DRX141253,-,-,ST11,OXA-181
+C391,Klebsiella pneumoniae,Sputum,1/11/2016,Sakon Nakhon,HiSeq,DRX141254,-,-,ST11,OXA-181
+C392,Klebsiella pneumoniae,Sputum,16/11/2016,Sakon Nakhon,HiSeq,DRX141255,-,-,ST340,OXA-181
+C393,Klebsiella pneumoniae,Sputum,22/10/2016,Sakon Nakhon,HiSeq,DRX141256,-,-,ST11,OXA-181
+C394,Klebsiella pneumoniae,Ascitic fluid,7/9/2016,Sakon Nakhon,HiSeq,DRX141257,-,-,ST147,NDM-1
+C396,Klebsiella pneumoniae,Blood,22/10/2016,Sakon Nakhon,HiSeq,DRX141261,-,-,ST340,OXA-181
+C397,Klebsiella pneumoniae,Urine,17/10/2016,Sakon Nakhon,HiSeq,DRX141262,-,-,ST147,NDM-1
+C398,Klebsiella pneumoniae,Sputum,15/10/2016,Sakon Nakhon,HiSeq,DRX141263,-,-,ST147,NDM-1
+C399,Klebsiella pneumoniae,Sputum,16/10/2016,Sakon Nakhon,HiSeq,DRX141264,-,-,ST340,OXA-181
+C400,Klebsiella pneumoniae,Sputum,16/10/2016,Sakon Nakhon,HiSeq,DRX141265,-,-,ST11,OXA-181
+C401,Escherichia coli,Urine,15/10/2016,Sakon Nakhon,HiSeq,DRX141266,-,-,ST410,NDM-5
+C402,Klebsiella pneumoniae,Bile,8/10/2016,Sakon Nakhon,HiSeq,DRX141267,-,-,ST147,NDM-1
+C403,Klebsiella pneumoniae,Sputum,21/10/2016,Sakon Nakhon,HiSeq,DRX141268,-,-,ST11,OXA-181
+C404,Escherichia coli,Urine,17/11/2016,Surin,HiSeq,DRX141269,-,-,ST410,NDM-5
+C405,Escherichia coli,Sputum,20/11/2016,Surin,HiSeq,DRX141270,GridION,DRX187486,ST410,NDM-5
+C406,Escherichia coli,Urine,20/11/2016,Surin,HiSeq,DRX141271,-,-,ST410,NDM-5
+C407,Escherichia coli,Urine,20/11/2016,Surin,HiSeq,DRX141272,-,-,ST410,NDM-5
+C408,Escherichia coli,Urine,23/11/2016,Surin,HiSeq,DRX141273,-,-,ST410,NDM-1
+C409,Escherichia coli,Urine,23/11/2016,Surin,HiSeq,DRX141274,-,-,ST457,NDM-1
+C410,Escherichia coli,Urine,24/11/2016,Surin,HiSeq,DRX141275,-,-,ST410,NDM-5
+C411,Klebsiella pneumoniae,Sputum,24/11/2016,Surin,HiSeq,DRX141276,-,-,ST16,NDM-1 OXA-232
+C412,Klebsiella pneumoniae,Sputum,24/11/2016,Surin,HiSeq,DRX141277,-,-,ST2673,NDM-1
+C413,Klebsiella pneumoniae,Sputum,24/11/2016,Surin,HiSeq,DRX141278,-,-,ST16,NDM-1 OXA-232
+C414,Escherichia coli,Blood,22/11/2016,Surin,HiSeq,DRX141279,-,-,ST410,NDM-5
+C415,Klebsiella pneumoniae,Pus,25/11/2016,Surin,HiSeq,DRX141280,-,-,ST16,NDM-1 OXA-232
+C416,Escherichia coli,Urine,22/11/2016,Surin,HiSeq,DRX141281,-,-,ST10210,NDM-5
+C417,Escherichia coli,Urine,26/11/2016,Surin,HiSeq,DRX141282,-,-,ST410,NDM-5
+C418,Klebsiella pneumoniae,Urine,29/8/2016,Udon Thani,HiSeq,DRX141283,-,-,ST5808,NDM-1
+C421,Escherichia coli,Urine,6/9/2016,Udon Thani,HiSeq,DRX141285,-,-,ST405,NDM-5
+C422,Escherichia coli,Urine,7/9/2016,Udon Thani,HiSeq,DRX141286,-,-,ST361,NDM-5
+C423,Escherichia coli,Blood,16/9/2016,Udon Thani,HiSeq,DRX141287,-,-,ST410,NDM-5
+C424,Escherichia coli,Blood,21/9/2016,Udon Thani,HiSeq,DRX141288,-,-,ST405,NDM-5
+C429,Klebsiella pneumoniae,Bile,5/10/2016,Udon Thani,HiSeq,DRX141292,-,-,ST336,NDM-1
+C430,Escherichia coli,Urine,14/10/2016,Udon Thani,HiSeq,DRX141293,-,-,ST34,NDM-5
+C432,Escherichia coli,Urine,19/10/2016,Udon Thani,HiSeq,DRX141296,-,-,ST361,NDM-5
+C433,Escherichia coli,Blood,17/10/2016,Udon Thani,HiSeq,DRX141297,-,-,ST405,NDM-5
+C434,Escherichia coli,Blood,21/10/2016,Udon Thani,HiSeq,DRX141298,-,-,ST46,NDM-5
+C435,Klebsiella pneumoniae,Urine,3/11/2016,Udon Thani,HiSeq,DRX141299,GridION,DRX187487,ST147,NDM-1
+C436,Klebsiella pneumoniae,Sputum,7/11/2016,Udon Thani,HiSeq,DRX141300,-,-,ST15,OXA-48
+C437,Escherichia coli,Blood,7/11/2016,Udon Thani,HiSeq,DRX141301,-,-,ST131,NDM-1
+C439,Escherichia coli,Urine,11/11/2016,Udon Thani,HiSeq,DRX141302,-,-,ST405,NDM-3
+C443,Escherichia coli,Wound,15/11/2016,Mukdahan,HiSeq,DRX141304,-,-,ST410,NDM-5
+C445,Escherichia coli,Pus,17/11/2016,Mukdahan,HiSeq,DRX141305,-,-,ST410,NDM-5
+C446,Klebsiella pneumoniae,Sputum,26/11/2016,Mukdahan,HiSeq,DRX141306,-,-,ST147,NDM-1
+C465,Escherichia coli,Urine,24/12/2016,Sakon Nakhon,HiSeq,DRX141307,-,-,ST410,NDM-5
+C466,Klebsiella pneumoniae,Urine,9/11/2016,Sakon Nakhon,HiSeq,DRX141308,-,-,ST340,OXA-181
+C467,Escherichia coli,Urine,9/11/2016,Sakon Nakhon,HiSeq,DRX141309,-,-,ST361,NDM-1
+C468,Klebsiella pneumoniae,Peritoneal dialysis fluid,12/1/2017,Sakon Nakhon,HiSeq,DRX141310,-,-,ST11,OXA-181
+C469,Klebsiella pneumoniae,Urine,21/12/2016,Sakon Nakhon,HiSeq,DRX141311,-,-,ST11,OXA-181
+C470,Escherichia coli,Urine,10/1/2017,Sakon Nakhon,HiSeq,DRX141312,GridION,DRX187488,ST405,NDM-5
+C471,Klebsiella pneumoniae,Sputum,17/12/2016,Sakon Nakhon,HiSeq,DRX141313,-,-,ST48,NDM-1
+C472,Klebsiella pneumoniae,Urine,7/1/2017,Sakon Nakhon,HiSeq,DRX141314,-,-,ST147,NDM-1
+C473,Klebsiella pneumoniae,Gastric content,16/1/2017,Sakon Nakhon,HiSeq,DRX141315,-,-,ST340,OXA-181
+C474,Klebsiella pneumoniae,Urine,5/1/2017,Sakon Nakhon,HiSeq,DRX141316,-,-,ST11,OXA-181
+C475,Klebsiella pneumoniae,Urine,22/12/2016,Sakon Nakhon,HiSeq,DRX141317,-,-,ST336,NDM-1
+C476,Escherichia coli,Urine,12/1/2017,Sakon Nakhon,HiSeq,DRX141318,-,-,ST410,NDM-5
+C477,Klebsiella pneumoniae,Sputum,10/1/2017,Sakon Nakhon,HiSeq,DRX141319,-,-,ST11,OXA-181
+C478,Escherichia coli,Urine,10/1/2017,Sakon Nakhon,HiSeq,DRX141320,-,-,ST167,NDM-5
+C479,Klebsiella pneumoniae,Sputum,14/1/2017,Sakon Nakhon,HiSeq,DRX141321,-,-,ST11,OXA-181
+C480,Klebsiella pneumoniae,Sputum,22/1/2017,Sakon Nakhon,HiSeq,DRX141322,-,-,ST11,OXA-181
+C481,Klebsiella pneumoniae,Blood,25/12/2016,Sakon Nakhon,HiSeq,DRX141323,-,-,ST11,NDM-1 OXA-181
+C482,Klebsiella pneumoniae,Sputum,11/1/2017,Sakon Nakhon,HiSeq,DRX141324,-,-,ST11,OXA-181
+C485,Klebsiella pneumoniae,Sputum,22/12/2016,Nakhon Phanom,HiSeq,DRX141326,-,-,ST11,OXA-181
+C486,Klebsiella pneumoniae,Sputum,31/12/2016,Nakhon Phanom,HiSeq,DRX141327,-,-,ST11,OXA-181
+C489,Klebsiella pneumoniae,Urine,10/1/2017,Nakhon Phanom,HiSeq,DRX141330,-,-,ST11,OXA-181
+C490,Klebsiella pneumoniae,Urine,18/1/2017,Nakhon Phanom,HiSeq,DRX141331,-,-,ST70,NDM-1
+C492,Klebsiella pneumoniae,Pus,17/1/2017,Surin,HiSeq,DRX141332,-,-,ST231,OXA-232
+C495,Escherichia coli,Urine,24/1/2017,Surin,HiSeq,DRX141333,-,-,ST410,NDM-5
+C497,Escherichia coli,Pus,25/1/2017,Surin,HiSeq,DRX141334,-,-,ST88,NDM-1
+C520,Klebsiella pneumoniae,Sputum,18/2/2017,Surin,HiSeq,DRX141335,-,-,ST16,NDM-1 OXA-232
+C521,Escherichia coli,Sputum,19/2/2017,Surin,HiSeq,DRX141336,-,-,ST410,NDM-5
+C524,Escherichia coli,Sputum,20/2/2017,Surin,HiSeq,DRX141337,-,-,ST410,NDM-5
+C528,Klebsiella pneumoniae,Urine,23/2/2017,Surin,HiSeq,DRX141338,-,-,ST231,OXA-232
+C535,Klebsiella pneumoniae,Sputum,12/3/2017,Surin,HiSeq,DRX141339,-,-,ST231,OXA-232
+C536,Klebsiella pneumoniae,Sputum,10/3/2017,Surin,HiSeq,DRX141340,-,-,ST231,OXA-232
+C537,Klebsiella pneumoniae,Sputum,15/3/2017,Surin,HiSeq,DRX141341,-,-,ST231,OXA-232
+C538,Klebsiella pneumoniae,Sputum,16/3/2017,Surin,HiSeq,DRX141342,-,-,ST11,OXA-48
+C540,Escherichia coli,Pus,6/3/2017,Surin,HiSeq,DRX141344,-,-,ST744,NDM-1
+C541,Klebsiella pneumoniae,Pus,12/3/2017,Surin,HiSeq,DRX141345,-,-,ST231,OXA-232
+C542,Klebsiella pneumoniae,Urine,14/3/2017,Surin,HiSeq,DRX141346,-,-,ST231,OXA-232
+C543,Klebsiella pneumoniae,Urine,13/3/2017,Surin,HiSeq,DRX141347,-,-,ST231,OXA-232
+C544,Klebsiella pneumoniae,Urine,10/3/2017,Surin,HiSeq,DRX141348,-,-,ST231,OXA-232
+C545,Escherichia coli,Urine,12/1/2017,Udon Thani,HiSeq,DRX141349,-,-,ST405,NDM-5
+C546,Klebsiella pneumoniae,Blood,16/1/2017,Udon Thani,HiSeq,DRX141350,-,-,ST11,NDM-5
+C547,Escherichia coli,Urine,27/1/2017,Udon Thani,HiSeq,DRX141351,-,-,ST405,NDM-5
+C548,Klebsiella pneumoniae,Urine,31/1/2017,Udon Thani,HiSeq,DRX141352,-,-,ST15,OXA-48
+C549,Escherichia coli,Ascitic fluid,7/2/2017,Udon Thani,HiSeq,DRX141353,-,-,ST405,NDM-5
+C550,Escherichia coli,Ascitic fluid,17/2/2017,Udon Thani,HiSeq,DRX141354,-,-,ST410,NDM-1
+C551,Klebsiella pneumoniae,Sputum,27/2/2017,Udon Thani,HiSeq,DRX141355,-,-,ST336,OXA-181
+C552,Klebsiella pneumoniae,Urine,4/3/2017,Udon Thani,HiSeq,DRX141356,-,-,ST147,NDM-1
+C553,Escherichia coli,Ascitic fluid,8/3/2017,Udon Thani,HiSeq,DRX141357,-,-,ST361,NDM-5
+C554,Escherichia coli,Sputum,16/3/2017,Udon Thani,HiSeq,DRX141358,-,-,ST2011,NDM-1
+C555,Escherichia coli,Urine,17/3/2017,Udon Thani,HiSeq,DRX141359,-,-,ST88,NDM-1
+C556,Klebsiella pneumoniae,Urine,18/3/2017,Udon Thani,HiSeq,DRX141360,-,-,ST340,OXA-181
+C557,Klebsiella pneumoniae,Urine,19/3/2017,Udon Thani,HiSeq,DRX141361,-,-,ST48,NDM-5
+C558,Escherichia coli,Blood,17/3/2017,Udon Thani,HiSeq,DRX141362,-,-,ST405,NDM-5
+C559,Klebsiella pneumoniae,Sputum,24/3/2017,Surin,HiSeq,DRX141363,-,-,ST16,NDM-1 OXA-232
+C562,Escherichia coli,Sputum,6/4/2017,Surin,HiSeq,DRX141364,-,-,ST410,NDM-5
+C566,Escherichia coli,Urine,5/4/2017,Surin,HiSeq,DRX141365,-,-,ST410,NDM-5
+C567,Klebsiella pneumoniae,Sputum,4/4/2017,Surin,HiSeq,DRX141366,-,-,ST16,NDM-1 OXA-232
+C568,Klebsiella pneumoniae,Urine,2/4/2017,Surin,HiSeq,DRX141367,-,-,ST231,OXA-232
+C570,Klebsiella pneumoniae,Sputum,28/3/2017,Surin,HiSeq,DRX141368,-,-,ST16,NDM-1 OXA-232
+C573,Klebsiella pneumoniae,Sputum,5/3/2017,Sakon Nakhon,HiSeq,DRX141370,-,-,ST340,OXA-181
+C574,Klebsiella pneumoniae,Sputum,14/3/2017,Sakon Nakhon,HiSeq,DRX141371,-,-,ST11,OXA-181
+C575,Klebsiella pneumoniae,Bedsore,25/3/2017,Sakon Nakhon,HiSeq,DRX141372,-,-,ST11,OXA-181
+C576,Klebsiella pneumoniae,Sputum,27/2/2017,Sakon Nakhon,HiSeq,DRX141373,-,-,ST340,OXA-181
+C577,Klebsiella pneumoniae,Sputum,7/3/2017,Sakon Nakhon,HiSeq,DRX141374,-,-,ST340,OXA-181
+C578,Klebsiella pneumoniae,Sputum,11/3/2017,Sakon Nakhon,HiSeq,DRX141375,-,-,ST11,OXA-181
+C579,Escherichia coli,Urine,4/4/2017,Sakon Nakhon,HiSeq,DRX141376,-,-,ST410,NDM-1
+C580,Klebsiella pneumoniae,Sputum,20/3/2017,Sakon Nakhon,HiSeq,DRX141377,-,-,ST11,OXA-181
+C581,Klebsiella pneumoniae,Sputum,6/4/2017,Sakon Nakhon,HiSeq,DRX141378,-,-,ST340,OXA-181
+C582,Klebsiella pneumoniae,Sputum,6/3/2017,Sakon Nakhon,HiSeq,DRX141379,-,-,ST340,OXA-181
+C583,Klebsiella pneumoniae,Sputum,1/3/2017,Sakon Nakhon,HiSeq,DRX141380,-,-,ST11,OXA-181
+C584,Escherichia coli,Urine,16/3/2017,Sakon Nakhon,HiSeq,DRX141381,-,-,ST410,NDM-5
+C585,Klebsiella pneumoniae,Urine,2/4/2017,Sakon Nakhon,HiSeq,DRX141382,-,-,ST147,NDM-1
+C586,Klebsiella pneumoniae,Sputum,3/3/2017,Sakon Nakhon,HiSeq,DRX141383,-,-,ST11,OXA-181
+C587,Klebsiella pneumoniae,Sputum,3/4/2017,Sakon Nakhon,HiSeq,DRX141384,-,-,ST340,OXA-181
+C588,Klebsiella pneumoniae,Sputum,15/3/2017,Sakon Nakhon,HiSeq,DRX141385,-,-,ST340,OXA-181
+C589,Klebsiella pneumoniae,Sputum,9/3/2017,Sakon Nakhon,HiSeq,DRX141386,-,-,ST340,OXA-181
+C590,Klebsiella pneumoniae,Sputum,2/3/2017,Sakon Nakhon,HiSeq,DRX141387,-,-,ST340,OXA-181
+C591,Klebsiella pneumoniae,Urine,8/3/2017,Sakon Nakhon,HiSeq,DRX141388,-,-,ST11,OXA-181
+C592,Klebsiella pneumoniae,Sputum,7/3/2017,Sakon Nakhon,HiSeq,DRX141389,-,-,ST11,OXA-181
+C593,Klebsiella pneumoniae,Sputum,21/3/2017,Sakon Nakhon,HiSeq,DRX141390,-,-,ST11,OXA-181
+C594,Escherichia coli,Urine,17/1/2017,Sakon Nakhon,HiSeq,DRX141391,-,-,ST410,NDM-5
+C595,Escherichia coli,Sputum,7/4/2017,Sakon Nakhon,HiSeq,DRX141392,-,-,ST361,NDM-5
+C596,Klebsiella pneumoniae,Sputum,24/1/2017,Sakon Nakhon,HiSeq,DRX141393,-,-,ST147,NDM-1
+C597,Klebsiella pneumoniae,Sputum,1/4/2017,Sakon Nakhon,HiSeq,DRX141394,-,-,ST11,OXA-181
+C598,Klebsiella pneumoniae,Sputum,31/3/2017,Sakon Nakhon,HiSeq,DRX141395,-,-,ST340,OXA-181
+C599,Klebsiella pneumoniae,Sputum,30/3/2017,Sakon Nakhon,HiSeq,DRX141396,-,-,ST11,OXA-181
+C600,Klebsiella pneumoniae,Urine,29/3/2017,Sakon Nakhon,HiSeq,DRX141397,-,-,ST16,NDM-1 OXA-232
+C601,Klebsiella pneumoniae,Urine,23/1/2017,Sakon Nakhon,HiSeq,DRX141398,-,-,ST147,NDM-1
+C623,Escherichia coli,Sputum,13/4/2017,Surin,HiSeq,DRX141399,-,-,ST410,NDM-5
+C626,Klebsiella pneumoniae,Blood,10/4/2017,Bueng Kan,HiSeq,DRX141400,-,-,ST16,NDM-1 OXA-232
+C627,Klebsiella pneumoniae,Sputum,17/4/2017,Bueng Kan,HiSeq,DRX141401,-,-,ST16,NDM-1 OXA-232
+C628,Klebsiella pneumoniae,Sputum,20/4/2017,Bueng Kan,HiSeq,DRX141402,-,-,ST16,NDM-1 OXA-232
+C629,Klebsiella pneumoniae,Sputum,22/4/2017,Bueng Kan,HiSeq,DRX141403,-,-,ST16,NDM-1 OXA-232
+C630,Klebsiella pneumoniae,Sputum,15/3/2017,Bueng Kan,HiSeq,DRX141404,-,-,ST336,NDM-1
+C631,Klebsiella pneumoniae,Urine,7/3/2017,Bueng Kan,HiSeq,DRX141405,-,-,ST16,OXA-181
+C632,Klebsiella pneumoniae,Sputum,1/5/2017,Bueng Kan,HiSeq,DRX141406,-,-,ST16,NDM-1 OXA-232
+C633,Klebsiella pneumoniae,Sputum,5/5/2017,Bueng Kan,HiSeq,DRX141407,-,-,ST16,NDM-1 OXA-232
+C634,Klebsiella pneumoniae,Blood,25/4/2017,Bueng Kan,HiSeq,DRX141408,-,-,ST16,NDM-1 OXA-232
+C635,Klebsiella pneumoniae,Blood,29/4/2017,Bueng Kan,HiSeq,DRX141409,-,-,ST16,NDM-1 OXA-232
+C665,Escherichia coli,Sputum,10/4/2017,Sakon Nakhon,HiSeq,DRX141410,-,-,ST361,NDM-5
+C666,Klebsiella pneumoniae,Sputum,13/4/2017,Sakon Nakhon,HiSeq,DRX141411,-,-,ST1859,NDM-1 OXA-181
+C667,Klebsiella pneumoniae,Sputum,20/4/2017,Sakon Nakhon,HiSeq,DRX141412,-,-,ST340,OXA-181
+C668,Klebsiella pneumoniae,Sputum,17/4/2017,Sakon Nakhon,HiSeq,DRX141413,-,-,ST11,OXA-181
+C669,Klebsiella pneumoniae,Drainage fluid from liver,14/4/2017,Sakon Nakhon,HiSeq,DRX141414,-,-,ST11,OXA-181
+C670,Klebsiella pneumoniae,Urine,13/4/2017,Sakon Nakhon,HiSeq,DRX141415,-,-,ST11,OXA-181
+C671,Escherichia coli,Urine,12/4/2017,Sakon Nakhon,HiSeq,DRX141416,-,-,ST410,NDM-5
+C672,Klebsiella pneumoniae,Sputum,18/4/2017,Sakon Nakhon,HiSeq,DRX141417,-,-,ST147,NDM-1
+C673,Klebsiella pneumoniae,Sputum,16/4/2017,Sakon Nakhon,HiSeq,DRX141418,-,-,ST11,OXA-181
+C674,Klebsiella pneumoniae,Sputum,30/4/2017,Sakon Nakhon,HiSeq,DRX141419,-,-,ST340,OXA-181
+C675,Klebsiella pneumoniae,Blood,21/4/2017,Sakon Nakhon,HiSeq,DRX141420,-,-,ST11,OXA-181
+C676,Klebsiella pneumoniae,Blood,21/4/2017,Sakon Nakhon,HiSeq,DRX141421,-,-,ST147,NDM-1
+C677,Klebsiella pneumoniae,Urine,24/4/2017,Sakon Nakhon,HiSeq,DRX141422,-,-,ST147,NDM-1
+C680,Klebsiella pneumoniae,Pus,3/5/2017,Sakon Nakhon,HiSeq,DRX141423,-,-,ST340,OXA-181
+C681,Klebsiella pneumoniae,Sputum,4/5/2017,Sakon Nakhon,HiSeq,DRX141424,-,-,ST340,OXA-181
+C682,Klebsiella pneumoniae,Sputum,6/5/2017,Sakon Nakhon,HiSeq,DRX141425,-,-,ST11,OXA-181
+C684,Escherichia coli,Urine,8/5/2017,Sakon Nakhon,HiSeq,DRX141426,-,-,ST410,NDM-5
+C685,Escherichia coli,Urine,14/5/2017,Sakon Nakhon,HiSeq,DRX141427,-,-,ST410,NDM-1
+C686,Klebsiella pneumoniae,Sputum,16/5/2017,Sakon Nakhon,HiSeq,DRX141428,-,-,ST147,NDM-1
+C687,Escherichia coli,Urine,16/5/2017,Sakon Nakhon,HiSeq,DRX141429,-,-,ST361,NDM-5
+C688,Klebsiella pneumoniae,Ascitic fluid,3/5/2017,Surin,HiSeq,DRX141430,-,-,ST231,OXA-232
+C689,Escherichia coli,Urine,3/5/2017,Surin,HiSeq,DRX141431,-,-,ST410,NDM-5
+C690,Klebsiella pneumoniae,Sputum,4/5/2017,Surin,HiSeq,DRX141432,-,-,ST231,OXA-232
+C692,Klebsiella pneumoniae,Blood,5/5/2017,Surin,HiSeq,DRX141434,-,-,ST231,OXA-232
+C693,Klebsiella pneumoniae,Sputum,4/5/2017,Surin,HiSeq,DRX141435,-,-,ST231,OXA-232
+C694,Klebsiella pneumoniae,Sputum,5/5/2017,Surin,HiSeq,DRX141436,-,-,ST231,OXA-232
+C695,Klebsiella pneumoniae,Urine,15/5/2017,Surin,HiSeq,DRX141437,-,-,ST231,NDM-1
+C696,Klebsiella pneumoniae,Blood,12/5/2017,Surin,HiSeq,DRX141438,-,-,ST231,OXA-232
+C697,Klebsiella pneumoniae,Sputum,12/5/2017,Surin,HiSeq,DRX141439,-,-,ST231,OXA-232
+C698,Klebsiella pneumoniae,Sputum,12/5/2017,Surin,HiSeq,DRX141440,-,-,ST231,OXA-232
+C699,Klebsiella pneumoniae,Sputum,12/5/2017,Surin,HiSeq,DRX141441,-,-,ST323,NDM-1
+C700,Escherichia coli,Sputum,12/5/2017,Surin,HiSeq,DRX141442,-,-,ST410,NDM-5
+C701,Escherichia coli,Urine,15/5/2017,Surin,HiSeq,DRX141443,-,-,ST410,NDM-5
+C702,Klebsiella pneumoniae,Urine,12/5/2017,Surin,HiSeq,DRX141444,-,-,ST231,OXA-232
+C703,Escherichia coli,Urine,12/5/2017,Surin,HiSeq,DRX141445,-,-,ST410,NDM-5
+C704,Escherichia coli,Blood,25/3/2017,Udon Thani,HiSeq,DRX141446,-,-,ST354,NDM-1
+C705,Escherichia coli,Urine,28/3/2017,Udon Thani,HiSeq,DRX141447,-,-,ST46,NDM-5
+C706,Klebsiella pneumoniae,Blood,30/3/2017,Udon Thani,HiSeq,DRX141448,-,-,ST336,OXA-181
+C707,Klebsiella pneumoniae,Blood,1/4/2017,Udon Thani,HiSeq,DRX141449,-,-,ST336,OXA-181
+C708,Klebsiella pneumoniae,Sputum,2/4/2017,Udon Thani,HiSeq,DRX141450,-,-,ST11,OXA-181
+C709,Klebsiella pneumoniae,Blood,3/4/2017,Udon Thani,HiSeq,DRX141451,-,-,ST11,OXA-181
+C710,Klebsiella pneumoniae,Urine,6/4/2017,Udon Thani,HiSeq,DRX141452,-,-,ST5819,OXA-232
+C711,Klebsiella pneumoniae,Blood,15/4/2017,Udon Thani,HiSeq,DRX141453,-,-,ST120,OXA-181
+C712,Escherichia coli,Blood,16/4/2017,Udon Thani,HiSeq,DRX141454,-,-,ST410,NDM-5
+C713,Escherichia coli,Urine,20/4/2017,Udon Thani,HiSeq,DRX141455,-,-,ST410,NDM-5
+C714,Klebsiella pneumoniae,Pus from leg,23/4/2017,Udon Thani,HiSeq,DRX141456,-,-,ST11,OXA-181
+C715,Klebsiella pneumoniae,Sputum,24/4/2017,Udon Thani,HiSeq,DRX141457,-,-,ST336,OXA-181
+C716,Klebsiella pneumoniae,Blood,24/4/2017,Udon Thani,HiSeq,DRX141458,-,-,ST147,NDM-1
+C717,Klebsiella pneumoniae,Sputum,29/4/2017,Udon Thani,HiSeq,DRX141459,-,-,ST336,OXA-181
+C718,Escherichia coli,Blood,29/4/2017,Udon Thani,HiSeq,DRX141460,-,-,ST410,NDM-5
+C719,Escherichia coli,Blood,30/4/2017,Udon Thani,HiSeq,DRX141461,-,-,ST405,NDM-5
+C720,Escherichia coli,Urine,3/5/2017,Udon Thani,HiSeq,DRX141462,-,-,ST354,NDM-1
+C721,Klebsiella pneumoniae,Urine,4/5/2017,Udon Thani,HiSeq,DRX141463,-,-,ST336,OXA-181
+C722,Klebsiella pneumoniae,Blood,11/5/2017,Udon Thani,HiSeq,DRX141464,-,-,ST1235,GES-5
+C724,Klebsiella pneumoniae,Sputum,15/5/2017,Udon Thani,HiSeq,DRX141467,-,-,ST48,NDM-5
+C725,Escherichia coli,Urine,18/5/2017,Udon Thani,HiSeq,DRX141468,-,-,ST410,NDM-5
+C726,Klebsiella pneumoniae,Sputum,20/5/2017,Udon Thani,HiSeq,DRX141469,-,-,ST11,OXA-181
+C727,Escherichia coli,Urine,22/5/2017,Udon Thani,HiSeq,DRX141470,-,-,ST410,NDM-5
+C779,Escherichia coli,Urine,2/6/2017,Surin,HiSeq,DRX141471,-,-,ST410,NDM-5
+C780,Klebsiella pneumoniae,Sputum,2/6/2017,Surin,HiSeq,DRX141472,-,-,ST231,OXA-232
+C781,Escherichia coli,Urine,30/5/2017,Surin,HiSeq,DRX141473,-,-,ST10210,NDM-5
+C782,Klebsiella pneumoniae,Sputum,22/5/2017,Surin,HiSeq,DRX141474,-,-,ST231,OXA-232
+C783,Escherichia coli,Urine,20/5/2017,Surin,HiSeq,DRX141475,-,-,ST410,NDM-5
+C786,Escherichia coli,Urine,6/6/2017,Surin,HiSeq,DRX141480,-,-,ST410,NDM-5
+C788,Klebsiella pneumoniae,Urine,9/6/2017,Surin,HiSeq,DRX141483,-,-,ST231,NDM-1
+C789,Klebsiella pneumoniae,Sputum,10/6/2017,Surin,HiSeq,DRX141484,-,-,ST15,NDM-1
+C790,Klebsiella pneumoniae,Sputum,14/6/2017,Surin,HiSeq,DRX141485,-,-,ST16,NDM-1 OXA-232
+C791,Klebsiella pneumoniae,Urine,15/6/2017,Surin,HiSeq,DRX141486,-,-,ST16,NDM-1
+C792,Klebsiella pneumoniae,Sputum,15/6/2017,Surin,HiSeq,DRX141487,-,-,ST16,NDM-1 OXA-232
+C793,Klebsiella pneumoniae,Sputum,10/5/2017,Bueng Kan,HiSeq,DRX141488,-,-,ST16,NDM-1 OXA-232
+C794,Klebsiella pneumoniae,Sputum,17/5/2017,Bueng Kan,HiSeq,DRX141489,-,-,ST16,NDM-1 OXA-232
+C795,Klebsiella pneumoniae,Pus,23/5/2017,Bueng Kan,HiSeq,DRX141490,-,-,ST16,NDM-1 OXA-232
+C796,Klebsiella pneumoniae,Urine,18/5/2017,Bueng Kan,HiSeq,DRX141491,-,-,ST16,NDM-1 OXA-232
+C797,Klebsiella pneumoniae,Sputum,3/6/2017,Bueng Kan,HiSeq,DRX141492,-,-,ST336,OXA-181
+C800,Klebsiella pneumoniae,Sputum,19/6/2017,Bueng Kan,HiSeq,DRX141494,-,-,ST336,OXA-181
+C803,Klebsiella pneumoniae,Urine,22/4/2017,Nakhon Phanom,HiSeq,DRX141496,-,-,ST340,OXA-181
+C810,Escherichia coli,Urine,31/5/2017,Nakhon Phanom,HiSeq,DRX141503,-,-,ST410,NDM-5
+C811,Klebsiella pneumoniae,Wound at foot,12/6/2017,Nakhon Phanom,HiSeq,DRX141504,-,-,ST11,OXA-181
+C812,Escherichia coli,Urine,12/6/2017,Nakhon Phanom,HiSeq,DRX141505,-,-,ST410,NDM-5
+C813,Escherichia coli,Urine,15/6/2017,Nakhon Phanom,HiSeq,DRX141506,-,-,ST131,NDM-1
+C814,Klebsiella pneumoniae,Sputum,15/7/2017,Surin,HiSeq,DRX141508,-,-,ST231,OXA-232
+C815,Escherichia coli,Sputum,15/7/2017,Surin,HiSeq,DRX141509,-,-,ST410,NDM-5
+C827,Escherichia coli,Urine,18/7/2017,Surin,HiSeq,DRX141510,-,-,ST410,NDM-5
+C828,Escherichia coli,Bile,13/7/2017,Surin,HiSeq,DRX141511,-,-,ST410,NDM-5
+C830,Klebsiella pneumoniae,Sputum,17/7/2017,Surin,HiSeq,DRX141513,-,-,ST15,NDM-1
+C831,Klebsiella pneumoniae,Sputum,11/7/2017,Surin,HiSeq,DRX141514,-,-,ST16,NDM-1 OXA-232
+C832,Klebsiella pneumoniae,Sputum,17/7/2017,Surin,HiSeq,DRX141515,-,-,ST15,NDM-1
+C833,Klebsiella pneumoniae,Sputum,6/7/2017,Surin,HiSeq,DRX141516,-,-,ST16,NDM-1 OXA-232
+C834,Klebsiella pneumoniae,Sputum,5/7/2017,Surin,HiSeq,DRX141517,-,-,ST638,NDM-1
+C835,Escherichia coli,Urine,21/7/2017,Surin,HiSeq,DRX141518,-,-,ST410,NDM-5
+C104B,Escherichia coli,Urine,4/6/2016,Surin,HiSeq,DRX115384,-,-,ST410,NDM-5
+C104R,Klebsiella pneumoniae,Urine,4/6/2016,Surin,HiSeq,DRX115385,-,-,ST147,NDM-1
+C165B,Escherichia coli,Sputum,18/6/2015,Surat Thani,HiSeq,DRX141054,-,-,ST410,OXA-181
+C165R,Klebsiella pneumoniae,Sputum,18/6/2015,Surat Thani,HiSeq,DRX141055,-,-,ST16,NDM-1
+C168B,Escherichia coli,Urine,20/6/2015,Surat Thani,HiSeq,DRX141058,-,-,ST410,OXA-181
+C168R,Klebsiella pneumoniae,Urine,20/6/2015,Surat Thani,HiSeq,DRX141059,-,-,ST101,NDM-1
+C175B,Escherichia coli,Wound at buttock,5/8/2015,Surat Thani,HiSeq,DRX141064,-,-,ST1340,OXA-181
+C175R,Klebsiella pneumoniae,Wound at buttock,5/8/2015,Surat Thani,HiSeq,DRX141065,-,-,ST16,NDM-1
+C179B,Escherichia coli,Sputum,6/8/2015,Surat Thani,HiSeq,DRX141069,-,-,ST448,NDM-4
+C180R,Klebsiella pneumoniae,Sputum,19/8/2015,Surat Thani,HiSeq,DRX141071,-,-,ST101,NDM-1
+C180W,Klebsiella pneumoniae,Sputum,19/8/2015,Surat Thani,HiSeq,DRX141072,-,-,ST677,NDM-1
+C181W,Klebsiella pneumoniae,Sputum,19/8/2015,Surat Thani,HiSeq,DRX141074,-,-,ST147,NDM-1
+C185B,Escherichia coli,Blood,28/12/2015,Surat Thani,HiSeq,DRX141078,-,-,ST410,OXA-181
+C185R,Klebsiella pneumoniae,Blood,28/12/2015,Surat Thani,HiSeq,DRX141079,-,-,ST11,NDM-1
+C190R,Klebsiella pneumoniae,Sputum,27/1/2016,Surat Thani,HiSeq,DRX141084,-,-,ST15,NDM-1
+C211S,Klebsiella pneumoniae,Urine,1/3/2016,Surat Thani,HiSeq,DRX141098,-,-,ST336,OXA-181
+C238R,Klebsiella pneumoniae,Sputum,2/7/2016,Surat Thani,HiSeq,DRX141118,-,-,ST16,NDM-1 OXA-232
+C289B,Escherichia coli,Sputum,16/6/2016,Udon Thani,HiSeq,DRX141158,-,-,ST410,NDM-5
+C289R,Klebsiella pneumoniae,Sputum,16/6/2016,Udon Thani,HiSeq,DRX141159,-,-,ST336,NDM-1
+C395S,Klebsiella pneumoniae,Blood,24/10/2016,Sakon Nakhon,HiSeq,DRX141260,-,-,ST48,NDM-1
+C431W,Escherichia coli,Urine,17/10/2016,Udon Thani,HiSeq,DRX141295,-,-,ST405,NDM-5
+C723B,Escherichia coli,Urine,15/5/2017,Udon Thani,HiSeq,DRX141465,-,-,ST38,NDM-1
+C723R,Klebsiella pneumoniae,Urine,15/5/2017,Udon Thani,HiSeq,DRX141466,GridION,DRX187489,ST1235,NDM-1 GES-5
+C784B,Escherichia coli,Sputum,17/6/2017,Surin,HiSeq,DRX141476,-,-,ST410,NDM-5
+C784R,Klebsiella pneumoniae,Sputum,17/6/2017,Surin,HiSeq,DRX141477,-,-,ST231,OXA-232
+C785B,Escherichia coli,Urine,8/6/2017,Surin,HiSeq,DRX141478,-,-,ST410,NDM-5
+C785R,Klebsiella pneumoniae,Urine,8/6/2017,Surin,HiSeq,DRX141479,-,-,ST231,OXA-232
+C787B,Escherichia coli,Pus,9/6/2017,Surin,HiSeq,DRX141481,-,-,ST410,NDM-5
+C787R,Klebsiella pneumoniae,Pus,9/6/2017,Surin,HiSeq,DRX141482,-,-,ST231,OXA-232
+C802R,Klebsiella pneumoniae,Urine,22/4/2017,Nakhon Phanom,HiSeq,DRX141495,-,-,ST340,OXA-181
+C805P,Klebsiella pneumoniae,Sputum,14/5/2017,Nakhon Phanom,HiSeq,DRX141499,-,-,ST39,IMP-14
+EC01,Escherichia coli,Urine,12/12/2013,Bangkok,-,-,PacBio,DRX187468,ST131,NDM-1
+EC02,Escherichia coli,Wound,23/1/2014,Bangkok,HiSeq,DRX115050,PacBio,DRX187469,ST131,NDM-1
+EC04,Escherichia coli,Urine,12/12/2012,Bangkok,-,-,PacBio,DRX187470,ST410,OXA-181
+EC05,Escherichia coli,Bile,25/3/2012,Bangkok,-,-,PacBio,DRX187471,ST8891,NDM-1
+EC06,Escherichia coli,Urine,11/5/2013,Bangkok,HiSeq,DRX115054,PacBio,DRX187472,ST131,NDM-1
+EC07,Escherichia coli,Bile,19/6/2014,Bangkok,HiSeq,DRX115055,-,-,ST1193,NDM-1
+EC08,Escherichia coli,Urine,21/2/2015,Bangkok,HiSeq,DRX115056,GridION,DRX187490,ST361,NDM-5
+EC09,Escherichia coli,Urine,25/2/2015,Bangkok,HiSeq,DRX115057,-,-,ST361,NDM-5
+EC10,Escherichia coli,Wound,2/8/2015,Bangkok,HiSeq,DRX115058,-,-,ST10,NDM-1
+KP01,Klebsiella pneumoniae,Rectal swab,17/1/2014,Bangkok,-,-,PacBio,DRX061698,ST340,NDM-1
+KP02,Klebsiella pneumoniae,Blood,23/11/2014,Bangkok,-,-,PacBio,DRX114713,ST340,NDM-1
+KP05,Klebsiella pneumoniae,Bedsore,6/6/2014,Bangkok,-,-,PacBio,DRX114714,ST11,NDM-1
+KP06,Klebsiella pneumoniae,Urine,15/8/2014,Bangkok,-,-,PacBio,DRX114715,ST231,NDM-1
+KP07,Klebsiella pneumoniae,Blood,25/2/2015,Bangkok,-,-,PacBio,DRX114716,ST231,NDM-1
+KP08,Klebsiella pneumoniae,Urine,22/6/2014,Bangkok,HiSeq,DRX114717,-,-,ST231,NDM-1
+KP09,Klebsiella pneumoniae,Urine,7/3/2014,Bangkok,-,-,PacBio,DRX114718,ST11,NDM-1
+KP10,Klebsiella pneumoniae,Sputum,26/3/2014,Bangkok,-,-,PacBio,DRX114719,ST231,NDM-1
+KP11,Klebsiella pneumoniae,Urine,26/6/2014,Bangkok,-,-,PacBio,DRX114720,ST231,NDM-1
+KP12,Klebsiella pneumoniae,Urine,18/12/2013,Bangkok,-,-,PacBio,DRX114721,ST340,NDM-1
+KP13,Klebsiella pneumoniae,Sputum,4/4/2014,Bangkok,-,-,PacBio,DRX114722,ST231,NDM-1
+KP16,Klebsiella pneumoniae,Ascitic fluid,23/2/2015,Bangkok,-,-,PacBio,DRX114723,ST35,IMP-14
+KP17,Klebsiella pneumoniae,Dranage fluid,23/1/2015,Bangkok,-,-,PacBio,DRX114724,ST37,NDM-1
+KP18,Klebsiella pneumoniae,Sputum,11/1/2014,Bangkok,-,-,PacBio,DRX114725,ST340,NDM-1
+KP19,Klebsiella pneumoniae,Urine,18/8/2014,Bangkok,-,-,PacBio,DRX114726,ST11,NDM-1
+KP20,Klebsiella pneumoniae,Urine,14/1/2013,Bangkok,-,-,PacBio,DRX114727,ST2287,NDM-1
+KP21,Klebsiella pneumoniae,Urine,3/7/2014,Bangkok,HiSeq,DRX114728,-,-,ST11,NDM-1
+KP22,Klebsiella pneumoniae,Sputum,21/4/2014,Bangkok,-,-,PacBio,DRX114729,ST11,OXA-48
+KP27,Klebsiella pneumoniae,Urine,8/12/2014,Bangkok,-,-,PacBio,DRX114730,ST231,NDM-1
+KP30,Klebsiella pneumoniae,Percutaneous dranage fluid,7/12/2014,Bangkok,HiSeq,DRX114731,-,-,ST16,OXA-181
+KP33,Klebsiella pneumoniae,Urine,13/6/2014,Bangkok,-,-,PacBio,DRX114732,ST14,NDM-1
+KP34,Klebsiella pneumoniae,Urine,20/3/2014,Bangkok,-,-,PacBio,DRX187473,ST231,NDM-1
+KP35,Klebsiella pneumoniae,Urine,4/9/2013,Bangkok,HiSeq,DRX114734,-,-,ST340,NDM-1
+KP36,Klebsiella pneumoniae,Urine,24/8/2014,Bangkok,-,-,PacBio,DRX187474,ST231,NDM-1
+KP38,Klebsiella pneumoniae,Urine,2/2/2014,Bangkok,-,-,PacBio,DRX187475,ST231,NDM-1
+KP42,Klebsiella pneumoniae,Urine,11/6/2014,Bangkok,-,-,PacBio,DRX114737,ST14,NDM-1
+KP43,Klebsiella pneumoniae,Blood,30/12/2014,Bangkok,HiSeq,DRX115067,-,-,ST231,OXA-232
+KP44,Klebsiella pneumoniae,Blood,10/6/2014,Bangkok,-,-,PacBio,DRX114738,ST16,NDM-1
+KP45,Klebsiella pneumoniae,Urine,24/3/2014,Bangkok,-,-,PacBio,DRX115068,ST231,NDM-1
+KP46,Klebsiella pneumoniae,Urine,24/3/2014,Bangkok,HiSeq,DRX115069,-,-,ST231,NDM-1
+KP47,Klebsiella pneumoniae,Urine,27/6/2014,Bangkok,HiSeq,DRX115071,-,-,ST231,NDM-1
+KP49,Klebsiella pneumoniae,Sputum,25/11/2014,Bangkok,-,-,PacBio,DRX114739,ST231,NDM-1
+KP50,Klebsiella pneumoniae,Urine,3/8/2014,Bangkok,-,-,PacBio,DRX115072,ST14,NDM-1 OXA-232
+KP51,Klebsiella pneumoniae,Urine,3/11/2014,Bangkok,HiSeq,DRX115073,-,-,ST340,NDM-1
+KP52,Klebsiella pneumoniae,Wound,25/2/2015,Bangkok,-,-,PacBio,DRX114740,ST231,NDM-1
+KP54,Klebsiella pneumoniae,Sputum,12/2/2015,Bangkok,-,-,PacBio,DRX115074,ST231,OXA-48
+KP55,Klebsiella pneumoniae,Urine,16/3/2015,Bangkok,-,-,PacBio,DRX114741,ST231,NDM-1
+KP56,Klebsiella pneumoniae,Blood,5/7/2015,Bangkok,-,-,PacBio,DRX114742,ST2072,IMP-14
+KP60,Klebsiella pneumoniae,Urine,20/6/2015,Bangkok,HiSeq,DRX114743,-,-,ST65,NDM-1
+KP64,Klebsiella pneumoniae,Urine,16/4/2015,Bangkok,-,-,PacBio,DRX114744,ST14,NDM-1
+KP65,Klebsiella pneumoniae,Sputum,30/4/2015,Bangkok,-,-,PacBio,DRX114745,ST231,NDM-1
+KP66,Klebsiella pneumoniae,Urine,24/5/2015,Bangkok,-,-,PacBio,DRX114746,ST14,NDM-1
+KP67,Klebsiella pneumoniae,Urine,22/3/2015,Bangkok,-,-,PacBio,DRX114747,ST14,NDM-1
+KP68,Klebsiella pneumoniae,Rectal swab,3/7/2015,Bangkok,HiSeq,DRX114748,PacBio,DRX187476,ST340,NDM-1
+KP70,Klebsiella pneumoniae,Urine,10/8/2015,Bangkok,HiSeq,DRX115075,-,-,ST340,NDM-1
+KP74,Klebsiella pneumoniae,Urine,23/10/2015,Bangkok,HiSeq,DRX114749,-,-,ST14,NDM-1 OXA-232
+KP76,Klebsiella pneumoniae,Nasal fluid,18/9/2015,Bangkok,HiSeq,DRX114750,-,-,ST231,OXA-232
+KP77,Klebsiella pneumoniae,Dranage fluid,10/9/2015,Bangkok,-,-,PacBio,DRX187477,ST11,NDM-1
+KP78,Klebsiella pneumoniae,Urine,30/9/2015,Bangkok,HiSeq,DRX114752,-,-,ST231,OXA-232
+KP83,Klebsiella pneumoniae,Urine,26/10/2015,Bangkok,HiSeq,DRX114753,-,-,ST101,OXA-181
+KP87,Klebsiella pneumoniae,Urine from percutaneous nephrostomy,5/10/2015,Bangkok,HiSeq,DRX114754,-,-,ST11,NDM-1
+KP89,Klebsiella pneumoniae,Urine,2/11/2015,Bangkok,HiSeq,DRX115077,-,-,ST340,OXA-181
+KP90,Klebsiella pneumoniae,Urine,30/10/2015,Bangkok,HiSeq,DRX114755,-,-,ST16,NDM-4
+KP91,Klebsiella pneumoniae,Urine from catheter,4/11/2015,Bangkok,HiSeq,DRX114756,-,-,ST336,NDM-1
+KP95,Klebsiella pneumoniae,Rectal Swab,9/11/2015,Bangkok,HiSeq,DRX114757,-,-,ST231,NDM-1
+KP97,Klebsiella pneumoniae,Urine,15/11/2015,Bangkok,HiSeq,DRX114758,-,-,ST14,NDM-1
+KP99,Klebsiella pneumoniae,Abdominal wound,10/12/2015,Bangkok,HiSeq,DRX114759,-,-,ST340,NDM-1
+KP100,Klebsiella pneumoniae,Swab from Penis,7/12/2015,Bangkok,-,-,PacBio,DRX187478,ST14,NDM-1
+KP101,Klebsiella pneumoniae,Urine,22/12/2015,Bangkok,HiSeq,DRX115078,-,-,ST16,OXA-232
+KP102,Klebsiella pneumoniae,Sputum,20/12/2015,Bangkok,HiSeq,DRX115079,-,-,ST16,NDM-1 OXA-232
+KP103,Klebsiella pneumoniae,Sputum,24/12/2015,Bangkok,HiSeq,DRX115080,-,-,ST16,OXA-232
+KP104,Klebsiella pneumoniae,Bile,21/12/2015,Bangkok,HiSeq,DRX115081,-,-,ST16,NDM-1 OXA-232
+KP105,Klebsiella pneumoniae,Swab from groin,21/12/2015,Bangkok,HiSeq,DRX115082,-,-,ST16,NDM-1 OXA-232
+KP106,Klebsiella pneumoniae,Pus,18/12/2015,Bangkok,HiSeq,DRX115083,-,-,ST231,OXA-48
+KP107,Klebsiella pneumoniae,Urine,25/12/2015,Bangkok,HiSeq,DRX115084,-,-,ST16,NDM-1 OXA-232
+KP108,Klebsiella pneumoniae,Urine,21/12/2015,Bangkok,HiSeq,DRX115085,-,-,ST16,NDM-1 OXA-232
+KP109,Klebsiella pneumoniae,Sputum,21/12/2015,Bangkok,HiSeq,DRX115086,-,-,ST16,NDM-1 OXA-181
+KP110,Klebsiella pneumoniae,Urine,25/12/2015,Bangkok,HiSeq,DRX115087,-,-,ST16,NDM-1 OXA-232
+KP111,Klebsiella pneumoniae,Urine,25/12/2015,Bangkok,HiSeq,DRX115088,-,-,ST16,NDM-1 OXA-232
+KP112,Klebsiella pneumoniae,Urine,23/12/2015,Bangkok,HiSeq,DRX115089,-,-,ST16,NDM-1 OXA-232
+KP116,Klebsiella pneumoniae,Urine,9/1/2016,Bangkok,HiSeq,DRX114761,-,-,ST14,NDM-1
+KP117,Klebsiella pneumoniae,Sputum,4/1/2016,Bangkok,HiSeq,DRX114762,-,-,ST14,NDM-1 OXA-232
+KP121,Klebsiella pneumoniae,Urine,12/1/2016,Bangkok,HiSeq,DRX114763,-,-,ST14,NDM-1 OXA-232
+KP122,Klebsiella pneumoniae,Sputum,30/12/2015,Bangkok,HiSeq,DRX115091,-,-,ST16,NDM-1 OXA-232
+KP123,Klebsiella pneumoniae,Sputum,1/1/2016,Bangkok,HiSeq,DRX115092,-,-,ST16,NDM-1 OXA-232
+KP124,Klebsiella pneumoniae,Sputum,7/1/2016,Bangkok,HiSeq,DRX115093,-,-,ST16,NDM-1 OXA-232
+KP125,Klebsiella pneumoniae,Sputum,12/1/2016,Bangkok,HiSeq,DRX115094,-,-,ST16,NDM-1 OXA-232
+KP126,Klebsiella pneumoniae,Sputum,3/4/2016,Bangkok,HiSeq,DRX115095,-,-,ST147,NDM-1
+KP127,Klebsiella pneumoniae,Urine,11/1/2016,Bangkok,HiSeq,DRX115096,-,-,ST16,OXA-232
+KP128,Klebsiella pneumoniae,Pus,13/1/2016,Bangkok,HiSeq,DRX115097,-,-,ST231,OXA-48
+KP129,Klebsiella pneumoniae,Urine,22/1/2016,Bangkok,HiSeq,DRX115098,-,-,ST16,NDM-1 OXA-232
+KP130,Klebsiella pneumoniae,Sputum,14/1/2016,Bangkok,HiSeq,DRX115099,-,-,ST16,NDM-1 OXA-232
+KP131,Klebsiella pneumoniae,Urine,21/1/2016,Bangkok,HiSeq,DRX115100,-,-,ST2325,NDM-9
+KP132,Klebsiella pneumoniae,Abdominal wound,24/1/2016,Bangkok,HiSeq,DRX115101,-,-,ST231,OXA-48
+KP134,Klebsiella pneumoniae,Blood,2/11/2016,Bangkok,HiSeq,DRX115102,-,-,ST1224,NDM-1
+KP135,Klebsiella pneumoniae,Blood,2/10/2016,Bangkok,HiSeq,DRX114764,-,-,ST16,NDM-5
+KP136,Klebsiella pneumoniae,Urine,2/10/2016,Bangkok,HiSeq,DRX114765,-,-,ST231,OXA-232
+KP137,Klebsiella pneumoniae,Urine,2/6/2016,Bangkok,HiSeq,DRX114766,-,-,ST14,NDM-1 OXA-232
+KP141,Klebsiella pneumoniae,Urine from catheter,2/12/2016,Bangkok,HiSeq,DRX114767,-,-,ST147,NDM-1
+KP142,Klebsiella pneumoniae,Bronchoalveolar lavage,2/9/2016,Bangkok,HiSeq,DRX114768,-,-,ST231,OXA-232
+KP143,Klebsiella pneumoniae,Bile,2/11/2016,Bangkok,HiSeq,DRX114769,-,-,ST14,NDM-1
+KP145,Klebsiella pneumoniae,Urine,2/9/2016,Bangkok,HiSeq,DRX115103,-,-,ST16,OXA-232
+KP146,Klebsiella pneumoniae,Urine,2/8/2016,Bangkok,HiSeq,DRX115104,-,-,ST16,NDM-1 OXA-232
+KP147,Klebsiella pneumoniae,Dranage fluid,2/4/2016,Bangkok,HiSeq,DRX115105,-,-,ST16,NDM-1 OXA-232
+KP148,Klebsiella pneumoniae,Ascitic fluid,2/1/2016,Bangkok,HiSeq,DRX115106,-,-,ST16,NDM-1 OXA-232
+KP149,Klebsiella pneumoniae,Urine,2/3/2016,Bangkok,HiSeq,DRX115107,-,-,ST231,OXA-48
+KP150,Klebsiella pneumoniae,Urine,2/1/2016,Bangkok,HiSeq,DRX115108,-,-,ST16,NDM-1 OXA-232
+KP151,Klebsiella pneumoniae,Sputum,2/2/2016,Bangkok,HiSeq,DRX115109,-,-,ST16,NDM-1 OXA-232
+KP152,Klebsiella pneumoniae,Sputum,2/2/2016,Bangkok,HiSeq,DRX115110,-,-,ST16,NDM-1 OXA-232
+KP153,Klebsiella pneumoniae,Urine,29/1/2016,Bangkok,HiSeq,DRX115111,-,-,ST16,OXA-232
+KP154,Klebsiella pneumoniae,Sputum,30/1/2016,Bangkok,HiSeq,DRX115112,-,-,ST147,OXA-48
+KP155,Klebsiella pneumoniae,Urine,31/1/2016,Bangkok,HiSeq,DRX115113,-,-,ST16,NDM-1 OXA-232
+KP156,Klebsiella pneumoniae,Pus,31/1/2016,Bangkok,HiSeq,DRX115114,-,-,ST16,NDM-1 OXA-232
+KP157,Klebsiella pneumoniae,Percutaneous dranage fluid,19/2/2016,Bangkok,HiSeq,DRX114770,-,-,ST231,OXA-232
+KP160,Klebsiella pneumoniae,Sputum,3/3/2016,Bangkok,HiSeq,DRX115115,-,-,ST16,OXA-232
+KP161,Klebsiella pneumoniae,Urine,3/2/2016,Bangkok,HiSeq,DRX115116,GridION,DRX187491,ST14,OXA-232
+KP162,Klebsiella pneumoniae,Blood,3/2/2016,Bangkok,HiSeq,DRX115117,-,-,ST16,OXA-232
+KP163,Klebsiella pneumoniae,Urine from catheter,22/2/2016,Bangkok,HiSeq,DRX114771,-,-,ST14,NDM-1 OXA-232
+KP164,Klebsiella pneumoniae,Sputum,3/7/2016,Bangkok,HiSeq,DRX115118,PacBio,DRX187479,ST16,NDM-1 OXA-232
+KP173,Klebsiella pneumoniae,Rectal swab,3/10/2016,Bangkok,HiSeq,DRX114772,-,-,ST17,OXA-181
+KP175,Klebsiella pneumoniae,Abdominal wound,3/9/2016,Bangkok,HiSeq,DRX114773,-,-,ST231,OXA-232
+KP178,Klebsiella pneumoniae,Rectal swab,14/3/2016,Bangkok,HiSeq,DRX114774,-,-,ST231,OXA-232
+KP181,Klebsiella pneumoniae,Urine,15/3/2016,Bangkok,HiSeq,DRX115120,-,-,ST16,NDM-1
+KP188,Klebsiella pneumoniae,Ascitic fluid,17/3/2016,Bangkok,HiSeq,DRX115121,-,-,ST16,NDM-1 OXA-232
+KP189,Klebsiella pneumoniae,Urine,3/11/2016,Bangkok,HiSeq,DRX115122,-,-,ST16,OXA-232
+KP190,Klebsiella pneumoniae,Urine,14/3/2016,Bangkok,HiSeq,DRX115123,-,-,ST16,NDM-1 OXA-232
+KP191,Klebsiella pneumoniae,Pus,18/2/2016,Bangkok,HiSeq,DRX115124,-,-,ST16,OXA-232
+KP192,Klebsiella pneumoniae,Sputum,19/2/2016,Bangkok,HiSeq,DRX115125,-,-,ST147,OXA-48
+KP193,Klebsiella pneumoniae,Urine,19/2/2016,Bangkok,HiSeq,DRX115126,-,-,ST16,NDM-1 OXA-181
+KP194,Klebsiella pneumoniae,Pus,21/2/2016,Bangkok,HiSeq,DRX115127,-,-,ST231,OXA-48
+KP195,Klebsiella pneumoniae,Urine,19/3/2016,Bangkok,HiSeq,DRX115128,-,-,ST16,NDM-1 OXA-232
+KP200,Klebsiella pneumoniae,Rectal swab,30/3/2016,Bangkok,HiSeq,DRX114776,-,-,ST147,NDM-1
+KP202,Klebsiella pneumoniae,Urine,4/1/2016,Bangkok,HiSeq,DRX114777,-,-,ST16,NDM-1 OXA-232
+KP204,Klebsiella pneumoniae,Sputum,4/4/2016,Bangkok,HiSeq,DRX115130,-,-,ST16,NDM-1 OXA-232
+KP207,Klebsiella pneumoniae,Sputum,25/4/2016,Bangkok,HiSeq,DRX114778,-,-,ST11,NDM-1
+KP208,Klebsiella pneumoniae,Urine,24/4/2016,Bangkok,HiSeq,DRX115131,-,-,ST231,OXA-232
+KP209,Klebsiella pneumoniae,Stool,25/4/2016,Bangkok,HiSeq,DRX115132,-,-,ST16,NDM-1 OXA-232
+KP210,Klebsiella pneumoniae,Stool,25/4/2016,Bangkok,HiSeq,DRX115133,-,-,ST16,NDM-1 OXA-232
+KP211,Klebsiella pneumoniae,Urine,25/4/2016,Bangkok,HiSeq,DRX115134,-,-,ST16,NDM-1
+KP212,Klebsiella pneumoniae,Urine,25/4/2016,Bangkok,HiSeq,DRX115135,-,-,ST16,NDM-1
+KP213,Klebsiella pneumoniae,Urine,20/4/2016,Bangkok,HiSeq,DRX114779,-,-,ST231,OXA-232
+KP215,Klebsiella pneumoniae,Blood,14/4/2016,Bangkok,HiSeq,DRX114780,-,-,ST231,OXA-232
+KP216,Klebsiella pneumoniae,Urine,18/4/2016,Bangkok,HiSeq,DRX114781,-,-,ST231,OXA-232
+KP217,Klebsiella pneumoniae,Urine,19/4/2016,Bangkok,HiSeq,DRX115136,-,-,ST16,NDM-1 OXA-232
+KP219,Klebsiella pneumoniae,Urine from catheter,4/8/2016,Bangkok,HiSeq,DRX114782,PacBio,DRX187480,ST11,NDM-1 OXA-181
+KP222,Klebsiella pneumoniae,Sputum,21/3/2016,Bangkok,HiSeq,DRX115137,-,-,ST16,OXA-232
+KP223,Klebsiella pneumoniae,Urine,25/3/2016,Bangkok,HiSeq,DRX115138,-,-,ST16,NDM-1 OXA-232
+KP224,Klebsiella pneumoniae,Urine,27/3/2016,Bangkok,HiSeq,DRX115139,-,-,ST16,OXA-232
+KP225,Klebsiella pneumoniae,Pus,2/4/2016,Bangkok,HiSeq,DRX115140,-,-,ST16,NDM-1 OXA-232
+KP226,Klebsiella pneumoniae,Urine,4/4/2016,Bangkok,HiSeq,DRX115141,-,-,ST16,NDM-1 OXA-232
+KP227,Klebsiella pneumoniae,Sputum,4/6/2016,Bangkok,HiSeq,DRX115142,-,-,ST16,NDM-1
+KP228,Klebsiella pneumoniae,Sputum,4/5/2016,Bangkok,HiSeq,DRX115143,-,-,ST16,NDM-1 OXA-232
+KP229,Klebsiella pneumoniae,Peritoneal dialysis fluid,4/8/2016,Bangkok,HiSeq,DRX115144,-,-,ST16,NDM-1 OXA-232
+KP230,Klebsiella pneumoniae,Sputum,4/12/2016,Bangkok,HiSeq,DRX115145,-,-,ST16,NDM-1 OXA-232
+KP231,Klebsiella pneumoniae,Sputum,15/4/2016,Bangkok,HiSeq,DRX115146,-,-,ST11,OXA-232
+KP232,Klebsiella pneumoniae,Sputum,18/4/2016,Bangkok,HiSeq,DRX115147,-,-,ST16,NDM-1 OXA-232
+KP233,Klebsiella pneumoniae,Urine from catheter,5/12/2016,Bangkok,HiSeq,DRX115148,-,-,ST16,NDM-1 OXA-232
+KP236,Klebsiella pneumoniae,Urine,26/4/2016,Bangkok,HiSeq,DRX115149,-,-,ST16,NDM-1 OXA-232
+KP237,Klebsiella pneumoniae,Urine,25/4/2016,Bangkok,HiSeq,DRX115150,-,-,ST16,NDM-1 OXA-232
+KP238,Klebsiella pneumoniae,Sputum,5/2/2016,Bangkok,HiSeq,DRX115151,-,-,ST16,NDM-1 OXA-232
+KP239,Klebsiella pneumoniae,Ascitic fluid,5/4/2016,Bangkok,HiSeq,DRX115152,-,-,ST16,NDM-1 OXA-232
+KP240,Klebsiella pneumoniae,Urine,5/6/2016,Bangkok,HiSeq,DRX115153,-,-,ST16,NDM-1 OXA-232
+KP241,Klebsiella pneumoniae,Urine,5/7/2016,Bangkok,HiSeq,DRX115154,-,-,ST16,NDM-1 OXA-232
+KP242,Klebsiella pneumoniae,Blood,5/11/2016,Bangkok,HiSeq,DRX114783,-,-,ST231,OXA-232
+KP244,Klebsiella pneumoniae,Urine from catheter,18/5/2016,Bangkok,HiSeq,DRX114784,-,-,ST147,OXA-181
+KP247,Klebsiella pneumoniae,Urine,13/5/2016,Bangkok,HiSeq,DRX114785,-,-,ST16,NDM-1 OXA-232
+KP255,Klebsiella pneumoniae,Urine,5/5/2016,Bangkok,HiSeq,DRX115155,-,-,ST231,OXA-232
+KP256,Klebsiella pneumoniae,Urine,5/1/2016,Bangkok,HiSeq,DRX114786,-,-,ST16,NDM-1 OXA-232
+KP259,Klebsiella pneumoniae,Urine,25/5/2016,Bangkok,HiSeq,DRX114787,-,-,ST231,OXA-232
+KP261,Klebsiella pneumoniae,Rectal swab,31/5/2016,Bangkok,HiSeq,DRX114788,-,-,ST307,NDM-1
+KP263,Klebsiella pneumoniae,Blood,28/7/2016,Bangkok,HiSeq,DRX141731,-,-,ST231,OXA-232
+KP266,Klebsiella pneumoniae,Sputum,26/7/2016,Bangkok,HiSeq,DRX141732,-,-,ST231,OXA-232
+KP271,Klebsiella pneumoniae,Rectal swab,6/7/2016,Bangkok,HiSeq,DRX141733,-,-,ST147,NDM-1
+KP273,Klebsiella pneumoniae,Sputum,1/7/2016,Bangkok,HiSeq,DRX141734,-,-,ST11,NDM-1
+KP276,Klebsiella pneumoniae,Sputum,15/6/2016,Bangkok,HiSeq,DRX141735,-,-,ST14,NDM-1 OXA-232
+KP278,Klebsiella pneumoniae,Urine,15/6/2016,Bangkok,HiSeq,DRX141736,-,-,ST14,NDM-1 OXA-232
+KP280,Klebsiella pneumoniae,Urine,10/8/2016,Bangkok,HiSeq,DRX141737,-,-,ST16,NDM-1 OXA-232
+KP283,Klebsiella pneumoniae,Urine from catheter,22/8/2016,Bangkok,HiSeq,DRX141738,-,-,ST336,NDM-1
+KP295,Klebsiella pneumoniae,Sputum,4/9/2016,Bangkok,HiSeq,DRX141739,-,-,ST231,OXA-232
+KP299,Klebsiella pneumoniae,Swab from neck,7/9/2016,Bangkok,HiSeq,DRX141740,-,-,ST231,OXA-232
+KP306,Klebsiella pneumoniae,Blood,24/9/2016,Bangkok,HiSeq,DRX141742,-,-,ST231,OXA-232
+KP307,Klebsiella pneumoniae,Sputum,18/9/2016,Bangkok,HiSeq,DRX141743,-,-,ST16,NDM-1 OXA-232
+KP314,Klebsiella pneumoniae,Wound,23/10/2016,Bangkok,HiSeq,DRX141746,-,-,ST16,NDM-1 OXA-232
+KP315,Klebsiella pneumoniae,Swab from amputated limb,25/10/2016,Bangkok,HiSeq,DRX141747,-,-,ST231,OXA-232
+KP317,Klebsiella pneumoniae,Urine from catheter,20/10/2016,Bangkok,HiSeq,DRX141748,-,-,ST16,NDM-1 OXA-232
+KP319,Klebsiella pneumoniae,Urine,22/10/2016,Bangkok,HiSeq,DRX141749,-,-,ST231,OXA-232
+KP327,Klebsiella pneumoniae,Urine,6/10/2016,Bangkok,HiSeq,DRX141751,-,-,ST231,OXA-232
+KP328,Klebsiella pneumoniae,Urine from catheter,4/10/2016,Bangkok,HiSeq,DRX141752,-,-,ST147,NDM-1
+KP333,Klebsiella pneumoniae,Percutaneous dranage fluid,26/9/2016,Bangkok,HiSeq,DRX141753,-,-,ST231,OXA-232
+KP335,Klebsiella pneumoniae,Bedsore,1/10/2016,Bangkok,HiSeq,DRX141754,-,-,ST231,OXA-232
+KP342,Klebsiella pneumoniae,Urine,3/11/2016,Bangkok,HiSeq,DRX141755,-,-,ST16,NDM-1 OXA-232
+KP343,Klebsiella pneumoniae,Urine,29/10/2016,Bangkok,HiSeq,DRX141756,-,-,ST16,NDM-1 OXA-232
+KP344,Klebsiella pneumoniae,Urine,30/10/2016,Bangkok,HiSeq,DRX141757,-,-,ST147,NDM-1
+KP346,Klebsiella pneumoniae,Urine,9/11/2016,Bangkok,HiSeq,DRX141758,-,-,ST14,OXA-232
+KP353,Klebsiella pneumoniae,Urine,11/10/2016,Bangkok,HiSeq,DRX141760,-,-,ST16,NDM-1 OXA-232
+KP354,Klebsiella pneumoniae,Dranage fluid,10/10/2016,Bangkok,HiSeq,DRX141761,-,-,ST231,OXA-232
+KP361,Klebsiella pneumoniae,Urine,18/11/2016,Bangkok,HiSeq,DRX141762,-,-,ST16,NDM-1 OXA-232
+KP362,Klebsiella pneumoniae,Sputum,18/11/2016,Bangkok,HiSeq,DRX141763,-,-,ST147,NDM-1
+KP363,Klebsiella pneumoniae,Urine,21/11/2016,Bangkok,HiSeq,DRX141764,-,-,ST11,NDM-1
+KP364,Klebsiella pneumoniae,Buccal swab,24/11/2016,Bangkok,HiSeq,DRX141765,-,-,ST15,NDM-1
+KP366,Klebsiella pneumoniae,Urine,25/11/2016,Bangkok,HiSeq,DRX141766,-,-,ST147,NDM-1
+KP367,Klebsiella pneumoniae,Sputum,23/11/2016,Bangkok,HiSeq,DRX141767,-,-,ST231,OXA-232
+KP369,Klebsiella pneumoniae,Rectal swab,28/11/2016,Bangkok,HiSeq,DRX141768,-,-,ST231,OXA-232
+KP370,Klebsiella pneumoniae,Urine from catheter,26/11/2016,Bangkok,HiSeq,DRX141769,-,-,ST231,OXA-232
+KP376,Klebsiella pneumoniae,Urine,12/12/2016,Bangkok,HiSeq,DRX141771,-,-,ST231,OXA-232
+KP378,Klebsiella pneumoniae,Sputum,10/1/2017,Bangkok,HiSeq,DRX141772,-,-,ST16,NDM-1
+KP379,Klebsiella pneumoniae,Urine,1/1/2017,Bangkok,HiSeq,DRX141773,-,-,ST231,OXA-232
+KP384,Klebsiella pneumoniae,Wound,9/1/2017,Bangkok,HiSeq,DRX141774,-,-,ST16,NDM-1 OXA-232
+KP390,Klebsiella pneumoniae,Rectal swab,20/1/2017,Bangkok,HiSeq,DRX141775,-,-,ST147,OXA-232
