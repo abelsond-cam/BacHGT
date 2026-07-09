@@ -318,7 +318,7 @@ def per_sample(
     fields: Sequence[str],
     accessions: Sequence[str] | None,
     out_path: Path,
-    manual_supp_dir: str | Path,
+    manual_supp_dir: str | Path | Sequence[str | Path],
     llm,
     model: str,
     caches: StageCaches,
@@ -383,13 +383,13 @@ def per_sample(
         local = lsupp.resolve_local_supp_tables(acc, manual_supp_dir)
         if not pmcid and not local:
             outcome_rows.append(_synthetic(acc, "", "NO_PMCID",
-                "no PMCID and no manual_download_supp table — cannot fetch supplementary; see missing-papers"))
+                "no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers"))
             print(f"[{i}/{len(targets)}] {acc} — NO_PMCID (no OA + no local supp)", file=sys.stderr)
             continue
         tables = supp.parse_tables(pmcid, cache_dir=caches.per_sample_supp) if pmcid else []
         if local:
             tables = (tables or []) + local
-            print(f"[{i}/{len(targets)}] {acc} — using {len(local)} local manual_download_supp table(s)"
+            print(f"[{i}/{len(targets)}] {acc} — using {len(local)} local supp table(s)"
                   + ("" if pmcid else " (NO_PMCID; local supp only)"), file=sys.stderr)
         try:
             ex = sx.extract_study(acc, pmcid, tables, sets[acc], maps[acc], llm, model=model,

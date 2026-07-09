@@ -208,8 +208,13 @@ def main() -> None:
     ps_dir = data / "sample_lv_attributes" / "per_sample"
     enriched_dir = data / "sample_lv_attributes" / "enriched"
     manual_papers_dir = find_dir / "manual_download"
-    manual_supp_dir = data / "sample_lv_attributes" / "manual_download_supp"
-    for d in (find_dir, grade_dir, wsb_dir, esc_dir, ps_dir, enriched_dir, manual_papers_dir, manual_supp_dir):
+    manual_supp_dir = data / "sample_lv_attributes" / "manual_download_supp"     # legacy, gitignored
+    committed_supp_dir = data.parent / "manual_supp_tables"                       # committed, version-controlled
+    # Committed folder has precedence — a version-controlled table can never be silently lost (the failure
+    # that dropped PRJEB28400's per-isolate table in the OneDrive→developer migration). Both are auto-read.
+    manual_supp_dirs = [committed_supp_dir, manual_supp_dir]
+    for d in (find_dir, grade_dir, wsb_dir, esc_dir, ps_dir, enriched_dir, manual_papers_dir,
+              manual_supp_dir, committed_supp_dir):
         d.mkdir(parents=True, exist_ok=True)
 
     caches = stages.StageCaches(
@@ -350,7 +355,7 @@ def main() -> None:
     print("\n### [per-sample]", file=sys.stderr)
     stages.per_sample(
         base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
-        manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
+        manual_supp_dir=manual_supp_dirs, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
         ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
     )
 

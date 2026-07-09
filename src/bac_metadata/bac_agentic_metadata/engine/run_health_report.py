@@ -33,11 +33,11 @@ from pathlib import Path
 import pandas as pd
 
 from .local_papers import resolve_local_fulltext
+from .local_supplements import find_local_supp_files
 
 #: A study at/above this fraction of the whole cohort's taxon samples is a "big decision" — its whole-field
 #: call must always be escalated (mirrors run_escalations.BIG_DECISION_FRAC); run-health flags any that slip.
 BIG_DECISION_FRAC = 0.01
-SUPP_EXTS = (".xlsx", ".xls", ".csv", ".tsv", ".docx", ".pdf")
 
 
 def _read_tsv(path: Path) -> pd.DataFrame:
@@ -141,7 +141,8 @@ def build_run_health(
     ps = data_dir / "sample_lv_attributes" / "per_sample"
     score = data_dir / "scorecard"
     manual_pdf = find / "manual_download"
-    manual_supp = data_dir / "sample_lv_attributes" / "manual_download_supp"
+    manual_supp = data_dir / "sample_lv_attributes" / "manual_download_supp"     # legacy, gitignored
+    committed_supp = data_dir.parent / "manual_supp_tables"                        # committed, version-controlled
 
     folds = {x.strip() for x in fold.split(",") if x.strip()}
 
@@ -228,7 +229,7 @@ def build_run_health(
         manual_pdf_present = (manual_pdf / f"{acc}.pdf").exists()
         manual_pdf_readable = manual_pdf_present and resolve_local_fulltext(acc, str(manual_pdf)) is not None
         paper_resolved = is_full_text or manual_pdf_readable
-        supp_present = any((manual_supp / f"{acc}{e}").exists() for e in SUPP_EXTS)
+        supp_present = bool(find_local_supp_files(acc, [committed_supp, manual_supp]))
         om_method = str(_get(outcome_of, acc, "method"))
         om_note = str(_get(outcome_of, acc, "note"))
         probe_opinion = str(_get(work_of, acc, "has_per_sample_table"))
@@ -244,11 +245,17 @@ def build_run_health(
             zreason = _zero_reason(om_method, om_note, has_pmcid=bool(pmcid), has_grade=has_grade,
                                    gate_status=gate_status)
             accepted_cell = (acc, field) in accepted_unrec
-            # A table is curator-FETCHABLE only when EPMC lacks the supp ZIP but the paper references a
-            # per-isolate table (no_supp + probe yes/likely) — a manual publisher download could get it.
-            # 'unanchored'/'manifest_only' tables are ALREADY fetched but can't be JOINED → that is the
-            # Phase-2 linkage problem, not a curator fetch (fetching it again wouldn't help).
-            table_recoverable = (not supp_present) and zreason == "no_supp" and probe_opinion in ("yes", "likely")
+            # A per-isolate table is curator-FETCHABLE when the paper references one (probe yes/likely) and
+            # none is wired yet. Two entry points: (i) EPMC lacks the supp ZIP ('no_supp') — a manual
+            # publisher download could get it; (ii) the study has NO PMCID so the OA path never ran
+            # ('NO_PMCID') but a resolved paper / curator-provided table can still supply it. Case (ii) is
+            # bug #4 — it was short-circuited to EXHAUSTED/NO_PMCID (PRJEB28400/PRJDB5929), hiding a
+            # recoverable table. 'unanchored'/'manifest_only' tables are ALREADY fetched but can't be JOINED
+            # → the Phase-2 linkage problem, not a curator fetch (fetching again wouldn't help).
+            table_recoverable = (
+                (not supp_present) and probe_opinion in ("yes", "likely")
+                and (zreason == "no_supp" or (zreason == "NO_PMCID" and paper_resolved))
+            )
             if not has_real_paper and not is_full_text:
                 exhausted_reason = "no_paper_findable"
             elif zreason in ("unanchored", "manifest_only"):
