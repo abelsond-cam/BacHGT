@@ -309,13 +309,19 @@ def detect_whole_field_escalations(
 ) -> list[EscalationItem]:
     """Detect whole-field near-misses worth a human decision, highest-gap first.
 
-    Candidacy is **deterministic**: for every ``(study, field)`` the grader declined (see :func:`_declined`),
-    an item is queued iff the field is still **materially incomplete after per-sample fills** — its
-    post-per-sample residual exceeds ``threshold`` samples **and** its post-per-sample completeness is below
-    ``frac`` (the same 0.75 the per-sample/backfill gate uses). This is a stable fact about the data, so the
-    same run inputs always yield the same queue — unlike the previous gate, whose LLM triage veto and
-    cohort-size-dependent big-decision boundary drifted between runs and silently dropped still-incomplete
-    studies (with them, the re-application of committed curator answers).
+    Candidacy is **deterministic**: for every ``(study, field)`` the grader did NOT whole-project-fill
+    (``applies_whole_project`` is false — whether it declined outright OR proposed a value it would not
+    vouch for study-wide), an item is queued iff the field is still **materially incomplete after
+    per-sample fills** — its post-per-sample residual exceeds ``threshold`` samples **and** its
+    post-per-sample completeness is below ``frac`` (the same 0.75 the per-sample/backfill gate uses). This
+    is a stable fact about the data, so the same run inputs always yield the same queue — unlike the
+    previous gate, whose LLM triage veto and cohort-size-dependent big-decision boundary drifted between
+    runs and silently dropped still-incomplete studies (with them, committed curator answers).
+
+    The "proposed-but-not-whole-project" case (``applies_whole_project`` false, ``proposed_value`` set) was
+    previously filled by NEITHER whole-field backfill (which needs ``applies_whole_project``) nor escalation
+    (whose old gate, :func:`_declined`, required an *empty* value) — silently discarding the grader's value.
+    It is now escalated with that value as the suggestion (the backup catch for grader under-confidence).
 
     :func:`classify_escalation_candidate` still runs, but only to **suggest** a ``representative_value`` /
     ``cluster_theme`` for the curator — it can no longer veto a candidate. A study's big-decision status
@@ -357,17 +363,21 @@ def detect_whole_field_escalations(
         )
         for f in fields:
             b = bf.get(f, {}) or {}
-            if not _declined(b):
-                continue
+            if b.get("applies_whole_project"):
+                continue  # grader asserts a whole-project value → whole-field backfill fills it, not escalation
             gap_samples = int(resid.get((acc, f), raw_gap.get((acc, f), 0)))  # residual AFTER per-sample
             n = int(n_of.get(acc, 0))
             complete = 1.0 - gap_samples / n if n else 0.0
-            # DETERMINISTIC candidacy: a declined field still materially incomplete after per-sample fills —
-            # residual over the min-samples floor AND completeness below the fraction gate. No LLM-triage or
-            # cohort-size dependence, so committed answers reapply and the queue reproduces run-to-run.
+            # DETERMINISTIC candidacy: any field the grader did NOT whole-project-fill and that is still
+            # materially incomplete after per-sample — a pure decline (no value) OR a "limbo" field where the
+            # grader proposed a value but would not vouch for it study-wide. The latter was silently dropped
+            # (filled by neither whole-field nor escalation), discarding the grader's value; surfacing it is
+            # the backup catch (David, 2026-07-10). Gate = residual over the floor AND completeness below the
+            # fraction — no LLM-triage/cohort-size dependence, so committed answers reapply and it reproduces.
             if gap_samples <= threshold or complete >= frac:
                 continue
 
+            proposed = (b.get("proposed_value") or "").strip()  # the grader's value, if it offered one
             ev = evidence_fn(acc)
             cls = classify_escalation_candidate(
                 spec,
@@ -387,8 +397,9 @@ def detect_whole_field_escalations(
             trigger = "+".join(
                 ([f"big_decision({study_samples.get(acc, 0)})"] if is_big else [])
                 + ([resolution] if triage_escalates else [])
+                + (["grader_proposed"] if proposed and not (is_big or triage_escalates) else [])
                 + ([f"residual({gap_samples}/{n}={1 - complete:.0%}_blank)"]
-                   if not (is_big or triage_escalates) else [])
+                   if not (is_big or triage_escalates or proposed) else [])
             )
 
             items.append(
@@ -397,7 +408,8 @@ def detect_whole_field_escalations(
                     field=f,
                     gap_samples=gap_samples,
                     resolution=resolution,
-                    suggested_value=(cls.get("representative_value") or "").strip(),
+                    # prefer the grader's own proposed value as the suggestion; fall back to the triage's
+                    suggested_value=proposed or (cls.get("representative_value") or "").strip(),
                     cluster_theme=(cls.get("cluster_theme") or "").strip(),
                     grader_quote=(cls.get("evidence_quote") or b.get("evidence_quote", "") or "").strip(),
                     paper_excerpt=_paper_excerpt(ev.fulltext.text, f),
