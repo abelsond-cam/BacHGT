@@ -33,7 +33,7 @@ import requests
 
 EUROPEPMC = "https://www.ebi.ac.uk/europepmc/webservices/rest"
 #: Native-spreadsheet members parsed directly into DataFrames.
-TABLE_SUFFIXES = (".xlsx", ".xls", ".csv", ".tsv")
+TABLE_SUFFIXES = (".xlsx", ".xls", ".csv", ".tsv", ".txt")
 #: Document members whose embedded tables we extract (DOCX via XML, PDF via pdfplumber) — no new deps.
 DOC_SUFFIXES = (".docx", ".pdf")
 #: WordprocessingML namespace for DOCX table parsing.
@@ -210,13 +210,22 @@ def _parse_member(tag: str, name: str, data: bytes) -> list[SuppTable]:
     """Parse one table-bearing file's bytes (csv/tsv/xlsx/xls/docx/pdf) into :class:`SuppTable`s."""
     low = name.lower()
     out: list[SuppTable] = []
-    if low.endswith((".csv", ".tsv")):
-        sep = "\t" if low.endswith(".tsv") else ","
-        try:
-            df = pd.read_csv(io.BytesIO(data), sep=sep, dtype=str, header=None, on_bad_lines="skip")
-            out.append(SuppTable(tag, name, None, df))
-        except (ValueError, pd.errors.ParserError, UnicodeDecodeError):
-            return out
+    if low.endswith((".csv", ".tsv", ".txt")):
+        # .csv / .tsv have a fixed delimiter (behaviour unchanged); a curator-provided .txt table has an
+        # UNKNOWN one, so try tab → comma → whitespace and keep whichever parse yields the most columns
+        # (a wrong delimiter collapses the table to a single column). Curator .txt exports are a mix.
+        seps = ["\t"] if low.endswith(".tsv") else [","] if low.endswith(".csv") else ["\t", ",", r"\s+"]
+        best = None
+        for sep in seps:
+            try:
+                df = pd.read_csv(io.BytesIO(data), sep=sep, dtype=str, header=None, on_bad_lines="skip",
+                                 engine="python" if sep == r"\s+" else "c")
+            except (ValueError, pd.errors.ParserError, UnicodeDecodeError):
+                continue
+            if best is None or df.shape[1] > best.shape[1]:
+                best = df
+        if best is not None:
+            out.append(SuppTable(tag, name, None, best))
     elif low.endswith((".xlsx", ".xls")):
         engine = "xlrd" if low.endswith(".xls") else "openpyxl"
         try:

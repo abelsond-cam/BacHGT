@@ -19,7 +19,7 @@ from pathlib import Path
 from .supplementary import SuppTable, _parse_member
 
 #: Extensions the manual-supplementary loader will try (the same table-bearing types the OA path parses).
-SUPP_EXTS = (".xlsx", ".xls", ".csv", ".tsv", ".docx", ".pdf")
+SUPP_EXTS = (".xlsx", ".xls", ".csv", ".tsv", ".txt", ".docx", ".pdf")
 
 #: A single directory, or an ordered list of them (earlier = higher precedence). Two live locations:
 #: the **committed** ``applications/<app>/manual_supp_tables/`` (version-controlled, can't be silently
