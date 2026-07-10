@@ -21,18 +21,18 @@ from .supplementary import SuppTable, _parse_member
 #: Extensions the manual-supplementary loader will try (the same table-bearing types the OA path parses).
 SUPP_EXTS = (".xlsx", ".xls", ".csv", ".tsv", ".txt", ".docx", ".pdf")
 
-#: A single directory, or an ordered list of them (earlier = higher precedence). Two live locations:
-#: the **committed** ``applications/<app>/manual_supp_tables/`` (version-controlled, can't be silently
-#: lost — the failure that dropped PRJEB28400's table) and the **legacy** gitignored
-#: ``data/sample_lv_attributes/manual_download_supp/``.
+#: A single directory, or an ordered list of them (earlier = higher precedence). In practice one location:
+#: ``data/sample_lv_attributes/manual_download_supp/`` — **tracked in git**, so a curator-provided table can
+#: never be silently lost (the failure that dropped PRJEB28400's table). The list form is kept so an
+#: application can layer an extra source without touching the resolver.
 SuppDirs = str | Path | Iterable[str | Path] | None
 
 
 def find_local_supp_files(accession: str, dirs: SuppDirs) -> list[Path]:
     """Existing ``<accession>.<ext>`` file(s) for a study, taking the **first** directory that has any.
 
-    Directory precedence means a committed table shadows a legacy one for the same accession (rather than
-    both being parsed), so the version-controlled copy is authoritative.
+    When several directories are supplied, the earliest one that holds a match wins outright (rather than
+    every directory's copy being parsed), so a higher-precedence source is authoritative.
 
     Parameters
     ----------
@@ -65,8 +65,8 @@ def resolve_local_supp_tables(accession: str, local_dir: SuppDirs) -> list[SuppT
     accession
         Study accession; the file must be named ``<accession>.<ext>`` (``ext`` in :data:`SUPP_EXTS`).
     local_dir
-        One directory, or an ordered list of them (see :data:`SuppDirs` — committed folder first, legacy
-        second). ``None`` / missing directories → ``None``.
+        The table directory, or an ordered list of them (see :data:`SuppDirs`). ``None`` / missing
+        directories → ``None``.
 
     Returns
     -------

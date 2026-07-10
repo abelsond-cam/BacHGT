@@ -141,8 +141,7 @@ def build_run_health(
     ps = data_dir / "sample_lv_attributes" / "per_sample"
     score = data_dir / "scorecard"
     manual_pdf = find / "manual_download"
-    manual_supp = data_dir / "sample_lv_attributes" / "manual_download_supp"     # legacy, gitignored
-    committed_supp = data_dir.parent / "manual_supp_tables"                        # committed, version-controlled
+    manual_supp = data_dir / "sample_lv_attributes" / "manual_download_supp"   # tracked in git (see its README)
 
     folds = {x.strip() for x in fold.split(",") if x.strip()}
 
@@ -229,7 +228,7 @@ def build_run_health(
         manual_pdf_present = (manual_pdf / f"{acc}.pdf").exists()
         manual_pdf_readable = manual_pdf_present and resolve_local_fulltext(acc, str(manual_pdf)) is not None
         paper_resolved = is_full_text or manual_pdf_readable
-        supp_present = bool(find_local_supp_files(acc, [committed_supp, manual_supp]))
+        supp_present = bool(find_local_supp_files(acc, manual_supp))
         om_method = str(_get(outcome_of, acc, "method"))
         om_note = str(_get(outcome_of, acc, "note"))
         probe_opinion = str(_get(work_of, acc, "has_per_sample_table"))

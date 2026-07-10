@@ -107,6 +107,13 @@ unanchored → outcome note `…unanchored…`, run-health **BLOCKED `needs_link
 
 ## Editing the engine or rubric — gotchas
 
+- **`--carry-forward` is for a band's FIRST run — never for re-running an already-accumulated band.**
+  It overlays `curated/curated_fills.tsv` onto the base's blanks (`run_full_metadata_agent.py:329`), so on a
+  re-run the band's own prior fills arrive pre-filled, the completeness gate skips those studies, and
+  `{per_sample,backfill}_applied_<tag>.tsv` come out **incremental-only**. `accumulate` replays applied files
+  onto the **raw** base, so accumulating those silently DROPS the band's original fills (observed: tail50_99
+  per-sample 2293→1017, whole-field 3653→48). Re-run a band **without** `--carry-forward` (the LLM cache keeps
+  it cheap), and always diff the applied row counts against the committed ones before accumulating.
 - **Byte-for-byte gate.** `engine/reference_outputs/{study_grades,per_sample_applied,backfill_applied}_train.tsv`
   are the train,val outputs under the final rubric; any behaviour-preserving change must reproduce them
   exactly (sort rows, plain compare) — the driver passes this today. Read the base table with

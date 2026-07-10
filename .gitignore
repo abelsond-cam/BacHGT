@@ -54,8 +54,10 @@ src/bac_metadata/bac_agentic_metadata/applications/*/data/cache/
 src/bac_metadata/bac_agentic_metadata/applications/*/data/inputs/base_table.csv
 # Manually-downloaded paywalled paper PDFs — copyrighted + large; reproduce with engine.cli.attach_papers.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_download/
-# Manually-downloaded supplementary tables — copyrighted; consumed by engine/local_supplements.py.
-src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/manual_download_supp/
+# Manually-downloaded supplementary tables (manual_download_supp/) are deliberately TRACKED: a curator table
+# that is not version-controlled gets silently lost (this is what dropped PRJEB28400's per-isolate table in the
+# OneDrive->developer migration, taking its isolation_source to 0%). They are small, and losing one is worse
+# than storing it. Consumed by engine/local_supplements.py; linkability tracked by evaluation/table_linkability.py.
 # Filled full-width metadata tables + provenance — large, regenerable (the driver's fill-metadata-table
 # stage substitutes agent values into the whole base row); the small summary .md is kept.
 src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/enriched/filled_metadata_*.tsv

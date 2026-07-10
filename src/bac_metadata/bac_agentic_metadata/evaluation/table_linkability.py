@@ -51,7 +51,7 @@ def _supp_files(dirs: list[Path]) -> dict[str, list[Path]]:
 def linkability(app_dir: Path, base_path: Path) -> pd.DataFrame:
     """Deterministic parse+anchor check for every curator supp table; one row per table file."""
     data_dir = app_dir / "data"
-    dirs = [app_dir / "manual_supp_tables", data_dir / "sample_lv_attributes" / "manual_download_supp"]
+    dirs = [data_dir / "sample_lv_attributes" / "manual_download_supp"]  # single, git-tracked table folder
     files = _supp_files(dirs)
 
     idcols = list(sx._ID_COLUMNS)

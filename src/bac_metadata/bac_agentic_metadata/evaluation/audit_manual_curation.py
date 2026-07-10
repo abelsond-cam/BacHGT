@@ -146,7 +146,7 @@ def audit(app: str, data_dir: Path, pk_root: Path) -> tuple[list[dict], list[str
                          "path": str(pdf.relative_to(data_dir.parent)), "detail": detail})
 
     # ---- Check 2: local supp tables consumed? ----
-    supp_dirs = [data_dir.parent / "manual_supp_tables", data_dir / "sample_lv_attributes" / "manual_download_supp"]
+    supp_dirs = [data_dir / "sample_lv_attributes" / "manual_download_supp"]  # single, git-tracked table folder
     supp = _supp_stems(*supp_dirs)
     for acc, files in sorted(supp.items()):
         rel = ", ".join(str(f.relative_to(data_dir.parent)) for f in files)
