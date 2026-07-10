@@ -38,7 +38,7 @@ a given application resolves a paper reference.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 
 import pandas as pd
@@ -299,7 +299,9 @@ def detect_whole_field_escalations(
     *,
     fields: tuple[str, ...] = backfill.FIELDS,
     threshold: int = 50,
-    per_sample_covered: set[tuple[str, str]] | None = None,
+    frac: float = 0.75,
+    post_gap: Mapping[tuple[str, str], int] | None = None,
+    n_records: Mapping[str, int] | None = None,
     model: str | None = None,
     study_samples: dict[str, int] | None = None,
     cohort_total_samples: int | None = None,
@@ -307,35 +309,44 @@ def detect_whole_field_escalations(
 ) -> list[EscalationItem]:
     """Detect whole-field near-misses worth a human decision, highest-gap first.
 
-    For every ``(study, field)`` the grader declined (see :func:`_declined`): gate by gap (skip if
-    ``gap_samples <= threshold``), gate by per-sample coverage, then triage with
-    :func:`classify_escalation_candidate`. An item is queued when EITHER:
+    Candidacy is **deterministic**: for every ``(study, field)`` the grader declined (see :func:`_declined`),
+    an item is queued iff the field is still **materially incomplete after per-sample fills** — its
+    post-per-sample residual exceeds ``threshold`` samples **and** its post-per-sample completeness is below
+    ``frac`` (the same 0.75 the per-sample/backfill gate uses). This is a stable fact about the data, so the
+    same run inputs always yield the same queue — unlike the previous gate, whose LLM triage veto and
+    cohort-size-dependent big-decision boundary drifted between runs and silently dropped still-incomplete
+    studies (with them, the re-application of committed curator answers).
 
-    * the triage returns an escalating resolution (:data:`ESCALATE_RESOLUTIONS`) — the tight-cluster rule; OR
-    * the study is a **BIG DECISION** — its taxon-sample count exceeds ``big_decision_frac`` of the whole
-      cohort (``cohort_total_samples``). A big study's whole-field call moves the global metric materially,
-      so a human ALWAYS confirms it (with the paper + grade + reasoning), *regardless* of the tight/wide
-      triage, and the per-sample-coverage gate is **bypassed** for it (a large residual must never be
-      silently abandoned). This is a deterministic, LLM-free safety net independent of grading variance.
+    :func:`classify_escalation_candidate` still runs, but only to **suggest** a ``representative_value`` /
+    ``cluster_theme`` for the curator — it can no longer veto a candidate. A study's big-decision status
+    (``>= big_decision_frac`` of the cohort) is recorded in ``escalate_trigger`` for audit, but no longer
+    gates candidacy (a big study is simply one with a large residual, which the fraction gate already keeps).
 
     Parameters
     ----------
-    grades, raw_ena, spec, llm, evidence_fn, fields, threshold, per_sample_covered, model
-        As before (see module docstring); ``per_sample_covered`` is bypassed for big-decision studies.
+    grades, raw_ena, spec, llm, evidence_fn, fields, threshold, model
+        As before (see module docstring). ``threshold`` is the min-residual-samples floor; ``frac`` the
+        completeness gate.
+    post_gap
+        ``{(study, field): blank_samples_after_per_sample}`` — the residual per-sample left (what escalation
+        would fill). Falls back to the raw ENA gap when ``None``.
+    n_records
+        ``{study_accession: n_samples}`` in the selection — the denominator for the completeness fraction.
     study_samples
-        ``{study_accession: taxon_sample_count}`` over the WHOLE cohort (all folds) — the big-decision size.
+        ``{study_accession: taxon_sample_count}`` over the WHOLE cohort — the big-decision size (audit only).
     cohort_total_samples
         Total taxon samples across the whole cohort; the denominator for the ``big_decision_frac`` test.
     big_decision_frac
-        A study at/above this fraction of the cohort is a big decision and always escalates (default 0.01).
+        A study at/above this fraction of the cohort is tagged a big decision in the trigger (default 0.01).
 
     Returns
     -------
     list[EscalationItem]
-        Escalations sorted by ``gap_samples`` descending (highest-impact first).
+        Escalations sorted by ``gap_samples`` (the residual) descending (highest-impact first).
     """
-    gap = field_gap(raw_ena, fields)
-    covered = per_sample_covered or set()
+    raw_gap = field_gap(raw_ena, fields)
+    resid = dict(post_gap) if post_gap is not None else dict(raw_gap)
+    n_of = dict(n_records or {})
     study_samples = study_samples or {}
     items: list[EscalationItem] = []
     for g in grades:
@@ -348,10 +359,13 @@ def detect_whole_field_escalations(
             b = bf.get(f, {}) or {}
             if not _declined(b):
                 continue
-            gap_samples = gap.get((acc, f), 0)
-            # Gap gate always applies; the per-sample-coverage gate is bypassed for big-decision studies so
-            # a large residual (e.g. a study per-sample only half-resolved) is never silently abandoned.
-            if gap_samples <= threshold or ((acc, f) in covered and not is_big):
+            gap_samples = int(resid.get((acc, f), raw_gap.get((acc, f), 0)))  # residual AFTER per-sample
+            n = int(n_of.get(acc, 0))
+            complete = 1.0 - gap_samples / n if n else 0.0
+            # DETERMINISTIC candidacy: a declined field still materially incomplete after per-sample fills —
+            # residual over the min-samples floor AND completeness below the fraction gate. No LLM-triage or
+            # cohort-size dependence, so committed answers reapply and the queue reproduces run-to-run.
+            if gap_samples <= threshold or complete >= frac:
                 continue
 
             ev = evidence_fn(acc)
@@ -368,13 +382,13 @@ def detect_whole_field_escalations(
                 prior_quote=b.get("evidence_quote", ""),
                 model=model,
             )
-            resolution = cls.get("resolution", "")
+            resolution = cls.get("resolution", "")  # advisory — informs suggested_value/theme, never vetoes
             triage_escalates = resolution in ESCALATE_RESOLUTIONS
-            if not triage_escalates and not is_big:
-                continue  # genuinely-wide mix in a small study → leave to per-sample, do not ask
             trigger = "+".join(
                 ([f"big_decision({study_samples.get(acc, 0)})"] if is_big else [])
                 + ([resolution] if triage_escalates else [])
+                + ([f"residual({gap_samples}/{n}={1 - complete:.0%}_blank)"]
+                   if not (is_big or triage_escalates) else [])
             )
 
             items.append(

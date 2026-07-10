@@ -392,7 +392,10 @@ def main() -> None:
     # ── Stage 7 — escalation detect → apply (best-effort; the curator-tier near-miss queue) ────────
     if not args.skip_escalation:
         try:
-            esc_master = (Path(args.data_dir) / "curated" / "curated_escalations.tsv") if args.carry_forward else None
+            # ALWAYS consult the version-controlled escalations master (not just under --carry-forward): its
+            # answers are the precious, non-regenerable curator input, re-applied to any still-gated study so
+            # a committed decision is never silently dropped when its detection trigger stops firing.
+            esc_master = Path(args.data_dir) / "curated" / "curated_escalations.tsv"
             stages.escalate_detect(
                 spec=spec, base=base, keep=selected, grades_jsonl=grades_jsonl,
                 per_sample_path=per_sample_tsv, sizing_path=sizing_path, paper_links=paper_links,

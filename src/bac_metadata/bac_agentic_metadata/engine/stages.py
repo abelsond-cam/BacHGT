@@ -588,23 +588,32 @@ def cohort_study_samples(sizing_path: str | Path) -> tuple[dict[str, int], int]:
     return samples, int(n.sum())
 
 
-def _per_sample_covered(per_sample_path: str | Path | None, raw: pd.DataFrame, fields: Sequence[str],
-                        frac: float) -> set[tuple[str, str]]:
-    """``(study, field)`` pairs per-sample extraction already resolved (per-sample runs first).
+def _post_per_sample_gap(per_sample_path: str | Path | None, raw: pd.DataFrame,
+                         fields: Sequence[str]) -> dict[tuple[str, str], int]:
+    """Blank ENA cells per ``(study, field)`` REMAINING after per-sample fills — the escalation residual.
 
-    A field counts as resolved when per-sample filled at least ``frac`` of its blank ENA cells: if the
-    sample-level data is there, the whole-field question is already answered and never escalates.
+    Per-sample runs first; the whole-field/escalation tier should only weigh what it left. Starting from
+    the raw gap (:func:`engine.escalation.field_gap`), subtract, per ``(study, field)``, the distinct
+    samples per-sample filled **from a genuinely-blank ENA cell** (``ena_value`` placeholder-null) — those
+    are the cells per-sample newly resolved. A fill that overwrote an existing ENA value never reduces the
+    blank count. The result is the deterministic input to the escalation candidacy gate.
     """
     from bac_metadata.bac_agentic_metadata.engine import escalation
 
+    gap = dict(escalation.field_gap(raw, tuple(fields)))
     if not per_sample_path or not Path(per_sample_path).exists():
-        return set()
-    mb = pd.read_csv(per_sample_path, sep="\t", dtype=str)
-    if not {"study_accession", "field"} <= set(mb.columns) or not len(mb):
-        return set()
-    fills = mb.groupby(["study_accession", "field"]).size()
-    gap = escalation.field_gap(raw, tuple(fields))
-    return {(acc, f) for (acc, f), n in fills.items() if gap.get((acc, f), 0) > 0 and n >= frac * gap[(acc, f)]}
+        return gap
+    mb = pd.read_csv(per_sample_path, sep="\t", dtype=str, keep_default_na=False)
+    if not {"study_accession", "field", "sample_accession"} <= set(mb.columns) or not len(mb):
+        return gap
+    if "ena_value" in mb.columns:  # only fills into a blank ENA cell reduce the blank count
+        mb = mb[mb["ena_value"].map(_is_blank)]
+    filled = mb.groupby(["study_accession", "field"])["sample_accession"].nunique()
+    for (acc, f), k in filled.items():
+        key = (str(acc), f)
+        if key in gap:
+            gap[key] = max(0, gap[key] - int(k))
+    return gap
 
 
 def _load_grade_records(grades_jsonl: str | Path, keep: set[str]) -> list[dict]:
@@ -688,10 +697,10 @@ def _preserve_prior_answers(frame: pd.DataFrame, output: Path) -> pd.DataFrame:
         if k in prior_ans:
             frame.at[idx, "answer"], frame.at[idx, "answer_note"] = prior_ans[k]
             carried += 1
-    dropped = sorted(k for k in prior_ans if k not in new_keys)
+    undetected = sorted(k for k in prior_ans if k not in new_keys)
     print(f"  [preserve] carried {carried} prior curator answer(s) into the regenerated queue; "
-          f"{len(dropped)} previously-answered question(s) no longer escalate"
-          + (f" (dropped: {dropped})" if dropped else ""), file=sys.stderr)
+          f"{len(undetected)} previously-answered question(s) no longer freshly detect"
+          + (f" → re-inject handles any still gated: {undetected}" if undetected else ""), file=sys.stderr)
     return frame
 
 
@@ -729,6 +738,69 @@ def _carry_forward_resolved(frame: pd.DataFrame, store_path: str | Path) -> pd.D
     return frame
 
 
+def _reinject_resolved_still_gated(
+    frame: pd.DataFrame, *, sources: Sequence[str | Path | None], keep: set[str],
+    post_gap: Mapping[tuple[str, str], int], n_records: Mapping[str, int], threshold: int,
+) -> pd.DataFrame:
+    """Re-apply resolved curator decisions still gated after per-sample but no longer freshly detected.
+
+    :func:`_preserve_prior_answers` / :func:`_carry_forward_resolved` only fill rows the fresh (now
+    deterministic) detection produced. A decision leaves detection when per-sample lifts its field over the
+    completeness gate — but if a residual remains, the curator's committed whole-field value must still fill
+    it. This appends such decisions (answered, or skip/reject-noted) as queue rows so :func:`escalate_apply`
+    fills the remainder, keyed on the same-tag queue + the version-controlled escalations master (same-tag
+    precedence). Without it a decision silently lapses the moment its trigger stops firing — the loss that
+    left ~3.7k curator-decided cells blank when the cohort grew past a study's big-decision line.
+
+    Parameters
+    ----------
+    frame
+        The freshly-detected queue (post preserve/carry-forward).
+    sources
+        Prior answer sources in precedence order (earlier wins) — typically ``[same_tag_queue, master]``.
+    keep
+        Studies in this selection; a decision for a study outside it is ignored (no cross-tag leakage).
+    post_gap, n_records, threshold
+        The residual map and per-study denominator; a decision is re-applied only while its field still has
+        a blank cell (``post_gap > 0``) — if per-sample filled the whole field there is nothing to re-apply.
+    """
+    markers = ("reject", "skip", "undeterm", "leave uncoded", "no value")
+
+    def _resolved(ans: object, note: object) -> bool:
+        return bool(str(ans).strip()) or any(w in str(note).lower() for w in markers)
+
+    present = {(str(r["study_accession"]), str(r["field"])) for _, r in frame.iterrows()}
+    resolved: dict[tuple[str, str], tuple[str, str]] = {}
+    for src in sources:
+        if not src or not Path(src).exists():
+            continue
+        d = pd.read_csv(src, sep="\t", dtype=str).fillna("")
+        if not {"study_accession", "field"} <= set(d.columns):
+            continue
+        for _, r in d.iterrows():
+            ans, note = r.get("answer", ""), r.get("answer_note", "")
+            if _resolved(ans, note):
+                resolved.setdefault((str(r["study_accession"]), str(r["field"])), (ans, note))
+    rows = []
+    for (acc, f), (ans, note) in resolved.items():
+        if (acc, f) in present or acc not in keep or int(post_gap.get((acc, f), 0)) <= 0:
+            continue
+        rows.append({
+            "study_accession": acc, "field": f, "gap_samples": int(post_gap[(acc, f)]),
+            "escalate_trigger": "reinjected_committed_decision", "resolution": "", "cluster_theme": "",
+            "suggested_value": "", "grader_quote": "", "paper_excerpt": "", "fulltext_status": "",
+            "answer": ans, "answer_note": note,
+        })
+    if rows:
+        add = pd.DataFrame(rows, columns=ESCALATION_QUEUE_COLUMNS)
+        frame = pd.concat([frame, add], ignore_index=True) if len(frame) else add
+        answered = sum(1 for r in rows if str(r["answer"]).strip())
+        print(f"  [re-inject] {len(rows)} committed decision(s) still gated after per-sample but no longer "
+              f"freshly detected, re-applied ({answered} with a fill value); "
+              f"studies: {sorted({r['study_accession'] for r in rows})}", file=sys.stderr)
+    return frame
+
+
 def escalate_detect(
     *,
     spec: AttributeSpec,
@@ -746,18 +818,21 @@ def escalate_detect(
     model: str,
     caches: StageCaches,
     threshold: int = 50,
-    per_sample_frac: float = 0.5,
+    frac: float = 0.75,
     big_decision_frac: float = BIG_DECISION_FRAC,
     escalations_master_path: str | Path | None = None,
     cohort_taxon_samples: Mapping[str, int] | None = None,
     cohort_taxon_total: int | None = None,
 ) -> pd.DataFrame:
-    """Detect tight whole-field near-misses worth a human decision; write the curator decision queue.
+    """Detect whole-field near-misses worth a human decision; write the curator decision queue.
 
-    Production-safe: uses no curator gold (the test fold / *M. abscessus* have none), only the grader's own
-    tight-vs-wide judgement of its decline plus the leverage-based big-decision rule. ``base`` is the raw
-    per-sample table already restricted to the selection. Writes ``decisions_needed_<tag>.tsv`` (sorted by
-    ``gap_samples`` desc, empty answer columns), preserving any answers a prior queue already held.
+    Candidacy is deterministic: a grader-declined field still below ``frac`` complete (and over ``threshold``
+    residual samples) **after** per-sample fills is queued — no LLM-triage or cohort-size dependence (see
+    :func:`engine.escalation.detect_whole_field_escalations`). ``base`` is the raw per-sample table already
+    restricted to the selection. Writes ``decisions_needed_<tag>.tsv`` (sorted by residual ``gap_samples``
+    desc). Committed answers are made **sticky**: any resolved decision in the same-tag queue or the
+    version-controlled escalations master whose field is still gated is re-applied even when it no longer
+    freshly detects (:func:`_reinject_resolved_still_gated`) — so a human decision is never silently dropped.
     """
     from bac_metadata.bac_agentic_metadata.engine import escalation
 
@@ -766,33 +841,47 @@ def escalate_detect(
     keep = set(keep)
     raw = base[base["study_accession"].isin(keep)].copy()
     grades = _load_grade_records(grades_jsonl, keep)
-    covered = _per_sample_covered(per_sample_path, raw, fields, per_sample_frac)
-    # Big-decision leverage gate = fraction of the WHOLE cohort. In tail/batch mode sizing_path is
-    # batch-local (its total would make every >1%-of-batch study look "big"), so the driver passes the
-    # whole-cohort taxon counts explicitly; fall back to the sizing file (splits mode, already whole-cohort).
+    post_gap = _post_per_sample_gap(per_sample_path, raw, fields)  # residual per-sample left (candidacy input)
+    n_records = raw.groupby("study_accession").size().to_dict()
+    still_gated = sum(1 for (a, _f), g in post_gap.items() if a in keep and g > threshold)
+    # Big-decision leverage = fraction of the WHOLE cohort (audit tag only now). In tail/batch mode
+    # sizing_path is batch-local (its total would make every >1%-of-batch study look "big"), so the driver
+    # passes the whole-cohort taxon counts explicitly; fall back to the sizing file (splits mode).
     if cohort_taxon_samples is not None and cohort_taxon_total:
         study_samples, cohort_total = dict(cohort_taxon_samples), int(cohort_taxon_total)
     else:
         study_samples, cohort_total = cohort_study_samples(sizing_path)
     big = sorted(a for a in keep if cohort_total and study_samples.get(a, 0) / cohort_total >= big_decision_frac)
     print(f"Scanning {len(grades)} graded studies / {len(raw)} ENA rows "
-          f"(gap threshold {threshold}; {len(covered)} field(s) already resolved by per-sample; "
-          f"cohort total {cohort_total} samples, big-decision (>={big_decision_frac:.0%}) studies: "
-          f"{big or 'none'})", file=sys.stderr)
+          f"(residual floor {threshold} samples, completeness gate {frac:.0%}; {still_gated} (study×field) "
+          f"still gated after per-sample; cohort total {cohort_total} samples, big-decision "
+          f"(>={big_decision_frac:.0%}) studies: {big or 'none'})", file=sys.stderr)
 
     evidence_fn = _escalation_evidence_fn(
         paper_links=paper_links, classifications=classifications, sizing_path=sizing_path,
         manual_papers_dir=manual_papers_dir, caches=caches,
     )
     items = escalation.detect_whole_field_escalations(
-        grades, raw, spec, llm, evidence_fn, fields=fields, threshold=threshold,
-        per_sample_covered=covered, model=model, study_samples=study_samples,
+        grades, raw, spec, llm, evidence_fn, fields=fields, threshold=threshold, frac=frac,
+        post_gap=post_gap, n_records=n_records, model=model, study_samples=study_samples,
         cohort_total_samples=cohort_total, big_decision_frac=big_decision_frac,
     )
     frame = _items_to_queue_frame(items)
-    frame = _preserve_prior_answers(frame, Path(out_path))  # never silently wipe curator answers on re-detect
+    frame = _preserve_prior_answers(frame, Path(out_path))  # fill freshly-detected rows from the prior queue
     if escalations_master_path:  # cross-batch: never re-ask a decision made in an earlier batch
         frame = _carry_forward_resolved(frame, escalations_master_path)
+    # Sticky: re-apply any resolved decision whose field is STILL gated post-per-sample but no longer freshly
+    # detects — the data-loss point the old preserve/carry-forward (which only touch detected rows) missed.
+    frame = _reinject_resolved_still_gated(
+        frame, sources=[Path(out_path), escalations_master_path], keep=keep, post_gap=post_gap,
+        n_records=n_records, threshold=threshold,
+    )
+    if len(frame):  # stable highest-residual-first order (append-independent → byte-reproducible queue)
+        frame = frame.sort_values(
+            ["gap_samples", "study_accession", "field"],
+            key=lambda s: pd.to_numeric(s, errors="coerce") if s.name == "gap_samples" else s,
+            ascending=[False, True, True],
+        ).reset_index(drop=True)
     frame.to_csv(out_path, sep="\t", index=False)
     print(f"Wrote {Path(out_path).name}: {len(frame)} escalation(s) "
           f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)", file=sys.stderr)
