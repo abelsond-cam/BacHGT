@@ -311,6 +311,23 @@ def _zero_bucket(method: str, note: str) -> str:
     return "abstained_other"
 
 
+def _is_blank(value) -> bool:
+    """True if an ENA cell is genuinely missing — empty, or placeholder-null text (``NA``, ``unknown``, …).
+
+    The scalar counterpart of :func:`engine.backfill.strip_placeholders`, sharing its
+    :data:`~engine.backfill.PLACEHOLDER_NULLS` vocabulary so "blank" means the same thing to the
+    completeness gate and to the blank-only fill policy.
+    """
+    import re as _re
+
+    from bac_metadata.bac_agentic_metadata.engine import backfill
+
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return True
+    key = _re.sub(r"\s+", " ", str(value).strip()).lower()
+    return key in backfill.PLACEHOLDER_NULLS
+
+
 def per_sample(
     *,
     base: pd.DataFrame,
@@ -327,18 +344,30 @@ def per_sample(
     id_columns: Sequence[str] | None = None,
     manual_papers_dir: str | Path | None = None,
     category_vocab: dict[str, str] | None = None,
+    paper_links: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     """Per-sample extraction from supplementary tables — the accurate per-isolate source, runs FIRST.
 
     Over every ENA-incomplete (gated) study with a paper (grade-independent gate), fetch + parse the
     paper's supplementary tables, let the extractor map columns→fields, and deterministically join rows
     to ENA ``sample_accession``. Emits per-sample fills (``method="per_sample"``) and one outcome row per
-    target (direct / two_hop / abstained / NO_PMCID / NOT_IN_FOLD / NOT_REACHED) so a study is never
-    silently dropped. ``base`` is the per-sample table already restricted to the selection.
+    target (direct / two_hop / abstained / NO_PMCID / NO_BLANKS / NOT_IN_FOLD / NOT_REACHED) so a study is
+    never silently dropped. ``base`` is the per-sample table already restricted to the selection.
+
+    Two rules widen the target set beyond the completeness gate, both so a curator's work is never wasted:
+
+    * **A study with a curator-provided local table is always a target** (David, 2026-07-10), even when ENA
+      reports it ``>= threshold`` complete — otherwise a table we deliberately hunted down is never opened.
+      Such a study is **blank-only**: its fills land solely in genuinely-blank ENA cells and never overwrite
+      an existing ENA value. A blank-only study with no blank cells at all is recorded ``NO_BLANKS`` and
+      skipped before any LLM call (nothing to fill), rather than silently dropped.
+    * ``paper_links`` (the same map the grader uses, honouring ``--paper-source``) is a **fallback** for the
+      PMCID when the finder came up empty — resolved via :func:`engine.europepmc.pmcid_for_link`. Without it
+      a study whose paper the curated snapshot names is wrongly written off as ``NO_PMCID``.
     """
     from collections import Counter
 
-    from bac_metadata.bac_agentic_metadata.engine import backfill
+    from bac_metadata.bac_agentic_metadata.engine import backfill, europepmc
     from bac_metadata.bac_agentic_metadata.engine import local_supplements as lsupp
     from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
     from bac_metadata.bac_agentic_metadata.engine import supplementary as supp
@@ -370,12 +399,17 @@ def per_sample(
                                  fields=tuple(fields), threshold=threshold)
     any_gated = needs.any(axis=1)
     gated = set(any_gated.index[any_gated])
+    # A curator-provided table is always opened; where ENA is already complete the study is BLANK-ONLY.
+    table_bearing = {a for a in sets if lsupp.find_local_supp_files(a, manual_supp_dir)}
+    blank_only = table_bearing - gated
+    n_blank = {a: sum(int(backfill.strip_placeholders(g[f]).isna().sum()) for f in fields)
+               for a, g in base.groupby("study_accession") if a in blank_only}
     if accessions:
         targets = [(a.strip(), pmcid_of.get(a.strip(), "")) for a in accessions if a.strip()]
     else:
-        targets = [(a, pmcid_of.get(a, "")) for a in sorted(gated)]
-    print(f"Per-sample over {len(targets)} gated studies (of {len(gated)} gated; threshold {threshold}) "
-          f"with {model}", file=sys.stderr)
+        targets = [(a, pmcid_of.get(a, "")) for a in sorted(gated | table_bearing)]
+    print(f"Per-sample over {len(targets)} studies ({len(gated)} gated at threshold {threshold}; "
+          f"+{len(blank_only)} ungated-with-table, blank-only) with {model}", file=sys.stderr)
 
     fills: list[dict] = []
     extractions = []
@@ -391,6 +425,18 @@ def per_sample(
                                            "study not in the per-sample selection accession sets"))
             print(f"[{i}/{len(targets)}] {acc} — NOT_IN_FOLD; skip", file=sys.stderr)
             continue
+        if acc in blank_only and n_blank.get(acc, 0) == 0:
+            outcome_rows.append(_synthetic(acc, pmcid, "NO_BLANKS",
+                "local table present, but ENA has no blank cell in any field — blank-only policy fills "
+                "blanks and never overwrites ENA, so there is nothing to fill"))
+            print(f"[{i}/{len(targets)}] {acc} — NO_BLANKS (ENA complete; blank-only policy)", file=sys.stderr)
+            continue
+        # The finder can miss a paper the curated snapshot names; fall back to its link (DOI/PMID/URL).
+        if not pmcid and paper_links and paper_links.get(acc):
+            pmcid = europepmc.pmcid_for_link(paper_links[acc], cache_dir=caches.find) or ""
+            if pmcid:
+                print(f"[{i}/{len(targets)}] {acc} — PMCID {pmcid} recovered from the curated paper link",
+                      file=sys.stderr)
         # Resolve any curator-provided supplementary table FIRST, so a manually-downloaded table can rescue
         # a paywalled (no-PMCID) study. Only skip when there is NEITHER an OA PMCID NOR a local supp table —
         # the previous `if not pmcid: continue` silently dropped local tables for exactly those studies.
@@ -417,15 +463,21 @@ def per_sample(
                     "not reached before usage limit; rerun to resume (cache fills the rest)"))
             break
         extractions.append(ex)
-        fills.extend(ex.fills)
+        ex_fills, note = ex.fills, ex.note
+        if acc in blank_only:  # never overwrite an ENA value in a study the completeness gate did not select
+            kept = [f for f in ex_fills if _is_blank(f.get("ena_value"))]
+            note = (f"{note}; blank-only (ungated, has local table): kept {len(kept)}/{len(ex_fills)} fills "
+                    f"in blank ENA cells, dropped {len(ex_fills) - len(kept)} that would overwrite ENA")
+            ex_fills = kept
+        fills.extend(ex_fills)
         outcome_rows.append({
             "study_accession": ex.study_accession, "pmcid": ex.pmcid, "table": ex.table,
-            "method": ("two_hop" if any(f["method"] == "per_sample_two_hop" for f in ex.fills)
-                       else "direct" if ex.fills else "abstained"),
-            "n_samples": ex.n_samples_mapped, "n_fills": len(ex.fills),
-            "confidence": ex.confidence, "note": ex.note,
+            "method": ("two_hop" if any(f["method"] == "per_sample_two_hop" for f in ex_fills)
+                       else "direct" if ex_fills else "abstained"),
+            "n_samples": ex.n_samples_mapped, "n_fills": len(ex_fills),
+            "confidence": ex.confidence, "note": note,
         })
-        print(f"[{i}/{len(targets)}] {acc} ({pmcid}) — {ex.note} [conf={ex.confidence}] cols={ex.columns}",
+        print(f"[{i}/{len(targets)}] {acc} ({pmcid}) — {note} [conf={ex.confidence}] cols={ex.columns}",
               file=sys.stderr)
 
     out = pd.DataFrame(fills, columns=["study_accession", "sample_accession", "field", "ena_value",

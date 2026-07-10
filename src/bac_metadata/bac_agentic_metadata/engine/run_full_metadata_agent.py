@@ -360,7 +360,7 @@ def main() -> None:
         base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
         manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
         ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
-        manual_papers_dir=manual_papers_dir, category_vocab=category_vocab,
+        manual_papers_dir=manual_papers_dir, category_vocab=category_vocab, paper_links=paper_links,
     )
 
     # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────

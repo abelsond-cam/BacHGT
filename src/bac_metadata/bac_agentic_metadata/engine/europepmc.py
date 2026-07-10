@@ -129,6 +129,53 @@ def candidates_by_pmids(pmids: list[str], *, cache_dir=None) -> list[Candidate]:
     return _search(query, cache_dir=cache_dir, page_size=len(pmids), found_via="ncbi_bioproject")
 
 
+#: A PMCID anywhere in a string (``PMC7244338``, or inside a pmc.ncbi.nlm.nih.gov URL).
+_PMCID_RE = re.compile(r"\bPMC\d+\b", re.IGNORECASE)
+#: A DOI anywhere in a string (bare, or inside a doi.org / publisher URL).
+_DOI_RE = re.compile(r"\b10\.\d{4,9}/[^\s\"'<>]+", re.IGNORECASE)
+#: A PubMed id: a bare integer, or the id segment of a pubmed.ncbi.nlm.nih.gov URL.
+_PMID_URL_RE = re.compile(r"pubmed\.ncbi\.nlm\.nih\.gov/(\d+)", re.IGNORECASE)
+
+
+def pmcid_for_link(link: str, *, cache_dir=None) -> str | None:
+    """Resolve any paper link/identifier to its PMCID, or ``None`` if it has no Europe PMC full text.
+
+    The per-sample stage needs a **PMCID** to fetch open-access supplementary tables, but a curated
+    study-level snapshot records whatever link the curator had — a DOI, a PubMed URL, a publisher URL.
+    This maps all of them onto a PMCID (cheap: a PMC link is read off the string; a DOI/PMID costs one
+    cached Europe PMC lookup), so a study whose paper we *do* know is never written off as ``NO_PMCID``.
+
+    Parameters
+    ----------
+    link
+        A PMCID, DOI, PMID, or a URL containing one of them. Empty/unrecognised → ``None``.
+    cache_dir
+        Directory for the cached Europe PMC ``/search`` responses (``None`` disables caching).
+
+    Returns
+    -------
+    str | None
+        The upper-cased ``PMC…`` id, or ``None`` when the paper has no PMC record.
+    """
+    s = (link or "").strip()
+    if not s:
+        return None
+    if m := _PMCID_RE.search(s):
+        return m.group(0).upper()
+    if m := _DOI_RE.search(s):
+        doi = m.group(0).rstrip(".,;)")
+        for c in _search(f'DOI:"{doi}"', cache_dir=cache_dir, page_size=1, found_via="europepmc_doi"):
+            if c.pmcid:
+                return c.pmcid.upper()
+        return None
+    pmid = m.group(1) if (m := _PMID_URL_RE.search(s)) else (s if s.isdigit() else "")
+    if pmid:
+        for c in candidates_by_pmids([pmid], cache_dir=cache_dir):
+            if c.pmcid:
+                return c.pmcid.upper()
+    return None
+
+
 # --------------------------------------------------------------------------------------------- #
 # Preprint → published promotion (always favour the peer-reviewed version).
 # --------------------------------------------------------------------------------------------- #
