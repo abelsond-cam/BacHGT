@@ -299,7 +299,11 @@ attributes:
         categories: []
         cross_column: []
       isolation_source:
-        null_tokens: ["0", "unclear", "others"]                 # beyond PLACEHOLDER_NULLS; ported from parse_isolation_source
+        # "clinical" / "surveillance" name a sampling CONTEXT, not a specimen/site (the definition of
+        # isolation_source) — uninformative as a source, so blank them pre-fill (like "laboratory") to let
+        # the per-sample table / paper supply the real specimen (e.g. blood vs perirectal surveillance swab,
+        # the carriage-vs-invasive distinction). David, 2026-07-11.
+        null_tokens: ["0", "unclear", "others", "clinical", "surveillance"]  # beyond PLACEHOLDER_NULLS; ported from parse_isolation_source
         null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']  # laboratory/in-vitro is not a source -> NA pre-grading
         categories: []
         cross_column: []

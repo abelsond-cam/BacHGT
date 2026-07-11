@@ -351,19 +351,22 @@ def per_sample(
     Over every ENA-incomplete (gated) study with a paper (grade-independent gate), fetch + parse the
     paper's supplementary tables, let the extractor map columns→fields, and deterministically join rows
     to ENA ``sample_accession``. Emits per-sample fills (``method="per_sample"``) and one outcome row per
-    target (direct / two_hop / abstained / NO_PMCID / NO_BLANKS / NOT_IN_FOLD / NOT_REACHED) so a study is
-    never silently dropped. ``base`` is the per-sample table already restricted to the selection.
+    target (direct / two_hop / abstained / NO_PMCID / NOT_IN_FOLD / NOT_REACHED) so a study is never silently
+    dropped. ``base`` is the per-sample table already restricted to the selection.
 
     Two rules widen the target set beyond the completeness gate, both so a curator's work is never wasted:
 
     * **A study with a curator-provided local table is always a target** (David, 2026-07-10), even when ENA
       reports it ``>= threshold`` complete — otherwise a table we deliberately hunted down is never opened.
-      Such a study is **blank-only**: its fills land solely in genuinely-blank ENA cells and never overwrite
-      an existing ENA value. A blank-only study with no blank cells at all is recorded ``NO_BLANKS`` and
-      skipped before any LLM call (nothing to fill), rather than silently dropped.
     * ``paper_links`` (the same map the grader uses, honouring ``--paper-source``) is a **fallback** for the
       PMCID when the finder came up empty — resolved via :func:`engine.europepmc.pmcid_for_link`. Without it
       a study whose paper the curated snapshot names is wrongly written off as ``NO_PMCID``.
+
+    **ENA-complete-field guard** (David, 2026-07-11): a per-sample fill always populates a BLANK ENA cell,
+    but only OVERWRITES a non-blank one when the field is itself gated (ENA mostly blank → the per-isolate
+    table is authoritative) OR :func:`engine.sample_extractor.judge_overwrite_fidelity` rules the table a
+    substantial improvement over ENA — so an ENA-complete field (in any study) is never degraded by a
+    lateral/worse table value, while a specific table specimen can still supersede a vague ENA one.
     """
     from collections import Counter
 
@@ -379,6 +382,9 @@ def per_sample(
     for acc, g in base.groupby("study_accession"):
         maps[acc] = sx.build_accession_to_sample(g, id_columns=id_cols)
         sets[acc] = set(maps[acc])
+    # The extractor emits fills with a placeholder ena_value=""; look up each sample's ACTUAL base value so
+    # the overwrite guard (and the escalation residual) can tell a blank fill from an overwrite of real ENA.
+    base_idx = base.drop_duplicates("sample_accession").set_index("sample_accession")
 
     found = pd.read_csv(found_path, sep="\t", dtype=str).fillna("")
     pmcid_of = {r["study_accession"]: r.get("chosen_pmcid", "").strip() for _, r in found.iterrows()}
@@ -402,8 +408,6 @@ def per_sample(
     # A curator-provided table is always opened; where ENA is already complete the study is BLANK-ONLY.
     table_bearing = {a for a in sets if lsupp.find_local_supp_files(a, manual_supp_dir)}
     blank_only = table_bearing - gated
-    n_blank = {a: sum(int(backfill.strip_placeholders(g[f]).isna().sum()) for f in fields)
-               for a, g in base.groupby("study_accession") if a in blank_only}
     if accessions:
         targets = [(a.strip(), pmcid_of.get(a.strip(), "")) for a in accessions if a.strip()]
     else:
@@ -424,12 +428,6 @@ def per_sample(
             outcome_rows.append(_synthetic(acc, pmcid, "NOT_IN_FOLD",
                                            "study not in the per-sample selection accession sets"))
             print(f"[{i}/{len(targets)}] {acc} — NOT_IN_FOLD; skip", file=sys.stderr)
-            continue
-        if acc in blank_only and n_blank.get(acc, 0) == 0:
-            outcome_rows.append(_synthetic(acc, pmcid, "NO_BLANKS",
-                "local table present, but ENA has no blank cell in any field — blank-only policy fills "
-                "blanks and never overwrites ENA, so there is nothing to fill"))
-            print(f"[{i}/{len(targets)}] {acc} — NO_BLANKS (ENA complete; blank-only policy)", file=sys.stderr)
             continue
         # The finder can miss a paper the curated snapshot names; fall back to its link (DOI/PMID/URL).
         if not pmcid and paper_links and paper_links.get(acc):
@@ -463,12 +461,45 @@ def per_sample(
                     "not reached before usage limit; rerun to resume (cache fills the rest)"))
             break
         extractions.append(ex)
+        for x in ex.fills:  # backfill the true ENA value (extractor left it "") so the guard can act
+            sa, f = x.get("sample_accession"), x.get("field")
+            if sa in base_idx.index and f in base_idx.columns:
+                x["ena_value"] = str(base_idx.at[sa, f])
         ex_fills, note = ex.fills, ex.note
-        if acc in blank_only:  # never overwrite an ENA value in a study the completeness gate did not select
-            kept = [f for f in ex_fills if _is_blank(f.get("ena_value"))]
-            note = (f"{note}; blank-only (ungated, has local table): kept {len(kept)}/{len(ex_fills)} fills "
-                    f"in blank ENA cells, dropped {len(ex_fills) - len(kept)} that would overwrite ENA")
-            ex_fills = kept
+        # ENA-complete-field guard (per FIELD, every study — David 2026-07-11). per_sample fills any BLANK
+        # ENA cell freely. It OVERWRITES a non-blank ENA cell only when EITHER (a) the field is itself gated
+        # (ENA mostly blank on it -> the per-isolate table is authoritative), OR (b) the fidelity judge rules
+        # the table a SUBSTANTIAL improvement over ENA. This protects an ENA-complete field in ANY study
+        # (not only fully-complete "blank-only" studies) from a lateral/worse table value — needed because
+        # blanking a vague token like `clinical` can gate a study on one field while its country/date stay
+        # ENA-complete and must not be clobbered by coded/degraded table values.
+        by_field: dict[str, list] = {}
+        for x in ex_fills:
+            by_field.setdefault(x.get("field"), []).append(x)
+        kept: list[dict] = []
+        overwrote: list[str] = []
+        kept_ena: list[str] = []
+        for field, xs in by_field.items():
+            kept.extend(x for x in xs if _is_blank(x.get("ena_value")))
+            overwrites = [x for x in xs if not _is_blank(x.get("ena_value"))]
+            if not overwrites:
+                continue
+            field_gated = bool(needs.loc[acc, field]) if (acc in needs.index and field in needs.columns) else True
+            if field_gated:  # ENA mostly blank on this field — the per-isolate table is authoritative
+                kept.extend(overwrites)
+                continue
+            improves, why = sx.judge_overwrite_fidelity(
+                field, [(x.get("ena_value"), x.get("applied_value")) for x in overwrites], llm, model=model)
+            if improves:
+                kept.extend(overwrites)
+                overwrote.append(f"{field}×{len(overwrites)}({why[:32]})")
+            else:
+                kept_ena.append(f"{field}×{len(overwrites)}")
+        if len(kept) != len(ex_fills):
+            note = (f"{note}; ENA-complete-field guard: {len(kept)}/{len(ex_fills)} fills kept"
+                    + (f"; overwrote {', '.join(overwrote)}" if overwrote else "")
+                    + (f"; kept ENA over table on {', '.join(kept_ena)}" if kept_ena else ""))
+        ex_fills = kept
         fills.extend(ex_fills)
         outcome_rows.append({
             "study_accession": ex.study_accession, "pmcid": ex.pmcid, "table": ex.table,

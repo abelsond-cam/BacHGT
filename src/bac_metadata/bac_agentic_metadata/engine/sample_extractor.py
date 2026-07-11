@@ -355,6 +355,60 @@ def verify_field_values(table: SuppTable, cols: dict[str, int | None], header_ro
     return kept, rejected
 
 
+OVERWRITE_SCHEMA_NAME = "overwrite_fidelity"
+
+
+def judge_overwrite_fidelity(field: str, ena_table_pairs, llm, *, model: str | None = None) -> tuple[bool, str]:
+    """Whether a curator table's values SUBSTANTIALLY improve fidelity over the ENA values of ``field``.
+
+    For a study ENA already reports complete (opened only because it carries a curator table), a table
+    value that DIFFERS from ENA is applied only when it is a substantial improvement — ENA vague / coarse
+    / wrong and the table specific and accurate (e.g. a vague clinical context → a real specimen such as
+    blood, urine, sputum, a perirectal surveillance swab) — never a cosmetic or lateral change (a synonym,
+    casing, or merely ADDING sub-locality like ``India`` → ``India: Kolkata``). One judgment per
+    ``(study, field)``; otherwise the table defers to ENA (the blank-only default). David, 2026-07-11.
+
+    Parameters
+    ----------
+    field
+        The metadata field being judged (``isolation_source`` / ``host`` / ``country`` / ``collection_date``).
+    ena_table_pairs
+        Iterable of ``(ena_value, table_value)`` for the samples the table would overwrite.
+    llm, model
+        The structured-output client and optional model override.
+
+    Returns
+    -------
+    tuple[bool, str]
+        ``(improves, reason)`` — ``improves`` gates the overwrite; ``reason`` is a short rationale for audit.
+    """
+    pairs = sorted({(str(e).strip(), str(t).strip()) for e, t in ena_table_pairs if str(t).strip()})[:15]
+    if not pairs:
+        return False, "no differing values"
+    listing = "\n".join(f"- ENA {e!r}  ->  table {t!r}" for e, t in pairs)
+    system = (
+        f"You decide whether a curator-provided per-isolate table should OVERWRITE the ENA value of the "
+        f"`{field}` field, which ENA already populated. Say improves=true ONLY when the table value "
+        "SUBSTANTIALLY improves fidelity — ENA is vague / coarse / uninformative or wrong and the table is "
+        "specific and accurate (e.g. a vague clinical or surveillance context -> a real specimen such as "
+        "blood, urine, sputum, or a perirectal surveillance swab). Say improves=false for cosmetic or "
+        "lateral changes that add no real information: synonyms or casing (Homo sapiens vs Human), or "
+        "merely adding sub-locality (India -> India: Kolkata), or any change that LOSES specificity. When "
+        "in doubt, keep ENA (false)."
+    )
+    schema = {"type": "object",
+              "properties": {"improves": {"type": "boolean"}, "reason": {"type": "string"}},
+              "required": ["improves"]}
+    out = llm.complete_structured(
+        system=system,
+        user=f"Field: {field}\nProposed overwrites (ENA -> table):\n{listing}\n\n"
+             "Does the table SUBSTANTIALLY improve fidelity for this field?",
+        json_schema=schema, schema_name=OVERWRITE_SCHEMA_NAME,
+        schema_description="Whether the table value substantially improves fidelity over ENA.", model=model,
+    )
+    return bool(out.get("improves")), str(out.get("reason", ""))[:200]
+
+
 def has_field_headers(table: SuppTable, *, scan_rows: int = 3) -> bool:
     """True if the table's first rows contain field-like header keywords (a two-hop candidate)."""
     for i in range(min(scan_rows, len(table.df))):
