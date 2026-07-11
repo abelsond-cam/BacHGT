@@ -339,3 +339,50 @@ sterile fluids onto the tissue axis. `laboratory` → NA pre-grading (tautology)
   vs metadata_v2 gold category columns (bulk agreement, uncategorised-tail reduction, adjudicated diffs).
 - **Deferred Phase D — `reconcile_cross_column.py`** (hybrid): M.abs host codes `CF*`/`COPD*`/`NCF` →
   `cf_status`; env iso (`volcanic ash`, taps) → `host=environment`; normalise `Non-CF`→`non-CF`.
+
+## 7. Silent-failure hardening (2026-07-10/11) — the curator-loop no longer drops work
+
+Re-gating the folds to prove the curator-table pipeline surfaced a chain of **silent failures** — steps that
+skipped without any error, so a curator's paper/table/decision was quietly lost. All are now fixed + committed;
+the **deterministic** logic of each is locked by `tests/test_agentic_metadata_fixes.py` (7 tests, no LLM — run
+`uv run --group test pytest tests/test_agentic_metadata_fixes.py` after any refactor / compaction to re-verify).
+
+**The fixes (commits):**
+- **`7b39c42`** — per_sample honours `--paper-source curated`: a study whose PMCID the finder missed but the
+  curated snapshot names is resolved via `europepmc.pmcid_for_link` (DOI/PMID/URL→PMCID), not written off
+  `NO_PMCID`. A curator table is always *opened* even when ENA looks complete.
+- **`b1d9a88`** — escalation candidacy is **deterministic** (declined-and-still-<75%-after-per-sample), not a
+  volatile LLM-triage veto + cohort-size-dependent big-decision line that dropped studies between runs; the
+  version-controlled `curated_escalations.tsv` is **always** consulted and answers are **sticky** — re-applied
+  to any still-gated study even when it no longer freshly detects (fixed a ~3.7k-cell drop).
+- **`b8bc8cf`** — "limbo" fields (grader proposed a value but set `applies_whole_project=false`) were filled by
+  neither whole-field backfill nor escalation → now escalated with the grader's value as the suggestion.
+- **`a1ac874` + `5d2ec9e`** — grader whole-project fill accepts a **~95% predominant value** (and, with no exact
+  % stated, a likely-vast-majority single description — e.g. 16 of 17 regions of the Philippines → country =
+  Philippines).
+
+**Curation-fidelity policy (David, 2026-07-11), all in `5d2ec9e`:**
+- **(i)** `clinical` / `surveillance` are isolation_source **null tokens** (a sampling context, not a specimen)
+  — blanked pre-fill so the table supplies the real specimen (carriage-vs-invasive).
+- **(ii)** **ENA-complete-field overwrite guard** (per FIELD, every study): per_sample fills any blank freely
+  but overwrites a non-blank ENA cell only when the field is itself gated *or* `judge_overwrite_fidelity` rules
+  the table a substantial improvement — so a good ENA value is never degraded by a lateral/coded table value,
+  while a specific specimen still supersedes a vague one. **Completeness-neutral** (only changes the value in
+  already-filled cells). The judge also catches vague values a token list would miss (`clinical material`).
+- **Latent bug fixed:** the extractor hardcoded `ena_value=""` on every fill, so the guard had been a **no-op**
+  (every fill looked blank → the table overwrote ENA freely). per_sample now backfills the true base value onto
+  each fill before the guard runs.
+
+**Canonical edge cases (the regression targets):**
+- **PRJEB29738** (Philippines, 862 samples): host auto-fills whole-project (97.7% inpatients → human);
+  country auto-fills via the vast-majority rule; a field the grader still declines is escalated, not dropped.
+- **PRJNA633565** (USA, 176): isolation_source `clinical`/`Surveillance` blanked → table refills specific
+  specimens (blood / urine / perirectal surveillance swab); country/date **keep ENA** over the table's coded
+  `Maryland Hospital A` values (guard).
+- **PRJNA922900 / PRJEB57159** (norwegian_poultry): PMCID recovered from the curated DOI, not `NO_PMCID`.
+
+**Still to harden (in progress):** `evaluation/regression_edge_cases.py` (asserts the above against committed
+test-fold outputs); a pipeline-wide **no-silent-fail coverage audit** (every selected study has an outcome row;
+every declined-and-incomplete field escalates; every missing paper is on the worklist; every table is
+linked-or-flagged); and archiving the test/val/train caches+grades+queues+papers so reruns stay cheap and
+deterministic. Then re-grade+accumulate train under the new rules and re-freeze `engine/reference_outputs/`.
