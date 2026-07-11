@@ -188,9 +188,17 @@ def _render_rubric(spec: AttributeSpec) -> str:
     if bf:
         lines.append("\n--- WHOLE-PROJECT BACKFILL (whole-field) for the standard per-sample fields ---")
         lines.append(
-            "Propose a single value for ALL samples ONLY when the field is study-wide-constant and "
-            "applicable to the whole project (paper coverage > 75%, or an EBI-wide title/description). "
-            "Otherwise set proposed_value null and applies_whole_project false."
+            "Propose a single value for ALL samples (applies_whole_project true) when one value covers "
+            "essentially the whole project — either study-wide-constant, OR a PREDOMINANT value shared by "
+            "about 95%+ of samples. A small minority of exceptions does NOT block it: give the predominant "
+            "value and set applies_whole_project true (only genuine blanks are filled; per-sample and "
+            "existing ENA values are never overwritten). Example: a clinical study described as 97.7% "
+            "inpatients -> host = human, applies_whole_project true. This applies only under whole-project "
+            "coverage (paper coverage > 75%, or an EBI-wide title/description), and to the categorical "
+            "fields (host, country, isolation_source); collection_date follows its own date-span rule below. "
+            "When the values are genuinely mixed with no ~95% predominant value, set applies_whole_project "
+            "false but STILL give your best proposed_value if you have one — it becomes the curator's "
+            "suggested value at escalation (do not null it)."
         )
         for name, frule in bf.items():
             rule = (frule.get("whole_project_value", "") or "").strip()
