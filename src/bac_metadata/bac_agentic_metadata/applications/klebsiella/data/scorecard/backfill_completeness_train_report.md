@@ -5,8 +5,8 @@ Samples: **34288**. Completeness = fraction with a real value (placeholder-strip
 | field | baseline | +whole-field | +per-sample | +escalation (agent) | v2 (gold) | gain wf | gain ps | gain esc | residual gap | gap-closed |
 |---|---|---|---|---|---|---|---|---|---|---|
 | country | 0.62 | 0.76 | 0.87 | **0.92** | 0.88 | +0.14 | +0.11 | +0.05 | 0.00 | 1.15 |
-| collection_date | 0.55 | 0.61 | 0.77 | **0.87** | 0.75 | +0.06 | +0.16 | +0.10 | 0.00 | 1.61 |
-| isolation_source | 0.45 | 0.49 | 0.63 | **0.71** | 0.67 | +0.05 | +0.14 | +0.08 | 0.00 | 1.21 |
-| host | 0.44 | 0.85 | 0.86 | **0.89** | 0.79 | +0.41 | +0.00 | +0.03 | 0.00 | 1.28 |
+| collection_date | 0.55 | 0.57 | 0.79 | **0.86** | 0.75 | +0.02 | +0.23 | +0.07 | 0.00 | 1.57 |
+| isolation_source | 0.45 | 0.52 | 0.69 | **0.75** | 0.67 | +0.07 | +0.17 | +0.06 | 0.00 | 1.35 |
+| host | 0.44 | 0.84 | 0.90 | **0.91** | 0.79 | +0.39 | +0.06 | +0.01 | 0.00 | 1.34 |
 
 - **gain wf / ps / esc** isolate the whole-field, per-sample, and curator-escalation contributions; **residual gap** is the per-field completeness manual curation still has over us — the target of the gap diagnosis.

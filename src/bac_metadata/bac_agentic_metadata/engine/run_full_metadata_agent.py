@@ -187,6 +187,10 @@ def main() -> None:
     p.add_argument("--backend", choices=["subscription", "api"], default="subscription", help="LLM backend.")
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
     p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete.")
+    p.add_argument("--skip-find", action="store_true",
+                   help="Skip the paper-finding stage and reuse the existing found_papers_<tag>.tsv (which must "
+                        "already exist). Intended for --paper-source curated, where grading uses the curated "
+                        "snapshot's links and the finder output is only a downstream input, not regenerated.")
     p.add_argument("--skip-escalation", action="store_true", help="Skip the escalation detect/apply stages.")
     p.add_argument("--skip-run-health", action="store_true", help="Skip the run-health report.")
     p.add_argument("--carry-forward", action="store_true",
@@ -337,11 +341,16 @@ def main() -> None:
     llm = make_llm(args.backend, model=args.model, cache_dir=caches.llm)
 
     # ── Stage 1 — find papers ─────────────────────────────────────────────────────────────────────
-    print(f"\n### [find] {len(selected)} studies", file=sys.stderr)
-    stages.find_papers(
-        spec=spec, sizing_path=sizing_path, folds=folds, out_jsonl=found_jsonl, out_tsv=found_tsv,
-        llm=llm, model=args.model, caches=caches, web_fallback=args.web_fallback, limit=args.limit,
-    )
+    if args.skip_find:
+        if not Path(found_tsv).exists():
+            sys.exit(f"--skip-find given but {found_tsv} does not exist — run find first (or drop --skip-find).")
+        print(f"\n### [find] SKIPPED (--skip-find) — reusing {Path(found_tsv).name}", file=sys.stderr)
+    else:
+        print(f"\n### [find] {len(selected)} studies", file=sys.stderr)
+        stages.find_papers(
+            spec=spec, sizing_path=sizing_path, folds=folds, out_jsonl=found_jsonl, out_tsv=found_tsv,
+            llm=llm, model=args.model, caches=caches, web_fallback=args.web_fallback, limit=args.limit,
+        )
 
     # ── Stage 2 — study grading (paper source per --paper-source) ─────────────────────────────────
     paper_links = (stages.finder_paper_links(found_tsv) if args.paper_source == "finder"
