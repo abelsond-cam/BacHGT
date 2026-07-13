@@ -21,7 +21,13 @@ study_lv_attributes/whole_study_backfill/backfill_gate_report_<tag>.tsv + backfi
 sample_lv_attributes/per_sample/per_sample_outcomes_<tag>.tsv + per_sample_applied_<tag>.tsv,
 study_lv_attributes/escalation/decisions_needed_<tag>.tsv + escalation_applied_<tag>.tsv,
 scorecard/backfill_completeness_<tag>_report.tsv, sample_lv_attributes/persample_supplement_worklist_<tag>.tsv,
-and the manual_download/ + manual_download_supp/ dirs. Writes scorecard/run_health_<tag>_report.{md,tsv}.
+sample_lv_attributes/preclean_summary_<tag>.tsv (the meaningless-value drops, written by the driver), and the
+manual_download/ + manual_download_supp/ dirs. Writes scorecard/run_health_<tag>_report.{md,tsv}.
+
+The report opens with a **pipeline self-audit** — one line per silent-fail-prone step (papers found, manual
+papers used, meaningless values dropped, per-sample supplementary-table fills, ENA overwrites + examples,
+escalations fired, extra tables requested / "none required"). It is computed from the run's own artifacts, so
+a future run re-verifies each step happened on ANY tag — no gold and no re-run of train/test required.
 """
 
 from __future__ import annotations
@@ -32,6 +38,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from . import backfill
 from .local_papers import resolve_local_fulltext
 from .local_supplements import find_local_supp_files
 
@@ -298,9 +305,73 @@ def build_run_health(
             })
 
     res = pd.DataFrame(rows)
+
+    # ── Pipeline self-audit — an explicit account of every silent-fail-prone step, from THIS run's own
+    # artifacts (so it holds on any run, incl. unlabelled / no-gold). Each is a step that has, at some
+    # point, failed silently: dropped meaningless values, picked up a manual paper, added per-sample from a
+    # supplementary table, overwrote a coarse ENA value with a better one, fired an escalation, or asked the
+    # curator for a table. A future run re-checks each here rather than trusting a green summary.
+    per_study = res.drop_duplicates("study_accession") if len(res) else pd.DataFrame()
+    papers_real = int(((per_study["paper_url"] != "") | per_study["is_full_text"].apply(bool)).sum()) \
+        if len(per_study) else 0
+    none_found_n = int(per_study["none_found"].apply(bool).sum()) if len(per_study) else 0
+    manual_pdf_used = sorted(set(res[res["manual_pdf_readable"].apply(bool)]["study_accession"])) if len(res) else []
+
+    preclean_path = data_dir / "sample_lv_attributes" / f"preclean_summary_{tag}.tsv"
+    preclean_ran = preclean_path.exists()
+    pc = _read_tsv(preclean_path)
+    if len(pc):
+        pc["n_cells"] = pd.to_numeric(pc["n_cells"], errors="coerce").fillna(0).astype(int)
+    preclean_total = int(pc["n_cells"].sum()) if len(pc) else 0
+    preclean_by_field = pc.groupby("field")["n_cells"].sum().to_dict() if len(pc) else {}
+
+    n_tables_read = int((outcomes["table"].astype(str).str.strip() != "").sum()) \
+        if len(outcomes) and "table" in outcomes.columns else 0
+    used = outcomes[outcomes["method"] == "direct"] if len(outcomes) and "method" in outcomes.columns else pd.DataFrame()
+    supp_used_studies = sorted(set(used["study_accession"])) if len(used) else []
+    supp_used_fills = int(pd.to_numeric(used["n_fills"], errors="coerce").fillna(0).sum()) \
+        if len(used) and "n_fills" in used.columns else 0
+
+    # Overwrite = a per-sample fill replaced a GENUINE deposited ENA value (not a placeholder-null) with a
+    # different value. Read with keep_default_na=False and judge "blank" with the engine's canonical
+    # PLACEHOLDER_NULLS (via strip_placeholders) — NOT pandas' own NA coercion, which would silently treat a
+    # literal "NA"/"None" ena_value inconsistently and mis-count. This is the same blank definition the
+    # fidelity guard uses, so the count is exactly "real ENA values the table overwrote".
+    apath = ps / f"per_sample_applied_{tag}.tsv"
+    applied = (pd.read_csv(apath, sep="\t", dtype=str, keep_default_na=False)
+               if apath.exists() else pd.DataFrame())
+    if len(applied) and {"ena_value", "applied_value"} <= set(applied.columns):
+        real_ena = backfill.strip_placeholders(applied["ena_value"]).notna()
+        real_app = backfill.strip_placeholders(applied["applied_value"]).notna()
+        ow = applied[real_ena & real_app & (applied["ena_value"] != applied["applied_value"])]
+    else:
+        ow = pd.DataFrame()
+    overwrite_by_field = ow.groupby("field").size().to_dict() if len(ow) else {}
+    overwrite_examples = {f: [(r["ena_value"], r["applied_value"]) for _, r in gg.head(2).iterrows()]
+                          for f, gg in ow.groupby("field")} if len(ow) else {}
+
+    trig = decisions["escalate_trigger"].astype(str) if len(decisions) and "escalate_trigger" in decisions.columns \
+        else pd.Series(dtype=str)
+    esc_closecall = int(trig.apply(lambda t: any(k in t for k in ("tight_cluster", "uniform_propose", "grader_proposed"))).sum())
+    esc_big = int(trig.apply(lambda t: "big_decision" in t).sum())
+    esc_residual = int(trig.apply(lambda t: t.startswith("residual")).sum())
+    esc_sticky = int(trig.apply(lambda t: "reinjected" in t).sum())
+    tables_requested = sorted(set(res[res["recoverability"] == "fetch_supp_table"]["study_accession"])) if len(res) else []
+
+    audit = {
+        "n_studies": len(studies), "papers_real": papers_real, "none_found": none_found_n,
+        "manual_pdf_used": manual_pdf_used,
+        "preclean_ran": preclean_ran, "preclean_total": preclean_total, "preclean_by_field": preclean_by_field,
+        "n_tables_read": n_tables_read, "supp_used_studies": supp_used_studies, "supp_used_fills": supp_used_fills,
+        "overwrite_n": len(ow), "overwrite_by_field": overwrite_by_field, "overwrite_examples": overwrite_examples,
+        "esc_total": len(decisions), "esc_studies": int(decisions["study_accession"].nunique()) if len(decisions) else 0,
+        "esc_closecall": esc_closecall, "esc_big": esc_big, "esc_residual": esc_residual, "esc_sticky": esc_sticky,
+        "tables_requested": tables_requested,
+    }
+
     score.mkdir(parents=True, exist_ok=True)
     res.to_csv(score / f"run_health_{tag}_report.tsv", sep="\t", index=False)
-    _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied, len(esc_pending))
+    _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied, len(esc_pending), audit)
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if len(res) else 0
     blocked = int((res["resolution_state"] == "BLOCKED").sum()) if len(res) else 0
     if not studies:
@@ -324,8 +395,65 @@ def build_run_health(
     return res, verdict
 
 
+def _audit_md(a: dict) -> list[str]:
+    """Render the pipeline self-audit checklist — every silent-fail-prone step, with counts + examples."""
+    md = ["## Pipeline self-audit — every silent-fail-prone step, explicitly accounted\n",
+          "Each row is a step that has, at some point, failed *silently*; here it is accounted for with counts "
+          "from this run's own artifacts (so it holds on any run, including unlabelled / no-gold). A green "
+          "summary above is not enough — these are the checks that a paper, table, drop, or decision was not "
+          "quietly lost.\n",
+          "| step | result |", "|---|---|"]
+    md.append(f"| Papers found | {a.get('papers_real', 0)}/{a.get('n_studies', 0)} studies have a resolvable "
+              f"paper ({a.get('none_found', 0)} none-found) |")
+    mp = a.get("manual_pdf_used", [])
+    md.append(f"| Manual papers picked up & used | {len(mp)} study(ies) filled from a hand-added PDF"
+              + (f" ({', '.join(mp[:8])}{'…' if len(mp) > 8 else ''})" if mp else "") + " |")
+    if not a.get("preclean_ran"):
+        pc_txt = "⚠ preclean summary not written (run predates this build — re-run to populate)"
+    elif a.get("preclean_total", 0) == 0:
+        pc_txt = "0 cells — nothing matched the null-token / pattern rules"
+    else:
+        by = a.get("preclean_by_field", {})
+        pc_txt = (f"**{a['preclean_total']}** cells blanked pre-fill ("
+                  + ", ".join(f"{k} {v}" for k, v in sorted(by.items())) + ") so the agent can recover a real value")
+    md.append(f"| Meaningless values dropped (preclean) | {pc_txt} |")
+    su = a.get("supp_used_studies", [])
+    md.append(f"| Per-sample added from supplementary tables | {len(su)} study(ies), "
+              f"**{a.get('supp_used_fills', 0)}** fills from a per-isolate table "
+              f"({a.get('n_tables_read', 0)} tables read) |")
+    ov = a.get("overwrite_n", 0)
+    if ov:
+        byf = a.get("overwrite_by_field", {})
+        ov_txt = (f"**{ov}** ENA cells replaced by a better table value ("
+                  + ", ".join(f"{k} {v}" for k, v in sorted(byf.items())) + ") — examples below")
+    else:
+        ov_txt = "0 — no deposited ENA value was overwritten (fidelity guard kept every one)"
+    md.append(f"| Meaning of words improved (overwrites) | {ov_txt} |")
+    md.append(f"| Escalation fired (close calls + big papers) | {a.get('esc_total', 0)} decision(s) / "
+              f"{a.get('esc_studies', 0)} studies — close-call {a.get('esc_closecall', 0)}, "
+              f"big-decision {a.get('esc_big', 0)}, residual {a.get('esc_residual', 0)}, "
+              f"sticky {a.get('esc_sticky', 0)} |")
+    tr = a.get("tables_requested", [])
+    tr_txt = ("**none required** ✅" if not tr else
+              f"⛔ **{len(tr)}** table(s) requested — {', '.join(tr[:8])}{'…' if len(tr) > 8 else ''} "
+              "(see the actionable worklist)")
+    md.append(f"| Extra manual tables requested | {tr_txt} |")
+    md.append("")
+    exs = a.get("overwrite_examples", {})
+    if exs:
+        md.append("**Overwrite examples — a supplementary-table value replaced a GENUINE deposited ENA value "
+                  "(surfaced for review). Note: on a *gated* field (<75% complete) the fidelity judge is "
+                  "bypassed, so these are not all judge-vetted — a garbled/truncated or wholesale-shifted "
+                  "value here signals a table-extraction or row-alignment defect to chase, not an improvement:**\n")
+        for f, pairs in sorted(exs.items()):
+            for ena, new in pairs:
+                md.append(f"- `{f}`: {ena!r} → {new!r}")
+        md.append("")
+    return md
+
+
 def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str, esc_generated: int,
-              esc_answered: int, esc_applied: int, esc_pending: int) -> None:
+              esc_answered: int, esc_applied: int, esc_pending: int, audit: dict | None = None) -> None:
     """Render the verdict banner + the shrinking actionable worklist + the concern sections."""
     n = len(res)
     filled = int((res["resolution_state"] == "FILLED").sum()) if n else 0
@@ -343,6 +471,9 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
           f"**FILLED {filled} · ACTIONABLE {actionable} · BLOCKED {blocked} · EXHAUSTED {exhausted}**. "
           "ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a "
           "logged reason / curator acceptance), and at least one study evaluated.\n"]
+
+    if audit is not None:
+        md += _audit_md(audit)
 
     act = res[res["resolution_state"] == "ACTIONABLE"] if n else res
     md.append("## Actionable worklist — do these, then rerun\n")

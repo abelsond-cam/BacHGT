@@ -4,6 +4,28 @@
 
 436 (study × field) cells over 109 studies — **FILLED 374 · ACTIONABLE 53 · BLOCKED 0 · EXHAUSTED 9**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance), and at least one study evaluated.
 
+## Pipeline self-audit — every silent-fail-prone step, explicitly accounted
+
+Each row is a step that has, at some point, failed *silently*; here it is accounted for with counts from this run's own artifacts (so it holds on any run, including unlabelled / no-gold). A green summary above is not enough — these are the checks that a paper, table, drop, or decision was not quietly lost.
+
+| step | result |
+|---|---|
+| Papers found | 105/109 studies have a resolvable paper (18 none-found) |
+| Manual papers picked up & used | 38 study(ies) filled from a hand-added PDF (PRJEB1563, PRJEB19322, PRJEB20799, PRJEB21277, PRJEB22252, PRJEB22890, PRJEB24082, PRJEB27256…) |
+| Meaningless values dropped (preclean) | **44** cells blanked pre-fill (isolation_source 44) so the agent can recover a real value |
+| Per-sample added from supplementary tables | 21 study(ies), **21770** fills from a per-isolate table (30 tables read) |
+| Meaning of words improved (overwrites) | **1942** ENA cells replaced by a better table value (collection_date 987, host 1, isolation_source 954) — examples below |
+| Escalation fired (close calls + big papers) | 62 decision(s) / 37 studies — close-call 15, big-decision 6, residual 38, sticky 4 |
+| Extra manual tables requested | ⛔ **1** table(s) requested — PRJEB20799 (see the actionable worklist) |
+
+**Overwrite examples — a supplementary-table value replaced a GENUINE deposited ENA value (surfaced for review). Note: on a *gated* field (<75% complete) the fidelity judge is bypassed, so these are not all judge-vetted — a garbled/truncated or wholesale-shifted value here signals a table-extraction or row-alignment defect to chase, not an improvement:**
+
+- `collection_date`: '2019-10-01' → '. similipne2u01m9o-1n0ia-0e1'
+- `collection_date`: '2018-04-11' → '2018-01-13 00:00:00'
+- `host`: 'environmental' → 'environment_soil'
+- `isolation_source`: 'bronchoalveolar lavage' → 'bronchoalveolar lava'
+- `isolation_source`: 'central venous catheter tip' → 'central venous cathe'
+
 ## Actionable worklist — do these, then rerun
 
 ### Fetch supplementary tables (1)
@@ -68,10 +90,10 @@
 
 | field | agent | v2 | gain_wf | gain_ps | gain_esc | residual | flag |
 |---|---|---|---|---|---|---|---|
-| country | 0.9214 | 0.8821 | 0.135 | 0.1145 | 0.0515 | 0.0 |  |
-| collection_date | 0.8665 | 0.7473 | 0.0606 | 0.1553 | 0.0998 | 0.0 |  |
-| isolation_source | 0.7149 | 0.6689 | 0.0482 | 0.1391 | 0.0826 | 0.0 |  |
-| host | 0.8868 | 0.7891 | 0.411 | 0.004 | 0.0279 | 0.0 |  |
+| country | 0.9217 | 0.8821 | 0.1352 | 0.1147 | 0.0515 | 0.0 |  |
+| collection_date | 0.8592 | 0.7473 | 0.0155 | 0.2274 | 0.0656 | 0.0 |  |
+| isolation_source | 0.7463 | 0.6689 | 0.0727 | 0.1683 | 0.0603 | 0.0 |  |
+| host | 0.9077 | 0.7891 | 0.3944 | 0.0619 | 0.0076 | 0.0 |  |
 
 
 ---

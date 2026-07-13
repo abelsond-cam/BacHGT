@@ -315,6 +315,17 @@ def main() -> None:
             top = sorted(vals.items(), key=lambda kv: -kv[1])[:8]
             print(f"[preclean]   {f}: " + ", ".join(f"{v!r}×{c}" for v, c in top)
                   + (f" (+{len(vals) - 8} more)" if len(vals) > 8 else ""), file=sys.stderr)
+    # Persist the drop summary so run-health can self-audit "meaningless data dropped" on ANY run (incl.
+    # unlabelled / no-gold): field × dropped-value × cell-count. Always written (empty header if nothing
+    # dropped) so "ran, dropped 0" is distinguishable from "step never ran".
+    preclean_path = data / "sample_lv_attributes" / f"preclean_summary_{tag}.tsv"
+    preclean_path.parent.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(
+        [{"field": f, "dropped_value": v, "n_cells": c}
+         for f, vals in (precleaned or {}).items()
+         for v, c in sorted(vals.items(), key=lambda kv: -kv[1])],
+        columns=["field", "dropped_value", "n_cells"],
+    ).to_csv(preclean_path, sep="\t", index=False)
 
     # Whole-cohort taxon counts for the big-decision leverage gate (>=1% of the WHOLE cohort, never the
     # batch). Computed over the FULL base (all studies) via the spec's taxon match — the batch-local sizing
