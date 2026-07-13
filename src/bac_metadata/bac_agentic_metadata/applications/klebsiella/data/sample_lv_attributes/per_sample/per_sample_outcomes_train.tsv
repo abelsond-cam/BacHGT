@@ -1,6 +1,6 @@
 study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
 PRJDB12075	PMC9465067		abstained	0	0	none	no joinable table
-PRJDB12116	PMC11571079	mgen-10-01295-s002.xlsx	direct	53	54	high	mapped 53 samples, 103 cell-fills; rescued ['host=vocab']; ENA-complete-field guard: 54/103 fills kept; kept ENA over table on host×49
+PRJDB12116	PMC11571079	mgen-10-01295-s002.xlsx	direct	53	50	high	mapped 53 samples, 103 cell-fills; rescued ['host=vocab']; overwrite guard: 50/103 fills kept; kept ENA over table on host×49; dropped 4 invalid ({'isolation_source': 4})
 PRJDB5929	PMC9453063		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mgen-8-0797-s001.pdf', 'mgen-8-0797-s001.pdf', 'mgen-8-0797-s001.pdf', 'mgen-8-0797-s002.xlsx', 'PRJDB5929.csv']
 PRJEB12699			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJEB15226	PMC5121380		abstained	0	0	none	no joinable table
@@ -16,42 +16,42 @@ PRJEB22903			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — c
 PRJEB24082	PMC10132065		abstained	0	0	none	no joinable table
 PRJEB24083	PMC10132065		abstained	0	0	none	no joinable table
 PRJEB24084	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24085	PMC10132065	PRJEB24085.pdf	direct	54	158	high	mapped 54 samples, 158 cell-fills; rescued ['host=vocab']
+PRJEB24085	PMC10132065	PRJEB24085.pdf	direct	54	157	high	mapped 54 samples, 158 cell-fills; rescued ['host=vocab']; overwrite guard: 157/158 fills kept; dropped 1 invalid ({'isolation_source': 1})
 PRJEB24086	PMC10132065		abstained	0	0	none	no joinable table
 PRJEB24087	PMC10132065		abstained	0	0	none	no joinable table
-PRJEB24970	PMC6977969	PRJEB24970.csv	abstained	224	0	medium	mapped 224 samples, 672 cell-fills; rescued ['host=vocab']; ENA-complete-field guard: 0/672 fills kept; kept ENA over table on collection_date×224, isolation_source×224, host×224
+PRJEB24970	PMC6977969	PRJEB24970.csv	abstained	224	0	medium	mapped 224 samples, 672 cell-fills; rescued ['host=vocab']; overwrite guard: 0/672 fills kept; kept ENA over table on collection_date×224, isolation_source×224, host×224
 PRJEB27256	PMC8865009		abstained	0	0	none	no joinable table
 PRJEB28054			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJEB28400		PRJEB28400.csv	direct	719	2154	medium	mapped 719 samples, 2154 cell-fills; rescued ['host=vocab', 'isolation_source=paper']
-PRJEB29143	PMC7527070	PRJEB29143.csv	direct	496	502	high	mapped 496 samples, 992 cell-fills; ENA-complete-field guard: 502/992 fills kept; kept ENA over table on country×490
+PRJEB29143	PMC7527070	PRJEB29143.csv	direct	496	495	high	mapped 496 samples, 992 cell-fills; overwrite guard: 495/992 fills kept; kept ENA over table on country×490; dropped 7 invalid ({'collection_date': 7})
 PRJEB29740	PMC11316559	mgen-10-01271-s002.xlsx	direct	815	2445	high	mapped 815 samples, 2445 cell-fills
 PRJEB29742	PMC8634422	ciab777_suppl_supplementary_table_2.xlsx	direct	425	850	high	mapped 425 samples, 850 cell-fills
-PRJEB30134	PMC10438816	mgen-9-1048-s001.pdf	direct	32	128	high	mapped 32 samples, 128 cell-fills
+PRJEB30134	PMC10438816	mgen-9-1048-s001.pdf	abstained	32	0	high	mapped 32 samples, 128 cell-fills; overwrite guard: 0/128 fills kept; kept ENA over table on country×32, collection_date×31, isolation_source×32, host×32; dropped 1 invalid ({'collection_date': 1})
 PRJEB33565	PMC8007471	41564_2021_870_MOESM4_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM3_ESM.pdf', '41564_2021_870_MOESM6_ESM.xlsx', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf', '41564_2021_870_MOESM1_ESM.pdf']
 PRJEB35685			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJEB36486	PMC9519460	EMS151721-supplement-Sample_accession_numbers.csv	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['EMS151721-supplement-Supplementary_Data.pdf', 'EMS151721-supplement-Supplementary_Data.pdf']
-PRJEB36683	PMC11025284	13073_2024_1332_MOESM1_ESM.xlsx	direct	328	656	high	mapped 328 samples, 656 cell-fills
+PRJEB36683	PMC11025284	13073_2024_1332_MOESM1_ESM.xlsx	direct	328	323	high	mapped 328 samples, 656 cell-fills; overwrite guard: 323/656 fills kept; overwrote isolation_source×323(ENA values 'Clinical sample' and); kept ENA over table on collection_date×321; dropped 12 invalid ({'collection_date': 7, 'isolation_source': 5})
 PRJEB37378	PMC12431665		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pntd.0012413.s005.xlsx', 'pntd.0012413.s010.docx', 'pntd.0012413.s007.xlsx', 'pntd.0012413.s006.xlsx', 'pntd.0012413.s006.xlsx', 'pntd.0012413.s004.xlsx', 'pntd.0012413.s003.xlsx', 'pntd.0012413.s008.xlsx']
 PRJEB38289	PMC7985491		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41598_2021_85724_MOESM2_ESM.docx', '41598_2021_85724_MOESM1_ESM.xlsx']
-PRJEB39293	PMC9417982	41564_2022_1184_MOESM9_ESM.xlsx	direct	158	158	high	mapped 158 samples, 631 cell-fills; rescued ['host=vocab']; ENA-complete-field guard: 158/631 fills kept; kept ENA over table on country×158, collection_date×158, isolation_source×157
+PRJEB39293	PMC9417982	41564_2022_1184_MOESM9_ESM.xlsx	direct	158	158	high	mapped 158 samples, 631 cell-fills; rescued ['host=vocab']; overwrite guard: 158/631 fills kept; kept ENA over table on country×158, isolation_source×157; dropped 158 invalid ({'collection_date': 158})
 PRJEB39867	PMC9598256		abstained	0	0	none	no joinable table
 PRJEB39943	PMC13259977	mmc2.xlsx	direct	2903	8636	high	mapped 2903 samples, 8636 cell-fills
 PRJEB42331	PMC8209719	mgen-7-0512-s001.xlsx	direct	80	80	high	mapped 80 samples, 80 cell-fills
 PRJEB42462		PRJEB42462.csv	direct	1156	1118	high	mapped 1156 samples, 1118 cell-fills
 PRJEB46513	PMC12885268	pgph.0005965.s002.tsv	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
-PRJEB48990	PMC10272877	mgen-9-1016-s001.xlsx	direct	539	1613	high	mapped 539 samples, 1613 cell-fills; rescued ['host=vocab']
-PRJEB50614	PMC11316559	mgen-10-01271-s002.xlsx	direct	339	358	high	mapped 339 samples, 1017 cell-fills; ENA-complete-field guard: 358/1017 fills kept; kept ENA over table on country×331, isolation_source×328
+PRJEB48990	PMC10272877	mgen-9-1016-s001.xlsx	direct	539	1547	high	mapped 539 samples, 1613 cell-fills; rescued ['host=vocab']; overwrite guard: 1547/1613 fills kept; overwrote collection_date×35(more-specific), host×38('environmental' → 'environment_s); kept ENA over table on isolation_source×37; dropped 29 invalid ({'collection_date': 23, 'isolation_source': 6})
+PRJEB50614	PMC11316559	mgen-10-01271-s002.xlsx	direct	339	358	high	mapped 339 samples, 1017 cell-fills; overwrite guard: 358/1017 fills kept; kept ENA over table on country×331, isolation_source×328
 PRJEB50822	PMC9279682		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_4.pdf']
 PRJEB58018	PMC12862290		abstained	0	0	none	no joinable table
-PRJEB58136	PMC11652666	44197_2024_323_MOESM6_ESM.csv	direct	138	138	high	mapped 138 samples, 537 cell-fills; ENA-complete-field guard: 138/537 fills kept; kept ENA over table on country×138, collection_date×138, isolation_source×123
+PRJEB58136	PMC11652666	44197_2024_323_MOESM6_ESM.csv	direct	138	138	high	mapped 138 samples, 537 cell-fills; overwrite guard: 138/537 fills kept; kept ENA over table on country×138, collection_date×138, isolation_source×123
 PRJEB58216	PMC10483420	mgen-9-1082-s002.xlsx	direct	209	418	high	mapped 209 samples, 418 cell-fills
-PRJEB63361	PMC12810914	ppat.1013859.s006.xlsx	direct	412	1239	high	mapped 412 samples, 1652 cell-fills; rescued ['country=vocab', 'host=vocab']; ENA-complete-field guard: 1239/1652 fills kept; overwrote collection_date×413(ENA provides only a year (e.g. '), isolation_source×413(ENA 'clinical material' is maxim); kept ENA over table on country×413
+PRJEB63361	PMC12810914	ppat.1013859.s006.xlsx	direct	412	1239	high	mapped 412 samples, 1652 cell-fills; rescued ['country=vocab', 'host=vocab']; overwrite guard: 1239/1652 fills kept; overwrote collection_date×413(more-specific), isolation_source×413(ENA 'clinical material' is maxim); kept ENA over table on country×413
 PRJEB64895	PMC10668257		abstained	0	0	none	no joinable table
-PRJEB6891	PMC5850561	PRJEB6891.csv	direct	84	170	high	mapped 84 samples, 170 cell-fills
+PRJEB6891	PMC5850561	PRJEB6891.csv	direct	84	169	high	mapped 84 samples, 170 cell-fills; overwrite guard: 169/170 fills kept; overwrote collection_date×1(more-specific); kept ENA over table on isolation_source×1
 PRJEB74083	PMC11027475		abstained	0	0	none	no joinable table
 PRJNA1048341	PMC10917868		abstained	0	0	none	no joinable table
 PRJNA1087366	PMC11087563	41467_2024_48296_MOESM5_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf', '41467_2024_48296_MOESM2_ESM.pdf']
-PRJNA271899	PMC8981930	13073_2022_1040_MOESM1_ESM.xlsx	direct	104	159	high	mapped 104 samples, 311 cell-fills; ENA-complete-field guard: 159/311 fills kept; kept ENA over table on country×51, collection_date×101
+PRJNA271899	PMC8981930	13073_2022_1040_MOESM1_ESM.xlsx	direct	104	157	high	mapped 104 samples, 311 cell-fills; overwrite guard: 157/311 fills kept; kept ENA over table on country×51, collection_date×101, isolation_source×2
 PRJNA325243	PMC12247286	12917_2025_4686_MOESM5_ESM.xlsx	abstained	0	0	low	no per-sample fields resolved; value-check rejected ['host', 'isolation_source']
 PRJNA341927			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJNA549322	PMC10200298		abstained	0	0	none	no joinable table
@@ -61,11 +61,11 @@ PRJNA604910	PMC7478627		abstained	0	0	none	no joinable table; field-bearing tabl
 PRJNA604975	PMC8414751		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13073_2021_947_MOESM1_ESM.docx', '13073_2021_947_MOESM1_ESM.docx']
 PRJNA634885	PMC7546619	41598_2020_73440_MOESM2_ESM.xlsx	direct	144	144	high	mapped 144 samples, 144 cell-fills
 PRJNA641987	PMC8743538		abstained	0	0	none	no joinable table
-PRJNA765801	PMC12569050	41467_2025_64515_MOESM1_ESM.pdf+41467_2025_64515_MOESM4_ESM.xlsx	abstained	7	0	high	two-hop: 7 samples via 14 shared IDs, 7 cell-fills; ENA-complete-field guard: 0/7 fills kept; kept ENA over table on country×7
+PRJNA765801	PMC12569050	41467_2025_64515_MOESM1_ESM.pdf+41467_2025_64515_MOESM4_ESM.xlsx	abstained	7	0	high	two-hop: 7 samples via 14 shared IDs, 7 cell-fills; overwrite guard: 0/7 fills kept; kept ENA over table on country×5; dropped 2 invalid ({'country': 2})
 PRJNA767944	PMC9241541		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['msphere.00143-22-st001.docx', 'msphere.00143-22-st004.docx']
 PRJNA804332	PMC9452910		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.xlsx']
 PRJNA845975			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJNA855907	PMC9430190		abstained	0	0	none	no joinable table
-PRJNA857686	PMC9934365	pone.0277575.s009.xlsx	abstained	3	0	high	mapped 3 samples, 4 cell-fills; ENA-complete-field guard: 0/4 fills kept; kept ENA over table on collection_date×4
+PRJNA857686	PMC9934365	pone.0277575.s009.xlsx	abstained	3	0	high	mapped 3 samples, 4 cell-fills; overwrite guard: 0/4 fills kept; kept ENA over table on collection_date×4
 PRJNA982859	PMC11326115		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['msystems.01415-23-s0006.xlsx', 'msystems.01415-23-s0007.xlsx', 'msystems.01415-23-s0001.xlsx', 'msystems.01415-23-s0001.xlsx', 'msystems.01415-23-s0001.xlsx']
 PRJNA996149	PMC10720542		abstained	0	0	none	no joinable table

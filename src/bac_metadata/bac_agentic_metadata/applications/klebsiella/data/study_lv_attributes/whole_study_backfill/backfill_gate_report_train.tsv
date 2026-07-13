@@ -7,7 +7,6 @@ collection_date	PRJEB28400	827	0.0	827	covered	0
 collection_date	PRJEB29143	498	0.0	498	covered	0
 collection_date	PRJEB29740	930	0.0	930	covered	0
 collection_date	PRJEB29742	555	0.0	555	covered	0
-collection_date	PRJEB30134	201	0.159	169	covered	0
 collection_date	PRJEB39943	3257	0.0	3257	covered	0
 collection_date	PRJEB42331	80	0.0	80	covered	0
 collection_date	PRJEB42462	1278	0.0	1278	covered	0
@@ -29,6 +28,7 @@ collection_date	PRJEB24084	3	0.0	3	residual_per_sample	0
 collection_date	PRJEB24086	3	0.0	3	residual_per_sample	0
 collection_date	PRJEB24087	4	0.0	4	residual_per_sample	0
 collection_date	PRJEB28054	326	0.0	326	residual_per_sample	0
+collection_date	PRJEB30134	201	0.159	169	residual_per_sample	0
 collection_date	PRJEB35685	412	0.0	412	residual_per_sample	0
 collection_date	PRJEB36486	221	0.0	221	residual_per_sample	0
 collection_date	PRJEB37378	1681	0.0	1681	residual_per_sample	0
@@ -127,7 +127,6 @@ isolation_source	PRJEB24085	104	0.0	104	covered	0
 isolation_source	PRJEB28400	827	0.0	827	covered	0
 isolation_source	PRJEB29740	930	0.0	930	covered	0
 isolation_source	PRJEB29742	555	0.0	555	covered	0
-isolation_source	PRJEB30134	201	0.159	169	covered	0
 isolation_source	PRJEB33565	400	0.0	400	covered	400
 isolation_source	PRJEB36486	221	0.0	221	covered	221
 isolation_source	PRJEB39943	3257	0.0	3257	covered	0
@@ -157,6 +156,7 @@ isolation_source	PRJEB24086	3	0.0	3	residual_per_sample	0
 isolation_source	PRJEB24087	4	0.0	4	residual_per_sample	0
 isolation_source	PRJEB28054	326	0.0	326	residual_per_sample	0
 isolation_source	PRJEB29143	498	0.0	498	residual_per_sample	0
+isolation_source	PRJEB30134	201	0.159	169	residual_per_sample	0
 isolation_source	PRJEB35685	412	0.0	412	residual_per_sample	0
 isolation_source	PRJEB37378	1681	0.0	1681	residual_per_sample	0
 isolation_source	PRJEB39867	286	0.0	286	residual_per_sample	0

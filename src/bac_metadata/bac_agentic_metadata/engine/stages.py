@@ -20,6 +20,7 @@ plus ``attach_downloaded_papers`` in the curator loop (match hand-downloaded PDF
 from __future__ import annotations
 
 import sys
+from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,6 +28,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import paper_finder, websearch
+from bac_metadata.bac_agentic_metadata.engine import value_validity as vv
 from bac_metadata.bac_agentic_metadata.engine.ena_sizing import study_aliases, study_title_and_description
 from bac_metadata.bac_agentic_metadata.engine.llm import UsageLimitError
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
@@ -362,14 +364,14 @@ def per_sample(
       PMCID when the finder came up empty — resolved via :func:`engine.europepmc.pmcid_for_link`. Without it
       a study whose paper the curated snapshot names is wrongly written off as ``NO_PMCID``.
 
-    **ENA-complete-field guard** (David, 2026-07-11): a per-sample fill always populates a BLANK ENA cell,
-    but only OVERWRITES a non-blank one when the field is itself gated (ENA mostly blank → the per-isolate
-    table is authoritative) OR :func:`engine.sample_extractor.judge_overwrite_fidelity` rules the table a
-    substantial improvement over ENA — so an ENA-complete field (in any study) is never degraded by a
-    lateral/worse table value, while a specific table specimen can still supersede a vague ENA one.
+    **Overwrite gate** (David, 2026-07-13): a per-sample fill always populates a BLANK ENA cell (when the
+    table value parses to a real value), but may only OVERWRITE a genuine ENA value when robustly BETTER —
+    on every field, gated or not (no free-overwrite bypass). Two layers: (1) parse-validity — a value must
+    parse to a real value for its field (rejects table-null tokens like "NF"/"ND" and non-date
+    collection_dates), else it is dropped and counted; (2) betterness — collection_date overwrites only with
+    a strictly more specific date (year→year-month→full, deterministic via :mod:`engine.value_validity`),
+    while country/isolation_source/host defer to :func:`engine.sample_extractor.judge_overwrite_fidelity`.
     """
-    from collections import Counter
-
     from bac_metadata.bac_agentic_metadata.engine import backfill, europepmc
     from bac_metadata.bac_agentic_metadata.engine import local_supplements as lsupp
     from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
@@ -466,39 +468,62 @@ def per_sample(
             if sa in base_idx.index and f in base_idx.columns:
                 x["ena_value"] = str(base_idx.at[sa, f])
         ex_fills, note = ex.fills, ex.note
-        # ENA-complete-field guard (per FIELD, every study — David 2026-07-11). per_sample fills any BLANK
-        # ENA cell freely. It OVERWRITES a non-blank ENA cell only when EITHER (a) the field is itself gated
-        # (ENA mostly blank on it -> the per-isolate table is authoritative), OR (b) the fidelity judge rules
-        # the table a SUBSTANTIAL improvement over ENA. This protects an ENA-complete field in ANY study
-        # (not only fully-complete "blank-only" studies) from a lateral/worse table value — needed because
-        # blanking a vague token like `clinical` can gate a study on one field while its country/date stay
-        # ENA-complete and must not be clobbered by coded/degraded table values.
+        # ── OVERWRITE GATE ────────────────────────────────────────────────────────────────────────
+        # A table value may only OVERWRITE a genuine ENA value when it is robustly a BETTER value —
+        # assessed on the parsed value, on every field (gated OR not; there is no free-overwrite bypass).
+        #  Layer 1 (parse-validity): a value must parse to a REAL value for its field to be adopted at all
+        #    (blank-fill or overwrite) — rejects table-null tokens ("NF"/"ND"/…) and non-date collection_dates.
+        #  Layer 2 (betterness, overwrites only): collection_date is deterministic — adopt only a STRICTLY
+        #    more specific date (year→year-month→full); the specimen-tuned judge is wrong for dates. country/
+        #    isolation_source/host defer to the agentic judge_overwrite_fidelity (its prompt fits these).
         by_field: dict[str, list] = {}
         for x in ex_fills:
             by_field.setdefault(x.get("field"), []).append(x)
         kept: list[dict] = []
         overwrote: list[str] = []
         kept_ena: list[str] = []
+        invalid: Counter = Counter()  # values dropped by Layer 1 (never a silent drop — surfaced in the note)
         for field, xs in by_field.items():
-            kept.extend(x for x in xs if _is_blank(x.get("ena_value")))
-            overwrites = [x for x in xs if not _is_blank(x.get("ena_value"))]
+            if field not in fields:  # ast_* / non-core fields: keep verbatim (guard scoped to the metadata fields)
+                kept.extend(xs)
+                continue
+            # Layer 1 — parse-validity for blank-fills (drop e.g. an "NF" that would fill a blank cell)
+            for x in (x for x in xs if _is_blank(x.get("ena_value"))):
+                if vv.parse_valid(field, x.get("applied_value")):
+                    kept.append(x)
+                else:
+                    invalid[field] += 1
+            # Layer 1 — parse-validity for overwrites of a genuine ENA value
+            overwrites = []
+            for x in (x for x in xs if not _is_blank(x.get("ena_value"))):
+                if vv.parse_valid(field, x.get("applied_value")):
+                    overwrites.append(x)
+                else:
+                    invalid[field] += 1
             if not overwrites:
                 continue
-            field_gated = bool(needs.loc[acc, field]) if (acc in needs.index and field in needs.columns) else True
-            if field_gated:  # ENA mostly blank on this field — the per-isolate table is authoritative
-                kept.extend(overwrites)
-                continue
-            improves, why = sx.judge_overwrite_fidelity(
-                field, [(x.get("ena_value"), x.get("applied_value")) for x in overwrites], llm, model=model)
-            if improves:
-                kept.extend(overwrites)
-                overwrote.append(f"{field}×{len(overwrites)}({why[:32]})")
-            else:
-                kept_ena.append(f"{field}×{len(overwrites)}")
+            # Layer 2 — betterness
+            if field == "collection_date":  # deterministic: overwrite only with a STRICTLY more specific date
+                better = [x for x in overwrites
+                          if vv.parse_date_scalar(x.get("applied_value"))[1] > vv.parse_date_scalar(x.get("ena_value"))[1]]
+                kept.extend(better)
+                if better:
+                    overwrote.append(f"{field}×{len(better)}(more-specific)")
+                if len(better) < len(overwrites):
+                    kept_ena.append(f"{field}×{len(overwrites) - len(better)}")
+            else:  # country / isolation_source / host — the agentic fidelity judge, always
+                improves, why = sx.judge_overwrite_fidelity(
+                    field, [(x.get("ena_value"), x.get("applied_value")) for x in overwrites], llm, model=model)
+                if improves:
+                    kept.extend(overwrites)
+                    overwrote.append(f"{field}×{len(overwrites)}({why[:32]})")
+                else:
+                    kept_ena.append(f"{field}×{len(overwrites)}")
         if len(kept) != len(ex_fills):
-            note = (f"{note}; ENA-complete-field guard: {len(kept)}/{len(ex_fills)} fills kept"
+            note = (f"{note}; overwrite guard: {len(kept)}/{len(ex_fills)} fills kept"
                     + (f"; overwrote {', '.join(overwrote)}" if overwrote else "")
-                    + (f"; kept ENA over table on {', '.join(kept_ena)}" if kept_ena else ""))
+                    + (f"; kept ENA over table on {', '.join(kept_ena)}" if kept_ena else "")
+                    + (f"; dropped {sum(invalid.values())} invalid ({dict(invalid)})" if invalid else ""))
         ex_fills = kept
         fills.extend(ex_fills)
         outcome_rows.append({

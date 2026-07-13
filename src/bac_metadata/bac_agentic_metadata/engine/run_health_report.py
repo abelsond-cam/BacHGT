@@ -442,9 +442,10 @@ def _audit_md(a: dict) -> list[str]:
     exs = a.get("overwrite_examples", {})
     if exs:
         md.append("**Overwrite examples — a supplementary-table value replaced a GENUINE deposited ENA value "
-                  "(surfaced for review). Note: on a *gated* field (<75% complete) the fidelity judge is "
-                  "bypassed, so these are not all judge-vetted — a garbled/truncated or wholesale-shifted "
-                  "value here signals a table-extraction or row-alignment defect to chase, not an improvement:**\n")
+                  "(surfaced for review). Every overwrite is now VETTED: collection_date only overwrites with "
+                  "a strictly more specific date (deterministic), country/isolation_source/host only when the "
+                  "agentic fidelity judge rules the table a real improvement — on every field, gated or not. A "
+                  "still-suspicious value here (truncation, a lateral date) is a table-parse defect to chase:**\n")
         for f, pairs in sorted(exs.items()):
             for ena, new in pairs:
                 md.append(f"- `{f}`: {ena!r} → {new!r}")

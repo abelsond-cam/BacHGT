@@ -837,10 +837,10 @@ def extract_study(
         if sample is None:
             continue
         mapped_samples.add(sample)
-        for f, col in cols.items():
-            val = _cell(table.df, i, col)
-            if val:
-                fills.append({
+        for f, col in cols.items():                    # values are copied verbatim; validity + overwrite
+            val = _cell(table.df, i, col)              # betterness are enforced downstream by stages.py's
+            if val:                                    # overwrite gate (engine.value_validity), where the
+                fills.append({                         # true ENA value is known.
                     "study_accession": study_accession, "sample_accession": sample, "field": f,
                     "ena_value": "", "applied_value": val, "method": "per_sample",
                     "evidence": f"{table.filename}:{key}",

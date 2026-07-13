@@ -1,6 +1,6 @@
 # Per-sample supplementary worklist — which studies need a manual supp-table fetch
 
-32 studies with a per-sample backlog > 50. The LLM read the paper we hold and judged whether it carries a per-isolate table (iso/host/date keyed by an ID); `mech` is the engine's mechanical reason per-sample yielded 0. **Download the supplementary file of the FETCH_SUPP rows as `<acc>.xlsx` into `manual_download_supp/`.**
+33 studies with a per-sample backlog > 50. The LLM read the paper we hold and judged whether it carries a per-isolate table (iso/host/date keyed by an ID); `mech` is the engine's mechanical reason per-sample yielded 0. **Download the supplementary file of the FETCH_SUPP rows as `<acc>.xlsx` into `manual_download_supp/`.**
 
 - **FETCH_SUPP** — paywalled + has a per-isolate table → fetch its supplementary file by hand.
 - **OA_INVESTIGATE** — open-access + has a table but per-sample extracted nothing → a fetch/parse bug.
@@ -23,6 +23,7 @@
 | OA_INVESTIGATE | PRJEB39867 | 572 | collection_date,isolation_source | no_supp | likely | isolation_source | Supplementary Table S2 | europepmc_fulltext / PMC9598256 | `PRJEB39867.xlsx` |
 | OA_INVESTIGATE | PRJNA1087366 | 405 | collection_date,country,isolation_source | manifest_only | likely | isolation_source | Supplementary Data 2 | europepmc_fulltext / PMC11087563 | `PRJNA1087366.xlsx` |
 | OA_INVESTIGATE | PRJEB24082 | 400 | collection_date,isolation_source | no_supp | likely | isolation_source,collection_date | Supplementary Table S1 | europepmc_fulltext / PMC10132065 | `PRJEB24082.xlsx` |
+| OA_INVESTIGATE | PRJEB30134 | 338 | collection_date,isolation_source | abstained_other | yes | isolation_source,collection_date | Tables S1 and S2 | europepmc_fulltext / PMC10438816 | `PRJEB30134.xlsx` |
 | OA_INVESTIGATE | PRJNA325243 | 241 | host | abstained_other | yes | isolation_source,host,collection_date | Supplemental File 1 (Animal Hosts and Co | europepmc_fulltext / PMC12247286 | `PRJNA325243.xlsx` |
 | OA_INVESTIGATE | PRJDB12075 | 184 | isolation_source | no_supp | likely | isolation_source | Table S1 (aem.01712-22-s0001.xlsx), Tabl | europepmc_fulltext / PMC9465067 | `PRJDB12075.xlsx` |
 | OA_INVESTIGATE | PRJNA804332 | 138 | isolation_source | unanchored | likely | isolation_source,host,collection_date | Supplementary Table 1 | europepmc_fulltext / PMC9452910 | `PRJNA804332.xlsx` |
