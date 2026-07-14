@@ -61,7 +61,7 @@ def _grade(llm, n_chars, tiers=(10, 50, 250)):
 
 
 def test_spec_ladder_from_yaml_sorted_ascending():
-    assert _SPEC.grade_context_tiers == (10000, 50000, 250000)
+    assert _SPEC.grade_context_tiers == (5000, 50000, 250000)
     assert _SPEC.max_paper_chars == 250000  # top of the ladder = the escalation-triage single-pass budget
 
 

@@ -29,14 +29,15 @@ gates:
   completeness_threshold: 0.75         # ENA non-null fraction at/above which a field counts as already complete -> not filled
   escalation_residual_floor: 50        # min blank samples remaining after per-sample before a field is worth escalating
   escalation_big_decision_frac: 0.01   # a study at/above this fraction of the WHOLE cohort is an escalation "big decision" (audit + leverage)
-  # Paper-text budgets the grader climbs, smallest first (~4 chars/token). It reads only the FIRST tier — the
-  # abstract usually fits in 10k chars — and climbs to the next ONLY when it self-reports that the truncated
-  # remainder might hold an answer it could not determine (full_text_would_help). Most studies resolve at 10k,
-  # so the average read collapses toward ~10k rather than the full text. 50k reaches abstract+methods; 250k
-  # (~62k tokens, within Sonnet's 200k context) captures ~p90 of Klebsiella full texts (median 140k, p90 209k
-  # chars) for the rare paper whose answer is deep in results/tables. The top tier is also the single-pass
-  # budget for the escalation triage. Tune the ladder here (fewer/more rungs, different sizes).
-  grade_context_tiers: [10000, 50000, 250000]
+  # Paper-text budgets the grader climbs, smallest first (~4 chars/token). It reads only the FIRST tier — 5k
+  # chars is a clean "answered from the abstract, or not" probe (the abstract is ~2-4k chars) — and climbs to
+  # the next ONLY when it self-reports that the truncated remainder might hold an answer it could not determine
+  # (full_text_would_help). The ~20% resolvable from the abstract cost 5k; the rest jump straight to 50k
+  # (abstract+methods, which the trial showed usually closes it) rather than paying for an in-between 10k rung
+  # that was rarely sufficient alone. 250k (~62k tokens, within Sonnet's 200k context) captures ~p90 of
+  # Klebsiella full texts (median 140k, p90 209k chars) for the rare paper whose answer is deep in
+  # results/tables. The top tier is also the single-pass budget for the escalation triage. Tune the ladder here.
+  grade_context_tiers: [5000, 50000, 250000]
 
 # Genus/species we are studying. Projects can be broad (e.g. all Enterobacteriaceae) while
 # we only care about one genus, so project sizing, paper coverage and completeness are all
