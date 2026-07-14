@@ -29,11 +29,14 @@ gates:
   completeness_threshold: 0.75         # ENA non-null fraction at/above which a field counts as already complete -> not filled
   escalation_residual_floor: 50        # min blank samples remaining after per-sample before a field is worth escalating
   escalation_big_decision_frac: 0.01   # a study at/above this fraction of the WHOLE cohort is an escalation "big decision" (audit + leverage)
-  # Paper-text truncation ceiling fed to the grader + escalation triage. ~4 chars/token, so 250k chars ~= 62k
-  # tokens — well within Sonnet's 200k-token context, and captures ~p90 of Klebsiella full texts (median 140k,
-  # p90 209k chars; the old 120k truncated ~65% of papers). Higher = more complete evidence but more tokens per
-  # call (usage-limited on the subscription backend); lower = cheaper/faster but risks cutting late methods/tables.
-  max_paper_chars: 250000
+  # Paper-text budgets the grader climbs, smallest first (~4 chars/token). It reads only the FIRST tier — the
+  # abstract usually fits in 10k chars — and climbs to the next ONLY when it self-reports that the truncated
+  # remainder might hold an answer it could not determine (full_text_would_help). Most studies resolve at 10k,
+  # so the average read collapses toward ~10k rather than the full text. 50k reaches abstract+methods; 250k
+  # (~62k tokens, within Sonnet's 200k context) captures ~p90 of Klebsiella full texts (median 140k, p90 209k
+  # chars) for the rare paper whose answer is deep in results/tables. The top tier is also the single-pass
+  # budget for the escalation triage. Tune the ladder here (fewer/more rungs, different sizes).
+  grade_context_tiers: [10000, 50000, 250000]
 
 # Genus/species we are studying. Projects can be broad (e.g. all Enterobacteriaceae) while
 # we only care about one genus, so project sizing, paper coverage and completeness are all

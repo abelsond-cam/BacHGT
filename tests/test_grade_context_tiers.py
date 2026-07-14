@@ -1,0 +1,98 @@
+"""Unit tests for the escalating-context grade ladder (``grader.grade_accession`` + ``spec.grade_context_tiers``).
+
+The grader reads the paper in ascending budget tiers (e.g. 10k → 50k → 250k chars), climbing to the next tier
+ONLY when it self-reports ``full_text_would_help`` and there is more text to show. This collapses per-call token
+cost to the cheapest tier for most studies. These tests lock the climb/stop logic offline (a fake LLM), with no
+network and no real model.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from bac_metadata.bac_agentic_metadata.engine import grader
+from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
+
+_SPEC = AttributeSpec.from_yaml(
+    Path(__file__).resolve().parents[1]
+    / "src/bac_metadata/bac_agentic_metadata/applications/klebsiella/attributes.yaml"
+)
+
+
+class _FakeFullText:
+    def __init__(self, n_chars: int):
+        self.text = "x" * n_chars
+        self.source = "test"
+        self.is_full_text = True
+        self.title = "t"
+
+
+class _FakeLLM:
+    """Returns a queued grade dict per call and records how many calls (tiers) were made."""
+
+    model = "fake"
+
+    def __init__(self, needs_more: list[bool]):
+        self._outs = [_grade_out(nm) for nm in needs_more]
+        self.calls = 0
+
+    def complete_structured(self, **_kwargs) -> dict:
+        out = self._outs[min(self.calls, len(self._outs) - 1)]
+        self.calls += 1
+        return out
+
+
+def _grade_out(full_text_would_help: bool) -> dict:
+    return {
+        "study_type": {"value": "observational", "evidence_quote": ""},
+        "study_level": {},
+        "paper_coverage": {"paper_records_in_taxon": None, "basis": ""},
+        "backfill": {"collection_date": {"proposed_value": None, "applies_whole_project": False,
+                                         "evidence_quote": "", "earliest_date": None, "latest_date": None}},
+        "needs_manual_download": False,
+        "full_text_would_help": full_text_would_help,
+        "notes": "",
+    }
+
+
+def _grade(llm, n_chars, tiers=(10, 50, 250)):
+    return grader.grade_accession(_SPEC, llm, accession="S", fulltext=_FakeFullText(n_chars),
+                                  ena_taxon_samples=100, context_tiers=tiers)
+
+
+def test_spec_ladder_from_yaml_sorted_ascending():
+    assert _SPEC.grade_context_tiers == (10000, 50000, 250000)
+    assert _SPEC.max_paper_chars == 250000  # top of the ladder = the escalation-triage single-pass budget
+
+
+def test_firm_at_first_tier_reads_once():
+    llm = _FakeLLM([False])  # firm from the abstract-sized slice
+    r = _grade(llm, n_chars=300)
+    assert llm.calls == 1
+    assert r.grade_context_chars == 10 and r.full_text_would_help is False
+
+
+def test_climbs_all_tiers_when_never_firm():
+    llm = _FakeLLM([True, True, True])  # keeps asking for more; paper longer than the top tier
+    r = _grade(llm, n_chars=300)
+    assert llm.calls == 3
+    assert r.grade_context_chars == 250 and r.full_text_would_help is True
+
+
+def test_stops_when_a_tier_shows_the_whole_paper():
+    llm = _FakeLLM([True, True, True])  # asks for more, but tier 2 (50) already exceeds the 30-char paper
+    r = _grade(llm, n_chars=30)
+    assert llm.calls == 2 and r.grade_context_chars == 30
+
+
+def test_short_paper_is_a_single_pass_even_if_flagged():
+    llm = _FakeLLM([True])  # first tier already covers the whole 5-char paper — nothing more to show
+    r = _grade(llm, n_chars=5)
+    assert llm.calls == 1 and r.grade_context_chars == 5
+
+
+def test_single_tier_fallback_behaves_like_one_pass():
+    llm = _FakeLLM([True, True])
+    r = grader.grade_accession(_SPEC, llm, accession="S", fulltext=_FakeFullText(9_999),
+                               ena_taxon_samples=100, max_chars=120_000)  # no context_tiers -> single pass
+    assert llm.calls == 1 and r.grade_context_chars == 9_999

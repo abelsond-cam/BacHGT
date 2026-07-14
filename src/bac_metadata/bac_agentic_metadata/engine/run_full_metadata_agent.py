@@ -376,7 +376,7 @@ def main() -> None:
         spec=spec, sizing_path=sizing_path, folds=folds, paper_links=paper_links,
         classifications=classifications, manual_papers_dir=manual_papers_dir,
         out_jsonl=grades_jsonl, out_tsv=grades_tsv, llm=llm, model=args.model, caches=caches,
-        max_chars=spec.max_paper_chars, limit=args.limit,
+        context_tiers=spec.grade_context_tiers, limit=args.limit,
     )
 
     # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ────────────────────

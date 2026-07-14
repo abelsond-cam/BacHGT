@@ -209,6 +209,7 @@ def grade(
     model: str,
     caches: StageCaches,
     max_chars: int | None = None,
+    context_tiers: Sequence[int] | None = None,
     limit: int | None = None,
 ) -> list:
     """Grade each selected study's paper against the rubric; write ``study_grades.{jsonl,tsv}``.
@@ -251,7 +252,7 @@ def grade(
             result = grader.grade_accession(
                 spec, llm, accession=acc, fulltext=ft, ena_title=study["study_title"],
                 ena_description=study["study_description"], ena_taxon_samples=taxon_n,
-                sizing_row=sizing_row, model=model, max_chars=max_chars,
+                sizing_row=sizing_row, model=model, max_chars=max_chars, context_tiers=context_tiers,
             )
         except UsageLimitError as exc:
             print(f"\n[usage limit] {exc}\nGraded {len(results)}/{len(sel)} before the window was "
@@ -267,6 +268,15 @@ def grade(
     grader.write_results(results, out_jsonl, out_tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {out_jsonl} and {out_tsv} ({len(results)} rows, {status})", file=sys.stderr)
+
+    if results:  # how the escalating-context ladder resolved — the per-call token saving in practice
+        from collections import Counter
+        tier_hist = Counter(r.grade_context_chars for r in results)
+        still = sum(1 for r in results if r.full_text_would_help)
+        ladder = " · ".join(f"{c:,}ch×{n}" for c, n in sorted(tier_hist.items()))
+        print(f"[grade context] resolved at: {ladder}"
+              + (f"  ({still} still flagged full_text_would_help at the top tier)" if still else ""),
+              file=sys.stderr)
 
     mdir = Path(manual_papers_dir)
     pdf_not_used = sorted(r.study_accession for r in results

@@ -25,6 +25,7 @@ accession) for the validator.
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
@@ -186,9 +187,11 @@ def build_grade_schema(spec: AttributeSpec) -> dict:
                 "additionalProperties": False,
             },
             "needs_manual_download": {"type": "boolean"},
+            "full_text_would_help": {"type": "boolean"},
             "notes": {"type": "string"},
         },
-        "required": ["study_type", "study_level", "paper_coverage", "backfill", "needs_manual_download", "notes"],
+        "required": ["study_type", "study_level", "paper_coverage", "backfill", "needs_manual_download",
+                     "full_text_would_help", "notes"],
         "additionalProperties": False,
     }
 
@@ -268,7 +271,14 @@ def _build_system_prompt(spec: AttributeSpec) -> str:
         "null, grade not_gradeable.\n"
         "- Backfill proposals are whole-field whole-project values only; never invent per-sample values.\n"
         "- Set needs_manual_download true only if a paper clearly exists but its full text was not "
-        "available to you (you were given only an abstract or nothing).\n\n"
+        "available to you (you were given only an abstract or nothing).\n"
+        "- Set full_text_would_help true ONLY when the paper text you were given was TRUNCATED (a "
+        "'[...truncated...]' marker is shown) AND at least one attribute you left not_gradeable / partial (or a "
+        "backfill field you could not resolve) might be determinable from the OMITTED remainder — e.g. a "
+        "collection-date range, sampling country, or a per-sample table typically found in methods/results. Set "
+        "it false when the text was not truncated, when you are confident in your answers, or when the missing "
+        "values are simply not the kind this paper reports (more text would not change them). It is used to "
+        "decide whether to re-read the study with a larger slice of the paper — do not set it out of caution.\n\n"
         "=== RUBRIC ===\n" + _render_rubric(spec)
     )
 
@@ -332,6 +342,8 @@ class GradeResult:
     is_full_text: bool
     notes: str
     model: str
+    grade_context_chars: int = 0  # paper-text budget the grade actually settled on (the tier that resolved it)
+    full_text_would_help: bool = False  # the grader's final self-report that more text might still help
     raw: dict = field(default_factory=dict)
 
     def to_row(self) -> dict:
@@ -345,6 +357,8 @@ class GradeResult:
             "needs_manual_download": self.needs_manual_download,
             "fulltext_source": self.fulltext_source,
             "is_full_text": self.is_full_text,
+            "grade_context_chars": self.grade_context_chars,
+            "full_text_would_help": self.full_text_would_help,
             "model": self.model,
         }
         for name, g in self.study_level.items():
@@ -368,6 +382,7 @@ def grade_accession(
     sizing_row: dict | None = None,
     model: str | None = None,
     max_chars: int = DEFAULT_MAX_CHARS,
+    context_tiers: Sequence[int] | None = None,
 ) -> GradeResult:
     """Grade one accession against the rubric and return a :class:`GradeResult`.
 
@@ -390,32 +405,49 @@ def grade_accession(
     model
         Per-call model override (e.g. escalate to Opus).
     max_chars
-        Truncation ceiling for the paper text.
+        Single-tier truncation ceiling, used only when ``context_tiers`` is None.
+    context_tiers
+        Ascending paper-text budgets to climb (e.g. ``(10_000, 50_000, 250_000)``). The grader reads only the
+        first; it climbs to the next tier ONLY when it self-reports ``full_text_would_help`` (the truncated tail
+        might hold an answer it could not determine) and there is more text to show. Most studies resolve at the
+        cheapest tier, so the average per-call token cost collapses. None → a single pass at ``max_chars``.
 
     Returns
     -------
     GradeResult
         The graded record. ``paper_coverage_for_taxon`` is computed here from the model's
-        ``paper_records_in_taxon`` and ``ena_taxon_samples``.
+        ``paper_records_in_taxon`` and ``ena_taxon_samples``; ``grade_context_chars`` records the tier that
+        resolved it.
     """
     schema = build_grade_schema(spec)
     system = _build_system_prompt(spec)
-    user = _build_user_prompt(
-        accession=accession,
-        fulltext=fulltext,
-        ena_title=ena_title,
-        ena_description=ena_description,
-        sizing_row=sizing_row,
-        max_chars=max_chars,
-    )
-    out = llm.complete_structured(
-        system=system,
-        user=user,
-        json_schema=schema,
-        schema_name=SCHEMA_NAME,
-        schema_description="Structured rubric grade for one project accession.",
-        model=model,
-    )
+    tiers = sorted({int(t) for t in (context_tiers or (max_chars,))})
+    text_len = len(fulltext.text or "")
+    out: dict = {}
+    used = tiers[-1]
+    for i, budget in enumerate(tiers):
+        user = _build_user_prompt(
+            accession=accession,
+            fulltext=fulltext,
+            ena_title=ena_title,
+            ena_description=ena_description,
+            sizing_row=sizing_row,
+            max_chars=budget,
+        )
+        out = llm.complete_structured(
+            system=system,
+            user=user,
+            json_schema=schema,
+            schema_name=SCHEMA_NAME,
+            schema_description="Structured rubric grade for one project accession.",
+            model=model,
+        )
+        used = min(budget, text_len)
+        # Stop climbing when this tier already showed the whole paper, it is the last rung, or the grader is
+        # satisfied it does not need the truncated remainder. Each tier is a distinct cache key, so a rerun that
+        # resolved early replays only the tiers it actually used.
+        if budget >= text_len or i == len(tiers) - 1 or not out.get("full_text_would_help"):
+            break
 
     # collection_date is resolved DETERMINISTICALLY from the grader's earliest/latest endpoints (never LLM span
     # arithmetic): the engine computes the true month span and applies David's 2yr/5yr/pre-2010 rule, overwriting
@@ -449,6 +481,8 @@ def grade_accession(
         is_full_text=fulltext.is_full_text,
         notes=out.get("notes", ""),
         model=model or getattr(llm, "model", ""),
+        grade_context_chars=int(used),
+        full_text_would_help=bool(out.get("full_text_would_help", False)),
         raw=out,
     )
 

@@ -19,7 +19,7 @@ import yaml
 _DEFAULT_COMPLETENESS_THRESHOLD = 0.75  # ENA non-null fraction at/above which a field is "already complete"
 _DEFAULT_ESCALATION_RESIDUAL_FLOOR = 50  # min blank samples remaining after per-sample to bother escalating
 _DEFAULT_ESCALATION_BIG_DECISION_FRAC = 0.01  # a study at/above this fraction of the cohort is a "big decision"
-_DEFAULT_MAX_PAPER_CHARS = 120_000  # paper-text truncation ceiling fed to the grader/triage (mirrors grader default)
+_DEFAULT_MAX_PAPER_CHARS = 120_000  # single-tier fallback paper-text ceiling when no ladder is configured
 
 
 @dataclass(frozen=True)
@@ -94,9 +94,24 @@ class AttributeSpec:
         return float(self._gate("escalation_big_decision_frac", _DEFAULT_ESCALATION_BIG_DECISION_FRAC))
 
     @property
+    def grade_context_tiers(self) -> tuple[int, ...]:
+        """Ascending paper-text budgets the grader climbs (``gates.grade_context_tiers``), smallest first.
+
+        The grader reads only the first tier (e.g. 10k chars ~= the abstract); it climbs to the next tier ONLY
+        when it self-reports that the truncated remainder might hold an answer it could not determine. Most
+        studies resolve at the cheapest tier, so the ladder collapses per-call token cost dramatically (David,
+        2026-07-14). Falls back to a single tier at ``gates.max_paper_chars`` (or the engine default) when no
+        ladder is configured — i.e. the original single-pass behaviour.
+        """
+        v = (self.raw.get("gates", {}) or {}).get("grade_context_tiers")
+        if v:
+            return tuple(sorted({int(x) for x in v}))
+        return (int(self._gate("max_paper_chars", _DEFAULT_MAX_PAPER_CHARS)),)
+
+    @property
     def max_paper_chars(self) -> int:
-        """Paper-text truncation ceiling fed to the grader + escalation triage (``gates.max_paper_chars``)."""
-        return int(self._gate("max_paper_chars", _DEFAULT_MAX_PAPER_CHARS))
+        """The ceiling paper-text budget (top of :attr:`grade_context_tiers`); the escalation triage single pass."""
+        return self.grade_context_tiers[-1]
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> AttributeSpec:
