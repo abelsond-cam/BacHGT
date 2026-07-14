@@ -1,25 +1,32 @@
 study_accession	field	answer	answer_note	tag
+PRJDB12075	isolation_source	rectal swab		train
 PRJEB10018	country		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB10018	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB12699	collection_date	2003-01-01		train
 PRJEB1563	isolation_source	blood		train
+PRJEB17615	isolation_source	blood		train
+PRJEB19322	isolation_source	blood		train
 PRJEB1963	collection_date	2009-09-01	curator accept	test
 PRJEB21081	collection_date		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB21081	host	human	curator accept	test
 PRJEB21081	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB22890	isolation_source	blood		train
+PRJEB22903	country	Guatemala		train
 PRJEB22903	host	Homo sapiens		train
 PRJEB27342	collection_date	2018-01-01		test
 PRJEB27342	country	Italy		test
 PRJEB27342	host		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB27342	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
+PRJEB28054	host	human		train
 PRJEB29143	isolation_source	faeces		train
 PRJEB29738	collection_date	2016-07-01	curator accept	test
 PRJEB29738	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB29739	collection_date	2017-01-01	curator accept	test
 PRJEB32655	collection_date	2018-01-01		test
+PRJEB36486	collection_date	1/1/2018		train
 PRJEB37378	collection_date	2020-03-01	 [curator-corrected]	train
 PRJEB37378	country	Malawi	 [curator-corrected]	train
+PRJEB37378	host		curator skip: no single whole-field value (genuinely wide / undeterminable)	train
 PRJEB39942	host	wastewater	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB42462	isolation_source	blood		train
 PRJEB43870	host	poultry	curator accept	test
@@ -35,6 +42,9 @@ PRJEB8667	host	human	curator-accepted suggested value (2026-07-07)	tail100
 PRJNA1087366	isolation_source	blood		train
 PRJNA288601	collection_date	2015-02-01		test
 PRJNA288601	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
+PRJNA325243	host	Dog		train
+PRJNA549322	country	USA		train
+PRJNA549322	isolation_source	blood		train
 PRJNA788733	isolation_source		curator skip: specimen types span multiple sites; no single whole-field isolation_source (2026-07-07)	tail100
 PRJNA825705	collection_date	2018-01-01		test
 PRJNA845975	isolation_source	blood		train

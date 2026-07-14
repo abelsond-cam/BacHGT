@@ -60,6 +60,7 @@ def _interactive(frame: pd.DataFrame, output: Path) -> None:
               file=sys.stderr)
     if not len(pending):
         print("All escalations already resolved — nothing to walk.", file=sys.stderr)
+        frame.to_csv(output, sep="\t", index=False)  # persist any auto-skip notes applied before the walk
         return
     print(f"\n{len(pending)} decision(s) — Enter accepts the suggested value, 's' skips, Ctrl-C stops.\n")
     for pos, (idx, r) in enumerate(pending.iterrows(), start=1):

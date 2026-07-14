@@ -121,34 +121,59 @@ def accumulate_escalations(data_dir: Path, tags: Sequence[str], out_dir: Path) -
         Resolved decisions keyed (study_accession, field), with ``answer``, ``answer_note`` and ``tag``;
         on a conflict (same study+field decided in two batches) the answered one wins, else the first.
     """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "curated_escalations.tsv"
+    cols = ["study_accession", "field", "answer", "answer_note", "tag", "_answered", "_src"]
+
+    def _resolved(df: pd.DataFrame, *, src: int, run_tag: str | None) -> pd.DataFrame:
+        """Keep the curator-resolved rows (answered OR a *curator* skip); drop regenerable auto-skips."""
+        df = df.fillna("")
+        for c in ("answer", "answer_note"):
+            if c not in df.columns:
+                df[c] = ""
+        answer = df["answer"].astype(str)
+        note_l = df["answer_note"].astype(str).str.lower()
+        is_auto = note_l.str.contains("auto-skip", na=False)  # engine-generated wide-mix skip — never promoted
+        answered = answer.str.strip() != ""
+        curator_skip = note_l.apply(lambda n: any(w in n for w in _RESOLVED_NOTE_MARKERS)) & ~is_auto
+        keep = answered | curator_skip
+        r = df[keep].copy()
+        r["tag"] = run_tag if run_tag is not None else r.get("tag", "")
+        r["_answered"] = answered[keep].astype(int).to_numpy()
+        r["_src"] = src
+        return r[cols]
+
     frames: list[pd.DataFrame] = []
-    for tag in tags:
+    for tag in tags:  # fresh per-band decisions (src=0 — highest precedence: a re-walk updates the store)
         path = data_dir / "study_lv_attributes" / "escalation" / f"decisions_needed_{tag}.tsv"
         if not path.exists():
             continue
-        df = pd.read_csv(path, sep="\t", dtype=str).fillna("")
-        if not {"study_accession", "field"} <= set(df.columns):
-            continue
-        df["answer"] = df.get("answer", "")
-        df["answer_note"] = df.get("answer_note", "")
-        answered = df["answer"].astype(str).str.strip() != ""
-        skipped = df["answer_note"].astype(str).str.lower().apply(
-            lambda n: any(w in n for w in _RESOLVED_NOTE_MARKERS))
-        resolved = df[answered | skipped].copy()
-        resolved["tag"] = tag
-        resolved["_answered"] = answered[answered | skipped].astype(int).to_numpy()
-        frames.append(resolved[["study_accession", "field", "answer", "answer_note", "tag", "_answered"]])
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / "curated_escalations.tsv"
-    if not frames:
+        df = pd.read_csv(path, sep="\t", dtype=str)
+        if {"study_accession", "field"} <= set(df.columns):
+            frames.append(_resolved(df, src=0, run_tag=tag))
+
+    # PRESERVE the existing master (src=1 — a fallback): a curator answer already committed to the store is
+    # NEVER lost, even if a band's decisions file was regenerated without it (the silent-loss step-bug). A
+    # fresh answered decision still updates it; a fresh skip never overrides a committed answer.
+    if out_path.exists():
+        m = pd.read_csv(out_path, sep="\t", dtype=str)
+        if {"study_accession", "field"} <= set(m.columns):
+            frames.append(_resolved(m, src=1, run_tag=None))
+
+    if not frames or not sum(len(f) for f in frames):
         empty = pd.DataFrame(columns=["study_accession", "field", "answer", "answer_note", "tag"])
         empty.to_csv(out_path, sep="\t", index=False)
         print(f"Wrote {out_path}: 0 resolved decisions", file=sys.stderr)
         return empty
+
     alld = pd.concat(frames, ignore_index=True)
-    # Prefer an answered decision over a bare skip when the same (study, field) appears in two batches.
-    alld = (alld.sort_values(["study_accession", "field", "_answered"], ascending=[True, True, False])
-            .drop_duplicates(["study_accession", "field"], keep="first").drop(columns="_answered"))
+    # Precedence per (study, field): answered before skip (_answered desc), then fresh decision before the
+    # preserved master (_src asc). keep='first' then applies that winner.
+    alld = (alld.sort_values(["study_accession", "field", "_answered", "_src"],
+                             ascending=[True, True, False, True])
+            .drop_duplicates(["study_accession", "field"], keep="first")
+            .drop(columns=["_answered", "_src"])
+            .sort_values(["study_accession", "field"]).reset_index(drop=True))
     alld.to_csv(out_path, sep="\t", index=False)
     n_ans = int((alld["answer"].astype(str).str.strip() != "").sum())
     print(f"Wrote {out_path}: {len(alld)} resolved decisions ({n_ans} answered, {len(alld) - n_ans} skip)",
