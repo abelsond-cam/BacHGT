@@ -96,6 +96,9 @@ def main() -> None:
     p.add_argument("--tag", default="train", help="Run tag — selects decisions_needed_<tag>.tsv / escalation_applied_<tag>.tsv.")
     p.add_argument("--interactive", action="store_true", help="Walk the pending queue at the prompt.")
     p.add_argument("--apply", action="store_true", help="Apply the filled queue → escalation_applied_<tag>.tsv.")
+    p.add_argument("--spec", default=None,
+                   help="Application attributes.yaml — enables escalation.auto_skip_wide_mix (wide-mix rows "
+                        "recorded as skips before the walk). Defaults to <data-dir>/../attributes.yaml if present.")
     p.add_argument("--queue", default=None,
                    help="Queue TSV (default <data-dir>/study_lv_attributes/escalation/decisions_needed_<tag>.tsv).")
     p.add_argument("--applied-output", default=None,
@@ -119,6 +122,17 @@ def main() -> None:
 
     if args.interactive:
         frame = pd.read_csv(queue, sep="\t", dtype=str).fillna("")
+        # Apply the application's auto-skip policy so wide-mix rows drop out of the walk (matches what the
+        # driver's escalate_detect does — needed here because the walk is often run directly on an existing
+        # queue). Only unresolved wide_mix_skip rows are affected; real/prior answers are never touched.
+        spec_path = Path(args.spec) if args.spec else data.parent / "attributes.yaml"
+        if spec_path.exists():
+            from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
+            if AttributeSpec.from_yaml(spec_path).auto_skip_wide_mix:
+                frame, n_auto = stages.apply_auto_skip_wide(frame)
+                if n_auto:
+                    print(f"[auto-skip] {n_auto} wide-mix decision(s) recorded as skip "
+                          f"(escalation.auto_skip_wide_mix=true)", file=sys.stderr)
         _interactive(frame, queue)
         return
 

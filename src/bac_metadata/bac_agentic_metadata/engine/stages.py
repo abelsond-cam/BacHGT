@@ -701,7 +701,7 @@ BIG_DECISION_FRAC = 0.01
 AUTO_SKIP_NOTE = "auto-skip: wide mix — no single whole-study value (triage=wide_mix_skip)"
 
 
-def _apply_auto_skip_wide(frame: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+def apply_auto_skip_wide(frame: pd.DataFrame) -> tuple[pd.DataFrame, int]:
     """Record every still-unresolved ``wide_mix_skip`` row as an auto-skip so it drops out of the curator walk.
 
     Only touches rows with a blank answer AND a blank note — a real curator answer or a re-injected/prior
@@ -1022,7 +1022,7 @@ def escalate_detect(
         ).reset_index(drop=True)
     n_auto = 0
     if auto_skip_wide:  # once the triage is trusted, record wide mixes as skips so only real decisions surface
-        frame, n_auto = _apply_auto_skip_wide(frame)
+        frame, n_auto = apply_auto_skip_wide(frame)
     frame.to_csv(out_path, sep="\t", index=False)
     still_pending = sum(
         1 for _, r in frame.iterrows()

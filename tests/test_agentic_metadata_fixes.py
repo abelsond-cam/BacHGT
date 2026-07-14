@@ -217,7 +217,7 @@ def test_collection_date_escalation_is_deterministic_no_llm(monkeypatch):
 
 
 def test_auto_skip_wide_records_only_unresolved_wide_mix():
-    from bac_metadata.bac_agentic_metadata.engine.stages import _apply_auto_skip_wide
+    from bac_metadata.bac_agentic_metadata.engine.stages import apply_auto_skip_wide
 
     frame = pd.DataFrame([
         # unresolved wide mix -> auto-skipped
@@ -233,7 +233,7 @@ def test_auto_skip_wide_records_only_unresolved_wide_mix():
         {"study_accession": "D", "field": "isolation_source", "resolution": "uniform_propose",
          "answer": "", "answer_note": ""},
     ])
-    out, n = _apply_auto_skip_wide(frame)
+    out, n = apply_auto_skip_wide(frame)
     assert n == 1                                                   # only row A
     assert "skip" in out.loc[0, "answer_note"].lower()             # A now recorded as a skip
     assert out.loc[1, "answer"] == "Kenya"                         # B untouched
