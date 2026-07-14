@@ -438,6 +438,7 @@ def main() -> None:
                 escalations_master_path=esc_master,
                 threshold=spec.escalation_residual_floor, frac=completeness_threshold,
                 big_decision_frac=spec.escalation_big_decision_frac,
+                auto_skip_wide=spec.auto_skip_wide_mix,
                 cohort_taxon_samples=cohort_taxon_samples, cohort_taxon_total=cohort_taxon_total,
             )
             stages.escalate_apply(base=base, keep=selected, queue_path=decisions_tsv,

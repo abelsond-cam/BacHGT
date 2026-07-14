@@ -695,6 +695,27 @@ ESCALATION_QUEUE_COLUMNS = [
 #: safety net so a single large study can never silently swing the global completeness metric.
 BIG_DECISION_FRAC = 0.01
 
+#: The auto-skip marker written into a wide-mix row's ``answer_note`` when ``auto_skip_wide`` is on. Contains
+#: "skip" so both the interactive walk (``_resolved``) and run-health (``_rejected``) treat it as a decided
+#: cell (never a lingering ACTIONABLE), while ``escalate_apply`` ignores it (no fill — a wide mix has no value).
+AUTO_SKIP_NOTE = "auto-skip: wide mix — no single whole-study value (triage=wide_mix_skip)"
+
+
+def _apply_auto_skip_wide(frame: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Record every still-unresolved ``wide_mix_skip`` row as an auto-skip so it drops out of the curator walk.
+
+    Only touches rows with a blank answer AND a blank note — a real curator answer or a re-injected/prior
+    decision is never overwritten. Returns ``(frame, n_auto_skipped)``.
+    """
+    if not len(frame):
+        return frame, 0
+    blank_ans = frame["answer"].fillna("").astype(str).str.strip() == ""
+    blank_note = frame["answer_note"].fillna("").astype(str).str.strip() == ""
+    mask = blank_ans & blank_note & (frame["resolution"].astype(str) == "wide_mix_skip")
+    frame = frame.copy()
+    frame.loc[mask, "answer_note"] = AUTO_SKIP_NOTE
+    return frame, int(mask.sum())
+
 
 def cohort_study_samples(sizing_path: str | Path) -> tuple[dict[str, int], int]:
     """Return ``({study: taxon_samples}, cohort_total)`` over the WHOLE cohort from the sizing table."""
@@ -936,6 +957,7 @@ def escalate_detect(
     threshold: int = 50,
     frac: float = 0.75,
     big_decision_frac: float = BIG_DECISION_FRAC,
+    auto_skip_wide: bool = False,
     escalations_master_path: str | Path | None = None,
     cohort_taxon_samples: Mapping[str, int] | None = None,
     cohort_taxon_total: int | None = None,
@@ -998,9 +1020,20 @@ def escalate_detect(
             key=lambda s: pd.to_numeric(s, errors="coerce") if s.name == "gap_samples" else s,
             ascending=[False, True, True],
         ).reset_index(drop=True)
+    n_auto = 0
+    if auto_skip_wide:  # once the triage is trusted, record wide mixes as skips so only real decisions surface
+        frame, n_auto = _apply_auto_skip_wide(frame)
     frame.to_csv(out_path, sep="\t", index=False)
+    still_pending = sum(
+        1 for _, r in frame.iterrows()
+        if str(r.get("answer", "")).strip() == ""
+        and not any(w in str(r.get("answer_note", "")).lower()
+                    for w in ("reject", "skip", "undeterm", "leave uncoded", "no value"))
+    ) if len(frame) else 0
     print(f"Wrote {Path(out_path).name}: {len(frame)} escalation(s) "
-          f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)", file=sys.stderr)
+          f"({int(frame['gap_samples'].sum()) if len(frame) else 0} gap samples)"
+          + (f"; {n_auto} wide-mix auto-skipped, {still_pending} decision(s) remain for review"
+             if auto_skip_wide else ""), file=sys.stderr)
     if len(frame):
         print("\nTop escalations (study · field · gap · suggested · theme):", file=sys.stderr)
         for _, r in frame.head(12).iterrows():

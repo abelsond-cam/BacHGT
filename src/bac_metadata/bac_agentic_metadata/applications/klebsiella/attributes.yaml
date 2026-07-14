@@ -358,6 +358,13 @@ attributes:
 escalation:
   # A single value at/above this share of a study's non-blank samples is "dominant" and adopted whole-study.
   dominant_share: 0.95
+  # Auto-resolve wide-mix escalations (David, 2026-07-14, after validating the triage on train). A
+  # wide_mix_skip decision — a genuinely heterogeneous field with no single whole-study value (incl. mid-range
+  # / >5yr collection dates left blank) — is recorded as a skip automatically and dropped from the curator
+  # queue rather than surfaced for manual confirmation. Only genuine decisions still reach the human:
+  # >=95%/homogeneous-category adopts, country region hints, and pre-2010 date midpoints. Set false to surface
+  # every wide mix again (the pre-trust behaviour).
+  auto_skip_wide_mix: true
   # collection_date span thresholds — the engine computes the true month span from the grader's earliest/latest
   # endpoints (period-enclosing, not calendar-label counting) and applies: <= two_year_months -> fill midpoint;
   # two_year_months..five_year_months -> escalate, midpoint suggested ONLY if the period is before old_before_year

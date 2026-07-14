@@ -113,6 +113,11 @@ class AttributeSpec:
         """The ceiling paper-text budget (top of :attr:`grade_context_tiers`); the escalation triage single pass."""
         return self.grade_context_tiers[-1]
 
+    @property
+    def auto_skip_wide_mix(self) -> bool:
+        """Auto-resolve ``wide_mix_skip`` escalations as skips instead of surfacing them (``escalation.auto_skip_wide_mix``)."""
+        return bool((self.raw.get("escalation", {}) or {}).get("auto_skip_wide_mix", False))
+
     @classmethod
     def from_yaml(cls, path: str | Path) -> AttributeSpec:
         """Parse an ``attributes.yaml`` file into an :class:`AttributeSpec`.

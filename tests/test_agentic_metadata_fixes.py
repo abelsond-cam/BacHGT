@@ -216,6 +216,31 @@ def test_collection_date_escalation_is_deterministic_no_llm(monkeypatch):
     assert it.suggested_value == "" and it.resolution == "wide_mix_skip"
 
 
+def test_auto_skip_wide_records_only_unresolved_wide_mix():
+    from bac_metadata.bac_agentic_metadata.engine.stages import _apply_auto_skip_wide
+
+    frame = pd.DataFrame([
+        # unresolved wide mix -> auto-skipped
+        {"study_accession": "A", "field": "isolation_source", "resolution": "wide_mix_skip",
+         "answer": "", "answer_note": ""},
+        # wide mix but the curator already gave a real value -> untouched
+        {"study_accession": "B", "field": "country", "resolution": "wide_mix_skip",
+         "answer": "Kenya", "answer_note": ""},
+        # wide mix already carrying a prior skip note -> untouched (still counts resolved)
+        {"study_accession": "C", "field": "host", "resolution": "wide_mix_skip",
+         "answer": "", "answer_note": "curator skip: genuinely wide"},
+        # an adopt call (not wide) -> never auto-skipped, stays pending for review
+        {"study_accession": "D", "field": "isolation_source", "resolution": "uniform_propose",
+         "answer": "", "answer_note": ""},
+    ])
+    out, n = _apply_auto_skip_wide(frame)
+    assert n == 1                                                   # only row A
+    assert "skip" in out.loc[0, "answer_note"].lower()             # A now recorded as a skip
+    assert out.loc[1, "answer"] == "Kenya"                         # B untouched
+    assert out.loc[2, "answer_note"] == "curator skip: genuinely wide"  # C untouched
+    assert out.loc[3, "answer_note"] == ""                         # D (adopt) still surfaces
+
+
 def test_pmcid_for_link_resolves_pmc_offline():
     assert pmcid_for_link("https://pmc.ncbi.nlm.nih.gov/articles/PMC7244338/") == "PMC7244338"
     assert pmcid_for_link("PMC10232788") == "PMC10232788"
