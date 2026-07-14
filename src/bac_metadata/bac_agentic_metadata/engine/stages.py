@@ -210,6 +210,7 @@ def grade(
     caches: StageCaches,
     max_chars: int | None = None,
     context_tiers: Sequence[int] | None = None,
+    workers: int = 1,
     limit: int | None = None,
 ) -> list:
     """Grade each selected study's paper against the rubric; write ``study_grades.{jsonl,tsv}``.
@@ -219,7 +220,16 @@ def grade(
     text is resolved the same way for every stage via :func:`resolve_fulltext_for_accession` (open full
     text, else a manually-downloaded ``<acc>.pdf``). One bad/slow paper is skipped; a usage limit stops
     cleanly. A loud audit flags any study whose ``manual_download`` PDF grading did not actually use.
+
+    ``workers`` grades that many accessions concurrently (default 1 = sequential, to stay light on a shared
+    Claude Pro window). Concurrency is safe — the subscription backend streams each prompt over stdin and the
+    disk cache is per-(study,tier) with atomic writes. The output is written incrementally after every
+    completion and always in the stable selection order, so ``study_grades.{jsonl,tsv}`` is byte-identical
+    regardless of ``workers`` and inspectable mid-run; a usage limit cancels the pending queue and stops clean.
     """
+    from collections import Counter
+    from concurrent.futures import CancelledError, ThreadPoolExecutor, as_completed
+
     from bac_metadata.bac_agentic_metadata.engine import grader
 
     caches.ensure()
@@ -227,50 +237,73 @@ def grade(
     sel = select_sizing_rows(sizing_path, accessions=accessions, folds=folds)
     if limit is not None:
         sel = sel.head(limit)
-    print(f"Grading {len(sel)} accessions with {model}", file=sys.stderr)
     max_chars = grader.DEFAULT_MAX_CHARS if max_chars is None else max_chars
+    tiers = list(context_tiers) if context_tiers else [max_chars]
+    first_tier = min(tiers)
+    rows = [(i, row) for i, (_, row) in enumerate(sel.iterrows())]
+    total = len(rows)
+    print(f"Grading {total} accessions with {model} (workers={workers}, context tiers={tiers})", file=sys.stderr)
 
-    results: list = []
-    skipped: list[str] = []
-    limited = False
-    for i, (_, row) in enumerate(sel.iterrows(), start=1):
+    def _grade_one(row):
         acc = row["study_accession"]
         link = paper_links.get(acc, "")
         taxon_n = int(row["ena_taxon_samples"]) if pd.notna(row["ena_taxon_samples"]) else None
-        print(f"[grade {i}/{len(sel)}] {acc} (taxon={taxon_n}) <- {link[:70] or '(no paper link)'}",
-              file=sys.stderr)
         ft = resolve_fulltext_for_accession(acc, link, manual_papers_dir, fulltext_cache=caches.fulltext)
-        if ft.source == "local_pdf":
-            print(f"  [local pdf] grading {acc} from manual download ({len(ft.text)} chars)", file=sys.stderr)
         study = study_title_and_description(acc, cache_dir=caches.ena)
         sizing_row = {
             "ena_taxon_samples": taxon_n, "ena_total_samples": row.get("ena_total_samples"),
             "ena_total_runs": row.get("ena_total_runs"), "by_scientific_name": row.get("by_scientific_name"),
             **classifications.get(acc, {}),
         }
-        try:
-            result = grader.grade_accession(
-                spec, llm, accession=acc, fulltext=ft, ena_title=study["study_title"],
-                ena_description=study["study_description"], ena_taxon_samples=taxon_n,
-                sizing_row=sizing_row, model=model, max_chars=max_chars, context_tiers=context_tiers,
-            )
-        except UsageLimitError as exc:
-            print(f"\n[usage limit] {exc}\nGraded {len(results)}/{len(sel)} before the window was "
-                  "exhausted. Rerun to resume — cached grades return instantly.", file=sys.stderr)
-            limited = True
-            break
-        except (RuntimeError, ValueError) as exc:
-            print(f"  [skip {acc}] {exc}", file=sys.stderr)
-            skipped.append(acc)
-            continue
-        results.append(result)
+        result = grader.grade_accession(
+            spec, llm, accession=acc, fulltext=ft, ena_title=study["study_title"],
+            ena_description=study["study_description"], ena_taxon_samples=taxon_n,
+            sizing_row=sizing_row, model=model, max_chars=max_chars, context_tiers=context_tiers,
+        )
+        return result, ft.source
 
-    grader.write_results(results, out_jsonl, out_tsv)
+    slots: list = [None] * total
+    skipped: list[str] = []
+    limited = False
+    completed = 0
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
+        futures = {ex.submit(_grade_one, row): (i, row["study_accession"]) for i, row in rows}
+        for fut in as_completed(futures):
+            idx, acc = futures[fut]
+            try:
+                result, ft_source = fut.result()
+            except CancelledError:
+                continue  # pending task cancelled after a usage limit — nothing graded for it
+            except UsageLimitError:
+                if not limited:
+                    limited = True
+                    for f in futures:  # stop cleanly: drop everything not already running
+                        f.cancel()
+                continue
+            except (RuntimeError, ValueError) as exc:
+                print(f"  [skip {acc}] {exc}", file=sys.stderr)
+                skipped.append(acc)
+                continue
+            slots[idx] = result
+            completed += 1
+            tier = result.grade_context_chars
+            note = "".join([
+                " climbed" if tier > first_tier else "",
+                " [local pdf]" if ft_source == "local_pdf" else "",
+                " ⚠more-would-help" if result.full_text_would_help else "",
+            ])
+            print(f"[grade {completed}/{total}] {acc}: resolved at {tier:,} chars{note}", file=sys.stderr)
+            grader.write_results([s for s in slots if s is not None], out_jsonl, out_tsv)  # incremental, ordered
+
+    results = [s for s in slots if s is not None]
+    grader.write_results(results, out_jsonl, out_tsv)  # final (also covers the graded-nothing case)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {out_jsonl} and {out_tsv} ({len(results)} rows, {status})", file=sys.stderr)
+    if limited:
+        print(f"[usage limit] Graded {len(results)}/{total} before the window was exhausted. Rerun to "
+              "resume — cached grades return instantly.", file=sys.stderr)
 
     if results:  # how the escalating-context ladder resolved — the per-call token saving in practice
-        from collections import Counter
         tier_hist = Counter(r.grade_context_chars for r in results)
         still = sum(1 for r in results if r.full_text_would_help)
         ladder = " · ".join(f"{c:,}ch×{n}" for c, n in sorted(tier_hist.items()))

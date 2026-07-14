@@ -186,6 +186,10 @@ def main() -> None:
     p.add_argument("--web-fallback", action="store_true", help="Enable the finder's paid web-search fallback.")
     p.add_argument("--backend", choices=["subscription", "api"], default="subscription", help="LLM backend.")
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
+    p.add_argument("--grade-workers", type=int, default=1,
+                   help="Concurrent grading workers (default 1 = sequential, light on a shared Claude Pro "
+                        "window). Raise it (e.g. 4-8) for a faster run when you are not using the account for "
+                        "other work; the grades output is identical regardless of the worker count.")
     p.add_argument("--threshold", type=float, default=None,
                    help="ENA non-null fraction at/above which a field is complete. Overrides the spec's "
                         "gates.completeness_threshold; when omitted the spec value is used.")
@@ -376,7 +380,7 @@ def main() -> None:
         spec=spec, sizing_path=sizing_path, folds=folds, paper_links=paper_links,
         classifications=classifications, manual_papers_dir=manual_papers_dir,
         out_jsonl=grades_jsonl, out_tsv=grades_tsv, llm=llm, model=args.model, caches=caches,
-        context_tiers=spec.grade_context_tiers, limit=args.limit,
+        context_tiers=spec.grade_context_tiers, workers=args.grade_workers, limit=args.limit,
     )
 
     # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ────────────────────

@@ -95,6 +95,25 @@ def _cache_key(payload: dict) -> str:
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()
 
 
+def _atomic_write_json(path: Path, obj: dict) -> None:
+    """Write ``obj`` as JSON atomically (unique temp file + ``os.replace``).
+
+    Concurrent grade workers write distinct cache keys, so they never target the same file; the atomic
+    swap is belt-and-suspenders so a reader (or a resumed run) can never observe a half-written cache entry.
+    """
+    fd, tmp = tempfile.mkstemp(dir=str(path.parent), prefix=path.name + ".", suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            json.dump(obj, fh, ensure_ascii=False, indent=2)
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
 def request_cache_key(
     *,
     model: str,
@@ -295,7 +314,7 @@ class AnthropicClient:
 
         if cache_path is not None:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+            _atomic_write_json(cache_path, result)
         return result
 
 
@@ -456,7 +475,7 @@ class ClaudeCliClient:
 
         if cache_path is not None:
             cache_path.parent.mkdir(parents=True, exist_ok=True)
-            cache_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+            _atomic_write_json(cache_path, result)
         return result
 
 

@@ -96,3 +96,41 @@ def test_single_tier_fallback_behaves_like_one_pass():
     r = grader.grade_accession(_SPEC, llm, accession="S", fulltext=_FakeFullText(9_999),
                                ena_taxon_samples=100, max_chars=120_000)  # no context_tiers -> single pass
     assert llm.calls == 1 and r.grade_context_chars == 9_999
+
+
+def test_parallel_grade_output_is_order_stable(tmp_path, monkeypatch):
+    """workers>1 must produce byte-identical, size-desc-ordered grades — order comes from slots, not completion."""
+    import pandas as pd
+
+    from bac_metadata.bac_agentic_metadata.engine import stages
+
+    sizing = tmp_path / "sizing.tsv"
+    pd.DataFrame({
+        "study_accession": ["S1", "S2", "S3", "S4"],
+        "ena_taxon_samples": [400, 300, 200, 100],  # select_sizing_rows sorts size-desc
+        "ena_total_samples": [400, 300, 200, 100],
+        "ena_total_runs": [0, 0, 0, 0],
+        "by_scientific_name": ["", "", "", ""],
+        "fold": ["train"] * 4,
+    }).to_csv(sizing, sep="\t", index=False)
+
+    monkeypatch.setattr(stages, "resolve_fulltext_for_accession",
+                        lambda acc, link, md, *, fulltext_cache: _FakeFullText(300))
+    monkeypatch.setattr(stages, "study_title_and_description",
+                        lambda acc, *, cache_dir: {"study_title": "", "study_description": ""})
+
+    caches = stages.StageCaches(llm=tmp_path / "llm", ena=tmp_path / "ena", find=tmp_path / "find",
+                                fulltext=tmp_path / "ft", per_sample_supp=tmp_path / "pss")
+
+    def run(workers: int, tag: str):
+        out_tsv = tmp_path / f"{tag}.tsv"
+        stages.grade(spec=_SPEC, sizing_path=sizing, accessions=None, folds=["train"],
+                     paper_links={}, classifications={}, manual_papers_dir=tmp_path / "manual",
+                     out_jsonl=tmp_path / f"{tag}.jsonl", out_tsv=out_tsv, llm=_FakeLLM([False]),
+                     model="fake", caches=caches, context_tiers=(10, 50, 250), workers=workers)
+        return pd.read_csv(out_tsv, sep="\t")
+
+    seq = run(1, "seq")
+    par = run(4, "par")
+    assert list(seq["study_accession"]) == ["S1", "S2", "S3", "S4"]  # stable size-desc order
+    pd.testing.assert_frame_equal(seq, par)
