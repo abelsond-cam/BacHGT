@@ -55,6 +55,11 @@ def _read_tsv(path: Path) -> pd.DataFrame:
         return pd.DataFrame()
 
 
+def _nonblank_series(series: pd.Series) -> pd.Series:
+    """Engine-canonical non-blank mask (placeholder nulls count as blank) — matches the fill/guard logic."""
+    return backfill.strip_placeholders(series).notna()
+
+
 def _count_by_study_field(path: Path) -> dict[tuple[str, str], int]:
     """Count non-blank fills per (study_accession, field) in a long applied-fills TSV."""
     df = _read_tsv(path)
@@ -358,6 +363,24 @@ def build_run_health(
     esc_sticky = int(trig.apply(lambda t: "reinjected" in t).sum())
     tables_requested = sorted(set(res[res["recoverability"] == "fetch_supp_table"]["study_accession"])) if len(res) else []
 
+    # ── Escalation-conservation chain (the five links a curator answer travels). This report can COUNT each
+    # link from the run's artifacts, but it cannot prove an *individual* answer survived apply→master→final —
+    # that end-to-end tracing is verify_escalation_conservation.py's job (links 3–5). We surface the counts +
+    # the explicit pointer so the chain is never assumed complete off a green summary alone.
+    note_l = decisions["answer_note"].astype(str).str.lower() if len(decisions) and "answer_note" in decisions.columns \
+        else pd.Series(dtype=str)
+    esc_autoskip = int(note_l.str.contains("auto-skip", na=False).sum()) if len(note_l) else 0
+    esc_skip = max(0, esc_generated - esc_answered)  # resolved-or-pending non-answers (incl. auto + curator skip)
+    master = _read_tsv(data_dir / "curated" / "curated_escalations.tsv")
+    master_rows = len(master)
+    master_answered = int(_nonblank_series(master["answer"]).sum()) if "answer" in master.columns else 0
+    prov = _read_tsv(data_dir / "sample_lv_attributes" / "enriched" / f"filled_metadata_provenance_{tag}.tsv")
+    if len(prov) and {"source", "filled_value"} <= set(prov.columns):
+        esc_prov = prov[(prov["source"] == "curator_escalation") & _nonblank_series(prov["filled_value"])]
+        fill_reached = len(esc_prov)
+    else:
+        fill_reached = 0
+
     audit = {
         "n_studies": len(studies), "papers_real": papers_real, "none_found": none_found_n,
         "manual_pdf_used": manual_pdf_used,
@@ -367,6 +390,10 @@ def build_run_health(
         "esc_total": len(decisions), "esc_studies": int(decisions["study_accession"].nunique()) if len(decisions) else 0,
         "esc_closecall": esc_closecall, "esc_big": esc_big, "esc_residual": esc_residual, "esc_sticky": esc_sticky,
         "tables_requested": tables_requested,
+        # escalation-conservation chain link counts (detect → answer → apply → accumulate → fill)
+        "esc_answered": esc_answered, "esc_skip": esc_skip, "esc_autoskip": esc_autoskip,
+        "esc_applied": esc_applied, "master_rows": master_rows, "master_answered": master_answered,
+        "fill_reached": fill_reached,
     }
 
     score.mkdir(parents=True, exist_ok=True)
@@ -450,6 +477,35 @@ def _audit_md(a: dict) -> list[str]:
             for ena, new in pairs:
                 md.append(f"- `{f}`: {ena!r} → {new!r}")
         md.append("")
+    md += _conservation_md(a)
+    return md
+
+
+def _conservation_md(a: dict) -> list[str]:
+    """Render the escalation-conservation chain — one line per link, plus the pointer to the hard gate.
+
+    A curator answer travels five links (detect → answer → apply → accumulate → fill); every past silent-drop
+    bug hid at a *different* one. This report can COUNT each link from the run's artifacts, but counts alone
+    cannot prove an individual answer survived apply→master→final. So it states each count AND directs the
+    reader to ``verify_escalation_conservation.py`` — the hard gate that traces each answer through links 3–5.
+    """
+    detect, answered, skip = a.get("esc_total", 0), a.get("esc_answered", 0), a.get("esc_skip", 0)
+    autoskip, applied = a.get("esc_autoskip", 0), a.get("esc_applied", 0)
+    master, master_ans, reached = a.get("master_rows", 0), a.get("master_answered", 0), a.get("fill_reached", 0)
+    md = ["## Escalation-conservation chain — the five links a curator answer travels\n",
+          "Every past silent-drop bug hid at a *different* link. This report **counts** each link from the "
+          "run's artifacts; it does **not** prove an individual answer survived apply→master→final. "
+          "**Run `verify_escalation_conservation.py` to CONFIRM links 3–5 (apply · master-preserve · fill) — "
+          "it hard-fails on any lost answer and stamps its verdict back into this report.**\n",
+          "| # | link | artifact | count |", "|---|---|---|---|",
+          f"| 1 | detect | decisions_needed | {detect} decision(s) queued |",
+          f"| 2 | answer | answer / answer_note | {answered} answered · {skip} skip ({autoskip} auto) |",
+          f"| 3 | apply | escalation_applied | {applied} per-sample fill(s) |",
+          f"| 4 | accumulate | curated_escalations (master) | {master} rows · {master_ans} answered |",
+          f"| 5 | fill | filled_metadata_provenance | {reached} cell(s) reached final via curator_escalation |",
+          "",
+          "> ⚠️ Counts are *necessary, not sufficient*. A non-zero row at each link does not prove the SAME "
+          "answers flowed through — only the conservation gate traces them individually.\n"]
     return md
 
 
