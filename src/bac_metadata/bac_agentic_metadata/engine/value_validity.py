@@ -21,11 +21,15 @@ light, pure ``pp.date_utils`` (re / pandas / dateutil) — no heavy imports, no 
 from __future__ import annotations
 
 import calendar
+import re
 from datetime import datetime
 
 from dateutil.parser import parse as _dateutil_parse
 
 from bac_metadata.pp.date_utils import normalize_date_str
+
+#: Leading ISO ``YYYY-M(M)-D(D)`` — such a date is year-first and must NOT be parsed dayfirst (that swaps M/D).
+_ISO_DATE_RE = re.compile(r"^\s*\d{4}-\d{1,2}-\d{1,2}")
 
 #: Whole-cell placeholders that name "no value" but are NOT in the engine's ``backfill.PLACEHOLDER_NULLS`` —
 #: they turn up in supplementary tables (e.g. "NF" not-found, "ND" not-determined). A cell equal to one of
@@ -106,8 +110,12 @@ def period_bounds(value: object) -> tuple[datetime, datetime] | None:
     norm, rank = parse_date_scalar(value)
     if norm is None:
         return None
+    # ISO ``YYYY-MM-DD`` is year-first with a fixed month-day order; parsing it with dayfirst=True swaps month
+    # and day whenever both are <= 12 (e.g. "2018-10-02" -> Feb 10), which corrupts the span. Parse ISO strings
+    # yearfirst; keep dayfirst for the D/M/Y table formats (e.g. "26/06/2018") where day genuinely comes first.
+    iso = bool(_ISO_DATE_RE.match(norm))
     try:
-        d = _dateutil_parse(norm, default=datetime(2000, 1, 1), dayfirst=True)
+        d = _dateutil_parse(norm, default=datetime(2000, 1, 1), dayfirst=not iso, yearfirst=iso)
     except (ValueError, OverflowError, TypeError):
         return None
     if rank == DATE_RANK_YEAR:

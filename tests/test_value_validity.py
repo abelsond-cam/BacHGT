@@ -79,6 +79,19 @@ def test_resolve_date_span_deterministic_rule():
     assert d["date_decision"] == "whole_field" and d["proposed_value"].startswith("2018-")
 
 
+def test_full_iso_date_span_not_month_day_swapped():
+    # regression (PRJEB36486): "2018-10-02" must read as Oct 2, not Feb 10 — dayfirst must not corrupt ISO dates.
+    d = resolve_date_span("2017-02-19", "2018-10-02")
+    assert 19 <= d["span_months"] <= 20, d          # true span ~20 months, not the buggy 12
+    assert d["date_decision"] == "whole_field"       # still <=2yr -> filled with the (correct) midpoint
+    assert d["proposed_value"][:7] in {"2017-12", "2018-01"}, d["proposed_value"]  # midpoint of Feb'17..Oct'18
+    # a D/M/Y table date must still be dayfirst (26 is unambiguously the day)
+    from bac_metadata.bac_agentic_metadata.engine.value_validity import period_bounds
+    assert period_bounds("26/06/2018")[0].month == 6
+    # an ISO date whose day <=12 must keep month/day order
+    assert period_bounds("2019-03-05")[0].month == 3 and period_bounds("2019-03-05")[0].day == 5
+
+
 def test_parse_valid_layer1():
     # collection_date must parse as a date; other fields reject only whole-cell table-null tokens
     assert parse_valid("collection_date", "2018")
