@@ -211,6 +211,7 @@ def grade(
     max_chars: int | None = None,
     context_tiers: Sequence[int] | None = None,
     workers: int = 1,
+    skip_existing: bool = False,
     limit: int | None = None,
 ) -> list:
     """Grade each selected study's paper against the rubric; write ``study_grades.{jsonl,tsv}``.
@@ -226,6 +227,10 @@ def grade(
     disk cache is per-(study,tier) with atomic writes. The output is written incrementally after every
     completion and always in the stable selection order, so ``study_grades.{jsonl,tsv}`` is byte-identical
     regardless of ``workers`` and inspectable mid-run; a usage limit cancels the pending queue and stops clean.
+
+    ``skip_existing`` keeps any study already present in ``out_jsonl`` exactly as previously graded and grades
+    only the rest — a usage-saving resume when a rubric/ladder tweak should NOT re-spend on studies already
+    done (their grades are re-used verbatim and merged into the output in stable order).
     """
     from collections import Counter
     from concurrent.futures import CancelledError, ThreadPoolExecutor, as_completed
@@ -265,9 +270,21 @@ def grade(
     slots: list = [None] * total
     skipped: list[str] = []
     limited = False
-    completed = 0
+    # Resume: keep already-graded studies verbatim, grade only the rest (a usage-saving restart).
+    existing = {r.study_accession: r for r in grader.load_results(out_jsonl)} if skip_existing else {}
+    to_grade = []
+    for i, row in rows:
+        if row["study_accession"] in existing:
+            slots[i] = existing[row["study_accession"]]
+        else:
+            to_grade.append((i, row))
+    completed = sum(1 for s in slots if s is not None)
+    if existing:
+        print(f"[grade] resume: keeping {completed} already-graded studies, grading {len(to_grade)} remaining",
+              file=sys.stderr)
+        grader.write_results([s for s in slots if s is not None], out_jsonl, out_tsv)  # seed the union
     with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
-        futures = {ex.submit(_grade_one, row): (i, row["study_accession"]) for i, row in rows}
+        futures = {ex.submit(_grade_one, row): (i, row["study_accession"]) for i, row in to_grade}
         for fut in as_completed(futures):
             idx, acc = futures[fut]
             try:

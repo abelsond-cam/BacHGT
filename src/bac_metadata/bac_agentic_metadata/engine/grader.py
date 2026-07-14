@@ -26,7 +26,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, fields
 from pathlib import Path
 
 from . import value_validity as vv
@@ -485,6 +485,27 @@ def grade_accession(
         full_text_would_help=bool(out.get("full_text_would_help", False)),
         raw=out,
     )
+
+
+def load_results(jsonl_path: str | Path) -> list[GradeResult]:
+    """Reconstruct :class:`GradeResult` objects from a grades JSONL (the resume/skip-existing path).
+
+    Returns an empty list when the file is absent. Unknown keys (from a future schema) are dropped so an older
+    JSONL still loads; missing keys fall back to the dataclass defaults.
+    """
+    p = Path(jsonl_path)
+    if not p.exists():
+        return []
+    known = {f.name for f in fields(GradeResult)}
+    out: list[GradeResult] = []
+    with p.open() as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            d = json.loads(line)
+            out.append(GradeResult(**{k: v for k, v in d.items() if k in known}))
+    return out
 
 
 def write_results(results: list[GradeResult], jsonl_path: str | Path, tsv_path: str | Path) -> None:

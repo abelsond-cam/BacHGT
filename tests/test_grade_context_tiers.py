@@ -61,7 +61,7 @@ def _grade(llm, n_chars, tiers=(10, 50, 250)):
 
 
 def test_spec_ladder_from_yaml_sorted_ascending():
-    assert _SPEC.grade_context_tiers == (5000, 50000, 250000)
+    assert _SPEC.grade_context_tiers == (10000, 50000, 250000)
     assert _SPEC.max_paper_chars == 250000  # top of the ladder = the escalation-triage single-pass budget
 
 
@@ -134,3 +134,49 @@ def test_parallel_grade_output_is_order_stable(tmp_path, monkeypatch):
     par = run(4, "par")
     assert list(seq["study_accession"]) == ["S1", "S2", "S3", "S4"]  # stable size-desc order
     pd.testing.assert_frame_equal(seq, par)
+
+
+def test_skip_existing_keeps_prior_grades_and_grades_only_the_rest(tmp_path, monkeypatch):
+    """--grade-skip-existing: already-graded studies are kept verbatim; only the missing ones are graded."""
+    import pandas as pd
+
+    from bac_metadata.bac_agentic_metadata.engine import grader, stages
+
+    sizing = tmp_path / "sizing.tsv"
+    pd.DataFrame({
+        "study_accession": ["S1", "S2", "S3", "S4"],
+        "ena_taxon_samples": [400, 300, 200, 100],
+        "ena_total_samples": [400, 300, 200, 100],
+        "ena_total_runs": [0, 0, 0, 0],
+        "by_scientific_name": ["", "", "", ""],
+        "fold": ["train"] * 4,
+    }).to_csv(sizing, sep="\t", index=False)
+
+    out_jsonl, out_tsv = tmp_path / "g.jsonl", tmp_path / "g.tsv"
+
+    def _pre(acc):  # a prior grade with a sentinel tier so we can tell it was kept, not re-graded
+        return grader.GradeResult(
+            study_accession=acc, study_type="observational", study_type_excluded=False, study_level={},
+            paper_records_in_taxon=None, paper_coverage_for_taxon=None, coverage_basis="", backfill={},
+            needs_manual_download=False, fulltext_source="test", is_full_text=True, notes="PRIOR",
+            model="old", grade_context_chars=12345, full_text_would_help=False, raw={})
+    grader.write_results([_pre("S1"), _pre("S2")], out_jsonl, out_tsv)  # S1, S2 already done
+
+    monkeypatch.setattr(stages, "resolve_fulltext_for_accession",
+                        lambda acc, link, md, *, fulltext_cache: _FakeFullText(300))
+    monkeypatch.setattr(stages, "study_title_and_description",
+                        lambda acc, *, cache_dir: {"study_title": "", "study_description": ""})
+    caches = stages.StageCaches(llm=tmp_path / "llm", ena=tmp_path / "ena", find=tmp_path / "find",
+                                fulltext=tmp_path / "ft", per_sample_supp=tmp_path / "pss")
+    llm = _FakeLLM([False])
+    stages.grade(spec=_SPEC, sizing_path=sizing, accessions=None, folds=["train"], paper_links={},
+                 classifications={}, manual_papers_dir=tmp_path / "manual", out_jsonl=out_jsonl, out_tsv=out_tsv,
+                 llm=llm, model="fake", caches=caches, context_tiers=(10, 50, 250), workers=1, skip_existing=True)
+
+    assert llm.calls == 2  # only S3, S4 graded; S1, S2 reused
+    df = pd.read_csv(out_tsv, sep="\t").set_index("study_accession")
+    assert list(df.index) == ["S1", "S2", "S3", "S4"]           # union, stable size-desc order
+    assert df.loc["S1", "grade_context_chars"] == 12345         # kept verbatim (sentinel survives)
+    assert df.loc["S2", "grade_context_chars"] == 12345
+    assert df.loc["S3", "grade_context_chars"] == 10            # freshly graded at the first tier
+    assert df.loc["S4", "grade_context_chars"] == 10
