@@ -1,16 +1,39 @@
 # Attribute spec — Klebsiella application
 #
-# SINGLE SOURCE OF TRUTH for the Klebsiella curation rubric. David edits this directly.
-# Stage-2 scoping: attribute names, value sets AND the per-attribute grading definitions
-# (when a value is gradeable/partial/not_gradeable, edge rules) are now supplied by David.
-# Do not invent grading criteria — change definitions only with David.
-#
-# See PIPELINE_PLAN.md (attribute-spec model) and STAGE0_kleb_curation_map.md.
+# SINGLE SOURCE OF TRUTH for the Klebsiella curation + escalation RULES. David edits this directly; the engine
+# (species-agnostic, under ../../engine/) only assembles + applies what is written here. Everything that makes a
+# decision Klebsiella-specific — attribute value sets, the per-attribute grading definitions, the whole-project
+# fill rule, the escalation thresholds + triage prose — lives in this ONE document, in labelled sections:
+#   gates                        — tunable pipeline thresholds (completeness, escalation residual floor + big-decision)
+#   taxon_of_interest            — the genus we size / grade / measure completeness over
+#   attributes.paper_selection   — coverage gate for applying a whole-project value
+#   attributes.study_filters     — study_type (cohort in/out)
+#   attributes.study_level       — study-wide judgements read from the paper / EBI (setting, amr, age)
+#   attributes.per_sample_completeness — the four backfilled fields + the whole_project_rule + per-field rules
+#   attributes.categorisation    — per-field null_tokens / (future) category schemes
+#   escalation                   — dominant-value threshold, collection_date span thresholds, triage prose
+#   cohort_flags                 — per-accession flags (e.g. needs_manual_download)
+# Do not invent grading criteria — change definitions only with David. Generic MECHANISM stays in the engine;
+# APPLICATION policy (rules + numbers) stays here. See bac_agentic_metadata/PROGRESS_REPORT.md for the pipeline.
 # Unit of work = project accession (study_accession). Grade scale applies to every attribute:
 grade_scale: [gradeable, partial, not_gradeable]
 
 application: klebsiella
 species: Klebsiella pneumoniae species complex (KPSC)
+
+# PIPELINE GATES — the application's tunable curation thresholds, shared across the fill / backfill /
+# escalation / run-health stages. Edit these numbers here (the engine reads them via AttributeSpec and falls
+# back to a generic default only when an app omits a key). Together with the `escalation` section below, this
+# makes the yaml the application's constants file. David, 2026-07-14.
+gates:
+  completeness_threshold: 0.75         # ENA non-null fraction at/above which a field counts as already complete -> not filled
+  escalation_residual_floor: 50        # min blank samples remaining after per-sample before a field is worth escalating
+  escalation_big_decision_frac: 0.01   # a study at/above this fraction of the WHOLE cohort is an escalation "big decision" (audit + leverage)
+  # Paper-text truncation ceiling fed to the grader + escalation triage. ~4 chars/token, so 250k chars ~= 62k
+  # tokens — well within Sonnet's 200k-token context, and captures ~p90 of Klebsiella full texts (median 140k,
+  # p90 209k chars; the old 120k truncated ~65% of papers). Higher = more complete evidence but more tokens per
+  # call (usage-limited on the subscription backend); lower = cheaper/faster but risks cutting late methods/tables.
+  max_paper_chars: 250000
 
 # Genus/species we are studying. Projects can be broad (e.g. all Enterobacteriaceae) while
 # we only care about one genus, so project sizing, paper coverage and completeness are all
@@ -215,6 +238,26 @@ attributes:
     # THE BACKFILL — the high-effort core. Fill each field where ENA left it blank, two methods
     # tried in order (method a is easy/high-yield; method b is harder/lower-yield but important).
     backfill:
+      # WHOLE-PROJECT FILL RULE — the application policy the grader applies to decide when ONE value covers the
+      # whole project (rendered into the grading prompt by engine/grader.py; the engine only assembles it).
+      whole_project_rule: |-
+        Propose a single value for ALL samples (applies_whole_project true) when one value covers essentially
+        the whole project — either study-wide-constant, OR a PREDOMINANT value shared by about 95%+ of samples.
+        An EXACT percentage need not be stated: it is enough that the evidence makes it LIKELY the vast majority
+        (probably 95%+) fit a single description — e.g. all isolates from ONE country even when collected across
+        many regions/sites within it (16 of 17 regions of the Philippines -> country = Philippines), or all from
+        one host type. A small minority of exceptions does NOT block it: give the predominant value and set
+        applies_whole_project true (only genuine blanks are filled; per-sample and existing ENA values are never
+        overwritten). Examples: a clinical study described as 97.7% inpatients -> host = human; a nationwide
+        surveillance study across a country's regions -> country = that country — both applies_whole_project true.
+        This applies only under whole-project coverage (paper coverage > 75%, or an EBI-wide title/description),
+        and to the categorical fields (host, country, isolation_source). Only when the values are genuinely mixed
+        with no ~95% predominant value, set applies_whole_project false but STILL give your best proposed_value if
+        you have one — it becomes the curator's suggested value at escalation (do not null it).
+        For collection_date, do NOT propose a value or compute a midpoint yourself: report the EARLIEST and LATEST
+        collection dates the evidence gives (earliest_date, latest_date, verbatim — a year alone is fine) and
+        leave proposed_value null / applies_whole_project false. The engine computes the span and applies the
+        date-span rule (see the `escalation` section) deterministically.
       methods:
         - id: whole_project_value
           summary: same value across ALL samples in the project (easy, high yield)
@@ -268,21 +311,15 @@ attributes:
             grown on a plate (true of nearly every isolate). Leave host BLANK in that case; never write
             "in vitro" / "lab".
         collection_date:
-          # ESCALATION NOTE (2026-06-30 — does NOT affect grading; comments are stripped before the grader
-          # sees the rubric, so the grading cache is preserved): the "still escalated" clause below is
-          # SUPERSEDED for the escalation trigger. A 2–5yr span is now escalated ONLY if its midpoint is
-          # before ~2010; a post-2010 mid-range span is left blank and NOT escalated (recent imprecise dates
-          # are low-value). The grader's FILL behaviour is unchanged (<=2yr midpoint, >2yr blank), so this
-          # text is kept verbatim. The trigger change lives in engine/escalation.py (_TRIAGE_GUIDANCE).
+          # DETERMINISTIC SPAN (David, 2026-07-13): the grader only REPORTS earliest_date + latest_date; the engine
+          # computes the month span and applies the thresholds in the `escalation.collection_date` section. This
+          # removes the calendar-label counting that misread a 20-month span as ">2 years" (PRJEB36486).
           meaning: date of sample collection
           whole_project_value: |-
-            If no specific dates are given but all collection falls within a <= 2-year period, set
-            the midpoint of that period (e.g. all within 2016-17 -> 2017-01-01). If the collection
-            period spans MORE than 2 years, do not whole-field backfill it here. A span of about 2–5
-            years is sent to curator escalation (not filled automatically): accept a midpoint there
-            ONLY when the period is before ~2010 — older genomes are scarce, so an approximate date is
-            worth more; for later periods leave the date blank even though it is still escalated for a
-            human to review. Spans wider than ~5 years are left blank.
+            Report the EARLIEST and LATEST collection dates the evidence gives (earliest_date, latest_date),
+            verbatim as found — a bare year is fine (e.g. earliest 2003, latest 2007). Do NOT compute a midpoint
+            or decide the span; leave proposed_value null and applies_whole_project false. The engine applies the
+            span thresholds in the `escalation.collection_date` section deterministically.
 
   # AGENTIC CATEGORISATION — the data-driven replacement for the hardcoded parse/categorise rule-system
   # in pp/metadata_curation.py, scoped to the two messy fields (host, isolation_source). Three uses:
@@ -307,6 +344,61 @@ attributes:
         null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']  # laboratory/in-vitro is not a source -> NA pre-grading
         categories: []
         cross_column: []
+
+# ESCALATION / TRIAGE POLICY — how a grader-DECLINED field (no whole-project value) is resolved into a single
+# whole-study value or surfaced to the curator. This is APPLICATION policy; the engine supplies only the generic
+# mechanism (candidacy gate on the post-per-sample residual, ENA value-distribution counting, the deterministic
+# collection_date span + country region-cluster computation). The thresholds + the triage prose below are what
+# make it Klebsiella-specific — edit them here, not in the engine (engine/{escalation,grader,value_validity}.py
+# read these keys, falling back to a generic default only when an application omits them). David, 2026-07-14.
+escalation:
+  # A single value at/above this share of a study's non-blank samples is "dominant" and adopted whole-study.
+  dominant_share: 0.95
+  # collection_date span thresholds — the engine computes the true month span from the grader's earliest/latest
+  # endpoints (period-enclosing, not calendar-label counting) and applies: <= two_year_months -> fill midpoint;
+  # two_year_months..five_year_months -> escalate, midpoint suggested ONLY if the period is before old_before_year
+  # (older genomes are scarce, so an approximate date is worth more; recent mid-range dates are low-value and
+  # surface blank); > five_year_months -> left blank.
+  collection_date:
+    two_year_months: 24
+    five_year_months: 60
+    old_before_year: 2010
+  # The triage prose the model reads when deciding a declined isolation_source / host / country (collection_date
+  # is deterministic; a country region-cluster is deterministic and fed in as context). Encodes the >=95%-or-
+  # homogeneous-category adopt/skip rule with the Klebsiella clinical priors (invasiveness as the phenotype axis).
+  triage_guidance: |-
+    Decide whether one clean whole-study value can represent this field. ADOPT a single value when EITHER:
+      (a) ONE value covers about 95% or more of the study's samples — a clear dominant value. If you cannot
+    count exactly, adopt when the evidence makes it LIKELY one value is >=95%.
+      (b) the values are BELOW 95% but are HOMOGENEOUS within one closely-related category — then adopt the
+    DOMINANT single value WITHIN that category:
+        * isolation_source: all specimens are invasive infection sites (blood, CSF, BALF / deep respiratory,
+    deep wound / abscess, other normally-sterile sites) -> adopt the dominant invasive specimen (usually
+    blood). Do NOT adopt if invasive sites are mixed with carriage / screening (rectal, stool, perirectal,
+    nasal or skin colonisation) — that is a genuine WIDE mix.
+        * country: all countries lie within ONE geographic region (e.g. all Central America, all East Africa,
+    all W. Europe) -> adopt the dominant country. (Region clustering is also computed deterministically and
+    given to you below when it applies.)
+        * host: all hosts fall in one group (all human clinical; all domesticated animals) -> adopt the
+    dominant host.
+
+    Resolutions:
+    - uniform_propose — case (a): one value is ~95%+ of the study.
+    - tight_cluster_escalate — case (b): homogeneous within a closely-related category, dominant value adopted.
+    - wide_mix_skip — a genuinely WIDE, unrelated mix with no >=95% dominant AND no homogeneous category
+    (e.g. blood + urine + respiratory + wound; invasive sites mixed with rectal/stool carriage; UK + Malawi +
+    Argentina across continents; human + animal + environmental). Do not ask — per-sample extraction handles it.
+
+    For uniform_propose or tight_cluster_escalate, set representative_value to that single dominant value. It
+    MUST be a SINGLE, PARSEABLE, CANONICAL value of the field, never a region, a list, or a concatenation:
+        * country: ONE country name (e.g. 'Malawi', 'Guatemala') — NOT a region/continent and NOT a join. If
+    the countries cluster to one region but no single country is dominant, prefer wide_mix_skip (the engine
+    surfaces the region separately for the curator).
+        * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human').
+    Set representative_value null for wide_mix_skip. Use the ENA base distribution provided (counts per value)
+    to apply the 95% test; for values that appear only in the paper, use the paper's own proportions. Give a
+    one-line cluster_theme naming the cluster and why it is homogeneous or wide, plus a verbatim
+    evidence_quote. Judge ONLY from the evidence above; do not guess.
 
 # COHORT FLAGS emitted per accession alongside the attributes above.
 cohort_flags:

@@ -186,7 +186,9 @@ def main() -> None:
     p.add_argument("--web-fallback", action="store_true", help="Enable the finder's paid web-search fallback.")
     p.add_argument("--backend", choices=["subscription", "api"], default="subscription", help="LLM backend.")
     p.add_argument("--model", default=DEFAULT_MODEL, help=f"LLM model id (default {DEFAULT_MODEL}).")
-    p.add_argument("--threshold", type=float, default=0.75, help="ENA non-null fraction at/above which a field is complete.")
+    p.add_argument("--threshold", type=float, default=None,
+                   help="ENA non-null fraction at/above which a field is complete. Overrides the spec's "
+                        "gates.completeness_threshold; when omitted the spec value is used.")
     p.add_argument("--skip-find", action="store_true",
                    help="Skip the paper-finding stage and reuse the existing found_papers_<tag>.tsv (which must "
                         "already exist). Intended for --paper-source curated, where grading uses the curated "
@@ -228,6 +230,9 @@ def main() -> None:
 
     spec = AttributeSpec.from_yaml(args.spec)
     fields = list(spec.completeness_fields)
+    # Application pipeline gates come from the spec's `gates` section (the yaml is the constants file); a CLI
+    # --threshold, if given, overrides only the completeness gate for an ad-hoc run.
+    completeness_threshold = args.threshold if args.threshold is not None else spec.completeness_threshold
     # Controlled-vocabulary summaries grounding the per-sample rescue cascade (Tier 2, no paper). Built from
     # the approved categorise yamls; absent files (a new application, or country/date which have none) are
     # simply omitted — the rescue then leans on the built-in per-field value guide.
@@ -371,14 +376,14 @@ def main() -> None:
         spec=spec, sizing_path=sizing_path, folds=folds, paper_links=paper_links,
         classifications=classifications, manual_papers_dir=manual_papers_dir,
         out_jsonl=grades_jsonl, out_tsv=grades_tsv, llm=llm, model=args.model, caches=caches,
-        limit=args.limit,
+        max_chars=spec.max_paper_chars, limit=args.limit,
     )
 
     # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ────────────────────
     print("\n### [per-sample]", file=sys.stderr)
     stages.per_sample(
         base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
-        manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=args.threshold,
+        manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=completeness_threshold,
         ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
         manual_papers_dir=manual_papers_dir, category_vocab=category_vocab, paper_links=paper_links,
     )
@@ -387,7 +392,7 @@ def main() -> None:
     print("\n### [backfill]", file=sys.stderr)
     stages.backfill_whole_field(
         base=base, grades_path=grades_tsv, per_sample_path=per_sample_tsv, fields=fields,
-        out_path=backfill_tsv, threshold=args.threshold,
+        out_path=backfill_tsv, threshold=completeness_threshold,
     )
 
     # ── Stage 5 — missing-papers worklist (the manual-fetch loop; best-effort) ─────────────────────
@@ -422,6 +427,8 @@ def main() -> None:
                 classifications=classifications, manual_papers_dir=manual_papers_dir, fields=fields,
                 out_path=decisions_tsv, llm=llm, model=args.model, caches=caches,
                 escalations_master_path=esc_master,
+                threshold=spec.escalation_residual_floor, frac=completeness_threshold,
+                big_decision_frac=spec.escalation_big_decision_frac,
                 cohort_taxon_samples=cohort_taxon_samples, cohort_taxon_total=cohort_taxon_total,
             )
             stages.escalate_apply(base=base, keep=selected, queue_path=decisions_tsv,
@@ -441,7 +448,7 @@ def main() -> None:
     # ── Stage 9 — run-health report (the convergence / closure artifact; best-effort) ──────────────
     if not args.skip_run_health:
         try:
-            stages.run_health(data_dir=data, fields=fields, fold=fold, tag=tag)
+            stages.run_health(data_dir=data, fields=fields, fold=fold, tag=tag, spec=spec)
         except Exception as exc:  # noqa: BLE001 — run-health never blocks
             print(f"WARN: run-health report failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 

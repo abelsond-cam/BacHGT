@@ -627,7 +627,7 @@ def backfill_whole_field(
 #: for the curator to fill).
 ESCALATION_QUEUE_COLUMNS = [
     "study_accession", "field", "gap_samples", "escalate_trigger", "resolution", "cluster_theme",
-    "suggested_value", "grader_quote", "paper_excerpt", "fulltext_status", "answer", "answer_note",
+    "suggested_value", "region_hint", "grader_quote", "paper_excerpt", "fulltext_status", "answer", "answer_note",
 ]
 
 #: A study at/above this fraction of the WHOLE cohort's taxon samples is a "big decision" — its whole-field
@@ -724,7 +724,7 @@ def _items_to_queue_frame(items) -> pd.DataFrame:
     rows = [{
         "study_accession": it.study_accession, "field": it.field, "gap_samples": it.gap_samples,
         "escalate_trigger": it.escalate_trigger, "resolution": it.resolution, "cluster_theme": it.cluster_theme,
-        "suggested_value": it.suggested_value, "grader_quote": it.grader_quote,
+        "suggested_value": it.suggested_value, "region_hint": it.region_hint, "grader_quote": it.grader_quote,
         "paper_excerpt": it.paper_excerpt, "fulltext_status": it.fulltext_status, "answer": "", "answer_note": "",
     } for it in items]
     return pd.DataFrame(rows, columns=ESCALATION_QUEUE_COLUMNS)
@@ -844,7 +844,7 @@ def _reinject_resolved_still_gated(
         rows.append({
             "study_accession": acc, "field": f, "gap_samples": int(post_gap[(acc, f)]),
             "escalate_trigger": "reinjected_committed_decision", "resolution": "", "cluster_theme": "",
-            "suggested_value": "", "grader_quote": "", "paper_excerpt": "", "fulltext_status": "",
+            "suggested_value": "", "region_hint": "", "grader_quote": "", "paper_excerpt": "", "fulltext_status": "",
             "answer": ans, "answer_note": note,
         })
     if rows:
@@ -1182,11 +1182,19 @@ def persample_supplement(*, data_dir: Path, paper_links: Mapping[str, str], cach
     )
 
 
-def run_health(*, data_dir: Path, fields: Sequence[str], fold: str, tag: str) -> str:
-    """Aggregate every stage artifact into the per-(study × field) health grid + convergence verdict."""
-    from bac_metadata.bac_agentic_metadata.engine.run_health_report import build_run_health
+def run_health(*, data_dir: Path, fields: Sequence[str], fold: str, tag: str,
+               spec: AttributeSpec | None = None) -> str:
+    """Aggregate every stage artifact into the per-(study × field) health grid + convergence verdict.
 
-    res, verdict = build_run_health(data_dir, tuple(fields), fold=fold, tag=tag)
+    ``spec`` (when supplied) provides the application ``big_decision_frac`` gate so run-health's big-decision
+    audit uses the SAME threshold as detection/escalation (the yaml constants file); omitted → engine default.
+    """
+    from bac_metadata.bac_agentic_metadata.engine.run_health_report import BIG_DECISION_FRAC, build_run_health
+
+    res, verdict = build_run_health(
+        data_dir, tuple(fields), fold=fold, tag=tag,
+        big_decision_frac=spec.escalation_big_decision_frac if spec is not None else BIG_DECISION_FRAC,
+    )
     print(f"Wrote run_health_{tag}_report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
     if len(res):
         print(res["resolution_state"].value_counts().to_string(), file=sys.stderr)

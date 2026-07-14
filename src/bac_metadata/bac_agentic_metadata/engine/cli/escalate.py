@@ -69,6 +69,9 @@ def _interactive(frame: pd.DataFrame, output: Path) -> None:
         print(f"  cluster theme: {r['cluster_theme']}")
         print(f"  grader quote : {r['grader_quote']}")
         print(f"  paper excerpt: {r['paper_excerpt']}")
+        if str(r.get("region_hint", "") or "").strip():
+            print(f"  REGION HINT  : {r['region_hint']} (countries cluster to one region; no dominant country — "
+                  f"confirm a country or accept the region)")
         print(f"  SUGGESTED    : {r['suggested_value'] or '(none)'}")
         try:
             ans = input("  your value [Enter=suggested, s=skip]: ").strip()

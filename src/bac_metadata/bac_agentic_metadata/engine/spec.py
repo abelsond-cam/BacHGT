@@ -13,6 +13,14 @@ from pathlib import Path
 
 import yaml
 
+#: Generic FALLBACK values for the application pipeline gates (used only when the app's ``attributes.yaml``
+#: omits the ``gates`` key). The application sets its own under a top-level ``gates:`` section, so the yaml is
+#: the single constants file; the engine keeps these merely so an app that declares none still runs.
+_DEFAULT_COMPLETENESS_THRESHOLD = 0.75  # ENA non-null fraction at/above which a field is "already complete"
+_DEFAULT_ESCALATION_RESIDUAL_FLOOR = 50  # min blank samples remaining after per-sample to bother escalating
+_DEFAULT_ESCALATION_BIG_DECISION_FRAC = 0.01  # a study at/above this fraction of the cohort is a "big decision"
+_DEFAULT_MAX_PAPER_CHARS = 120_000  # paper-text truncation ceiling fed to the grader/triage (mirrors grader default)
+
 
 @dataclass(frozen=True)
 class TaxonOfInterest:
@@ -64,6 +72,31 @@ class AttributeSpec:
     sample_identifier_columns: tuple[str, ...]
     categorisation: dict[str, dict]
     raw: dict
+
+    def _gate(self, key: str, default: float) -> float:
+        """Read a numeric gate from the yaml ``gates`` section, falling back to the engine default."""
+        v = (self.raw.get("gates", {}) or {}).get(key)
+        return default if v is None else v
+
+    @property
+    def completeness_threshold(self) -> float:
+        """ENA non-null fraction at/above which a field is "already complete" (``gates.completeness_threshold``)."""
+        return float(self._gate("completeness_threshold", _DEFAULT_COMPLETENESS_THRESHOLD))
+
+    @property
+    def escalation_residual_floor(self) -> int:
+        """Min blank samples remaining after per-sample before a field escalates (``gates.escalation_residual_floor``)."""
+        return int(self._gate("escalation_residual_floor", _DEFAULT_ESCALATION_RESIDUAL_FLOOR))
+
+    @property
+    def escalation_big_decision_frac(self) -> float:
+        """Cohort fraction at/above which a study is an escalation "big decision" (``gates.escalation_big_decision_frac``)."""
+        return float(self._gate("escalation_big_decision_frac", _DEFAULT_ESCALATION_BIG_DECISION_FRAC))
+
+    @property
+    def max_paper_chars(self) -> int:
+        """Paper-text truncation ceiling fed to the grader + escalation triage (``gates.max_paper_chars``)."""
+        return int(self._gate("max_paper_chars", _DEFAULT_MAX_PAPER_CHARS))
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> AttributeSpec:

@@ -73,10 +73,14 @@ def test_post_per_sample_gap_subtracts_only_blank_fills(tmp_path):
     assert gap[("S", "host")] == 0
 
 
-def _run_detect(grades, raw, monkeypatch, *, post_gap, n_records):
-    """Run detect with the LLM triage stubbed (advisory only) and a minimal evidence object."""
+def _run_detect(grades, raw, monkeypatch, *, post_gap, n_records, resolution="uniform_propose"):
+    """Run detect with the LLM triage stubbed (advisory only) and a minimal evidence object.
+
+    The stub returns an escalating ``resolution`` by default so a limbo field's grader-proposed value flows
+    through as the suggestion (fix #1: a suggestion is offered only when the triage escalates).
+    """
     monkeypatch.setattr(escalation, "classify_escalation_candidate",
-                        lambda *a, **k: {"resolution": "", "representative_value": "",
+                        lambda *a, **k: {"resolution": resolution, "representative_value": "",
                                          "cluster_theme": "", "evidence_quote": ""})
     ev = type("Ev", (), {"fulltext": type("F", (), {"text": "", "source": "x"})(),
                          "ena_title": "", "ena_description": "", "sizing_row": {}})()
@@ -143,6 +147,73 @@ def test_reinject_resolved_answer_while_still_gated(tmp_path):
     out3 = _reinject_resolved_still_gated(empty, sources=[master], keep={"OTHER"},
                                           post_gap={("S", "country"): 700}, n_records={"S": 862}, threshold=50)
     assert len(out3) == 0
+
+
+def _fake_evidence():
+    """A minimal StudyEvidence-shaped object for detect (no paper text, no LLM)."""
+    return type("Ev", (), {"fulltext": type("F", (), {"text": "", "source": "x"})(),
+                           "ena_title": "", "ena_description": "", "sizing_row": {}})()
+
+
+def test_region_cluster_decision_pure():
+    csa = "Central & S. America"
+    # multi-country, one region, NO dominant (<95%) -> fires with region only (country suggestion blank)
+    d = escalation.region_cluster_decision({"Guatemala": 50, "Honduras": 30, "Nicaragua": 20},
+                                           {"Guatemala": csa, "Honduras": csa, "Nicaragua": csa})
+    assert d and d["region"] == csa and d["dominant"] == ""
+    # one country >=95% -> dominant adopted
+    d = escalation.region_cluster_decision({"Kenya": 96, "Uganda": 4}, {"Kenya": "Africa", "Uganda": "Africa"})
+    assert d and d["dominant"] == "Kenya"
+    # two different regions -> not a cluster
+    assert escalation.region_cluster_decision({"UK": 5, "Malawi": 5},
+                                              {"UK": "W. Europe", "Malawi": "Africa"}) is None
+    # a single country is not a region-cluster question
+    assert escalation.region_cluster_decision({"France": 10}, {"France": "W. Europe"}) is None
+    # one shared label that is NOT a known region (passthrough of an unrecognised country) -> not a cluster
+    assert escalation.region_cluster_decision({"X": 5, "Y": 5}, {"X": "Narnia", "Y": "Narnia"}) is None
+
+
+def test_country_region_cluster_escalates_deterministically(monkeypatch):
+    monkeypatch.setattr(escalation, "_country_region_map",
+                        lambda cs: dict.fromkeys(cs, "Central & S. America"))
+    monkeypatch.setattr(escalation, "classify_escalation_candidate",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("no LLM when region clusters")))
+    raw = pd.DataFrame({"study_accession": ["S"] * 100, "sample_accession": [f"s{i}" for i in range(100)],
+                        "country": ["Guatemala"] * 50 + ["Honduras"] * 30 + ["Nicaragua"] * 20})
+    grades = [{"study_accession": "S", "fulltext_source": "x", "backfill": {
+        "country": {"applies_whole_project": False, "proposed_value": "", "evidence_quote": ""}}}]
+    items = escalation.detect_whole_field_escalations(
+        grades, raw, spec=None, llm=None, evidence_fn=lambda a: _fake_evidence(),
+        fields=("country",), threshold=50, frac=0.75,
+        post_gap={("S", "country"): 60}, n_records={"S": 100})
+    it = items[0]
+    assert it.suggested_value == "" and it.region_hint == "Central & S. America"
+    assert it.resolution == "tight_cluster_escalate"
+
+
+def test_collection_date_escalation_is_deterministic_no_llm(monkeypatch):
+    monkeypatch.setattr(escalation, "classify_escalation_candidate",
+                        lambda *a, **k: (_ for _ in ()).throw(AssertionError("no LLM for collection_date")))
+    raw = pd.DataFrame({"study_accession": ["S"] * 100, "sample_accession": [f"s{i}" for i in range(100)],
+                        "collection_date": [""] * 100})
+    # a pre-2010 2-5yr span carries the midpoint as the suggestion; a recent one escalates blank
+    grades = [{"study_accession": "S", "fulltext_source": "x", "backfill": {
+        "collection_date": {"applies_whole_project": False, "proposed_value": "2005-07-02", "evidence_quote": "q",
+                            "date_decision": "escalate_midpoint", "date_span_months": 54,
+                            "earliest_date": "2003", "latest_date": "2007"}}}]
+    it = escalation.detect_whole_field_escalations(
+        grades, raw, spec=None, llm=None, evidence_fn=lambda a: _fake_evidence(),
+        fields=("collection_date",), threshold=50, frac=0.75,
+        post_gap={("S", "collection_date"): 100}, n_records={"S": 100})[0]
+    assert it.suggested_value == "2005-07-02" and it.resolution == "uniform_propose"
+
+    grades[0]["backfill"]["collection_date"].update(
+        {"proposed_value": "", "date_decision": "escalate_blank", "earliest_date": "2015", "latest_date": "2019"})
+    it = escalation.detect_whole_field_escalations(
+        grades, raw, spec=None, llm=None, evidence_fn=lambda a: _fake_evidence(),
+        fields=("collection_date",), threshold=50, frac=0.75,
+        post_gap={("S", "collection_date"): 100}, n_records={"S": 100})[0]
+    assert it.suggested_value == "" and it.resolution == "wide_mix_skip"
 
 
 def test_pmcid_for_link_resolves_pmc_offline():

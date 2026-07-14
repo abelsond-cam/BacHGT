@@ -16,6 +16,7 @@ from bac_metadata.bac_agentic_metadata.engine.value_validity import (
     is_table_null,
     parse_date_scalar,
     parse_valid,
+    resolve_date_span,
 )
 
 
@@ -50,6 +51,32 @@ def test_date_betterness_is_strict_specificity():
     assert not better("2018-04-11", "2018-01-13")   # full -> different full: KEEP ENA (Q1, David 2026-07-13)
     assert not better("2018", "2003-10-23")    # full -> year: KEEP ENA (never coarsen)
     assert not better("NF", "2018-04-11")      # invalid -> rank 0, never beats a real date
+
+
+def test_resolve_date_span_deterministic_rule():
+    # <=2yr -> whole-field fill with the midpoint (David's 2026-07-13 rule; period-enclosing, not label-count)
+    d = resolve_date_span("2016", "2017")
+    assert d["date_decision"] == "whole_field" and d["applies_whole_project"] is True
+    assert d["span_months"] <= 24 and d["proposed_value"][:7] in {"2016-12", "2017-01"}  # true period midpoint
+    # the 20-month PRJEB36486 case: a sub-2yr span must NOT read as ">2 years" (the calendar-label bug)
+    d = resolve_date_span("2015-06", "2017-01")
+    assert d["span_months"] <= 24 and d["date_decision"] == "whole_field"
+    # 2-5yr AND pre-2010 -> escalate WITH a midpoint suggestion
+    d = resolve_date_span("2003", "2007")
+    assert 24 < d["span_months"] <= 60 and d["date_decision"] == "escalate_midpoint"
+    assert d["applies_whole_project"] is False and d["proposed_value"].startswith("2005-")
+    # 2-5yr but recent -> escalate BLANK (a recent imprecise mid-range date is low-value)
+    d = resolve_date_span("2015", "2019")
+    assert d["date_decision"] == "escalate_blank" and d["proposed_value"] == ""
+    # >5yr -> blank, never filled
+    d = resolve_date_span("2000", "2010")
+    assert d["span_months"] > 60 and d["date_decision"] == "blank_wide" and d["proposed_value"] == ""
+    # no parseable dates -> a pure decline
+    d = resolve_date_span(None, None)
+    assert d["date_decision"] == "no_dates" and d["span_months"] is None
+    # a single date -> a zero-span whole-field fill of that date
+    d = resolve_date_span("2018", None)
+    assert d["date_decision"] == "whole_field" and d["proposed_value"].startswith("2018-")
 
 
 def test_parse_valid_layer1():

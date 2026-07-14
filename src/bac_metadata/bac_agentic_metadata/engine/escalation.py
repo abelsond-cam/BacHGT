@@ -10,10 +10,11 @@ different shapes, and only one is worth a human's time:
   respiratory + wound; urine + sputum + blood + rectal — which has no single label and belongs to
   per-sample extraction (per-sample), not a whole-field value.
 
-This tier escalates only the first. The order David set is: **per-sample runs first** — if per-sample data
-is available the question is already answered — and the grader **auto-rejects the wide mixes**; only the
-tight near-misses reach a human. Each is packaged as an :class:`EscalationItem` (the grader's quote, a
-paper excerpt, the candidate value, the gap it closes) so the curator decides once; those decisions later
+The order David set is: **per-sample runs first** — if per-sample data is available the question is already
+answered. Every still-incomplete declined field is then surfaced for review; the tight near-misses carry a
+suggested value, the wide mixes are surfaced with a blank suggestion (David wants to confirm they are all
+handled correctly before any auto-skip). Each is packaged as an :class:`EscalationItem` (the grader's quote,
+a paper excerpt, the candidate value, the gap it closes) so the curator decides once; those decisions later
 become rubric clauses.
 
 Detection, per ``(study, field)`` the grader declined whole-field:
@@ -22,13 +23,20 @@ Detection, per ``(study, field)`` the grader declined whole-field:
    or below the threshold.
 2. **Gate by per-sample**: skip if per-sample extraction already resolved the field (sample-level data
    answers it).
-3. **Classify** (cached LLM, the grader's own pitch): :func:`classify_escalation_candidate` decides
-   ``wide_mix_skip`` / ``tight_cluster_escalate`` / ``uniform_propose`` and, for the latter two, the
-   single ``representative_value`` a human would most likely accept (blood; the region; the midpoint
-   year). Only the escalating resolutions reach the queue.
+3. **Resolve** the near-miss (David, 2026-07-13):
+   * **collection_date** — DETERMINISTIC, no LLM: the span was resolved at grade time
+     (:func:`value_validity.resolve_date_span`); only a pre-2010 mid-range span carries a midpoint
+     suggestion, everything else surfaces blank for review.
+   * **country** — if the study's ENA countries collapse to ONE region (legacy
+     :func:`pp.metadata_curation.categorise_region` buckets), DETERMINISTIC: adopt the dominant country
+     (>=95%), else surface the region as a hint with a blank country suggestion.
+   * **otherwise** — a cached LLM triage (:func:`classify_escalation_candidate`) applies the
+     **>=95%-or-homogeneous-category** adopt/skip rule (``wide_mix_skip`` / ``tight_cluster_escalate`` /
+     ``uniform_propose``), given the field's ENA value distribution so the 95% test is grounded in the data.
 
-The curator's confirmed answer is a whole-field proposal (``whole_project: True``) that applies through the
-**existing** :func:`backfill.apply_whole_field` path — never a new fill mechanism.
+A suggestion is offered ONLY when the resolution escalates — a ``wide_mix_skip`` row carries no pre-fill, so
+Enter-to-accept never writes an un-vouched value. The curator's confirmed answer is a whole-field proposal
+(``whole_project: True``) applied through the **existing** :func:`backfill.apply_whole_field` path.
 
 Species-agnostic: the application supplies an ``evidence_fn`` that turns an accession into a
 :class:`StudyEvidence` bundle (paper text + EBI title/description + sizing), so the engine never knows how
@@ -82,44 +90,72 @@ _FIELD_TERMS: dict[str, str] = {
 #: Sentence splitter for the excerpt (greedy run up to terminal punctuation).
 _SENTENCE_RE = re.compile(r"[^.!?]*[.!?]")
 
-#: The triage criteria — David's "tight cluster vs wide mix" rule, field by field. Encodes the research
-#: priors (invasiveness as the primary phenotype axis). collection_date uses a STRICT 2-year window with no
-#: exceptions and is NEVER escalated (David, 2026-07-02): the cohorts already have a good spread of true
-#: dates, so accepting an imprecise wide-range midpoint would only corrupt fine-grained lineage dating.
+#: Generic FALLBACK triage criteria. The application supplies its own policy prose at
+#: ``escalation.triage_guidance`` in its attributes.yaml (Klebsiella does — the ">=95%-or-homogeneous-category"
+#: rule with its invasive-vs-carriage priors); the engine only assembles + renders it. collection_date is NOT
+#: triaged here (resolved deterministically upstream); country region clustering is computed deterministically.
 _TRIAGE_GUIDANCE = (
-    "We only ask a human to confirm a value when the field, though it does not fit one clean rubric "
-    "label, is a TIGHT, CLOSELY-RELATED cluster a human could reasonably collapse to one representative "
-    "value. When it is a genuinely WIDE, unrelated mix, do NOT ask — per-sample extraction handles it.\n\n"
+    "Decide whether one clean whole-study value can represent this field. ADOPT a single value when EITHER:\n"
+    "  (a) ONE value covers about 95% or more of the study's samples — a clear dominant value. If you cannot "
+    "count exactly, adopt when the evidence makes it LIKELY one value is >=95%.\n"
+    "  (b) the values are BELOW 95% but are HOMOGENEOUS within one closely-related category — then adopt the "
+    "DOMINANT single value WITHIN that category:\n"
+    "    * isolation_source: all specimens are invasive infection sites (blood, CSF, BALF / deep respiratory, "
+    "deep wound / abscess, other normally-sterile sites) -> adopt the dominant invasive specimen (usually "
+    "blood). Do NOT adopt if invasive sites are mixed with carriage / screening (rectal, stool, perirectal, "
+    "nasal or skin colonisation) — that is a genuine WIDE mix.\n"
+    "    * country: all countries lie within ONE geographic region (e.g. all Central America, all East Africa, "
+    "all W. Europe) -> adopt the dominant country. (Region clustering is also computed deterministically and "
+    "given to you below when it applies.)\n"
+    "    * host: all hosts fall in one group (all human clinical; all domesticated animals) -> adopt the "
+    "dominant host.\n\n"
     "Resolutions:\n"
-    "- tight_cluster_escalate — closely related, worth a human's confirmation. By field:\n"
-    "    * isolation_source: all specimens share the INVASIVENESS theme — e.g. all invasive (blood and "
-    "CSF; blood and deep-tissue/abscess). WIDE (skip) if it mixes invasive sites with carriage/screening "
-    "(rectal, stool) OR spans many unrelated sites (e.g. blood + urine + respiratory + wound).\n"
-    "    * country: all countries lie in ONE close region (e.g. all Nordic, all East Africa). WIDE (skip) "
-    "across continents (e.g. UK + Malawi + Argentina) or dozens of countries (e.g. '37 countries').\n"
-    "    * collection_date: NEVER escalate — dates use a STRICT 2-year window with no exceptions. A span of "
-    "2 years (24 months) or less is already auto-filled with its midpoint by whole-field backfill (nothing "
-    "to ask); ANY span wider than 2 years is WIDE — use wide_mix_skip and leave the date blank. Never accept "
-    "an imprecise midpoint for a wide range: the cohort already has a good spread of true collection dates, "
-    "and a coarse range-midpoint would corrupt fine-grained lineage dating. There is no 'older/valuable "
-    "span' exception.\n"
-    "    * host: closely-related hosts (e.g. all human clinical) are tight; mixing human + animal + "
-    "environmental is WIDE.\n"
-    "- wide_mix_skip — a genuinely wide, unrelated mix; do not escalate.\n"
-    "- uniform_propose — on reflection the evidence DOES support one whole-project value you should have "
-    "proposed.\n\n"
-    "For tight_cluster_escalate or uniform_propose, set representative_value to the single value a human "
-    "would most likely accept — it is the representative of the tight set. It MUST be a SINGLE, PARSEABLE, "
-    "CANONICAL value of that field, never a region, a list, or a concatenation:\n"
-    "    * country: ONE country name as it would appear in metadata (e.g. 'Malawi', 'Guatemala') — NOT a "
-    "region/continent ('Central America', 'East Africa') and NOT a join ('Uganda; Malawi'). If the cluster "
-    "spans a few neighbouring countries, give the single DOMINANT country; if there is no dominant one, "
-    "prefer wide_mix_skip.\n"
-    "    * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human'). collection_date "
-    "is never escalated, so it never has a representative_value.\n"
-    "Set representative_value null for wide_mix_skip. Give a one-line cluster_theme naming the cluster and "
-    "why it is tight or wide, plus a verbatim evidence_quote. Judge ONLY from the evidence above; do not guess."
+    "- uniform_propose — case (a): one value is ~95%+ of the study.\n"
+    "- tight_cluster_escalate — case (b): homogeneous within a closely-related category, dominant value adopted.\n"
+    "- wide_mix_skip — a genuinely WIDE, unrelated mix with no >=95% dominant AND no homogeneous category "
+    "(e.g. blood + urine + respiratory + wound; invasive sites mixed with rectal/stool carriage; UK + Malawi + "
+    "Argentina across continents; human + animal + environmental). Do not ask — per-sample extraction handles it.\n\n"
+    "For uniform_propose or tight_cluster_escalate, set representative_value to that single dominant value. It "
+    "MUST be a SINGLE, PARSEABLE, CANONICAL value of the field, never a region, a list, or a concatenation:\n"
+    "    * country: ONE country name (e.g. 'Malawi', 'Guatemala') — NOT a region/continent and NOT a join. If "
+    "the countries cluster to one region but no single country is dominant, prefer wide_mix_skip (the engine "
+    "surfaces the region separately for the curator).\n"
+    "    * isolation_source: one specimen term (e.g. 'blood'); host: one host (e.g. 'human').\n"
+    "Set representative_value null for wide_mix_skip. Use the ENA base distribution provided (counts per value) "
+    "to apply the 95% test; for values that appear only in the paper, use the paper's own proportions. Give a "
+    "one-line cluster_theme naming the cluster and why it is homogeneous or wide, plus a verbatim "
+    "evidence_quote. Judge ONLY from the evidence above; do not guess."
 )
+
+#: Generic FALLBACK: a single value at/above this share of a study's non-blank samples is "dominant" and
+#: adoptable whole-study. The application sets its own value at ``escalation.dominant_share`` (Klebsiella: 0.95,
+#: David's ">=95%" rule). Used for the deterministic country region-cluster dominant-country test.
+DOMINANT_SHARE = 0.95
+
+
+def triage_guidance(spec: AttributeSpec | None) -> str:
+    """Return the application's escalation triage prose (yaml ``escalation.triage_guidance``) or the default."""
+    if spec is not None:
+        txt = (spec.raw.get("escalation", {}) or {}).get("triage_guidance", "")
+        if (txt or "").strip():
+            return txt.strip()
+    return _TRIAGE_GUIDANCE
+
+
+def dominant_share(spec: AttributeSpec | None) -> float:
+    """Return the application's dominant-value share threshold (yaml ``escalation.dominant_share``) or default."""
+    if spec is not None:
+        v = (spec.raw.get("escalation", {}) or {}).get("dominant_share")
+        if v is not None:
+            return float(v)
+    return DOMINANT_SHARE
+
+#: The region LABELS emitted by ``pp.metadata_curation.categorise_region`` (passthrough leaves an unrecognised
+#: country as its own name, so only these count as a real "one region" cluster).
+KNOWN_REGIONS: frozenset[str] = frozenset({
+    "N. America", "Central & S. America", "W. Europe", "E. Europe", "Africa",
+    "M. East, Central Asia", "E. Asia", "Oceania",
+})
 
 
 @dataclass
@@ -153,11 +189,12 @@ class EscalationItem:
     gap_samples
         Genuinely-blank ENA cells for this ``(study, field)`` — the completeness a decision would close.
     resolution
-        The grader's triage call (a :data:`RESOLUTIONS` value; always an escalating one for queued items).
+        The triage call (a :data:`RESOLUTIONS` value). Candidacy is deterministic, so ``wide_mix_skip`` rows
+        are ALSO queued — surfaced for the curator to confirm rather than auto-dropped (David, 2026-07-13).
     suggested_value
-        The single representative value the grader judged a human would likely accept (the pre-fill).
+        The single representative value to pre-fill — non-empty ONLY when the resolution escalates.
     cluster_theme
-        One line naming the cluster and why it is tight (the grader's rationale).
+        One line naming the cluster and why it is homogeneous or wide (the rationale).
     grader_quote
         The verbatim evidence the grader cited.
     paper_excerpt
@@ -176,6 +213,7 @@ class EscalationItem:
     paper_excerpt: str
     fulltext_status: str
     escalate_trigger: str = ""  # WHY this escalated: 'big_decision', a triage resolution, or both ('+')
+    region_hint: str = ""  # for country: the single region the study's countries cluster to when no dominant one
 
 
 def _classify_schema() -> dict:
@@ -205,15 +243,18 @@ def classify_escalation_candidate(
     sizing_row: dict | None,
     prior_proposed: str | None,
     prior_quote: str,
+    distribution_text: str = "",
+    region_note: str = "",
     model: str | None = None,
     max_chars: int = DEFAULT_MAX_CHARS,
 ) -> dict:
-    """Triage one whole-field decline as a tight near-miss (escalate) vs a wide mix (skip).
+    """Triage one whole-field decline with David's >=95%-or-homogeneous-category adopt/skip rule.
 
-    Presented in the grader's own pitch (so it reasons in-rubric) with the same evidence it graded on,
-    plus David's tight-vs-wide criteria. Returns the validated classification dict (see
-    :func:`_classify_schema`): ``resolution``, ``representative_value``, ``cluster_theme``,
-    ``evidence_quote``.
+    Presented in the grader's own pitch (so it reasons in-rubric) with the same evidence it graded on, the
+    field's ENA base value distribution (``distribution_text`` — counts per value, so the 95% test is
+    applicable to base-borne data), an optional deterministic ``region_note`` for country, plus the criteria.
+    Returns the validated classification dict (see :func:`_classify_schema`): ``resolution``,
+    ``representative_value``, ``cluster_theme``, ``evidence_quote``.
     """
     system = _build_system_prompt(spec)
     evidence = _build_user_prompt(
@@ -224,10 +265,15 @@ def classify_escalation_candidate(
         sizing_row=sizing_row,
         max_chars=max_chars,
     )
+    context = ""
+    if distribution_text:
+        context += f"\n\nENA BASE DISTRIBUTION for `{field}` in this study:\n{distribution_text}"
+    if region_note:
+        context += f"\n\n{region_note}"
     follow_up = (
         "\n\n=== FOLLOW-UP: escalation triage (this supersedes the grading instruction above) ===\n"
         f"Earlier you declined a single whole-project value for `{field}` (proposed_value="
-        f"{prior_proposed!r}, evidence quote {prior_quote!r}).\n\n" + _TRIAGE_GUIDANCE
+        f"{prior_proposed!r}, evidence quote {prior_quote!r})." + context + "\n\n" + triage_guidance(spec)
     )
     return llm.complete_structured(
         system=system,
@@ -288,6 +334,112 @@ def _declined(backfill_field: dict) -> bool:
     if bool(backfill_field.get("applies_whole_project")):
         return False
     return not (backfill_field.get("proposed_value") or "").strip()
+
+
+def _field_nulls(spec: AttributeSpec | None, field: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Return the ``(null_tokens, null_patterns)`` for a field from the spec's categorisation block (or ())."""
+    if spec is None:
+        return (), ()
+    cat = spec.raw.get("attributes", {}).get("categorisation", {}).get("fields", {}).get(field, {}) or {}
+    return tuple(cat.get("null_tokens", []) or []), tuple(cat.get("null_patterns", []) or [])
+
+
+def _field_distribution(
+    raw_ena: pd.DataFrame, acc: str, field: str, spec: AttributeSpec | None, *, max_values: int = 20
+) -> tuple[str, pd.Series]:
+    r"""Return ``(rendered_text, freqs)`` — the study's ENA base value distribution for ``field``.
+
+    ``freqs`` is the distinct-informative-value count Series (descending); ``rendered_text`` is the compact
+    ``count \\t value`` list for the triage prompt (empty when the study has no informative base value for the
+    field, e.g. all-blank — the common escalation case, where the model falls back to the paper's proportions).
+    """
+    from .categorise.value_frequencies import render_for_prompt, value_frequencies
+
+    empty = pd.Series(dtype="int64")
+    if field not in raw_ena.columns:
+        return "", empty
+    sub = raw_ena[raw_ena["study_accession"] == acc]
+    if not len(sub):
+        return "", empty
+    null_tokens, null_patterns = _field_nulls(spec, field)
+    freqs = value_frequencies(sub[field], null_tokens=null_tokens, null_patterns=null_patterns)
+    if freqs.empty:
+        return "", empty
+    total = int(freqs.sum())
+    top_share = int(freqs.iloc[0]) / total if total else 0.0
+    header = (f"(counts per value; {total} non-blank of {len(sub)} samples; top value {top_share:.0%})")
+    return header + "\n" + render_for_prompt(freqs, max_values=max_values), freqs
+
+
+def _country_region_map(countries: list[str]) -> dict[str, str]:
+    """Map each country string to a ``categorise_region`` label (lazy, degrades to identity on import failure).
+
+    Reuses the legacy ``pp.metadata_curation`` region buckets (parse_country -> categorise_region) so the
+    escalation path clusters countries exactly as the canonical curation does. The module is heavy (matplotlib
+    + HPC path constants at import); a failure to import/run degrades to identity (no clustering, no crash).
+    """
+    if not countries:
+        return {}
+    try:
+        from bac_metadata.pp import metadata_curation as mc
+        df = pd.DataFrame({"country": list(countries)})
+        df = mc.parse_country(df, verbose=False)
+        df = mc.categorise_region(df, verbose=False)
+        return {str(c): str(r) for c, r in zip(df["country"], df["region"], strict=False)}
+    except Exception:  # noqa: BLE001 — any import/parse failure degrades to no clustering
+        return {c: c for c in countries}
+
+
+def region_cluster_decision(
+    counts: Mapping[str, int], region_of: Mapping[str, str], *, dominant_share: float = DOMINANT_SHARE
+) -> dict | None:
+    """Pure region-cluster decision: do a study's countries collapse to one region, and is one dominant?
+
+    Parameters
+    ----------
+    counts
+        ``{country: n_samples}`` for the study's distinct non-blank countries.
+    region_of
+        ``{country: region_label}`` (from :func:`_country_region_map`).
+    dominant_share
+        A country at/above this share of the counted samples is "dominant".
+
+    Returns
+    -------
+    dict | None
+        ``None`` when the countries do NOT cluster to one known region (or there is <2). Otherwise
+        ``{"region", "dominant", "top_country", "top_share", "countries"}`` — ``dominant`` is the top country
+        when its share ``>= dominant_share`` else ``""`` (region-only, surfaced for review).
+    """
+    countries = [c for c in counts if str(c).strip()]
+    if len(countries) < 2:
+        return None
+    regions = {region_of.get(c, c) for c in countries}
+    if len(regions) != 1:
+        return None
+    region = next(iter(regions))
+    if region not in KNOWN_REGIONS:
+        return None
+    total = sum(int(counts[c]) for c in countries)
+    top_country = max(countries, key=lambda c: int(counts[c]))
+    top_share = int(counts[top_country]) / total if total else 0.0
+    return {
+        "region": region,
+        "dominant": top_country if top_share >= dominant_share else "",
+        "top_country": top_country,
+        "top_share": top_share,
+        "countries": countries,
+    }
+
+
+def _region_cluster(raw_ena: pd.DataFrame, acc: str, spec: AttributeSpec | None) -> dict | None:
+    """Deterministic country region-cluster for one study from its ENA base countries (see above)."""
+    _, freqs = _field_distribution(raw_ena, acc, "country", spec, max_values=None)
+    if freqs.empty:
+        return None
+    counts = {str(v): int(c) for v, c in freqs.items()}
+    region_of = _country_region_map(list(counts))
+    return region_cluster_decision(counts, region_of, dominant_share=dominant_share(spec))
 
 
 def detect_whole_field_escalations(
@@ -379,21 +531,57 @@ def detect_whole_field_escalations(
 
             proposed = (b.get("proposed_value") or "").strip()  # the grader's value, if it offered one
             ev = evidence_fn(acc)
-            cls = classify_escalation_candidate(
-                spec,
-                llm,
-                accession=acc,
-                field=f,
-                fulltext=ev.fulltext,
-                ena_title=ev.ena_title,
-                ena_description=ev.ena_description,
-                sizing_row=ev.sizing_row,
-                prior_proposed=b.get("proposed_value"),
-                prior_quote=b.get("evidence_quote", ""),
-                model=model,
-            )
-            resolution = cls.get("resolution", "")  # advisory — informs suggested_value/theme, never vetoes
-            triage_escalates = resolution in ESCALATE_RESOLUTIONS
+            region_hint = ""
+
+            if f == "collection_date":
+                # DETERMINISTIC (no LLM): the span was resolved at grade time (value_validity.resolve_date_span);
+                # only a pre-2010 mid-range span carries a midpoint suggestion, everything else surfaces blank.
+                decision = str(b.get("date_decision", "") or "")
+                span = b.get("date_span_months")
+                if decision == "escalate_midpoint":
+                    resolution, triage_escalates, suggested = "uniform_propose", True, proposed
+                else:  # escalate_blank / blank_wide / no_dates (or an old grade) → surface for review, no fill
+                    resolution, triage_escalates, suggested = "wide_mix_skip", False, ""
+                cluster_theme = (
+                    f"collection span {span} months "
+                    f"({b.get('earliest_date') or '?'}–{b.get('latest_date') or '?'}); {decision or 'unresolved'}"
+                )
+                grader_quote = (b.get("evidence_quote", "") or "").strip()
+            else:
+                region = _region_cluster(raw_ena, acc, spec) if f == "country" else None
+                if region is not None:
+                    # DETERMINISTIC (no LLM): the study's countries collapse to ONE region (legacy region
+                    # buckets). A dominant country (>=95%) is adopted; otherwise the region is surfaced as a
+                    # hint (country suggestion left blank) for the curator to confirm (David, 2026-07-13).
+                    resolution = "uniform_propose" if region["dominant"] else "tight_cluster_escalate"
+                    triage_escalates = True
+                    suggested = region["dominant"]
+                    region_hint = "" if region["dominant"] else region["region"]
+                    shown = ", ".join(region["countries"][:6]) + ("…" if len(region["countries"]) > 6 else "")
+                    cluster_theme = f"all {region['region']} ({shown}); " + (
+                        f"dominant {region['dominant']} ({region['top_share']:.0%})"
+                        if region["dominant"]
+                        else f"no single dominant country → suggest region {region['region']}"
+                    )
+                    grader_quote = (b.get("evidence_quote", "") or "").strip()
+                else:
+                    dist_text, _ = _field_distribution(raw_ena, acc, f, spec)
+                    cls = classify_escalation_candidate(
+                        spec, llm, accession=acc, field=f, fulltext=ev.fulltext, ena_title=ev.ena_title,
+                        ena_description=ev.ena_description, sizing_row=ev.sizing_row,
+                        prior_proposed=b.get("proposed_value"), prior_quote=b.get("evidence_quote", ""),
+                        distribution_text=dist_text, model=model,
+                        max_chars=spec.max_paper_chars if spec is not None else DEFAULT_MAX_CHARS,
+                    )
+                    resolution = cls.get("resolution", "")  # advisory — informs suggested/theme, never vetoes
+                    triage_escalates = resolution in ESCALATE_RESOLUTIONS
+                    # A suggestion (Enter-to-accept pre-fill) is offered ONLY when the triage escalates (David,
+                    # 2026-07-13): a wide_mix_skip must carry NO value, else the grader's un-vouched "limbo" guess
+                    # (PRJEB6891→rectal swab, PRJNA767944→sputum) shows as a pre-fill and Enter writes it wrongly.
+                    suggested = (proposed or (cls.get("representative_value") or "").strip()) if triage_escalates else ""
+                    cluster_theme = (cls.get("cluster_theme") or "").strip()
+                    grader_quote = (cls.get("evidence_quote") or b.get("evidence_quote", "") or "").strip()
+
             trigger = "+".join(
                 ([f"big_decision({study_samples.get(acc, 0)})"] if is_big else [])
                 + ([resolution] if triage_escalates else [])
@@ -408,13 +596,13 @@ def detect_whole_field_escalations(
                     field=f,
                     gap_samples=gap_samples,
                     resolution=resolution,
-                    # prefer the grader's own proposed value as the suggestion; fall back to the triage's
-                    suggested_value=proposed or (cls.get("representative_value") or "").strip(),
-                    cluster_theme=(cls.get("cluster_theme") or "").strip(),
-                    grader_quote=(cls.get("evidence_quote") or b.get("evidence_quote", "") or "").strip(),
+                    suggested_value=suggested,
+                    cluster_theme=cluster_theme,
+                    grader_quote=grader_quote,
                     paper_excerpt=_paper_excerpt(ev.fulltext.text, f),
                     fulltext_status=g.get("fulltext_source", ev.fulltext.source),
                     escalate_trigger=trigger,
+                    region_hint=region_hint,
                 )
             )
     items.sort(key=lambda it: it.gap_samples, reverse=True)

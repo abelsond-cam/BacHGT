@@ -28,6 +28,7 @@ import json
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
+from . import value_validity as vv
 from .fulltext import FullText
 from .llm import LLMClient
 from .spec import AttributeSpec
@@ -35,6 +36,21 @@ from .spec import AttributeSpec
 #: Truncate paper text beyond this many characters (~30k tokens) to bound per-call cost.
 DEFAULT_MAX_CHARS = 120_000
 SCHEMA_NAME = "study_grade"
+
+#: Generic FALLBACK for the whole-project fill rule rendered to the grader. The application supplies its own
+#: policy text at ``attributes.per_sample_completeness.backfill.whole_project_rule`` (Klebsiella does — see its
+#: attributes.yaml); the engine only assembles + renders it. Kept generic here so an app that omits it still
+#: gets a sane, species-agnostic instruction.
+_DEFAULT_WHOLE_PROJECT_RULE = (
+    "Propose a single value for ALL samples (applies_whole_project true) when one value covers essentially "
+    "the whole project — study-wide-constant, or a predominant value shared by the vast majority of samples "
+    "(only genuine blanks are filled; per-sample and existing values are never overwritten). Only under "
+    "whole-project coverage (paper coverage > 75%, or an EBI-wide title/description), for the categorical "
+    "fields (host, country, isolation_source). When the values are genuinely mixed with no predominant value, "
+    "set applies_whole_project false but STILL give your best proposed_value if you have one. For "
+    "collection_date, do NOT propose a value: report the EARLIEST and LATEST collection dates (earliest_date, "
+    "latest_date, verbatim — a year alone is fine); the engine computes the span deterministically."
+)
 
 
 # --------------------------------------------------------------------------------------------- #
@@ -66,6 +82,31 @@ def _grade_scale(spec: AttributeSpec) -> list[str]:
     return list(spec.raw.get("grade_scale", ["gradeable", "partial", "not_gradeable"]))
 
 
+def whole_project_rule(spec: AttributeSpec) -> str:
+    """Return the application's whole-project fill rule text (yaml), or the generic engine default."""
+    txt = (
+        spec.raw.get("attributes", {})
+        .get("per_sample_completeness", {})
+        .get("backfill", {})
+        .get("whole_project_rule", "")
+    )
+    return (txt or "").strip() or _DEFAULT_WHOLE_PROJECT_RULE
+
+
+def date_span_policy(spec: AttributeSpec) -> dict:
+    """Return the application's collection_date span thresholds (yaml ``escalation.collection_date``).
+
+    Missing keys fall back to the engine defaults in :mod:`value_validity` — the date-span *machinery* is
+    generic; only the thresholds (2yr / 5yr / pre-2010) are application policy (David, 2026-07-14).
+    """
+    cd = (spec.raw.get("escalation", {}) or {}).get("collection_date", {}) or {}
+    return {
+        "two_year_months": int(cd.get("two_year_months", vv.DATE_SPAN_TWO_YEAR_MONTHS)),
+        "five_year_months": int(cd.get("five_year_months", vv.DATE_SPAN_FIVE_YEAR_MONTHS)),
+        "old_before_year": int(cd.get("old_before_year", vv.DATE_OLD_BEFORE_YEAR)),
+    }
+
+
 # --------------------------------------------------------------------------------------------- #
 # JSON schema for forced tool use, built from the rubric.
 # --------------------------------------------------------------------------------------------- #
@@ -89,19 +130,27 @@ def build_grade_schema(spec: AttributeSpec) -> dict:
         }
 
     study_level_props = {name: attr_obj(a["values"]) for name, a in study_level.items()}
-    backfill_props = {
-        name: {
+    backfill_props = {}
+    for name in backfill:
+        props = {
+            "proposed_value": {"type": ["string", "null"]},
+            "applies_whole_project": {"type": "boolean"},
+            "evidence_quote": {"type": "string"},
+        }
+        required = ["proposed_value", "applies_whole_project", "evidence_quote"]
+        if name == "collection_date":
+            # The grader reports the two endpoint dates VERBATIM; the engine computes the span + fill
+            # deterministically (value_validity.resolve_date_span) rather than trusting LLM calendar-label
+            # arithmetic (David, 2026-07-13). proposed_value/applies_whole_project are overwritten post-grade.
+            props["earliest_date"] = {"type": ["string", "null"]}
+            props["latest_date"] = {"type": ["string", "null"]}
+            required += ["earliest_date", "latest_date"]
+        backfill_props[name] = {
             "type": "object",
-            "properties": {
-                "proposed_value": {"type": ["string", "null"]},
-                "applies_whole_project": {"type": "boolean"},
-                "evidence_quote": {"type": "string"},
-            },
-            "required": ["proposed_value", "applies_whole_project", "evidence_quote"],
+            "properties": props,
+            "required": required,
             "additionalProperties": False,
         }
-        for name in backfill
-    }
 
     return {
         "type": "object",
@@ -187,24 +236,7 @@ def _render_rubric(spec: AttributeSpec) -> str:
     bf = _backfill_fields(spec)
     if bf:
         lines.append("\n--- WHOLE-PROJECT BACKFILL (whole-field) for the standard per-sample fields ---")
-        lines.append(
-            "Propose a single value for ALL samples (applies_whole_project true) when one value covers "
-            "essentially the whole project — either study-wide-constant, OR a PREDOMINANT value shared by "
-            "about 95%+ of samples. An EXACT percentage need not be stated: it is enough that the evidence "
-            "makes it LIKELY the vast majority (probably 95%+) fit a single description — e.g. all isolates "
-            "from ONE country even when collected across many regions/sites within it (16 of 17 regions of "
-            "the Philippines -> country = Philippines), or all from one host type. A small minority of "
-            "exceptions does NOT block it: give the predominant value and set applies_whole_project true "
-            "(only genuine blanks are filled; per-sample and existing ENA values are never overwritten). "
-            "Examples: a clinical study described as 97.7% inpatients -> host = human; a nationwide "
-            "surveillance study across a country's regions -> country = that country — both "
-            "applies_whole_project true. This applies only under whole-project coverage (paper coverage "
-            "> 75%, or an EBI-wide title/description), and to the categorical fields (host, country, "
-            "isolation_source); collection_date follows its own date-span rule below. Only when the values "
-            "are genuinely mixed with no ~95% predominant value, set applies_whole_project false but STILL "
-            "give your best proposed_value if you have one — it becomes the curator's suggested value at "
-            "escalation (do not null it)."
-        )
+        lines.append(whole_project_rule(spec))
         for name, frule in bf.items():
             rule = (frule.get("whole_project_value", "") or "").strip()
             lines.append(f"\n[{name}] {frule.get('meaning', '')}\n{rule}")
@@ -384,6 +416,17 @@ def grade_accession(
         schema_description="Structured rubric grade for one project accession.",
         model=model,
     )
+
+    # collection_date is resolved DETERMINISTICALLY from the grader's earliest/latest endpoints (never LLM span
+    # arithmetic): the engine computes the true month span and applies David's 2yr/5yr/pre-2010 rule, overwriting
+    # the model's proposed_value/applies_whole_project so whole-field backfill + escalation act on it uniformly.
+    cd = (out.get("backfill", {}) or {}).get("collection_date")
+    if isinstance(cd, dict):
+        dec = vv.resolve_date_span(cd.get("earliest_date"), cd.get("latest_date"), **date_span_policy(spec))
+        cd["proposed_value"] = dec["proposed_value"]
+        cd["applies_whole_project"] = dec["applies_whole_project"]
+        cd["date_decision"] = dec["date_decision"]
+        cd["date_span_months"] = dec["span_months"]
 
     study_type_val = out.get("study_type", {}).get("value")
     exclude_if = set(_study_type_spec(spec).get("exclude_if", []))
