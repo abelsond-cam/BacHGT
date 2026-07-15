@@ -280,6 +280,16 @@ The benchmarked folds + the whole >100-sample tail are done and accumulated (§4
 "unlinkable-table" classifier that separates a genuinely aggregate supplement (auto-discard) from a
 per-isolate table we simply failed to link (a real linkage target).
 
+*Reporting gap — `combined_run_health` (needed).* run_health is strictly **per-tag** and has **no acceptance
+policy**, so it can only ever say *"N ACTIONABLE + M BLOCKED — supplement & rerun"* — even when every remaining
+cell is genuinely unrecoverable. Confirming a cohort is *actually* clear currently requires hand-rolled Python
+across the six `run_progress/<tag>/run_health/report.tsv` + `persample_supplement_worklist.tsv` (as done
+2026-07-15). Build a `combined_run_health` that (a) **unions all tags** into one verdict and (b) applies the
+**disposition policy** — reclassifying `NO_PAPER` / `SKIP` (wide-mix) / fetched-all-available / unanchored-no-
+ENA-key / PDF-table-undetectable as **accepted-exhausted** — then reports *"genuinely clear"* vs *"K truly-
+actionable cells remain (listed)."* This makes the manual "all-clear" reasoning a repeatable gate, the way
+`verify_pipeline_triggers` did for silent failures.
+
 ## 6. Agentic categorisation sub-engine (replaces hardcoded parse/categorise) + current workstream
 
 **Why.** Running the M.abs master through the Klebsiella `pp/metadata_curation.py` (~860 hardcoded parse/
