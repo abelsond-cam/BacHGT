@@ -1,0 +1,564 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJEB50545	SAMEA12999809	collection_date		2018-04-27 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104050
+PRJEB50545	SAMEA12999811	collection_date		2018-07-06 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104052
+PRJEB50545	SAMEA12999813	collection_date		2018-09-05 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104054
+PRJEB50545	SAMEA12999814	collection_date		2018-06-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104055
+PRJEB50545	SAMEA12999815	collection_date		2018-09-27 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104056
+PRJEB50545	SAMEA12999816	collection_date		2018-09-27 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104057
+PRJEB50545	SAMEA12999618	collection_date		2017-12-09 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104432
+PRJEB50545	SAMEA12999619	collection_date		2018-05-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104433
+PRJEB50545	SAMEA12999621	collection_date		2018-07-07 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104435
+PRJEB50545	SAMEA12999623	collection_date		2018-03-26 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104437
+PRJEB50545	SAMEA12999625	collection_date		2018-04-04 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104439
+PRJEB50545	SAMEA12999628	collection_date		2018-07-04 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104442
+PRJEB50545	SAMEA12999632	collection_date		2018-07-13 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104446
+PRJEB50545	SAMEA12999633	collection_date		2018-03-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104447
+PRJEB50545	SAMEA12999634	collection_date		2018-08-28 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104448
+PRJEB50545	SAMEA12999635	collection_date		2018-07-16 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104449
+PRJEB50545	SAMEA12999636	collection_date		2018-07-23 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104450
+PRJEB50545	SAMEA12999637	collection_date		2018-09-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104451
+PRJEB50545	SAMEA12999639	collection_date		2018-07-25 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104453
+PRJEB50545	SAMEA12999645	collection_date		2018-08-16 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104460
+PRJEB50545	SAMEA12999642	collection_date		2018-08-16 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104457
+PRJEB50545	SAMEA12999643	collection_date		2018-09-01 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104458
+PRJEB50545	SAMEA12999730	collection_date		2018-01-29 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104091
+PRJEB50545	SAMEA12999732	collection_date		2018-01-19 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104093
+PRJEB50545	SAMEA12999758	collection_date		2018-01-30 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104893
+PRJEB50545	SAMEA12999759	collection_date		2018-02-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104894
+PRJEB50545	SAMEA12999734	collection_date		2018-04-24 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104095
+PRJEB50545	SAMEA12999735	collection_date		2018-03-01 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104096
+PRJEB50545	SAMEA12999760	collection_date		2018-04-03 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104902
+PRJEB50545	SAMEA12999741	collection_date		2018-04-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104102
+PRJEB50545	SAMEA12999740	collection_date		2018-04-12 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104101
+PRJEB50545	SAMEA12999743	collection_date		2018-04-16 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104104
+PRJEB50545	SAMEA12999744	collection_date		2018-04-16 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104105
+PRJEB50545	SAMEA12999746	collection_date		2018-05-10 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104107
+PRJEB50545	SAMEA12999747	collection_date		2018-11-28 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104108
+PRJEB50545	SAMEA12999752	collection_date		2018-12-18 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104850
+PRJEB50545	SAMEA12999756	collection_date		2019-04-01 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104854
+PRJEB50545	SAMEA12999757	collection_date		2019-06-04 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104855
+PRJEB50545	SAMEA12999891	collection_date		2018-08-01 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104692
+PRJEB50545	SAMEA12999894	collection_date		2019-02-27 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104776
+PRJEB50545	SAMEA12999895	collection_date		2019-03-06 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104777
+PRJEB50545	SAMEA12999899	collection_date		2019-05-07 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104903
+PRJEB50545	SAMEA12999896	collection_date		2019-04-18 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104778
+PRJEB50545	SAMEA12999502	collection_date		2018-04-04 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-IMI-103616
+PRJEB50545	SAMEA12999506	collection_date		2018-07-13 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104044
+PRJEB50545	SAMEA12999507	collection_date		2018-07-18 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104045
+PRJEB50545	SAMEA12999513	collection_date		2019-03-29 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104783
+PRJEB50545	SAMEA12999512	collection_date		2019-03-29 00:00:00	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104782
+PRJEB50545	SAMEA12999809	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104050 (rescued 'Besancon')
+PRJEB50545	SAMEA12999811	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104052 (rescued 'Besancon')
+PRJEB50545	SAMEA12999813	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104054 (rescued 'Besancon')
+PRJEB50545	SAMEA12999814	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104055 (rescued 'Besancon')
+PRJEB50545	SAMEA12999815	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104056 (rescued 'Besancon')
+PRJEB50545	SAMEA12999816	country		France	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104057 (rescued 'Besancon')
+PRJEB50545	SAMEA12999618	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104432 (rescued 'Geneva')
+PRJEB50545	SAMEA12999619	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104433 (rescued 'Geneva')
+PRJEB50545	SAMEA12999621	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104435 (rescued 'Geneva')
+PRJEB50545	SAMEA12999623	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104437 (rescued 'Geneva')
+PRJEB50545	SAMEA12999625	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104439 (rescued 'Geneva')
+PRJEB50545	SAMEA12999628	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104442 (rescued 'Geneva')
+PRJEB50545	SAMEA12999632	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104446 (rescued 'Geneva')
+PRJEB50545	SAMEA12999633	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104447 (rescued 'Geneva')
+PRJEB50545	SAMEA12999634	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104448 (rescued 'Geneva')
+PRJEB50545	SAMEA12999635	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104449 (rescued 'Geneva')
+PRJEB50545	SAMEA12999636	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104450 (rescued 'Geneva')
+PRJEB50545	SAMEA12999637	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104451 (rescued 'Geneva')
+PRJEB50545	SAMEA12999639	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104453 (rescued 'Geneva')
+PRJEB50545	SAMEA12999645	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104460 (rescued 'Geneva')
+PRJEB50545	SAMEA12999642	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104457 (rescued 'Geneva')
+PRJEB50545	SAMEA12999643	country		Switzerland	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104458 (rescued 'Geneva')
+PRJEB50545	SAMEA12999730	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104091 (rescued 'Seville')
+PRJEB50545	SAMEA12999732	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104093 (rescued 'Seville')
+PRJEB50545	SAMEA12999758	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104893 (rescued 'Seville')
+PRJEB50545	SAMEA12999759	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104894 (rescued 'Seville')
+PRJEB50545	SAMEA12999734	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104095 (rescued 'Seville')
+PRJEB50545	SAMEA12999735	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104096 (rescued 'Seville')
+PRJEB50545	SAMEA12999760	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104902 (rescued 'Seville')
+PRJEB50545	SAMEA12999741	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104102 (rescued 'Seville')
+PRJEB50545	SAMEA12999740	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104101 (rescued 'Seville')
+PRJEB50545	SAMEA12999743	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104104 (rescued 'Seville')
+PRJEB50545	SAMEA12999744	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104105 (rescued 'Seville')
+PRJEB50545	SAMEA12999746	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104107 (rescued 'Seville')
+PRJEB50545	SAMEA12999747	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104108 (rescued 'Seville')
+PRJEB50545	SAMEA12999752	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104850 (rescued 'Seville')
+PRJEB50545	SAMEA12999756	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104854 (rescued 'Seville')
+PRJEB50545	SAMEA12999757	country		Spain	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104855 (rescued 'Seville')
+PRJEB50545	SAMEA12999891	country		Germany	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104692 (rescued 'Tubingen')
+PRJEB50545	SAMEA12999894	country		Germany	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104776 (rescued 'Tubingen')
+PRJEB50545	SAMEA12999895	country		Germany	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104777 (rescued 'Tubingen')
+PRJEB50545	SAMEA12999899	country		Germany	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104903 (rescued 'Tubingen')
+PRJEB50545	SAMEA12999896	country		Germany	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104778 (rescued 'Tubingen')
+PRJEB50545	SAMEA12999502	country		Netherlands	per_sample	pone.0337346.s002.xlsx:KLP-JSC-IMI-103616 (rescued 'Utrecht')
+PRJEB50545	SAMEA12999506	country		Netherlands	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104044 (rescued 'Utrecht')
+PRJEB50545	SAMEA12999507	country		Netherlands	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104045 (rescued 'Utrecht')
+PRJEB50545	SAMEA12999513	country		Netherlands	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104783 (rescued 'Utrecht')
+PRJEB50545	SAMEA12999512	country		Netherlands	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104782 (rescued 'Utrecht')
+PRJEB50545	SAMEA12999809	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104050 (rescued 'human')
+PRJEB50545	SAMEA12999811	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104052 (rescued 'human')
+PRJEB50545	SAMEA12999813	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104054 (rescued 'human')
+PRJEB50545	SAMEA12999814	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104055 (rescued 'human')
+PRJEB50545	SAMEA12999815	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104056 (rescued 'human')
+PRJEB50545	SAMEA12999816	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104057 (rescued 'human')
+PRJEB50545	SAMEA12999618	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104432 (rescued 'human')
+PRJEB50545	SAMEA12999619	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104433 (rescued 'human')
+PRJEB50545	SAMEA12999621	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104435 (rescued 'human')
+PRJEB50545	SAMEA12999623	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104437 (rescued 'human')
+PRJEB50545	SAMEA12999625	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104439 (rescued 'human')
+PRJEB50545	SAMEA12999628	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104442 (rescued 'human')
+PRJEB50545	SAMEA12999632	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104446 (rescued 'human')
+PRJEB50545	SAMEA12999633	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104447 (rescued 'human')
+PRJEB50545	SAMEA12999634	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104448 (rescued 'human')
+PRJEB50545	SAMEA12999635	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104449 (rescued 'human')
+PRJEB50545	SAMEA12999636	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104450 (rescued 'human')
+PRJEB50545	SAMEA12999637	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104451 (rescued 'human')
+PRJEB50545	SAMEA12999639	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104453 (rescued 'human')
+PRJEB50545	SAMEA12999645	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104460 (rescued 'human')
+PRJEB50545	SAMEA12999642	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104457 (rescued 'human')
+PRJEB50545	SAMEA12999643	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104458 (rescued 'human')
+PRJEB50545	SAMEA12999730	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104091 (rescued 'human')
+PRJEB50545	SAMEA12999732	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104093 (rescued 'human')
+PRJEB50545	SAMEA12999758	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104893 (rescued 'human')
+PRJEB50545	SAMEA12999759	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104894 (rescued 'human')
+PRJEB50545	SAMEA12999734	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104095 (rescued 'human')
+PRJEB50545	SAMEA12999735	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104096 (rescued 'human')
+PRJEB50545	SAMEA12999760	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104902 (rescued 'human')
+PRJEB50545	SAMEA12999741	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104102 (rescued 'human')
+PRJEB50545	SAMEA12999740	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104101 (rescued 'human')
+PRJEB50545	SAMEA12999743	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104104 (rescued 'human')
+PRJEB50545	SAMEA12999744	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104105 (rescued 'human')
+PRJEB50545	SAMEA12999746	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104107 (rescued 'human')
+PRJEB50545	SAMEA12999747	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104108 (rescued 'human')
+PRJEB50545	SAMEA12999752	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104850 (rescued 'human')
+PRJEB50545	SAMEA12999756	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104854 (rescued 'human')
+PRJEB50545	SAMEA12999757	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104855 (rescued 'human')
+PRJEB50545	SAMEA12999891	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104692 (rescued 'human')
+PRJEB50545	SAMEA12999894	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104776 (rescued 'human')
+PRJEB50545	SAMEA12999895	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104777 (rescued 'human')
+PRJEB50545	SAMEA12999899	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104903 (rescued 'human')
+PRJEB50545	SAMEA12999896	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104778 (rescued 'human')
+PRJEB50545	SAMEA12999502	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-IMI-103616 (rescued 'human')
+PRJEB50545	SAMEA12999506	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104044 (rescued 'human')
+PRJEB50545	SAMEA12999507	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104045 (rescued 'human')
+PRJEB50545	SAMEA12999513	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104783 (rescued 'human')
+PRJEB50545	SAMEA12999512	host		human	per_sample	pone.0337346.s002.xlsx:KLP-JSC-MOD-104782 (rescued 'human')
+PRJNA267549	SAMN03197861	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:659_KOXY
+PRJNA267549	SAMN03197629	isolation_source		EYE	per_sample	pgen.1005413.s012.xlsx:436_KPNE
+PRJNA267549	SAMN03197212	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1246_KOXY
+PRJNA267549	SAMN03197936	isolation_source		SPUTIN	per_sample	pgen.1005413.s012.xlsx:731_KPNE
+PRJNA267549	SAMN03198148	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:93_SDYS
+PRJNA267549	SAMN03197209	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1243_CKOS
+PRJNA267549	SAMN03197386	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:194_KPNE
+PRJNA267549	SAMN03197007	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:1041_KPNE
+PRJNA267549	SAMN03197716	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:521_SSON
+PRJNA267549	SAMN03197719	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:524_SBOY
+PRJNA267549	SAMN03197855	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:653_KVAR
+PRJNA267549	SAMN03198006	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:793_SHAE
+PRJNA267549	SAMN03197874	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:671_KVAR
+PRJNA267549	SAMN03197947	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:741_KPNE
+PRJNA267549	SAMN03197949	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:743_KPNE
+PRJNA267549	SAMN03197962	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:755.rep1_KPNE
+PRJNA267549	SAMN03197963	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:755.rep2_KPNE
+PRJNA267549	SAMN03198063	isolation_source		CSFPC	per_sample	pgen.1005413.s012.xlsx:855_SHAE
+PRJNA267549	SAMN03197013	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:1047_KOXY
+PRJNA267549	SAMN03197833	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:633_KOXY
+PRJNA267549	SAMN03197141	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:1183_KPNE
+PRJNA267549	SAMN03197378	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:187_KPNE
+PRJNA267549	SAMN03198027	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:813_KPNE
+PRJNA267549	SAMN03197885	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:682_EAER
+PRJNA267549	SAMN03197849	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:648_KPNE
+PRJNA267549	SAMN03198025	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:811_RORN
+PRJNA267549	SAMN03197772	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:570_KPNE
+PRJNA267549	SAMN03197968	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:76_ECLO
+PRJNA267549	SAMN03196972	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1010_KPNE
+PRJNA267549	SAMN03196974	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1012_KPNE
+PRJNA267549	SAMN03197634	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:442_KOXY
+PRJNA267549	SAMN03197201	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:1236_KOXY
+PRJNA267549	SAMN03197204	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1239_KPNE
+PRJNA267549	SAMN03197206	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1240_ECLO
+PRJNA267549	SAMN03197414	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:221_KPNE
+PRJNA267549	SAMN03197361	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:170_EAER
+PRJNA267549	SAMN03197266	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1294_KPNE
+PRJNA267549	SAMN03198005	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:793_KOXY
+PRJNA267549	SAMN03197002	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1037_KOXY
+PRJNA267549	SAMN03197110	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1154_KOXY
+PRJNA267549	SAMN03197126	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1169_SBOY
+PRJNA267549	SAMN03197485	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:291_EBAC
+PRJNA267549	SAMN03197247	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1277_EAER
+PRJNA267549	SAMN03197248	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1278_EAER
+PRJNA267549	SAMN03197252	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1281_EAER
+PRJNA267549	SAMN03197253	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1282_EAER
+PRJNA267549	SAMN03198068	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:86_EAER
+PRJNA267549	SAMN03197312	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:1331_KPNE
+PRJNA267549	SAMN03198185	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:965_EAER
+PRJNA267549	SAMN03197825	isolation_source		BALB	per_sample	pgen.1005413.s012.xlsx:625_KOXY
+PRJNA267549	SAMN03197826	isolation_source		BALB	per_sample	pgen.1005413.s012.xlsx:626_SENT
+PRJNA267549	SAMN03197828	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:628_KOXY
+PRJNA267549	SAMN03197035	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1072_ECOL
+PRJNA267549	SAMN03197693	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:500_KPNE
+PRJNA267549	SAMN03197694	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:501_KPNE
+PRJNA267549	SAMN03198093	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:887_KPNE
+PRJNA267549	SAMN03197104	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1148_KOXY
+PRJNA267549	SAMN03197341	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:151_EAER
+PRJNA267549	SAMN03196981	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:1019_EAER
+PRJNA267549	SAMN03196983	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:1020_EAER
+PRJNA267549	SAMN03198200	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:98_KPNE
+PRJNA267549	SAMN03197991	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:780_KPNE
+PRJNA267549	SAMN03198040	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:833_KPNE
+PRJNA267549	SAMN03198041	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:834_KPNE
+PRJNA267549	SAMN03198042	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:835_KPNE
+PRJNA267549	SAMN03198043	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:836_KPNE
+PRJNA267549	SAMN03198044	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:837_KPNE
+PRJNA267549	SAMN03197576	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:385_ECLO
+PRJNA267549	SAMN03197783	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:582_KOXY
+PRJNA267549	SAMN03197789	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:588_KOXY
+PRJNA267549	SAMN03197000	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:1035_KPNE
+PRJNA267549	SAMN03197017	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:1050_SSON
+PRJNA267549	SAMN03197067	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:1113_KOXY
+PRJNA267549	SAMN03197044	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1081_KOXY
+PRJNA267549	SAMN03197045	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1082_KOXY
+PRJNA267549	SAMN03197047	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1084_KOXY
+PRJNA267549	SAMN03197048	isolation_source		FLUID	per_sample	pgen.1005413.s012.xlsx:1085_KOXY
+PRJNA267549	SAMN03197060	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1098_KPNE
+PRJNA267549	SAMN03197437	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:247_KOXY
+PRJNA267549	SAMN03197527	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:337_KOXY
+PRJNA267549	SAMN03197316	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:1335_KPNE
+PRJNA267549	SAMN03197372	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:181_KOXY
+PRJNA267549	SAMN03197389	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:197_KOXY
+PRJNA267549	SAMN03196960	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:10_ECLO
+PRJNA267549	SAMN03197385	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:193_KOXY
+PRJNA267549	SAMN03198053	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:845_KPNE
+PRJNA267549	SAMN03198131	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:918_SSAL
+PRJNA267549	SAMN03198000	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:789_KVAR
+PRJNA267549	SAMN03197938	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:733_KPNE
+PRJNA267549	SAMN03197549	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:359_ECLO
+PRJNA267549	SAMN03197562	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:371_KOXY
+PRJNA267549	SAMN03197566	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:375_KOXY
+PRJNA267549	SAMN03197587	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:397_KOXY
+PRJNA267549	SAMN03197599	isolation_source		SPUT	per_sample	pgen.1005413.s012.xlsx:409_KOXY
+PRJNA267549	SAMN03197644	isolation_source		TASP	per_sample	pgen.1005413.s012.xlsx:452_SSON
+PRJNA267549	SAMN03198071	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:863_KPNE
+PRJNA267549	SAMN03198105	isolation_source		SPUTIN	per_sample	pgen.1005413.s012.xlsx:898_KPNE
+PRJNA267549	SAMN03198121	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:912_KPNE
+PRJNA267549	SAMN03198122	isolation_source		BLUD	per_sample	pgen.1005413.s012.xlsx:913_KPNE
+PRJNA267549	SAMN03198149	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:930_KPNE
+PRJNA267549	SAMN03198196	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:977.rep1_SDYS
+PRJNA267549	SAMN03198197	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:977.rep2_SDYS
+PRJNA267549	SAMN03197417	isolation_source		UCATH	per_sample	pgen.1005413.s012.xlsx:225_EAER
+PRJNA267549	SAMN03197536	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:345_KOXY
+PRJNA267549	SAMN03197537	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:346_KOXY
+PRJNA267549	SAMN03197205	isolation_source		WUND	per_sample	pgen.1005413.s012.xlsx:124_ECLO
+PRJNA267549	SAMN03197231	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:1263_KPNE
+PRJNA267549	SAMN03198073	isolation_source		URN	per_sample	pgen.1005413.s012.xlsx:865_KPNE
+PRJNA267549	SAMN03197836	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:636_KOXY
+PRJNA267549	SAMN03197850	isolation_source		BAL	per_sample	pgen.1005413.s012.xlsx:649_KOXY
+PRJNA675776	SAMN16721895	collection_date	2010	10/08/2010	per_sample	PRJNA675776.xlsx:25571
+PRJNA675776	SAMN16721896	collection_date	2011	27/01/2011	per_sample	PRJNA675776.xlsx:26425
+PRJNA675776	SAMN16721897	collection_date	2011	21/05/2011	per_sample	PRJNA675776.xlsx:27064
+PRJNA675776	SAMN16721898	collection_date	2011	2011-11-09 00:00:00	per_sample	PRJNA675776.xlsx:29130
+PRJNA675776	SAMN16721899	collection_date	2012	2012-03-10 00:00:00	per_sample	PRJNA675776.xlsx:32558
+PRJNA675776	SAMN16721900	collection_date	2012	2012-02-06 00:00:00	per_sample	PRJNA675776.xlsx:32572
+PRJNA675776	SAMN16721901	collection_date	2012	2012-02-16 00:00:00	per_sample	PRJNA675776.xlsx:32576
+PRJNA675776	SAMN16721902	collection_date	2012	2012-08-03 00:00:00	per_sample	PRJNA675776.xlsx:32803
+PRJNA675776	SAMN16721903	collection_date	2012	2012-07-03 00:00:00	per_sample	PRJNA675776.xlsx:32804
+PRJNA675776	SAMN16721904	collection_date	2012	2012-01-27 00:00:00	per_sample	PRJNA675776.xlsx:33197
+PRJNA675776	SAMN16721905	collection_date	2013	2013-01-28 00:00:00	per_sample	PRJNA675776.xlsx:33741
+PRJNA675776	SAMN16721906	collection_date	2012	2012-12-03 00:00:00	per_sample	PRJNA675776.xlsx:33747
+PRJNA675776	SAMN16721907	collection_date	2013	2013-04-19 00:00:00	per_sample	PRJNA675776.xlsx:34143
+PRJNA675776	SAMN16721908	collection_date	2013	2013-10-07 00:00:00	per_sample	PRJNA675776.xlsx:35812
+PRJNA675776	SAMN16721909	collection_date	2013	2013-10-22 00:00:00	per_sample	PRJNA675776.xlsx:35813
+PRJNA675776	SAMN16721910	collection_date	2013	2013-10-02 00:00:00	per_sample	PRJNA675776.xlsx:35814
+PRJNA675776	SAMN16721911	collection_date	2013	2013-11-15 00:00:00	per_sample	PRJNA675776.xlsx:35815
+PRJNA675776	SAMN16721912	collection_date	2013	2013-12-17 00:00:00	per_sample	PRJNA675776.xlsx:35816
+PRJNA675776	SAMN16721913	collection_date	2014	2014-02-14 00:00:00	per_sample	PRJNA675776.xlsx:36216
+PRJNA675776	SAMN16721914	collection_date	2014	2014-02-20 00:00:00	per_sample	PRJNA675776.xlsx:36558
+PRJNA675776	SAMN16721915	collection_date	2014	2014-09-10 00:00:00	per_sample	PRJNA675776.xlsx:38209
+PRJNA675776	SAMN16721916	collection_date	2014	2014-08-11 00:00:00	per_sample	PRJNA675776.xlsx:38612
+PRJNA675776	SAMN16721917	collection_date	2014	2014-12-01 00:00:00	per_sample	PRJNA675776.xlsx:38974
+PRJNA675776	SAMN16721918	collection_date	2014	2014-11-13 00:00:00	per_sample	PRJNA675776.xlsx:38983
+PRJNA675776	SAMN16721919	collection_date	2014	2014-11-13 00:00:00	per_sample	PRJNA675776.xlsx:38989
+PRJNA675776	SAMN16721920	collection_date	2014	2014-12-03 00:00:00	per_sample	PRJNA675776.xlsx:39000
+PRJNA675776	SAMN16721921	collection_date	2015	2015-01-05 00:00:00	per_sample	PRJNA675776.xlsx:39142
+PRJNA675776	SAMN16721922	collection_date	2015	2015-01-05 00:00:00	per_sample	PRJNA675776.xlsx:39143
+PRJNA675776	SAMN16721923	collection_date	2015	2015-01-15 00:00:00	per_sample	PRJNA675776.xlsx:39145
+PRJNA675776	SAMN16721924	collection_date	2014	2014-09-18 00:00:00	per_sample	PRJNA675776.xlsx:39566
+PRJNA675776	SAMN16721925	collection_date	2014	2014-01-30 00:00:00	per_sample	PRJNA675776.xlsx:40064
+PRJNA675776	SAMN16721926	collection_date	2015	2015-04-23 00:00:00	per_sample	PRJNA675776.xlsx:40294
+PRJNA675776	SAMN16721927	collection_date	2015	2015-09-14 00:00:00	per_sample	PRJNA675776.xlsx:42465
+PRJNA675776	SAMN16721928	collection_date	2015	2015-10-26 00:00:00	per_sample	PRJNA675776.xlsx:42468
+PRJNA675776	SAMN16721929	collection_date	2015	2015-09-24 00:00:00	per_sample	PRJNA675776.xlsx:42470
+PRJNA675776	SAMN16721930	collection_date	2015	2015-03-03 00:00:00	per_sample	PRJNA675776.xlsx:42472
+PRJNA675776	SAMN16721931	collection_date	2015	2015-04-10 00:00:00	per_sample	PRJNA675776.xlsx:42474
+PRJNA675776	SAMN16721932	collection_date	2015	2015-01-08 00:00:00	per_sample	PRJNA675776.xlsx:42475
+PRJNA675776	SAMN16721933	collection_date	2015	2015-07-21 00:00:00	per_sample	PRJNA675776.xlsx:42477
+PRJNA675776	SAMN16721934	collection_date	2016	2016-01-08 00:00:00	per_sample	PRJNA675776.xlsx:42485
+PRJNA675776	SAMN16721935	collection_date	2015	2015-06-05 00:00:00	per_sample	PRJNA675776.xlsx:42486
+PRJNA675776	SAMN16721936	collection_date	2015	2015-08-13 00:00:00	per_sample	PRJNA675776.xlsx:42492
+PRJNA675776	SAMN16721937	collection_date	2015	2015-05-12 00:00:00	per_sample	PRJNA675776.xlsx:42982
+PRJNA675776	SAMN16721938	collection_date	2016	2016-01-28 00:00:00	per_sample	PRJNA675776.xlsx:43103
+PRJNA675776	SAMN16721939	collection_date	2015	2015-09-11 00:00:00	per_sample	PRJNA675776.xlsx:43112
+PRJNA675776	SAMN16721940	collection_date	2015	2015-11-10 00:00:00	per_sample	PRJNA675776.xlsx:43924
+PRJNA675776	SAMN16721941	collection_date	2016	2016-04-11 00:00:00	per_sample	PRJNA675776.xlsx:43926
+PRJNA675776	SAMN16721942	collection_date	2016	2016-05-19 00:00:00	per_sample	PRJNA675776.xlsx:43934
+PRJNA675776	SAMN16721943	collection_date	2016	2016-05-26 00:00:00	per_sample	PRJNA675776.xlsx:43935
+PRJNA675776	SAMN16721944	collection_date	2016	2016-05-31 00:00:00	per_sample	PRJNA675776.xlsx:43936
+PRJNA675776	SAMN16721945	collection_date	2016	2016-06-23 00:00:00	per_sample	PRJNA675776.xlsx:45339
+PRJNA675776	SAMN16721946	collection_date	2016	2016-10-14 00:00:00	per_sample	PRJNA675776.xlsx:45340
+PRJNA675776	SAMN16721947	collection_date	2016	2016-04-12 00:00:00	per_sample	PRJNA675776.xlsx:45341
+PRJNA675776	SAMN16721948	collection_date	2016	2016-05-09 00:00:00	per_sample	PRJNA675776.xlsx:45342
+PRJNA675776	SAMN16721949	collection_date	2016	2016-06-08 00:00:00	per_sample	PRJNA675776.xlsx:45343
+PRJNA675776	SAMN16721950	collection_date	2016	2016-11-17 00:00:00	per_sample	PRJNA675776.xlsx:45350
+PRJNA675776	SAMN16721951	collection_date	2016	2016-09-15 00:00:00	per_sample	PRJNA675776.xlsx:45351
+PRJNA675776	SAMN16721952	collection_date	2016	2016-10-04 00:00:00	per_sample	PRJNA675776.xlsx:45352
+PRJNA675776	SAMN16721953	collection_date	2016	2016-09-20 00:00:00	per_sample	PRJNA675776.xlsx:45353
+PRJNA675776	SAMN16721954	collection_date	2016	2016-10-25 00:00:00	per_sample	PRJNA675776.xlsx:45355
+PRJNA675776	SAMN16721955	collection_date	2017	2017-02-13 00:00:00	per_sample	PRJNA675776.xlsx:46236
+PRJNA675776	SAMN16721956	collection_date	2017	2017-02-03 00:00:00	per_sample	PRJNA675776.xlsx:46238
+PRJNA675776	SAMN16721957	collection_date	2017	2017-02-16 00:00:00	per_sample	PRJNA675776.xlsx:46239
+PRJNA675776	SAMN16721958	collection_date	2017	2017-01-17 00:00:00	per_sample	PRJNA675776.xlsx:46244
+PRJNA675776	SAMN16721959	collection_date	2016	2016-09-16 00:00:00	per_sample	PRJNA675776.xlsx:46247
+PRJNA675776	SAMN16721960	collection_date	2016	2016-11-16 00:00:00	per_sample	PRJNA675776.xlsx:46248
+PRJNA675776	SAMN16721961	collection_date	2016	2016-10-24 00:00:00	per_sample	PRJNA675776.xlsx:46249
+PRJNA675776	SAMN16721962	collection_date	2016	2016-12-15 00:00:00	per_sample	PRJNA675776.xlsx:47225
+PRJNA675776	SAMN16721963	collection_date	2017	2017-09-22 00:00:00	per_sample	PRJNA675776.xlsx:47693
+PRJNA675776	SAMN16721964	collection_date	2017	2017-09-18 00:00:00	per_sample	PRJNA675776.xlsx:47885
+PRJNA675776	SAMN16721965	collection_date	2017	2017-06-13 00:00:00	per_sample	PRJNA675776.xlsx:47892
+PRJNA675776	SAMN16721966	collection_date	2017	2017-06-27 00:00:00	per_sample	PRJNA675776.xlsx:48146
+PRJNA675776	SAMN16721967	collection_date	2017	2017-10-09 00:00:00	per_sample	PRJNA675776.xlsx:48148
+PRJNA675776	SAMN16721968	collection_date	2017	2017-09-05 00:00:00	per_sample	PRJNA675776.xlsx:49240
+PRJNA675776	SAMN16721969	collection_date	2018	2018-02-27 00:00:00	per_sample	PRJNA675776.xlsx:49243
+PRJNA675776	SAMN16721970	collection_date	2018	2018-03-01 00:00:00	per_sample	PRJNA675776.xlsx:49245
+PRJNA675776	SAMN16721971	collection_date	2018	2018-03-12 00:00:00	per_sample	PRJNA675776.xlsx:49246
+PRJNA675776	SAMN16721972	collection_date	2017	2017-07-11 00:00:00	per_sample	PRJNA675776.xlsx:49248
+PRJNA675776	SAMN16721973	collection_date	2017	2017-11-24 00:00:00	per_sample	PRJNA675776.xlsx:49249
+PRJNA675776	SAMN16721974	collection_date	2017	2017-11-29 00:00:00	per_sample	PRJNA675776.xlsx:49252
+PRJNA675776	SAMN16721975	collection_date	2017	2017-08-14 00:00:00	per_sample	PRJNA675776.xlsx:49253
+PRJNA675776	SAMN16721976	collection_date	2017	2017-02-14 00:00:00	per_sample	PRJNA675776.xlsx:49254
+PRJNA675776	SAMN16721977	collection_date	2018	2018-01-18 00:00:00	per_sample	PRJNA675776.xlsx:49255
+PRJNA675776	SAMN16721978	collection_date	2018	2018-05-15 00:00:00	per_sample	PRJNA675776.xlsx:51599
+PRJNA675776	SAMN16721979	collection_date	2017	2017-08-17 00:00:00	per_sample	PRJNA675776.xlsx:51600
+PRJNA675776	SAMN16721980	collection_date	2017	2017-09-22 00:00:00	per_sample	PRJNA675776.xlsx:51601
+PRJNA675776	SAMN16721981	collection_date	2017	2017-10-03 00:00:00	per_sample	PRJNA675776.xlsx:51602
+PRJNA675776	SAMN16721982	collection_date	2018	2018-06-12 00:00:00	per_sample	PRJNA675776.xlsx:51603
+PRJNA675776	SAMN16721983	collection_date	2018	2018-07-18 00:00:00	per_sample	PRJNA675776.xlsx:51606
+PRJNA675776	SAMN16721984	collection_date	2018	2018-12-18 00:00:00	per_sample	PRJNA675776.xlsx:51610
+PRJNA675776	SAMN16721985	collection_date	2018	2018-09-01 00:00:00	per_sample	PRJNA675776.xlsx:51612
+PRJNA675776	SAMN16721986	collection_date	2018	2018-09-01 00:00:00	per_sample	PRJNA675776.xlsx:51613
+PRJNA675776	SAMN16721987	collection_date	2018	2018-09-01 00:00:00	per_sample	PRJNA675776.xlsx:51614
+PRJNA675776	SAMN16721988	collection_date	2018	2108-10-18 00:00:00	per_sample	PRJNA675776.xlsx:51615
+PRJNA675776	SAMN16721989	collection_date	2018	2018-03-15 00:00:00	per_sample	PRJNA675776.xlsx:51616
+PRJNA675776	SAMN16721990	collection_date	2018	2018-10-05 00:00:00	per_sample	PRJNA675776.xlsx:51617
+PRJNA675776	SAMN16721991	collection_date	2018	2018-11-07 00:00:00	per_sample	PRJNA675776.xlsx:51620
+PRJNA675776	SAMN16721992	collection_date	2018	2018-02-22 00:00:00	per_sample	PRJNA675776.xlsx:51621
+PRJNA675776	SAMN16721993	collection_date	2018	2018-03-15 00:00:00	per_sample	PRJNA675776.xlsx:51622
+PRJNA675776	SAMN16721994	collection_date	2018	2018-04-09 00:00:00	per_sample	PRJNA675776.xlsx:51623
+PRJNA675776	SAMN16721995	collection_date	2018	2018-04-09 00:00:00	per_sample	PRJNA675776.xlsx:51625
+PRJNA675776	SAMN16721996	collection_date	2018	2018-04-19 00:00:00	per_sample	PRJNA675776.xlsx:51626
+PRJNA675776	SAMN16721997	collection_date	2018	2018-11-14 00:00:00	per_sample	PRJNA675776.xlsx:51634
+PRJNA675776	SAMN16721998	collection_date	2018	2018-11-28 00:00:00	per_sample	PRJNA675776.xlsx:51635
+PRJNA675776	SAMN16721999	collection_date	2018	2018-08-23 00:00:00	per_sample	PRJNA675776.xlsx:51718
+PRJNA675776	SAMN16721895	isolation_source		dog	per_sample	PRJNA675776.xlsx:25571
+PRJNA675776	SAMN16721896	isolation_source		dog	per_sample	PRJNA675776.xlsx:26425
+PRJNA675776	SAMN16721897	isolation_source		dog	per_sample	PRJNA675776.xlsx:27064
+PRJNA675776	SAMN16721898	isolation_source		cat	per_sample	PRJNA675776.xlsx:29130
+PRJNA675776	SAMN16721899	isolation_source		cat	per_sample	PRJNA675776.xlsx:32558
+PRJNA675776	SAMN16721900	isolation_source		cat	per_sample	PRJNA675776.xlsx:32572
+PRJNA675776	SAMN16721901	isolation_source		dog	per_sample	PRJNA675776.xlsx:32576
+PRJNA675776	SAMN16721902	isolation_source		dog	per_sample	PRJNA675776.xlsx:32803
+PRJNA675776	SAMN16721903	isolation_source		cat	per_sample	PRJNA675776.xlsx:32804
+PRJNA675776	SAMN16721904	isolation_source		dog	per_sample	PRJNA675776.xlsx:33197
+PRJNA675776	SAMN16721905	isolation_source		cat	per_sample	PRJNA675776.xlsx:33741
+PRJNA675776	SAMN16721906	isolation_source		dog	per_sample	PRJNA675776.xlsx:33747
+PRJNA675776	SAMN16721907	isolation_source		cat	per_sample	PRJNA675776.xlsx:34143
+PRJNA675776	SAMN16721908	isolation_source		dog	per_sample	PRJNA675776.xlsx:35812
+PRJNA675776	SAMN16721909	isolation_source		dog	per_sample	PRJNA675776.xlsx:35813
+PRJNA675776	SAMN16721910	isolation_source		dog	per_sample	PRJNA675776.xlsx:35814
+PRJNA675776	SAMN16721911	isolation_source		dog	per_sample	PRJNA675776.xlsx:35815
+PRJNA675776	SAMN16721912	isolation_source		dog	per_sample	PRJNA675776.xlsx:35816
+PRJNA675776	SAMN16721913	isolation_source		horse	per_sample	PRJNA675776.xlsx:36216
+PRJNA675776	SAMN16721914	isolation_source		cat	per_sample	PRJNA675776.xlsx:36558
+PRJNA675776	SAMN16721915	isolation_source		cat	per_sample	PRJNA675776.xlsx:38209
+PRJNA675776	SAMN16721916	isolation_source		cat	per_sample	PRJNA675776.xlsx:38612
+PRJNA675776	SAMN16721917	isolation_source		dog	per_sample	PRJNA675776.xlsx:38974
+PRJNA675776	SAMN16721918	isolation_source		dog	per_sample	PRJNA675776.xlsx:38983
+PRJNA675776	SAMN16721919	isolation_source		dog	per_sample	PRJNA675776.xlsx:38989
+PRJNA675776	SAMN16721920	isolation_source		cat	per_sample	PRJNA675776.xlsx:39000
+PRJNA675776	SAMN16721921	isolation_source		dog	per_sample	PRJNA675776.xlsx:39142
+PRJNA675776	SAMN16721922	isolation_source		dog	per_sample	PRJNA675776.xlsx:39143
+PRJNA675776	SAMN16721923	isolation_source		dog	per_sample	PRJNA675776.xlsx:39145
+PRJNA675776	SAMN16721924	isolation_source		horse	per_sample	PRJNA675776.xlsx:39566
+PRJNA675776	SAMN16721925	isolation_source		dog	per_sample	PRJNA675776.xlsx:40064
+PRJNA675776	SAMN16721926	isolation_source		cat	per_sample	PRJNA675776.xlsx:40294
+PRJNA675776	SAMN16721927	isolation_source		dog	per_sample	PRJNA675776.xlsx:42465
+PRJNA675776	SAMN16721928	isolation_source		dog	per_sample	PRJNA675776.xlsx:42468
+PRJNA675776	SAMN16721929	isolation_source		dog	per_sample	PRJNA675776.xlsx:42470
+PRJNA675776	SAMN16721930	isolation_source		dog	per_sample	PRJNA675776.xlsx:42472
+PRJNA675776	SAMN16721931	isolation_source		dog	per_sample	PRJNA675776.xlsx:42474
+PRJNA675776	SAMN16721932	isolation_source		dog	per_sample	PRJNA675776.xlsx:42475
+PRJNA675776	SAMN16721933	isolation_source		bovine	per_sample	PRJNA675776.xlsx:42477
+PRJNA675776	SAMN16721934	isolation_source		dog	per_sample	PRJNA675776.xlsx:42485
+PRJNA675776	SAMN16721935	isolation_source		dog	per_sample	PRJNA675776.xlsx:42486
+PRJNA675776	SAMN16721936	isolation_source		dog	per_sample	PRJNA675776.xlsx:42492
+PRJNA675776	SAMN16721937	isolation_source		dog	per_sample	PRJNA675776.xlsx:42982
+PRJNA675776	SAMN16721938	isolation_source		dog	per_sample	PRJNA675776.xlsx:43103
+PRJNA675776	SAMN16721939	isolation_source		dog	per_sample	PRJNA675776.xlsx:43112
+PRJNA675776	SAMN16721940	isolation_source		cat	per_sample	PRJNA675776.xlsx:43924
+PRJNA675776	SAMN16721941	isolation_source		cat	per_sample	PRJNA675776.xlsx:43926
+PRJNA675776	SAMN16721942	isolation_source		dog	per_sample	PRJNA675776.xlsx:43934
+PRJNA675776	SAMN16721943	isolation_source		dog	per_sample	PRJNA675776.xlsx:43935
+PRJNA675776	SAMN16721944	isolation_source		cat	per_sample	PRJNA675776.xlsx:43936
+PRJNA675776	SAMN16721945	isolation_source		cat	per_sample	PRJNA675776.xlsx:45339
+PRJNA675776	SAMN16721946	isolation_source		dog	per_sample	PRJNA675776.xlsx:45340
+PRJNA675776	SAMN16721947	isolation_source		dog	per_sample	PRJNA675776.xlsx:45341
+PRJNA675776	SAMN16721948	isolation_source		dog	per_sample	PRJNA675776.xlsx:45342
+PRJNA675776	SAMN16721949	isolation_source		dog	per_sample	PRJNA675776.xlsx:45343
+PRJNA675776	SAMN16721950	isolation_source		cat	per_sample	PRJNA675776.xlsx:45350
+PRJNA675776	SAMN16721951	isolation_source		dog	per_sample	PRJNA675776.xlsx:45351
+PRJNA675776	SAMN16721952	isolation_source		dog	per_sample	PRJNA675776.xlsx:45352
+PRJNA675776	SAMN16721953	isolation_source		horse	per_sample	PRJNA675776.xlsx:45353
+PRJNA675776	SAMN16721954	isolation_source		cat	per_sample	PRJNA675776.xlsx:45355
+PRJNA675776	SAMN16721955	isolation_source		cat	per_sample	PRJNA675776.xlsx:46236
+PRJNA675776	SAMN16721956	isolation_source		dog	per_sample	PRJNA675776.xlsx:46238
+PRJNA675776	SAMN16721957	isolation_source		dog	per_sample	PRJNA675776.xlsx:46239
+PRJNA675776	SAMN16721958	isolation_source		cat	per_sample	PRJNA675776.xlsx:46244
+PRJNA675776	SAMN16721959	isolation_source		cat	per_sample	PRJNA675776.xlsx:46247
+PRJNA675776	SAMN16721960	isolation_source		dog	per_sample	PRJNA675776.xlsx:46248
+PRJNA675776	SAMN16721961	isolation_source		dog	per_sample	PRJNA675776.xlsx:46249
+PRJNA675776	SAMN16721962	isolation_source		dog	per_sample	PRJNA675776.xlsx:47225
+PRJNA675776	SAMN16721963	isolation_source		dog	per_sample	PRJNA675776.xlsx:47693
+PRJNA675776	SAMN16721964	isolation_source		cat	per_sample	PRJNA675776.xlsx:47885
+PRJNA675776	SAMN16721965	isolation_source		horse	per_sample	PRJNA675776.xlsx:47892
+PRJNA675776	SAMN16721966	isolation_source		horse	per_sample	PRJNA675776.xlsx:48146
+PRJNA675776	SAMN16721967	isolation_source		horse	per_sample	PRJNA675776.xlsx:48148
+PRJNA675776	SAMN16721968	isolation_source		dog	per_sample	PRJNA675776.xlsx:49240
+PRJNA675776	SAMN16721969	isolation_source		horse	per_sample	PRJNA675776.xlsx:49243
+PRJNA675776	SAMN16721970	isolation_source		dog	per_sample	PRJNA675776.xlsx:49245
+PRJNA675776	SAMN16721971	isolation_source		cat	per_sample	PRJNA675776.xlsx:49246
+PRJNA675776	SAMN16721972	isolation_source		dog	per_sample	PRJNA675776.xlsx:49248
+PRJNA675776	SAMN16721973	isolation_source		dog	per_sample	PRJNA675776.xlsx:49249
+PRJNA675776	SAMN16721974	isolation_source		dog	per_sample	PRJNA675776.xlsx:49252
+PRJNA675776	SAMN16721975	isolation_source		dog	per_sample	PRJNA675776.xlsx:49253
+PRJNA675776	SAMN16721976	isolation_source		horse	per_sample	PRJNA675776.xlsx:49254
+PRJNA675776	SAMN16721977	isolation_source		dog	per_sample	PRJNA675776.xlsx:49255
+PRJNA675776	SAMN16721978	isolation_source		dog	per_sample	PRJNA675776.xlsx:51599
+PRJNA675776	SAMN16721979	isolation_source		horse	per_sample	PRJNA675776.xlsx:51600
+PRJNA675776	SAMN16721980	isolation_source		dog	per_sample	PRJNA675776.xlsx:51601
+PRJNA675776	SAMN16721981	isolation_source		dog	per_sample	PRJNA675776.xlsx:51602
+PRJNA675776	SAMN16721982	isolation_source		bovine	per_sample	PRJNA675776.xlsx:51603
+PRJNA675776	SAMN16721983	isolation_source		dog	per_sample	PRJNA675776.xlsx:51606
+PRJNA675776	SAMN16721984	isolation_source		dog	per_sample	PRJNA675776.xlsx:51610
+PRJNA675776	SAMN16721985	isolation_source		cat	per_sample	PRJNA675776.xlsx:51612
+PRJNA675776	SAMN16721986	isolation_source		cat	per_sample	PRJNA675776.xlsx:51613
+PRJNA675776	SAMN16721987	isolation_source		cat	per_sample	PRJNA675776.xlsx:51614
+PRJNA675776	SAMN16721988	isolation_source		dog	per_sample	PRJNA675776.xlsx:51615
+PRJNA675776	SAMN16721989	isolation_source		bird	per_sample	PRJNA675776.xlsx:51616
+PRJNA675776	SAMN16721990	isolation_source		dog	per_sample	PRJNA675776.xlsx:51617
+PRJNA675776	SAMN16721991	isolation_source		cat	per_sample	PRJNA675776.xlsx:51620
+PRJNA675776	SAMN16721992	isolation_source		cat	per_sample	PRJNA675776.xlsx:51621
+PRJNA675776	SAMN16721993	isolation_source		cat	per_sample	PRJNA675776.xlsx:51622
+PRJNA675776	SAMN16721994	isolation_source		dog	per_sample	PRJNA675776.xlsx:51623
+PRJNA675776	SAMN16721995	isolation_source		horse	per_sample	PRJNA675776.xlsx:51625
+PRJNA675776	SAMN16721996	isolation_source		dog	per_sample	PRJNA675776.xlsx:51626
+PRJNA675776	SAMN16721997	isolation_source		dog	per_sample	PRJNA675776.xlsx:51634
+PRJNA675776	SAMN16721998	isolation_source		dog	per_sample	PRJNA675776.xlsx:51635
+PRJNA675776	SAMN16721999	isolation_source		bovine	per_sample	PRJNA675776.xlsx:51718
+PRJNA725484	SAMN18913839	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN751969
+PRJNA725484	SAMN18913841	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN751985
+PRJNA725484	SAMN18913844	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752019
+PRJNA725484	SAMN18913846	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752035
+PRJNA725484	SAMN18913849	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752069
+PRJNA725484	SAMN18913850	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752077
+PRJNA725484	SAMN18913852	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752093
+PRJNA725484	SAMN18913853	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752107
+PRJNA725484	SAMN18913854	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752115
+PRJNA725484	SAMN18913855	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752123
+PRJNA725484	SAMN18913856	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752131
+PRJNA725484	SAMN18913857	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752149
+PRJNA725484	SAMN18913858	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752157
+PRJNA725484	SAMN18913859	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752165
+PRJNA725484	SAMN18913860	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752173
+PRJNA725484	SAMN18913861	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752181
+PRJNA725484	SAMN18913862	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752199
+PRJNA725484	SAMN18913863	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752203
+PRJNA725484	SAMN18913867	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752245
+PRJNA725484	SAMN18913868	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752253
+PRJNA725484	SAMN18913869	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752261
+PRJNA725484	SAMN18913870	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752279
+PRJNA725484	SAMN18913871	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752287
+PRJNA725484	SAMN18913872	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752295
+PRJNA725484	SAMN18913873	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752309
+PRJNA725484	SAMN18913877	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752359
+PRJNA725484	SAMN18913879	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752375
+PRJNA725484	SAMN18913880	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752383
+PRJNA725484	SAMN18913881	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752405
+PRJNA725484	SAMN18913882	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752413
+PRJNA725484	SAMN18913883	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752421
+PRJNA725484	SAMN18913884	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752439
+PRJNA725484	SAMN18913885	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752447
+PRJNA725484	SAMN18913887	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752463
+PRJNA725484	SAMN18913888	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752471
+PRJNA725484	SAMN18913889	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752489
+PRJNA725484	SAMN18913890	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752497
+PRJNA725484	SAMN18913891	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752501
+PRJNA725484	SAMN18913892	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752519
+PRJNA725484	SAMN18913893	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752527
+PRJNA725484	SAMN18913894	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752543
+PRJNA725484	SAMN18913895	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752551
+PRJNA725484	SAMN18913896	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752569
+PRJNA725484	SAMN18913901	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752615
+PRJNA725484	SAMN18913902	isolation_source		Vagina	per_sample	pnas.2110227118.sd01.xlsx:MRSN752623
+PRJNA725484	SAMN18913905	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752657
+PRJNA725484	SAMN18913907	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752681
+PRJNA725484	SAMN18913908	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752699
+PRJNA725484	SAMN18913909	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752703
+PRJNA725484	SAMN18913910	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752711
+PRJNA725484	SAMN18913911	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752729
+PRJNA725484	SAMN18913912	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752737
+PRJNA725484	SAMN18913913	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752745
+PRJNA725484	SAMN18913914	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752753
+PRJNA725484	SAMN18913915	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752761
+PRJNA725484	SAMN18913917	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752787
+PRJNA725484	SAMN18913918	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752795
+PRJNA725484	SAMN18913919	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752809
+PRJNA725484	SAMN18913920	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752817
+PRJNA725484	SAMN18913921	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752825
+PRJNA725484	SAMN18913922	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752833
+PRJNA725484	SAMN18913923	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752841
+PRJNA725484	SAMN18913924	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752859
+PRJNA725484	SAMN18913925	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752867
+PRJNA725484	SAMN18913926	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752875
+PRJNA725484	SAMN18913928	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752905
+PRJNA725484	SAMN18913929	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752913
+PRJNA725484	SAMN18913930	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752921
+PRJNA725484	SAMN18913932	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752947
+PRJNA725484	SAMN18913934	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN752989
+PRJNA725484	SAMN18913935	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849636
+PRJNA725484	SAMN18913937	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849740
+PRJNA725484	SAMN18913938	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849758
+PRJNA725484	SAMN18913939	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849766
+PRJNA725484	SAMN18913940	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849774
+PRJNA725484	SAMN18913941	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849782
+PRJNA725484	SAMN18913942	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849790
+PRJNA725484	SAMN18913943	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849804
+PRJNA725484	SAMN18913944	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849812
+PRJNA725484	SAMN18913945	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849820
+PRJNA725484	SAMN18913947	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849846
+PRJNA725484	SAMN18913948	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849854
+PRJNA725484	SAMN18913949	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849862
+PRJNA725484	SAMN18913950	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849870
+PRJNA725484	SAMN18913951	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849888
+PRJNA725484	SAMN18913952	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849896
+PRJNA725484	SAMN18913953	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849900
+PRJNA725484	SAMN18913954	isolation_source		Rectal Swab	per_sample	pnas.2110227118.sd01.xlsx:MRSN849934
+PRJNA725484	SAMN18913824	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN381127 (rescued 'Middle East')
+PRJNA725484	SAMN18913828	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN515548 (rescued 'Middle East')
+PRJNA725484	SAMN18913829	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN515566 (rescued 'Middle East')
+PRJNA725484	SAMN18913830	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516404 (rescued 'Middle East')
+PRJNA725484	SAMN18913831	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516459 (rescued 'Middle East')
+PRJNA725484	SAMN18913832	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516529 (rescued 'Middle East')
+PRJNA725484	SAMN18913833	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516608 (rescued 'Middle East')
+PRJNA725484	SAMN18913834	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516653 (rescued 'Middle East')
+PRJNA725484	SAMN18913835	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516662 (rescued 'Middle East')
+PRJNA725484	SAMN18913836	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN516741 (rescued 'Middle East')
+PRJNA725484	SAMN18913837	country		Middle East	per_sample	pnas.2110227118.sd01.xlsx:MRSN519386 (rescued 'Middle East')

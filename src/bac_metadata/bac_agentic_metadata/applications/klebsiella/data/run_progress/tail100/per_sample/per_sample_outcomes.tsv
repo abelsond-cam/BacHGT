@@ -1,30 +1,31 @@
 study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
-PRJDB11378			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJDB11378			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJDB6407	PMC8318238		abstained	0	0	none	no joinable table
-PRJEB12888			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB12888			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJEB20809	PMC13148723		abstained	0	0	none	no joinable table
-PRJEB21132			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB30913	PMC6966826	13073_2019_706_MOESM1_ESM.xlsx	direct	129	258	high	mapped 129 samples, 258 cell-fills
-PRJEB36370			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB40861			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB49326			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJEB21132			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB30913	PMC6966826	13073_2019_706_MOESM1_ESM.xlsx	abstained	129	0	high	mapped 129 samples, 258 cell-fills; overwrite guard: 0/258 fills kept; kept ENA over table on country×129, collection_date×129
+PRJEB36370			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB39567	PMC12647771		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['PRJEB39567.xlsx', 'PRJEB39567.csv']
+PRJEB40861			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB49326			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJEB49683	PMC7994358		abstained	0	0	none	no joinable table
-PRJEB50545	PMC12779062	pone.0337346.s002.xlsx	direct	48	48	medium	mapped 48 samples, 48 cell-fills; value-check rejected ['isolation_source']
+PRJEB50545	PMC12779062	pone.0337346.s002.xlsx	direct	48	144	medium	mapped 48 samples, 192 cell-fills; rescued ['country=vocab', 'host=vocab', 'isolation_source=vocab']; value-check rejected ['isolation_source']; overwrite guard: 144/192 fills kept; dropped 48 invalid ({'isolation_source': 48})
 PRJEB54810	PMC9376106		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2022_32504_MOESM6_ESM.xlsx', '41467_2022_32504_MOESM6_ESM.xlsx', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM2_ESM.pdf', '41467_2022_32504_MOESM1_ESM.docx']
 PRJEB55414	PMC10434048		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['reviewer-comments.pdf']
 PRJEB56918	PMC10505216		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41597_2023_2502_MOESM1_ESM.xlsx', '41597_2023_2502_MOESM1_ESM.xlsx']
 PRJEB63210	PMC11790497		abstained	0	0	none	no joinable table
 PRJEB8666	PMC8330565		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['bmjgh-2021-005659supp002.pdf', 'bmjgh-2021-005659supp002.pdf']
-PRJEB8667			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJNA1076808	PMC11587635		abstained	0	0	none	no joinable table
+PRJEB8667			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1076808	PMC11587635		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['PRJNA1076808.xlsx']
 PRJNA267549	PMC4521703	pgen.1005413.s012.xlsx	direct	110	110	high	mapped 110 samples, 110 cell-fills
-PRJNA353728			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
+PRJNA353728			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
 PRJNA411762	PMC6535554		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['AAC.02513-18-sd001.xlsx', 'AAC.02513-18-sd001.xlsx', 'AAC.02513-18-sd001.xlsx', 'AAC.02513-18-sd001.xlsx', 'AAC.02513-18-sd001.xlsx', 'AAC.02513-18-sd001.xlsx']
 PRJNA532924	PMC8115898		abstained	0	0	none	no joinable table
 PRJNA611540	PMC7688209		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['AEM.01715-20-s0001.pdf', 'AEM.01715-20-s0001.pdf', 'AEM.01715-20-s0001.pdf', 'AEM.01715-20-s0001.pdf', 'AEM.01715-20-s0001.pdf', 'AEM.01715-20-s0001.pdf']
-PRJNA646855			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJNA675776	PMC9047677		abstained	0	0	none	no joinable table
+PRJNA646855	PMC9790207		abstained	0	0	none	no joinable table
+PRJNA675776	PMC9047677	PRJNA675776.xlsx	direct	105	210	high	mapped 105 samples, 420 cell-fills; rescued ['isolation_source=verbatim']; overwrite guard: 210/420 fills kept; overwrote collection_date×105(more-specific); kept ENA over table on country×105, host×105
+PRJNA725484	PMC8640832	pnas.2110227118.sd01.xlsx	direct	131	99	medium	mapped 131 samples, 393 cell-fills; rescued ['country=vocab']; value-check rejected ['country']; overwrite guard: 99/393 fills kept; kept ENA over table on collection_date×121, isolation_source×33, country×120; dropped 20 invalid ({'collection_date': 10, 'isolation_source': 10})
 PRJNA788733	PMC11925198		abstained	0	0	none	no joinable table
 PRJNA857533	PMC9813266	41467_2022_35713_MOESM5_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM1_ESM.pdf', '41467_2022_35713_MOESM4_ESM.xlsx', '41467_2022_35713_MOESM4_ESM.xlsx', '41467_2022_35713_MOESM4_ESM.xlsx', '41467_2022_35713_MOESM7_ESM.xlsx', '41467_2022_35713_MOESM7_ESM.xlsx', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf', '41467_2022_35713_MOESM2_ESM.pdf']
-PRJNA949653			NO_PMCID	0	0	none	no PMCID — cannot fetch OA supplementary; see missing-papers / manual_download_supp
-PRJEB39567	PMC12647771		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['PRJEB39567.csv']
+PRJNA949653			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
