@@ -30,29 +30,46 @@ Parent guidance: [`../CLAUDE.md`](../CLAUDE.md) (bac_metadata),
 bac_agentic_metadata/
   engine/                 # the engine + the whole pipeline:
                           #   run_full_metadata_agent.py (in-process driver), stages.py (one fn/stage),
-                          #   accumulate.py + cli/ (curator CLIs escalate/run_health/attach_papers + accumulate), run_health_report.py,
+                          #   run_layout.py (RunPaths — THE per-tranche path authority), accumulate.py +
+                          #   cli/ (curator CLIs escalate/run_health/fill/attach_papers + accumulate),
+                          #   run_health_report.py, escalation_conservation.py (the conservation gate core),
                           #   reference_outputs/ (byte-for-byte gate), + mechanics (grader, paper_finder,
                           #   backfill, sample_extractor, escalation, ena_sizing, fulltext, …)
   evaluation/             # fold + manual-curation validation + run_folds.sh (driver + scorecard benchmark):
-                          #   make_splits, freeze_study_setting, validate_*, summarise_agent_vs_manual
+                          #   make_splits, freeze_study_setting, validate_*, summarise_agent_vs_manual,
+                          #   verify_escalation_conservation (thin CLI over engine/escalation_conservation)
   applications/
     klebsiella/           # the app: attributes.yaml (rubric), export_base_table.py,
                           #   run_klebsiella.sh (canonical driver wrapper), data/
-      data/               # task-aligned tree (folders mirror the pipeline steps):
-        inputs/             #   curated study-level snapshot + base_table (gitignored)
-        fold_splits/        #   project_splits.tsv
-        ena_assessment/     #   ena_sizing / ingest / assessment_report
-        find_papers/        #   found_papers*, find_validation/adjudication, missing_papers,
-          manual_download/  #     manually-downloaded <accession>.pdf (paywalled-paper fallback)
-        study_lv_attributes/  # study-level: grading/ , whole_study_backfill/ , escalation/
-        sample_lv_attributes/ # sample-level: per_sample/   (per-sample table extraction)
-        curated/            #   accumulation stores + master (curated_escalations.tsv versioned; rest gitignored)
-        scorecard/          #   agent_vs_manual + completeness (final measurement)
-        diagnostics/        #   curator_gold, gt_corrections, gap/decline reports
-        logs/  cache/       #   run logs; regenerable LLM/ENA/fulltext/find/per_sample caches
+      data/               # per-tranche outputs under run_progress/<tag>/; shared inputs at the root:
+        run_progress/       #   ⭐ EVERY per-tranche output — one folder per run tag, stage-nested:
+          <tag>/find/         #     found_papers, missing_papers_report, find_validation/adjudication
+          <tag>/grade/        #     study_grades, grading_validation/adjudication
+          <tag>/per_sample/   #     per_sample_applied/outcomes, per_sample_value_report,
+                          #                persample_supplement_worklist, preclean_summary
+          <tag>/backfill/     #     backfill_applied, backfill_gate_report, backfill_value_report
+          <tag>/escalation/   #     decisions_needed, escalation_applied, accepted_unrecoverable
+          <tag>/fill/         #     filled_metadata (PRODUCTION output; TRACKED) + provenance + summary
+          <tag>/run_health/   #     report.{md,tsv} (+ the VERIFIED conservation stamp)
+          <tag>/scorecard/    #     agent_vs_manual, backfill_completeness_report (gold benchmark)
+          <tag>/selection/    #     synthetic sizing/splits for a tail size-band tranche
+        inputs/             #   curated study-level snapshot + base_table (gitignored) — SHARED
+        fold_splits/        #   project_splits.tsv — SHARED
+        ena_assessment/     #   ena_sizing / ingest / assessment_report — SHARED
+        find_papers/manual_download/       #   hand-downloaded <accession>.pdf — SHARED
+        sample_lv_attributes/manual_download_supp/  #   curator per-isolate tables (tracked) — SHARED
+        study_lv_attributes/categorisation/         #   approved category vocab yamls — SHARED
+        curated/            #   cross-tag accumulation stores + master (curated_escalations.tsv versioned) — SHARED
+        diagnostics/  logs/  cache/   #   diagnostics; run logs; regenerable caches — SHARED
     m_abs/                # attributes.yaml, ATB_metadata_Mabs_2025_release.xlsx, CLAUDE.md
   PROGRESS_REPORT.md      # collaborator-facing overview (aim, design, results, plan)
 ```
+
+**Paths: always via `engine.run_layout.RunPaths(data_dir, tag)`** — never hand-build `f"..._{tag}.tsv"`.
+It resolves every per-tranche artifact under `run_progress/<tag>/<stage>/` (the tag is the folder, so the
+filename drops the suffix) and the shared root-level inputs. Co-locating a tranche's whole trail makes it
+auditable at a glance, and one path authority removes the two-modules-disagree bug class that caused the
+silent drops. `RunPaths.ensure()` makes the stage dirs.
 
 ## Core ideas (one line each)
 

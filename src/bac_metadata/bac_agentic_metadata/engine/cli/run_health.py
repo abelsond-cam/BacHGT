@@ -33,7 +33,7 @@ def main() -> None:
     fields = tuple(spec.completeness_fields)
     res, verdict = build_run_health(Path(args.data_dir), fields, fold=args.fold, tag=args.tag,
                                     big_decision_frac=spec.escalation_big_decision_frac)
-    print(f"Wrote run_health_{args.tag}_report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
+    print(f"Wrote run_progress/{args.tag}/run_health/report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
     if len(res):
         print(res["resolution_state"].value_counts().to_string(), file=sys.stderr)
     raise SystemExit(0)  # always exit 0 — loud, never blocks

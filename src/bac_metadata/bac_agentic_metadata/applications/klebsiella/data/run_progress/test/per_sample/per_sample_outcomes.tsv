@@ -1,0 +1,34 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJEB10018	PMC7244338	EMS83227-supplement-Supplementary_Table_6.xlsx	abstained	236	0	high	mapped 236 samples, 944 cell-fills; overwrite guard: 0/944 fills kept; kept ENA over table on country×236, collection_date×236, isolation_source×236, host×236
+PRJEB1271	PMC6717969	13059_2019_1785_MOESM2_ESM.xlsx	direct	162	163	high	mapped 162 samples, 324 cell-fills; overwrite guard: 163/324 fills kept; overwrote collection_date×1(more-specific); kept ENA over table on collection_date×161
+PRJEB1272	PMC4790626		abstained	0	0	none	no joinable table
+PRJEB19226			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB1963	PMC3772739		abstained	0	0	none	no joinable table
+PRJEB21081			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB27342	PMC9712112	41564_2022_1263_MOESM3_ESM.xlsx	direct	3227	8926	high	mapped 3227 samples, 8974 cell-fills; overwrite guard: 8926/8974 fills kept; dropped 48 invalid ({'host': 48})
+PRJEB29424			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB29738	PMC8634409	PRJEB29738.csv	direct	147	441	high	mapped 147 samples, 441 cell-fills
+PRJEB29739	PMC8634535	ciab769_suppl_supplementary_table_2.xlsx	direct	134	359	high	mapped 134 samples, 359 cell-fills
+PRJEB32655			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB34643	PMC8865463	spectrum02376-21_supp_1_seq6.xlsx	direct	131	315	high	mapped 131 samples, 320 cell-fills; rescued ['host=vocab']; overwrite guard: 315/320 fills kept; overwrote collection_date×105(more-specific), isolation_source×105(Both sets of changes represent g); kept ENA over table on country×5
+PRJEB37504	PMC12060429	13756_2025_1553_MOESM4_ESM.xlsx	direct	347	478	high	mapped 347 samples, 1365 cell-fills; rescued ['host=vocab']; overwrite guard: 478/1365 fills kept; kept ENA over table on collection_date×266, country×339, isolation_source×282
+PRJEB37711	PMC8836320	pone.0261999.s002.xlsx	direct	155	287	high	mapped 155 samples, 301 cell-fills; rescued ['host=vocab']; overwrite guard: 287/301 fills kept; kept ENA over table on isolation_source×13; dropped 1 invalid ({'isolation_source': 1})
+PRJEB38540	PMC8283727		abstained	0	0	none	no joinable table
+PRJEB42350	PMC8244762		abstained	0	0	none	no joinable table
+PRJEB43870	PMC10232788	Table_1.XLSX	direct	203	203	high	mapped 203 samples, 609 cell-fills; overwrite guard: 203/609 fills kept; kept ENA over table on collection_date×203, isolation_source×203
+PRJEB48268	PMC12039103	13073_2025_1466_MOESM2_ESM.xlsx	direct	1104	1104	high	mapped 1104 samples, 4416 cell-fills; overwrite guard: 1104/4416 fills kept; kept ENA over table on country×1104, collection_date×1104, isolation_source×1104
+PRJEB53835			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB56146	PMC10370044	22-00774_SupplementaryTable1.xlsx	direct	156	1	high	mapped 156 samples, 309 cell-fills; overwrite guard: 1/309 fills kept; kept ENA over table on collection_date×156, isolation_source×152
+PRJEB57159	PMC10232788	Table_1.XLSX	direct	5	5	high	mapped 5 samples, 15 cell-fills; overwrite guard: 5/15 fills kept; kept ENA over table on collection_date×5, isolation_source×5
+PRJEB63349	PMC11178878	41467_2024_49349_MOESM4_ESM.xlsx	direct	687	687	high	mapped 687 samples, 2061 cell-fills; overwrite guard: 687/2061 fills kept; overwrote isolation_source×687(ENA 'clinical material' is a vag); kept ENA over table on country×687, collection_date×673; dropped 14 invalid ({'collection_date': 14})
+PRJNA252957	PMC4510304	pone.0133727.s003.docx+pone.0133727.s004.xlsx	abstained	5	0	medium	two-hop: 5 samples via 5 shared IDs, 26 cell-fills; overwrite guard: 0/26 fills kept; kept ENA over table on country×13, collection_date×10; dropped 3 invalid ({'collection_date': 3})
+PRJNA529744	PMC6711911		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf', 'JCM.00573-19-s0001.pdf']
+PRJNA543274	PMC8438989	13073_2021_960_MOESM2_ESM.xlsx	abstained	259	0	high	mapped 259 samples, 412 cell-fills; rescued ['host=vocab']; overwrite guard: 0/412 fills kept; kept ENA over table on isolation_source×164, host×153; dropped 95 invalid ({'isolation_source': 95})
+PRJNA548120	PMC7845606	PRJNA548120.csv	abstained	4	0	high	mapped 4 samples, 16 cell-fills; overwrite guard: 0/16 fills kept; kept ENA over table on country×4, collection_date×4, isolation_source×4, host×4
+PRJNA633565	PMC10434059	PRJNA633565.csv	direct	166	166	high	mapped 166 samples, 498 cell-fills; overwrite guard: 166/498 fills kept; kept ENA over table on country×166, collection_date×166
+PRJNA684006	PMC10101084		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.04121-22-s0001.pdf', 'spectrum.04121-22-s0001.pdf', 'spectrum.04121-22-s0001.pdf', 'PRJNA684006.csv']
+PRJNA757551	PMC9160272	41467_2022_30637_MOESM4_ESM.xlsx	direct	334	333	high	mapped 334 samples, 334 cell-fills; overwrite guard: 333/334 fills kept; dropped 1 invalid ({'isolation_source': 1})
+PRJNA778230	PMC9603589		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.01242-22-s0004.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'spectrum.01242-22-s0002.xlsx', 'PRJNA778230.csv']
+PRJNA825705	PMC9393496	Data_Sheet_1.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['Data_Sheet_1.xlsx']
+PRJNA839691	PMC9764986	msystems.00799-22-s0002.xlsx	direct	143	241	high	mapped 143 samples, 286 cell-fills; overwrite guard: 241/286 fills kept; overwrote isolation_source×143(The first four changes (rectal s); kept ENA over table on host×45
+PRJNA922900	PMC10232788	Table_1.XLSX	direct	111	111	high	mapped 111 samples, 333 cell-fills; overwrite guard: 111/333 fills kept; kept ENA over table on collection_date×111, isolation_source×111

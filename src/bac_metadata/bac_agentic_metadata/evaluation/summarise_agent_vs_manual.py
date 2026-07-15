@@ -142,7 +142,9 @@ def main() -> None:
     p.add_argument("--find-validation", default=str(DATA_DIR / "find_papers" / "find_validation_report.tsv"))
     p.add_argument("--find-adjudication", default=str(DATA_DIR / "find_papers" / "find_adjudication_report.tsv"))
     p.add_argument("--grading-adjudication", default=str(DATA_DIR / "study_lv_attributes" / "grading" / "grading_adjudication_report.tsv"))
-    p.add_argument("--prefix", default="sonnet", help="Run tag for the output basename (e.g. sonnet, opus).")
+    p.add_argument("--prefix", default="sonnet", help="Run tag shown in the report title (e.g. sonnet, opus).")
+    p.add_argument("--out-dir", default=str(DATA_DIR / "scorecard"),
+                   help="Output dir (default data/scorecard; pass run_progress/<tag>/scorecard for the tranche).")
     args = p.parse_args()
 
     vsg = _load_validator()
@@ -192,8 +194,10 @@ def main() -> None:
     md.append("- **agent right** = adjudicated manual-curation errors the agent corrects; "
               "**manual right** = agent errors. When they disagree the agent is right far more often.")
 
-    (DATA_DIR / "scorecard" / f"agent_vs_manual_{args.prefix}.md").write_text("\n".join(md) + "\n")
-    res.to_csv(DATA_DIR / "scorecard" / f"agent_vs_manual_{args.prefix}.tsv", sep="\t", index=False)
+    out_dir = Path(args.out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "agent_vs_manual.md").write_text("\n".join(md) + "\n")
+    res.to_csv(out_dir / "agent_vs_manual.tsv", sep="\t", index=False)
     print(f"Wrote agent_vs_manual_{args.prefix}.{{md,tsv}}", file=sys.stderr)
     print(res.to_string(index=False), file=sys.stderr)
 

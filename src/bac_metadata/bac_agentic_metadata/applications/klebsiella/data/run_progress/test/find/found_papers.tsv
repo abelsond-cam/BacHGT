@@ -1,0 +1,48 @@
+study_accession	none_found	chosen_pmid	chosen_pmcid	chosen_doi	chosen_found_via	find_confidence	verified	sources_agreeing	coverage_estimate	coverage_fraction	shared_accession	umbrella	data_reuse_only	n_candidates	chosen_title
+PRJNA288601	True					low		0			True	False	True	25	
+PRJEB27342	False	36411354	PMC9712112	10.1038/s41564-022-01263-0	europepmc_accession,ncbi_bioproject	high	False	2	3482.0	0.548	False	False	False	2	A large-scale genomic snapshot of Klebsiella spp. isolates in Northern Italy reveals limited transmission between clinical and non-clinical settings.
+PRJEB10018	False	31358985	PMC7244338	10.1038/s41564-019-0492-8	europepmc_accession,europepmc_secondary	high	False	2	1700.0	0.7324	True	False	False	14	Epidemic of carbapenem-resistant Klebsiella pneumoniae in Europe is driven by nosocomial spread.
+PRJNA376414	False	28512093	PMC5433097	10.1128/mbio.00489-17	europepmc_accession,ncbi_bioproject	high	True	2	1777.0	0.9989	True	False	False	10	Population Genomic Analysis of 1,777 Extended-Spectrum Beta-Lactamase-Producing <i>Klebsiella pneumoniae</i> Isolates, Houston, Texas: Unexpected Abundance of Clonal Group 307.
+PRJNA658369	False	32151332	PMC7473597	10.1016/s1473-3099(19)30755-8	ncbi_bioproject	high		1	1663.0	1.0	True	False	False	13	Molecular and clinical epidemiology of carbapenem-resistant Enterobacterales in the USA (CRACKLE-2): a prospective cohort study.
+PRJEB48268	False	40296028	PMC12039103	10.1186/s13073-025-01466-0	europepmc_accession	high	True	1	1110.0	1.0	False	False	False	2	A genome-wide One Health study of Klebsiella pneumoniae in Norway reveals overlapping populations but few recent transmission events across reservoirs.
+PRJEB21081	True					low		0			False	False	False	0	
+PRJEB29738	False	34850834	PMC8634409	10.1093/cid/ciab776	europepmc_accession	high	True	1	259.0	0.3005	True	False	False	2	Genome Sequencing Identifies Previously Unrecognized Klebsiella pneumoniae Outbreaks in Neonatal Intensive Care Units in the Philippines.
+PRJNA577535	False	36066252	PMC9602435	10.1128/spectrum.00957-22	europepmc_accession	medium	True	1	575.0	0.7196	True	False	False	6	Genomic Surveillance of Carbapenem-Resistant Klebsiella pneumoniae from a Major Public Health Hospital in Singapore.
+PRJEB29739	True					high		0			True	False	False	10	
+PRJEB29424	True					high		0			False	False	True	1	
+PRJEB63349	False	38877000	PMC11178878	10.1038/s41467-024-49349-z	europepmc_accession	high	True	1	687.0	1.0	False	False	False	1	International and regional spread of carbapenem-resistant Klebsiella pneumoniae in Europe.
+PRJEB42350	False	34182896	PMC8244762	10.1080/19490976.2021.1939599	europepmc_accession,ncbi_bioproject	high	True	2	484.0	1.0	False	False	False	4	Gastrointestinal carriage of Klebsiella pneumoniae in a general adult population: a cross-sectional study of risk factors and bacterial genomic diversity.
+PRJNA529744	False	31315956	PMC6711911	10.1128/jcm.00573-19	europepmc_accession,ncbi_bioproject	high	True	2	361.0	0.7917	True	False	False	5	Genomics for Molecular Epidemiology and Detecting Transmission of Carbapenemase-Producing <i>Enterobacterales</i> in Victoria, Australia, 2012 to 2016.
+PRJNA757551	False	35650193	PMC9160272	10.1038/s41467-022-30637-5	europepmc_accession	high	True	1	375.0	1.0	True	False	False	2	Whole genome sequencing reveals hidden transmission of carbapenemase-producing Enterobacterales.
+PRJEB53835	True					low		0			False	False	False	0	
+PRJEB2111	False	26100894	PMC4500264	10.1073/pnas.1501049112	europepmc_secondary,ncbi_bioproject	high	True	2	348.0	1.0	False	False	False	8	Genomic analysis of diversity, population structure, virulence, and antimicrobial resistance in Klebsiella pneumoniae, an urgent threat to public health.
+PRJEB37504	False	40336117	PMC12060429	10.1186/s13756-025-01553-2	europepmc_accession	medium	False	1			True	False	False	3	Genomic surveillance reveals different transmission patterns between third-generation cephalosporin and carbapenem resistance in Klebsiella pneumoniae in the Comunidad Valenciana (Spain), 2018-2020.
+PRJNA778230	False	36094181	PMC9603589	10.1128/spectrum.01242-22	europepmc_accession	high	True	1	331.0	1.0	False	False	False	1	Limited Transmission of Klebsiella pneumoniae among Humans, Animals, and the Environment in a Caribbean Island, Guadeloupe (French West Indies).
+PRJNA1133668	False	39366703	PMC11610580	10.1101/gr.279355.124	europepmc_accession	high	True	1	315.0	1.0	False	False	False	1	Genomic epidemiology of carbapenem-resistant Enterobacterales at a New York City hospital over a 10-year period reveals complex plasmid-clone dynamics and evidence for frequent horizontal transfer of &lt;i&gt;bla&lt;/i&gt; &lt;sub&gt;KPC&lt;/sub&gt;.
+PRJNA543274	False	34517886	PMC8438989	10.1186/s13073-021-00960-5	ncbi_bioproject	high	False	1	261.0	1.0	False	False	False	2	Whole-genome sequence-informed MALDI-TOF MS diagnostics reveal importance of Klebsiella oxytoca group in invasive infections: a retrospective clinical study.
+PRJEB38540	False	33829268	PMC8283727	10.1093/jac/dkab118	europepmc_accession,ncbi_bioproject	high	True	2	253.0	1.0	True	False	False	2	Characterization of Klebsiella pneumoniae complex isolates from pigs and humans in farms in Thailand: population genomic structure, antibiotic resistance and virulence genes.
+PRJEB32655	True					low		0			False	False	False	0	
+PRJEB1271	False	31477167	PMC6717969	10.1186/s13059-019-1785-1	europepmc_accession	high	False	1	229.0	1.0	False	False	False	4	Contrasting patterns of longitudinal population dynamics and antimicrobial resistance mechanisms in two priority bacterial pathogens over 7 years in a single center.
+PRJNA810752	True					low		0			False	False	False	0	
+PRJNA339843	True					high		0			False	False	True	6	
+PRJEB34643	False	35196810	PMC8865463	10.1128/spectrum.02376-21	europepmc_accession	medium	True	1	205.0	1.0	True	False	False	3	High Prevalence of Klebsiella pneumoniae in European Food Products: a Multicentric Study Comparing Culture and Molecular Detection Methods.
+PRJEB43870	True					low		0			False	False	True	1	
+PRJNA532291	True					low		0			False	False	True	1	
+PRJNA433394	True					high		0			False	False	True	5	
+PRJEB19226	True					low		0			False	False	True	3	
+PRJNA594602	True					low		0			False	False	False	0	
+PRJNA306133	False	27572646	PMC5049680	10.1038/nmicrobiol.2016.41	europepmc_accession	medium	True	1	176.0	1.0	False	False	False	2	Identifying lineage effects when controlling for population structure improves power in bacterial association studies.
+PRJNA633565	False	37289087	PMC10434059	10.1128/spectrum.01775-23	europepmc_accession	medium	True	1	176.0	1.0	False	False	False	1	Clinical and Bacterial Characteristics Associated with Glove and Gown Contamination by Carbapenem-Resistant Klebsiella pneumoniae in the Health Care Setting.
+PRJNA252957	False	26196384	PMC4510304	10.1371/journal.pone.0133727	europepmc_accession	high	True	1	167.0	1.0	False	False	False	2	Genomic Analysis of the Emergence and Rapid Global Dissemination of the Clonal Group 258 Klebsiella pneumoniae Pandemic.
+PRJNA547865	True					low		0			False	False	False	0	
+PRJEB56146	False	37410381	PMC10370044	10.2807/1560-7917.es.2023.28.27.2200774	europepmc_accession,europepmc_title	high	True	2	389.0	2.5097	False	False	False	4	Nationwide, population-based observational study of the molecular epidemiology and temporal trend of carbapenemase-producing Enterobacterales in Norway, 2015 to 2021.
+PRJNA825705	False	36003946	PMC9393496	10.3389/fmicb.2022.973605	europepmc_accession	high	True	1	181.0	1.1677	False	False	False	1	Automated antimicrobial susceptibility testing and antimicrobial resistance genotyping using Illumina and Oxford Nanopore Technologies sequencing data among <i>Enterobacteriaceae</i>.
+PRJEB37711	False	35148318	PMC8836320	10.1371/journal.pone.0261999	europepmc_accession	high	True	1	2009.0	12.9613	True	False	False	5	One Day in Denmark: Nationwide point-prevalence survey of human bacterial isolates and comparison of classical and whole-genome sequence-based species identification methods.
+PRJEB1272	False	26769896	PMC4790626	10.1093/jac/dkv458	ncbi_bioproject	high	False	1	105.0	0.6863	False	False	False	2	Phylogeny, resistome and mobile genetic elements of emergent OXA-48 and OXA-245 Klebsiella pneumoniae clones circulating in Spain.
+PRJNA839691	False	36445111	PMC9764986	10.1128/msystems.00799-22	europepmc_accession	high	True	1	146.0	1.0	False	False	False	1	Competitive Transmission of Carbapenem-Resistant Klebsiella pneumoniae in a Newly Opened Intensive Care Unit.
+PRJNA922900	True					low		0			False	False	False	0	
+PRJEB1963	False	23722448	PMC3772739	10.1093/jac/dkt180	europepmc_secondary,europepmc_title	high	True	2	69.0	1.0	False	False	False	3	Predicting antimicrobial susceptibilities for Escherichia coli and Klebsiella pneumoniae isolates using whole genomic sequence data.
+PRJEB57159	True					low		0			False	False	False	0	
+PRJNA548120	False	33441403	PMC7845606	10.1128/msphere.01156-20	ncbi_bioproject	medium	False	1	14.0	1.0	False	False	False	2	OXA-181-Like Carbapenemases in Klebsiella pneumoniae ST14, ST15, ST23, ST48, and ST231 from Septicemic Neonates: Coexistence with NDM-5, Resistome, Transmissibility, and Genome Diversity.
+PRJNA684006	False	36752639	PMC10101084	10.1128/spectrum.04121-22	europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Hypervirulent &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; Causing Neonatal Bloodstream Infections: Emergence of NDM-1-Producing Hypervirulent ST11-K2 and ST15-K54 Strains Possessing pLVPK-Associated Markers.
+PRJNA514908	True					low		0			False	False	False	0	

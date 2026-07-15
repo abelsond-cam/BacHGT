@@ -20,14 +20,16 @@ import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import backfill as bf
 from bac_metadata.bac_agentic_metadata.engine.categorise.value_frequencies import null_mask
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 APP = Path(__file__).resolve().parents[1] / "applications" / "klebsiella"
 DATA = APP / "data"
-GRADES = DATA / "study_lv_attributes" / "grading" / "study_grades_test.jsonl"
-PS_APPLIED = DATA / "sample_lv_attributes" / "per_sample" / "per_sample_applied_test.tsv"
-PS_OUT = DATA / "sample_lv_attributes" / "per_sample" / "per_sample_outcomes_test.tsv"
-WF_APPLIED = DATA / "study_lv_attributes" / "whole_study_backfill" / "backfill_applied_test.tsv"
-QUEUE = DATA / "study_lv_attributes" / "escalation" / "decisions_needed_test.tsv"
+_RP = RunPaths(DATA, "test")                     # edge cases are checked on the test tranche
+GRADES = _RP.study_grades_jsonl
+PS_APPLIED = _RP.per_sample_applied
+PS_OUT = _RP.per_sample_outcomes
+WF_APPLIED = _RP.backfill_applied
+QUEUE = _RP.decisions_needed
 BASE = DATA / "inputs" / "base_table.csv"
 
 

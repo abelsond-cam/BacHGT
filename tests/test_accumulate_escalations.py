@@ -14,14 +14,14 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine.accumulate import accumulate_escalations
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 
 def _write_decisions(data_dir: Path, tag: str, rows: list[dict]) -> None:
-    p = data_dir / "study_lv_attributes" / "escalation"
-    p.mkdir(parents=True, exist_ok=True)
+    out = RunPaths(data_dir, tag).decisions_needed
+    out.parent.mkdir(parents=True, exist_ok=True)
     cols = ["study_accession", "field", "resolution", "suggested_value", "answer", "answer_note"]
-    pd.DataFrame(rows).reindex(columns=cols).fillna("").to_csv(p / f"decisions_needed_{tag}.tsv",
-                                                               sep="\t", index=False)
+    pd.DataFrame(rows).reindex(columns=cols).fillna("").to_csv(out, sep="\t", index=False)
 
 
 def _write_master(out_dir: Path, rows: list[dict]) -> None:

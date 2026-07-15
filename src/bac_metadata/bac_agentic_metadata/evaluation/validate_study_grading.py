@@ -244,7 +244,7 @@ def _run_adjudication(disagreements: dict[str, list[dict]], model: str, backend:
     return adjudications
 
 
-def _write_adjudication_report(adjudications: list, report_prefix: str = "grading") -> None:
+def _write_adjudication_report(adjudications: list, grading_dir: Path, report_prefix: str = "grading") -> None:
     """Write the adjudication report (verbatim verdicts + aggregated rule-gap lessons)."""
     from collections import Counter
 
@@ -270,7 +270,6 @@ def _write_adjudication_report(adjudications: list, report_prefix: str = "gradin
     else:
         md.append("_No rule gaps flagged._")
 
-    grading_dir = DATA_DIR / "study_lv_attributes" / "grading"
     (grading_dir / f"{report_prefix}_adjudication_report.md").write_text("\n".join(md) + "\n")
     # Always emit a headered TSV (even with 0 adjudications) so the scorecard never reads an empty
     # file and silently scores 0 — present-but-empty honestly means "no disagreements to adjudicate".
@@ -397,7 +396,7 @@ def main() -> None:
         "amr_target__value", "amr_method__value", "paper_coverage_for_taxon",
         "needs_manual_download", "fulltext_source",
     ]
-    grading_dir = DATA_DIR / "study_lv_attributes" / "grading"
+    grading_dir = Path(args.grades).parent   # write reports beside the grades input (run_progress/<tag>/grade/)
     out_tsv = grading_dir / f"{args.report_prefix}_validation_report.tsv"
     df[[c for c in keep if c in df.columns]].to_csv(out_tsv, sep="\t", index=False)
     out_md = grading_dir / f"{args.report_prefix}_validation_report.md"
@@ -408,7 +407,7 @@ def main() -> None:
         total = sum(len(v) for v in disagreements.values())
         print(f"Adjudicating {total} primary disagreements with {args.adjudicate_model}", file=sys.stderr)
         adjudications = _run_adjudication(disagreements, args.adjudicate_model, args.adjudicate_backend)
-        _write_adjudication_report(adjudications, args.report_prefix)
+        _write_adjudication_report(adjudications, grading_dir, args.report_prefix)
 
 
 if __name__ == "__main__":

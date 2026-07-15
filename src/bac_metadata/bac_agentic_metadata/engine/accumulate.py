@@ -33,22 +33,22 @@ from pathlib import Path
 import pandas as pd
 
 from . import backfill
+from .run_layout import RunPaths as _rp
 
 #: The three long applied-fill tables each batch writes, keyed by the method-source they carry.
-_APPLIED_FILES: dict[str, tuple[str, ...]] = {
-    "per_sample": ("sample_lv_attributes", "per_sample", "per_sample_applied_{tag}.tsv"),
-    "whole_field": ("study_lv_attributes", "whole_study_backfill", "backfill_applied_{tag}.tsv"),
-    "escalation": ("study_lv_attributes", "escalation", "escalation_applied_{tag}.tsv"),
-}
+_APPLIED_SOURCES = ("per_sample", "whole_field", "escalation")
 
 #: Resolved-escalation note markers (mirrors run_health / run_escalations): a skip/reject is a DECISION.
 _RESOLVED_NOTE_MARKERS = ("reject", "skip", "undeterm", "leave uncoded", "no value")
 
 
 def _applied_path(data_dir: Path, source: str, tag: str) -> Path:
-    """Return the path to one batch's applied-fill table for the given method source."""
-    *parts, name = _APPLIED_FILES[source]
-    return data_dir.joinpath(*parts, name.format(tag=tag))
+    """Return the path to one batch's applied-fill table for the given method source (via RunPaths)."""
+    from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
+
+    rp = RunPaths(data_dir, tag)
+    return {"per_sample": rp.per_sample_applied, "whole_field": rp.backfill_applied,
+            "escalation": rp.escalation_applied}[source]
 
 
 def accumulate_fills(data_dir: Path, tags: Sequence[str], out_dir: Path) -> pd.DataFrame:
@@ -75,7 +75,7 @@ def accumulate_fills(data_dir: Path, tags: Sequence[str], out_dir: Path) -> pd.D
     """
     frames: list[pd.DataFrame] = []
     for tag in tags:
-        for source in _APPLIED_FILES:
+        for source in _APPLIED_SOURCES:
             path = _applied_path(data_dir, source, tag)
             if not path.exists():
                 print(f"  [fills] {tag}/{source}: absent ({path.name}) — skipped", file=sys.stderr)
@@ -145,7 +145,7 @@ def accumulate_escalations(data_dir: Path, tags: Sequence[str], out_dir: Path) -
 
     frames: list[pd.DataFrame] = []
     for tag in tags:  # fresh per-band decisions (src=0 — highest precedence: a re-walk updates the store)
-        path = data_dir / "study_lv_attributes" / "escalation" / f"decisions_needed_{tag}.tsv"
+        path = _rp(data_dir, tag).decisions_needed
         if not path.exists():
             continue
         df = pd.read_csv(path, sep="\t", dtype=str)
@@ -185,7 +185,7 @@ def accumulate_grades(data_dir: Path, tags: Sequence[str], out_dir: Path) -> Pat
     """Union every batch's study grades (deduped by study) into ``curated_grades.tsv`` for the master fill."""
     frames: list[pd.DataFrame] = []
     for tag in tags:
-        path = data_dir / "study_lv_attributes" / "grading" / f"study_grades_{tag}.tsv"
+        path = _rp(data_dir, tag).study_grades_tsv
         if path.exists():
             frames.append(pd.read_csv(path, sep="\t", dtype=str))
     out_dir.mkdir(parents=True, exist_ok=True)

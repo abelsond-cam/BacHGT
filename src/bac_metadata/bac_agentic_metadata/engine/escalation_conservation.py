@@ -32,6 +32,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import backfill as bf
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 #: A resolved decision with no value is a *skip* (a deliberate "no single whole-field value"), not a fill —
 #: mirrors accumulate._RESOLVED_NOTE_MARKERS. An engine-generated ``auto-skip`` is regenerable, never a fill.
@@ -91,10 +92,11 @@ def _repo_root(start: Path) -> Path:
     return start
 
 
-def check_inv1_apply(esc_dir: Path, tag: str, fails: list[str], out: Callable[[str], None] = print) -> dict:
+def check_inv1_apply(rp: RunPaths, fails: list[str], out: Callable[[str], None] = print) -> dict:
     """INV1 — every answered decision has ≥1 non-blank curator_escalation fill in escalation_applied."""
-    decisions = _read_tsv(esc_dir / f"decisions_needed_{tag}.tsv")
-    applied = _read_tsv(esc_dir / f"escalation_applied_{tag}.tsv")
+    tag = rp.tag
+    decisions = _read_tsv(rp.decisions_needed)
+    applied = _read_tsv(rp.escalation_applied)
     answered = _answered_pairs(decisions)
     if len(applied) and {"applied_value", "study_accession", "field"} <= set(applied.columns):
         filled_rows = applied[_nonblank(applied["applied_value"])]
@@ -112,18 +114,18 @@ def check_inv1_apply(esc_dir: Path, tag: str, fails: list[str], out: Callable[[s
         applied["applied_value"]).sum()) if len(applied) and "applied_value" in applied.columns else 0}
 
 
-def check_inv3_fill(esc_dir: Path, enriched_dir: Path, tag: str, fails: list[str],
-                    out: Callable[[str], None] = print) -> dict:
+def check_inv3_fill(rp: RunPaths, fails: list[str], out: Callable[[str], None] = print) -> dict:
     """INV3 — every non-blank escalation fill lands non-blank in the final filled_metadata table."""
-    applied = _read_tsv(esc_dir / f"escalation_applied_{tag}.tsv")
-    filled = _read_tsv(enriched_dir / f"filled_metadata_{tag}.tsv")
+    tag = rp.tag
+    applied = _read_tsv(rp.escalation_applied)
+    filled = _read_tsv(rp.filled_metadata)
     if not len(applied) or "applied_value" not in applied.columns:
         out(f"  PASS  [{tag}] INV3 fill — no escalation fills to trace")
         return {"traced": 0, "in_final": 0}
     fills = applied[_nonblank(applied["applied_value"])]
     if not len(filled) or "sample_accession" not in filled.columns:
-        fails.append(f"[{tag}] INV3 fill: {len(fills)} escalation fill(s) but no filled_metadata_{tag}.tsv")
-        out(f"  FAIL  [{tag}] INV3 fill — filled_metadata_{tag}.tsv missing/empty ({len(fills)} fills orphaned)")
+        fails.append(f"[{tag}] INV3 fill: {len(fills)} escalation fill(s) but no {rp.filled_metadata.name}")
+        out(f"  FAIL  [{tag}] INV3 fill — fill/{rp.filled_metadata.name} missing/empty ({len(fills)} fills orphaned)")
         return {"traced": len(fills), "in_final": 0}
     fm = filled.set_index("sample_accession")
     lost: list[str] = []
@@ -171,11 +173,13 @@ def check_inv2_master(master_path: Path, fails: list[str], out: Callable[[str], 
     return {"disk_rows": len(disk), "head_rows": len(head), "dropped": len(dropped)}
 
 
-def _amend_run_health(score_dir: Path, tag: str, inv1: dict, inv3: dict, inv2: dict) -> None:
-    """Write an idempotent, stamped conservation block into run_health_<tag>_report.md (verified confirmation)."""
-    md_path = score_dir / f"run_health_{tag}_report.md"
+def _amend_run_health(rp: RunPaths, inv1: dict, inv3: dict, inv2: dict) -> None:
+    """Write an idempotent, stamped conservation block into the tag's run_health/report.md (verified confirmation)."""
+    tag = rp.tag
+    md_path = rp.run_health_md
     if not md_path.exists():
-        print(f"  [amend] run_health_{tag}_report.md absent — skipped (run run-health first)", file=sys.stderr)
+        print(f"  [amend] run_progress/{tag}/run_health/report.md absent — skipped (run run-health first)",
+              file=sys.stderr)
         return
     head = f"disk {inv2['disk_rows']} ⊇ HEAD {inv2['head_rows']} rows" if inv2["head_rows"] is not None \
         else f"disk {inv2['disk_rows']} rows (no HEAD baseline)"
@@ -194,7 +198,7 @@ def _amend_run_health(score_dir: Path, tag: str, inv1: dict, inv3: dict, inv2: d
     idx = text.find(_CONSERVATION_MARKER)
     text = (text[:idx].rstrip() + "\n\n" + block) if idx != -1 else (text.rstrip() + "\n\n---\n\n" + block)
     md_path.write_text(text if text.endswith("\n") else text + "\n")
-    print(f"  [amend] stamped conservation block into run_health_{tag}_report.md", file=sys.stderr)
+    print(f"  [amend] stamped conservation block into run_progress/{tag}/run_health/report.md", file=sys.stderr)
 
 
 def verify_tags(data_dir: str | Path, tags: Sequence[str], *, amend: bool = True,
@@ -209,11 +213,8 @@ def verify_tags(data_dir: str | Path, tags: Sequence[str], *, amend: bool = True
     actually lost an answer never gets a "VERIFIED" stamp.
     """
     data = Path(data_dir)
-    esc_dir = data / "study_lv_attributes" / "escalation"
-    enriched_dir = data / "sample_lv_attributes" / "enriched"
-    score_dir = data / "scorecard"
-    master_path = data / "curated" / "curated_escalations.tsv"
     tags = [t.strip() for t in tags if t.strip()]
+    master_path = RunPaths(data, tags[0] if tags else "_").escalations_master  # shared, tag-independent
 
     fails: list[str] = []
     out("Escalation-conservation gate — answer → apply → master → final\n")
@@ -225,15 +226,16 @@ def verify_tags(data_dir: str | Path, tags: Sequence[str], *, amend: bool = True
     per_tag: dict[str, tuple[dict, dict]] = {}
     for tag in tags:
         before = len(fails)
-        inv1 = check_inv1_apply(esc_dir, tag, fails, out)
-        inv3 = check_inv3_fill(esc_dir, enriched_dir, tag, fails, out)
+        rp = RunPaths(data, tag)
+        inv1 = check_inv1_apply(rp, fails, out)
+        inv3 = check_inv3_fill(rp, fails, out)
         per_tag[tag] = (inv1, inv3)
         # Only stamp the VERIFIED block when THIS tag's links held (and the master, when checked) — never
         # claim conservation over a run where an answer was actually lost.
         tag_ok = (len(fails) == before) and inv2_ok
         if amend:
             if tag_ok and include_master:
-                _amend_run_health(score_dir, tag, inv1, inv3, inv2)
+                _amend_run_health(rp, inv1, inv3, inv2)
             elif not tag_ok:
                 print(f"  [amend] {tag}: invariants FAILED — run-health NOT stamped (fix the loss, rerun)",
                       file=sys.stderr)

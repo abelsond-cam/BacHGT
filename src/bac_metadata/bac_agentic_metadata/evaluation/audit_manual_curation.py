@@ -33,6 +33,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine.local_supplements import SUPP_EXTS
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 ENGINE_APPS = Path(__file__).resolve().parents[1] / "applications"
 #: Default local mirror of the project_k ENA_projects tree (curator-downloaded per-study tables).
@@ -54,23 +55,17 @@ _TAG_DENYLIST = {"", "opus", "tail_smoke", "test_basecache", "basecache"}
 
 
 def _discover_tags(data_dir: Path) -> list[str]:
-    """Auto-discover pipeline tags from the per-tag grade/outcome filenames (denylist-filtered)."""
-    grading = data_dir / "study_lv_attributes" / "grading"
-    persample = data_dir / "sample_lv_attributes" / "per_sample"
-    tags: set[str] = set()
-    for f in grading.glob("study_grades_*.tsv"):
-        tags.add(f.stem[len("study_grades_"):])
-    for f in persample.glob("per_sample_outcomes_*.tsv"):
-        tags.add(f.stem[len("per_sample_outcomes_"):])
+    """Auto-discover pipeline tags from the run_progress/<tag>/ subfolders (denylist-filtered)."""
+    progress = data_dir / "run_progress"
+    tags = {p.name for p in progress.iterdir() if p.is_dir()} if progress.is_dir() else set()
     return sorted(t for t in tags if t not in _TAG_DENYLIST)
 
 
 def _load_grades(data_dir: Path, tags: list[str]) -> pd.DataFrame:
-    """Concatenate study_grades_<tag>.tsv over ``tags`` (adds a ``tag`` column); empty if none exist."""
+    """Concatenate each tranche's study_grades.tsv over ``tags`` (adds a ``tag`` column); empty if none exist."""
     frames = []
-    grading = data_dir / "study_lv_attributes" / "grading"
     for t in tags:
-        f = grading / f"study_grades_{t}.tsv"
+        f = RunPaths(data_dir, t).study_grades_tsv
         if f.exists():
             df = pd.read_csv(f, sep="\t", dtype=str, keep_default_na=False)
             df["tag"] = t
@@ -79,11 +74,10 @@ def _load_grades(data_dir: Path, tags: list[str]) -> pd.DataFrame:
 
 
 def _load_outcomes(data_dir: Path, tags: list[str]) -> pd.DataFrame:
-    """Concatenate per_sample_outcomes_<tag>.tsv over ``tags`` (adds a ``tag`` column); empty if none."""
+    """Concatenate each tranche's per_sample_outcomes.tsv over ``tags`` (adds a ``tag`` column); empty if none."""
     frames = []
-    persample = data_dir / "sample_lv_attributes" / "per_sample"
     for t in tags:
-        f = persample / f"per_sample_outcomes_{t}.tsv"
+        f = RunPaths(data_dir, t).per_sample_outcomes
         if f.exists():
             df = pd.read_csv(f, sep="\t", dtype=str, keep_default_na=False)
             df["tag"] = t

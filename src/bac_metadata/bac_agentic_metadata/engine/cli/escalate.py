@@ -9,7 +9,10 @@ columns) and re-applying any answers already filled. This CLI is the attended ha
   preserved untouched, so a partially-answered queue resumes safely. Writes answers back into the queue.
 * ``--apply`` — read the filled queue and apply the answers as whole-field fills through the engine backfill
   path (:func:`engine.stages.escalate_apply`), writing ``escalation_applied_<tag>.tsv``
-  (``method="curator_escalation"``). The driver also applies on its next pass; this is the standalone shortcut.
+  (``method="curator_escalation"``), then rebuild the final table over the full fold and run the conservation
+  gate. The driver also applies on its next pass; this is the standalone shortcut.
+* ``--interactive --then-apply`` — walk the queue AND immediately apply in one command (answer → apply →
+  rebuild final → gate). Needs ``--table`` + ``--fold`` like ``--apply``.
 
 Detection lives in the driver (it needs the grader JSONL + the LLM triage); regenerate the queue by
 re-running the pipeline. Replaces the former per-application ``run_escalations.py``.
@@ -31,6 +34,7 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import stages
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 
 def _resolved(row: pd.Series) -> bool:
@@ -97,6 +101,9 @@ def main() -> None:
     p.add_argument("--tag", default="train", help="Run tag — selects decisions_needed_<tag>.tsv / escalation_applied_<tag>.tsv.")
     p.add_argument("--interactive", action="store_true", help="Walk the pending queue at the prompt.")
     p.add_argument("--apply", action="store_true", help="Apply the filled queue → escalation_applied_<tag>.tsv.")
+    p.add_argument("--then-apply", action="store_true",
+                   help="(with --interactive) immediately run the apply step after answering — expand answers, "
+                        "rebuild the final table, run the conservation gate. Needs --table + --fold like --apply.")
     p.add_argument("--spec", default=None,
                    help="Application attributes.yaml — enables escalation.auto_skip_wide_mix (wide-mix rows "
                         "recorded as skips before the walk). Defaults to <data-dir>/../attributes.yaml if present.")
@@ -114,10 +121,12 @@ def main() -> None:
 
     if args.interactive == args.apply:
         sys.exit("Choose exactly one mode: --interactive OR --apply.")
+    if args.then_apply and not args.interactive:
+        sys.exit("--then-apply is only valid with --interactive (--apply already applies).")
 
     data = Path(args.data_dir)
-    esc_dir = data / "study_lv_attributes" / "escalation"
-    queue = Path(args.queue) if args.queue else esc_dir / f"decisions_needed_{args.tag}.tsv"
+    rp = RunPaths(data, args.tag)
+    queue = Path(args.queue) if args.queue else rp.decisions_needed
     if not queue.exists():
         sys.exit(f"No queue at {queue} — run the pipeline (driver) first to detect escalations.")
 
@@ -135,16 +144,25 @@ def main() -> None:
                     print(f"[auto-skip] {n_auto} wide-mix decision(s) recorded as skip "
                           f"(escalation.auto_skip_wide_mix=true)", file=sys.stderr)
         _interactive(frame, queue)
+        if args.then_apply:   # one-shot: answer → apply → rebuild final → gate
+            _apply(args, data, rp, queue)
         return
 
-    # --apply
+    _apply(args, data, rp, queue)
+
+
+def _apply(args: argparse.Namespace, data: Path, rp: RunPaths, queue: Path) -> None:
+    """Expand the answered queue into per-sample fills, rebuild the final table, run the conservation gate.
+
+    Shared by ``--apply`` and ``--interactive --then-apply``. The fill is rebuilt over the tag's FULL fold
+    universe (not just the answered subset) so a curator answer always propagates to the production table
+    without shrinking it — the silent-staleness bug the gate exists to catch.
+    """
     if not args.table:
-        sys.exit("--apply needs --table (the full-width base table) to build the per-sample fills.")
-    applied_out = (Path(args.applied_output) if args.applied_output
-                   else esc_dir / f"escalation_applied_{args.tag}.tsv")
+        sys.exit("apply needs --table (the full-width base table) to build the per-sample fills.")
+    applied_out = Path(args.applied_output) if args.applied_output else rp.escalation_applied
     base = pd.read_csv(args.table, dtype=str, low_memory=False, keep_default_na=False)
-    # The tag's FULL study universe (from --fold), independent of which studies we apply to — the final table
-    # must be rebuilt over ALL of it, else it shrinks. Absent when only --accessions is given.
+    # The tag's FULL study universe (from --fold), independent of which studies we apply to. Absent with --accessions.
     fold_universe: list[str] | None = None
     if args.fold:
         splits = Path(args.splits) if args.splits else data / "fold_splits" / "project_splits.tsv"
@@ -156,16 +174,15 @@ def main() -> None:
     elif fold_universe is not None:
         keep = fold_universe
     else:
-        sys.exit("--apply needs --fold (or --accessions) to select the studies.")
+        sys.exit("apply needs --fold (or --accessions) to select the studies.")
     stages.escalate_apply(base=base, keep=keep, queue_path=queue, out_path=applied_out)
 
-    # Every apply completes the loop: rebuild filled_metadata_<tag>.tsv so the just-applied answers actually
-    # reach the production table. A standalone apply that stopped at escalation_applied is exactly what left
-    # the final table one step behind — the silent-staleness bug the conservation gate caught. The fill MUST
-    # cover the tag's FULL fold universe, not just the answered subset, or the final table would shrink.
+    # Every apply completes the loop: rebuild filled_metadata so the just-applied answers reach the production
+    # table. A standalone apply that stopped at escalation_applied is exactly what left the final table one step
+    # behind — the silent-staleness bug the gate caught. Rebuild over the FULL fold universe, or the table shrinks.
     spec_path = Path(args.spec) if args.spec else data.parent / "attributes.yaml"
     if fold_universe is None:
-        print("[fill] --apply without --fold: cannot determine the tag's full study universe — filled_metadata "
+        print("[fill] apply without --fold: cannot determine the tag's full study universe — filled_metadata "
               f"was NOT rebuilt. Re-run the driver or `cli.fill --tag {args.tag} --fold …` to refresh it.",
               file=sys.stderr)
         return
@@ -180,8 +197,8 @@ def main() -> None:
     spec = AttributeSpec.from_yaml(spec_path)
     fill_base = base[base["study_accession"].isin(set(fold_universe))].copy()
     fill_base, _pre = preclean_base(fill_base, spec)   # match the driver's in-memory null-token blanking
-    print(f"\n### [fill-metadata-table] rebuilding filled_metadata_{args.tag}.tsv over {len(fold_universe)} "
-          f"studies (fold {args.fold})", file=sys.stderr)
+    print(f"\n### [fill-metadata-table] rebuilding run_progress/{args.tag}/fill/filled_metadata.tsv over "
+          f"{len(fold_universe)} studies (fold {args.fold})", file=sys.stderr)
     stages.fill_for_tag(data_dir=data, spec=spec, base=fill_base, fields=list(spec.completeness_fields),
                         tag=args.tag, fold_label=args.fold)
 

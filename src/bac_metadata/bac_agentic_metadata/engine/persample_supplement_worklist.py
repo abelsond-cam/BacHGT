@@ -116,15 +116,13 @@ def build_persample_supplement_worklist(
     pandas.DataFrame
         The worklist (also written to disk).
     """
-    gate_dir = data_dir / "study_lv_attributes" / "whole_study_backfill"
-    grade_dir = data_dir / "study_lv_attributes" / "grading"
-    ps_dir = data_dir / "sample_lv_attributes" / "per_sample"
-    find_dir = data_dir / "find_papers"
-    out_dir = data_dir / "sample_lv_attributes"
-    supp_dir = out_dir / "manual_download_supp"
+    from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
+
+    rp = RunPaths(data_dir, tag)
+    supp_dir = rp.manual_supp_dir
     fields = tuple(fields)
 
-    gate = pd.read_csv(gate_dir / f"backfill_gate_report_{tag}.tsv", sep="\t", dtype=str).fillna("")
+    gate = pd.read_csv(rp.backfill_gate_report, sep="\t", dtype=str).fillna("")
     gate["n_blank"] = pd.to_numeric(gate["n_blank"], errors="coerce").fillna(0).astype(int)
     resid = gate[(gate["field"].isin(fields)) & (gate["status"] == "residual_per_sample") & (gate["n_blank"] > 0)]
     # Per study: total per-sample backlog + the fields that are short.
@@ -133,19 +131,19 @@ def build_persample_supplement_worklist(
     backlog = backlog[backlog["gap"] > min_gap].sort_values("gap", ascending=False)
 
     grades = {r["study_accession"]: r for _, r in
-              pd.read_json(grade_dir / f"study_grades_{tag}.jsonl", lines=True).iterrows()} \
-        if (grade_dir / f"study_grades_{tag}.jsonl").exists() else {}
-    ps_path = ps_dir / f"per_sample_applied_{tag}.tsv"
+              pd.read_json(rp.study_grades_jsonl, lines=True).iterrows()} \
+        if rp.study_grades_jsonl.exists() else {}
+    ps_path = rp.per_sample_applied
     ps = pd.read_csv(ps_path, sep="\t", dtype=str).fillna("") if ps_path.exists() else pd.DataFrame()
     ps_fills = (ps[ps["applied_value"] != ""].groupby("study_accession").size().to_dict()
                 if len(ps) else {})
-    fp_path = find_dir / f"found_papers_{tag}.tsv"
+    fp_path = rp.found_papers_tsv
     fp = pd.read_csv(fp_path, sep="\t", dtype=str).fillna("").set_index("study_accession") \
         if fp_path.exists() else pd.DataFrame()
     # The per-sample outcomes carry the MECHANICAL reason each study yielded 0 (no_supp/unanchored/…),
     # shown alongside the LLM opinion so the curator sees both "engine couldn't anchor" and "model thinks
     # the paper does/doesn't hold per-sample data".
-    out_path = ps_dir / f"per_sample_outcomes_{tag}.tsv"
+    out_path = rp.per_sample_outcomes
     outcomes = pd.read_csv(out_path, sep="\t", dtype=str).fillna("").set_index("study_accession") \
         if out_path.exists() else pd.DataFrame()
     _supp_exts = (".xlsx", ".xls", ".csv", ".tsv", ".docx", ".pdf")
@@ -188,8 +186,8 @@ def build_persample_supplement_worklist(
         })
 
     res = pd.DataFrame(rows)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    res.to_csv(out_dir / f"persample_supplement_worklist_{tag}.tsv", sep="\t", index=False)
+    rp.per_sample_dir.mkdir(parents=True, exist_ok=True)
+    res.to_csv(rp.persample_supplement_worklist_tsv, sep="\t", index=False)
 
     order = {"FETCH_SUPP": 0, "OA_INVESTIGATE": 1, "OA_PARTIAL": 2, "REVIEW": 3, "NO_PAPER": 4,
              "SKIP": 5, "SUPP_PRESENT": 6}
@@ -212,8 +210,9 @@ def build_persample_supplement_worklist(
         md.append(f"| {r['action']} | {r['study_accession']} | {r['gap_samples']} | {r['gap_fields']} | "
                   f"{r.get('mech_reason', '')} | {r['has_per_sample_table']} | {r['table_fields']} | "
                   f"{r['table_reference'][:40]} | {paper} | `{r['save_as']}` |")
-    (out_dir / f"persample_supplement_worklist_{tag}.md").write_text("\n".join(md) + "\n")
-    print(f"\nWrote persample_supplement_worklist_{tag}.{{md,tsv}} ({len(res)} studies)", file=sys.stderr)
+    rp.persample_supplement_worklist_md.write_text("\n".join(md) + "\n")
+    print(f"\nWrote run_progress/{tag}/per_sample/persample_supplement_worklist.{{md,tsv}} "
+          f"({len(res)} studies)", file=sys.stderr)
     if len(res):
         print(res["action"].value_counts().to_string(), file=sys.stderr)
     return res

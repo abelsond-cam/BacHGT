@@ -24,9 +24,10 @@ GOLD="${BACHGT_GOLD:-$BACHGT_PROJECT_K_ROOT/$BACHGT_PROJECT_K_USER/final/metadat
 cd "$REPO" || exit 1
 unset VIRTUAL_ENV
 
-FIND="$DATA/find_papers"; GRADE="$DATA/study_lv_attributes/grading"
-WSB="$DATA/study_lv_attributes/whole_study_backfill"; ESC="$DATA/study_lv_attributes/escalation"
-PS="$DATA/sample_lv_attributes/per_sample"
+# Per-tranche outputs live under run_progress/<tag>/<stage>/ (the RunPaths layout; the tag encodes the folder,
+# so filenames drop the _<tag> suffix). Shared inputs (GOLD, splits) stay at the data root.
+RP="$DATA/run_progress/$TAG"
+FIND="$RP/find"; GRADE="$RP/grade"; WSB="$RP/backfill"; ESC="$RP/escalation"; PS="$RP/per_sample"; SC="$RP/scorecard"
 ts() { date '+%Y-%m-%d %H:%M:%S'; }
 run() { echo; echo "### [$(ts)] $*"; uv run python "$@" || { echo "FAILED: $*"; exit 1; }; }
 
@@ -38,20 +39,20 @@ bash "$APP/run_klebsiella.sh" --fold "$FOLD" --tag "$TAG" --paper-source "$PAPER
     || { echo "FAILED: driver"; exit 1; }
 
 # ── Evaluation — the gold-comparison stages the driver omits (find/grading adjudication + scorecard) ──
-run "$EVAL/validate_find_papers.py" --found "$FIND/found_papers_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "find_$TAG"
-run "$EVAL/validate_study_grading.py" --grades "$GRADE/study_grades_$TAG.tsv" --folds "$FOLD" --adjudicate --report-prefix "grading_$TAG"
-run "$EVAL/validate_backfill_values.py" --applied "$WSB/backfill_applied_$TAG.tsv" --truth "$GOLD" \
-    --report-prefix "backfill_value_$TAG" --out-dir "$WSB"
-run "$EVAL/validate_backfill_values.py" --applied "$PS/per_sample_applied_$TAG.tsv" --truth "$GOLD" \
-    --report-prefix "per_sample_value_$TAG" --out-dir "$PS"
-run "$EVAL/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$WSB/backfill_applied_$TAG.tsv" \
-    --per-sample "$PS/per_sample_applied_$TAG.tsv" --escalation "$ESC/escalation_applied_$TAG.tsv" \
-    --truth "$GOLD" --report-prefix "backfill_completeness_$TAG"
-run "$EVAL/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades_$TAG.tsv" \
-    --find-validation "$FIND/find_${TAG}_validation_report.tsv" \
-    --find-adjudication "$FIND/find_${TAG}_adjudication_report.tsv" \
-    --grading-adjudication "$GRADE/grading_${TAG}_adjudication_report.tsv" --prefix "$TAG"
+run "$EVAL/validate_find_papers.py" --found "$FIND/found_papers.tsv" --folds "$FOLD" --adjudicate --report-prefix "find"
+run "$EVAL/validate_study_grading.py" --grades "$GRADE/study_grades.tsv" --folds "$FOLD" --adjudicate --report-prefix "grading"
+run "$EVAL/validate_backfill_values.py" --applied "$WSB/backfill_applied.tsv" --truth "$GOLD" \
+    --report-prefix "backfill_value" --out-dir "$WSB"
+run "$EVAL/validate_backfill_values.py" --applied "$PS/per_sample_applied.tsv" --truth "$GOLD" \
+    --report-prefix "per_sample_value" --out-dir "$PS"
+run "$EVAL/validate_backfill_completeness.py" --fold "$FOLD" --backfill "$WSB/backfill_applied.tsv" \
+    --per-sample "$PS/per_sample_applied.tsv" --escalation "$ESC/escalation_applied.tsv" \
+    --truth "$GOLD" --report-prefix "backfill_completeness" --out-dir "$SC"
+run "$EVAL/summarise_agent_vs_manual.py" --grades "$GRADE/study_grades.tsv" \
+    --find-validation "$FIND/find_validation_report.tsv" \
+    --find-adjudication "$FIND/find_adjudication_report.tsv" \
+    --grading-adjudication "$GRADE/grading_adjudication_report.tsv" --prefix "$TAG" --out-dir "$SC"
 
 echo; echo "=== [$(ts)] RUN_FOLDS COMPLETE ($FOLD / $TAG) ==="
-echo "scorecard:  $DATA/scorecard/agent_vs_manual_$TAG.md  +  backfill_completeness_${TAG}_report.md"
-echo "run-health: $DATA/scorecard/run_health_${TAG}_report.md  (written by the driver)"
+echo "scorecard:  $SC/agent_vs_manual.md  +  $SC/backfill_completeness_report.md"
+echo "run-health: $RP/run_health/report.md  (written by the driver)"

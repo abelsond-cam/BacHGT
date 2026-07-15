@@ -41,6 +41,7 @@ import pandas as pd
 from . import backfill
 from .local_papers import resolve_local_fulltext
 from .local_supplements import find_local_supp_files
+from .run_layout import RunPaths
 
 #: A study at/above this fraction of the whole cohort's taxon samples is a "big decision" — its whole-field
 #: call must always be escalated (mirrors run_escalations.BIG_DECISION_FRAC); run-health flags any that slip.
@@ -144,16 +145,11 @@ def build_run_health(
         The per-(study × field) grid and the one-line verdict string. Side effect: writes
         ``scorecard/run_health_<tag>_report.{md,tsv}`` under ``data_dir``.
     """
-    splits = data_dir / "fold_splits" / "project_splits.tsv"
-    sizing_path = data_dir / "ena_assessment" / "ena_sizing.tsv"
-    find = data_dir / "find_papers"
-    grade = data_dir / "study_lv_attributes" / "grading"
-    wsb = data_dir / "study_lv_attributes" / "whole_study_backfill"
-    esc = data_dir / "study_lv_attributes" / "escalation"
-    ps = data_dir / "sample_lv_attributes" / "per_sample"
-    score = data_dir / "scorecard"
-    manual_pdf = find / "manual_download"
-    manual_supp = data_dir / "sample_lv_attributes" / "manual_download_supp"   # tracked in git (see its README)
+    rp = RunPaths(data_dir, tag)                      # the path authority — run_progress/<tag>/<stage>/…
+    splits = rp.splits
+    sizing_path = rp.sizing
+    manual_pdf = rp.manual_papers_dir
+    manual_supp = rp.manual_supp_dir                  # tracked in git (see its README)
 
     folds = {x.strip() for x in fold.split(",") if x.strip()}
 
@@ -165,7 +161,7 @@ def build_run_health(
         # (it lives only in the batch-local splits). Fall back to the tag's own graded-study universe so
         # run-health never evaluates an empty set and emits a hollow "ALL CLEAR" (the tail-band gap that
         # let <100-sample studies skip the manual-download loop unnoticed).
-        graded = _read_tsv(grade / f"study_grades_{tag}.tsv")
+        graded = _read_tsv(rp.study_grades_tsv)
         if len(graded) and "study_accession" in graded.columns:
             studies = sorted(set(graded["study_accession"].astype(str)))
 
@@ -181,23 +177,23 @@ def build_run_health(
             big_studies = set(sizing.loc[(n / cohort_total) >= big_decision_frac, "study_accession"].astype(str))
 
     # Inputs (each guarded — absent artifact ⇒ empty ⇒ flagged in the stage checklist).
-    found = _read_tsv(find / f"found_papers_{tag}.tsv").set_index("study_accession") \
-        if len(_read_tsv(find / f"found_papers_{tag}.tsv")) else pd.DataFrame()
+    found = _read_tsv(rp.found_papers_tsv).set_index("study_accession") \
+        if len(_read_tsv(rp.found_papers_tsv)) else pd.DataFrame()
     grades = {}
-    gpath = grade / f"study_grades_{tag}.jsonl"
+    gpath = rp.study_grades_jsonl
     if gpath.exists():
         for line in gpath.read_text().splitlines():
             if line.strip():
                 r = json.loads(line)
                 grades[r["study_accession"]] = r
-    gate = _read_tsv(wsb / f"backfill_gate_report_{tag}.tsv")
+    gate = _read_tsv(rp.backfill_gate_report)
     gate_of = {(r["study_accession"], r["field"]): r for _, r in gate.iterrows()} if len(gate) else {}
-    outcomes = _read_tsv(ps / f"per_sample_outcomes_{tag}.tsv")
+    outcomes = _read_tsv(rp.per_sample_outcomes)
     outcome_of = outcomes.set_index("study_accession") if len(outcomes) else pd.DataFrame()
-    n_wf = _count_by_study_field(wsb / f"backfill_applied_{tag}.tsv")
-    n_ps = _count_by_study_field(ps / f"per_sample_applied_{tag}.tsv")
-    n_esc = _count_by_study_field(esc / f"escalation_applied_{tag}.tsv")
-    decisions = _read_tsv(esc / f"decisions_needed_{tag}.tsv")
+    n_wf = _count_by_study_field(rp.backfill_applied)
+    n_ps = _count_by_study_field(rp.per_sample_applied)
+    n_esc = _count_by_study_field(rp.escalation_applied)
+    decisions = _read_tsv(rp.decisions_needed)
     # A decision is RESOLVED when answered (accepted) OR explicitly rejected (a reject marker in
     # answer_note) — otherwise the curator's "leave it" looks identical to "not yet decided" and the loop
     # could never reach ALL CLEAR. Pending = blank answer AND no reject marker.
@@ -209,13 +205,13 @@ def build_run_health(
     esc_in_queue = {(r["study_accession"], r["field"]) for _, r in decisions.iterrows()} if len(decisions) else set()
     esc_generated = len(decisions)
     esc_answered = sum(1 for _, r in decisions.iterrows() if str(r.get("answer", "")).strip()) if len(decisions) else 0
-    esc_applied = len(_read_tsv(esc / f"escalation_applied_{tag}.tsv"))
-    worklist = _read_tsv(ps.parent / f"persample_supplement_worklist_{tag}.tsv")  # written to sample_lv_attributes/
+    esc_applied = len(_read_tsv(rp.escalation_applied))
+    worklist = _read_tsv(rp.persample_supplement_worklist_tsv)
     work_of = worklist.set_index("study_accession") if len(worklist) else pd.DataFrame()
     # Curator override: (study_accession, field[, reason]) the curator has manually verified as
     # unrecoverable (no paper findable, paper holds no usable per-isolate table, …) → forced EXHAUSTED,
     # so the loop can reach ALL CLEAR once the human has checked the genuinely-dead-end gaps.
-    accepted = _read_tsv(esc / f"accepted_unrecoverable_{tag}.tsv")
+    accepted = _read_tsv(rp.accepted_unrecoverable)
     accepted_unrec = {(r["study_accession"], r["field"]) for _, r in accepted.iterrows()} if len(accepted) else set()
 
     def _get(df, acc, col, default=""):
@@ -322,7 +318,7 @@ def build_run_health(
     none_found_n = int(per_study["none_found"].apply(bool).sum()) if len(per_study) else 0
     manual_pdf_used = sorted(set(res[res["manual_pdf_readable"].apply(bool)]["study_accession"])) if len(res) else []
 
-    preclean_path = data_dir / "sample_lv_attributes" / f"preclean_summary_{tag}.tsv"
+    preclean_path = rp.preclean_summary
     preclean_ran = preclean_path.exists()
     pc = _read_tsv(preclean_path)
     if len(pc):
@@ -342,7 +338,7 @@ def build_run_health(
     # PLACEHOLDER_NULLS (via strip_placeholders) — NOT pandas' own NA coercion, which would silently treat a
     # literal "NA"/"None" ena_value inconsistently and mis-count. This is the same blank definition the
     # fidelity guard uses, so the count is exactly "real ENA values the table overwrote".
-    apath = ps / f"per_sample_applied_{tag}.tsv"
+    apath = rp.per_sample_applied
     applied = (pd.read_csv(apath, sep="\t", dtype=str, keep_default_na=False)
                if apath.exists() else pd.DataFrame())
     if len(applied) and {"ena_value", "applied_value"} <= set(applied.columns):
@@ -374,7 +370,7 @@ def build_run_health(
     master = _read_tsv(data_dir / "curated" / "curated_escalations.tsv")
     master_rows = len(master)
     master_answered = int(_nonblank_series(master["answer"]).sum()) if "answer" in master.columns else 0
-    prov = _read_tsv(data_dir / "sample_lv_attributes" / "enriched" / f"filled_metadata_provenance_{tag}.tsv")
+    prov = _read_tsv(rp.filled_metadata_provenance)
     if len(prov) and {"source", "filled_value"} <= set(prov.columns):
         esc_prov = prov[(prov["source"] == "curator_escalation") & _nonblank_series(prov["filled_value"])]
         fill_reached = len(esc_prov)
@@ -396,9 +392,10 @@ def build_run_health(
         "fill_reached": fill_reached,
     }
 
-    score.mkdir(parents=True, exist_ok=True)
-    res.to_csv(score / f"run_health_{tag}_report.tsv", sep="\t", index=False)
-    _write_md(res, studies, score, tag, fold, esc_generated, esc_answered, esc_applied, len(esc_pending), audit)
+    rp.run_health_dir.mkdir(parents=True, exist_ok=True)
+    rp.scorecard_dir.mkdir(parents=True, exist_ok=True)
+    res.to_csv(rp.run_health_tsv, sep="\t", index=False)
+    _write_md(res, studies, rp, fold, esc_generated, esc_answered, esc_applied, len(esc_pending), audit)
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if len(res) else 0
     blocked = int((res["resolution_state"] == "BLOCKED").sum()) if len(res) else 0
     if not studies:
@@ -509,9 +506,10 @@ def _conservation_md(a: dict) -> list[str]:
     return md
 
 
-def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str, esc_generated: int,
+def _write_md(res: pd.DataFrame, studies: list, rp: RunPaths, fold: str, esc_generated: int,
               esc_answered: int, esc_applied: int, esc_pending: int, audit: dict | None = None) -> None:
     """Render the verdict banner + the shrinking actionable worklist + the concern sections."""
+    tag = rp.tag
     n = len(res)
     filled = int((res["resolution_state"] == "FILLED").sum()) if n else 0
     actionable = int((res["resolution_state"] == "ACTIONABLE").sum()) if n else 0
@@ -590,7 +588,7 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
         md.append("\n".join(f"- {k}: {v}" for k, v in zr.items()) or "- none")
         md.append("")
 
-    comp = _read_tsv(score / f"backfill_completeness_{tag}_report.tsv")
+    comp = _read_tsv(rp.backfill_completeness_tsv)
     if len(comp):
         md.append("\n## Per-field completeness roll-up (verbatim from completeness report)\n")
         md.append("| field | agent | v2 | gain_wf | gain_ps | gain_esc | residual | flag |")
@@ -645,7 +643,7 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
                   f"(present but unreadable — re-export/replace): {', '.join(present_unreadable)}\n")
 
     md.append(f"## 2. Escalations answered (tight grading questions) — {esc_mark}\n")
-    md.append(f"Queue `study_lv_attributes/escalation/decisions_needed_{tag}.tsv`: "
+    md.append(f"Queue `run_progress/{tag}/escalation/decisions_needed.tsv`: "
               f"**{esc_generated} generated · {esc_answered} answered · {esc_pending} PENDING** "
               f"({esc_applied} fills applied).\n")
     if esc_pending:
@@ -658,4 +656,4 @@ def _write_md(res: pd.DataFrame, studies: list, score: Path, tag: str, fold: str
 
     md.append(f"# → {overall}\n")
 
-    (score / f"run_health_{tag}_report.md").write_text("\n".join(md) + "\n")
+    rp.run_health_md.write_text("\n".join(md) + "\n")

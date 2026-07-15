@@ -55,6 +55,7 @@ import pandas as pd
 from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
 from bac_metadata.bac_agentic_metadata.engine import stages
 from bac_metadata.bac_agentic_metadata.engine.llm import DEFAULT_MODEL, make_llm
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 #: Synthetic non-study collections in the base table — never selected for the tail.
@@ -198,19 +199,17 @@ def main() -> None:
         sys.exit("--paper-source curated needs --snapshot (the curated study-level CSV with paper_link).")
 
     data = Path(args.data_dir).resolve()
-    find_dir = data / "find_papers"
-    grade_dir = data / "study_lv_attributes" / "grading"
-    wsb_dir = data / "study_lv_attributes" / "whole_study_backfill"
-    esc_dir = data / "study_lv_attributes" / "escalation"
-    ps_dir = data / "sample_lv_attributes" / "per_sample"
-    enriched_dir = data / "sample_lv_attributes" / "enriched"
-    manual_papers_dir = find_dir / "manual_download"
+    # RunPaths is the single path authority — every per-tranche artifact lives under
+    # data/run_progress/<tag>/<stage>/ (auditable per tranche); shared curator/input dirs stay at data root.
+    rp = RunPaths(data, args.tag).ensure()
+    find_dir = rp.find_dir
+    manual_papers_dir = rp.manual_papers_dir
     # The single, version-controlled home for curator-provided per-isolate tables (see its README). Tracked in
     # git precisely so a hand-provided table can never be silently lost — the failure that dropped PRJEB28400's
-    # table in the OneDrive→developer migration. Auto-read every run; no separate wiring step.
-    manual_supp_dir = data / "sample_lv_attributes" / "manual_download_supp"
-    for d in (find_dir, grade_dir, wsb_dir, esc_dir, ps_dir, enriched_dir, manual_papers_dir, manual_supp_dir):
-        d.mkdir(parents=True, exist_ok=True)
+    # table in the OneDrive→developer migration. Auto-read every run; no separate wiring step. (Shared, root-level.)
+    manual_supp_dir = rp.manual_supp_dir
+    manual_papers_dir.mkdir(parents=True, exist_ok=True)
+    manual_supp_dir.mkdir(parents=True, exist_ok=True)
 
     caches = stages.StageCaches(
         llm=data / "cache" / "llm", ena=data / "cache" / "ena", find=data / "cache" / "find",
@@ -242,9 +241,10 @@ def main() -> None:
         )
         if not selected:
             sys.exit("No uncurated studies match the size band — nothing to do.")
-        scratch = Path(args.scratch) if args.scratch else data / "cache" / f"driver_{tag}"
-        sizing_path = _write_batch_sizing(selected, sizes, tag, scratch / f"ena_sizing_{tag}.tsv")
-        _write_batch_splits(selected, sizes, tag, scratch / f"project_splits_{tag}.tsv")
+        sel_dir = Path(args.scratch) if args.scratch else rp.selection_dir
+        sel_dir.mkdir(parents=True, exist_ok=True)
+        sizing_path = _write_batch_sizing(selected, sizes, tag, sel_dir / "ena_sizing.tsv")
+        _write_batch_splits(selected, sizes, tag, sel_dir / "project_splits.tsv")
         fold = tag
         classifications: dict[str, dict] = {}
         total = int(sum(sizes.get(s, 0) for s in selected))
@@ -263,16 +263,16 @@ def main() -> None:
               f"(paper-source={args.paper_source}) ===", file=sys.stderr)
 
     folds = [f.strip() for f in fold.split(",") if f.strip()]
-    found_jsonl = find_dir / f"found_papers_{tag}.jsonl"
-    found_tsv = find_dir / f"found_papers_{tag}.tsv"
-    grades_jsonl = grade_dir / f"study_grades_{tag}.jsonl"
-    grades_tsv = grade_dir / f"study_grades_{tag}.tsv"
-    per_sample_tsv = ps_dir / f"per_sample_applied_{tag}.tsv"
-    backfill_tsv = wsb_dir / f"backfill_applied_{tag}.tsv"
-    gate_report_tsv = wsb_dir / f"backfill_gate_report_{tag}.tsv"
-    decisions_tsv = esc_dir / f"decisions_needed_{tag}.tsv"
-    escalation_applied_tsv = esc_dir / f"escalation_applied_{tag}.tsv"
-    filled_tsv = enriched_dir / f"filled_metadata_{tag}.tsv"
+    found_jsonl = rp.found_papers_jsonl
+    found_tsv = rp.found_papers_tsv
+    grades_jsonl = rp.study_grades_jsonl
+    grades_tsv = rp.study_grades_tsv
+    per_sample_tsv = rp.per_sample_applied
+    backfill_tsv = rp.backfill_applied
+    gate_report_tsv = rp.backfill_gate_report
+    decisions_tsv = rp.decisions_needed
+    escalation_applied_tsv = rp.escalation_applied
+    filled_tsv = rp.filled_metadata
 
     # The full-width base table, restricted to the selection — the substrate every per-sample stage reads.
     # keep_default_na=False preserves literal placeholder strings (e.g. ENA's "NA") exactly as the
@@ -312,7 +312,7 @@ def main() -> None:
     # Persist the drop summary so run-health can self-audit "meaningless data dropped" on ANY run (incl.
     # unlabelled / no-gold): field × dropped-value × cell-count. Always written (empty header if nothing
     # dropped) so "ran, dropped 0" is distinguishable from "step never ran".
-    preclean_path = data / "sample_lv_attributes" / f"preclean_summary_{tag}.tsv"
+    preclean_path = rp.preclean_summary
     preclean_path.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(
         [{"field": f, "dropped_value": v, "n_cells": c}
@@ -390,7 +390,7 @@ def main() -> None:
         stages.missing_papers(
             grades_jsonl=grades_jsonl, found_path=found_tsv, gap_report_path=gate_report_tsv,
             sizing_path=Path(sizing_path), manual_papers_dir=manual_papers_dir, out_dir=find_dir,
-            paper_links=paper_links, report_prefix=f"missing_papers_report_{tag}",
+            paper_links=paper_links, report_prefix=RunPaths.MISSING_PAPERS_PREFIX,
         )
     except Exception as exc:  # noqa: BLE001 — a worklist failure must not kill the run
         print(f"WARN: missing-papers worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)

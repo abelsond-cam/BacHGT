@@ -1215,8 +1215,10 @@ def fill_metadata_table(
 
     provenance = pd.concat(prov_rows, ignore_index=True) if prov_rows else pd.DataFrame()
     res = pd.DataFrame(summary)
-    prov_path = out_dir / f"filled_metadata_provenance_{tag}.tsv"
-    md_path = out_dir / f"filled_metadata_summary_{tag}.md"
+    # Provenance + summary sit beside the final table (the folder encodes the tag under the run_progress layout,
+    # so they derive from out_path's stem rather than re-appending _<tag>).
+    prov_path = out_path.with_name(out_path.stem + "_provenance.tsv")
+    md_path = out_path.with_name(out_path.stem + "_summary.md")
     filled.to_csv(out_path, sep="\t", index=False)
     provenance.to_csv(prov_path, sep="\t", index=False)
 
@@ -1284,22 +1286,19 @@ def fill_for_tag(
     silent-staleness bug the escalation-conservation gate exists to catch. ``base`` must already be
     restricted to the tag's FULL study universe (a subset would silently shrink the final table).
     """
-    data_dir = Path(data_dir)
-    grade_dir = data_dir / "study_lv_attributes" / "grading"
-    wsb_dir = data_dir / "study_lv_attributes" / "whole_study_backfill"
-    esc_dir = data_dir / "study_lv_attributes" / "escalation"
-    ps_dir = data_dir / "sample_lv_attributes" / "per_sample"
-    enriched_dir = data_dir / "sample_lv_attributes" / "enriched"
+    from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
+
+    rp = RunPaths(data_dir, tag)
     return fill_metadata_table(
         base=base, fields=fields,
         fill_paths={
-            "per_sample": ps_dir / f"per_sample_applied_{tag}.tsv",
-            "escalation": esc_dir / f"escalation_applied_{tag}.tsv",
-            "whole_field": wsb_dir / f"backfill_applied_{tag}.tsv",
+            "per_sample": rp.per_sample_applied,
+            "escalation": rp.escalation_applied,
+            "whole_field": rp.backfill_applied,
         },
-        grades_path=grade_dir / f"study_grades_{tag}.tsv",
+        grades_path=rp.study_grades_tsv,
         study_grade_columns=study_grade_columns(spec),
-        out_path=enriched_dir / f"filled_metadata_{tag}.tsv",
+        out_path=rp.filled_metadata,
         tag=tag, fold_label=fold_label,
     )
 
@@ -1347,7 +1346,7 @@ def run_health(*, data_dir: Path, fields: Sequence[str], fold: str, tag: str,
         data_dir, tuple(fields), fold=fold, tag=tag,
         big_decision_frac=spec.escalation_big_decision_frac if spec is not None else BIG_DECISION_FRAC,
     )
-    print(f"Wrote run_health_{tag}_report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
+    print(f"Wrote run_progress/{tag}/run_health/report.{{md,tsv}} — VERDICT: {verdict}", file=sys.stderr)
     if len(res):
         print(res["resolution_state"].value_counts().to_string(), file=sys.stderr)
     return verdict

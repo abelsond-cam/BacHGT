@@ -1,5 +1,0 @@
-field	n_samples	baseline	after_whole_field	after_per_sample	agent	v2	gain_whole_field	gain_per_sample	gain_escalation	residual_gap	gap_closed
-country	34288	0.6204	0.7555	0.8702	0.9217	0.8821	0.1352	0.1147	0.0515	0.0	1.1516
-collection_date	34288	0.5507	0.5662	0.7928	0.8585	0.7473	0.0155	0.2266	0.0656	0.0	1.5652
-isolation_source	34288	0.445	0.5177	0.6856	0.7459	0.6689	0.0727	0.1679	0.0603	0.0	1.3444
-host	34288	0.4438	0.8382	0.9001	0.9077	0.7891	0.3944	0.0619	0.0076	0.0	1.3436

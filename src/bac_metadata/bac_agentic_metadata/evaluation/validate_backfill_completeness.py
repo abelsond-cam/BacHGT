@@ -85,7 +85,9 @@ def main() -> None:
     p.add_argument("--truth", required=True, help="metadata_v2 per-sample gold TSV (local path).")
     p.add_argument("--gold-suffix", default="_parsed", help="Gold column suffix per field (default '_parsed').")
     p.add_argument("--fold", default="train,val", help="Comma-separated folds (default train,val).")
-    p.add_argument("--report-prefix", default="backfill_completeness", help="Report basename under data/.")
+    p.add_argument("--report-prefix", default="backfill_completeness", help="Report basename.")
+    p.add_argument("--out-dir", default=str(DATA_DIR / "scorecard"),
+                   help="Output dir for the report (default data/scorecard; pass run_progress/<tag>/scorecard).")
     args = p.parse_args()
 
     folds = {x.strip() for x in args.fold.split(",") if x.strip()}
@@ -141,10 +143,11 @@ def main() -> None:
               "contributions; **residual gap** is the per-field completeness manual curation still has over "
               "us — the target of the gap diagnosis.")
 
-    scorecard = DATA_DIR / "scorecard"
+    scorecard = Path(args.out_dir)
+    scorecard.mkdir(parents=True, exist_ok=True)
     (scorecard / f"{args.report_prefix}_report.md").write_text("\n".join(md) + "\n")
     res.to_csv(scorecard / f"{args.report_prefix}_report.tsv", sep="\t", index=False)
-    print(f"Wrote scorecard/{args.report_prefix}_report.{{md,tsv}}", file=sys.stderr)
+    print(f"Wrote {scorecard}/{args.report_prefix}_report.{{md,tsv}}", file=sys.stderr)
     print(res.to_string(index=False), file=sys.stderr)
 
 

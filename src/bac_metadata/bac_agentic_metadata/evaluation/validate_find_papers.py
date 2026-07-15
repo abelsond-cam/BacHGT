@@ -283,7 +283,7 @@ def main() -> None:
         g = gt.get(r["study_accession"], {})
         md.append(f"- `{r['study_accession']}` (n_candidates={r.get('n_candidates')}) curated={_curated_links(g)}")
 
-    find_dir = DATA_DIR / "find_papers"
+    find_dir = Path(args.found).parent   # write reports beside the found_papers input (run_progress/<tag>/find/)
     (find_dir / f"{args.report_prefix}_validation_report.md").write_text("\n".join(md) + "\n")
     df[["study_accession", "fold", "category", "chosen_found_via", "verified", "find_confidence",
         "chosen_pmid", "chosen_pmcid", "chosen_doi", "coverage_fraction"]].to_csv(

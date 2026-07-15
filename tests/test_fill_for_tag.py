@@ -16,6 +16,7 @@ import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import escalation_conservation as ec
 from bac_metadata.bac_agentic_metadata.engine import stages
+from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 _MIN_SPEC = """\
@@ -38,14 +39,14 @@ def _spec(tmp_path: Path) -> AttributeSpec:
 
 
 def _seed_applied(data: Path, tag: str) -> None:
-    esc = data / "study_lv_attributes" / "escalation"
-    esc.mkdir(parents=True, exist_ok=True)
+    applied = RunPaths(data, tag).escalation_applied
+    applied.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame([
         {"study_accession": "A", "sample_accession": "s1", "field": "country",
          "ena_value": "", "applied_value": "USA", "method": "curator_escalation"},
         {"study_accession": "A", "sample_accession": "s2", "field": "country",
          "ena_value": "", "applied_value": "USA", "method": "curator_escalation"},
-    ]).to_csv(esc / f"escalation_applied_{tag}.tsv", sep="\t", index=False)
+    ]).to_csv(applied, sep="\t", index=False)
 
 
 def test_fill_for_tag_lands_escalation_and_keeps_full_universe(tmp_path):
@@ -59,7 +60,7 @@ def test_fill_for_tag_lands_escalation_and_keeps_full_universe(tmp_path):
     ])
     filled = stages.fill_for_tag(data_dir=data, spec=_spec(tmp_path), base=base, fields=["country"], tag="train")
 
-    out = data / "sample_lv_attributes" / "enriched" / "filled_metadata_train.tsv"
+    out = RunPaths(data, "train").filled_metadata
     assert out.exists()
     fm = pd.read_csv(out, sep="\t", dtype=str, keep_default_na=False).set_index("sample_accession")
     assert fm.at["s1", "country"] == "USA" and fm.at["s2", "country"] == "USA"   # escalation reached final
@@ -85,12 +86,12 @@ def test_gate_catches_stale_final_before_rebuild(tmp_path):
     """Without the rebuild (a stale final missing the applied cells), INV3 must loudly fail — the caught bug."""
     data = tmp_path / "data"
     _seed_applied(data, "train")
-    enriched = data / "sample_lv_attributes" / "enriched"
-    enriched.mkdir(parents=True, exist_ok=True)
+    stale = RunPaths(data, "train").filled_metadata
+    stale.parent.mkdir(parents=True, exist_ok=True)
     # Stale final: s1 present, s2's escalation cell blank (the exact PRJEB19322-shape silent drop).
     pd.DataFrame([
         {"sample_accession": "s1", "country": "USA"},
         {"sample_accession": "s2", "country": ""},
-    ]).to_csv(enriched / "filled_metadata_train.tsv", sep="\t", index=False)
+    ]).to_csv(stale, sep="\t", index=False)
     fails = ec.verify_tags(data, ["train"], amend=False, include_master=False, out=lambda _m: None)
     assert any("INV3" in f for f in fails)
