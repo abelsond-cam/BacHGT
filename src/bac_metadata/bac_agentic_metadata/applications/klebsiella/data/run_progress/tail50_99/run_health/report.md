@@ -1,8 +1,8 @@
 # Run-health report (tail50_99 / tail50_99)
 
-## ⚠️ **11 ACTIONABLE + 10 BLOCKED outstanding — supplement & rerun**
+## ⚠️ **10 ACTIONABLE + 10 BLOCKED outstanding — supplement & rerun**
 
-380 (study × field) cells over 95 studies — **FILLED 335 · ACTIONABLE 11 · BLOCKED 10 · EXHAUSTED 24**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance), and at least one study evaluated.
+380 (study × field) cells over 95 studies — **FILLED 336 · ACTIONABLE 10 · BLOCKED 10 · EXHAUSTED 24**. ALL CLEAR requires ACTIONABLE and BLOCKED both 0 (every cell FILLED, or EXHAUSTED with a logged reason / curator acceptance), and at least one study evaluated.
 
 ## Pipeline self-audit — every silent-fail-prone step, explicitly accounted
 
@@ -31,10 +31,10 @@ Every past silent-drop bug hid at a *different* link. This report **counts** eac
 | # | link | artifact | count |
 |---|---|---|---|
 | 1 | detect | decisions_needed | 38 decision(s) queued |
-| 2 | answer | answer / answer_note | 3 answered · 35 skip (34 auto) |
-| 3 | apply | escalation_applied | 204 per-sample fill(s) |
-| 4 | accumulate | curated_escalations (master) | 50 rows · 38 answered |
-| 5 | fill | filled_metadata_provenance | 204 cell(s) reached final via curator_escalation |
+| 2 | answer | answer / answer_note | 4 answered · 34 skip (34 auto) |
+| 3 | apply | escalation_applied | 263 per-sample fill(s) |
+| 4 | accumulate | curated_escalations (master) | 53 rows · 41 answered |
+| 5 | fill | filled_metadata_provenance | 263 cell(s) reached final via curator_escalation |
 
 > ⚠️ Counts are *necessary, not sufficient*. A non-zero row at each link does not prove the SAME answers flowed through — only the conservation gate traces them individually.
 
@@ -50,10 +50,6 @@ Every past silent-drop bug hid at a *different* link. This report **counts** eac
 | PRJNA237670 | isolation_source | isolation_source:0,host:0,collection_date:0 | [Molecular dissection of the evolution of carbapenem-resistan](https://doi.org/10.1073/pnas.1321364111) | `manual_download_supp/PRJNA237670.xlsx` |
 | PRJNA918858 | collection_date,isolation_source | isolation_source:0,host:0,collection_date:0 | [Heteroresistance to Colistin in Clinical Isolates of <i>Kleb](https://doi.org/10.3390/antibiotics12071111) | `manual_download_supp/PRJNA918858.xlsx` |
 
-### Answer escalations (1)
-
-- PRJEB59403 (host)
-
 ## No paper could be found — validated, won't be recovered
 8 studies have no resolvable paper (finder exhausted; EBI record only). Marked EXHAUSTED: PRJDB4948, PRJEB26075, PRJEB28115, PRJEB45369, PRJEB50346, PRJEB5495, PRJNA1026096, PRJNA329105
 
@@ -61,11 +57,11 @@ Every past silent-drop bug hid at a *different* link. This report **counts** eac
 7 studies have a supplementary table with the fields but no joinable accession key (anchoring): PRJEB78367, PRJEB7967, PRJEB8265, PRJNA1050414, PRJNA231221, PRJNA259658, PRJNA970254
 
 ## Escalation status
-- queue generated: 38 rows; answered: 3; applied fills: 204.
+- queue generated: 38 rows; answered: 4; applied fills: 263.
 
 ## Zero-reason breakdown (per-sample residual)
 
-- NO_PMCID: 19
+- NO_PMCID: 18
 - no_supp: 13
 - abstained_other: 2
 - field_not_in_table: 1
@@ -81,21 +77,11 @@ Every past silent-drop bug hid at a *different* link. This report **counts** eac
 
 ✅ No outstanding downloads — every findable paper has full text (7 via a manually-added PDF).
 
-## 2. Escalations answered (tight grading questions) — ⛔ INCOMPLETE
+## 2. Escalations answered (tight grading questions) — ✅ COMPLETE
 
-Queue `run_progress/tail50_99/escalation/decisions_needed.tsv`: **38 generated · 3 answered · 1 PENDING** (204 fills applied).
+Queue `run_progress/tail50_99/escalation/decisions_needed.tsv`: **38 generated · 4 answered · 0 PENDING** (263 fills applied).
 
-⛔ **1 tight-grading decision(s) are UNANSWERED.** Fill the `answer` column (a blank answer = not decided; a reject/skip note counts as resolved) and rerun `--apply`.
+✅ All 38 escalation(s) resolved (answered or explicitly rejected).
 
-# → ⛔ CURATOR ACTION OUTSTANDING — 0 paper(s) to add, 1 escalation(s) to answer
+# → ✅ CURATOR SIGN-OFF COMPLETE — both human steps done
 
----
-
-<!-- ESCALATION-CONSERVATION -->
-## ✅ Escalation conservation VERIFIED — links 3–5 confirmed
-
-`verify_escalation_conservation.py` traced every curator decision through apply → master → final and found none lost:
-
-- **INV1 apply** — 4 answered decision(s) → 4 applied (study×field), 263 per-sample fills. 0 unapplied.
-- **INV2 master-preserve** — curated_escalations disk 50 ⊇ HEAD 50 rows; 0 committed decisions dropped.
-- **INV3 fill** — 263 escalation fill(s) → 263 non-blank in filled_metadata_tail50_99. 0 lost to a blank final cell.

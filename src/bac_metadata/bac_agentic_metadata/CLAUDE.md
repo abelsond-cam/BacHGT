@@ -133,6 +133,18 @@ Writes `run_progress/<tag>/run_health/pipeline_triggers.{md,tsv}`. Run it after 
 (`… verify_pipeline_triggers --tags <tag>`); WARN is fine, any FAIL blocks. Composes existing vocab
 (`audit_manual_curation`, `escalation_conservation`) — no new grading logic.
 
+**The cross-tag "genuinely clear" roll-up — `evaluation.combined_run_health`.** Per-tag run_health can never
+declare a cohort *clear* — it has no notion of a genuinely-unrecoverable gap, so it always reports "N ACTIONABLE
++ M BLOCKED — supplement & rerun." This tool unions the tags' `run_health/report.tsv` grids and applies a
+visible **acceptance policy** (`ACCEPT_POLICY`): `fetch_supp_table` (no table in folder → all fetchable already
+fetched), `needs_linkage` (unanchored / no ENA-mappable key), and `escalate_big_decision` (wide-mix, no single
+whole-field value) are **ACCEPTED** as unrecoverable; only `answer_escalation` (a still-answerable escalation) —
+or any **unrecognised** recoverability (fail-loud) — stays ACTIONABLE. Emits one verdict (**GENUINELY CLEAR** vs
+K truly-actionable, `--strict` → exit 1). `… combined_run_health --tags train,test,tail100,…`. Note: after
+answering escalations via `escalate --then-apply`, **refresh the grid** (`cli.run_health --tag <tag>`) before
+the roll-up — `--then-apply` rebuilds `filled_metadata` but not the run_health grid, so a resolved escalation
+reads as stale-ACTIONABLE otherwise.
+
 ## Editing the engine or rubric — gotchas
 
 - **`--carry-forward` is for a band's FIRST run — never for re-running an already-accumulated band.**
