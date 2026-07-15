@@ -6,7 +6,7 @@ Samples: **34288**. Completeness = fraction with a real value (placeholder-strip
 |---|---|---|---|---|---|---|---|---|---|---|
 | country | 0.62 | 0.76 | 0.87 | **0.92** | 0.88 | +0.14 | +0.11 | +0.05 | 0.00 | 1.15 |
 | collection_date | 0.55 | 0.57 | 0.79 | **0.86** | 0.75 | +0.02 | +0.23 | +0.07 | 0.00 | 1.57 |
-| isolation_source | 0.45 | 0.52 | 0.69 | **0.75** | 0.67 | +0.07 | +0.17 | +0.06 | 0.00 | 1.35 |
+| isolation_source | 0.45 | 0.52 | 0.69 | **0.75** | 0.67 | +0.07 | +0.17 | +0.06 | 0.00 | 1.34 |
 | host | 0.44 | 0.84 | 0.90 | **0.91** | 0.79 | +0.39 | +0.06 | +0.01 | 0.00 | 1.34 |
 
 - **gain wf / ps / esc** isolate the whole-field, per-sample, and curator-escalation contributions; **residual gap** is the per-field completeness manual curation still has over us — the target of the gap diagnosis.

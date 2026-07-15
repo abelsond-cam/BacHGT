@@ -58,9 +58,10 @@ src/bac_metadata/bac_agentic_metadata/applications/*/data/find_papers/manual_dow
 # that is not version-controlled gets silently lost (this is what dropped PRJEB28400's per-isolate table in the
 # OneDrive->developer migration, taking its isolation_source to 0%). They are small, and losing one is worse
 # than storing it. Consumed by engine/local_supplements.py; linkability tracked by evaluation/table_linkability.py.
-# Filled full-width metadata tables + provenance — large, regenerable (the driver's fill-metadata-table
-# stage substitutes agent values into the whole base row); the small summary .md is kept.
-src/bac_metadata/bac_agentic_metadata/applications/*/data/sample_lv_attributes/enriched/filled_metadata_*.tsv
+# Filled full-width metadata tables + provenance (the driver's fill-metadata-table stage substitutes agent
+# values into the whole base row) are deliberately TRACKED: this is the pipeline's PRODUCTION output, and the
+# escalation-conservation gate diffs it vs git HEAD (INV2/INV3) to prove no curator answer is silently lost.
+# They regenerate from the applied files via engine.cli.fill, but keeping them version-controlled is the point.
 
 # pixi-solved tool environments (manifest + lock are tracked; the env dir is not)
 .pixi/
