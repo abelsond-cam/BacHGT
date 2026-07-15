@@ -1,0 +1,480 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJEB19777	SAMEA104032372	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC07 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032382	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC66 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032384	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC72 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032386	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC85 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032387	host		wastewater_water	per_sample	Data_Sheet_1.pdf:131SC04 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032390	host		wastewater_water	per_sample	Data_Sheet_1.pdf:131SC24 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032381	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC65 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032373	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC10 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032378	host		wastewater_water	per_sample	Data_Sheet_1.pdf:121SC39 (rescued 'urban effluent')
+PRJEB19777	SAMEA104032389	host		wastewater_water	per_sample	Data_Sheet_1.pdf:131SC2 (rescued 'urban effluent')
+PRJEB30858	SAMEA5408359	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A
+PRJEB30858	SAMEA5408360	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.2
+PRJEB30858	SAMEA5408361	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.3
+PRJEB30858	SAMEA5408362	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.4
+PRJEB30858	SAMEA5408363	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B
+PRJEB30858	SAMEA5408364	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B.2
+PRJEB30858	SAMEA5408365	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-C
+PRJEB30858	SAMEA5408366	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-D
+PRJEB30858	SAMEA5408367	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-E
+PRJEB30858	SAMEA5408368	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-F
+PRJEB30858	SAMEA5408369	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-G
+PRJEB30858	SAMEA5408370	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-H
+PRJEB30858	SAMEA5408371	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I
+PRJEB30858	SAMEA5408372	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I.2
+PRJEB30858	SAMEA5408373	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-J
+PRJEB30858	SAMEA5408374	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-K
+PRJEB30858	SAMEA5408375	collection_date		2014	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Z
+PRJEB30858	SAMEA5408376	collection_date		2014	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Y
+PRJEB30858	SAMEA5408377	collection_date		2014	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-X
+PRJEB30858	SAMEA5408378	collection_date		2014	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox_U
+PRJEB30858	SAMEA5408380	collection_date		2015	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kpn_T
+PRJEB30858	SAMEA5408359	isolation_source		urine	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A
+PRJEB30858	SAMEA5408360	isolation_source		BAL	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.2
+PRJEB30858	SAMEA5408361	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.3
+PRJEB30858	SAMEA5408362	isolation_source		blood	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.4
+PRJEB30858	SAMEA5408363	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B
+PRJEB30858	SAMEA5408364	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B.2
+PRJEB30858	SAMEA5408365	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-C
+PRJEB30858	SAMEA5408366	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-D
+PRJEB30858	SAMEA5408367	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-E
+PRJEB30858	SAMEA5408368	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-F
+PRJEB30858	SAMEA5408369	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-G
+PRJEB30858	SAMEA5408370	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-H
+PRJEB30858	SAMEA5408371	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I
+PRJEB30858	SAMEA5408372	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I.2
+PRJEB30858	SAMEA5408373	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-J
+PRJEB30858	SAMEA5408374	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-K
+PRJEB30858	SAMEA5408375	isolation_source		urine	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Z
+PRJEB30858	SAMEA5408376	isolation_source		wound	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Y
+PRJEB30858	SAMEA5408377	isolation_source		throat swab	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-X
+PRJEB30858	SAMEA5408378	isolation_source		waste water	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox_U
+PRJEB30858	SAMEA5408380	isolation_source		rectal screen	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kpn_T
+PRJEB30858	SAMEA5408359	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A (rescued 'urine')
+PRJEB30858	SAMEA5408360	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.2 (rescued 'BAL')
+PRJEB30858	SAMEA5408361	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.3 (rescued 'rectal screen')
+PRJEB30858	SAMEA5408362	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-A.4 (rescued 'blood')
+PRJEB30858	SAMEA5408363	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B (rescued 'rectal screen')
+PRJEB30858	SAMEA5408364	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-B.2 (rescued 'rectal screen')
+PRJEB30858	SAMEA5408365	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-C (rescued 'rectal screen')
+PRJEB30858	SAMEA5408366	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-D (rescued 'rectal screen')
+PRJEB30858	SAMEA5408367	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-E (rescued 'rectal screen')
+PRJEB30858	SAMEA5408368	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-F (rescued 'rectal screen')
+PRJEB30858	SAMEA5408369	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-G (rescued 'rectal screen')
+PRJEB30858	SAMEA5408370	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-H (rescued 'rectal screen')
+PRJEB30858	SAMEA5408371	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I (rescued 'rectal screen')
+PRJEB30858	SAMEA5408372	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-I.2 (rescued 'rectal screen')
+PRJEB30858	SAMEA5408373	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-J (rescued 'rectal screen')
+PRJEB30858	SAMEA5408374	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-K (rescued 'rectal screen')
+PRJEB30858	SAMEA5408375	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Z (rescued 'urine')
+PRJEB30858	SAMEA5408376	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-Y (rescued 'wound')
+PRJEB30858	SAMEA5408377	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox-X (rescued 'throat swab')
+PRJEB30858	SAMEA5408378	host		wastewater_water	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kox_U (rescued 'waste water')
+PRJEB30858	SAMEA5408380	host		human	per_sample	ciz1130_suppl_supplementary_tables.xlsx:Kpn_T (rescued 'rectal screen')
+PRJEB34353	SAMEA5949538	isolation_source	clinical sample	catheter	per_sample	Table_1.xlsx:22-16
+PRJEB34353	SAMEA5949540	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:22-17
+PRJEB34353	SAMEA5949541	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:24-17
+PRJEB34353	SAMEA5949542	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:26-17
+PRJEB34353	SAMEA5949543	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:211-17
+PRJEB34353	SAMEA5949544	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:213-17
+PRJEB34353	SAMEA5949545	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:689-17
+PRJEB34353	SAMEA5949546	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:691-17
+PRJEB34353	SAMEA5949547	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:693-17
+PRJEB34353	SAMEA5949548	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:694-17
+PRJEB34353	SAMEA5949549	isolation_source	environmental sample	rinse water	per_sample	Table_1.xlsx:697-17
+PRJEB34353	SAMEA5949550	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:1087-16
+PRJEB34353	SAMEA5949551	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:28-17
+PRJEB34353	SAMEA5949552	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:685-17
+PRJEB34353	SAMEA5949553	isolation_source	clinical sample	intraabdominal	per_sample	Table_1.xlsx:686-17
+PRJEB34353	SAMEA5949555	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:1081-16
+PRJEB34353	SAMEA5949557	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:1086-16
+PRJEB34353	SAMEA5949559	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:692-17
+PRJEB34353	SAMEA5949560	isolation_source	clinical sample	rectal	per_sample	Table_1.xlsx:696-17
+PRJEB37551	SAMEA6658638	host		human	per_sample	Data_Sheet_2.xlsx:EbB003 (rescued 'INFANT')
+PRJEB37551	SAMEA6658640	host		human	per_sample	Data_Sheet_2.xlsx:EbB005 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658646	host		human	per_sample	Data_Sheet_2.xlsx:EbB012 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658655	host		human	per_sample	Data_Sheet_2.xlsx:EbB022 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658658	host		human	per_sample	Data_Sheet_2.xlsx:EbB025 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658660	host		human	per_sample	Data_Sheet_2.xlsx:EbB027 (rescued 'INFANT')
+PRJEB37551	SAMEA6658661	host		human	per_sample	Data_Sheet_2.xlsx:EbB028 (rescued 'INFANT')
+PRJEB37551	SAMEA6658668	host		human	per_sample	Data_Sheet_2.xlsx:EbB035 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658671	host		human	per_sample	Data_Sheet_2.xlsx:EbB038 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658675	host		human	per_sample	Data_Sheet_2.xlsx:EbB043 (rescued 'INFANT')
+PRJEB37551	SAMEA6658676	host		human	per_sample	Data_Sheet_2.xlsx:EbB044 (rescued 'INFANT')
+PRJEB37551	SAMEA6658677	host		human	per_sample	Data_Sheet_2.xlsx:EbB045 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658685	host		human	per_sample	Data_Sheet_2.xlsx:EbB053 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658689	host		human	per_sample	Data_Sheet_2.xlsx:EbB057 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658695	host		human	per_sample	Data_Sheet_2.xlsx:EbB064 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658699	host		human	per_sample	Data_Sheet_2.xlsx:EbB068 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658701	host		human	per_sample	Data_Sheet_2.xlsx:EbB070 (rescued 'INFANT')
+PRJEB37551	SAMEA6658702	host		human	per_sample	Data_Sheet_2.xlsx:EbB071 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658703	host		human	per_sample	Data_Sheet_2.xlsx:EbB075 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658709	host		human	per_sample	Data_Sheet_2.xlsx:EbB094 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658717	host		human	per_sample	Data_Sheet_2.xlsx:EbB104 (rescued 'INFANT')
+PRJEB37551	SAMEA6658718	host		human	per_sample	Data_Sheet_2.xlsx:EbB105 (rescued 'MOTHER')
+PRJEB37551	SAMEA6658727	host		human	per_sample	Data_Sheet_2.xlsx:EbB114 (rescued 'INFANT')
+PRJEB37551	SAMEA6658728	host		human	per_sample	Data_Sheet_2.xlsx:EbB115 (rescued 'MOTHER')
+PRJEB38898	SAMEA6963083	collection_date	2019	2020-08-01 00:00:00	per_sample	mgen-7-0519-s002.xlsx:ERS4672944
+PRJEB38898	SAMEA6963084	collection_date	2019	2020-08-01 00:00:00	per_sample	mgen-7-0519-s002.xlsx:ERS4672945
+PRJEB38898	SAMEA6963085	isolation_source	BAL	BAL	per_sample	mgen-7-0519-s002.xlsx:ERS4672946
+PRJEB38898	SAMEA6963086	isolation_source	BAL	BAL	per_sample	mgen-7-0519-s002.xlsx:ERS4672947
+PRJEB38898	SAMEA6963087	isolation_source	blood	BLOOD	per_sample	mgen-7-0519-s002.xlsx:ERS4672948
+PRJEB38898	SAMEA6963088	isolation_source	BAL	BAL	per_sample	mgen-7-0519-s002.xlsx:ERS4672949
+PRJEB38898	SAMEA6963089	isolation_source	urine	URINE	per_sample	mgen-7-0519-s002.xlsx:ERS4672950
+PRJEB38898	SAMEA6963090	isolation_source	pus	PUS	per_sample	mgen-7-0519-s002.xlsx:ERS4672951
+PRJEB38898	SAMEA6963080	isolation_source	tracheal aspirate	Tracheal aspirate	per_sample	mgen-7-0519-s002.xlsx:ERS4672941
+PRJEB38898	SAMEA6963082	isolation_source	blood	BLOOD	per_sample	mgen-7-0519-s002.xlsx:ERS4672943
+PRJEB38898	SAMEA6963083	isolation_source	environment swab	Bed rail	per_sample	mgen-7-0519-s002.xlsx:ERS4672944
+PRJEB38898	SAMEA6963084	isolation_source	environment	Blood pressure cuff	per_sample	mgen-7-0519-s002.xlsx:ERS4672945
+PRJEB38898	SAMEA6963085	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672946 (rescued 'BAL')
+PRJEB38898	SAMEA6963086	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672947 (rescued 'BAL')
+PRJEB38898	SAMEA6963087	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672948 (rescued 'BLOOD')
+PRJEB38898	SAMEA6963088	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672949 (rescued 'BAL')
+PRJEB38898	SAMEA6963089	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672950 (rescued 'URINE')
+PRJEB38898	SAMEA6963090	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672951 (rescued 'PUS')
+PRJEB38898	SAMEA6963080	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672941 (rescued 'Tracheal aspirate')
+PRJEB38898	SAMEA6963082	host		human	per_sample	mgen-7-0519-s002.xlsx:ERS4672943 (rescued 'BLOOD')
+PRJEB38898	SAMEA6963083	host		environment_soil	per_sample	mgen-7-0519-s002.xlsx:ERS4672944 (rescued 'Bed rail')
+PRJEB38898	SAMEA6963084	host		environment_soil	per_sample	mgen-7-0519-s002.xlsx:ERS4672945 (rescued 'Blood pressure cuff')
+PRJEB41835	SAMEA7707542	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707542 (rescued 'Throat swab')
+PRJEB41835	SAMEA7707543	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707543 (rescued 'Urine')
+PRJEB41835	SAMEA7707544	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707544 (rescued 'Rectal swab')
+PRJEB41835	SAMEA7707545	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707545 (rescued 'Blood')
+PRJEB41835	SAMEA7707546	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707546 (rescued 'Blood')
+PRJEB41835	SAMEA7707547	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707547 (rescued 'Rectal swab')
+PRJEB41835	SAMEA7707548	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707548 (rescued 'Urine')
+PRJEB41835	SAMEA7707549	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707549 (rescued 'Blood')
+PRJEB41835	SAMEA7707550	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707550 (rescued 'Urine')
+PRJEB41835	SAMEA7707551	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707551 (rescued 'Sputum')
+PRJEB41835	SAMEA7707552	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707552 (rescued 'Catheter')
+PRJEB41835	SAMEA7707553	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707553 (rescued 'Blood')
+PRJEB41835	SAMEA7707554	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707554 (rescued 'Throat swab')
+PRJEB41835	SAMEA7707555	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707555 (rescued 'Bile')
+PRJEB41835	SAMEA7707556	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707556 (rescued 'Urine')
+PRJEB41835	SAMEA7707557	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707557 (rescued 'Rectal swab')
+PRJEB41835	SAMEA7707558	host		human	per_sample	msystems.00244-21-st001.pdf:SAMEA7707558 (rescued 'Urine')
+PRJEB60418	SAMEA112746551	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741813 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746552	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741814 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746553	host		environment_soil	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741815 (rescued 'Farm environment')
+PRJEB60418	SAMEA112746554	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741816 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746558	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741820 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746559	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741821 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746560	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741822 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746555	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741817 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746564	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741826 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746565	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741827 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746567	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741829 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746569	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741831 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746570	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741832 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746561	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741823 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746568	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741830 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746562	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741824 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746563	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741825 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746556	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741818 (rescued 'Animal (chicken)')
+PRJEB60418	SAMEA112746557	host		poultry	per_sample	spectrum.01386-23-s0003.xlsx:ERS14741819 (rescued 'Animal (chicken)')
+PRJEB8770	SAMEA3304682	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985160 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304684	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985161 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304691	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985164 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304692	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985165 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304694	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985166 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304696	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985167 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304698	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985168 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3304700	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR985169 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3531615	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216300 (rescued 'Municipal Wastewater')
+PRJEB8770	SAMEA3531616	host		wastewater_water	per_sample	ciz174_suppl_supplementary_table_1.xlsx:ERR1216301 (rescued 'Municipal Wastewater')
+PRJNA430457	SAMN08374159	isolation_source		biological product [ENVO:02000043]	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		cerebrospinal fluid from infant	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		SWAB, PERITONEAL ABSCESS	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Tissue	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretions	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretions	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374164	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretions	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretions	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		respiratory secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Burn Patient	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		pus swab from leg	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		TIP	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		pus swab (trachea)	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		pus	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		sputum	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Ear secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Thigh tissue	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Abdominal drain tube	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Urine sample	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		stool	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Tracheal Aspirate	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		body fluid	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		body fluid	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Respiratory	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Rectal	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		abdominal drainage	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		rectal	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Hospital	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		nose	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		wound swab	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine sample	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		tracheal secretion	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		abdominal drainage fluid	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		nasal swab	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		abdominal drainage fluid	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		anal swab	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		abdominal drain fluid	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		urine sample	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		anal swab	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	isolation_source		Blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374159	isolation_source		sputum	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		blood	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		sputum	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	isolation_source		pus	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374160	isolation_source		urine	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2012	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2010	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2010	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2012	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2015	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2013	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2014	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2006	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2005	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2008	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2003	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2003	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2003	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2004	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2004	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2004	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2004	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2010	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2005	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2007	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2002	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2003	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2005	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2006	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2007	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2008	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2005	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374151	collection_date		2009	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2015	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430457	SAMN08374146	collection_date		2015	per_sample_two_hop	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx via 228 shared IDs
+PRJNA430813	SAMN03455994	isolation_source		Patient Q (this study)	per_sample	mbo001183707st2.xlsx:ABFQA
+PRJNA430813	SAMN06040382	isolation_source		Sink Drain	per_sample	mbo001183707st2.xlsx:ABOHI
+PRJNA430813	SAMN06040438	isolation_source		Sink Drain	per_sample	mbo001183707st2.xlsx:ABOKF
+PRJNA430813	SAMN06040383	isolation_source		Sink Drain	per_sample	mbo001183707st2.xlsx:ABOHK
+PRJNA430813	SAMN03456001	isolation_source		WW Manhole	per_sample	mbo001183707st2.xlsx:ABFQH
+PRJNA430813	SAMN06040439	isolation_source		Sink Drain	per_sample	mbo001183707st2.xlsx:ABOKG
+PRJNA430813	SAMN04287054	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABKXW
+PRJNA430813	SAMN06040420	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABOJN
+PRJNA430813	SAMN06040392	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABOIK
+PRJNA430813	SAMN04287025	isolation_source		Patient S (this study)	per_sample	mbo001183707st2.xlsx:ABKWA
+PRJNA430813	SAMN06040387	isolation_source		WW Pipe (sludge)	per_sample	mbo001183707st2.xlsx:ABOIF
+PRJNA430813	SAMN03455936	isolation_source		Patient N (this study)	per_sample	mbo001183707st2.xlsx:AATYC
+PRJNA430813	SAMN04287031	isolation_source		Closet Drain	per_sample	mbo001183707st2.xlsx:ABKWG
+PRJNA430813	SAMN04287033	isolation_source		Closet Equipment	per_sample	mbo001183707st2.xlsx:ABKWK
+PRJNA430813	SAMN03455933	isolation_source		Patient M (this study)	per_sample	mbo001183707st2.xlsx:AATXZ
+PRJNA430813	SAMN03455990	isolation_source		Patient Q (this study)	per_sample	mbo001183707st2.xlsx:ABFPW
+PRJNA430813	SAMN06040388	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABOIG
+PRJNA430813	SAMN06040419	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABOJM
+PRJNA430813	SAMN06040389	isolation_source		WW Pipe	per_sample	mbo001183707st2.xlsx:ABOIH
+PRJNA430813	SAMN03455994	host		human	per_sample	mbo001183707st2.xlsx:ABFQA (rescued 'Patient Q (this study)')
+PRJNA430813	SAMN06040382	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOHI (rescued 'Sink Drain')
+PRJNA430813	SAMN06040438	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOKF (rescued 'Sink Drain')
+PRJNA430813	SAMN06040383	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOHK (rescued 'Sink Drain')
+PRJNA430813	SAMN03456001	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABFQH (rescued 'WW Manhole')
+PRJNA430813	SAMN06040439	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOKG (rescued 'Sink Drain')
+PRJNA430813	SAMN04287054	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABKXW (rescued 'WW Pipe')
+PRJNA430813	SAMN06040420	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOJN (rescued 'WW Pipe')
+PRJNA430813	SAMN06040392	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOIK (rescued 'WW Pipe')
+PRJNA430813	SAMN04287031	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABKWG (rescued 'Closet Drain')
+PRJNA430813	SAMN03455990	host		human	per_sample	mbo001183707st2.xlsx:ABFPW (rescued 'Patient Q (this study)')
+PRJNA430813	SAMN06040388	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOIG (rescued 'WW Pipe')
+PRJNA430813	SAMN06040419	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOJM (rescued 'WW Pipe')
+PRJNA430813	SAMN06040389	host		wastewater_water	per_sample	mbo001183707st2.xlsx:ABOIH (rescued 'WW Pipe')
+PRJNA606074	SAMN14125795	collection_date		2017-09-21 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI025
+PRJNA606074	SAMN14125983	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI213
+PRJNA606074	SAMN14125984	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI214
+PRJNA606074	SAMN14125985	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI215
+PRJNA606074	SAMN14125987	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI217
+PRJNA606074	SAMN14125989	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI219
+PRJNA606074	SAMN14125992	collection_date		2017-12-06 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI222
+PRJNA606074	SAMN14125925	collection_date		2017-09-15 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI155
+PRJNA606074	SAMN14125927	collection_date		2017-09-20 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI157
+PRJNA606074	SAMN14125928	collection_date		2017-09-13 00:00:00	per_sample	40168_2020_907_MOESM3_ESM.xlsx:PI158
+PRJNA908117	SAMN32026869	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026870	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026871	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026868	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026876	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026877	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026872	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026873	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026874	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026875	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026880	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026879	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026878	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026885	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026886	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026887	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026881	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026882	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026884	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026883	country	NA	USA	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026869	collection_date	NA	2018	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026870	collection_date	NA	2017	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026871	collection_date	NA	2017	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026868	collection_date	NA	2021	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026876	collection_date	NA	2020	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026877	collection_date	NA	2020	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026872	collection_date	NA	2021	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026873	collection_date	NA	2018	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026874	collection_date	NA	2017	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026875	collection_date	NA	2018	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026880	collection_date	NA	2019	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026879	collection_date	NA	2019	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026878	collection_date	NA	2019	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026885	collection_date	NA	2017	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026886	collection_date	NA	2018	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026887	collection_date	NA	2021	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026881	collection_date	NA	2019	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026882	collection_date	NA	2020	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026884	collection_date	NA	2020	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026883	collection_date	NA	2017	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026869	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026870	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026871	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026868	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026876	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026877	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026872	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026873	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026874	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026875	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026880	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026879	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026878	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026885	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026886	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026887	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026881	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026882	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026884	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026883	isolation_source		blood	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026869	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026870	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026871	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026868	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026876	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026877	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026872	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026873	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026874	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026875	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026880	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026879	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026878	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026885	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026886	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026887	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026881	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026882	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026884	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs
+PRJNA908117	SAMN32026883	host	NA	Homo sapiens	per_sample_two_hop	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx via 324 shared IDs

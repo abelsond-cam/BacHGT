@@ -1,0 +1,150 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJDB10735			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJDB4867			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJDB6244	PMC5923170		abstained	0	0	none	no joinable table
+PRJEB12817	PMC5823397		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0191958.s003.pdf', 'pone.0191958.s002.pdf']
+PRJEB15325			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB1730			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB17888	PMC7672463		abstained	0	0	none	no joinable table
+PRJEB18733			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB19777	PMC5487458	Data_Sheet_1.pdf	direct	10	10	high	mapped 10 samples, 30 cell-fills; rescued ['host=vocab']; overwrite guard: 10/30 fills kept; kept ENA over table on collection_date×10, isolation_source×10
+PRJEB20357	PMC9155631		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['dkac071_supplementary_data.docx', 'dkac071_supplementary_data.docx']
+PRJEB22139	PMC5540593		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['12864_2017_3955_MOESM1_ESM.xlsx']
+PRJEB23845	PMC6785715	41587_2018_9_MOESM3_ESM.xlsx	abstained	0	0	low	no per-sample fields resolved; value-check rejected ['isolation_source']
+PRJEB2399	PMC3410874		abstained	0	0	none	no joinable table
+PRJEB24612			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB24641	PMC5631940		abstained	0	0	none	no joinable table
+PRJEB25682			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB27344			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB27707			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB29106			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB30102	PMC6535532		abstained	0	0	none	no joinable table
+PRJEB30858	PMC7744980	ciz1130_suppl_supplementary_tables.xlsx	direct	21	63	high	mapped 21 samples, 63 cell-fills; rescued ['host=vocab']
+PRJEB31347	PMC12607791		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mbio.01428-25-s0001.pdf', 'mbio.01428-25-s0001.pdf', 'mbio.01428-25-s0001.pdf', 'mbio.01428-25-s0001.pdf', 'mbio.01428-25-s0001.pdf', 'mbio.01428-25-s0002.xlsx', 'mbio.01428-25-s0002.xlsx']
+PRJEB3226			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB33495	PMC6938319		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0226828.s003.docx', 'pone.0226828.s002.xlsx', 'pone.0226828.s005.docx']
+PRJEB34353	PMC6929489	Table_1.xlsx	direct	19	19	high	mapped 19 samples, 38 cell-fills; overwrite guard: 19/38 fills kept; overwrote isolation_source×19(All four proposed overwrites rep); kept ENA over table on collection_date×19
+PRJEB34549	PMC8044893		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.XLSX', 'Table_1.XLSX', 'Table_1.XLSX', 'Table_1.XLSX', 'Table_1.XLSX', 'Table_1.XLSX']
+PRJEB35018	PMC7233586		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0233313.s002.xlsx', 'pone.0233313.s003.xlsx']
+PRJEB37551	PMC10140293	Data_Sheet_2.xlsx	direct	24	24	medium	mapped 24 samples, 24 cell-fills; rescued ['host=vocab']; value-check rejected ['host', 'isolation_source']
+PRJEB38650			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB38818	PMC11272044		abstained	0	0	none	no joinable table
+PRJEB38898	PMC8190610	mgen-7-0519-s002.xlsx	direct	10	22	high	mapped 10 samples, 30 cell-fills; rescued ['host=vocab']; overwrite guard: 22/30 fills kept; overwrote collection_date×2(more-specific), isolation_source×10(Two overwrites substantially imp); kept ENA over table on collection_date×8
+PRJEB3980	PMC4498295		abstained	0	0	none	no joinable table
+PRJEB41835	PMC8269217	msystems.00244-21-st001.pdf	direct	17	17	high	mapped 17 samples, 51 cell-fills; rescued ['host=vocab']; overwrite guard: 17/51 fills kept; kept ENA over table on collection_date×16, isolation_source×17; dropped 1 invalid ({'collection_date': 1})
+PRJEB42167			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB42426			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB43391			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB43543			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB44870	PMC8230887		abstained	0	0	none	no joinable table
+PRJEB45397	PMC10394256		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mmc2.xlsx', 'mmc3.pdf', 'mmc3.pdf', 'mmc3.pdf', 'mmc3.pdf']
+PRJEB45776	PMC8956024		abstained	0	0	none	no joinable table
+PRJEB46126	PMC8918851		abstained	0	0	none	no joinable table
+PRJEB48744			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB50554	PMC12164281		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['2400590_SupplementaryMaterial_1.pdf']
+PRJEB52158	PMC12277283		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.xlsx', 'Table_4.xlsx', 'Table_2.xlsx', 'Table_3.xlsx', 'Table_3.xlsx']
+PRJEB58365	PMC10665453	15010_2023_2061_MOESM1_ESM.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJEB58695	PMC12753507		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.DOCX']
+PRJEB60418	PMC10434174	spectrum.01386-23-s0003.xlsx	direct	20	19	high	mapped 20 samples, 80 cell-fills; rescued ['host=vocab']; overwrite guard: 19/80 fills kept; kept ENA over table on country×20, collection_date×20, isolation_source×20; dropped 1 invalid ({'host': 1})
+PRJEB61083	PMC10597170		abstained	0	0	none	no joinable table
+PRJEB67440			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB67696			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB67733			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB70314	PMC12909941		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['44259_2026_186_MOESM2_ESM.xlsx', '44259_2026_186_MOESM3_ESM.xlsx']
+PRJEB70897	PMC10869444		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table_1.XLSX', 'Table_1.XLSX']
+PRJEB71325	PMC11004228		abstained	0	0	none	no joinable table
+PRJEB72521			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB7657			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB8770	PMC6938978	ciz174_suppl_supplementary_table_1.xlsx	direct	10	10	medium	mapped 10 samples, 20 cell-fills; rescued ['host=vocab']; value-check rejected ['host']; overwrite guard: 10/20 fills kept; kept ENA over table on isolation_source×10
+PRJNA1000742	PMC10909888	41598_2024_55705_MOESM1_ESM.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJNA1016138	PMC11237748		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['reviewer-comments.pdf']
+PRJNA1026663			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1031934	PMC10782962	spectrum.03079-23-s0001.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['spectrum.03079-23-s0002.xlsx']
+PRJNA1040414			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1047501			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1057737			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1070647			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1072014	PMC11949386		abstained	0	0	none	no joinable table
+PRJNA1101444			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1136145	PMC13281820		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['sciadv.aee0675_sm.pdf', 'sciadv.aee0675_sm.pdf', 'sciadv.aee0675_sm.pdf', 'sciadv.aee0675_sm.pdf']
+PRJNA1136496	PMC11533117	mgen-10-01314-s002.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mgen-10-01314-s001.pdf', 'mgen-10-01314-s001.pdf', 'mgen-10-01314-s002.xlsx']
+PRJNA279496	PMC4580588		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0138828.s008.docx']
+PRJNA287968	PMC5923139		abstained	0	0	none	no joinable table
+PRJNA292663	PMC6906146		abstained	0	0	none	no joinable table
+PRJNA292901			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA316969	PMC5060011		abstained	0	0	none	no joinable table
+PRJNA326665	PMC5328542		abstained	0	0	none	no joinable table
+PRJNA356346			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA375798	PMC5529442		abstained	0	0	none	no joinable table
+PRJNA391054	PMC6417137		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['12866_2019_1431_MOESM2_ESM.xlsx']
+PRJNA396729	PMC5660112	DataSheet1.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['DataSheet1.docx']
+PRJNA430457	PMC6436753	ppat.1007218.s016.xlsx+ppat.1007218.s017.xlsx	two_hop	6	172	high	two-hop: 6 samples via 228 shared IDs, 421 cell-fills; overwrite guard: 172/421 fills kept; kept ENA over table on isolation_source×4, host×76, country×121, collection_date×48
+PRJNA430813	PMC5801463	mbo001183707st2.xlsx	direct	19	33	high	mapped 19 samples, 52 cell-fills; rescued ['host=vocab']; overwrite guard: 33/52 fills kept; kept ENA over table on collection_date×19
+PRJNA437215			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA438157			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA451051			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA497260	PMC5786719		abstained	0	0	none	no joinable table
+PRJNA508510			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA512395	PMC7180233		abstained	0	0	none	no joinable table
+PRJNA523429			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA523433			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA523709			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA524761	PMC6554614		abstained	0	0	none	no joinable table
+PRJNA525688	PMC6486781		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pnas.1820594116.sd03.xlsx', 'pnas.1820594116.sd03.xlsx', 'pnas.1820594116.sapp.pdf', 'pnas.1820594116.sapp.pdf', 'pnas.1820594116.sd04.xlsx', 'pnas.1820594116.sd01.xlsx']
+PRJNA529495			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA575837			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA590288			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA606074	PMC7457799	40168_2020_907_MOESM3_ESM.xlsx	direct	10	10	high	mapped 10 samples, 10 cell-fills
+PRJNA606985	PMC8315908		abstained	0	0	none	no joinable table
+PRJNA608440	PMC7473113		abstained	0	0	none	no joinable table
+PRJNA635420			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA640134			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA647793			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA648857	PMC8448114		abstained	0	0	none	no joinable table
+PRJNA670748	PMC8079144		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['elife-67310-supp3.xlsx', 'elife-67310-supp10.xlsx']
+PRJNA685215			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA692086	PMC9603328		abstained	0	0	none	no joinable table
+PRJNA701285			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA701733			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA716986	PMC10616195		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41598_2023_42838_MOESM1_ESM.pdf', '41598_2023_42838_MOESM3_ESM.pdf', '41598_2023_42838_MOESM2_ESM.pdf']
+PRJNA719104			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA720499			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA729628	PMC13243436		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table1.xlsx', 'Table1.xlsx', 'Table1.xlsx', 'Table1.xlsx', 'Table1.xlsx', 'Table1.xlsx', 'Table1.xlsx']
+PRJNA739639			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA741866	PMC8787482	mbio.02631-21-st003.pdf	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['mbio.02631-21-st001.pdf']
+PRJNA744890	PMC9120164	41598_2022_12471_MOESM1_ESM.pdf	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJNA749142	PMC10114455		abstained	0	0	none	no joinable table
+PRJNA751707	PMC8907832		abstained	0	0	none	no joinable table
+PRJNA757582	PMC9120164		abstained	0	0	none	no joinable table
+PRJNA775973			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA776891			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA777127	PMC9987243		abstained	0	0	none	no joinable table
+PRJNA777533	PMC9176267		abstained	0	0	none	no joinable table
+PRJNA786742	PMC8925887		abstained	0	0	none	no joinable table
+PRJNA799444	PMC9239081		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['reviewer-comments.pdf']
+PRJNA800400			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA800729			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA801425	PMC9328930		abstained	0	0	none	no joinable table
+PRJNA823356			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA832331	PMC12460818	42003_2025_8756_MOESM4_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['42003_2025_8756_MOESM5_ESM.xlsx', '42003_2025_8756_MOESM3_ESM.xlsx', '42003_2025_8756_MOESM3_ESM.xlsx', '42003_2025_8756_MOESM3_ESM.xlsx']
+PRJNA833742			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA835887			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA845217	PMC10105422		abstained	0	0	none	no joinable table
+PRJNA857878			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA865026	PMC10846045	spectrum.02503-23-s0001.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns)
+PRJNA869900	PMC9578389		abstained	0	0	none	no joinable table
+PRJNA897716			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA906139	PMC11515790	12879_2024_10056_MOESM1_ESM.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['12879_2024_10056_MOESM1_ESM.xlsx']
+PRJNA908117	PMC10581156	spectrum.00549-23-s0002.xlsx+spectrum.00549-23-s0002.xlsx	two_hop	20	80	high	two-hop: 20 samples via 324 shared IDs, 80 cell-fills
+PRJNA919159			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA947477	PMC10501869		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mmc1.docx', 'mmc1.docx']
+PRJNA949542			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA951070	PMC10301528		abstained	0	0	none	no joinable table
+PRJNA952961	PMC10918111		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM1_ESM.pdf', '41467_2024_46147_MOESM5_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM17_ESM.xlsx', '41467_2024_46147_MOESM2_ESM.pdf', '41467_2024_46147_MOESM2_ESM.pdf', '41467_2024_46147_MOESM2_ESM.pdf', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM8_ESM.xlsx', '41467_2024_46147_MOESM4_ESM.xlsx']
+PRJNA956822	PMC10474722	12866_2023_2974_MOESM1_ESM.docx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['12866_2023_2974_MOESM1_ESM.docx', '12866_2023_2974_MOESM1_ESM.docx', '12866_2023_2974_MOESM1_ESM.docx']
+PRJNA982765			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA984017	PMC11913740		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mmc1.docx', 'mmc1.docx']
+PRJNA984710	PMC11784238		abstained	0	0	none	no joinable table
+PRJNA986550	PMC10597399		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['msphere.00288-23-s0002.xlsx', 'msphere.00288-23-s0003.xlsx']
+PRJNA994484	PMC11481518		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mbio.01393-24-s0002.xlsx', 'mbio.01393-24-s0004.xlsx', 'mbio.01393-24-s0007.xlsx', 'mbio.01393-24-s0008.xlsx']
+PRJNA994967	PMC10865842	mbio.02867-23-s0002.xlsx	abstained	15	0	medium	mapped 15 samples, 15 cell-fills; overwrite guard: 0/15 fills kept; kept ENA over table on country×15

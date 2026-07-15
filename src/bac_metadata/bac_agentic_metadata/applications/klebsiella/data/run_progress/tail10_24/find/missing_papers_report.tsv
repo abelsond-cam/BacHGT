@@ -1,0 +1,69 @@
+study_accession	has_paper	date_gap	source_gap	gap_samples	ena_taxon_samples	fulltext_status	best_url	doi	pmid	pmcid	paper_link	title	save_as
+PRJNA388450	True	0	0	0	24	abstract	https://doi.org/10.1093/cid/cix417	10.1093/cid/cix417	28472260	PMC5850535		Whole-Genome Sequencing Accurately Identifies Resistance to Extended-Spectrum β-Lactams for Major Gram-Negative Bacterial Pathogens.	PRJNA388450.pdf
+PRJDB6244	True	0	0	0	23	abstract	https://doi.org/10.1128/aac.02501-17	10.1128/aac.02501-17	29483120	PMC5923170		Characteristics of Carbapenemase-Producing Enterobacteriaceae in Wastewater Revealed by Genomic Analysis.	PRJDB6244.pdf
+PRJNA375812	True	0	0	0	22	abstract	https://doi.org/10.1093/jac/dkx234	10.1093/jac/dkx234	28961916	PMC5890713		Structural modification of LPS in colistin-resistant, KPC-producing Klebsiella pneumoniae.	PRJNA375812.pdf
+PRJNA1099381	True	0	0	0	19	none	https://doi.org/10.1016/j.idnow.2024.105026	10.1016/j.idnow.2024.105026				Loss of OmpK35 and Glycine-aspartic acid Duplication in ompK36 Negatively Affect the in vitro Synergy of Meropenem in Combination with Piperacillin/tazobactam or Imipenem Against OXA-48-like Carbapenemase-producing Klebsiella pneumoniae	PRJNA1099381.pdf
+PRJEB67696	True	0	0	0	18	none	https://doi.org/10.51585/gjm.2024.1.0030	10.51585/gjm.2024.1.0030				WGS analysis of hypervirulent and MDR Klebsiella pneumoniae from Vietnam reveales an inverse relationship between resistome and virulome	PRJEB67696.pdf
+PRJEB48744	True	0	0	0	18	abstract	https://doi.org/10.1016/j.mimet.2024.106938	10.1016/j.mimet.2024.106938	38642781			Rapid detection of plasmid-mediated AmpC-producers by eazyplex® SuperBug AmpC assay compared to whole-genome sequencing.	PRJEB48744.pdf
+PRJNA530687	True	0	0	0	18	abstract	https://doi.org/10.7883/yoken.JJID.2023.009	10.7883/yoken.JJID.2023.009				Extensively Drug-Resistant Klebsiella pneumoniae Associated with Complicated Urinary Tract Infection in Northern India	PRJNA530687.pdf
+PRJNA590644	True	0	0	0	15	abstract	https://doi.org/10.1016/j.cmi.2022.11.011	10.1016/j.cmi.2022.11.011	36414199			Deciphering variable resistance to novel carbapenem-based β-lactamase inhibitor combinations in a multi-clonal outbreak caused by Klebsiella pneumoniae carbapenemase (KPC)-producing Klebsiella pneumoniae resistant to ceftazidime/avibactam.	PRJNA590644.pdf
+PRJEB30102	True	0	0	0	12	abstract	https://doi.org/10.1128/aac.02529-18	10.1128/aac.02529-18	30936106	PMC6535532		Characterization of Carbapenemase-Producing Klebsiella oxytoca in Spain, 2016-2017.	PRJEB30102.pdf
+PRJNA392824	True	0	0	0	12	abstract	https://doi.org/10.1093/jac/dky121	10.1093/jac/dky121	29648629	PMC6005101		Antibiotic pressure on the acquisition and loss of antibiotic resistance genes in Klebsiella pneumoniae.	PRJNA392824.pdf
+PRJNA733872	True	0	0	0	12	none	https://doi.org/10.1093/jac/dkab380	10.1093/jac/dkab380	34726753			In vivo evolution of carbapenem resistance in hypervirulent Klebsiella pneumoniae in a patient undergoing long-term treatment.	PRJNA733872.pdf
+PRJNA359577	True	0	0	0	11	abstract	https://doi.org/10.1099/jmm.0.000624	10.1099/jmm.0.000624	29068275			Investigation of next-generation sequencing data of Klebsiella pneumoniae using web-based tools.	PRJNA359577.pdf
+PRJNA484792	True	0	0	0	11	abstract	https://doi.org/10.1093/cid/ciy778	10.1093/cid/ciy778	30204843			Outbreak of Hypervirulent Multidrug-resistant Klebsiella variicola Causing High Mortality in Neonates in Bangladesh.	PRJNA484792.pdf
+PRJEB38650	False	0	0	0	23	none							PRJEB38650.pdf
+PRJNA640134	False	0	0	0	22	none							PRJNA640134.pdf
+PRJNA356346	False	0	0	0	22	none							PRJNA356346.pdf
+PRJNA922195	False	0	0	0	22	none							PRJNA922195.pdf
+PRJNA795199	False	0	0	0	22	none							PRJNA795199.pdf
+PRJNA508510	False	0	0	0	22	none							PRJNA508510.pdf
+PRJNA429779	False	0	0	0	22	none						Emergence of Klebsiella pneumoniae producing NDM-1 carbapenemase in Saint Petersburg, Russia	PRJNA429779.pdf
+PRJNA823356	False	0	0	0	21	none							PRJNA823356.pdf
+PRJNA701285	False	0	0	0	21	none							PRJNA701285.pdf
+PRJNA739639	False	0	0	0	21	none							PRJNA739639.pdf
+PRJEB24612	False	0	0	0	21	none							PRJEB24612.pdf
+PRJEB1730	False	0	0	0	19	none							PRJEB1730.pdf
+PRJNA590288	False	0	0	0	18	none							PRJNA590288.pdf
+PRJNA351911	False	0	0	0	18	none							PRJNA351911.pdf
+PRJEB25682	False	0	0	0	18	none							PRJEB25682.pdf
+PRJNA833742	False	0	0	0	17	none							PRJNA833742.pdf
+PRJNA827103	False	0	0	0	17	none							PRJNA827103.pdf
+PRJEB67440	False	0	0	0	17	none							PRJEB67440.pdf
+PRJNA296699	False	0	0	0	17	none							PRJNA296699.pdf
+PRJNA635420	False	0	0	0	17	none							PRJNA635420.pdf
+PRJNA701733	False	0	0	0	17	none							PRJNA701733.pdf
+PRJNA949542	False	0	0	0	16	none							PRJNA949542.pdf
+PRJNA1057737	False	0	0	0	16	none							PRJNA1057737.pdf
+PRJNA857878	False	0	0	0	16	none							PRJNA857878.pdf
+PRJNA1027607	False	0	0	0	16	none							PRJNA1027607.pdf
+PRJNA451051	False	0	0	0	15	none							PRJNA451051.pdf
+PRJNA523709	False	0	0	0	15	none							PRJNA523709.pdf
+PRJDB4867	False	0	0	0	14	none							PRJDB4867.pdf
+PRJNA1070647	False	0	0	0	14	none							PRJNA1070647.pdf
+PRJNA438157	False	0	0	0	14	none							PRJNA438157.pdf
+PRJNA720499	False	0	0	0	14	none							PRJNA720499.pdf
+PRJNA800729	False	0	0	0	14	none							PRJNA800729.pdf
+PRJNA523429	False	0	0	0	14	none							PRJNA523429.pdf
+PRJEB43543	False	0	0	0	14	none							PRJEB43543.pdf
+PRJNA1040414	False	0	0	0	13	none							PRJNA1040414.pdf
+PRJEB29106	False	0	0	0	13	none							PRJEB29106.pdf
+PRJNA817042	False	0	0	0	13	none							PRJNA817042.pdf
+PRJNA534055	False	0	0	0	13	none							PRJNA534055.pdf
+PRJEB3226	False	0	0	0	13	none							PRJEB3226.pdf
+PRJEB7657	False	0	0	0	13	none							PRJEB7657.pdf
+PRJNA437215	False	0	0	0	12	none							PRJNA437215.pdf
+PRJNA835887	False	0	0	0	12	none							PRJNA835887.pdf
+PRJNA982765	False	0	0	0	12	none							PRJNA982765.pdf
+PRJEB43391	False	0	0	0	12	none							PRJEB43391.pdf
+PRJNA286705	False	0	0	0	12	none							PRJNA286705.pdf
+PRJEB72521	False	0	0	0	12	none							PRJEB72521.pdf
+PRJNA867572	False	0	0	0	12	none							PRJNA867572.pdf
+PRJNA523433	False	0	0	0	12	none							PRJNA523433.pdf
+PRJNA776891	False	0	0	0	11	none							PRJNA776891.pdf
+PRJNA647793	False	0	0	0	11	none							PRJNA647793.pdf
+PRJEB67733	False	0	0	0	11	none							PRJEB67733.pdf
+PRJNA685215	False	0	0	0	10	none							PRJNA685215.pdf
+PRJNA1026663	False	0	0	0	10	none							PRJNA1026663.pdf
+PRJNA996741	False	0	0	0	10	none							PRJNA996741.pdf
+PRJNA719104	False	0	0	0	10	none							PRJNA719104.pdf
