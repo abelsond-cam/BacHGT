@@ -3,6 +3,7 @@ PRJDB12075	isolation_source	rectal swab		train
 PRJEB10018	country		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB10018	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB12699	collection_date	2003-01-01		train
+PRJEB1271	country	United Kingdom		test
 PRJEB1563	isolation_source	blood		train
 PRJEB17615	isolation_source	blood		train
 PRJEB19322	isolation_source	blood		train
@@ -20,6 +21,7 @@ PRJEB27342	isolation_source		curator skip: no single whole-field value (genuinel
 PRJEB28054	host	human		train
 PRJEB29143	isolation_source	faeces		train
 PRJEB29738	collection_date	2016-07-01	curator accept	test
+PRJEB29738	country	Philippines		test
 PRJEB29738	isolation_source		curator skip: no single whole-field value (genuinely wide / undeterminable)	test
 PRJEB29739	collection_date	2017-01-01	curator accept	test
 PRJEB32655	collection_date	2018-01-01		test
@@ -36,6 +38,7 @@ PRJEB51676	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
 PRJEB53835	collection_date	2019-01-01	curator accept	test
 PRJEB53835	isolation_source	stool		test
 PRJEB5495	host	human	curator-accepted suggested value (2026-07-07)	tail50_99
+PRJEB59403	host	wastewater		tail50_99
 PRJEB63210	isolation_source		curator skip: lab-evolved lines; isolation_source left blank per rubric (2026-07-07)	tail100
 PRJEB6891	collection_date	2013-10-01		train
 PRJEB8667	host	human	curator-accepted suggested value (2026-07-07)	tail100
