@@ -1265,6 +1265,12 @@ def study_grade_columns(spec: AttributeSpec) -> dict[str, str]:
             continue
         if {"ground_truth", "values"} <= set(body) and "applies_when" not in body and "note" not in body:
             out[field] = f"{field}__value"
+    # Always broadcast the grader's study-type filter (a grader output, not a study_level attribute) so the
+    # excluded-study flag reaches the filled table + master. This is how in-vitro experimental_evolution
+    # studies (flagged ``study_type_excluded``) are surfaced for downstream cohort removal — non-destructive:
+    # it labels every sample of an excluded study, never drops rows.
+    out["study_type"] = "study_type"
+    out["study_type_excluded"] = "study_type_excluded"
     return out
 
 
