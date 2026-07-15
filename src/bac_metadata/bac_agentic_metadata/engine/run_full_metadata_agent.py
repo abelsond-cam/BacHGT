@@ -185,6 +185,10 @@ def main() -> None:
                         "already exist). Intended for --paper-source curated, where grading uses the curated "
                         "snapshot's links and the finder output is only a downstream input, not regenerated.")
     p.add_argument("--skip-escalation", action="store_true", help="Skip the escalation detect/apply stages.")
+    p.add_argument("--skip-per-sample", action="store_true",
+                   help="Skip the per-sample supplementary-table extraction (the expensive LLM per-isolate "
+                        "stage) + its worklist; emit empty per-sample artifacts. Grade + whole-field backfill "
+                        "+ fill still run — a cheap 'study_type + whole-field only' pass (e.g. the sub-10 tail).")
     p.add_argument("--skip-run-health", action="store_true", help="Skip the run-health report.")
     p.add_argument("--carry-forward", action="store_true",
                    help="Build-it-up mode: overlay prior curation (data-dir/curated/) onto the base so the "
@@ -371,12 +375,22 @@ def main() -> None:
 
     # ── Stage 3 — per-sample extraction FIRST (the accurate per-isolate source) ────────────────────
     print("\n### [per-sample]", file=sys.stderr)
-    stages.per_sample(
-        base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
-        manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=completeness_threshold,
-        ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
-        manual_papers_dir=manual_papers_dir, category_vocab=category_vocab, paper_links=paper_links,
-    )
+    if args.skip_per_sample:
+        # Emit empty per-sample artifacts (correct headers) so backfill/fill/run-health read them cleanly;
+        # whole-field backfill + fill still run. The one-place headers mirror stages.per_sample's writes.
+        print("[per-sample] SKIPPED (--skip-per-sample) — writing empty artifacts", file=sys.stderr)
+        outcomes_tsv = per_sample_tsv.with_name(per_sample_tsv.name.replace("per_sample_applied", "per_sample_outcomes"))
+        pd.DataFrame(columns=["study_accession", "sample_accession", "field", "ena_value",
+                              "applied_value", "method", "evidence"]).to_csv(per_sample_tsv, sep="\t", index=False)
+        pd.DataFrame(columns=["study_accession", "pmcid", "table", "method",
+                              "n_samples", "n_fills", "confidence", "note"]).to_csv(outcomes_tsv, sep="\t", index=False)
+    else:
+        stages.per_sample(
+            base=base, found_path=found_tsv, fields=fields, accessions=None, out_path=per_sample_tsv,
+            manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=completeness_threshold,
+            ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
+            manual_papers_dir=manual_papers_dir, category_vocab=category_vocab, paper_links=paper_links,
+        )
 
     # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────
     print("\n### [backfill]", file=sys.stderr)
@@ -396,13 +410,14 @@ def main() -> None:
         print(f"WARN: missing-papers worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 
     # ── Stage 6 — per-sample supplementary worklist (the manual-table curator queue; best-effort) ──
-    try:
-        stages.persample_supplement(
-            data_dir=data, paper_links=paper_links, caches=caches, manual_papers_dir=manual_papers_dir,
-            fields=fields, tag=tag, backend=args.backend, model=args.model,
-        )
-    except Exception as exc:  # noqa: BLE001 — non-blocking worklist
-        print(f"WARN: per-sample supplement worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
+    if not args.skip_per_sample:
+        try:
+            stages.persample_supplement(
+                data_dir=data, paper_links=paper_links, caches=caches, manual_papers_dir=manual_papers_dir,
+                fields=fields, tag=tag, backend=args.backend, model=args.model,
+            )
+        except Exception as exc:  # noqa: BLE001 — non-blocking worklist
+            print(f"WARN: per-sample supplement worklist failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 
     # ── Stage 7 — escalation detect → apply (best-effort; the curator-tier near-miss queue) ────────
     if not args.skip_escalation:
