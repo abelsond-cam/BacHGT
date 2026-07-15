@@ -1,0 +1,23 @@
+study_accession	has_paper	date_gap	source_gap	gap_samples	ena_taxon_samples	fulltext_status	best_url	doi	pmid	pmcid	paper_link	title	save_as
+PRJEB53419	True	0	0	0	84	abstract	https://doi.org/10.1093/jac/dkad001	10.1093/jac/dkad001	36640136			Molecular features and transmission of NDM-producing Enterobacterales in Israeli hospitals.	PRJEB53419.pdf
+PRJNA479772	True	0	0	0	71	abstract	https://doi.org/10.1128/aac.02349-16	10.1128/aac.02349-16	28167547	PMC5365653		Multicenter Clinical and Molecular Epidemiological Analysis of Bacteremia Due to Carbapenem-Resistant Enterobacteriaceae (CRE) in the CRE Epicenter of the United States.	PRJNA479772.pdf
+PRJNA355241	True	0	0	0	69	abstract	https://doi.org/10.1128/aac.01622-19	10.1128/aac.01622-19	31451495	PMC6811406		Whole-Genome Sequencing To Identify Drivers of Carbapenem-Resistant Klebsiella pneumoniae Transmission within and between Regional Long-Term Acute-Care Hospitals.	PRJNA355241.pdf
+PRJEB30771	True	0	0	0	59	abstract	https://doi.org/10.1093/jac/dkz366	10.1093/jac/dkz366	31504589			Emergence of NDM-producing Klebsiella pneumoniae and Escherichia coli in Spain: phylogeny, resistome, virulence and plasmids encoding blaNDM-like genes as determined by WGS.	PRJEB30771.pdf
+PRJNA945449	True	0	0	0	51	abstract	https://doi.org/10.1093/infdis/jiae417	10.1093/infdis/jiae417	39163245	PMC12526891		Bacterial Genomics for National Antimicrobial Resistance Surveillance in Cambodia.	PRJNA945449.pdf
+PRJNA641536	False	0	0	0	97	none							PRJNA641536.pdf
+PRJNA1004324	False	0	0	0	90	none							PRJNA1004324.pdf
+PRJNA1026096	False	0	0	0	88	none							PRJNA1026096.pdf
+PRJEB5495	False	0	0	0	87	none							PRJEB5495.pdf
+PRJEB45369	False	0	0	0	84	none							PRJEB45369.pdf
+PRJDB16654	False	0	0	0	81	none							PRJDB16654.pdf
+PRJNA413040	False	0	0	0	78	none							PRJNA413040.pdf
+PRJNA1095184	False	0	0	0	78	none							PRJNA1095184.pdf
+PRJNA561493	False	0	0	0	72	none							PRJNA561493.pdf
+PRJEB50346	False	0	0	0	70	none							PRJEB50346.pdf
+PRJDB4948	False	0	0	0	69	none							PRJDB4948.pdf
+PRJNA595034	False	0	0	0	67	none							PRJNA595034.pdf
+PRJEB26075	False	0	0	0	65	none							PRJEB26075.pdf
+PRJNA445400	False	0	0	0	63	none							PRJNA445400.pdf
+PRJNA799063	False	0	0	0	59	none							PRJNA799063.pdf
+PRJNA329105	False	0	0	0	57	none							PRJNA329105.pdf
+PRJEB28115	False	0	0	0	50	none							PRJEB28115.pdf

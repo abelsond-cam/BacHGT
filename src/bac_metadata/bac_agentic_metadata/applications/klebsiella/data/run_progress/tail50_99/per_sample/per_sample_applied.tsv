@@ -1,0 +1,1425 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJEB34380	SAMEA5951251	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739735
+PRJEB34380	SAMEA5951252	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739736
+PRJEB34380	SAMEA5951253	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739737
+PRJEB34380	SAMEA5951254	isolation_source		sputum	per_sample	Table_1.XLSX:ERS3739738
+PRJEB34380	SAMEA5951255	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739739
+PRJEB34380	SAMEA5951256	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739740
+PRJEB34380	SAMEA5951257	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739741
+PRJEB34380	SAMEA5951258	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739742
+PRJEB34380	SAMEA5951259	isolation_source		tracheal_aspirate	per_sample	Table_1.XLSX:ERS3739743
+PRJEB34380	SAMEA5951260	isolation_source		catheter_tip	per_sample	Table_1.XLSX:ERS3739744
+PRJEB34380	SAMEA5951261	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739745
+PRJEB34380	SAMEA5951262	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739746
+PRJEB34380	SAMEA5951263	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739747
+PRJEB34380	SAMEA5951264	isolation_source		bronchial_lavage	per_sample	Table_1.XLSX:ERS3739748
+PRJEB34380	SAMEA5951265	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739749
+PRJEB34380	SAMEA5951266	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739750
+PRJEB34380	SAMEA5951267	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739751
+PRJEB34380	SAMEA5951268	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739752
+PRJEB34380	SAMEA5951269	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739753
+PRJEB34380	SAMEA5951270	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739754
+PRJEB34380	SAMEA5951271	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739755
+PRJEB34380	SAMEA5951272	isolation_source		sputum	per_sample	Table_1.XLSX:ERS3739756
+PRJEB34380	SAMEA5951273	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739757
+PRJEB34380	SAMEA5951274	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739758
+PRJEB34380	SAMEA5951275	isolation_source		tracheal_aspirate	per_sample	Table_1.XLSX:ERS3739759
+PRJEB34380	SAMEA5951276	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739760
+PRJEB34380	SAMEA5951277	isolation_source		abdominal_fluid	per_sample	Table_1.XLSX:ERS3739761
+PRJEB34380	SAMEA5951278	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739762
+PRJEB34380	SAMEA5951279	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739763
+PRJEB34380	SAMEA5951280	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739764
+PRJEB34380	SAMEA5951281	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739765
+PRJEB34380	SAMEA5951282	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739766
+PRJEB34380	SAMEA5951283	isolation_source		tracheal_aspirate	per_sample	Table_1.XLSX:ERS3739767
+PRJEB34380	SAMEA5951284	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739768
+PRJEB34380	SAMEA5951285	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739769
+PRJEB34380	SAMEA5951286	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739770
+PRJEB34380	SAMEA5951287	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739771
+PRJEB34380	SAMEA5951288	isolation_source		sputum	per_sample	Table_1.XLSX:ERS3739772
+PRJEB34380	SAMEA5951289	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739773
+PRJEB34380	SAMEA5951290	isolation_source		sputum	per_sample	Table_1.XLSX:ERS3739774
+PRJEB34380	SAMEA5951291	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739775
+PRJEB34380	SAMEA5951292	isolation_source		pleural_fluid	per_sample	Table_1.XLSX:ERS3739776
+PRJEB34380	SAMEA5951293	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739777
+PRJEB34380	SAMEA5951294	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739778
+PRJEB34380	SAMEA5951295	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739779
+PRJEB34380	SAMEA5951296	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739780
+PRJEB34380	SAMEA5951297	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739781
+PRJEB34380	SAMEA5951298	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739782
+PRJEB34380	SAMEA5951299	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739783
+PRJEB34380	SAMEA5951300	isolation_source		bronchial_lavage	per_sample	Table_1.XLSX:ERS3739784
+PRJEB34380	SAMEA5951301	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739785
+PRJEB34380	SAMEA5951302	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739786
+PRJEB34380	SAMEA5951303	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739787
+PRJEB34380	SAMEA5951304	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739788
+PRJEB34380	SAMEA5951305	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739789
+PRJEB34380	SAMEA5951306	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739790
+PRJEB34380	SAMEA5951307	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739791
+PRJEB34380	SAMEA5951308	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739792
+PRJEB34380	SAMEA5951309	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739793
+PRJEB34380	SAMEA5951310	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739794
+PRJEB34380	SAMEA5951311	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739795
+PRJEB34380	SAMEA5951312	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739796
+PRJEB34380	SAMEA5951313	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739797
+PRJEB34380	SAMEA5951314	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739798
+PRJEB34380	SAMEA5951315	isolation_source		sputum	per_sample	Table_1.XLSX:ERS3739799
+PRJEB34380	SAMEA5951316	isolation_source		blood	per_sample	Table_1.XLSX:ERS3739800
+PRJEB34380	SAMEA5951317	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739801
+PRJEB34380	SAMEA5951318	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739802
+PRJEB34380	SAMEA5951319	isolation_source		tracheal_aspirate	per_sample	Table_1.XLSX:ERS3739803
+PRJEB34380	SAMEA5951320	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739804
+PRJEB34380	SAMEA5951321	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739805
+PRJEB34380	SAMEA5951322	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739806
+PRJEB34380	SAMEA5951323	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739807
+PRJEB34380	SAMEA5951324	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739808
+PRJEB34380	SAMEA5951325	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739809
+PRJEB34380	SAMEA5951326	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739810
+PRJEB34380	SAMEA5951327	isolation_source		urine	per_sample	Table_1.XLSX:ERS3739811
+PRJEB34380	SAMEA5951328	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739812
+PRJEB34380	SAMEA5951329	isolation_source		rectal_swab	per_sample	Table_1.XLSX:ERS3739813
+PRJEB34380	SAMEA5951330	isolation_source		tracheal_aspirate	per_sample	Table_1.XLSX:ERS3739814
+PRJEB36392	SAMEA111533207	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533207
+PRJEB36392	SAMEA111533209	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533209
+PRJEB36392	SAMEA111533211	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533211
+PRJEB36392	SAMEA111533213	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533213
+PRJEB36392	SAMEA111533215	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533215
+PRJEB36392	SAMEA111533217	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533217
+PRJEB36392	SAMEA111533219	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533219
+PRJEB36392	SAMEA111533221	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533221
+PRJEB36392	SAMEA111533223	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533223
+PRJEB36392	SAMEA111533225	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533225
+PRJEB36392	SAMEA111533227	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533227
+PRJEB36392	SAMEA111533229	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533229
+PRJEB36392	SAMEA111533231	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533231
+PRJEB36392	SAMEA111533233	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533233
+PRJEB36392	SAMEA111533235	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533235
+PRJEB36392	SAMEA111533237	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533237
+PRJEB36392	SAMEA111533239	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533239
+PRJEB36392	SAMEA111533241	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533241
+PRJEB36392	SAMEA111533245	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533245
+PRJEB36392	SAMEA111533247	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533247
+PRJEB36392	SAMEA111533249	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533249
+PRJEB36392	SAMEA111533251	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533251
+PRJEB36392	SAMEA111533253	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533253
+PRJEB36392	SAMEA111533255	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533255
+PRJEB36392	SAMEA111533257	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533257
+PRJEB36392	SAMEA111533259	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533259
+PRJEB36392	SAMEA111533261	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533261
+PRJEB36392	SAMEA111533263	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533263
+PRJEB36392	SAMEA111533265	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533265
+PRJEB36392	SAMEA111533267	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533267
+PRJEB36392	SAMEA111533269	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533269
+PRJEB36392	SAMEA111533271	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533271
+PRJEB36392	SAMEA111533273	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533273
+PRJEB36392	SAMEA111533275	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533275
+PRJEB36392	SAMEA111533277	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533277
+PRJEB36392	SAMEA111533279	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533279
+PRJEB36392	SAMEA111533281	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533281
+PRJEB36392	SAMEA111533283	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533283
+PRJEB36392	SAMEA111533285	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533285
+PRJEB36392	SAMEA111533287	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533287
+PRJEB36392	SAMEA111533289	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533289
+PRJEB36392	SAMEA111533291	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533291
+PRJEB36392	SAMEA111533293	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533293
+PRJEB36392	SAMEA111533295	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA111533295
+PRJEB36392	SAMEA8550523	host		human	per_sample	mgen-9-1005-s003.xlsx:SAMEA8550523
+PRJEB39942	SAMEA7198846	collection_date	2019-05	2019-05-01 00:00:00	per_sample	mgen-7-0509-s002.xlsx:ERS4959068
+PRJEB39942	SAMEA7198797	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959019
+PRJEB39942	SAMEA7198798	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959020
+PRJEB39942	SAMEA7198799	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959021
+PRJEB39942	SAMEA7198800	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959022
+PRJEB39942	SAMEA7198801	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959023
+PRJEB39942	SAMEA7198802	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959024
+PRJEB39942	SAMEA7198803	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959025
+PRJEB39942	SAMEA7198804	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959026
+PRJEB39942	SAMEA7198805	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959027
+PRJEB39942	SAMEA7198808	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959030
+PRJEB39942	SAMEA7198806	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959028
+PRJEB39942	SAMEA7198807	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959029
+PRJEB39942	SAMEA7198848	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959070
+PRJEB39942	SAMEA7198849	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959071
+PRJEB39942	SAMEA7198847	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959069
+PRJEB39942	SAMEA7198850	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959072
+PRJEB39942	SAMEA7198851	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959073
+PRJEB39942	SAMEA7198852	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959074
+PRJEB39942	SAMEA7198853	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959075
+PRJEB39942	SAMEA7198854	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959076
+PRJEB39942	SAMEA7198855	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959077
+PRJEB39942	SAMEA7198856	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959078
+PRJEB39942	SAMEA7198857	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959079
+PRJEB39942	SAMEA7198811	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959033
+PRJEB39942	SAMEA7198812	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959034
+PRJEB39942	SAMEA7198821	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959043
+PRJEB39942	SAMEA7198809	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959031
+PRJEB39942	SAMEA7198813	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959035
+PRJEB39942	SAMEA7198814	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959036
+PRJEB39942	SAMEA7198819	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959041
+PRJEB39942	SAMEA7198815	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959037
+PRJEB39942	SAMEA7198820	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959042
+PRJEB39942	SAMEA7198816	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959038
+PRJEB39942	SAMEA7198810	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959032
+PRJEB39942	SAMEA7198817	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959039
+PRJEB39942	SAMEA7198818	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959040
+PRJEB39942	SAMEA7198822	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959044
+PRJEB39942	SAMEA7198823	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959045
+PRJEB39942	SAMEA7198860	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959082
+PRJEB39942	SAMEA7198861	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959083
+PRJEB39942	SAMEA7198862	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959084
+PRJEB39942	SAMEA7198863	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959085
+PRJEB39942	SAMEA7198858	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959080
+PRJEB39942	SAMEA7198859	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959081
+PRJEB39942	SAMEA7198864	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959086
+PRJEB39942	SAMEA7198865	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959087
+PRJEB39942	SAMEA7198866	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959088
+PRJEB39942	SAMEA7198829	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959051
+PRJEB39942	SAMEA7198825	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959047
+PRJEB39942	SAMEA7198824	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959046
+PRJEB39942	SAMEA7198828	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959050
+PRJEB39942	SAMEA7198826	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959048
+PRJEB39942	SAMEA7198827	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959049
+PRJEB39942	SAMEA7198867	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959089
+PRJEB39942	SAMEA7198869	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959091
+PRJEB39942	SAMEA7198870	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959092
+PRJEB39942	SAMEA7198868	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959090
+PRJEB39942	SAMEA7198871	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959093
+PRJEB39942	SAMEA7198872	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959094
+PRJEB39942	SAMEA7198873	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959095
+PRJEB39942	SAMEA7198874	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959096
+PRJEB39942	SAMEA7198875	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959097
+PRJEB39942	SAMEA7198876	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959098
+PRJEB39942	SAMEA7198877	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959099
+PRJEB39942	SAMEA7198878	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959100
+PRJEB39942	SAMEA7198879	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959101
+PRJEB39942	SAMEA7198880	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959102
+PRJEB39942	SAMEA7198833	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959055
+PRJEB39942	SAMEA7198834	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959056
+PRJEB39942	SAMEA7198836	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959058
+PRJEB39942	SAMEA7198835	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959057
+PRJEB39942	SAMEA7198830	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959052
+PRJEB39942	SAMEA7198837	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959059
+PRJEB39942	SAMEA7198838	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959060
+PRJEB39942	SAMEA7198831	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959053
+PRJEB39942	SAMEA7198832	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959054
+PRJEB39942	SAMEA7198881	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959103
+PRJEB39942	SAMEA7198882	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959104
+PRJEB39942	SAMEA7198883	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959105
+PRJEB39942	SAMEA7198884	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959106
+PRJEB39942	SAMEA7198891	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959113
+PRJEB39942	SAMEA7198885	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959107
+PRJEB39942	SAMEA7198886	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959108
+PRJEB39942	SAMEA7198887	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959109
+PRJEB39942	SAMEA7198888	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959110
+PRJEB39942	SAMEA7198889	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959111
+PRJEB39942	SAMEA7198890	isolation_source		WWTP	per_sample	mgen-7-0509-s002.xlsx:ERS4959112
+PRJEB39942	SAMEA7198839	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959061
+PRJEB39942	SAMEA7198845	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959067
+PRJEB39942	SAMEA7198843	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959065
+PRJEB39942	SAMEA7198840	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959062
+PRJEB39942	SAMEA7198841	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959063
+PRJEB39942	SAMEA7198842	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959064
+PRJEB39942	SAMEA7198844	isolation_source		Hospital	per_sample	mgen-7-0509-s002.xlsx:ERS4959066
+PRJEB39942	SAMEA7198846	isolation_source		River	per_sample	mgen-7-0509-s002.xlsx:ERS4959068
+PRJEB39942	SAMEA7198797	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959019 (rescued 'Hospital')
+PRJEB39942	SAMEA7198798	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959020 (rescued 'Hospital')
+PRJEB39942	SAMEA7198799	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959021 (rescued 'Hospital')
+PRJEB39942	SAMEA7198800	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959022 (rescued 'Hospital')
+PRJEB39942	SAMEA7198801	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959023 (rescued 'Hospital')
+PRJEB39942	SAMEA7198802	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959024 (rescued 'Hospital')
+PRJEB39942	SAMEA7198803	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959025 (rescued 'Hospital')
+PRJEB39942	SAMEA7198804	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959026 (rescued 'Hospital')
+PRJEB39942	SAMEA7198805	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959027 (rescued 'Hospital')
+PRJEB39942	SAMEA7198808	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959030 (rescued 'Hospital')
+PRJEB39942	SAMEA7198806	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959028 (rescued 'Hospital')
+PRJEB39942	SAMEA7198807	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959029 (rescued 'Hospital')
+PRJEB39942	SAMEA7198848	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959070 (rescued 'WWTP')
+PRJEB39942	SAMEA7198849	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959071 (rescued 'WWTP')
+PRJEB39942	SAMEA7198847	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959069 (rescued 'WWTP')
+PRJEB39942	SAMEA7198850	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959072 (rescued 'WWTP')
+PRJEB39942	SAMEA7198851	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959073 (rescued 'WWTP')
+PRJEB39942	SAMEA7198852	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959074 (rescued 'WWTP')
+PRJEB39942	SAMEA7198853	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959075 (rescued 'WWTP')
+PRJEB39942	SAMEA7198854	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959076 (rescued 'WWTP')
+PRJEB39942	SAMEA7198855	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959077 (rescued 'WWTP')
+PRJEB39942	SAMEA7198856	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959078 (rescued 'WWTP')
+PRJEB39942	SAMEA7198857	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959079 (rescued 'WWTP')
+PRJEB39942	SAMEA7198811	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959033 (rescued 'Hospital')
+PRJEB39942	SAMEA7198812	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959034 (rescued 'Hospital')
+PRJEB39942	SAMEA7198821	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959043 (rescued 'Hospital')
+PRJEB39942	SAMEA7198809	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959031 (rescued 'Hospital')
+PRJEB39942	SAMEA7198813	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959035 (rescued 'Hospital')
+PRJEB39942	SAMEA7198814	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959036 (rescued 'Hospital')
+PRJEB39942	SAMEA7198819	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959041 (rescued 'Hospital')
+PRJEB39942	SAMEA7198815	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959037 (rescued 'Hospital')
+PRJEB39942	SAMEA7198820	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959042 (rescued 'Hospital')
+PRJEB39942	SAMEA7198816	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959038 (rescued 'Hospital')
+PRJEB39942	SAMEA7198810	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959032 (rescued 'Hospital')
+PRJEB39942	SAMEA7198817	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959039 (rescued 'Hospital')
+PRJEB39942	SAMEA7198818	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959040 (rescued 'Hospital')
+PRJEB39942	SAMEA7198822	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959044 (rescued 'Hospital')
+PRJEB39942	SAMEA7198823	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959045 (rescued 'Hospital')
+PRJEB39942	SAMEA7198860	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959082 (rescued 'WWTP')
+PRJEB39942	SAMEA7198861	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959083 (rescued 'WWTP')
+PRJEB39942	SAMEA7198862	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959084 (rescued 'WWTP')
+PRJEB39942	SAMEA7198863	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959085 (rescued 'WWTP')
+PRJEB39942	SAMEA7198858	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959080 (rescued 'WWTP')
+PRJEB39942	SAMEA7198859	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959081 (rescued 'WWTP')
+PRJEB39942	SAMEA7198864	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959086 (rescued 'WWTP')
+PRJEB39942	SAMEA7198865	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959087 (rescued 'WWTP')
+PRJEB39942	SAMEA7198866	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959088 (rescued 'WWTP')
+PRJEB39942	SAMEA7198829	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959051 (rescued 'Hospital')
+PRJEB39942	SAMEA7198825	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959047 (rescued 'Hospital')
+PRJEB39942	SAMEA7198824	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959046 (rescued 'Hospital')
+PRJEB39942	SAMEA7198828	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959050 (rescued 'Hospital')
+PRJEB39942	SAMEA7198826	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959048 (rescued 'Hospital')
+PRJEB39942	SAMEA7198827	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959049 (rescued 'Hospital')
+PRJEB39942	SAMEA7198867	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959089 (rescued 'WWTP')
+PRJEB39942	SAMEA7198869	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959091 (rescued 'WWTP')
+PRJEB39942	SAMEA7198870	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959092 (rescued 'WWTP')
+PRJEB39942	SAMEA7198868	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959090 (rescued 'WWTP')
+PRJEB39942	SAMEA7198871	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959093 (rescued 'WWTP')
+PRJEB39942	SAMEA7198872	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959094 (rescued 'WWTP')
+PRJEB39942	SAMEA7198873	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959095 (rescued 'WWTP')
+PRJEB39942	SAMEA7198874	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959096 (rescued 'WWTP')
+PRJEB39942	SAMEA7198875	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959097 (rescued 'WWTP')
+PRJEB39942	SAMEA7198876	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959098 (rescued 'WWTP')
+PRJEB39942	SAMEA7198877	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959099 (rescued 'WWTP')
+PRJEB39942	SAMEA7198878	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959100 (rescued 'WWTP')
+PRJEB39942	SAMEA7198879	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959101 (rescued 'WWTP')
+PRJEB39942	SAMEA7198880	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959102 (rescued 'WWTP')
+PRJEB39942	SAMEA7198833	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959055 (rescued 'Hospital')
+PRJEB39942	SAMEA7198834	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959056 (rescued 'Hospital')
+PRJEB39942	SAMEA7198836	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959058 (rescued 'Hospital')
+PRJEB39942	SAMEA7198835	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959057 (rescued 'Hospital')
+PRJEB39942	SAMEA7198830	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959052 (rescued 'Hospital')
+PRJEB39942	SAMEA7198837	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959059 (rescued 'Hospital')
+PRJEB39942	SAMEA7198838	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959060 (rescued 'Hospital')
+PRJEB39942	SAMEA7198831	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959053 (rescued 'Hospital')
+PRJEB39942	SAMEA7198832	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959054 (rescued 'Hospital')
+PRJEB39942	SAMEA7198881	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959103 (rescued 'WWTP')
+PRJEB39942	SAMEA7198882	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959104 (rescued 'WWTP')
+PRJEB39942	SAMEA7198883	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959105 (rescued 'WWTP')
+PRJEB39942	SAMEA7198884	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959106 (rescued 'WWTP')
+PRJEB39942	SAMEA7198891	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959113 (rescued 'WWTP')
+PRJEB39942	SAMEA7198885	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959107 (rescued 'WWTP')
+PRJEB39942	SAMEA7198886	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959108 (rescued 'WWTP')
+PRJEB39942	SAMEA7198887	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959109 (rescued 'WWTP')
+PRJEB39942	SAMEA7198888	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959110 (rescued 'WWTP')
+PRJEB39942	SAMEA7198889	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959111 (rescued 'WWTP')
+PRJEB39942	SAMEA7198890	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959112 (rescued 'WWTP')
+PRJEB39942	SAMEA7198839	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959061 (rescued 'Hospital')
+PRJEB39942	SAMEA7198845	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959067 (rescued 'Hospital')
+PRJEB39942	SAMEA7198843	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959065 (rescued 'Hospital')
+PRJEB39942	SAMEA7198840	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959062 (rescued 'Hospital')
+PRJEB39942	SAMEA7198841	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959063 (rescued 'Hospital')
+PRJEB39942	SAMEA7198842	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959064 (rescued 'Hospital')
+PRJEB39942	SAMEA7198844	host		human	per_sample	mgen-7-0509-s002.xlsx:ERS4959066 (rescued 'Hospital')
+PRJEB39942	SAMEA7198846	host		wastewater_water	per_sample	mgen-7-0509-s002.xlsx:ERS4959068 (rescued 'River')
+PRJEB42526	SAMEA7832379	host		Equine	per_sample	PRJEB42526.xlsx:K102
+PRJEB42526	SAMEA7832460	host		Equine	per_sample	PRJEB42526.xlsx:K106
+PRJEB42526	SAMEA7832442	host		Primate	per_sample	PRJEB42526.xlsx:K100
+PRJEB42526	SAMEA7832383	host		Primate	per_sample	PRJEB42526.xlsx:K107
+PRJEB42526	SAMEA7832385	host		Primate	per_sample	PRJEB42526.xlsx:K108
+PRJEB42526	SAMEA7832386	host		Primate	per_sample	PRJEB42526.xlsx:K109
+PRJEB42526	SAMEA7832379	isolation_source		equine	per_sample	PRJEB42526.xlsx:K102 (rescued 'Equine')
+PRJEB42526	SAMEA7832460	isolation_source		equine	per_sample	PRJEB42526.xlsx:K106 (rescued 'Equine')
+PRJEB42526	SAMEA7832442	isolation_source		primate	per_sample	PRJEB42526.xlsx:K100 (rescued 'Primate')
+PRJEB42526	SAMEA7832383	isolation_source		primate	per_sample	PRJEB42526.xlsx:K107 (rescued 'Primate')
+PRJEB42526	SAMEA7832385	isolation_source		primate	per_sample	PRJEB42526.xlsx:K108 (rescued 'Primate')
+PRJEB42526	SAMEA7832386	isolation_source		primate	per_sample	PRJEB42526.xlsx:K109 (rescued 'Primate')
+PRJEB46655	SAMEA8997884	collection_date		2017-06-01 00:00:00	per_sample	mmc1.xlsx:ERS6680572
+PRJEB46655	SAMEA8997885	collection_date		2017-06-01 00:00:00	per_sample	mmc1.xlsx:ERS6680573
+PRJEB46655	SAMEA8997886	collection_date		2017-06-05 00:00:00	per_sample	mmc1.xlsx:ERS6680574
+PRJEB46655	SAMEA8997887	collection_date		2017-06-06 00:00:00	per_sample	mmc1.xlsx:ERS6680575
+PRJEB46655	SAMEA8997888	collection_date		2017-06-08 00:00:00	per_sample	mmc1.xlsx:ERS6680576
+PRJEB46655	SAMEA8997889	collection_date		2017-06-16 00:00:00	per_sample	mmc1.xlsx:ERS6680577
+PRJEB46655	SAMEA8997890	collection_date		2017-06-22 00:00:00	per_sample	mmc1.xlsx:ERS6680578
+PRJEB46655	SAMEA8997891	collection_date		2017-06-26 00:00:00	per_sample	mmc1.xlsx:ERS6680579
+PRJEB46655	SAMEA8997892	collection_date		2017-06-27 00:00:00	per_sample	mmc1.xlsx:ERS6680580
+PRJEB46655	SAMEA8997893	collection_date		2017-07-03 00:00:00	per_sample	mmc1.xlsx:ERS6680581
+PRJEB46655	SAMEA8997894	collection_date		2017-07-03 00:00:00	per_sample	mmc1.xlsx:ERS6680582
+PRJEB46655	SAMEA8997895	collection_date		2017-07-13 00:00:00	per_sample	mmc1.xlsx:ERS6680583
+PRJEB46655	SAMEA8997896	collection_date		2017-07-17 00:00:00	per_sample	mmc1.xlsx:ERS6680584
+PRJEB46655	SAMEA8997897	collection_date		2017-07-21 00:00:00	per_sample	mmc1.xlsx:ERS6680585
+PRJEB46655	SAMEA8997898	collection_date		2017-08-01 00:00:00	per_sample	mmc1.xlsx:ERS6680586
+PRJEB46655	SAMEA8997899	collection_date		2017-08-07 00:00:00	per_sample	mmc1.xlsx:ERS6680587
+PRJEB46655	SAMEA8997900	collection_date		2017-08-08 00:00:00	per_sample	mmc1.xlsx:ERS6680588
+PRJEB46655	SAMEA8997901	collection_date		2017-08-07 00:00:00	per_sample	mmc1.xlsx:ERS6680589
+PRJEB46655	SAMEA8997902	collection_date		2017-08-07 00:00:00	per_sample	mmc1.xlsx:ERS6680590
+PRJEB46655	SAMEA8997903	collection_date		2017-09-08 00:00:00	per_sample	mmc1.xlsx:ERS6680591
+PRJEB46655	SAMEA8997904	collection_date		2017-08-10 00:00:00	per_sample	mmc1.xlsx:ERS6680592
+PRJEB46655	SAMEA8997905	collection_date		2017-08-14 00:00:00	per_sample	mmc1.xlsx:ERS6680593
+PRJEB46655	SAMEA8997906	collection_date		2017-08-21 00:00:00	per_sample	mmc1.xlsx:ERS6680594
+PRJEB46655	SAMEA8997907	collection_date		2017-08-22 00:00:00	per_sample	mmc1.xlsx:ERS6680595
+PRJEB46655	SAMEA8997908	collection_date		2017-08-28 00:00:00	per_sample	mmc1.xlsx:ERS6680596
+PRJEB46655	SAMEA8997909	collection_date		2017-08-29 00:00:00	per_sample	mmc1.xlsx:ERS6680597
+PRJEB46655	SAMEA8997910	collection_date		2017-08-18 00:00:00	per_sample	mmc1.xlsx:ERS6680598
+PRJEB46655	SAMEA8997911	collection_date		2017-09-21 00:00:00	per_sample	mmc1.xlsx:ERS6680599
+PRJEB46655	SAMEA8997912	collection_date		2017-09-26 00:00:00	per_sample	mmc1.xlsx:ERS6680600
+PRJEB46655	SAMEA8997913	collection_date		2017-09-29 00:00:00	per_sample	mmc1.xlsx:ERS6680601
+PRJEB46655	SAMEA8997914	collection_date		2017-10-07 00:00:00	per_sample	mmc1.xlsx:ERS6680602
+PRJEB46655	SAMEA8997915	collection_date		2017-10-18 00:00:00	per_sample	mmc1.xlsx:ERS6680603
+PRJEB46655	SAMEA8997916	collection_date		2017-10-19 00:00:00	per_sample	mmc1.xlsx:ERS6680604
+PRJEB46655	SAMEA8997917	collection_date		2017-10-30 00:00:00	per_sample	mmc1.xlsx:ERS6680605
+PRJEB46655	SAMEA8997918	collection_date		2017-10-31 00:00:00	per_sample	mmc1.xlsx:ERS6680606
+PRJEB46655	SAMEA8997919	collection_date		2017-11-01 00:00:00	per_sample	mmc1.xlsx:ERS6680607
+PRJEB46655	SAMEA8997920	collection_date		2017-10-22 00:00:00	per_sample	mmc1.xlsx:ERS6680608
+PRJEB46655	SAMEA8997921	collection_date		2017-11-07 00:00:00	per_sample	mmc1.xlsx:ERS6680609
+PRJEB46655	SAMEA8997922	collection_date		2017-11-13 00:00:00	per_sample	mmc1.xlsx:ERS6680610
+PRJEB46655	SAMEA8997923	collection_date		2017-11-15 00:00:00	per_sample	mmc1.xlsx:ERS6680611
+PRJEB46655	SAMEA8997924	collection_date		2017-11-20 00:00:00	per_sample	mmc1.xlsx:ERS6680612
+PRJEB46655	SAMEA8997925	collection_date		2017-11-21 00:00:00	per_sample	mmc1.xlsx:ERS6680613
+PRJEB46655	SAMEA8997926	collection_date		2017-11-27 00:00:00	per_sample	mmc1.xlsx:ERS6680614
+PRJEB46655	SAMEA8997927	collection_date		2017-12-11 00:00:00	per_sample	mmc1.xlsx:ERS6680615
+PRJEB46655	SAMEA8997928	collection_date		2017-12-11 00:00:00	per_sample	mmc1.xlsx:ERS6680616
+PRJEB46655	SAMEA8997929	collection_date		2017-12-18 00:00:00	per_sample	mmc1.xlsx:ERS6680617
+PRJEB46655	SAMEA8997930	collection_date		2017-12-19 00:00:00	per_sample	mmc1.xlsx:ERS6680618
+PRJEB46655	SAMEA8997931	collection_date		2017-12-19 00:00:00	per_sample	mmc1.xlsx:ERS6680619
+PRJEB46655	SAMEA8997932	collection_date		2018-01-04 00:00:00	per_sample	mmc1.xlsx:ERS6680620
+PRJEB46655	SAMEA8997933	collection_date		2018-01-04 00:00:00	per_sample	mmc1.xlsx:ERS6680621
+PRJEB46655	SAMEA8997934	collection_date		2018-01-16 00:00:00	per_sample	mmc1.xlsx:ERS6680622
+PRJEB46655	SAMEA8997935	collection_date		2018-01-15 00:00:00	per_sample	mmc1.xlsx:ERS6680623
+PRJEB46655	SAMEA8997936	collection_date		2018-01-18 00:00:00	per_sample	mmc1.xlsx:ERS6680624
+PRJEB46655	SAMEA8997937	collection_date		2018-01-19 00:00:00	per_sample	mmc1.xlsx:ERS6680625
+PRJEB46655	SAMEA8997938	collection_date		2018-01-22 00:00:00	per_sample	mmc1.xlsx:ERS6680626
+PRJEB46655	SAMEA8997939	collection_date		2018-01-22 00:00:00	per_sample	mmc1.xlsx:ERS6680627
+PRJEB46655	SAMEA8997940	collection_date		2018-01-26 00:00:00	per_sample	mmc1.xlsx:ERS6680628
+PRJEB46655	SAMEA8997941	collection_date		2018-01-30 00:00:00	per_sample	mmc1.xlsx:ERS6680629
+PRJEB46655	SAMEA8997942	collection_date		2018-01-31 00:00:00	per_sample	mmc1.xlsx:ERS6680630
+PRJEB46655	SAMEA8997943	collection_date		2017-09-21 00:00:00	per_sample	mmc1.xlsx:ERS6680631
+PRJEB46655	SAMEA8997944	collection_date		2017-08-22 00:00:00	per_sample	mmc1.xlsx:ERS6680632
+PRJEB46655	SAMEA8997884	host		human	per_sample	mmc1.xlsx:ERS6680572 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997885	host		human	per_sample	mmc1.xlsx:ERS6680573 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997886	host		human	per_sample	mmc1.xlsx:ERS6680574 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997887	host		human	per_sample	mmc1.xlsx:ERS6680575 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997888	host		human	per_sample	mmc1.xlsx:ERS6680576 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997889	host		human	per_sample	mmc1.xlsx:ERS6680577 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997890	host		human	per_sample	mmc1.xlsx:ERS6680578 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997891	host		human	per_sample	mmc1.xlsx:ERS6680579 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997892	host		human	per_sample	mmc1.xlsx:ERS6680580 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997893	host		human	per_sample	mmc1.xlsx:ERS6680581 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997894	host		human	per_sample	mmc1.xlsx:ERS6680582 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997895	host		human	per_sample	mmc1.xlsx:ERS6680583 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997896	host		human	per_sample	mmc1.xlsx:ERS6680584 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997897	host		human	per_sample	mmc1.xlsx:ERS6680585 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997898	host		human	per_sample	mmc1.xlsx:ERS6680586 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997899	host		human	per_sample	mmc1.xlsx:ERS6680587 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997900	host		human	per_sample	mmc1.xlsx:ERS6680588 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997901	host		human	per_sample	mmc1.xlsx:ERS6680589 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997902	host		human	per_sample	mmc1.xlsx:ERS6680590 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997903	host		human	per_sample	mmc1.xlsx:ERS6680591 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997904	host		human	per_sample	mmc1.xlsx:ERS6680592 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997905	host		human	per_sample	mmc1.xlsx:ERS6680593 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997906	host		human	per_sample	mmc1.xlsx:ERS6680594 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997907	host		human	per_sample	mmc1.xlsx:ERS6680595 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997908	host		human	per_sample	mmc1.xlsx:ERS6680596 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997909	host		human	per_sample	mmc1.xlsx:ERS6680597 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997910	host		human	per_sample	mmc1.xlsx:ERS6680598 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997911	host		human	per_sample	mmc1.xlsx:ERS6680599 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997912	host		human	per_sample	mmc1.xlsx:ERS6680600 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997913	host		human	per_sample	mmc1.xlsx:ERS6680601 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997914	host		human	per_sample	mmc1.xlsx:ERS6680602 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997915	host		human	per_sample	mmc1.xlsx:ERS6680603 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997916	host		human	per_sample	mmc1.xlsx:ERS6680604 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997917	host		human	per_sample	mmc1.xlsx:ERS6680605 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997918	host		human	per_sample	mmc1.xlsx:ERS6680606 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997919	host		human	per_sample	mmc1.xlsx:ERS6680607 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997920	host		human	per_sample	mmc1.xlsx:ERS6680608 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997921	host		human	per_sample	mmc1.xlsx:ERS6680609 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997922	host		human	per_sample	mmc1.xlsx:ERS6680610 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997923	host		human	per_sample	mmc1.xlsx:ERS6680611 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997924	host		human	per_sample	mmc1.xlsx:ERS6680612 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997925	host		human	per_sample	mmc1.xlsx:ERS6680613 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997926	host		human	per_sample	mmc1.xlsx:ERS6680614 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997927	host		human	per_sample	mmc1.xlsx:ERS6680615 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997928	host		human	per_sample	mmc1.xlsx:ERS6680616 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997929	host		human	per_sample	mmc1.xlsx:ERS6680617 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997930	host		human	per_sample	mmc1.xlsx:ERS6680618 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997931	host		human	per_sample	mmc1.xlsx:ERS6680619 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997932	host		human	per_sample	mmc1.xlsx:ERS6680620 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997933	host		human	per_sample	mmc1.xlsx:ERS6680621 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997934	host		human	per_sample	mmc1.xlsx:ERS6680622 (rescued 'neonate (0-28days)')
+PRJEB46655	SAMEA8997935	host		human	per_sample	mmc1.xlsx:ERS6680623 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997936	host		human	per_sample	mmc1.xlsx:ERS6680624 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997937	host		human	per_sample	mmc1.xlsx:ERS6680625 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997938	host		human	per_sample	mmc1.xlsx:ERS6680626 (rescued 'child (<14 years)')
+PRJEB46655	SAMEA8997939	host		human	per_sample	mmc1.xlsx:ERS6680627 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997940	host		human	per_sample	mmc1.xlsx:ERS6680628 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997941	host		human	per_sample	mmc1.xlsx:ERS6680629 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997942	host		human	per_sample	mmc1.xlsx:ERS6680630 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997943	host		human	per_sample	mmc1.xlsx:ERS6680631 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997944	host		human	per_sample	mmc1.xlsx:ERS6680632 (rescued 'adult (14+ years)')
+PRJEB46655	SAMEA8997884	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680572 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997885	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680573 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997886	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680574 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997887	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680575 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997888	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680576 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997889	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680577 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997890	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680578 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997891	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680579 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997892	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680580 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997893	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680581 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997894	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680582 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997895	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680583 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997896	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680584 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997897	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680585 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997898	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680586 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997899	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680587 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997900	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680588 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997901	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680589 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997902	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680590 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997903	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680591 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997904	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680592 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997905	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680593 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997906	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680594 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997907	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680595 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997908	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680596 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997909	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680597 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997910	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680598 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997911	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680599 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997912	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680600 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997913	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680601 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997914	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680602 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997915	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680603 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997916	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680604 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997917	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680605 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997918	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680606 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997919	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680607 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997920	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680608 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997921	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680609 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997922	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680610 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997923	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680611 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997924	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680612 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997925	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680613 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997926	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680614 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997927	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680615 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997928	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680616 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997929	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680617 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997930	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680618 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997931	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680619 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997932	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680620 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997933	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680621 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997934	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680622 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997935	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680623 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997936	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680624 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997937	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680625 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997938	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680626 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997939	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680627 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997940	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680628 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997941	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680629 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997942	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680630 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997943	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680631 (rescued 'K. pneumoniae BSI')
+PRJEB46655	SAMEA8997944	isolation_source		blood	per_sample	mmc1.xlsx:ERS6680632 (rescued 'K. pneumoniae BSI')
+PRJEB50837	SAMEA12943403	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-02164 (rescued 'Human')
+PRJEB50837	SAMEA12943405	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-02167 (rescued 'Human')
+PRJEB50837	SAMEA12943428	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-02212 (rescued 'Human')
+PRJEB50837	SAMEA12943535	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03113 (rescued 'Human')
+PRJEB50837	SAMEA12943536	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03116 (rescued 'Human')
+PRJEB50837	SAMEA12943537	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03123 (rescued 'Human')
+PRJEB50837	SAMEA12943538	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03125 (rescued 'Human')
+PRJEB50837	SAMEA12943539	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03127 (rescued 'Human')
+PRJEB50837	SAMEA12943540	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03130 (rescued 'Human')
+PRJEB50837	SAMEA12943541	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03137 (rescued 'Human')
+PRJEB50837	SAMEA12943542	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03141 (rescued 'Human')
+PRJEB50837	SAMEA12943543	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03158 (rescued 'Human')
+PRJEB50837	SAMEA12943544	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03164 (rescued 'Human')
+PRJEB50837	SAMEA12943545	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03166 (rescued 'Human')
+PRJEB50837	SAMEA12943546	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N16-03168 (rescued 'Human')
+PRJEB50837	SAMEA12943558	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N17-00959 (rescued 'Human')
+PRJEB50837	SAMEA12943570	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N17-00980 (rescued 'Human')
+PRJEB50837	SAMEA12943581	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:N17-01002 (rescued 'Human')
+PRJEB50837	SAMEA12943856	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:J131 (rescued 'Dog')
+PRJEB50837	SAMEA12943854	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:J129 (rescued 'Dog')
+PRJEB50837	SAMEA12943753	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:J016 (rescued 'Human')
+PRJEB50837	SAMEA12943906	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:24412_S20 (rescued 'Cat')
+PRJEB50837	SAMEA12943907	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:24419_S21 (rescued 'Dog')
+PRJEB50837	SAMEA12943911	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:24671_S23 (rescued 'Dog')
+PRJEB50837	SAMEA12943936	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:29132_S28 (rescued 'Dog')
+PRJEB50837	SAMEA12943956	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:32245_S34 (rescued 'Dog')
+PRJEB50837	SAMEA12944042	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:39143_S43 (rescued 'Dog')
+PRJEB50837	SAMEA12944105	host		bovine	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:42477_S52 (rescued 'Cattle')
+PRJEB50837	SAMEA12944117	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:43928_S56 (rescued 'Cat')
+PRJEB50837	SAMEA12944140	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:BLSE117 (rescued 'Human')
+PRJEB50837	SAMEA12944157	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:BLSE190 (rescued 'Human')
+PRJEB50837	SAMEA12944164	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:BLSE57 (rescued 'Human')
+PRJEB50837	SAMEA12944281	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI198_S48 (rescued 'Human')
+PRJEB50837	SAMEA12944378	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:ESC18_S65 (rescued 'Human')
+PRJEB50837	SAMEA12944451	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI271_S63 (rescued 'Human')
+PRJEB50837	SAMEA12944452	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI272_S64 (rescued 'Human')
+PRJEB50837	SAMEA12944453	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI273_S65 (rescued 'Human')
+PRJEB50837	SAMEA12944454	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI274_S66 (rescued 'Human')
+PRJEB50837	SAMEA12944455	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI275_S67 (rescued 'Human')
+PRJEB50837	SAMEA12944456	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI278_S68 (rescued 'Human')
+PRJEB50837	SAMEA12944457	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI279_S69 (rescued 'Human')
+PRJEB50837	SAMEA12944458	host		human	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:JPI280_S70 (rescued 'Human')
+PRJEB50837	SAMEA12944461	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT17437 (rescued 'Cat')
+PRJEB50837	SAMEA12944462	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT18316 (rescued 'Dog')
+PRJEB50837	SAMEA12944463	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT22243 (rescued 'Dog')
+PRJEB50837	SAMEA12944465	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT29678 (rescued 'Dog')
+PRJEB50837	SAMEA12944466	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT30165 (rescued 'Dog')
+PRJEB50837	SAMEA12944467	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT32348 (rescued 'Dog')
+PRJEB50837	SAMEA12944468	host		equine	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT34099 (rescued 'Horse')
+PRJEB50837	SAMEA12944469	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT38093 (rescued 'Dog')
+PRJEB50837	SAMEA12944470	host		companion_animal	per_sample	41467_2022_34970_MOESM3_ESM.xlsx:IMT39566 (rescued 'Dog')
+PRJEB51224	SAMEA13206926	country		France	per_sample	mmc2.xlsx:ERR9035462
+PRJEB51224	SAMEA13206904	country		France	per_sample	mmc2.xlsx:ERR9035520
+PRJEB51224	SAMEA13206903	country		France	per_sample	mmc2.xlsx:ERR9035519
+PRJEB51224	SAMEA13206972	country		France	per_sample	mmc2.xlsx:ERR9035548
+PRJEB51224	SAMEA13206906	country		France	per_sample	mmc2.xlsx:ERR9035521
+PRJEB51224	SAMEA13206979	country		France	per_sample	mmc2.xlsx:ERR9035552
+PRJEB51224	SAMEA13206973	country		France	per_sample	mmc2.xlsx:ERR9035546
+PRJEB51224	SAMEA13206975	country		France	per_sample	mmc2.xlsx:ERR9035550
+PRJEB51224	SAMEA13206942	country		France	per_sample	mmc2.xlsx:ERR9035480
+PRJEB51224	SAMEA13206943	country		France	per_sample	mmc2.xlsx:ERR9035478
+PRJEB51224	SAMEA13206930	country		France	per_sample	mmc2.xlsx:ERR9035466
+PRJEB51224	SAMEA13206956	country		France	per_sample	mmc2.xlsx:ERR9035493
+PRJEB51224	SAMEA13206948	country		France	per_sample	mmc2.xlsx:ERR9035484
+PRJEB51224	SAMEA13206946	country		France	per_sample	mmc2.xlsx:ERR9035483
+PRJEB51224	SAMEA13206954	country		France	per_sample	mmc2.xlsx:ERR9035491
+PRJEB51224	SAMEA13206892	country		France	per_sample	mmc2.xlsx:ERR9035507
+PRJEB51224	SAMEA13206982	country		France	per_sample	mmc2.xlsx:ERR9035555
+PRJEB51224	SAMEA13206959	country		France	per_sample	mmc2.xlsx:ERR9035495
+PRJEB51224	SAMEA13206895	country		France	per_sample	mmc2.xlsx:ERR9035510
+PRJEB51224	SAMEA13206897	country		France	per_sample	mmc2.xlsx:ERR9035511
+PRJEB51224	SAMEA13206901	country		France	per_sample	mmc2.xlsx:ERR9035516
+PRJEB51224	SAMEA13206898	country		France	per_sample	mmc2.xlsx:ERR9035513
+PRJEB51224	SAMEA13206899	country		France	per_sample	mmc2.xlsx:ERR9035514
+PRJEB51224	SAMEA13206900	country		France	per_sample	mmc2.xlsx:ERR9035515
+PRJEB51224	SAMEA13206981	country		France	per_sample	mmc2.xlsx:ERR9035556
+PRJEB51224	SAMEA13206934	country		France	per_sample	mmc2.xlsx:ERR9035470
+PRJEB51224	SAMEA13206925	country		France	per_sample	mmc2.xlsx:ERR9035461
+PRJEB51224	SAMEA13206936	country		France	per_sample	mmc2.xlsx:ERR9035473
+PRJEB51224	SAMEA13206949	country		France	per_sample	mmc2.xlsx:ERR9035485
+PRJEB51224	SAMEA13206891	country		France	per_sample	mmc2.xlsx:ERR9035506
+PRJEB51224	SAMEA13206893	country		France	per_sample	mmc2.xlsx:ERR9035505
+PRJEB51224	SAMEA13206966	country		France	per_sample	mmc2.xlsx:ERR9035504
+PRJEB51224	SAMEA13206964	country		France	per_sample	mmc2.xlsx:ERR9035501
+PRJEB51224	SAMEA13206976	country		France	per_sample	mmc2.xlsx:ERR9035553
+PRJEB51224	SAMEA13206902	country		France	per_sample	mmc2.xlsx:ERR9035517
+PRJEB51224	SAMEA13206905	country		France	per_sample	mmc2.xlsx:ERR9035518
+PRJEB51224	SAMEA13206940	country		France	per_sample	mmc2.xlsx:ERR9035476
+PRJEB51224	SAMEA13206957	country		France	per_sample	mmc2.xlsx:ERR9035492
+PRJEB51224	SAMEA13206909	country		France	per_sample	mmc2.xlsx:ERR9035523
+PRJEB51224	SAMEA13206968	country		France	per_sample	mmc2.xlsx:ERR9035545
+PRJEB51224	SAMEA13206911	country		France	per_sample	mmc2.xlsx:ERR9035528
+PRJEB51224	SAMEA13206912	country		France	per_sample	mmc2.xlsx:ERR9035529
+PRJEB51224	SAMEA13206919	country		France	per_sample	mmc2.xlsx:ERR9035537
+PRJEB51224	SAMEA13206927	country		France	per_sample	mmc2.xlsx:ERR9035464
+PRJEB51224	SAMEA13206928	country		France	per_sample	mmc2.xlsx:ERR9035463
+PRJEB51224	SAMEA13206939	country		France	per_sample	mmc2.xlsx:ERR9035474
+PRJEB51224	SAMEA13206938	country		France	per_sample	mmc2.xlsx:ERR9035477
+PRJEB51224	SAMEA13206944	country		France	per_sample	mmc2.xlsx:ERR9035479
+PRJEB51224	SAMEA13206945	country		France	per_sample	mmc2.xlsx:ERR9035482
+PRJEB51224	SAMEA13206967	country		France	per_sample	mmc2.xlsx:ERR9035543
+PRJEB51224	SAMEA13206974	country		France	per_sample	mmc2.xlsx:ERR9035549
+PRJEB51224	SAMEA13206952	country		France	per_sample	mmc2.xlsx:ERR9035490
+PRJEB51224	SAMEA13206953	country		France	per_sample	mmc2.xlsx:ERR9035489
+PRJEB51224	SAMEA13206947	country		France	per_sample	mmc2.xlsx:ERR9035486
+PRJEB51224	SAMEA13206951	country		France	per_sample	mmc2.xlsx:ERR9035488
+PRJEB51224	SAMEA13206961	country		France	per_sample	mmc2.xlsx:ERR9035499
+PRJEB51224	SAMEA13206962	country		France	per_sample	mmc2.xlsx:ERR9035498
+PRJEB51224	SAMEA13206960	country		France	per_sample	mmc2.xlsx:ERR9035497
+PRJEB51224	SAMEA13206958	country		France	per_sample	mmc2.xlsx:ERR9035496
+PRJEB51224	SAMEA13206955	country		France	per_sample	mmc2.xlsx:ERR9035494
+PRJEB51224	SAMEA13206914	country		France	per_sample	mmc2.xlsx:ERR9035531
+PRJEB51224	SAMEA13206922	country		France	per_sample	mmc2.xlsx:ERR9035541
+PRJEB51224	SAMEA13206921	country		France	per_sample	mmc2.xlsx:ERR9035539
+PRJEB51224	SAMEA13206908	country		France	per_sample	mmc2.xlsx:ERR9035526
+PRJEB51224	SAMEA13206923	country		France	per_sample	mmc2.xlsx:ERR9035542
+PRJEB51224	SAMEA13206915	country		France	per_sample	mmc2.xlsx:ERR9035532
+PRJEB51224	SAMEA13206924	country		France	per_sample	mmc2.xlsx:ERR9035540
+PRJEB51224	SAMEA13206918	country		France	per_sample	mmc2.xlsx:ERR9035536
+PRJEB51224	SAMEA13206970	country		France	per_sample	mmc2.xlsx:ERR9035544
+PRJEB51224	SAMEA13206907	country		France	per_sample	mmc2.xlsx:ERR9035522
+PRJEB51224	SAMEA13206926	collection_date		2019	per_sample	mmc2.xlsx:ERR9035462
+PRJEB51224	SAMEA13206904	collection_date		2019	per_sample	mmc2.xlsx:ERR9035520
+PRJEB51224	SAMEA13206903	collection_date		2019	per_sample	mmc2.xlsx:ERR9035519
+PRJEB51224	SAMEA13206972	collection_date		2019	per_sample	mmc2.xlsx:ERR9035548
+PRJEB51224	SAMEA13206906	collection_date		2019	per_sample	mmc2.xlsx:ERR9035521
+PRJEB51224	SAMEA13206979	collection_date		2019	per_sample	mmc2.xlsx:ERR9035552
+PRJEB51224	SAMEA13206973	collection_date		2019	per_sample	mmc2.xlsx:ERR9035546
+PRJEB51224	SAMEA13206975	collection_date		2019	per_sample	mmc2.xlsx:ERR9035550
+PRJEB51224	SAMEA13206942	collection_date		2019	per_sample	mmc2.xlsx:ERR9035480
+PRJEB51224	SAMEA13206943	collection_date		2019	per_sample	mmc2.xlsx:ERR9035478
+PRJEB51224	SAMEA13206930	collection_date		2019	per_sample	mmc2.xlsx:ERR9035466
+PRJEB51224	SAMEA13206956	collection_date		2019	per_sample	mmc2.xlsx:ERR9035493
+PRJEB51224	SAMEA13206948	collection_date		2019	per_sample	mmc2.xlsx:ERR9035484
+PRJEB51224	SAMEA13206946	collection_date		2019	per_sample	mmc2.xlsx:ERR9035483
+PRJEB51224	SAMEA13206954	collection_date		2019	per_sample	mmc2.xlsx:ERR9035491
+PRJEB51224	SAMEA13206892	collection_date		2019	per_sample	mmc2.xlsx:ERR9035507
+PRJEB51224	SAMEA13206982	collection_date		2019	per_sample	mmc2.xlsx:ERR9035555
+PRJEB51224	SAMEA13206959	collection_date		2019	per_sample	mmc2.xlsx:ERR9035495
+PRJEB51224	SAMEA13206895	collection_date		2019	per_sample	mmc2.xlsx:ERR9035510
+PRJEB51224	SAMEA13206897	collection_date		2019	per_sample	mmc2.xlsx:ERR9035511
+PRJEB51224	SAMEA13206901	collection_date		2019	per_sample	mmc2.xlsx:ERR9035516
+PRJEB51224	SAMEA13206898	collection_date		2019	per_sample	mmc2.xlsx:ERR9035513
+PRJEB51224	SAMEA13206899	collection_date		2019	per_sample	mmc2.xlsx:ERR9035514
+PRJEB51224	SAMEA13206900	collection_date		2019	per_sample	mmc2.xlsx:ERR9035515
+PRJEB51224	SAMEA13206981	collection_date		2019	per_sample	mmc2.xlsx:ERR9035556
+PRJEB51224	SAMEA13206934	collection_date		2019	per_sample	mmc2.xlsx:ERR9035470
+PRJEB51224	SAMEA13206925	collection_date		2019	per_sample	mmc2.xlsx:ERR9035461
+PRJEB51224	SAMEA13206936	collection_date		2019	per_sample	mmc2.xlsx:ERR9035473
+PRJEB51224	SAMEA13206949	collection_date		2019	per_sample	mmc2.xlsx:ERR9035485
+PRJEB51224	SAMEA13206891	collection_date		2019	per_sample	mmc2.xlsx:ERR9035506
+PRJEB51224	SAMEA13206893	collection_date		2019	per_sample	mmc2.xlsx:ERR9035505
+PRJEB51224	SAMEA13206966	collection_date		2019	per_sample	mmc2.xlsx:ERR9035504
+PRJEB51224	SAMEA13206964	collection_date		2019	per_sample	mmc2.xlsx:ERR9035501
+PRJEB51224	SAMEA13206976	collection_date		2019	per_sample	mmc2.xlsx:ERR9035553
+PRJEB51224	SAMEA13206902	collection_date		2019	per_sample	mmc2.xlsx:ERR9035517
+PRJEB51224	SAMEA13206905	collection_date		2019	per_sample	mmc2.xlsx:ERR9035518
+PRJEB51224	SAMEA13206940	collection_date		2019	per_sample	mmc2.xlsx:ERR9035476
+PRJEB51224	SAMEA13206957	collection_date		2019	per_sample	mmc2.xlsx:ERR9035492
+PRJEB51224	SAMEA13206909	collection_date		2019	per_sample	mmc2.xlsx:ERR9035523
+PRJEB51224	SAMEA13206968	collection_date		2019	per_sample	mmc2.xlsx:ERR9035545
+PRJEB51224	SAMEA13206911	collection_date		2019	per_sample	mmc2.xlsx:ERR9035528
+PRJEB51224	SAMEA13206912	collection_date		2019	per_sample	mmc2.xlsx:ERR9035529
+PRJEB51224	SAMEA13206919	collection_date		2019	per_sample	mmc2.xlsx:ERR9035537
+PRJEB51224	SAMEA13206927	collection_date		2019	per_sample	mmc2.xlsx:ERR9035464
+PRJEB51224	SAMEA13206928	collection_date		2019	per_sample	mmc2.xlsx:ERR9035463
+PRJEB51224	SAMEA13206939	collection_date		2019	per_sample	mmc2.xlsx:ERR9035474
+PRJEB51224	SAMEA13206938	collection_date		2019	per_sample	mmc2.xlsx:ERR9035477
+PRJEB51224	SAMEA13206944	collection_date		2019	per_sample	mmc2.xlsx:ERR9035479
+PRJEB51224	SAMEA13206945	collection_date		2019	per_sample	mmc2.xlsx:ERR9035482
+PRJEB51224	SAMEA13206967	collection_date		2019	per_sample	mmc2.xlsx:ERR9035543
+PRJEB51224	SAMEA13206974	collection_date		2019	per_sample	mmc2.xlsx:ERR9035549
+PRJEB51224	SAMEA13206952	collection_date		2019	per_sample	mmc2.xlsx:ERR9035490
+PRJEB51224	SAMEA13206953	collection_date		2019	per_sample	mmc2.xlsx:ERR9035489
+PRJEB51224	SAMEA13206947	collection_date		2019	per_sample	mmc2.xlsx:ERR9035486
+PRJEB51224	SAMEA13206951	collection_date		2019	per_sample	mmc2.xlsx:ERR9035488
+PRJEB51224	SAMEA13206961	collection_date		2019	per_sample	mmc2.xlsx:ERR9035499
+PRJEB51224	SAMEA13206962	collection_date		2019	per_sample	mmc2.xlsx:ERR9035498
+PRJEB51224	SAMEA13206960	collection_date		2019	per_sample	mmc2.xlsx:ERR9035497
+PRJEB51224	SAMEA13206958	collection_date		2019	per_sample	mmc2.xlsx:ERR9035496
+PRJEB51224	SAMEA13206955	collection_date		2019	per_sample	mmc2.xlsx:ERR9035494
+PRJEB51224	SAMEA13206914	collection_date		2019	per_sample	mmc2.xlsx:ERR9035531
+PRJEB51224	SAMEA13206922	collection_date		2019	per_sample	mmc2.xlsx:ERR9035541
+PRJEB51224	SAMEA13206921	collection_date		2019	per_sample	mmc2.xlsx:ERR9035539
+PRJEB51224	SAMEA13206908	collection_date		2019	per_sample	mmc2.xlsx:ERR9035526
+PRJEB51224	SAMEA13206923	collection_date		2019	per_sample	mmc2.xlsx:ERR9035542
+PRJEB51224	SAMEA13206915	collection_date		2019	per_sample	mmc2.xlsx:ERR9035532
+PRJEB51224	SAMEA13206924	collection_date		2019	per_sample	mmc2.xlsx:ERR9035540
+PRJEB51224	SAMEA13206918	collection_date		2019	per_sample	mmc2.xlsx:ERR9035536
+PRJEB51224	SAMEA13206970	collection_date		2019	per_sample	mmc2.xlsx:ERR9035544
+PRJEB51224	SAMEA13206907	collection_date		2019	per_sample	mmc2.xlsx:ERR9035522
+PRJEB51224	SAMEA13206926	isolation_source		Aspirates	per_sample	mmc2.xlsx:ERR9035462
+PRJEB51224	SAMEA13206904	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035520
+PRJEB51224	SAMEA13206903	isolation_source		Aspirates	per_sample	mmc2.xlsx:ERR9035519
+PRJEB51224	SAMEA13206972	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035548
+PRJEB51224	SAMEA13206906	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035521
+PRJEB51224	SAMEA13206979	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035552
+PRJEB51224	SAMEA13206973	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035546
+PRJEB51224	SAMEA13206975	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035550
+PRJEB51224	SAMEA13206942	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035480
+PRJEB51224	SAMEA13206943	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035478
+PRJEB51224	SAMEA13206930	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035466
+PRJEB51224	SAMEA13206956	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035493
+PRJEB51224	SAMEA13206948	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035484
+PRJEB51224	SAMEA13206946	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035483
+PRJEB51224	SAMEA13206954	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035491
+PRJEB51224	SAMEA13206892	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035507
+PRJEB51224	SAMEA13206982	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035555
+PRJEB51224	SAMEA13206959	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035495
+PRJEB51224	SAMEA13206895	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035510
+PRJEB51224	SAMEA13206897	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035511
+PRJEB51224	SAMEA13206901	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035516
+PRJEB51224	SAMEA13206898	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035513
+PRJEB51224	SAMEA13206899	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035514
+PRJEB51224	SAMEA13206900	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035515
+PRJEB51224	SAMEA13206981	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035556
+PRJEB51224	SAMEA13206934	isolation_source		Aspirates	per_sample	mmc2.xlsx:ERR9035470
+PRJEB51224	SAMEA13206925	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035461
+PRJEB51224	SAMEA13206936	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035473
+PRJEB51224	SAMEA13206949	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035485
+PRJEB51224	SAMEA13206891	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035506
+PRJEB51224	SAMEA13206893	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035505
+PRJEB51224	SAMEA13206966	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035504
+PRJEB51224	SAMEA13206964	isolation_source		Soft tissue samples	per_sample	mmc2.xlsx:ERR9035501
+PRJEB51224	SAMEA13206976	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035553
+PRJEB51224	SAMEA13206902	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035517
+PRJEB51224	SAMEA13206905	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035518
+PRJEB51224	SAMEA13206940	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035476
+PRJEB51224	SAMEA13206957	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035492
+PRJEB51224	SAMEA13206909	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035523
+PRJEB51224	SAMEA13206968	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035545
+PRJEB51224	SAMEA13206911	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035528
+PRJEB51224	SAMEA13206912	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035529
+PRJEB51224	SAMEA13206919	isolation_source		Other	per_sample	mmc2.xlsx:ERR9035537
+PRJEB51224	SAMEA13206927	isolation_source		Catheter exit site	per_sample	mmc2.xlsx:ERR9035464
+PRJEB51224	SAMEA13206928	isolation_source		Aspirates	per_sample	mmc2.xlsx:ERR9035463
+PRJEB51224	SAMEA13206939	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035474
+PRJEB51224	SAMEA13206938	isolation_source		Other	per_sample	mmc2.xlsx:ERR9035477
+PRJEB51224	SAMEA13206944	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035479
+PRJEB51224	SAMEA13206945	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035482
+PRJEB51224	SAMEA13206967	isolation_source		Wound swab	per_sample	mmc2.xlsx:ERR9035543
+PRJEB51224	SAMEA13206974	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035549
+PRJEB51224	SAMEA13206952	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035490
+PRJEB51224	SAMEA13206953	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035489
+PRJEB51224	SAMEA13206947	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035486
+PRJEB51224	SAMEA13206951	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035488
+PRJEB51224	SAMEA13206961	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035499
+PRJEB51224	SAMEA13206962	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035498
+PRJEB51224	SAMEA13206960	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035497
+PRJEB51224	SAMEA13206958	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035496
+PRJEB51224	SAMEA13206955	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035494
+PRJEB51224	SAMEA13206914	isolation_source		Lower respiratory tract specimens	per_sample	mmc2.xlsx:ERR9035531
+PRJEB51224	SAMEA13206922	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035541
+PRJEB51224	SAMEA13206921	isolation_source		Blood	per_sample	mmc2.xlsx:ERR9035539
+PRJEB51224	SAMEA13206908	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035526
+PRJEB51224	SAMEA13206923	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035542
+PRJEB51224	SAMEA13206915	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035532
+PRJEB51224	SAMEA13206924	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035540
+PRJEB51224	SAMEA13206918	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035536
+PRJEB51224	SAMEA13206970	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035544
+PRJEB51224	SAMEA13206907	isolation_source		Urine	per_sample	mmc2.xlsx:ERR9035522
+PRJEB51225	SAMEA13206833	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034638
+PRJEB51225	SAMEA13206787	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034639
+PRJEB51225	SAMEA13206801	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034640
+PRJEB51225	SAMEA13206831	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034641
+PRJEB51225	SAMEA13206823	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034642
+PRJEB51225	SAMEA13206790	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034643
+PRJEB51225	SAMEA13206830	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034644
+PRJEB51225	SAMEA13206802	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034645
+PRJEB51225	SAMEA13206806	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034646
+PRJEB51225	SAMEA13206794	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034647
+PRJEB51225	SAMEA13206791	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034648
+PRJEB51225	SAMEA13206799	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034649
+PRJEB51225	SAMEA13206798	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034650
+PRJEB51225	SAMEA13206800	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034651
+PRJEB51225	SAMEA13206792	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034652
+PRJEB51225	SAMEA13206803	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034653
+PRJEB51225	SAMEA13206804	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034654
+PRJEB51225	SAMEA13206796	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034655
+PRJEB51225	SAMEA13206824	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034656
+PRJEB51225	SAMEA13206821	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034657
+PRJEB51225	SAMEA13206788	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034658
+PRJEB51225	SAMEA13206789	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034659
+PRJEB51225	SAMEA13206795	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034660
+PRJEB51225	SAMEA13206797	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034661
+PRJEB51225	SAMEA13206793	country		South West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034662
+PRJEB51225	SAMEA13206836	country		West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034663
+PRJEB51225	SAMEA13206805	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034664
+PRJEB51225	SAMEA13206808	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034665
+PRJEB51225	SAMEA13206809	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034666
+PRJEB51225	SAMEA13206810	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034667
+PRJEB51225	SAMEA13206811	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034668
+PRJEB51225	SAMEA13206820	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034669
+PRJEB51225	SAMEA13206812	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034670
+PRJEB51225	SAMEA13206822	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034671
+PRJEB51225	SAMEA13206834	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034672
+PRJEB51225	SAMEA13206813	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034673
+PRJEB51225	SAMEA13206815	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034674
+PRJEB51225	SAMEA13206827	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034675
+PRJEB51225	SAMEA13206825	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034676
+PRJEB51225	SAMEA13206829	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034677
+PRJEB51225	SAMEA13206835	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034678
+PRJEB51225	SAMEA13206832	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034679
+PRJEB51225	SAMEA13206819	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034680
+PRJEB51225	SAMEA13206837	country		West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034681
+PRJEB51225	SAMEA13206828	country		West Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034682
+PRJEB51225	SAMEA13206807	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034683
+PRJEB51225	SAMEA13206818	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034684
+PRJEB51225	SAMEA13206814	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034685
+PRJEB51225	SAMEA13206816	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034686
+PRJEB51225	SAMEA13206826	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034687
+PRJEB51225	SAMEA13206817	country		South East Wales, UK	per_sample	mgen-9-1104-s002.xlsx:ERR9034688
+PRJEB51225	SAMEA13206833	collection_date		2020-08-20 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034638
+PRJEB51225	SAMEA13206787	collection_date		2020-09-24 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034639
+PRJEB51225	SAMEA13206801	collection_date		2021-01-21 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034640
+PRJEB51225	SAMEA13206831	collection_date		2021-01-29 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034641
+PRJEB51225	SAMEA13206823	collection_date		2021-02-03 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034642
+PRJEB51225	SAMEA13206790	collection_date		2021-02-15 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034643
+PRJEB51225	SAMEA13206830	collection_date		2021-02-19 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034644
+PRJEB51225	SAMEA13206802	collection_date		2021-03-10 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034645
+PRJEB51225	SAMEA13206806	collection_date		2021-03-10 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034646
+PRJEB51225	SAMEA13206794	collection_date		2021-03-11 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034647
+PRJEB51225	SAMEA13206791	collection_date		2021-03-12 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034648
+PRJEB51225	SAMEA13206799	collection_date		2021-03-22 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034649
+PRJEB51225	SAMEA13206798	collection_date		2021-03-22 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034650
+PRJEB51225	SAMEA13206800	collection_date		2021-03-22 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034651
+PRJEB51225	SAMEA13206792	collection_date		2021-03-30 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034652
+PRJEB51225	SAMEA13206803	collection_date		2021-04-07 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034653
+PRJEB51225	SAMEA13206804	collection_date		2021-04-07 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034654
+PRJEB51225	SAMEA13206796	collection_date		2021-03-29 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034655
+PRJEB51225	SAMEA13206824	collection_date		2020-11-22 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034656
+PRJEB51225	SAMEA13206821	collection_date		2021-01-13 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034657
+PRJEB51225	SAMEA13206788	collection_date		2021-04-13 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034658
+PRJEB51225	SAMEA13206789	collection_date		2021-04-13 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034659
+PRJEB51225	SAMEA13206795	collection_date		2021-04-18 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034660
+PRJEB51225	SAMEA13206797	collection_date		2021-04-24 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034661
+PRJEB51225	SAMEA13206793	collection_date		2021-04-28 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034662
+PRJEB51225	SAMEA13206836	collection_date		2021-03-25 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034663
+PRJEB51225	SAMEA13206805	collection_date		2021-06-02 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034664
+PRJEB51225	SAMEA13206808	collection_date		2021-06-18 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034665
+PRJEB51225	SAMEA13206809	collection_date		2021-06-18 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034666
+PRJEB51225	SAMEA13206810	collection_date		2021-06-24 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034667
+PRJEB51225	SAMEA13206811	collection_date		2021-06-30 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034668
+PRJEB51225	SAMEA13206820	collection_date		2021-06-30 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034669
+PRJEB51225	SAMEA13206812	collection_date		2021-07-05 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034670
+PRJEB51225	SAMEA13206822	collection_date		2021-06-24 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034671
+PRJEB51225	SAMEA13206834	collection_date		2021-07-13 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034672
+PRJEB51225	SAMEA13206813	collection_date		2021-07-20 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034673
+PRJEB51225	SAMEA13206815	collection_date		2021-07-19 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034674
+PRJEB51225	SAMEA13206827	collection_date		2021-07-26 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034675
+PRJEB51225	SAMEA13206825	collection_date		2021-08-04 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034676
+PRJEB51225	SAMEA13206829	collection_date		2021-08-12 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034677
+PRJEB51225	SAMEA13206835	collection_date		2021-08-19 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034678
+PRJEB51225	SAMEA13206832	collection_date		2021-08-19 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034679
+PRJEB51225	SAMEA13206819	collection_date		2021-09-11 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034680
+PRJEB51225	SAMEA13206837	collection_date		2021-09-14 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034681
+PRJEB51225	SAMEA13206828	collection_date		2021-10-25 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034682
+PRJEB51225	SAMEA13206807	collection_date		2021-11-08 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034683
+PRJEB51225	SAMEA13206818	collection_date		2021-11-08 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034684
+PRJEB51225	SAMEA13206814	collection_date		2021-11-14 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034685
+PRJEB51225	SAMEA13206816	collection_date		2021-11-19 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034686
+PRJEB51225	SAMEA13206826	collection_date		2021-11-17 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034687
+PRJEB51225	SAMEA13206817	collection_date		2021-11-22 00:00:00	per_sample	mgen-9-1104-s002.xlsx:ERR9034688
+PRJEB51225	SAMEA13206833	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034638
+PRJEB51225	SAMEA13206787	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034639
+PRJEB51225	SAMEA13206801	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034640
+PRJEB51225	SAMEA13206831	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034641
+PRJEB51225	SAMEA13206823	isolation_source		CSF	per_sample	mgen-9-1104-s002.xlsx:ERR9034642
+PRJEB51225	SAMEA13206790	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034643
+PRJEB51225	SAMEA13206830	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034644
+PRJEB51225	SAMEA13206802	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034645
+PRJEB51225	SAMEA13206806	isolation_source		faeces	per_sample	mgen-9-1104-s002.xlsx:ERR9034646
+PRJEB51225	SAMEA13206794	isolation_source		Pus Swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034647
+PRJEB51225	SAMEA13206791	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034648
+PRJEB51225	SAMEA13206799	isolation_source		swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034649
+PRJEB51225	SAMEA13206798	isolation_source		swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034650
+PRJEB51225	SAMEA13206800	isolation_source		swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034651
+PRJEB51225	SAMEA13206792	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034652
+PRJEB51225	SAMEA13206803	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034653
+PRJEB51225	SAMEA13206804	isolation_source		faeces	per_sample	mgen-9-1104-s002.xlsx:ERR9034654
+PRJEB51225	SAMEA13206796	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034655
+PRJEB51225	SAMEA13206824	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034656
+PRJEB51225	SAMEA13206821	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034657
+PRJEB51225	SAMEA13206788	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034658
+PRJEB51225	SAMEA13206789	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034659
+PRJEB51225	SAMEA13206795	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034660
+PRJEB51225	SAMEA13206797	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034661
+PRJEB51225	SAMEA13206793	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034662
+PRJEB51225	SAMEA13206836	isolation_source		Blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034663
+PRJEB51225	SAMEA13206805	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034664
+PRJEB51225	SAMEA13206808	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034665
+PRJEB51225	SAMEA13206809	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034666
+PRJEB51225	SAMEA13206810	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034667
+PRJEB51225	SAMEA13206811	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034668
+PRJEB51225	SAMEA13206820	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034669
+PRJEB51225	SAMEA13206812	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034670
+PRJEB51225	SAMEA13206822	isolation_source		Blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034671
+PRJEB51225	SAMEA13206834	isolation_source		wound swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034672
+PRJEB51225	SAMEA13206813	isolation_source		faeces	per_sample	mgen-9-1104-s002.xlsx:ERR9034673
+PRJEB51225	SAMEA13206815	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034674
+PRJEB51225	SAMEA13206827	isolation_source		Blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034675
+PRJEB51225	SAMEA13206825	isolation_source		Blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034676
+PRJEB51225	SAMEA13206829	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034677
+PRJEB51225	SAMEA13206835	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034678
+PRJEB51225	SAMEA13206832	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034679
+PRJEB51225	SAMEA13206819	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034680
+PRJEB51225	SAMEA13206837	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034681
+PRJEB51225	SAMEA13206828	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034682
+PRJEB51225	SAMEA13206807	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034683
+PRJEB51225	SAMEA13206818	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034684
+PRJEB51225	SAMEA13206814	isolation_source		urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034685
+PRJEB51225	SAMEA13206816	isolation_source		rectal swab	per_sample	mgen-9-1104-s002.xlsx:ERR9034686
+PRJEB51225	SAMEA13206826	isolation_source		blood	per_sample	mgen-9-1104-s002.xlsx:ERR9034687
+PRJEB51225	SAMEA13206817	isolation_source		Urine	per_sample	mgen-9-1104-s002.xlsx:ERR9034688
+PRJEB51225	SAMEA13206833	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034638 (rescued 'Clinical')
+PRJEB51225	SAMEA13206787	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034639 (rescued 'Clinical')
+PRJEB51225	SAMEA13206801	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034640 (rescued 'Screen')
+PRJEB51225	SAMEA13206831	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034641 (rescued 'Clinical')
+PRJEB51225	SAMEA13206823	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034642 (rescued 'Clinical')
+PRJEB51225	SAMEA13206790	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034643 (rescued 'Clinical')
+PRJEB51225	SAMEA13206830	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034644 (rescued 'Clinical')
+PRJEB51225	SAMEA13206802	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034645 (rescued 'Screen')
+PRJEB51225	SAMEA13206806	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034646 (rescued 'Screen')
+PRJEB51225	SAMEA13206794	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034647 (rescued 'Clinical')
+PRJEB51225	SAMEA13206791	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034648 (rescued 'Clinical')
+PRJEB51225	SAMEA13206799	host		environment_soil	per_sample	mgen-9-1104-s002.xlsx:ERR9034649 (rescued 'Environmental')
+PRJEB51225	SAMEA13206798	host		environment_soil	per_sample	mgen-9-1104-s002.xlsx:ERR9034650 (rescued 'Environmental')
+PRJEB51225	SAMEA13206800	host		environment_soil	per_sample	mgen-9-1104-s002.xlsx:ERR9034651 (rescued 'Environmental')
+PRJEB51225	SAMEA13206792	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034652 (rescued 'Clinical')
+PRJEB51225	SAMEA13206803	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034653 (rescued 'Screen')
+PRJEB51225	SAMEA13206804	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034654 (rescued 'Screen')
+PRJEB51225	SAMEA13206796	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034655 (rescued 'Clinical')
+PRJEB51225	SAMEA13206824	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034656 (rescued 'Clinical')
+PRJEB51225	SAMEA13206821	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034657 (rescued 'Clinical')
+PRJEB51225	SAMEA13206788	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034658 (rescued 'Clinical')
+PRJEB51225	SAMEA13206789	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034659 (rescued 'Clinical')
+PRJEB51225	SAMEA13206795	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034660 (rescued 'Screen')
+PRJEB51225	SAMEA13206797	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034661 (rescued 'Screen')
+PRJEB51225	SAMEA13206793	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034662 (rescued 'Clinical')
+PRJEB51225	SAMEA13206836	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034663 (rescued 'Clinical')
+PRJEB51225	SAMEA13206805	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034664 (rescued 'Screen')
+PRJEB51225	SAMEA13206808	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034665 (rescued 'Screen')
+PRJEB51225	SAMEA13206809	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034666 (rescued 'Screen')
+PRJEB51225	SAMEA13206810	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034667 (rescued 'Screen')
+PRJEB51225	SAMEA13206811	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034668 (rescued 'Screen')
+PRJEB51225	SAMEA13206820	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034669 (rescued 'Screen')
+PRJEB51225	SAMEA13206812	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034670 (rescued 'Screen')
+PRJEB51225	SAMEA13206822	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034671 (rescued 'Clinical')
+PRJEB51225	SAMEA13206834	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034672 (rescued 'Clinical')
+PRJEB51225	SAMEA13206813	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034673 (rescued 'Screen')
+PRJEB51225	SAMEA13206815	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034674 (rescued 'Screen')
+PRJEB51225	SAMEA13206827	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034675 (rescued 'Clinical')
+PRJEB51225	SAMEA13206825	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034676 (rescued 'Clinical')
+PRJEB51225	SAMEA13206829	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034677 (rescued 'Screen')
+PRJEB51225	SAMEA13206835	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034678 (rescued 'Screen')
+PRJEB51225	SAMEA13206832	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034679 (rescued 'Screen')
+PRJEB51225	SAMEA13206819	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034680 (rescued 'Screen')
+PRJEB51225	SAMEA13206837	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034681 (rescued 'Screen')
+PRJEB51225	SAMEA13206828	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034682 (rescued 'Clinical')
+PRJEB51225	SAMEA13206807	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034683 (rescued 'Screen')
+PRJEB51225	SAMEA13206818	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034684 (rescued 'Screen')
+PRJEB51225	SAMEA13206814	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034685 (rescued 'Screen')
+PRJEB51225	SAMEA13206816	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034686 (rescued 'Screen')
+PRJEB51225	SAMEA13206826	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034687 (rescued 'Clinical')
+PRJEB51225	SAMEA13206817	host		human	per_sample	mgen-9-1104-s002.xlsx:ERR9034688 (rescued 'Screen')
+PRJEB56668	SAMEA111441544	isolation_source	Food	Cheese stored day 0	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:1-Kleb-o_S10
+PRJEB56668	SAMEA111441545	isolation_source	Food	Cheese stored day 4 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:2-Kleb-o_S11
+PRJEB56668	SAMEA111441546	isolation_source	Food	Cheese stored day 4 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:3-Kleb-o_S12
+PRJEB56668	SAMEA111441547	isolation_source	Food	Cheese stored day 8 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:4-Kleb-o_S13
+PRJEB56668	SAMEA111441548	isolation_source	Food	Cheese stored day 11 (2/8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:5-Kleb-o_S14
+PRJEB56668	SAMEA111441549	isolation_source	Food	Cheese stored day 15 (2/8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:6-Kleb-o_S15
+PRJEB56668	SAMEA111441550	isolation_source	Environment	Walls in maturation room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:7-Kleb-o_S16
+PRJEB56668	SAMEA111441551	isolation_source	Food	Cheese stored day 0	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:8-Kleb-o_S17
+PRJEB56668	SAMEA111441552	isolation_source	Environment	Drains maturation room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:9-Kleb-o_S18
+PRJEB56668	SAMEA111441541	isolation_source	Food	Cheese maturation room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:10-Kleb-o_S19
+PRJEB56668	SAMEA111441542	isolation_source	Environment	Drains packaging area	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:11-Kleb-o_S20
+PRJEB56668	SAMEA111441543	isolation_source	Food	Cheese stored day 0	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:12-Kleb-o_S21
+PRJEB56668	SAMEA111441553	isolation_source	Food	Cheese warm room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K13_S11
+PRJEB56668	SAMEA111441554	isolation_source	Food	Cheese stored day 0	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K14_S12
+PRJEB56668	SAMEA111441555	isolation_source	Environment	Drains maturation room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K15_S13
+PRJEB56668	SAMEA111441556	isolation_source	Food	Cheese stored day 1 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K16_S14
+PRJEB56668	SAMEA111441557	isolation_source	Food	Cheese stored day 1 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K17_S15
+PRJEB56668	SAMEA111441558	isolation_source	Food	Cheese maturation room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K18_S16
+PRJEB56668	SAMEA111441559	isolation_source	Food	Cheese stored day 4 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K19_S17
+PRJEB56668	SAMEA111441573	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-20_S23
+PRJEB56668	SAMEA111441574	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-21_S24
+PRJEB56668	SAMEA111441575	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-22_S25
+PRJEB56668	SAMEA111441576	isolation_source	Food	Salami ripening 3 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-23_S26
+PRJEB56668	SAMEA111441577	isolation_source	Environment	Drains stuffing room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-24_S27
+PRJEB56668	SAMEA111441578	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-25_S28
+PRJEB56668	SAMEA111441579	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-26_S29
+PRJEB56668	SAMEA111441580	isolation_source	Food	Salami ripening 3 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-27_S30
+PRJEB56668	SAMEA111441581	isolation_source	Food	Salami ripening 3 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-28_S31
+PRJEB56668	SAMEA111441582	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-29_S32
+PRJEB56668	SAMEA111441583	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-PNEUM-31_S34
+PRJEB56668	SAMEA111441568	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:KO32_S15
+PRJEB56668	SAMEA111441569	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:KO33_S16
+PRJEB56668	SAMEA111441570	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:KO34_S17
+PRJEB56668	SAMEA111441560	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K35_S6
+PRJEB56668	SAMEA111441561	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K36_S7
+PRJEB56668	SAMEA111441562	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K37_S8
+PRJEB56668	SAMEA111441563	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K38_S9
+PRJEB56668	SAMEA111441564	isolation_source	Environment	Drains drying room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K39_S10
+PRJEB56668	SAMEA111441565	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K40_S11
+PRJEB56668	SAMEA111441566	isolation_source	Food	Salami drying 1 week	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K41_S12
+PRJEB56668	SAMEA111441567	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K42_S13
+PRJEB56668	SAMEA111441584	isolation_source	Environment	Drains warm room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K43_S3
+PRJEB56668	SAMEA111441585	isolation_source	Food	Cheese stored warm room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K44_S4
+PRJEB56668	SAMEA111441586	isolation_source	Food	Cheese stored warm room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K45_S5
+PRJEB56668	SAMEA111441571	isolation_source	Food	Cheese stored day 1 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:KO46_S41
+PRJEB56668	SAMEA111441572	isolation_source	Food	Cheese stored day 1 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:KO47_S42
+PRJEB56668	SAMEA111441587	isolation_source	Food	Cheese stored day 4 (2/8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K48_S1
+PRJEB56668	SAMEA111441588	isolation_source	Food	Cheese stored day 8 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K49_S2
+PRJEB56668	SAMEA111441589	isolation_source	Food	Cheese stored day 8 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K50_S3
+PRJEB56668	SAMEA111441590	isolation_source	Food	Cheese stored day 4 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K51_S4
+PRJEB56668	SAMEA111441591	isolation_source	Food	Cheese stored day 8 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K52_S5
+PRJEB56668	SAMEA111441592	isolation_source	Food	Cheese stored day 8 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K53_S6
+PRJEB56668	SAMEA111441593	isolation_source	Food	Salami ripening 10 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K54_S9
+PRJEB56668	SAMEA111441594	isolation_source	Food	Meat mixture	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K55_S10
+PRJEB56668	SAMEA111441595	isolation_source	Environment	Drains stuffing room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K56_S11
+PRJEB56668	SAMEA111441596	isolation_source	Environment	Drains stuffing room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K57_S12
+PRJEB56668	SAMEA111441597	isolation_source	Environment	Table stuffing room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K58_S7
+PRJEB56668	SAMEA111441598	isolation_source	Food	Salami ripening 3 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K59_S13
+PRJEB56668	SAMEA111441599	isolation_source	Food	Cheese stored day 15 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K60_S14
+PRJEB56668	SAMEA111441600	isolation_source	Food	Cheese stored day 8 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K61_S8
+PRJEB56668	SAMEA111441601	isolation_source	Food	Cheese stored day 4 (2/8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K62_S9
+PRJEB56668	SAMEA111441602	isolation_source	Food	Cheese stored day 15 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K63_S10
+PRJEB56668	SAMEA111441603	isolation_source	Food	Cheese stored day 11 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K64_S11
+PRJEB56668	SAMEA111441604	isolation_source	Food	Cheese stored day 15 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K65_S12
+PRJEB56668	SAMEA111441605	isolation_source	Environment	Filler stuffer machine stuffing room	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K66_S15
+PRJEB56668	SAMEA111441606	isolation_source	Food	Salami ripening 10 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K67_S13
+PRJEB56668	SAMEA111441607	isolation_source	Food	Cheese stored day 4 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K69_S15
+PRJEB56668	SAMEA111441608	isolation_source	Food	Cheese stored day 4 (2/8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K70_S16
+PRJEB56668	SAMEA111441609	isolation_source	Food	Cheese stored day 11 (2°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K71_S6
+PRJEB56668	SAMEA111441610	isolation_source	Food	Cheese stored day 11 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K72_S7
+PRJEB56668	SAMEA111441611	isolation_source	Food	Cheese stored day 11 (8°C)	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K73_S8
+PRJEB56668	SAMEA111441612	isolation_source	Food	Salami ripening 28 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:k-75_S42
+PRJEB56668	SAMEA111441613	isolation_source	Food	Salami ripening 28 weeks	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:k-76_S43
+PRJEB56668	SAMEA111441550	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:7-Kleb-o_S16 (rescued 'Environmental')
+PRJEB56668	SAMEA111441552	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:9-Kleb-o_S18 (rescued 'Environmental')
+PRJEB56668	SAMEA111441542	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:11-Kleb-o_S20 (rescued 'Environmental')
+PRJEB56668	SAMEA111441555	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K15_S13 (rescued 'Environmental')
+PRJEB56668	SAMEA111441577	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K-OXYT-24_S27 (rescued 'Environmental')
+PRJEB56668	SAMEA111441564	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K39_S10 (rescued 'Environmental')
+PRJEB56668	SAMEA111441584	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K43_S3 (rescued 'Environmental')
+PRJEB56668	SAMEA111441595	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K56_S11 (rescued 'Environmental')
+PRJEB56668	SAMEA111441596	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K57_S12 (rescued 'Environmental')
+PRJEB56668	SAMEA111441597	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K58_S7 (rescued 'Environmental')
+PRJEB56668	SAMEA111441605	host		environment_soil	per_sample	41598_2023_37821_MOESM1_ESM.xlsx:K66_S15 (rescued 'Environmental')
+PRJEB59975	SAMEA112661764	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-121-PRJ1228-Klebsiella-pneumoniae-185_S31
+PRJEB59975	SAMEA112661765	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-144-PRJ1228-Klebsiella-ozoneae-500A
+PRJEB59975	SAMEA112661766	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-229-PRJ1228-Klebsiella-pneumoniae-558A_S2
+PRJEB59975	SAMEA112661767	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-151-PRJ1228-Klebsiella-pneumoniae-589A
+PRJEB59975	SAMEA112661768	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-156-PRJ1228-Klebsiella-pneumoniae-640A
+PRJEB59975	SAMEA112661769	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-157-PRJ1228-Klebsiella-pneumoniae-653
+PRJEB59975	SAMEA112661770	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-158-PRJ1228-Klebsiella-pneumoniae-655A
+PRJEB59975	SAMEA112661771	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-166-PRJ1228-Klebsiella-pneumoniae-697
+PRJEB59975	SAMEA112661772	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-168-PRJ1228-Klebsiella-pneumoniae-718
+PRJEB59975	SAMEA112661773	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-134-PRJ1228-Klebsiella-pneumoniae-35A_S44
+PRJEB59975	SAMEA112661774	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-135-PRJ1228-Klebsiella-pneumoniae-361_S45
+PRJEB59975	SAMEA112661775	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-136-PRJ1228-Klebsiella-pneumoniae-364_S46
+PRJEB59975	SAMEA112661776	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-148-PRJ1228-Klebsiella-pneumoniae-56
+PRJEB59975	SAMEA112661777	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-154-PRJ1228-Klebsiella-pneumoniae-635
+PRJEB59975	SAMEA112661778	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-164-PRJ1228-Klebsiella-pneumoniae-691B
+PRJEB59975	SAMEA112661779	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-233-PRJ1228-Klebsiella-pneumoniae-607B_S6
+PRJEB59975	SAMEA112661780	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-120-PRJ1228-Klebsiella-pneumoniae-152A_S30
+PRJEB59975	SAMEA112661781	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-122-PRJ1228-Klebsiella-pneumoniae-190_S32
+PRJEB59975	SAMEA112661782	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-124-PRJ1228-Klebsiella-pneumoniae-200_S34
+PRJEB59975	SAMEA112661783	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-145-PRJ1228-Klebsiella-pneumoniae-525
+PRJEB59975	SAMEA112661784	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-146-PRJ1228-Klebsiella-pneumoniae-531A
+PRJEB59975	SAMEA112661785	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-152-PRJ1228-Klebsiella-pneumoniae-606A
+PRJEB59975	SAMEA112661786	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-155-PRJ1228-Klebsiella-pneumoniae-639
+PRJEB59975	SAMEA112661787	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-163-PRJ1228-Klebsiella-pneumoniae-689A
+PRJEB59975	SAMEA112661788	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-165-PRJ1228-Klebsiella-pneumoniae-693
+PRJEB59975	SAMEA112661789	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-129-PRJ1228-Klebsiella-pneumoniae-290_S39
+PRJEB59975	SAMEA112661790	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-171-PRJ1228-Klebsiella-pneumoniae-533A
+PRJEB59975	SAMEA112661791	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-127-PRJ1228-Klebsiella-pneumoniae-254_S37
+PRJEB59975	SAMEA112661792	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-131-PRJ1228-Klebsiella-pneumoniae-298B_S41
+PRJEB59975	SAMEA112661793	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-149-PRJ1228-Klebsiella-pneumoniae-560
+PRJEB59975	SAMEA112661794	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-162-PRJ1228-Klebsiella-pneumoniae-686A
+PRJEB59975	SAMEA112661795	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-116-PRJ1228-Klebsiella-pneumoniae-111_S26
+PRJEB59975	SAMEA112661796	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-118-PRJ1228-Klebsiella-pneumoniae-117_S28
+PRJEB59975	SAMEA112661797	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-119-PRJ1228-Klebsiella-pneumoniae-118A_S29
+PRJEB59975	SAMEA112661798	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-123-PRJ1228-Klebsiella-pneumoniae-2_S33
+PRJEB59975	SAMEA112661799	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-128-PRJ1228-Klebsiella-pneumoniae-275A_S38
+PRJEB59975	SAMEA112661800	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-132-PRJ1228-Klebsiella-pneumoniae-350_S42
+PRJEB59975	SAMEA112661801	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-139-PRJ1228-Klebsiella-pneumoniae-432
+PRJEB59975	SAMEA112661802	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-140-PRJ1228-Klebsiella-pneumoniae-434B
+PRJEB59975	SAMEA112661803	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-141-PRJ1228-Klebsiella-pneumoniae-447
+PRJEB59975	SAMEA112661804	host		Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-142-PRJ1228-Klebsiella-pneumoniae-45
+PRJEB59975	SAMEA112661805	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-143-PRJ1228-Klebsiella-pneumoniae-460
+PRJEB59975	SAMEA112661806	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-159-PRJ1228-Klebsiella-pneumoniae-659
+PRJEB59975	SAMEA112661807	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-170-PRJ1228-Klebsiella-pneumoniae-77
+PRJEB59975	SAMEA112661808	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-179-PRJ1228-Klebsiella-pneumoniae-351A
+PRJEB59975	SAMEA112661809	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-180-PRJ1228-Klebsiella-pneumoniae-247
+PRJEB59975	SAMEA112661810	host		Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-174-PRJ1228-Enterobacter-cloace-191b
+PRJEB59975	SAMEA112661811	host		Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-167-PRJ1228-Klebsiella-pneumoniae-700
+PRJEB59975	SAMEA112661812	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-138-PRJ1228-Klebsiella-pneumoniae-416_S48
+PRJEB59975	SAMEA112661813	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-160-PRJ1228-Klebsiella-pneumoniae-670B
+PRJEB59975	SAMEA112661814	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-161-PRJ1228-Klebsiella-pneumoniae-671B
+PRJEB59975	SAMEA112661815	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-117-PRJ1228-Klebsiella-pneumoniae-114_S27
+PRJEB59975	SAMEA112661816	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-172-PRJ1228-Klebsiella-pneumoniae-542
+PRJEB59975	SAMEA112661817	host	NA	Homo sapiens	per_sample	12929_2023_960_MOESM2_ESM.xlsx:DTU2020-125-PRJ1228-Klebsiella-pneumoniae-22_S35
+PRJEB64408	SAMEA114094071	host		human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077912 (rescued 'Blood')
+PRJEB64408	SAMEA114094040	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077881 (rescued 'Blood')
+PRJEB64408	SAMEA114094041	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077882 (rescued 'Blood')
+PRJEB64408	SAMEA114094042	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077883 (rescued 'Blood')
+PRJEB64408	SAMEA114094046	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077887 (rescued 'Blood')
+PRJEB64408	SAMEA114094047	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077888 (rescued 'Blood')
+PRJEB64408	SAMEA114094048	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077889 (rescued 'Blood')
+PRJEB64408	SAMEA114094051	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077892 (rescued 'Blood')
+PRJEB64408	SAMEA114094053	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077894 (rescued 'Blood')
+PRJEB64408	SAMEA114094054	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077895 (rescued 'Blood')
+PRJEB64408	SAMEA114094055	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077896 (rescued 'Blood')
+PRJEB64408	SAMEA114094056	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077897 (rescued 'Blood')
+PRJEB64408	SAMEA114094058	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077899 (rescued 'Blood')
+PRJEB64408	SAMEA114094059	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077900 (rescued 'Blood')
+PRJEB64408	SAMEA114094062	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077903 (rescued 'Blood')
+PRJEB64408	SAMEA114094064	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077905 (rescued 'Blood')
+PRJEB64408	SAMEA114094066	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077907 (rescued 'Blood')
+PRJEB64408	SAMEA114094067	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077908 (rescued 'Blood')
+PRJEB64408	SAMEA114094069	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077910 (rescued 'Blood')
+PRJEB64408	SAMEA114094070	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077911 (rescued 'Blood')
+PRJEB64408	SAMEA114094073	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077914 (rescued 'Blood')
+PRJEB64408	SAMEA114094074	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077915 (rescued 'Blood')
+PRJEB64408	SAMEA114094077	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077918 (rescued 'Blood')
+PRJEB64408	SAMEA114094078	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077919 (rescued 'Blood')
+PRJEB64408	SAMEA114094085	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077926 (rescued 'Blood')
+PRJEB64408	SAMEA114094087	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077928 (rescued 'Blood')
+PRJEB64408	SAMEA114094088	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077929 (rescued 'Blood')
+PRJEB64408	SAMEA114094089	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077930 (rescued 'Blood')
+PRJEB64408	SAMEA114094090	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077931 (rescued 'Blood')
+PRJEB64408	SAMEA114094093	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077934 (rescued 'Blood')
+PRJEB64408	SAMEA114094094	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077935 (rescued 'Blood')
+PRJEB64408	SAMEA114094096	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077937 (rescued 'Blood')
+PRJEB64408	SAMEA114094099	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077940 (rescued 'Blood')
+PRJEB64408	SAMEA114094100	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077941 (rescued 'Blood')
+PRJEB64408	SAMEA114094102	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077943 (rescued 'Blood')
+PRJEB64408	SAMEA114094103	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077944 (rescued 'Blood')
+PRJEB64408	SAMEA114094106	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077947 (rescued 'Blood')
+PRJEB64408	SAMEA114094107	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077948 (rescued 'Blood')
+PRJEB64408	SAMEA114094110	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077951 (rescued 'Blood')
+PRJEB64408	SAMEA114094115	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077956 (rescued 'Blood')
+PRJEB64408	SAMEA114094119	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077960 (rescued 'Blood')
+PRJEB64408	SAMEA114094120	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077961 (rescued 'Blood')
+PRJEB64408	SAMEA114094122	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077963 (rescued 'Blood')
+PRJEB64408	SAMEA114094124	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077965 (rescued 'Blood')
+PRJEB64408	SAMEA114094126	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077967 (rescued 'Blood')
+PRJEB64408	SAMEA114094129	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077970 (rescued 'Blood')
+PRJEB64408	SAMEA114094130	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077971 (rescued 'Blood')
+PRJEB64408	SAMEA114094132	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077973 (rescued 'Blood')
+PRJEB64408	SAMEA114094133	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077974 (rescued 'Blood')
+PRJEB64408	SAMEA114094095	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077936 (rescued 'Stool')
+PRJEB64408	SAMEA114094098	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077939 (rescued 'Stool')
+PRJEB64408	SAMEA114094108	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077949 (rescued 'Stool')
+PRJEB64408	SAMEA114094109	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077950 (rescued 'Stool')
+PRJEB64408	SAMEA114094111	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077952 (rescued 'Stool')
+PRJEB64408	SAMEA114094112	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077953 (rescued 'Stool')
+PRJEB64408	SAMEA114094113	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077954 (rescued 'Stool')
+PRJEB64408	SAMEA114094116	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077957 (rescued 'Stool')
+PRJEB64408	SAMEA114094118	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077959 (rescued 'Stool')
+PRJEB64408	SAMEA114094121	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077962 (rescued 'Stool')
+PRJEB64408	SAMEA114094123	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077964 (rescued 'Stool')
+PRJEB64408	SAMEA114094127	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077968 (rescued 'Stool')
+PRJEB64408	SAMEA114094128	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077969 (rescued 'Stool')
+PRJEB64408	SAMEA114094039	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077880 (rescued 'Blood')
+PRJEB64408	SAMEA114094043	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077884 (rescued 'Blood')
+PRJEB64408	SAMEA114094044	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077885 (rescued 'Blood')
+PRJEB64408	SAMEA114094045	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077886 (rescued 'Blood')
+PRJEB64408	SAMEA114094049	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077890 (rescued 'Blood')
+PRJEB64408	SAMEA114094050	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077891 (rescued 'Blood')
+PRJEB64408	SAMEA114094052	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077893 (rescued 'Blood')
+PRJEB64408	SAMEA114094057	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077898 (rescued 'Blood')
+PRJEB64408	SAMEA114094060	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077901 (rescued 'Blood')
+PRJEB64408	SAMEA114094061	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077902 (rescued 'Blood')
+PRJEB64408	SAMEA114094063	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077904 (rescued 'Blood')
+PRJEB64408	SAMEA114094065	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077906 (rescued 'Blood')
+PRJEB64408	SAMEA114094068	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077909 (rescued 'Blood')
+PRJEB64408	SAMEA114094072	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077913 (rescued 'Blood')
+PRJEB64408	SAMEA114094075	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077916 (rescued 'Blood')
+PRJEB64408	SAMEA114094079	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077920 (rescued 'Blood')
+PRJEB64408	SAMEA114094080	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077921 (rescued 'Blood')
+PRJEB64408	SAMEA114094081	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077922 (rescued 'Blood')
+PRJEB64408	SAMEA114094082	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077923 (rescued 'Blood')
+PRJEB64408	SAMEA114094083	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077924 (rescued 'Blood')
+PRJEB64408	SAMEA114094084	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077925 (rescued 'Blood')
+PRJEB64408	SAMEA114094086	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077927 (rescued 'Blood')
+PRJEB64408	SAMEA114094091	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077932 (rescued 'Blood')
+PRJEB64408	SAMEA114094092	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077933 (rescued 'Blood')
+PRJEB64408	SAMEA114094097	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077938 (rescued 'Blood')
+PRJEB64408	SAMEA114094101	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077942 (rescued 'Blood')
+PRJEB64408	SAMEA114094104	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077945 (rescued 'Blood')
+PRJEB64408	SAMEA114094105	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077946 (rescued 'Blood')
+PRJEB64408	SAMEA114094114	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077955 (rescued 'Blood')
+PRJEB64408	SAMEA114094117	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077958 (rescued 'Blood')
+PRJEB64408	SAMEA114094125	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077966 (rescued 'Blood')
+PRJEB64408	SAMEA114094131	host	NA	human	per_sample	41467_2024_48206_MOESM6_ESM.xlsx:ERS16077972 (rescued 'Blood')
+PRJEB9325	SAMEA3375639	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024604
+PRJEB9325	SAMEA3375588	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024553
+PRJEB9325	SAMEA3375598	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024563
+PRJEB9325	SAMEA3375589	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024554
+PRJEB9325	SAMEA3375590	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024555
+PRJEB9325	SAMEA3375591	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024556
+PRJEB9325	SAMEA3375592	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024557
+PRJEB9325	SAMEA3375593	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024558
+PRJEB9325	SAMEA3375594	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024559
+PRJEB9325	SAMEA3375596	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024561
+PRJEB9325	SAMEA3375595	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024560
+PRJEB9325	SAMEA3375597	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024562
+PRJEB9325	SAMEA3375599	collection_date		2010	per_sample	mgen-7-0613-s002.xlsx:ERR1024564
+PRJEB9325	SAMEA3375646	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024611
+PRJEB9325	SAMEA3375600	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024565
+PRJEB9325	SAMEA3375601	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024566
+PRJEB9325	SAMEA3375602	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024567
+PRJEB9325	SAMEA3375603	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024568
+PRJEB9325	SAMEA3375638	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024603
+PRJEB9325	SAMEA3375604	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024569
+PRJEB9325	SAMEA3375654	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024619
+PRJEB9325	SAMEA3375607	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024572
+PRJEB9325	SAMEA3375608	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024573
+PRJEB9325	SAMEA3375609	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024574
+PRJEB9325	SAMEA3375610	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024575
+PRJEB9325	SAMEA3375612	collection_date		2011	per_sample	mgen-7-0613-s002.xlsx:ERR1024577
+PRJEB9325	SAMEA3375613	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024578
+PRJEB9325	SAMEA3375614	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024579
+PRJEB9325	SAMEA3375615	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024580
+PRJEB9325	SAMEA3375616	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024581
+PRJEB9325	SAMEA3375617	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024582
+PRJEB9325	SAMEA3375659	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024624
+PRJEB9325	SAMEA3375618	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024583
+PRJEB9325	SAMEA3375619	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024584
+PRJEB9325	SAMEA3375621	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024586
+PRJEB9325	SAMEA3375623	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024588
+PRJEB9325	SAMEA3375624	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024589
+PRJEB9325	SAMEA3375622	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024587
+PRJEB9325	SAMEA3375625	collection_date		2012	per_sample	mgen-7-0613-s002.xlsx:ERR1024590
+PRJEB9325	SAMEA3375626	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024591
+PRJEB9325	SAMEA3375627	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024592
+PRJEB9325	SAMEA3375628	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024593
+PRJEB9325	SAMEA3375631	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024596
+PRJEB9325	SAMEA3375641	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024606
+PRJEB9325	SAMEA3375632	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024597
+PRJEB9325	SAMEA3375658	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024623
+PRJEB9325	SAMEA3375635	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024600
+PRJEB9325	SAMEA3375633	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024598
+PRJEB9325	SAMEA3375636	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024601
+PRJEB9325	SAMEA3375649	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024614
+PRJEB9325	SAMEA3375650	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024615
+PRJEB9325	SAMEA3375651	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024616
+PRJEB9325	SAMEA3375640	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024605
+PRJEB9325	SAMEA3375642	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024607
+PRJEB9325	SAMEA3375656	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024621
+PRJEB9325	SAMEA3375657	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024622
+PRJEB9325	SAMEA3375677	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024640
+PRJEB9325	SAMEA3375670	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024633
+PRJEB9325	SAMEA3375669	collection_date		2013	per_sample	mgen-7-0613-s002.xlsx:ERR1024632
+PRJEB9325	SAMEA3375664	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024629
+PRJEB9325	SAMEA3375675	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024638
+PRJEB9325	SAMEA3375661	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024626
+PRJEB9325	SAMEA3375680	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024642
+PRJEB9325	SAMEA3375676	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024639
+PRJEB9325	SAMEA3375678	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024641
+PRJEB9325	SAMEA3375671	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024634
+PRJEB9325	SAMEA3375681	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024643
+PRJEB9325	SAMEA3375668	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024631
+PRJEB9325	SAMEA3375672	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024635
+PRJEB9325	SAMEA3375667	collection_date		2014	per_sample	mgen-7-0613-s002.xlsx:ERR1024630
+PRJEB9325	SAMEA3375639	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024604
+PRJEB9325	SAMEA3375588	isolation_source		Tissue	per_sample	mgen-7-0613-s002.xlsx:ERR1024553
+PRJEB9325	SAMEA3375598	isolation_source		Eschar Fragment	per_sample	mgen-7-0613-s002.xlsx:ERR1024563
+PRJEB9325	SAMEA3375589	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024554
+PRJEB9325	SAMEA3375590	isolation_source		urinary catheter	per_sample	mgen-7-0613-s002.xlsx:ERR1024555
+PRJEB9325	SAMEA3375591	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024556
+PRJEB9325	SAMEA3375592	isolation_source		urinary catheter	per_sample	mgen-7-0613-s002.xlsx:ERR1024557
+PRJEB9325	SAMEA3375593	isolation_source		Wound secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024558
+PRJEB9325	SAMEA3375594	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024559
+PRJEB9325	SAMEA3375596	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024561
+PRJEB9325	SAMEA3375595	isolation_source		Eschar Fragment	per_sample	mgen-7-0613-s002.xlsx:ERR1024560
+PRJEB9325	SAMEA3375597	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024562
+PRJEB9325	SAMEA3375599	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024564
+PRJEB9325	SAMEA3375646	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024611
+PRJEB9325	SAMEA3375600	isolation_source		Tracheal aspirate	per_sample	mgen-7-0613-s002.xlsx:ERR1024565
+PRJEB9325	SAMEA3375601	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024566
+PRJEB9325	SAMEA3375602	isolation_source		Bone Fragment	per_sample	mgen-7-0613-s002.xlsx:ERR1024567
+PRJEB9325	SAMEA3375603	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024568
+PRJEB9325	SAMEA3375638	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024603
+PRJEB9325	SAMEA3375604	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024569
+PRJEB9325	SAMEA3375654	isolation_source		Fragment	per_sample	mgen-7-0613-s002.xlsx:ERR1024619
+PRJEB9325	SAMEA3375607	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024572
+PRJEB9325	SAMEA3375608	isolation_source		Liquor	per_sample	mgen-7-0613-s002.xlsx:ERR1024573
+PRJEB9325	SAMEA3375609	isolation_source		Liquor	per_sample	mgen-7-0613-s002.xlsx:ERR1024574
+PRJEB9325	SAMEA3375610	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024575
+PRJEB9325	SAMEA3375612	isolation_source		Bronchial lavage	per_sample	mgen-7-0613-s002.xlsx:ERR1024577
+PRJEB9325	SAMEA3375613	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024578
+PRJEB9325	SAMEA3375614	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024579
+PRJEB9325	SAMEA3375615	isolation_source		Bronchial lavage	per_sample	mgen-7-0613-s002.xlsx:ERR1024580
+PRJEB9325	SAMEA3375616	isolation_source		Endotracheal aspiration	per_sample	mgen-7-0613-s002.xlsx:ERR1024581
+PRJEB9325	SAMEA3375617	isolation_source		Abdominal fluid	per_sample	mgen-7-0613-s002.xlsx:ERR1024582
+PRJEB9325	SAMEA3375659	isolation_source		Liquor	per_sample	mgen-7-0613-s002.xlsx:ERR1024624
+PRJEB9325	SAMEA3375618	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024583
+PRJEB9325	SAMEA3375619	isolation_source		Endotracheal aspiration	per_sample	mgen-7-0613-s002.xlsx:ERR1024584
+PRJEB9325	SAMEA3375621	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024586
+PRJEB9325	SAMEA3375623	isolation_source		Bronchial lavage	per_sample	mgen-7-0613-s002.xlsx:ERR1024588
+PRJEB9325	SAMEA3375624	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024589
+PRJEB9325	SAMEA3375622	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024587
+PRJEB9325	SAMEA3375625	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024590
+PRJEB9325	SAMEA3375626	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024591
+PRJEB9325	SAMEA3375627	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024592
+PRJEB9325	SAMEA3375628	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024593
+PRJEB9325	SAMEA3375631	isolation_source		Tracheal aspirate	per_sample	mgen-7-0613-s002.xlsx:ERR1024596
+PRJEB9325	SAMEA3375641	isolation_source		Blood culture	per_sample	mgen-7-0613-s002.xlsx:ERR1024606
+PRJEB9325	SAMEA3375632	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024597
+PRJEB9325	SAMEA3375658	isolation_source		Tissue Fragment	per_sample	mgen-7-0613-s002.xlsx:ERR1024623
+PRJEB9325	SAMEA3375635	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024600
+PRJEB9325	SAMEA3375633	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024598
+PRJEB9325	SAMEA3375636	isolation_source		Wound secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024601
+PRJEB9325	SAMEA3375649	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024614
+PRJEB9325	SAMEA3375650	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024615
+PRJEB9325	SAMEA3375651	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024616
+PRJEB9325	SAMEA3375640	isolation_source		Liquor	per_sample	mgen-7-0613-s002.xlsx:ERR1024605
+PRJEB9325	SAMEA3375642	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024607
+PRJEB9325	SAMEA3375656	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024621
+PRJEB9325	SAMEA3375657	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024622
+PRJEB9325	SAMEA3375677	isolation_source		Pulmonary secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024640
+PRJEB9325	SAMEA3375670	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024633
+PRJEB9325	SAMEA3375669	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024632
+PRJEB9325	SAMEA3375664	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024629
+PRJEB9325	SAMEA3375675	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024638
+PRJEB9325	SAMEA3375661	isolation_source		Blood	per_sample	mgen-7-0613-s002.xlsx:ERR1024626
+PRJEB9325	SAMEA3375680	isolation_source		Wound secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024642
+PRJEB9325	SAMEA3375676	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024639
+PRJEB9325	SAMEA3375678	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024641
+PRJEB9325	SAMEA3375671	isolation_source		Tracheal secretion	per_sample	mgen-7-0613-s002.xlsx:ERR1024634
+PRJEB9325	SAMEA3375681	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024643
+PRJEB9325	SAMEA3375668	isolation_source		Urine	per_sample	mgen-7-0613-s002.xlsx:ERR1024631
+PRJEB9325	SAMEA3375672	isolation_source		Catheter tip	per_sample	mgen-7-0613-s002.xlsx:ERR1024635
+PRJEB9325	SAMEA3375667	isolation_source		Swab Retal	per_sample	mgen-7-0613-s002.xlsx:ERR1024630
+PRJNA605147	SAMN15148092	host		Pig	per_sample	PRJNA605147.xlsx:RH04|T1-C03
+PRJNA605147	SAMN15148140	host		Pig	per_sample	PRJNA605147.xlsx:RH02|T2-C24
+PRJNA605147	SAMN15148165	host		Sheep	per_sample	PRJNA605147.xlsx:RH14|T2-C08
+PRJNA605147	SAMN15148173	host		Cattle	per_sample	PRJNA605147.xlsx:RH10|T2-C01
+PRJNA605147	SAMN15148174	host		Cattle	per_sample	PRJNA605147.xlsx:RH10|T2-C02
+PRJNA605147	SAMN15148246	host		Cattle	per_sample	PRJNA605147.xlsx:RH09|T2-C08
+PRJNA605147	SAMN15148287	host		Pig	per_sample	PRJNA605147.xlsx:RH02|T3-C02
+PRJNA605147	SAMN15148290	host		Pig	per_sample	PRJNA605147.xlsx:RH02|T3-C05
+PRJNA605147	SAMN15148385	host		Pig	per_sample	PRJNA605147.xlsx:RH04|T3-C06
+PRJNA605147	SAMN15148398	host		Cattle	per_sample	PRJNA605147.xlsx:RH09|T3-C09
+PRJNA605147	SAMN15148399	host		Cattle	per_sample	PRJNA605147.xlsx:RH09|T3-C10
+PRJNA605147	SAMN15148407	host		Cattle	per_sample	PRJNA605147.xlsx:RH09|T3-C24
+PRJNA605147	SAMN15148443	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T1-00001
+PRJNA605147	SAMN15148459	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T1-00039
+PRJNA605147	SAMN15148463	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T1-00054
+PRJNA605147	SAMN15148466	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00062
+PRJNA605147	SAMN15148467	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00065
+PRJNA605147	SAMN15148468	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00066
+PRJNA605147	SAMN15148470	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00069
+PRJNA605147	SAMN15148481	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00092
+PRJNA605147	SAMN15148490	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00109
+PRJNA605147	SAMN15148492	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T1-00113
+PRJNA605147	SAMN15148502	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00128
+PRJNA605147	SAMN15148509	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00138
+PRJNA605147	SAMN15148521	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00165
+PRJNA605147	SAMN15148522	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00167
+PRJNA605147	SAMN15148523	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00170
+PRJNA605147	SAMN15148527	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00178
+PRJNA605147	SAMN15148529	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00181
+PRJNA605147	SAMN15148530	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00184
+PRJNA605147	SAMN15148531	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00186
+PRJNA605147	SAMN15148533	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T1-00189
+PRJNA605147	SAMN15148544	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T1-00215
+PRJNA605147	SAMN15148557	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T1-00268
+PRJNA605147	SAMN15148592	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00365
+PRJNA605147	SAMN15148597	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00373
+PRJNA605147	SAMN15148602	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00405
+PRJNA605147	SAMN15148604	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00409
+PRJNA605147	SAMN15148609	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00432
+PRJNA605147	SAMN15148610	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T2-00433
+PRJNA605147	SAMN15148614	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00441
+PRJNA605147	SAMN15148619	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00452
+PRJNA605147	SAMN15148621	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00464
+PRJNA605147	SAMN15148622	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00465
+PRJNA605147	SAMN15148624	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00472
+PRJNA605147	SAMN15148630	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00484
+PRJNA605147	SAMN15148636	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00493
+PRJNA605147	SAMN15148637	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T2-00494
+PRJNA605147	SAMN15148642	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00510
+PRJNA605147	SAMN15148644	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00515
+PRJNA605147	SAMN15148647	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00529
+PRJNA605147	SAMN15148651	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00555
+PRJNA605147	SAMN15148656	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00574
+PRJNA605147	SAMN15148657	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T2-00577
+PRJNA605147	SAMN15148664	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T2-00610
+PRJNA605147	SAMN15148669	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T2-00634
+PRJNA605147	SAMN15148670	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T2-00636
+PRJNA605147	SAMN15148673	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T2-00651
+PRJNA605147	SAMN15148681	host		WTP2	per_sample	PRJNA605147.xlsx:WTP2|T2-00676
+PRJNA605147	SAMN15148699	host		WTP4	per_sample	PRJNA605147.xlsx:WTP4|T3-00807
+PRJNA605147	SAMN15148709	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00832
+PRJNA605147	SAMN15148711	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00843
+PRJNA605147	SAMN15148715	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00852
+PRJNA605147	SAMN15148716	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00853
+PRJNA605147	SAMN15148723	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00866
+PRJNA605147	SAMN15148724	host		WTP5	per_sample	PRJNA605147.xlsx:WTP5|T3-00867
+PRJNA605147	SAMN15148729	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00883
+PRJNA605147	SAMN15148730	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00884
+PRJNA605147	SAMN15148733	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00898
+PRJNA605147	SAMN15148734	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00900
+PRJNA605147	SAMN15148738	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00904
+PRJNA605147	SAMN15148741	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00909
+PRJNA605147	SAMN15148748	host		WTP1	per_sample	PRJNA605147.xlsx:WTP1|T3-00938
+PRJNA605147	SAMN15148755	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T3-00973
+PRJNA605147	SAMN15148760	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T3-00982
+PRJNA605147	SAMN15148764	host		WTP3	per_sample	PRJNA605147.xlsx:WTP3|T3-00995
