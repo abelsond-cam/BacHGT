@@ -122,6 +122,17 @@ is exercised, assert all three outcomes visibly: added+joinable → **FILLED** (
 per_sample outcome `table`); added+unparseable → loud `[WARN]`, stays **ACTIONABLE**; added+parses-but-
 unanchored → outcome note `…unanchored…`, run-health **BLOCKED `needs_linkage`**.
 
+**The hard per-tag gate — `evaluation.verify_pipeline_triggers`.** run_health is a *soft* self-audit (exit 0,
+bare counts); this is its **hard** complement (read-only, no LLM, one exit code per `--tags`): it proves every
+stage fired and no hand-provided input was silently dropped. Seven checks per tag — find/grade ran over the
+same selection · per_sample has NO silent 0 (a `direct`/`two_hop` join with `n_fills==0`, or any 0-fill row
+with an empty note, is a **FAIL**; every honest 0 carries a loud `_zero_bucket` reason) · manual PDFs consumed
+(`local_pdf`) · manual tables consumed or loud-WARN (unanchored/manifest, never silent) · backfill applied
+when the gate marks studies `covered` · fill non-empty + no field shrank + escalation-conservation holds.
+Writes `run_progress/<tag>/run_health/pipeline_triggers.{md,tsv}`. Run it after every tranche
+(`… verify_pipeline_triggers --tags <tag>`); WARN is fine, any FAIL blocks. Composes existing vocab
+(`audit_manual_curation`, `escalation_conservation`) — no new grading logic.
+
 ## Editing the engine or rubric — gotchas
 
 - **`--carry-forward` is for a band's FIRST run — never for re-running an already-accumulated band.**

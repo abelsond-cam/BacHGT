@@ -1,0 +1,33 @@
+severity	check	accession	detail
+OK	find		47 studies found == graded
+OK	grade		47 studies graded (1 row each)
+OK	per_sample		33 outcomes: 16 with fills; 0-fill reasons {'NO_PMCID': 5, 'abstained_other': 4, 'no_supp': 4, 'unanchored': 3, 'manifest_only': 1} (all loud)
+OK	manual_paper	PRJEB27342	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB29424	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB29738	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB32655	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB38540	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB48268	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB63349	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA306133	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA514908	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA532291	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA543274	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA547865	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA548120	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA594602	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA658369	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA684006	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA757551	consumed (fulltext_source=local_pdf)
+OK	manual_table	PRJEB10018	consumed (method=direct/two_hop or table set)
+OK	manual_table	PRJEB1271	consumed (method=direct/two_hop or table set)
+OK	manual_table	PRJEB27342	consumed (method=direct/two_hop or table set)
+OK	manual_table	PRJEB29738	consumed (method=direct/two_hop or table set)
+WARN	manual_table	PRJNA514908	wired but study not in the per_sample outcomes yet
+OK	manual_table	PRJNA548120	consumed (method=direct/two_hop or table set)
+OK	manual_table	PRJNA633565	consumed (method=direct/two_hop or table set)
+WARN	manual_table	PRJNA684006	wired but won't anchor to our accessions — linkage, not a loss
+WARN	manual_table	PRJNA778230	wired but won't anchor to our accessions — linkage, not a loss
+OK	backfill		43 covered → 9235 whole-field fills applied
+OK	fill		31604 rows; no field shrank (country 0.665→0.959, collection_date 0.644→0.935, isolation_source 0.595→0.747, host 0.531→0.837)
+OK	conservation		answer → apply → final invariants hold

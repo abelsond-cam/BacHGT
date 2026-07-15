@@ -1,0 +1,15 @@
+severity	check	accession	detail
+OK	find		50 studies found == graded
+OK	grade		50 studies graded == batch selection
+OK	per_sample		30 outcomes: 4 with fills; 0-fill reasons {'NO_PMCID': 9, 'unanchored': 8, 'no_supp': 7, 'abstained_other': 1, 'manifest_only': 1} (all loud)
+OK	manual_paper	PRJEB20234	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB36370	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA797179	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA878595	consumed (fulltext_source=local_pdf)
+WARN	manual_table	PRJDB6407	wired but won't anchor to our accessions — linkage, not a loss
+WARN	manual_table	PRJEB39567	wired but won't anchor to our accessions — linkage, not a loss
+WARN	manual_table	PRJNA1076808	wired but won't anchor to our accessions — linkage, not a loss
+OK	manual_table	PRJNA675776	consumed (method=direct/two_hop or table set)
+OK	backfill		25 covered → 3142 whole-field fills applied
+OK	fill		8627 rows; no field shrank (country 0.840→0.922, collection_date 0.793→0.846, isolation_source 0.445→0.493, host 0.630→0.886)
+OK	conservation		answer → apply → final invariants hold
