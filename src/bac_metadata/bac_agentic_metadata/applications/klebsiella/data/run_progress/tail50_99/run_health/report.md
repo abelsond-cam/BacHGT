@@ -96,6 +96,6 @@ Queue `run_progress/tail50_99/escalation/decisions_needed.tsv`: **38 generated �
 
 `verify_escalation_conservation.py` traced every curator decision through apply → master → final and found none lost:
 
-- **INV1 apply** — 3 answered decision(s) → 3 applied (study×field), 204 per-sample fills. 0 unapplied.
+- **INV1 apply** — 4 answered decision(s) → 4 applied (study×field), 263 per-sample fills. 0 unapplied.
 - **INV2 master-preserve** — curated_escalations disk 50 ⊇ HEAD 50 rows; 0 committed decisions dropped.
-- **INV3 fill** — 204 escalation fill(s) → 204 non-blank in filled_metadata_tail50_99. 0 lost to a blank final cell.
+- **INV3 fill** — 263 escalation fill(s) → 263 non-blank in filled_metadata_tail50_99. 0 lost to a blank final cell.

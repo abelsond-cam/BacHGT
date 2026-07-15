@@ -4879,6 +4879,7 @@ PRJEB64408	SAMEA114094053	host		human	per_sample
 PRJEB64408	SAMEA114094041	host		human	per_sample
 PRJEB64702	SAMEA114228163	host		human	whole_field
 PRJEB59975	SAMEA112661765	host		Homo sapiens	per_sample
+PRJEB59403	SAMEA114240981	host		wastewater	curator_escalation
 PRJEB64702	SAMEA114228179	host		human	whole_field
 PRJEB64408	SAMEA114094087	host		human	per_sample
 PRJEB64408	SAMEA114094062	host		human	per_sample
@@ -4908,6 +4909,7 @@ PRJEB78367	SAMEA115874794	host		human	whole_field
 PRJEB78367	SAMEA115874778	host		human	whole_field
 PRJEB78367	SAMEA115874790	host		human	whole_field
 PRJEB59975	SAMEA112661780	host		Homo sapiens	per_sample
+PRJEB59403	SAMEA114240949	host		wastewater	curator_escalation
 PRJEB66360	SAMEA114438950	host		human	whole_field
 PRJNA1135353	SAMN42480304	host		food	whole_field
 PRJNA1135353	SAMN42480308	host		food	whole_field
@@ -4924,6 +4926,8 @@ PRJEB64408	SAMEA114094095	host		human	per_sample
 PRJEB64702	SAMEA114228156	host		human	whole_field
 PRJEB66360	SAMEA114438938	host		human	whole_field
 PRJEB78367	SAMEA115874769	host		human	whole_field
+PRJEB59403	SAMEA114240933	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240951	host		wastewater	curator_escalation
 PRJEB66360	SAMEA114438952	host		human	whole_field
 PRJEB64702	SAMEA114228207	host		human	whole_field
 PRJEB78367	SAMEA115874780	host		human	whole_field
@@ -4950,6 +4954,7 @@ PRJEB66360	SAMEA114438956	host		human	whole_field
 PRJEB66360	SAMEA114438929	host		human	whole_field
 PRJEB78367	SAMEA115874818	host		human	whole_field
 PRJEB66360	SAMEA114438908	host		human	whole_field
+PRJEB59403	SAMEA114240975	host		wastewater	curator_escalation
 PRJEB78367	SAMEA115874745	host		human	whole_field
 PRJEB64702	SAMEA114228140	host		human	whole_field
 PRJEB64702	SAMEA114228190	host		human	whole_field
@@ -4985,13 +4990,17 @@ PRJEB59975	SAMEA112661797	host		Homo sapiens	per_sample
 PRJEB64408	SAMEA114094131	host		human	per_sample
 PRJEB66360	SAMEA114438916	host		human	whole_field
 PRJEB78367	SAMEA115874816	host		human	whole_field
+PRJEB59403	SAMEA114240930	host		wastewater	curator_escalation
 PRJNA1135353	SAMN42480307	host		food	whole_field
 PRJEB78367	SAMEA115874759	host		human	whole_field
 PRJEB64408	SAMEA114094077	host		human	per_sample
 PRJEB26075	SAMEA4589514	host		human	whole_field
 PRJEB78367	SAMEA115874754	host		human	whole_field
+PRJEB59403	SAMEA114240970	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240968	host		wastewater	curator_escalation
 PRJEB64408	SAMEA114094051	host		human	per_sample
 PRJEB59975	SAMEA112661774	host		Homo sapiens	per_sample
+PRJEB59403	SAMEA114240974	host		wastewater	curator_escalation
 PRJEB66360	SAMEA114438911	host		human	whole_field
 PRJEB66360	SAMEA114438948	host		human	whole_field
 PRJEB66360	SAMEA114438922	host		human	whole_field
@@ -5000,9 +5009,11 @@ PRJEB59975	SAMEA112661798	host		Homo sapiens	per_sample
 PRJNA1135353	SAMN42480290	host		food	whole_field
 PRJEB64408	SAMEA114094128	host		human	per_sample
 PRJEB64702	SAMEA114228160	host		human	whole_field
+PRJEB59403	SAMEA114240971	host		wastewater	curator_escalation
 PRJEB64702	SAMEA114228134	host		human	whole_field
 PRJNA1135353	SAMN42480312	host		food	whole_field
 PRJNA1135353	SAMN42480314	host		food	whole_field
+PRJEB59403	SAMEA114240955	host		wastewater	curator_escalation
 PRJEB64702	SAMEA114228194	host		human	whole_field
 PRJEB64408	SAMEA114094132	host		human	per_sample
 PRJEB66360	SAMEA114438931	host		human	whole_field
@@ -5020,6 +5031,7 @@ PRJNA1135353	SAMN42480261	host		food	whole_field
 PRJEB64702	SAMEA114228202	host		human	whole_field
 PRJEB78367	SAMEA115874766	host		human	whole_field
 PRJEB64408	SAMEA114094074	host		human	per_sample
+PRJEB59403	SAMEA114240934	host		wastewater	curator_escalation
 PRJEB64408	SAMEA114094116	host		human	per_sample
 PRJEB64408	SAMEA114094098	host		human	per_sample
 PRJEB26075	SAMEA4589517	host		human	whole_field
@@ -5032,6 +5044,7 @@ PRJEB78367	SAMEA115874777	host		human	whole_field
 PRJEB64702	SAMEA114228161	host		human	whole_field
 PRJEB78367	SAMEA115874793	host		human	whole_field
 PRJEB66360	SAMEA114438923	host		human	whole_field
+PRJEB59403	SAMEA114240972	host		wastewater	curator_escalation
 PRJEB64408	SAMEA114094111	host		human	per_sample
 PRJEB66360	SAMEA114438902	host		human	whole_field
 PRJEB64702	SAMEA114228177	host		human	whole_field
@@ -5074,6 +5087,7 @@ PRJEB59975	SAMEA112661817	host		Homo sapiens	per_sample
 PRJEB64408	SAMEA114094106	host		human	per_sample
 PRJEB64702	SAMEA114228182	host		human	whole_field
 PRJEB78367	SAMEA115874801	host		human	whole_field
+PRJEB59403	SAMEA114240956	host		wastewater	curator_escalation
 PRJNA1135353	SAMN42480310	host		food	whole_field
 PRJEB64702	SAMEA114228133	host		human	whole_field
 PRJEB64702	SAMEA114228195	host		human	whole_field
@@ -5130,6 +5144,7 @@ PRJEB64702	SAMEA114228186	host		human	whole_field
 PRJEB66360	SAMEA114438913	host		human	whole_field
 PRJEB66360	SAMEA114438930	host		human	whole_field
 PRJEB64702	SAMEA114228165	host		human	whole_field
+PRJEB59403	SAMEA114240929	host		wastewater	curator_escalation
 PRJEB78367	SAMEA115874764	host		human	whole_field
 PRJEB64702	SAMEA114228204	host		human	whole_field
 PRJEB64702	SAMEA114228180	host		human	whole_field
@@ -5145,6 +5160,7 @@ PRJEB64702	SAMEA114228178	host		human	whole_field
 PRJEB64408	SAMEA114094123	host		human	per_sample
 PRJEB59975	SAMEA112661796	host		Homo sapiens	per_sample
 PRJEB59975	SAMEA112661788	host		Homo sapiens	per_sample
+PRJEB59403	SAMEA114240942	host		wastewater	curator_escalation
 PRJNA1135353	SAMN42480288	host		food	whole_field
 PRJEB64408	SAMEA114094097	host		human	per_sample
 PRJNA1135353	SAMN42480311	host		food	whole_field
@@ -5168,6 +5184,7 @@ PRJEB64702	SAMEA114228183	host		human	whole_field
 PRJEB78367	SAMEA115874771	host		human	whole_field
 PRJEB66360	SAMEA114438955	host		human	whole_field
 PRJEB64702	SAMEA114228184	host		human	whole_field
+PRJEB59403	SAMEA114240973	host		wastewater	curator_escalation
 PRJEB64702	SAMEA114228181	host		human	whole_field
 PRJEB64408	SAMEA114094088	host		human	per_sample
 PRJEB59975	SAMEA112661813	host		Homo sapiens	per_sample
@@ -5187,6 +5204,7 @@ PRJEB26075	SAMEA4589512	host		human	whole_field
 PRJEB64702	SAMEA114228198	host		human	whole_field
 PRJEB64702	SAMEA114228210	host		human	whole_field
 PRJEB64408	SAMEA114094039	host		human	per_sample
+PRJEB59403	SAMEA114240960	host		wastewater	curator_escalation
 PRJEB64702	SAMEA114228126	host		human	whole_field
 PRJEB64408	SAMEA114094078	host		human	per_sample
 PRJEB64408	SAMEA114094122	host		human	per_sample
@@ -5391,6 +5409,47 @@ PRJEB64702	SAMEA114228169	host		human	whole_field
 PRJEB64702	SAMEA114228170	host		human	whole_field
 PRJEB64702	SAMEA114228171	host		human	whole_field
 PRJEB64702	SAMEA114228172	host		human	whole_field
+PRJEB59403	SAMEA114240927	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240928	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240931	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240932	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240935	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240936	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240937	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240938	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240939	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240940	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240941	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240943	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240944	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240945	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240946	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240947	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240948	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240950	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240952	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240954	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240957	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240958	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240961	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240962	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240963	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240966	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240969	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240976	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240977	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240978	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240979	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240980	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240982	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240983	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240984	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240985	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240986	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240987	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240988	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240989	host		wastewater	curator_escalation
+PRJEB59403	SAMEA114240990	host		wastewater	curator_escalation
 PRJEB66360	SAMEA114438947	host		human	whole_field
 PRJEB78367	SAMEA115874746	host		human	whole_field
 PRJEB78367	SAMEA115874755	host		human	whole_field

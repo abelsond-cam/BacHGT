@@ -7,7 +7,7 @@ Studies: **95**; samples: **6756**. The per-sample clinical fields in the full-w
 | country | 0.818 | **0.957** | 939 | 939 | 0 | 121 | 0 | 818 |
 | collection_date | 0.781 | **0.868** | 587 | 586 | 1 | 253 | 0 | 334 |
 | isolation_source | 0.617 | **0.756** | 1016 | 943 | 73 | 506 | 0 | 510 |
-| host | 0.513 | **0.940** | 2884 | 2884 | 0 | 544 | 204 | 2136 |
+| host | 0.513 | **0.949** | 2943 | 2943 | 0 | 544 | 263 | 2136 |
 
 ## Study-level grades (broadcast to every sample in the study)
 

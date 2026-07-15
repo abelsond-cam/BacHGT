@@ -12,5 +12,5 @@ OK	manual_paper	PRJNA643814	consumed (fulltext_source=local_pdf)
 OK	manual_table	PRJEB42526	consumed (method=direct/two_hop or table set)
 OK	manual_table	PRJNA605147	consumed (method=direct/two_hop or table set)
 OK	backfill		79 covered → 3861 whole-field fills applied
-OK	fill		6756 rows; no field shrank (country 0.818→0.957, collection_date 0.781→0.868, isolation_source 0.617→0.756, host 0.513→0.940)
+OK	fill		6756 rows; no field shrank (country 0.818→0.957, collection_date 0.781→0.868, isolation_source 0.617→0.756, host 0.513→0.949)
 OK	conservation		answer → apply → final invariants hold
