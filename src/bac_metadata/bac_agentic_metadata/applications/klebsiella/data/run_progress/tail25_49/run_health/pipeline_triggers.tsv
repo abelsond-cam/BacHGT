@@ -1,0 +1,15 @@
+severity	check	accession	detail
+OK	find		148 studies found == graded
+OK	grade		148 studies graded == batch selection
+OK	per_sample		94 outcomes: 15 with fills; 0-fill reasons {'no_supp': 30, 'NO_PMCID': 27, 'unanchored': 13, 'manifest_only': 6, 'abstained_other': 3} (all loud)
+OK	manual_paper	PRJDB17160	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB19808	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJEB60743	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA390933	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA552385	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA631924	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA728968	consumed (fulltext_source=local_pdf)
+OK	manual_paper	PRJNA814816	consumed (fulltext_source=local_pdf)
+OK	backfill		101 covered → 2922 whole-field fills applied
+OK	fill		5214 rows; no field shrank (country 0.812→0.927, collection_date 0.772→0.886, isolation_source 0.555→0.661, host 0.548→0.864)
+OK	conservation		answer → apply → final invariants hold

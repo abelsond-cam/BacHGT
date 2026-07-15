@@ -1,0 +1,35 @@
+study_accession	has_paper	date_gap	source_gap	gap_samples	ena_taxon_samples	fulltext_status	best_url	doi	pmid	pmcid	paper_link	title	save_as
+PRJNA438531	True	0	0	0	47	abstract	https://doi.org/10.1111/nyas.13672	10.1111/nyas.13672	29604079	PMC6167210		Genomic epidemiology of multidrug-resistant Gram-negative organisms.	PRJNA438531.pdf
+PRJNA496461	True	0	0	0	40	abstract	https://doi.org/10.1128/aac.01923-18	10.1128/aac.01923-18	30373801	PMC6325187		Applying Rapid Whole-Genome Sequencing To Predict Phenotypic Antimicrobial Susceptibility Testing Results among Carbapenem-Resistant Klebsiella pneumoniae Clinical Isolates.	PRJNA496461.pdf
+PRJNA682246	True	0	0	0	39	abstract	https://doi.org/10.1016/j.chom.2022.04.008	10.1016/j.chom.2022.04.008	35545083	PMC10365138		Persisting uropathogenic Escherichia coli lineages show signatures of niche-specific within-host adaptation mediated by mobile genetic elements.	PRJNA682246.pdf
+PRJDB9036	True	0	0	0	34	none	https://doi.org/10.2147/IDR.S339543	10.2147/IDR.S339543				Comprehensive Genomic Survey of Antimicrobial-Resistance Bacteria in the Sewage Tank Replacement with Hospital Relocation	PRJDB9036.pdf
+PRJNA939143	True	0	0	0	31	abstract	https://doi.org/10.1016/j.jiph.2023.10.013	10.1016/j.jiph.2023.10.013	37866269			Whole-genome sequencing of carbapenem-resistant Enterobacterales isolates in southeast Louisiana reveals persistent genetic clusters spanning multiple locations.	PRJNA939143.pdf
+PRJNA799652	True	0	0	0	30	abstract	https://doi.org/10.1016/j.ijantimicag.2024.107252	10.1016/j.ijantimicag.2024.107252	38908534			Rapid inference of antibiotic resistance and susceptibility for Klebsiella pneumoniae by clinical shotgun metagenomic sequencing.	PRJNA799652.pdf
+PRJNA504784	True	0	0	0	26	abstract	https://doi.org/10.1128/aac.02577-18	10.1128/aac.02577-18	30910904	PMC6535514		Next-Generation-Sequencing-Based Hospital Outbreak Investigation Yields Insight into Klebsiella aerogenes Population Structure and Determinants of Carbapenem Resistance and Pathogenicity.	PRJNA504784.pdf
+PRJNA986308	False	0	0	0	48	none							PRJNA986308.pdf
+PRJNA1092662	False	0	0	0	46	none							PRJNA1092662.pdf
+PRJNA323522	False	0	0	0	45	none							PRJNA323522.pdf
+PRJEB59013	False	0	0	0	42	none							PRJEB59013.pdf
+PRJEB36919	False	0	0	0	41	none							PRJEB36919.pdf
+PRJNA278293	False	0	0	0	40	none							PRJNA278293.pdf
+PRJEB25746	False	0	0	0	39	none							PRJEB25746.pdf
+PRJNA597144	False	0	0	0	38	none							PRJNA597144.pdf
+PRJNA1045567	False	0	0	0	36	none							PRJNA1045567.pdf
+PRJNA527021	False	0	0	0	36	none							PRJNA527021.pdf
+PRJNA842739	False	0	0	0	34	none							PRJNA842739.pdf
+PRJNA739636	False	0	0	0	34	none							PRJNA739636.pdf
+PRJNA979006	False	0	0	0	33	none							PRJNA979006.pdf
+PRJNA667445	False	0	0	0	33	none							PRJNA667445.pdf
+PRJNA967113	False	0	0	0	32	none							PRJNA967113.pdf
+PRJEB5132	False	0	0	0	32	none							PRJEB5132.pdf
+PRJNA857525	False	0	0	0	31	none							PRJNA857525.pdf
+PRJEB73547	False	0	0	0	31	none							PRJEB73547.pdf
+PRJNA563817	False	0	0	0	31	none							PRJNA563817.pdf
+PRJNA658789	False	0	0	0	30	none							PRJNA658789.pdf
+PRJDB5317	False	0	0	0	27	none							PRJDB5317.pdf
+PRJNA718275	False	0	0	0	26	none							PRJNA718275.pdf
+PRJNA292902	False	0	0	0	26	none							PRJNA292902.pdf
+PRJNA790644	False	0	0	0	25	none							PRJNA790644.pdf
+PRJNA413541	False	0	0	0	25	none							PRJNA413541.pdf
+PRJNA744889	False	0	0	0	25	none							PRJNA744889.pdf
+PRJNA858823	False	0	0	0	25	none							PRJNA858823.pdf
