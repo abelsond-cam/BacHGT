@@ -16,8 +16,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_metadata.bac_agentic_metadata.engine import accumulate
-from bac_metadata.bac_agentic_metadata.engine.run_full_metadata_agent import _study_grade_columns
+from bac_metadata.bac_agentic_metadata.engine import accumulate, stages
 from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
 
 
@@ -41,7 +40,7 @@ def main() -> None:
         base=base,
         tags=[t.strip() for t in args.tags.split(",") if t.strip()],
         fields=list(spec.completeness_fields),
-        study_grade_columns=_study_grade_columns(spec),
+        study_grade_columns=stages.study_grade_columns(spec),
         out_dir=Path(args.out_dir) if args.out_dir else None,
         canonical_path=args.canonical,
         gold_suffix=args.gold_suffix,

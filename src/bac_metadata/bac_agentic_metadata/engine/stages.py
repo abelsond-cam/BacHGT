@@ -1245,6 +1245,65 @@ def fill_metadata_table(
     return filled
 
 
+def study_grade_columns(spec: AttributeSpec) -> dict[str, str]:
+    """Study-level grades broadcast to every sample as new columns (col name -> ``<field>__value``).
+
+    Spec-driven, not hardcoded: a study-level attribute is broadcast when it is gradeable for the WHOLE
+    project (declares ``ground_truth`` + ``values``) and applies unconditionally (no ``applies_when``,
+    no ``note`` caveat). For Klebsiella this resolves to ``study_setting`` + ``amr_study`` — the two
+    metadata_v2 study-level columns — reproducing the former ``build_enriched_table`` behaviour.
+
+    Shared home (was ``run_full_metadata_agent._study_grade_columns``) so the driver, ``fill_for_tag``, and
+    the standalone ``cli.fill`` all build the broadcast columns identically without importing the driver.
+    """
+    study_level = spec.raw.get("attributes", {}).get("study_level", {})
+    out: dict[str, str] = {}
+    for field, body in study_level.items():
+        if not isinstance(body, dict):
+            continue
+        if {"ground_truth", "values"} <= set(body) and "applies_when" not in body and "note" not in body:
+            out[field] = f"{field}__value"
+    return out
+
+
+def fill_for_tag(
+    *,
+    data_dir: str | Path,
+    spec: AttributeSpec,
+    base: pd.DataFrame,
+    fields: Sequence[str],
+    tag: str,
+    fold_label: str = "",
+) -> pd.DataFrame:
+    """Rebuild ``filled_metadata_<tag>.tsv`` from the tag's current applied files — the ONE fill code path.
+
+    Derives the standard per-tag artifact paths under ``data_dir`` (exactly the ones the driver writes),
+    builds ``study_grade_columns`` from the spec, and delegates to :func:`fill_metadata_table`. The driver's
+    fill stage, the standalone ``escalate --apply``, and ``cli.fill`` all go through here, so a curator
+    answer can never be applied without the final table being rebuilt to fold it in — the class of
+    silent-staleness bug the escalation-conservation gate exists to catch. ``base`` must already be
+    restricted to the tag's FULL study universe (a subset would silently shrink the final table).
+    """
+    data_dir = Path(data_dir)
+    grade_dir = data_dir / "study_lv_attributes" / "grading"
+    wsb_dir = data_dir / "study_lv_attributes" / "whole_study_backfill"
+    esc_dir = data_dir / "study_lv_attributes" / "escalation"
+    ps_dir = data_dir / "sample_lv_attributes" / "per_sample"
+    enriched_dir = data_dir / "sample_lv_attributes" / "enriched"
+    return fill_metadata_table(
+        base=base, fields=fields,
+        fill_paths={
+            "per_sample": ps_dir / f"per_sample_applied_{tag}.tsv",
+            "escalation": esc_dir / f"escalation_applied_{tag}.tsv",
+            "whole_field": wsb_dir / f"backfill_applied_{tag}.tsv",
+        },
+        grades_path=grade_dir / f"study_grades_{tag}.tsv",
+        study_grade_columns=study_grade_columns(spec),
+        out_path=enriched_dir / f"filled_metadata_{tag}.tsv",
+        tag=tag, fold_label=fold_label,
+    )
+
+
 # ── Curator-loop helpers — worklists + attaching hand-downloaded papers ────────────────────────────────
 
 def missing_papers(*, grades_jsonl: Path, found_path: Path, gap_report_path: Path, sizing_path: Path,

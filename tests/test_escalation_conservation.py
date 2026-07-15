@@ -1,9 +1,11 @@
-"""Unit tests for the escalation-conservation gate (``evaluation.verify_escalation_conservation``).
+"""Unit tests for the escalation-conservation gate (``engine.escalation_conservation``).
 
 The gate is the end-to-end catch for the recurring silent-drop pattern: a curator decision that vanishes at
 any link of answer → apply → master → final. These tests lock each invariant's PASS and its loud-FAIL:
 INV1 (an answered decision with no applied fill), INV3 (an escalation fill that ends blank in the final
-table), and the honest funnel. INV2 (master ⊇ git HEAD) is exercised against a throwaway git repo.
+table), and the honest funnel. INV2 (master ⊇ git HEAD) is exercised against a throwaway git repo. The pure
+invariants live in ``engine.escalation_conservation``; ``evaluation.verify_escalation_conservation`` is the
+thin CLI over them (and re-exports the checks, so the historical import path keeps working).
 """
 
 from __future__ import annotations
@@ -13,7 +15,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from bac_metadata.bac_agentic_metadata.evaluation import verify_escalation_conservation as vc
+from bac_metadata.bac_agentic_metadata.engine import escalation_conservation as vc
 
 
 def _write(path: Path, rows: list[dict]) -> None:

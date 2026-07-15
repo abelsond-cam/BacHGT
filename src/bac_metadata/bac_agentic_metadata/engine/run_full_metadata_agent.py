@@ -137,24 +137,6 @@ def _classification_lookup(report_path: Path) -> dict[str, dict]:
     return {r[key]: {c: r[c] for c in cols} for _, r in vdf.iterrows()}
 
 
-def _study_grade_columns(spec: AttributeSpec) -> dict[str, str]:
-    """Study-level grades broadcast to every sample as new columns (col name -> ``<field>__value``).
-
-    Spec-driven, not hardcoded: a study-level attribute is broadcast when it is gradeable for the WHOLE
-    project (declares ``ground_truth`` + ``values``) and applies unconditionally (no ``applies_when``,
-    no ``note`` caveat). For Klebsiella this resolves to ``study_setting`` + ``amr_study`` — the two
-    metadata_v2 study-level columns — reproducing the former ``build_enriched_table`` behaviour.
-    """
-    study_level = spec.raw.get("attributes", {}).get("study_level", {})
-    out: dict[str, str] = {}
-    for field, body in study_level.items():
-        if not isinstance(body, dict):
-            continue
-        if {"ground_truth", "values"} <= set(body) and "applies_when" not in body and "note" not in body:
-            out[field] = f"{field}__value"
-    return out
-
-
 def main() -> None:
     """Parse arguments, select studies, and orchestrate the full pipeline in-process over the table."""
     p = argparse.ArgumentParser(description="Unified agentic-metadata pipeline (in-process) over one table.")
@@ -249,7 +231,6 @@ def main() -> None:
     # long-format fills. Absent for Klebsiella (spec has no ast_panel) -> None -> extractor unchanged.
     ast_panel = spec.raw.get("attributes", {}).get("per_sample_completeness", {}).get("ast_panel") or {}
     ast_drugs = list(ast_panel.get("drugs", [])) or None
-    study_grade_columns = _study_grade_columns(spec)
     tag = args.tag
 
     sizes = _study_sizes(Path(args.table))
@@ -447,13 +428,10 @@ def main() -> None:
             print(f"WARN: escalation failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
 
     # ── Stage 8 — fill the metadata table (PRODUCTION output) ──────────────────────────────────────
+    # One fill code path (stages.fill_for_tag) shared with `escalate --apply` and `cli.fill`, so a curator
+    # answer can never be applied without the final table being rebuilt to fold it in.
     print("\n### [fill-metadata-table]", file=sys.stderr)
-    stages.fill_metadata_table(
-        base=base, fields=fields,
-        fill_paths={"per_sample": per_sample_tsv, "escalation": escalation_applied_tsv, "whole_field": backfill_tsv},
-        grades_path=grades_tsv, study_grade_columns=study_grade_columns, out_path=filled_tsv,
-        tag=tag, fold_label=fold,
-    )
+    stages.fill_for_tag(data_dir=data, spec=spec, base=base, fields=fields, tag=tag, fold_label=fold)
 
     # ── Stage 9 — run-health report (the convergence / closure artifact; best-effort) ──────────────
     if not args.skip_run_health:
@@ -461,6 +439,25 @@ def main() -> None:
             stages.run_health(data_dir=data, fields=fields, fold=fold, tag=tag, spec=spec)
         except Exception as exc:  # noqa: BLE001 — run-health never blocks
             print(f"WARN: run-health report failed (non-blocking): {type(exc).__name__}: {exc}", file=sys.stderr)
+
+    # ── Stage 10 — escalation-conservation gate (always-on, loud WARN, never blocks) ───────────────
+    # Content-based: every applied escalation value must appear non-blank in the final table. Because it is
+    # rebuilt every pass (stage 8) this is normally green — but it stays as the loud backstop that makes any
+    # future stale-final regression impossible to miss. On PASS it stamps the VERIFIED block into run-health.
+    try:
+        from bac_metadata.bac_agentic_metadata.engine import escalation_conservation as ec
+        cons_fails = ec.verify_tags(data, [tag], amend=True, include_master=True)
+        if cons_fails:
+            print(f"\n⛔⛔ WARN: escalation-conservation gate FAILED for tag={tag} "
+                  f"({len(cons_fails)} issue(s)) — a curator answer did not reach the final table:",
+                  file=sys.stderr)
+            for f in cons_fails:
+                print(f"   ⛔ {f}", file=sys.stderr)
+            print("   The final table may be stale. Re-run fill (cli.fill) / accumulate, then "
+                  "verify_escalation_conservation.", file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001 — the gate is a backstop, never blocks the run
+        print(f"WARN: escalation-conservation gate errored (non-blocking): {type(exc).__name__}: {exc}",
+              file=sys.stderr)
 
     print(f"\n=== DRIVER COMPLETE (tag={tag}) ===", file=sys.stderr)
     print(f"found:      {found_tsv}", file=sys.stderr)

@@ -143,16 +143,55 @@ def main() -> None:
     applied_out = (Path(args.applied_output) if args.applied_output
                    else esc_dir / f"escalation_applied_{args.tag}.tsv")
     base = pd.read_csv(args.table, dtype=str, low_memory=False, keep_default_na=False)
-    if args.accessions:
-        keep = [a.strip() for a in args.accessions.split(",") if a.strip()]
-    elif args.fold:
+    # The tag's FULL study universe (from --fold), independent of which studies we apply to — the final table
+    # must be rebuilt over ALL of it, else it shrinks. Absent when only --accessions is given.
+    fold_universe: list[str] | None = None
+    if args.fold:
         splits = Path(args.splits) if args.splits else data / "fold_splits" / "project_splits.tsv"
         sel = pd.read_csv(splits, sep="\t", dtype=str)
         folds = {f.strip() for f in args.fold.split(",") if f.strip()}
-        keep = list(sel[sel["fold"].isin(folds)]["study_accession"])
+        fold_universe = list(sel[sel["fold"].isin(folds)]["study_accession"])
+    if args.accessions:
+        keep = [a.strip() for a in args.accessions.split(",") if a.strip()]
+    elif fold_universe is not None:
+        keep = fold_universe
     else:
         sys.exit("--apply needs --fold (or --accessions) to select the studies.")
     stages.escalate_apply(base=base, keep=keep, queue_path=queue, out_path=applied_out)
+
+    # Every apply completes the loop: rebuild filled_metadata_<tag>.tsv so the just-applied answers actually
+    # reach the production table. A standalone apply that stopped at escalation_applied is exactly what left
+    # the final table one step behind — the silent-staleness bug the conservation gate caught. The fill MUST
+    # cover the tag's FULL fold universe, not just the answered subset, or the final table would shrink.
+    spec_path = Path(args.spec) if args.spec else data.parent / "attributes.yaml"
+    if fold_universe is None:
+        print("[fill] --apply without --fold: cannot determine the tag's full study universe — filled_metadata "
+              f"was NOT rebuilt. Re-run the driver or `cli.fill --tag {args.tag} --fold …` to refresh it.",
+              file=sys.stderr)
+        return
+    if not spec_path.exists():
+        print(f"[fill] no spec at {spec_path} — filled_metadata NOT rebuilt; run `cli.fill` with --spec.",
+              file=sys.stderr)
+        return
+    from bac_metadata.bac_agentic_metadata.engine import escalation_conservation as ec
+    from bac_metadata.bac_agentic_metadata.engine.categorise.preclean import preclean_base
+    from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
+
+    spec = AttributeSpec.from_yaml(spec_path)
+    fill_base = base[base["study_accession"].isin(set(fold_universe))].copy()
+    fill_base, _pre = preclean_base(fill_base, spec)   # match the driver's in-memory null-token blanking
+    print(f"\n### [fill-metadata-table] rebuilding filled_metadata_{args.tag}.tsv over {len(fold_universe)} "
+          f"studies (fold {args.fold})", file=sys.stderr)
+    stages.fill_for_tag(data_dir=data, spec=spec, base=fill_base, fields=list(spec.completeness_fields),
+                        tag=args.tag, fold_label=args.fold)
+
+    # Always-on WARN gate (loud, exit 0): confirm the applied answers reached the final table + stamp run-health.
+    cons_fails = ec.verify_tags(data, [args.tag], amend=True, include_master=True)
+    if cons_fails:
+        print(f"⛔ WARN: escalation-conservation gate FAILED after apply ({len(cons_fails)} issue(s)) — "
+              "an answer did not reach the final table:", file=sys.stderr)
+        for f in cons_fails:
+            print(f"   ⛔ {f}", file=sys.stderr)
 
 
 if __name__ == "__main__":
