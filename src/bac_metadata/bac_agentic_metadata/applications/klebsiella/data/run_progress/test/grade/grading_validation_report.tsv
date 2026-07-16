@@ -1,48 +1,48 @@
 study_accession	fold	amr_study__value	gt_amr_study	study_setting__value	gt_study_setting	cohort_age__value	amr_target__value	amr_method__value	paper_coverage_for_taxon	needs_manual_download	fulltext_source
-PRJNA288601	test	mixed	mixed	hospital	hospital	adult	carbapenem	ast_result	0.0404	False	europepmc_fulltext
+PRJNA288601	test		mixed	hospital	hospital					False	europepmc_fulltext
 PRJEB27342	test	surveillance	surveillance	mixed	mixed				0.548	False	local_pdf
 PRJEB10018	test	mixed	amr	hospital	hospital		carbapenem	ast_result	0.7398	False	europepmc_fulltext
 PRJNA376414	test	amr	amr	hospital	hospital		third_gen_cephalosporin	ast_result	0.9989	False	europepmc_fulltext
 PRJNA658369	test	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	0.3903	False	local_pdf
-PRJEB48268	test	surveillance	surveillance	community	hospital				1.0	False	local_pdf
-PRJEB21081	test									True	none
+PRJEB48268	test	surveillance	surveillance	hospital	hospital				1.0	False	local_pdf
+PRJEB21081	test									False	none
 PRJEB29738	test	amr	amr	hospital	hospital	mixed	other	ast_result	0.3005	False	local_pdf
 PRJNA577535	test	amr	amr	hospital	hospital	adult	carbapenem	ast_result	0.7196	False	europepmc_fulltext
 PRJEB29739	test	surveillance	surveillance	hospital	hospital				0.1787	False	europepmc_fulltext
 PRJEB29424	test	amr	amr	hospital	hospital	adult	other	ast_result	1.8457	False	local_pdf
 PRJEB63349	test	amr	amr	hospital	hospital	mixed	carbapenem	ast_result	1.0	False	local_pdf
 PRJEB42350	test	surveillance		community	community	adult			1.0	False	europepmc_fulltext
-PRJNA529744	test	amr	mixed	hospital	hospital	adult	carbapenem	ast_result	0.432	False	europepmc_fulltext
-PRJNA757551	test	amr	amr	hospital	hospital	adult	carbapenem	pcr_gene_presence	1.0	False	local_pdf
-PRJEB53835	test	amr	amr	community			third_gen_cephalosporin	ast_result		False	none
+PRJNA529744	test	amr	mixed	hospital	hospital	adult	carbapenem	ast_result		False	europepmc_fulltext
+PRJNA757551	test	amr	amr	hospital	hospital	adult	carbapenem	pcr_gene_presence		False	local_pdf
+PRJEB53835	test	amr	amr	community			third_gen_cephalosporin			False	none
 PRJEB2111	test	surveillance	mixed	mixed	mixed				0.9425	False	pdf
 PRJEB37504	test	mixed		hospital	hospital	adult	carbapenem	ast_result	0.6455	False	europepmc_fulltext
 PRJNA778230	test	surveillance	surveillance	mixed	community				1.0	False	europepmc_fulltext
 PRJNA1133668	test	amr	amr	hospital	hospital		carbapenem	ast_result	1.0	False	europepmc_fulltext
-PRJNA543274	test	surveillance	amr	mixed	mixed				1.0	False	local_pdf
-PRJEB38540	test	mixed	surveillance	community	community		other	ast_result	1.0	False	local_pdf
+PRJNA543274	test	surveillance	amr	hospital	mixed				1.0	False	local_pdf
+PRJEB38540	test	surveillance	surveillance	community	community				1.0	False	local_pdf
 PRJEB32655	test	amr	amr	mixed	mixed		third_gen_cephalosporin	ast_result	0.0	False	local_pdf
 PRJEB1271	test	mixed	mixed	hospital	hospital		other	ast_result	0.7074	False	europepmc_fulltext
 PRJNA810752	test	surveillance		hospital						False	none
 PRJNA339843	test	amr	amr	hospital	hospital		carbapenem	ast_result		False	pdf
 PRJEB34643	test	surveillance	surveillance	community	community				0.639	False	europepmc_fulltext
-PRJEB43870	test	surveillance	surveillance	community	community				1.0	False	europepmc_fulltext
-PRJNA532291	test	amr	amr	hospital			carbapenem		0.0	True	local_pdf
-PRJNA433394	test	amr	amr	hospital	hospital		carbapenem	ast_result	1.0	False	pdf
-PRJEB19226	test	amr	amr		hospital					True	none
+PRJEB43870	test	surveillance	surveillance	community	community				0.5714	False	europepmc_fulltext
+PRJNA532291	test	amr	amr	hospital			carbapenem	ast_result	0.0053	False	local_pdf
+PRJNA433394	test	amr	amr	hospital	hospital		carbapenem	ast_result	1.0695	False	pdf
+PRJEB19226	test		amr		hospital					True	none
 PRJNA594602	test	surveillance		community	community				1.0	False	local_pdf
 PRJNA306133	test	surveillance	surveillance	hospital	hospital				1.0	False	local_pdf
 PRJNA633565	test	amr	amr	hospital	hospital		carbapenem	ast_result	0.9432	False	europepmc_fulltext
 PRJNA252957	test	amr		hospital	hospital		carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
 PRJNA547865	test	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	1.0	False	local_pdf
-PRJEB56146	test	amr	amr	mixed	hospital	mixed	carbapenem	ast_result	1.0	False	europepmc_fulltext
+PRJEB56146	test	amr	amr	mixed	hospital	mixed	carbapenem	pcr_gene_presence	1.0	False	europepmc_fulltext
 PRJNA825705	test	mixed	amr	hospital	hospital		carbapenem	ast_result	0.9935	False	europepmc_fulltext
-PRJEB37711	test	surveillance	surveillance	mixed	hospital				0.9226	False	europepmc_fulltext
+PRJEB37711	test	surveillance	surveillance	mixed	hospital	mixed			1.0	False	europepmc_fulltext
 PRJEB1272	test	amr	amr	hospital	hospital		carbapenem	pcr_gene_presence	0.6863	False	pdf
 PRJNA839691	test	amr	amr	hospital	hospital		carbapenem	ast_result	0.9795	False	europepmc_fulltext
-PRJNA922900	test	surveillance	surveillance	community	community				1.045	False	europepmc_fulltext
+PRJNA922900	test	surveillance	surveillance	community	community				1.036	False	europepmc_fulltext
 PRJEB1963	test	mixed	mixed	hospital	hospital		third_gen_cephalosporin	ast_result	1.0	False	europepmc_fulltext
-PRJEB57159	test	surveillance	surveillance	community	community				2.7619	False	europepmc_fulltext
-PRJNA548120	test	amr		hospital	hospital	newborn_young_child	carbapenem	pcr_gene_presence	0.7857	False	local_pdf
-PRJNA684006	test	amr	surveillance	hospital	hospital	newborn_young_child	carbapenem	ast_result	1.0	False	local_pdf
+PRJEB57159	test	surveillance	surveillance	community	community				1.0	False	europepmc_fulltext
+PRJNA548120	test	amr		hospital	hospital	newborn_young_child	carbapenem	pcr_gene_presence	0.4286	False	local_pdf
+PRJNA684006	test	amr	surveillance	hospital	hospital	newborn_young_child	carbapenem	pcr_gene_presence	1.0	False	local_pdf
 PRJNA514908	test	amr		community	community		carbapenem	ast_result		False	local_pdf

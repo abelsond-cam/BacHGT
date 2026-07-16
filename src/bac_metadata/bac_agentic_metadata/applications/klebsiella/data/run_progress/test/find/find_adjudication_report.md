@@ -1,8 +1,8 @@
 # paper finding find-adjudication — found vs curated on mismatches
 
-Adjudicated 7. same_paper=0 (link/DOI variants, not errors); verdicts: {'both_describe': 1, 'curated_correct': 2, 'found_correct': 2, 'neither': 2}.
+Adjudicated 5. same_paper=0 (link/DOI variants, not errors); verdicts: {'both_describe': 1, 'curated_correct': 2, 'found_correct': 2}.
 
-## Adjudicated find-accuracy: 0.74  (34/46) — folding in 0 same-paper variants + 3 where the found paper is the correct (or a co-)describing study.
+## Adjudicated find-accuracy: 0.61  (28/46) — folding in 0 same-paper variants + 3 where the found paper is the correct (or a co-)describing study.
 
 
 ## `PRJNA658369` — both_describe
@@ -32,20 +32,6 @@ Adjudicated 7. same_paper=0 (link/DOI variants, not errors); verdicts: {'both_de
 - justification: 'In total, 261 Klebsiella spp. isolates were collected from various tissue sources (see Additional file 2: Table S1 for more details) at three routine diagnostic laboratories in Switzerland including the University Hospital of Basel (USB; Basel, Switzerland)'
 - reasoning: ENA project PRJNA543274 holds exactly 261 Klebsiella samples ('Klebsiella Genome sequencing and assembly'). Paper A reports collecting and whole-genome sequencing precisely 261 Klebsiella spp. isolates at USB Basel (with 11 additionally PacBio-sequenced), matching the project's sample count and taxon exactly, and states the WGS were uploaded to GenBank — this is the primary study that generated/deposited these genomes. Paper B analyses a different, larger collection of 285 CP-K. pneumoniae genomes spanning 2006-2020 from human and non-human sources; its count, scope, and time range do not match the 261-sample deposit, so it does not describe this project.
 - ⚠️ rule_gap: Both candidates are Swiss Klebsiella WGS studies with near-identical sample counts (261 vs 285), a strong distractor pattern; matching must rely on exact deposited-count and cohort scope rather than topical/geographic similarity.
-
-## `PRJEB32655` — neither
-- found: Genomic analysis of extended-spectrum beta-lactamase (ESBL) producing &lt;i&gt;Escherichia coli&lt;/i&gt; colonising adults in Blantyre, Malawi reveals previously undescribed diversity.  |  curated: Not published
-- same_paper=False — Paper B has no text, title, authors, or metadata (an unpublished BioProject link), so there is nothing to match against Paper A; they cannot be established as the same work.
-- justification: 'Reads from all isolates sequenced as part of this study have been deposited in the European Nucleotide Archive, under PRJEB26677, PRJEB28522 and PRJEB36486 (short reads) and PRJNA869071 (Nanopore reads and hybrid assemblies).'
-- reasoning: The project is PRJEB32655 (the ANTIDOTE study of Gram-negative bloodstream infection and ESBL transmission in Blantyre). Paper A never cites PRJEB32655; it deposits its 473 ESBL E. coli carriage genomes under PRJEB26677, PRJEB28522, PRJEB36486 and PRJNA869071, and draws isolates from a separate longitudinal carriage study (ref [16]) — not ANTIDOTE. Paper B is unpublished with no text. Neither paper provides evidence of describing/depositing the genomes under PRJEB32655.
-- ⚠️ rule_gap: Finder appears to match papers to a project by topical/geographic similarity (Malawi ESBL E. coli) rather than verifying the specific accession PRJEB32655 appears in the paper; closely related studies from the same group with different ENA project IDs get conflated.
-
-## `PRJNA532291` — neither
-- found: Genomic characterization of an emerging bla<sub>KPC-2</sub> carrying Enterobacteriaceae clinical isolates in Thailand.  |  curated: WGS of Carbapenem-resistant Gram-negative clinical isolates from Thailand
-- same_paper=False — Paper A is a specific 3-isolate KPC-2 characterization article (PMC6898716); Paper B has no retrievable text — only the ENA project title. With no content for B, identity cannot be established, and A's deposited accessions do not even match this project.
-- justification: 'The genomic sequences assembled were deposited under the Bioproject accession number of PRJNA525849 ... PRJNA525942 ... PRJNA555780'
-- reasoning: This project is PRJNA532291 (187-200 carbapenem-resistant Gram-negative clinical isolates from Thailand). Paper A characterizes only 3 bla_KPC-2-carrying isolates (K. pneumoniae C1985, E. coli C1992, E. asburiae C2135) and explicitly deposits them under PRJNA525849, PRJNA525942, and PRJNA555780 — none of which is PRJNA532291. The sample count (3 vs ~200) and accession numbers both rule out Paper A as the study that generated/deposited this project's genomes. Paper B has no recoverable text beyond the ENA title, providing no evidence it describes this project. With neither paper matching the project accession, verdict is neither.
-- ⚠️ rule_gap: A finder can be misled by surface similarity (same country, same carbapenem-resistant Enterobacteriaceae topic, same Thailand surveillance theme) into matching a small case-report paper to a large deposition project; cross-checking the BioProject/SRA accessions and sample counts cited in-text against the target accession is needed to avoid false positives.
 
 ## `PRJNA548120` — found_correct
 - found: OXA-181-Like Carbapenemases in Klebsiella pneumoniae ST14, ST15, ST23, ST48, and ST231 from Septicemic Neonates: Coexistence with NDM-5, Resistome, Transmissibility, and Genome Diversity.  |  curated: Published on Pathogenwatch A Decade-Long Evaluation of Neonatal Septicaemic Escherichia coli: Clonal Lineages, Genomes, and New Delhi Metallo-Beta-Lactamase Variants

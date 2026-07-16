@@ -2,7 +2,7 @@ study_accession	fold	category	chosen_found_via	verified	find_confidence	chosen_p
 PRJEB74192	val	exact_match	europepmc_accession	True	high	40296028	PMC12039103	10.1186/s13073-025-01466-0	0.9982
 PRJEB39943	val	mismatch	europepmc_accession	True	medium	42127954	PMC13259977	10.1016/j.lanmic.2025.101320	0.8113
 PRJEB36683	val	exact_match	europepmc_accession	False	medium	38637822	PMC11025284	10.1186/s13073-024-01332-5	
-PRJEB37378	train	mismatch	web_search	False	high	38817338	PMC11137479	10.12688/wellcomeopenres.17581.2	1.0
+PRJEB37378	train	not_found			high				
 PRJDB10842	val	exact_match	europepmc_accession	True	high	38052776	PMC10698200	10.1038/s41467-023-43516-4	2.8306
 PRJEB42462	train	not_found			low				
 PRJEB27256	train	exact_match	europepmc_accession,ncbi_bioproject	True	high	34935048	PMC8865009	10.1093/jac/dkab463	1.0
@@ -10,12 +10,12 @@ PRJNA475751	train	mismatch	europepmc_accession		high			10.1101/2024.02.16.243029
 PRJEB29740	val	exact_match	europepmc_accession	True	medium	39037209	PMC11316559	10.1099/mgen.0.001271	1.1527
 PRJNA604975	val	exact_match	europepmc_accession	True	medium	34479643	PMC8414751	10.1186/s13073-021-00947-2	1.0
 PRJNA768622	val	mismatch	europepmc_accession,published_version	True	high	39234218	PMC11369815	10.1093/jacamr/dlae140	1.0
-PRJEB28400	train	title_match	published_version,web_search		high	36206776		10.1016/s2666-5247(22)00181-1	1.0
+PRJEB28400	train	not_found			high				
 PRJNA271899	train	exact_match	europepmc_accession	True	low	35379360	PMC8981930	10.1186/s13073-022-01040-y	1.0
-PRJDB5929	train	mismatch	web_search	False	high	36445367	PMC9769800	10.1128/jcm.01080-22	0.686
+PRJDB5929	train	not_found			high				
 PRJEB50614	val	exact_match	europepmc_accession	True	medium	39037209	PMC11316559	10.1099/mgen.0.001271	1.6646
 PRJNA325243	train	exact_match	europepmc_accession	True	medium	40640834	PMC12247286	10.1186/s12917-025-04686-z	
-PRJNA845975	train	mismatch	web_search	True	medium			10.1101/2025.06.11.25329357	1.0
+PRJNA845975	train	not_found			low				
 PRJEB29742	val	exact_match	europepmc_accession	True	high	34850835	PMC8634422	10.1093/cid/ciab777	0.7658
 PRJNA1028672	train	mismatch	europepmc_accession	True	high	38424289	PMC10914598	10.1038/s41564-024-01612-1	1.8626
 PRJEB48990	train	exact_match	europepmc_accession	True	high	37227259	PMC10272877	10.1099/mgen.0.001016	1.0
@@ -42,9 +42,9 @@ PRJNA996149	val	exact_match	europepmc_accession	True	high	38014944	PMC10720542	1
 PRJNA857686	val	no_curated_link	europepmc_accession	True	medium	36795668	PMC9934365	10.1371/journal.pone.0277575	1.0
 PRJEB15226	val	mismatch	europepmc_accession,europepmc_title		high	27629900	PMC5121380	10.1128/jcm.01648-16	6.2431
 PRJEB39867	train	exact_match	europepmc_accession	True	high	36289942	PMC9598256	10.3390/antibiotics11101286	1.0
-PRJNA549322	train	not_found			high				
+PRJNA549322	train	not_found			low				
 PRJNA278886	train	mismatch	europepmc_accession	True	medium	30530605	PMC6355588	10.1128/aac.02040-18	1.0
-PRJEB22903	train	no_curated_link			high				
+PRJEB22903	train	no_curated_link			low				
 PRJNA604910	train	exact_match	europepmc_accession	True	high	32553019	PMC7478627	10.1099/mgen.0.000391	1.0
 PRJNA789336	train	not_found			high				
 PRJNA341927	train	title_match	ncbi_bioproject		high	28486697		10.1093/jac/dkx135	1.0
@@ -52,7 +52,7 @@ PRJNA544438	train	mismatch	europepmc_accession	True	medium	33036018	PMC7546912	1
 PRJEB22252	train	mismatch	europepmc_secondary	False	medium	31534227	PMC6894937	10.1038/s41586-019-1560-1	1.0
 PRJDB14656	train	exact_match	europepmc_accession	True	medium	39298254	PMC11571079	10.1099/mgen.0.001295	0.7179
 PRJEB24970	train	exact_match	europepmc_accession	False	medium	31793878	PMC6977969	10.7554/elife.50468	1.0
-PRJEB6574	train	mismatch	web_search	False	high	26100894	PMC4500264	10.1073/pnas.1501049112	1.0
+PRJEB6574	train	not_found			low				
 PRJEB36486	val	title_match	europepmc_accession	False	medium	36065064	PMC9519460	10.1038/s41564-022-01216-7	1.0
 PRJNA765801	val	mismatch	europepmc_accession	False	medium	41152242	PMC12569050	10.1038/s41467-025-64515-7	1.0
 PRJEB58216	train	exact_match	europepmc_accession	True	high	37642647	PMC10483420	10.1099/mgen.0.001082	1.0
@@ -61,7 +61,7 @@ PRJEB30134	train	exact_match	europepmc_accession	True	medium	37405394	PMC1043881
 PRJEB58018	train	mismatch	europepmc_accession	False	high	41508890	PMC12862290	10.2807/1560-7917.es.2026.31.1.2500378	1.0
 PRJEB24082	train	exact_match	europepmc_accession	True	medium	36916881	PMC10132065	10.1099/mgen.0.000924	3.73
 PRJEB1563	val	title_match	europepmc_secondary	True	high	28789913	PMC5615107	10.1016/j.ijmm.2017.07.006	1.0
-PRJEB21277	train	mismatch	web_search	False	medium	36916881	PMC10132065	10.1099/mgen.0.000924	1.0
+PRJEB21277	train	not_found			high				
 PRJNA787062	train	exact_match	europepmc_accession	True	high	35876577	PMC9380574	10.1128/aac.00534-22	1.0
 PRJDB12075	val	mismatch	europepmc_accession	True	high	35622495	PMC9465067	10.1099/mgen.0.000827	1.0
 PRJNA982859	train	not_found			low				
@@ -96,8 +96,8 @@ PRJEB24085	train	exact_match	europepmc_accession	True	high	36916881	PMC10132065	
 PRJEB19229	train	exact_match	europepmc_accession	True	medium	36916881	PMC10132065	10.1099/mgen.0.000924	1.0
 PRJEB19322	train	mismatch	europepmc_accession	True	medium	34793293	PMC8743538	10.1099/mgen.0.000703	1.087
 PRJEB42331	val	exact_match	europepmc_accession,europepmc_title	True	high	33961543	PMC8209719	10.1099/mgen.0.000512	1.0
-PRJNA351909	train	exact_match	web_search	False	medium	28369261	PMC5850561	10.1093/cid/cix270	1.0
-PRJEB20799	train	not_found			high				
+PRJNA351909	train	not_found			high				
+PRJEB20799	train	not_found			low				
 PRJNA398288	train	not_found			high				
 PRJNA641987	val	exact_match	europepmc_accession,europepmc_title	True	high	34793293	PMC8743538	10.1099/mgen.0.000703	6.25
 PRJEB24086	train	exact_match	europepmc_accession	True	high	36916881	PMC10132065	10.1099/mgen.0.000924	248.6667
