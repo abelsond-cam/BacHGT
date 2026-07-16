@@ -39,6 +39,7 @@ ACCEPT_POLICY: dict[str, tuple[str, str]] = {
     "fetch_supp_table": ("ACCEPTED", "requested supplement not in folder — unavailable (all fetchable fetched)"),
     "needs_linkage": ("ACCEPTED", "table has no ENA-mappable key (unanchored) or no per-isolate table exists"),
     "escalate_big_decision": ("ACCEPTED", "wide-mix — no single whole-field value applies"),
+    "fetch_paper": ("ACCEPTED", "no describing paper resolved for the study — nothing to extract from"),
 }
 
 #: resolution_states that are already closed (not outstanding). FILLED = resolved; EXHAUSTED = logged-exhausted.

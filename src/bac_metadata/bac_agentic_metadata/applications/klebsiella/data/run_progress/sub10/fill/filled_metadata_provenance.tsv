@@ -1,0 +1,1307 @@
+study_accession	sample_accession	field	ena_value	filled_value	source
+PRJDB8047	SAMD00163748	country		Japan	whole_field
+PRJDB10450	SAMD00243948	country		Zambia	whole_field
+PRJDB10450	SAMD00243950	country		Zambia	whole_field
+PRJDB10450	SAMD00243951	country		Zambia	whole_field
+PRJDB10450	SAMD00243956	country		Zambia	whole_field
+PRJDB10450	SAMD00243979	country		Zambia	whole_field
+PRJDB9509	SAMD00212724	country		Japan	whole_field
+PRJDB9509	SAMD00287286	country		Japan	whole_field
+PRJDB9509	SAMD00287287	country		Japan	whole_field
+PRJDB9509	SAMD00287288	country		Japan	whole_field
+PRJDB9509	SAMD00212725	country		Japan	whole_field
+PRJDB10450	SAMD00243953	country		Zambia	whole_field
+PRJDB10450	SAMD00243973	country		Zambia	whole_field
+PRJDB10450	SAMD00243982	country		Zambia	whole_field
+PRJDB10450	SAMD00243955	country		Zambia	whole_field
+PRJDB9509	SAMD00287284	country		Japan	whole_field
+PRJDB9509	SAMD00287285	country		Japan	whole_field
+PRJEB25904	SAMEA1062168	country		Germany	whole_field
+PRJEB25904	SAMEA1062167	country		Germany	whole_field
+PRJEB25904	SAMEA1062336	country		Germany	whole_field
+PRJEB25904	SAMEA1062166	country		Germany	whole_field
+PRJEB25904	SAMEA1062334	country		Germany	whole_field
+PRJEB25904	SAMEA1062335	country		Germany	whole_field
+PRJEB25904	SAMEA1062345	country		Germany	whole_field
+PRJEB29928	SAMEA5128438	country		Australia	whole_field
+PRJEB29928	SAMEA5128440	country		Australia	whole_field
+PRJEB29745	SAMEA5131872	country		Germany	whole_field
+PRJEB29928	SAMEA5128439	country		Australia	whole_field
+PRJEB29745	SAMEA5131870	country		Germany	whole_field
+PRJEB29745	SAMEA5131871	country		Germany	whole_field
+PRJEB29745	SAMEA5131873	country		Germany	whole_field
+PRJEB29745	SAMEA5131874	country		Germany	whole_field
+PRJEB29745	SAMEA5131875	country		Germany	whole_field
+PRJEB26677	SAMEA4672915	country		Malawi	whole_field
+PRJEB26677	SAMEA4672935	country		Malawi	whole_field
+PRJEB26677	SAMEA4672895	country		Malawi	whole_field
+PRJEB26677	SAMEA4672921	country		Malawi	whole_field
+PRJEB34874	SAMEA6086533	country		Czechia	whole_field
+PRJEB34874	SAMEA6086510	country		Czechia	whole_field
+PRJEB34874	SAMEA6086513	country		Czechia	whole_field
+PRJEB34874	SAMEA6086515	country		Czechia	whole_field
+PRJEB34874	SAMEA6086531	country		Czechia	whole_field
+PRJEB34874	SAMEA6086532	country		Czechia	whole_field
+PRJEB26512	SAMEA6160281	country		USA	whole_field
+PRJEB36448	SAMEA6506341	country		United Kingdom	whole_field
+PRJEB36448	SAMEA6506344	country		United Kingdom	whole_field
+PRJEB43975	SAMEA8457514	country		Germany	whole_field
+PRJEB45009	SAMEA8755920	country		Denmark	whole_field
+PRJEB45009	SAMEA8755933	country		Denmark	whole_field
+PRJEB45084	SAMEA8796403	country		Norway	whole_field
+PRJEB45084	SAMEA8796407	country		Norway	whole_field
+PRJEB45009	SAMEA8755915	country		Denmark	whole_field
+PRJEB45084	SAMEA8796404	country		Norway	whole_field
+PRJEB45084	SAMEA8796406	country		Norway	whole_field
+PRJEB45084	SAMEA8796405	country		Norway	whole_field
+PRJEB6657	SAMEA3252003	country		United Kingdom	whole_field
+PRJEB52722	SAMEA14369721	country		United Kingdom	whole_field
+PRJEB52722	SAMEA14369722	country		United Kingdom	whole_field
+PRJEB53460	SAMEA110188920	country		Netherlands	whole_field
+PRJNA674952	SAMN16684229	country		Pakistan	whole_field
+PRJNA674952	SAMN16684226	country		Pakistan	whole_field
+PRJNA674952	SAMN16684228	country		Pakistan	whole_field
+PRJNA521748	SAMN10910564	country		Brazil	whole_field
+PRJNA739632	SAMN19856744	country		USA	whole_field
+PRJNA739637	SAMN19856763	country		USA	whole_field
+PRJNA739637	SAMN19856761	country		USA	whole_field
+PRJNA739637	SAMN19856760	country		USA	whole_field
+PRJNA739637	SAMN19856758	country		USA	whole_field
+PRJNA739632	SAMN19856743	country		USA	whole_field
+PRJNA739632	SAMN19856742	country		USA	whole_field
+PRJNA739637	SAMN19856762	country		USA	whole_field
+PRJNA739637	SAMN19856759	country		USA	whole_field
+PRJNA739637	SAMN19856757	country		USA	whole_field
+PRJNA774508	SAMN22567295	country		Italy	whole_field
+PRJNA774508	SAMN22567294	country		Italy	whole_field
+PRJEB53460	SAMEA110188922	country		Netherlands	whole_field
+PRJEB53460	SAMEA110188921	country		Netherlands	whole_field
+PRJEB53460	SAMEA110188919	country		Netherlands	whole_field
+PRJNA275974	SAMN32130555	country		USA	whole_field
+PRJNA674952	SAMN16684230	country		Pakistan	whole_field
+PRJNA674952	SAMN16684227	country		Pakistan	whole_field
+PRJNA674952	SAMN16684225	country		Pakistan	whole_field
+PRJNA887375	SAMN31164023	country		Switzerland	whole_field
+PRJNA891137	SAMN31311659	country		China	whole_field
+PRJNA847041	SAMN28911479	country		Austria	whole_field
+PRJNA891137	SAMN31311655	country		China	whole_field
+PRJNA891137	SAMN31311660	country		China	whole_field
+PRJNA891137	SAMN31311657	country		China	whole_field
+PRJNA891137	SAMN31311661	country		China	whole_field
+PRJNA891137	SAMN31311654	country		China	whole_field
+PRJNA891137	SAMN31311656	country		China	whole_field
+PRJNA891137	SAMN31311658	country		China	whole_field
+PRJNA922098	SAMN32643410	country		Switzerland	whole_field
+PRJNA773853	SAMN22826309	country		India	whole_field
+PRJNA508495	SAMN10523731	country		Uganda	whole_field
+PRJEB22207	SAMEA104219966	country		United Kingdom	whole_field
+PRJEB3353	SAMEA2036458	country		United Kingdom	whole_field
+PRJEB6416	SAMEA2555317	country		United Kingdom	whole_field
+PRJEB7689	SAMEA3178240	country		USA	whole_field
+PRJEB7689	SAMEA3178292	country		USA	whole_field
+PRJEB7689	SAMEA3178312	country		USA	whole_field
+PRJEB7689	SAMEA3178401	country		USA	whole_field
+PRJEB8302	SAMEA3217956	country		Malawi	whole_field
+PRJEB8302	SAMEA3217957	country		Malawi	whole_field
+PRJEB8302	SAMEA3217984	country		Malawi	whole_field
+PRJEB8575	SAMEA3256066	country		Netherlands	whole_field
+PRJEB9824	SAMEA3480896	country		United Kingdom	whole_field
+PRJEB9824	SAMEA3480900	country		United Kingdom	whole_field
+PRJEB9824	SAMEA3480903	country		United Kingdom	whole_field
+PRJEB9824	SAMEA3480905	country		United Kingdom	whole_field
+PRJEB18589	SAMEA44002918	country		United Kingdom	whole_field
+PRJNA73843	SAMN01057614	country		USA	whole_field
+PRJNA343442,PRJNA175243	SAMN01731171	country		Spain	whole_field
+PRJNA187305	SAMN02141968	country		USA	whole_field
+PRJNA187315	SAMN02141986	country		USA	whole_field
+PRJNA193165	SAMN02141992	country		USA	whole_field
+PRJNA187285	SAMN02142026	country		USA	whole_field
+PRJNA187287	SAMN02142029	country		USA	whole_field
+PRJNA302185	SAMN04448494	country		USA	whole_field
+PRJNA302185	SAMN04448495	country		USA	whole_field
+PRJNA302185	SAMN04448497	country		USA	whole_field
+PRJNA302185	SAMN04448501	country		USA	whole_field
+PRJNA302185	SAMN04448502	country		USA	whole_field
+PRJNA302185	SAMN04448505	country		USA	whole_field
+PRJNA302185	SAMN04448508	country		USA	whole_field
+PRJNA1003529	SAMN36911246	country		Brazil	whole_field
+PRJNA1001661	SAMN36814833	country		Germany	whole_field
+PRJNA1003529	SAMN36911249	country		Brazil	whole_field
+PRJNA1077593	SAMN39976604	country		Turkey	whole_field
+PRJNA1088746	SAMN40496051	country		Nigeria	whole_field
+PRJNA825843	SAMN42765596	country		USA	whole_field
+PRJNA949453	SAMN33944297	country		Belgium	whole_field
+PRJNA1003529	SAMN36911244	country		Brazil	whole_field
+PRJNA1001661	SAMN36814836	country		Germany	whole_field
+PRJNA949453	SAMN33944301	country		Belgium	whole_field
+PRJNA1001661	SAMN36814840	country		Germany	whole_field
+PRJNA1003529	SAMN36911248	country		Brazil	whole_field
+PRJNA1003529	SAMN36911247	country		Brazil	whole_field
+PRJNA1001661	SAMN36814832	country		Germany	whole_field
+PRJNA949453	SAMN33944302	country		Belgium	whole_field
+PRJNA1001661	SAMN36814839	country		Germany	whole_field
+PRJNA1003529	SAMN36911250	country		Brazil	whole_field
+PRJNA1001661	SAMN36814835	country		Germany	whole_field
+PRJNA983061	SAMN35719110	country		Japan	whole_field
+PRJNA1100498	SAMN40970350	country		Italy	whole_field
+PRJNA983061	SAMN35719109	country		Japan	whole_field
+PRJNA949453	SAMN33944298	country		Belgium	whole_field
+PRJNA825843	SAMN42765597	country		USA	whole_field
+PRJNA774508	SAMN36815650	country		Italy	whole_field
+PRJNA1064853	SAMN39441276	country		Netherlands	whole_field
+PRJNA1066419	SAMN39487900	country		India	whole_field
+PRJNA1001661	SAMN36814837	country		Germany	whole_field
+PRJNA949453	SAMN33944299	country		Belgium	whole_field
+PRJNA1001661	SAMN36814838	country		Germany	whole_field
+PRJNA983061	SAMN35719108	country		Japan	whole_field
+PRJNA949453	SAMN33944300	country		Belgium	whole_field
+PRJNA1064853	SAMN39441282	country		Netherlands	whole_field
+PRJNA825843	SAMN42765598	country		USA	whole_field
+PRJNA1003529	SAMN36911245	country		Brazil	whole_field
+PRJNA1001661	SAMN36814834	country		Germany	whole_field
+PRJNA983061	SAMN35719121	country		Japan	whole_field
+PRJEB19657	SAMEA103972959	country		Vietnam	whole_field
+PRJEB19657	SAMEA103972960	country		Vietnam	whole_field
+PRJEB19657	SAMEA103972964	country		Vietnam	whole_field
+PRJEB19657	SAMEA103972975	country		Vietnam	whole_field
+PRJEB19657	SAMEA103972978	country		Vietnam	whole_field
+PRJEB21566	SAMEA104147973	country		Bangladesh	whole_field
+PRJEB22119	SAMEA104283095	country		Netherlands	whole_field
+PRJEB2801	SAMEA1569413	country		Vietnam	whole_field
+PRJEB4649	SAMEA2201701	country		Uruguay	whole_field
+PRJEB8303	SAMEA3217958	country		Malawi	whole_field
+PRJEB9644	SAMEA3464924	country		Ghana	whole_field
+PRJEB12361	SAMEA3725491	country		Tanzania	whole_field
+PRJEB12361	SAMEA3725492	country		Tanzania	whole_field
+PRJEB12361	SAMEA3725493	country		Tanzania	whole_field
+PRJEB14232	SAMEA4021183	country		United Kingdom	whole_field
+PRJEB12513	SAMEA4043139	country		United Kingdom	whole_field
+PRJEB12513	SAMEA4043267	country		United Kingdom	whole_field
+PRJEB12887	SAMEA4061945	country		Vietnam	whole_field
+PRJEB26677	SAMEA4672812	country		Malawi	whole_field
+PRJEB26677	SAMEA4672948	country		Malawi	whole_field
+PRJEB28522	SAMEA5043336	country		Malawi	whole_field
+PRJEB28522	SAMEA5043560	country		Malawi	whole_field
+PRJEB28522	SAMEA5043571	country		Malawi	whole_field
+PRJEB28522	SAMEA5043604	country		Malawi	whole_field
+PRJEB28522	SAMEA5043632	country		Malawi	whole_field
+PRJEB29743	SAMEA5376703	country		Vietnam	whole_field
+PRJEB12513	SAMEA5422311	country		United Kingdom	whole_field
+PRJEB32059	SAMEA5621762	country		Norway	whole_field
+PRJEB32059	SAMEA5621972	country		Norway	whole_field
+PRJEB34232	SAMEA5976486	country		Ethiopia	whole_field
+PRJEB32700	SAMEA6081938	country		Sweden	whole_field
+PRJEB32700	SAMEA6081939	country		Sweden	whole_field
+PRJEB32700	SAMEA6081940	country		Sweden	whole_field
+PRJEB32700	SAMEA6081941	country		Sweden	whole_field
+PRJEB39709	SAMEA7330005	country		Kenya	whole_field
+PRJEB39709	SAMEA7330038	country		Kenya	whole_field
+PRJEB39709	SAMEA7330039	country		Kenya	whole_field
+PRJEB39709	SAMEA7330438	country		Kenya	whole_field
+PRJEB41279	SAMEA7563987	country		Vietnam	whole_field
+PRJEB41279	SAMEA7563989	country		Vietnam	whole_field
+PRJEB45009	SAMEA8755900	country		Denmark	whole_field
+PRJNA302185	SAMN04448496	country		USA	whole_field
+PRJNA609701	SAMN14258342	country		Canada	whole_field
+PRJEB71714	SAMEA115874540	country		Tanzania	whole_field
+PRJNA871216	SAMN29983822	country		USA	whole_field
+PRJNA871216	SAMN29983824	country		USA	whole_field
+PRJNA917297	SAMN32535231	country		Brazil	whole_field
+PRJEB58069	SAMEA112192756	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192755	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192754	collection_date		2021-07-16	whole_field
+PRJEB19677	SAMEA103900120	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900119	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900123	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900124	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900125	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900118	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900121	collection_date		2012-01-01	whole_field
+PRJEB19677	SAMEA103900122	collection_date		2012-01-01	whole_field
+PRJEB26677	SAMEA4672915	collection_date		2017-12-11	whole_field
+PRJEB26677	SAMEA4672935	collection_date		2017-12-11	whole_field
+PRJEB26677	SAMEA4672895	collection_date		2017-12-11	whole_field
+PRJEB26677	SAMEA4672921	collection_date		2017-12-11	whole_field
+PRJEB49171	SAMEA11356547	collection_date		2018-03-31	whole_field
+PRJEB49171	SAMEA11356702	collection_date		2018-03-31	whole_field
+PRJEB48690	SAMEA13609699	collection_date		2020-01-01	whole_field
+PRJEB48690	SAMEA13609698	collection_date		2020-01-01	whole_field
+PRJEB48690	SAMEA13609701	collection_date		2020-01-01	whole_field
+PRJEB48690	SAMEA13609702	collection_date		2020-01-01	whole_field
+PRJEB48690	SAMEA13609703	collection_date		2020-01-01	whole_field
+PRJEB48690	SAMEA13609700	collection_date		2020-01-01	whole_field
+PRJNA592166	SAMN13413444	collection_date		2019-07-02	whole_field
+PRJNA695302	SAMN17611225	collection_date		1973-07-02	whole_field
+PRJNA746575	SAMN20218088	collection_date		2021-01-15	whole_field
+PRJNA746575	SAMN20218087	collection_date		2021-01-15	whole_field
+PRJNA746575	SAMN20218086	collection_date		2021-01-15	whole_field
+PRJEB8575	SAMEA3256066	collection_date		2012-12-31	whole_field
+PRJNA73843	SAMN01057614	collection_date		2011-07-02	whole_field
+PRJNA343442,PRJNA175243	SAMN01731171	collection_date		2010-07-02	whole_field
+PRJNA1001661	SAMN36814833	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814836	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814840	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814832	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814839	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814835	collection_date		2021-07-02	whole_field
+PRJNA1100498	SAMN40970350	collection_date		2022-07-02	whole_field
+PRJNA774508	SAMN36815650	collection_date		2020-12-31	whole_field
+PRJNA1001661	SAMN36814837	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814838	collection_date		2021-07-02	whole_field
+PRJNA1001661	SAMN36814834	collection_date		2021-07-02	whole_field
+PRJEB58069	SAMEA112192757	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192759	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192760	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192761	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192762	collection_date		2021-07-16	whole_field
+PRJEB58069	SAMEA112192763	collection_date		2021-07-16	whole_field
+PRJEB12361	SAMEA3725491	collection_date		2015-08-15	whole_field
+PRJEB12361	SAMEA3725492	collection_date		2015-08-15	whole_field
+PRJEB12361	SAMEA3725493	collection_date		2015-08-15	whole_field
+PRJEB26677	SAMEA4672812	collection_date		2017-12-11	whole_field
+PRJEB26677	SAMEA4672948	collection_date		2017-12-11	whole_field
+PRJEB28522	SAMEA5043336	collection_date		2017-12-31	whole_field
+PRJEB28522	SAMEA5043560	collection_date		2017-12-31	whole_field
+PRJEB28522	SAMEA5043571	collection_date		2017-12-31	whole_field
+PRJEB28522	SAMEA5043604	collection_date		2017-12-31	whole_field
+PRJEB28522	SAMEA5043632	collection_date		2017-12-31	whole_field
+PRJEB71714	SAMEA115874540	collection_date		2020-12-31	whole_field
+PRJNA917297	SAMN32535231	collection_date		2021-09-30	whole_field
+PRJDB6797	SAMD00113231	isolation_source		abscess	whole_field
+PRJDB7330	SAMD00135337	isolation_source		urine	whole_field
+PRJDB7330	SAMD00135341	isolation_source		urine	whole_field
+PRJDB7545	SAMD00144880	isolation_source		feces	whole_field
+PRJDB7330	SAMD00135336	isolation_source		urine	whole_field
+PRJDB7330	SAMD00135339	isolation_source		urine	whole_field
+PRJDB7330	SAMD00135340	isolation_source		urine	whole_field
+PRJDB8047	SAMD00163748	isolation_source		ascites	whole_field
+PRJDB7545	SAMD00144881	isolation_source		feces	whole_field
+PRJDB9461	SAMD00212276	isolation_source		blood	whole_field
+PRJDB9461	SAMD00212278	isolation_source		blood	whole_field
+PRJDB9227	SAMD00201313	isolation_source		chicken meat	whole_field
+PRJDB9461	SAMD00212274	isolation_source		blood	whole_field
+PRJDB9461	SAMD00212275	isolation_source		blood	whole_field
+PRJDB9461	SAMD00212279	isolation_source		blood	whole_field
+PRJDB9461	SAMD00212277	isolation_source		blood	whole_field
+PRJDB10686	SAMD00253847	isolation_source		leaf soil	whole_field
+PRJDB14068	SAMD00520768	isolation_source		rectal swab	whole_field
+PRJDB14068	SAMD00520753	isolation_source		rectal swab	whole_field
+PRJDB14068	SAMD00520775	isolation_source		rectal swab	whole_field
+PRJEB55904	SAMEA111347396	isolation_source		blood culture	whole_field
+PRJEB19677	SAMEA103900120	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900119	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900123	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900124	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900125	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900118	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900121	isolation_source		faeces	whole_field
+PRJEB19677	SAMEA103900122	isolation_source		faeces	whole_field
+PRJEB25904	SAMEA1062168	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062167	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062336	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062166	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062334	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062335	isolation_source		skin swab	whole_field
+PRJEB25904	SAMEA1062345	isolation_source		skin swab	whole_field
+PRJEB29745	SAMEA5131872	isolation_source		surface water	whole_field
+PRJEB29745	SAMEA5131870	isolation_source		surface water	whole_field
+PRJEB29745	SAMEA5131871	isolation_source		surface water	whole_field
+PRJEB29745	SAMEA5131873	isolation_source		surface water	whole_field
+PRJEB29745	SAMEA5131874	isolation_source		surface water	whole_field
+PRJEB29745	SAMEA5131875	isolation_source		surface water	whole_field
+PRJEB26677	SAMEA4672915	isolation_source		faeces	whole_field
+PRJEB26677	SAMEA4672935	isolation_source		faeces	whole_field
+PRJEB33296	SAMEA5752172	isolation_source		urine	whole_field
+PRJEB26677	SAMEA4672895	isolation_source		faeces	whole_field
+PRJEB26677	SAMEA4672921	isolation_source		faeces	whole_field
+PRJEB26512	SAMEA6160281	isolation_source		faeces	whole_field
+PRJEB36448	SAMEA6506341	isolation_source		sewer fatberg (fat, oil and grease deposit)	whole_field
+PRJEB36448	SAMEA6506344	isolation_source		sewer fatberg (fat, oil and grease deposit)	whole_field
+PRJEB38442	SAMEA6863335	isolation_source		wastewater	whole_field
+PRJEB38442	SAMEA6863351	isolation_source		wastewater	whole_field
+PRJEB43975	SAMEA8457514	isolation_source		dried milk powder	whole_field
+PRJEB45009	SAMEA8755920	isolation_source		rectal swab	whole_field
+PRJEB45009	SAMEA8755933	isolation_source		rectal swab	whole_field
+PRJEB45084	SAMEA8796403	isolation_source		blood	whole_field
+PRJEB45084	SAMEA8796407	isolation_source		blood	whole_field
+PRJEB45009	SAMEA8755915	isolation_source		rectal swab	whole_field
+PRJEB45084	SAMEA8796404	isolation_source		blood	whole_field
+PRJEB45084	SAMEA8796406	isolation_source		blood	whole_field
+PRJEB45084	SAMEA8796405	isolation_source		blood	whole_field
+PRJEB50384	SAMEA12561091	isolation_source		wastewater	whole_field
+PRJEB49171	SAMEA11356547	isolation_source		broiler chicken faeces	whole_field
+PRJEB49171	SAMEA11356702	isolation_source		broiler chicken faeces	whole_field
+PRJEB50384	SAMEA12561089	isolation_source		wastewater	whole_field
+PRJEB50384	SAMEA12561090	isolation_source		wastewater	whole_field
+PRJEB52722	SAMEA14369721	isolation_source		blood	whole_field
+PRJEB52722	SAMEA14369722	isolation_source		blood	whole_field
+PRJNA547184	SAMN12024174	isolation_source		plant root	whole_field
+PRJNA611005	SAMN14330249	isolation_source		intestinal tract	whole_field
+PRJNA614986	SAMN14443832	isolation_source		bovine rumen	whole_field
+PRJNA589639	SAMN13286549	isolation_source		plantain plant tissue (necrotic soft rot)	whole_field
+PRJNA589638	SAMN13286538	isolation_source		plantain	whole_field
+PRJNA657522	SAMN15831314	isolation_source		spleen	whole_field
+PRJNA657522	SAMN15831312	isolation_source		spleen	whole_field
+PRJNA641130	SAMN15329758	isolation_source		International Space Station	whole_field
+PRJNA641131	SAMN15329712	isolation_source		International Space Station	whole_field
+PRJNA641131	SAMN15329711	isolation_source		International Space Station	whole_field
+PRJNA641131	SAMN15329710	isolation_source		International Space Station	whole_field
+PRJNA664939	SAMN16278040	isolation_source		wastewater	whole_field
+PRJNA657522	SAMN15831315	isolation_source		spleen	whole_field
+PRJNA657522	SAMN15831313	isolation_source		spleen	whole_field
+PRJNA657522	SAMN15831311	isolation_source		spleen	whole_field
+PRJNA699239	SAMN17768967	isolation_source		rhizosphere	whole_field
+PRJNA687411	SAMN17524437	isolation_source		cecal contents	whole_field
+PRJNA664939	SAMN16278270	isolation_source		wastewater	whole_field
+PRJNA759343	SAMN21163724	isolation_source		feces	whole_field
+PRJNA770882	SAMN22243475	isolation_source		respiratory	whole_field
+PRJNA715072	SAMN20720545	isolation_source		stool	whole_field
+PRJNA793783	SAMN24583986	isolation_source		feces	whole_field
+PRJNA793783	SAMN24583984	isolation_source		feces	whole_field
+PRJNA793783	SAMN24583985	isolation_source		feces	whole_field
+PRJNA841267	SAMN28579378	isolation_source		urine	whole_field
+PRJNA656363	SAMN29005771	isolation_source		urine	whole_field
+PRJEB50384	SAMEA12561088	isolation_source		wastewater	whole_field
+PRJNA664939	SAMN16278273	isolation_source		wastewater	whole_field
+PRJNA656363	SAMN29005765	isolation_source		urine	whole_field
+PRJNA884103	SAMN31229780	isolation_source		blood	whole_field
+PRJNA851948	SAMN29257229	isolation_source		aquaculture farm	whole_field
+PRJNA717148	SAMN18487814	isolation_source		swine feces	whole_field
+PRJNA864766	SAMN30170578	isolation_source		wastewater	whole_field
+PRJNA911203	SAMN32490773	isolation_source		gut	whole_field
+PRJNA911203	SAMN32490770	isolation_source		gut	whole_field
+PRJNA864766	SAMN30170577	isolation_source		wastewater	whole_field
+PRJNA941224	SAMN33593349	isolation_source		meat	whole_field
+PRJNA892272	SAMN31373496	isolation_source		wastewater	whole_field
+PRJNA911203	SAMN32490775	isolation_source		gut	whole_field
+PRJNA911203	SAMN32490767	isolation_source		gut	whole_field
+PRJNA941224	SAMN33593347	isolation_source		meat	whole_field
+PRJNA911203	SAMN32490776	isolation_source		gut	whole_field
+PRJNA911203	SAMN32490772	isolation_source		gut	whole_field
+PRJNA911203	SAMN32490771	isolation_source		gut	whole_field
+PRJNA941224	SAMN33593351	isolation_source		meat	whole_field
+PRJNA941224	SAMN33593350	isolation_source		meat	whole_field
+PRJNA941224	SAMN33593348	isolation_source		meat	whole_field
+PRJNA265261	SAMN03159330	isolation_source		switchgrass root	whole_field
+PRJNA494608	SAMN10174811	isolation_source		stool	whole_field
+PRJNA505478	SAMN10422810	isolation_source		rectal swab	whole_field
+PRJNA529243	SAMN11260909	isolation_source		stool	whole_field
+PRJNA529243	SAMN11260903	isolation_source		stool	whole_field
+PRJNA529243	SAMN11260912	isolation_source		stool	whole_field
+PRJNA529243	SAMN11260915	isolation_source		stool	whole_field
+PRJNA553808	SAMN12251522	isolation_source		respiratory tract	whole_field
+PRJDB5295	SAMD00066597	isolation_source		sputum	whole_field
+PRJDB7066	SAMD00127157	isolation_source		clinical specimen	whole_field
+PRJDB7066	SAMD00127160	isolation_source		clinical specimen	whole_field
+PRJEB22207	SAMEA104219966	isolation_source		faeces	whole_field
+PRJEB24657	SAMEA104551382	isolation_source		blood	whole_field
+PRJEB24657	SAMEA104551383	isolation_source		blood	whole_field
+PRJEB24657	SAMEA104551384	isolation_source		blood	whole_field
+PRJEB6416	SAMEA2555317	isolation_source		rectal swab	whole_field
+PRJEB7689	SAMEA3178240	isolation_source		sputum	whole_field
+PRJEB7689	SAMEA3178292	isolation_source		sputum	whole_field
+PRJEB7689	SAMEA3178312	isolation_source		sputum	whole_field
+PRJEB7689	SAMEA3178401	isolation_source		sputum	whole_field
+PRJEB8302	SAMEA3217956	isolation_source		feces	whole_field
+PRJEB8302	SAMEA3217957	isolation_source		feces	whole_field
+PRJEB8302	SAMEA3217984	isolation_source		feces	whole_field
+PRJEB8104	SAMEA3319269	isolation_source		urine	whole_field
+PRJEB8104	SAMEA3319303	isolation_source		urine	whole_field
+PRJEB9173	SAMEA3359030	isolation_source		respiratory specimen	whole_field
+PRJEB8104	SAMEA3594240	isolation_source		urine	whole_field
+PRJEB18589	SAMEA44002918	isolation_source		feces	whole_field
+PRJNA161277	SAMN00990761	isolation_source		food	whole_field
+PRJNA343442,PRJNA175243	SAMN01731171	isolation_source		blood	whole_field
+PRJNA195754	SAMN02440965	isolation_source		plant biomass-degrading environment	whole_field
+PRJNA213341	SAMN02744777	isolation_source		plant biomass-degrading system	whole_field
+PRJNA263062	SAMN03097705	isolation_source		plant root	whole_field
+PRJNA265347	SAMN03159289	isolation_source		switchgrass root	whole_field
+PRJNA265243	SAMN03159295	isolation_source		plant root	whole_field
+PRJNA265240	SAMN03159308	isolation_source		switchgrass root	whole_field
+PRJNA265267	SAMN03159311	isolation_source		plant root endophyte (switchgrass)	whole_field
+PRJNA265242	SAMN03159325	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265245	SAMN03159326	isolation_source		plant root endosphere	whole_field
+PRJNA265258	SAMN03159331	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265257	SAMN03159347	isolation_source		plant root	whole_field
+PRJNA265256	SAMN03159351	isolation_source		plant root (switchgrass)	whole_field
+PRJNA265263	SAMN03159356	isolation_source		plant root	whole_field
+PRJNA265254	SAMN03159364	isolation_source		switchgrass root	whole_field
+PRJNA265244	SAMN03159373	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265236	SAMN03159374	isolation_source		switchgrass root	whole_field
+PRJNA265232	SAMN03159381	isolation_source		switchgrass root	whole_field
+PRJNA265260	SAMN03159387	isolation_source		plant root (root endophyte of switchgrass)	whole_field
+PRJNA265234	SAMN03159388	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265241	SAMN03159392	isolation_source		plant root	whole_field
+PRJNA265268	SAMN03159393	isolation_source		plant root	whole_field
+PRJNA265264	SAMN03159397	isolation_source		plant root	whole_field
+PRJNA265247	SAMN03159400	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265265	SAMN03159401	isolation_source		plant root (switchgrass root endophyte)	whole_field
+PRJNA265231	SAMN03159410	isolation_source		plant root	whole_field
+PRJNA265255	SAMN03159418	isolation_source		plant root	whole_field
+PRJNA265262	SAMN03159426	isolation_source		plant root	whole_field
+PRJNA265237	SAMN03159441	isolation_source		switchgrass root	whole_field
+PRJNA265259	SAMN03159451	isolation_source		plant root	whole_field
+PRJNA265266	SAMN03159458	isolation_source		plant root	whole_field
+PRJNA265233	SAMN03159472	isolation_source		switchgrass root	whole_field
+PRJNA265246	SAMN03159478	isolation_source		switchgrass root	whole_field
+PRJNA265275	SAMN03159480	isolation_source		plant root (switchgrass root endosphere)	whole_field
+PRJNA265248	SAMN03159500	isolation_source		switchgrass root (plant root endophyte)	whole_field
+PRJNA265235	SAMN03159501	isolation_source		plant root	whole_field
+PRJNA265269	SAMN03159513	isolation_source		switchgrass root (plant root endophyte)	whole_field
+PRJNA279611	SAMN03455930	isolation_source		rectal swab	whole_field
+PRJNA279619	SAMN03455939	isolation_source		rectal swab	whole_field
+PRJNA279672	SAMN03455992	isolation_source		rectal swab	whole_field
+PRJNA357339	SAMN06140912	isolation_source		wound	whole_field
+PRJNA357350	SAMN06140973	isolation_source		burn wound	whole_field
+PRJNA357543	SAMN06143022	isolation_source		burn wound	whole_field
+PRJNA265270	SAMN06161047	isolation_source		plant root	whole_field
+PRJNA436343	SAMN08733388	isolation_source		blood culture	whole_field
+PRJNA1029809	SAMN37879555	isolation_source		water	whole_field
+PRJNA1029809	SAMN37879549	isolation_source		water	whole_field
+PRJNA656363	SAMN29005757	isolation_source		urine	whole_field
+PRJNA1029809	SAMN37879553	isolation_source		water	whole_field
+PRJNA1077593	SAMN39976604	isolation_source		urine	whole_field
+PRJNA949453	SAMN33944297	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJNA1134078	SAMN42392496	isolation_source		salad and herbs	whole_field
+PRJNA949453	SAMN33944301	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJNA656363	SAMN29005713	isolation_source		urine	whole_field
+PRJNA1023934	SAMN37684973	isolation_source		blood	whole_field
+PRJNA1029809	SAMN37879556	isolation_source		water	whole_field
+PRJNA949453	SAMN33944302	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJNA656363	SAMN29005723	isolation_source		urine	whole_field
+PRJNA892272	SAMN31373495	isolation_source		wastewater	whole_field
+PRJNA949453	SAMN33944298	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJNA656363	SAMN29005715	isolation_source		urine	whole_field
+PRJNA892272	SAMN31373494	isolation_source		wastewater	whole_field
+PRJNA684628	SAMN34495010	isolation_source		urine	whole_field
+PRJNA1029809	SAMN37879552	isolation_source		water	whole_field
+PRJNA1029809	SAMN37879550	isolation_source		water	whole_field
+PRJEB74697	SAMEA115768915	isolation_source		blood	whole_field
+PRJNA1023934	SAMN37684972	isolation_source		blood	whole_field
+PRJNA1029809	SAMN37879551	isolation_source		water	whole_field
+PRJNA981489	SAMN35676417	isolation_source		soil	whole_field
+PRJNA1029809	SAMN37879554	isolation_source		water	whole_field
+PRJNA985548	SAMN35798078	isolation_source		wastewater	whole_field
+PRJNA949453	SAMN33944299	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJNA887604	SAMN31178596	isolation_source		sewage	whole_field
+PRJNA1134078	SAMN42392493	isolation_source		salad and herbs	whole_field
+PRJNA884103	SAMN31229784	isolation_source		blood	whole_field
+PRJNA1023934	SAMN37684970	isolation_source		blood	whole_field
+PRJNA949453	SAMN33944300	isolation_source		Galleria mellonella haemocoel	whole_field
+PRJDB14068	SAMD00520778	isolation_source		rectal swab	whole_field
+PRJNA1134078	SAMN42392490	isolation_source		salad and herbs	whole_field
+PRJNA656363	SAMN29005688	isolation_source		urine	whole_field
+PRJNA1134078	SAMN42392497	isolation_source		salad and herbs	whole_field
+PRJEB74697	SAMEA115768914	isolation_source		blood	whole_field
+PRJEB50384	SAMEA12561087	isolation_source		wastewater	whole_field
+PRJNA1023934	SAMN37684971	isolation_source		blood	whole_field
+PRJNA1023934	SAMN37684974	isolation_source		blood	whole_field
+PRJEB74697	SAMEA115768916	isolation_source		blood	whole_field
+PRJEB54871	SAMEA110665186	isolation_source		nasopharynx	whole_field
+PRJEB54871	SAMEA110665198	isolation_source		nasopharynx	whole_field
+PRJEB54871	SAMEA110665231	isolation_source		nasopharynx	whole_field
+PRJEB54871	SAMEA110665298	isolation_source		nasopharynx	whole_field
+PRJEB54871	SAMEA110665323	isolation_source		nasopharynx	whole_field
+PRJEB8303	SAMEA3217958	isolation_source		faeces	whole_field
+PRJEB8768	SAMEA3310297	isolation_source		water	whole_field
+PRJEB8104	SAMEA3594200	isolation_source		urine	whole_field
+PRJEB12361	SAMEA3725491	isolation_source		fish gut	whole_field
+PRJEB12361	SAMEA3725492	isolation_source		fish gut	whole_field
+PRJEB12361	SAMEA3725493	isolation_source		fish gut	whole_field
+PRJEB12513	SAMEA4043139	isolation_source		blood	whole_field
+PRJEB12513	SAMEA4043267	isolation_source		blood	whole_field
+PRJEB26677	SAMEA4672812	isolation_source		faeces	whole_field
+PRJEB26677	SAMEA4672948	isolation_source		faeces	whole_field
+PRJEB28522	SAMEA5043336	isolation_source		stool	whole_field
+PRJEB28522	SAMEA5043560	isolation_source		stool	whole_field
+PRJEB28522	SAMEA5043571	isolation_source		stool	whole_field
+PRJEB28522	SAMEA5043604	isolation_source		stool	whole_field
+PRJEB28522	SAMEA5043632	isolation_source		stool	whole_field
+PRJEB30582	SAMEA5206503	isolation_source		faeces	whole_field
+PRJEB12513	SAMEA5422311	isolation_source		blood	whole_field
+PRJEB32059	SAMEA5621762	isolation_source		blood	whole_field
+PRJEB32059	SAMEA5621972	isolation_source		blood	whole_field
+PRJEB45009	SAMEA8755900	isolation_source		rectal swab	whole_field
+PRJNA494608	SAMN10174754	isolation_source		stool	whole_field
+PRJNA501406	SAMN10361111	isolation_source		Caenorhabditis elegans gut/microbiome	whole_field
+PRJNA499494	SAMN10361115	isolation_source		Caenorhabditis elegans	whole_field
+PRJNA501409	SAMN10361620	isolation_source		Caenorhabditis elegans	whole_field
+PRJNA501412	SAMN10361637	isolation_source		Caenorhabditis elegans	whole_field
+PRJNA527940	SAMN11164559	isolation_source		environment	whole_field
+PRJNA609701	SAMN14258342	isolation_source		biosolids	whole_field
+PRJNA664939	SAMN16278201	isolation_source		wastewater	whole_field
+PRJNA664939	SAMN16278268	isolation_source		wastewater	whole_field
+PRJNA664939	SAMN16278278	isolation_source		wastewater	whole_field
+PRJEB73531	SAMEA115464668	isolation_source		blood	whole_field
+PRJEB73531	SAMEA115464669	isolation_source		blood	whole_field
+PRJEB73531	SAMEA115464671	isolation_source		blood	whole_field
+PRJNA871216	SAMN29983822	isolation_source		drinking water	whole_field
+PRJNA871216	SAMN29983824	isolation_source		drinking water	whole_field
+PRJNA907796	SAMN31997490	isolation_source		milk	whole_field
+PRJNA917297	SAMN32535231	isolation_source		bone marrow	whole_field
+PRJNA1023975	SAMN37686351	isolation_source		sputum	whole_field
+PRJNA1073544	SAMN39905150	isolation_source		surface mucous swab	whole_field
+PRJNA1134078	SAMN42392498	isolation_source		salad and herbs	whole_field
+PRJDB6797	SAMD00113231	host		human	whole_field
+PRJDB8047	SAMD00163748	host		human	whole_field
+PRJDB9461	SAMD00212276	host		human	whole_field
+PRJDB9461	SAMD00212278	host		human	whole_field
+PRJDB10450	SAMD00243948	host		human	whole_field
+PRJDB10450	SAMD00243950	host		human	whole_field
+PRJDB10450	SAMD00243951	host		human	whole_field
+PRJDB10450	SAMD00243956	host		human	whole_field
+PRJDB10450	SAMD00243979	host		human	whole_field
+PRJDB9227	SAMD00201313	host		chicken	whole_field
+PRJDB9461	SAMD00212275	host		human	whole_field
+PRJDB9461	SAMD00212279	host		human	whole_field
+PRJDB9509	SAMD00212724	host		human	whole_field
+PRJDB9509	SAMD00287286	host		human	whole_field
+PRJDB9509	SAMD00287287	host		human	whole_field
+PRJDB9509	SAMD00287288	host		human	whole_field
+PRJDB9461	SAMD00212277	host		human	whole_field
+PRJDB9509	SAMD00212725	host		human	whole_field
+PRJDB10450	SAMD00243953	host		human	whole_field
+PRJDB10450	SAMD00243973	host		human	whole_field
+PRJDB10450	SAMD00243982	host		human	whole_field
+PRJDB10450	SAMD00243955	host		human	whole_field
+PRJDB12737	SAMD00431575	host		human	whole_field
+PRJDB10686	SAMD00253847	host		soil	whole_field
+PRJDB9509	SAMD00287284	host		human	whole_field
+PRJDB9509	SAMD00287285	host		human	whole_field
+PRJDB15848	SAMD00607298	host		food market water environment	whole_field
+PRJEB56148	SAMEA111372280	host		human	whole_field
+PRJEB56148	SAMEA111372296	host		human	whole_field
+PRJEB55839	SAMEA111391100	host		human	whole_field
+PRJEB55904	SAMEA111347396	host		human	whole_field
+PRJEB56148	SAMEA111372297	host		human	whole_field
+PRJEB56148	SAMEA111372315	host		human	whole_field
+PRJEB56148	SAMEA111372335	host		human	whole_field
+PRJEB56148	SAMEA111372291	host		human	whole_field
+PRJEB55839	SAMEA111391102	host		human	whole_field
+PRJEB55839	SAMEA111391101	host		human	whole_field
+PRJEB58827	SAMEA112300463	host		wastewater	whole_field
+PRJEB58827	SAMEA112300464	host		wastewater	whole_field
+PRJEB59061	SAMEA112348281	host		human	whole_field
+PRJEB60429	SAMEA112748800	host		human	whole_field
+PRJEB59337	SAMEA112764954	host		human	whole_field
+PRJEB60429	SAMEA112748801	host		human	whole_field
+PRJEB59337	SAMEA112764953	host		human	whole_field
+PRJEB59337	SAMEA112764956	host		human	whole_field
+PRJEB59337	SAMEA112764957	host		human	whole_field
+PRJEB60914	SAMEA113467533	host		human	whole_field
+PRJEB19677	SAMEA103900120	host		human	whole_field
+PRJEB19677	SAMEA103900119	host		human	whole_field
+PRJEB19677	SAMEA103900123	host		human	whole_field
+PRJEB19677	SAMEA103900124	host		human	whole_field
+PRJEB19677	SAMEA103900125	host		human	whole_field
+PRJEB19677	SAMEA103900118	host		human	whole_field
+PRJEB19677	SAMEA103900121	host		human	whole_field
+PRJEB19677	SAMEA103900122	host		human	whole_field
+PRJEB24576	SAMEA104554881	host		human	whole_field
+PRJEB25904	SAMEA1062168	host		human	whole_field
+PRJEB24576	SAMEA104554882	host		human	whole_field
+PRJEB25904	SAMEA1062167	host		human	whole_field
+PRJEB25904	SAMEA1062336	host		human	whole_field
+PRJEB25904	SAMEA1062166	host		human	whole_field
+PRJEB25904	SAMEA1062334	host		human	whole_field
+PRJEB25904	SAMEA1062335	host		human	whole_field
+PRJEB25904	SAMEA1062345	host		human	whole_field
+PRJEB27805	SAMEA4795086	host		human	whole_field
+PRJEB27805	SAMEA4795087	host		human	whole_field
+PRJEB27805	SAMEA4795088	host		human	whole_field
+PRJEB28252	SAMEA4837039	host		Phoca vitulina	whole_field
+PRJEB29928	SAMEA5128438	host		human	whole_field
+PRJEB29928	SAMEA5128440	host		human	whole_field
+PRJEB29928	SAMEA5128436	host		human	whole_field
+PRJEB29745	SAMEA5131872	host		water	whole_field
+PRJEB29928	SAMEA5128437	host		human	whole_field
+PRJEB29928	SAMEA5128439	host		human	whole_field
+PRJEB29745	SAMEA5131870	host		water	whole_field
+PRJEB29745	SAMEA5131871	host		water	whole_field
+PRJEB29745	SAMEA5131873	host		water	whole_field
+PRJEB29745	SAMEA5131874	host		water	whole_field
+PRJEB29745	SAMEA5131875	host		water	whole_field
+PRJEB30599	SAMEA5205924	host		human	whole_field
+PRJEB26677	SAMEA4672915	host		human	whole_field
+PRJEB26677	SAMEA4672935	host		human	whole_field
+PRJEB33694	SAMEA5815686	host		human	whole_field
+PRJEB34028	SAMEA5869125	host		human	whole_field
+PRJEB33296	SAMEA5752172	host		human	whole_field
+PRJEB26677	SAMEA4672895	host		human	whole_field
+PRJEB26677	SAMEA4672921	host		human	whole_field
+PRJEB33694	SAMEA5815685	host		human	whole_field
+PRJEB34028	SAMEA5869126	host		human	whole_field
+PRJEB34028	SAMEA5869127	host		human	whole_field
+PRJEB34513	SAMEA5789894	host		human	whole_field
+PRJEB34702	SAMEA5988753	host		human	whole_field
+PRJEB34702	SAMEA5988755	host		human	whole_field
+PRJEB34867	SAMEA6081870	host		human	whole_field
+PRJEB34874	SAMEA6086533	host		turkey	whole_field
+PRJEB34513	SAMEA5789899	host		human	whole_field
+PRJEB34702	SAMEA5988754	host		human	whole_field
+PRJEB34513	SAMEA5789893	host		human	whole_field
+PRJEB34513	SAMEA5789897	host		human	whole_field
+PRJEB34513	SAMEA5789898	host		human	whole_field
+PRJEB34867	SAMEA6081871	host		human	whole_field
+PRJEB34702	SAMEA5988756	host		human	whole_field
+PRJEB34874	SAMEA6086510	host		turkey	whole_field
+PRJEB34874	SAMEA6086513	host		turkey	whole_field
+PRJEB34874	SAMEA6086515	host		turkey	whole_field
+PRJEB34874	SAMEA6086531	host		turkey	whole_field
+PRJEB34874	SAMEA6086532	host		turkey	whole_field
+PRJEB35623	SAMEA6262376	host		human	whole_field
+PRJEB26512	SAMEA6160281	host		human	whole_field
+PRJEB34028	SAMEA6373151	host		human	whole_field
+PRJEB36000	SAMEA6447082	host		human	whole_field
+PRJEB36448	SAMEA6506341	host		wastewater	whole_field
+PRJEB36448	SAMEA6506344	host		wastewater	whole_field
+PRJEB37472	SAMEA6634592	host		human	whole_field
+PRJEB37472	SAMEA6634593	host		human	whole_field
+PRJEB37472	SAMEA6634591	host		human	whole_field
+PRJEB37472	SAMEA6634594	host		human	whole_field
+PRJEB38442	SAMEA6863335	host		wastewater	whole_field
+PRJEB38442	SAMEA6863351	host		wastewater	whole_field
+PRJEB39204	SAMEA7071334	host		human	whole_field
+PRJEB39204	SAMEA7071335	host		human	whole_field
+PRJEB39204	SAMEA7071342	host		human	whole_field
+PRJEB39204	SAMEA7071347	host		human	whole_field
+PRJEB38602	SAMEA6865661	host		human	whole_field
+PRJEB38601	SAMEA6865660	host		human	whole_field
+PRJEB38863	SAMEA6952708	host		human	whole_field
+PRJEB37902	SAMEA7026341	host		medicinal plant	whole_field
+PRJEB37902	SAMEA7026335	host		medicinal plant	whole_field
+PRJEB37902	SAMEA7026324	host		medicinal plant	whole_field
+PRJEB37902	SAMEA7026339	host		medicinal plant	whole_field
+PRJEB39204	SAMEA7071346	host		human	whole_field
+PRJEB39816	SAMEA7175945	host		human	whole_field
+PRJEB39816	SAMEA7175944	host		human	whole_field
+PRJEB40388	SAMEA7315186	host		human	whole_field
+PRJEB40388	SAMEA7315187	host		human	whole_field
+PRJEB37610	SAMEA7101081	host		human	whole_field
+PRJEB39816	SAMEA7175946	host		human	whole_field
+PRJEB39816	SAMEA7175948	host		human	whole_field
+PRJEB39816	SAMEA7175950	host		human	whole_field
+PRJEB41009	SAMEA7502065	host		human	whole_field
+PRJEB41009	SAMEA7502066	host		human	whole_field
+PRJEB39816	SAMEA7175949	host		human	whole_field
+PRJEB40149	SAMEA7293484	host		Mytilus edulis	whole_field
+PRJEB40388	SAMEA7315188	host		human	whole_field
+PRJEB40388	SAMEA7315189	host		human	whole_field
+PRJEB40388	SAMEA7315190	host		human	whole_field
+PRJEB40388	SAMEA7315185	host		human	whole_field
+PRJEB41009	SAMEA7502067	host		human	whole_field
+PRJEB41009	SAMEA7502068	host		human	whole_field
+PRJEB41009	SAMEA7502064	host		human	whole_field
+PRJEB41234	SAMEA7556989	host		human	whole_field
+PRJEB42295	SAMEA7753652	host		human	whole_field
+PRJEB42295	SAMEA7753651	host		human	whole_field
+PRJEB43637	SAMEA8238921	host		chimpanzee	whole_field
+PRJEB43637	SAMEA8238922	host		chimpanzee	whole_field
+PRJEB43637	SAMEA8238923	host		chimpanzee	whole_field
+PRJEB44350	SAMEA8574780	host		human	whole_field
+PRJEB44175	SAMEA8534242	host		chicken	whole_field
+PRJEB43637	SAMEA8238920	host		chimpanzee	whole_field
+PRJEB43637	SAMEA8238924	host		chimpanzee	whole_field
+PRJEB43975	SAMEA8457514	host		powdered milk	whole_field
+PRJEB44350	SAMEA8574779	host		human	whole_field
+PRJEB44175	SAMEA8534243	host		chicken	whole_field
+PRJEB44904	SAMEA8730851	host		chicken	whole_field
+PRJEB45009	SAMEA8755920	host		human	whole_field
+PRJEB45009	SAMEA8755933	host		human	whole_field
+PRJEB45084	SAMEA8796403	host		human	whole_field
+PRJEB45084	SAMEA8796407	host		human	whole_field
+PRJEB45559	SAMEA8946551	host		human	whole_field
+PRJEB45559	SAMEA8946565	host		human	whole_field
+PRJEB45559	SAMEA8946571	host		human	whole_field
+PRJEB44904	SAMEA8730852	host		chicken	whole_field
+PRJEB45009	SAMEA8755915	host		human	whole_field
+PRJEB45084	SAMEA8796404	host		human	whole_field
+PRJEB45084	SAMEA8796406	host		human	whole_field
+PRJEB45084	SAMEA8796405	host		human	whole_field
+PRJEB45559	SAMEA8946556	host		human	whole_field
+PRJEB45559	SAMEA8946558	host		human	whole_field
+PRJEB45559	SAMEA8946574	host		human	whole_field
+PRJEB46059	SAMEA8953318	host		human	whole_field
+PRJEB45559	SAMEA8946504	host		human	whole_field
+PRJEB45559	SAMEA8946561	host		human	whole_field
+PRJEB45559	SAMEA8946567	host		human	whole_field
+PRJEB46059	SAMEA8953319	host		human	whole_field
+PRJEB45084	SAMEA9965799	host		human	whole_field
+PRJEB50384	SAMEA12561091	host		wastewater	whole_field
+PRJEB49171	SAMEA11356547	host		broiler chicken	whole_field
+PRJEB49171	SAMEA11356702	host		broiler chicken	whole_field
+PRJEB49509	SAMEA11198328	host		human	whole_field
+PRJEB36913	SAMEA11943729	host		Centrochelys sulcata	whole_field
+PRJEB6657	SAMEA3252003	host		human	whole_field
+PRJEB46496	SAMEA12311723	host		hospital environment	whole_field
+PRJEB50384	SAMEA12561089	host		wastewater	whole_field
+PRJEB50384	SAMEA12561090	host		wastewater	whole_field
+PRJEB50707	SAMEA12921797	host		dog	whole_field
+PRJEB52194	SAMEA14019043	host		Necrosyrtes monachus	whole_field
+PRJEB52722	SAMEA14369721	host		human	whole_field
+PRJEB50707	SAMEA12921808	host		dog	whole_field
+PRJEB52194	SAMEA14019044	host		Necrosyrtes monachus	whole_field
+PRJEB52194	SAMEA14019045	host		Necrosyrtes monachus	whole_field
+PRJEB52194	SAMEA14019046	host		Necrosyrtes monachus	whole_field
+PRJEB52722	SAMEA14369722	host		human	whole_field
+PRJEB53051	SAMEA14449080	host		human	whole_field
+PRJEB53051	SAMEA14449073	host		human	whole_field
+PRJEB53512	SAMEA110132229	host		human	whole_field
+PRJEB51925	SAMEA110187926	host		human	whole_field
+PRJEB53460	SAMEA110188920	host		human	whole_field
+PRJEB53512	SAMEA110132223	host		human	whole_field
+PRJEB53512	SAMEA110132226	host		human	whole_field
+PRJEB53512	SAMEA110132228	host		human	whole_field
+PRJEB53512	SAMEA110132230	host		human	whole_field
+PRJEB53512	SAMEA110132225	host		human	whole_field
+PRJEB53512	SAMEA110132227	host		human	whole_field
+PRJEB53512	SAMEA110132224	host		human	whole_field
+PRJNA564151	SAMN12703571	host		fungus farming ant	whole_field
+PRJNA576510	SAMN12911127	host		freshwater sediment	whole_field
+PRJNA604671	SAMN13978237	host		wastewater	whole_field
+PRJNA604100	SAMN13951914	host		environment	whole_field
+PRJNA592166	SAMN13413444	host		human	whole_field
+PRJNA587512	SAMN13192042	host		chicken	whole_field
+PRJNA553302	SAMN12233573	host		activated sludge	whole_field
+PRJNA547184	SAMN12024174	host		plant	whole_field
+PRJNA611005	SAMN14330249	host		wild carp	whole_field
+PRJNA636185	SAMN15061188	host		International Space Station	whole_field
+PRJNA636185	SAMN15061191	host		International Space Station	whole_field
+PRJNA636185	SAMN15061189	host		International Space Station	whole_field
+PRJNA641176	SAMN15344675	host		International Space Station	whole_field
+PRJNA636185	SAMN15061192	host		International Space Station	whole_field
+PRJNA636185	SAMN15061190	host		International Space Station	whole_field
+PRJNA641130	SAMN15329758	host		International Space Station environment	whole_field
+PRJNA641131	SAMN15329712	host		International Space Station	whole_field
+PRJNA641131	SAMN15329711	host		International Space Station	whole_field
+PRJNA641131	SAMN15329710	host		International Space Station	whole_field
+PRJNA594627	SAMN13523692	host		soil	whole_field
+PRJNA664939	SAMN16278040	host		wastewater	whole_field
+PRJNA664939	SAMN16278270	host		wastewater	whole_field
+PRJNA715927	SAMN18388146	host		wastewater	whole_field
+PRJNA713498	SAMN18253156	host		Bos taurus	whole_field
+PRJNA713498	SAMN18253152	host		Bos taurus	whole_field
+PRJNA719938	SAMN18628976	host		water	whole_field
+PRJNA733494	SAMN19414789	host		raw dog food	whole_field
+PRJNA733494	SAMN19414787	host		raw dog food	whole_field
+PRJNA744549	SAMN20110664	host		human	whole_field
+PRJNA744549	SAMN20110663	host		human	whole_field
+PRJNA744549	SAMN20110674	host		human	whole_field
+PRJNA744549	SAMN20110661	host		human	whole_field
+PRJNA744549	SAMN20110665	host		human	whole_field
+PRJNA744549	SAMN20110677	host		human	whole_field
+PRJNA719938	SAMN18628977	host		water	whole_field
+PRJNA758781	SAMN21035660	host		food (kimchi)	whole_field
+PRJNA733494	SAMN19414791	host		raw dog food	whole_field
+PRJNA733494	SAMN19414788	host		raw dog food	whole_field
+PRJNA744549	SAMN20110670	host		human	whole_field
+PRJNA744549	SAMN20110671	host		human	whole_field
+PRJNA744549	SAMN20110662	host		human	whole_field
+PRJNA768347	SAMN22028931	host		seawater	whole_field
+PRJNA768347	SAMN22028932	host		seawater	whole_field
+PRJNA756469	SAMN20867107	host		water	whole_field
+PRJNA774508	SAMN22567295	host		wild animal	whole_field
+PRJNA774508	SAMN22567294	host		wild animal	whole_field
+PRJNA768347	SAMN22028933	host		seawater	whole_field
+PRJNA715323	SAMN18346073	host		rice	whole_field
+PRJNA733494	SAMN19414786	host		raw dog food	whole_field
+PRJNA856883	SAMN29598486	host		companion animals	whole_field
+PRJEB35623	SAMEA6262377	host		human	whole_field
+PRJEB59337	SAMEA112764955	host		human	whole_field
+PRJEB50384	SAMEA12561088	host		wastewater	whole_field
+PRJEB48936	SAMEA13183815	host		Homo sapiens	whole_field
+PRJEB51925	SAMEA110187920	host		human	whole_field
+PRJEB51925	SAMEA110187921	host		human	whole_field
+PRJEB51925	SAMEA110187922	host		human	whole_field
+PRJEB51925	SAMEA110187923	host		human	whole_field
+PRJEB51925	SAMEA110187925	host		human	whole_field
+PRJEB51925	SAMEA110187927	host		human	whole_field
+PRJEB53460	SAMEA110188922	host		human	whole_field
+PRJEB53460	SAMEA110188921	host		human	whole_field
+PRJEB53460	SAMEA110188919	host		human	whole_field
+PRJEB51925	SAMEA110195546	host		human	whole_field
+PRJNA564151	SAMN12703573	host		fungus farming ant	whole_field
+PRJNA564151	SAMN12703572	host		fungus farming ant	whole_field
+PRJNA564151	SAMN12703570	host		fungus farming ant	whole_field
+PRJNA818256	SAMN26849641	host		human	whole_field
+PRJNA664939	SAMN16278273	host		wastewater	whole_field
+PRJNA845367	SAMN28900525	host		wastewater	whole_field
+PRJNA856883	SAMN29598474	host		companion animals	whole_field
+PRJNA886974	SAMN31148867	host		soil	whole_field
+PRJNA688543	SAMN17180721	host		Bos taurus	whole_field
+PRJNA685932	SAMN17101190	host		soil	whole_field
+PRJNA856883	SAMN29598461	host		companion animals	whole_field
+PRJNA856883	SAMN29598435	host		companion animals	whole_field
+PRJNA856883	SAMN29598433	host		companion animals	whole_field
+PRJNA856883	SAMN29598430	host		companion animals	whole_field
+PRJNA801117	SAMN25297980	host		wastewater	whole_field
+PRJNA864766	SAMN30170578	host		wastewater	whole_field
+PRJNA904531	SAMN31844984	host		hospital environment	whole_field
+PRJNA873263	SAMN30494074	host		wastewater	whole_field
+PRJNA873263	SAMN30494072	host		wastewater	whole_field
+PRJNA873263	SAMN30494071	host		wastewater	whole_field
+PRJNA873263	SAMN30494070	host		wastewater	whole_field
+PRJNA873263	SAMN30494069	host		wastewater	whole_field
+PRJNA847041	SAMN28911479	host		human	whole_field
+PRJNA864766	SAMN30170577	host		wastewater	whole_field
+PRJNA941224	SAMN33593349	host		meat	whole_field
+PRJNA873263	SAMN30494075	host		wastewater	whole_field
+PRJNA873263	SAMN30494073	host		wastewater	whole_field
+PRJNA892272	SAMN31373496	host		wastewater	whole_field
+PRJNA885384	SAMN31088692	host		water	whole_field
+PRJNA904531	SAMN31845011	host		hospital environment	whole_field
+PRJNA904531	SAMN31845029	host		hospital environment	whole_field
+PRJNA904531	SAMN31844993	host		hospital environment	whole_field
+PRJNA941224	SAMN33593347	host		meat	whole_field
+PRJNA565663	SAMN34176390	host		environment	whole_field
+PRJNA961034	SAMN34340402	host		wastewater	whole_field
+PRJNA941224	SAMN33593351	host		meat	whole_field
+PRJNA941224	SAMN33593350	host		meat	whole_field
+PRJNA941224	SAMN33593348	host		meat	whole_field
+PRJNA565663	SAMN34176391	host		environment	whole_field
+PRJNA565663	SAMN34176389	host		environment	whole_field
+PRJNA565663	SAMN34176388	host		environment	whole_field
+PRJNA565663	SAMN34176387	host		environment	whole_field
+PRJNA961034	SAMN34340404	host		wastewater	whole_field
+PRJNA961034	SAMN34340403	host		wastewater	whole_field
+PRJNA489399	SAMN09980275	host		wastewater	whole_field
+PRJNA474898	SAMN09375111	host		chicken	whole_field
+PRJNA508509	SAMN10527289	host		human	whole_field
+PRJNA508509	SAMN10527293	host		human	whole_field
+PRJNA508509	SAMN10527295	host		human	whole_field
+PRJNA807804	SAMN26000826	host		egg white	whole_field
+PRJNA856883	SAMN35057280	host		companion animals	whole_field
+PRJNA265261	SAMN03159330	host		switchgrass	whole_field
+PRJNA508495	SAMN10523731	host		human	whole_field
+PRJNA508509	SAMN10527290	host		human	whole_field
+PRJNA508509	SAMN10527287	host		human	whole_field
+PRJNA508495	SAMN11160070	host		human	whole_field
+PRJNA508495	SAMN11160068	host		human	whole_field
+PRJNA508509	SAMN10527286	host		human	whole_field
+PRJNA508509	SAMN10527294	host		human	whole_field
+PRJNA513350	SAMN10794298	host		human	whole_field
+PRJNA552487	SAMN12211898	host		desert environment	whole_field
+PRJNA543860	SAMN11870789	host		poultry feed	whole_field
+PRJNA543860	SAMN11870793	host		poultry feed	whole_field
+PRJDB5295	SAMD00066597	host		human	whole_field
+PRJEB22207	SAMEA104219966	host		human	whole_field
+PRJEB3353	SAMEA2036458	host		human	whole_field
+PRJEB4506	SAMEA2173363	host		human	whole_field
+PRJEB4506	SAMEA2173364	host		human	whole_field
+PRJEB6416	SAMEA2555317	host		human	whole_field
+PRJEB7689	SAMEA3178240	host		human	whole_field
+PRJEB7689	SAMEA3178292	host		human	whole_field
+PRJEB7689	SAMEA3178312	host		human	whole_field
+PRJEB7689	SAMEA3178401	host		human	whole_field
+PRJEB8302	SAMEA3217956	host		human	whole_field
+PRJEB8302	SAMEA3217957	host		human	whole_field
+PRJEB8302	SAMEA3217984	host		human	whole_field
+PRJEB8575	SAMEA3256066	host		human	whole_field
+PRJEB8104	SAMEA3319269	host		human	whole_field
+PRJEB8104	SAMEA3319303	host		human	whole_field
+PRJEB9173	SAMEA3359030	host		human	whole_field
+PRJEB9824	SAMEA3480896	host		human	whole_field
+PRJEB9824	SAMEA3480900	host		human	whole_field
+PRJEB9824	SAMEA3480903	host		human	whole_field
+PRJEB9824	SAMEA3480905	host		human	whole_field
+PRJEB8104	SAMEA3594240	host		human	whole_field
+PRJEB18589	SAMEA44002918	host		mouse	whole_field
+PRJNA40049	SAMN00102974	host		human	whole_field
+PRJNA40025	SAMN00103451	host		human	whole_field
+PRJNA52135	SAMN00254032	host		human	whole_field
+PRJNA52137	SAMN00254033	host		human	whole_field
+PRJNA52139	SAMN00254034	host		human	whole_field
+PRJNA52141	SAMN00254035	host		human	whole_field
+PRJNA52143	SAMN00254036	host		human	whole_field
+PRJNA52149	SAMN00254037	host		human	whole_field
+PRJNA52151	SAMN00254038	host		human	whole_field
+PRJNA52153	SAMN00254039	host		human	whole_field
+PRJNA197002	SAMN00862124	host		human	whole_field
+PRJNA73843	SAMN01057614	host		human	whole_field
+PRJNA343442,PRJNA175243	SAMN01731171	host		human	whole_field
+PRJNA184888	SAMN01922274	host		human	whole_field
+PRJNA184888	SAMN01922277	host		human	whole_field
+PRJNA184888	SAMN01922278	host		human	whole_field
+PRJNA184888	SAMN01922322	host		human	whole_field
+PRJNA184888	SAMN01922327	host		human	whole_field
+PRJNA184888	SAMN01922328	host		human	whole_field
+PRJNA202047	SAMN02138666	host		human	whole_field
+PRJNA193162	SAMN02141705	host		human	whole_field
+PRJNA187326	SAMN02141966	host		human	whole_field
+PRJNA187308	SAMN02141967	host		human	whole_field
+PRJNA187305	SAMN02141968	host		human	whole_field
+PRJNA187281	SAMN02141969	host		human	whole_field
+PRJNA187313	SAMN02141970	host		human	whole_field
+PRJNA187300	SAMN02141971	host		human	whole_field
+PRJNA187296	SAMN02141972	host		human	whole_field
+PRJNA187302	SAMN02141973	host		human	whole_field
+PRJNA187310	SAMN02141974	host		human	whole_field
+PRJNA187297	SAMN02141975	host		human	whole_field
+PRJNA187298	SAMN02141976	host		human	whole_field
+PRJNA187312	SAMN02141977	host		human	whole_field
+PRJNA187280	SAMN02141978	host		human	whole_field
+PRJNA187307	SAMN02141979	host		human	whole_field
+PRJNA187289	SAMN02141980	host		human	whole_field
+PRJNA187290	SAMN02141981	host		human	whole_field
+PRJNA187291	SAMN02141982	host		human	whole_field
+PRJNA187303	SAMN02141984	host		human	whole_field
+PRJNA187301	SAMN02141985	host		human	whole_field
+PRJNA187315	SAMN02141986	host		human	whole_field
+PRJNA187282	SAMN02141987	host		human	whole_field
+PRJNA193160	SAMN02141988	host		human	whole_field
+PRJNA193161	SAMN02141989	host		human	whole_field
+PRJNA193163	SAMN02141990	host		human	whole_field
+PRJNA193164	SAMN02141991	host		human	whole_field
+PRJNA193165	SAMN02141992	host		human	whole_field
+PRJNA193167	SAMN02141993	host		human	whole_field
+PRJNA193168	SAMN02141994	host		human	whole_field
+PRJNA193169	SAMN02141995	host		human	whole_field
+PRJNA187288	SAMN02141996	host		human	whole_field
+PRJNA187299	SAMN02142000	host		human	whole_field
+PRJNA187314	SAMN02142001	host		human	whole_field
+PRJNA187294	SAMN02142014	host		human	whole_field
+PRJNA187279	SAMN02142015	host		human	whole_field
+PRJNA187311	SAMN02142016	host		human	whole_field
+PRJNA187283	SAMN02142017	host		human	whole_field
+PRJNA187293	SAMN02142018	host		human	whole_field
+PRJNA187306	SAMN02142019	host		human	whole_field
+PRJNA187309	SAMN02142020	host		human	whole_field
+PRJNA187295	SAMN02142021	host		human	whole_field
+PRJNA187292	SAMN02142022	host		human	whole_field
+PRJNA187284	SAMN02142023	host		human	whole_field
+PRJNA187285	SAMN02142026	host		human	whole_field
+PRJNA187286	SAMN02142027	host		human	whole_field
+PRJNA187304	SAMN02142028	host		human	whole_field
+PRJNA187287	SAMN02142029	host		human	whole_field
+PRJNA187316	SAMN02142041	host		human	whole_field
+PRJNA187317	SAMN02142042	host		human	whole_field
+PRJNA187318	SAMN02142043	host		human	whole_field
+PRJNA187321	SAMN02142044	host		human	whole_field
+PRJNA187322	SAMN02142047	host		human	whole_field
+PRJNA187319	SAMN02142048	host		human	whole_field
+PRJNA187320	SAMN02142049	host		human	whole_field
+PRJNA187323	SAMN02142050	host		human	whole_field
+PRJNA187324	SAMN02142051	host		human	whole_field
+PRJNA165913	SAMN02344609	host		human	whole_field
+PRJNA181051	SAMN02344627	host		human	whole_field
+PRJNA181052	SAMN02344628	host		human	whole_field
+PRJNA181050	SAMN02344629	host		human	whole_field
+PRJNA195754	SAMN02440965	host		plant biomass-degrading environment	whole_field
+PRJNA173233	SAMN02786855	host		human	whole_field
+PRJNA263062	SAMN03097705	host		switchgrass	whole_field
+PRJNA265347	SAMN03159289	host		Panicum virgatum	whole_field
+PRJNA265243	SAMN03159295	host		switchgrass	whole_field
+PRJNA265240	SAMN03159308	host		switchgrass	whole_field
+PRJNA265267	SAMN03159311	host		switchgrass	whole_field
+PRJNA265242	SAMN03159325	host		switchgrass	whole_field
+PRJNA265245	SAMN03159326	host		switchgrass	whole_field
+PRJNA265258	SAMN03159331	host		Panicum virgatum	whole_field
+PRJNA265257	SAMN03159347	host		switchgrass	whole_field
+PRJNA265256	SAMN03159351	host		switchgrass (Panicum virgatum)	whole_field
+PRJNA265263	SAMN03159356	host		switchgrass	whole_field
+PRJNA265254	SAMN03159364	host		switchgrass	whole_field
+PRJNA265244	SAMN03159373	host		switchgrass	whole_field
+PRJNA265236	SAMN03159374	host		switchgrass	whole_field
+PRJNA265232	SAMN03159381	host		switchgrass	whole_field
+PRJNA265260	SAMN03159387	host		switchgrass	whole_field
+PRJNA265234	SAMN03159388	host		switchgrass	whole_field
+PRJNA265241	SAMN03159392	host		switchgrass	whole_field
+PRJNA265268	SAMN03159393	host		switchgrass	whole_field
+PRJNA265264	SAMN03159397	host		switchgrass	whole_field
+PRJNA265247	SAMN03159400	host		switchgrass (Panicum virgatum)	whole_field
+PRJNA265265	SAMN03159401	host		switchgrass	whole_field
+PRJNA265231	SAMN03159410	host		switchgrass	whole_field
+PRJNA265255	SAMN03159418	host		switchgrass	whole_field
+PRJNA265262	SAMN03159426	host		switchgrass	whole_field
+PRJNA265237	SAMN03159441	host		switchgrass	whole_field
+PRJNA265259	SAMN03159451	host		switchgrass	whole_field
+PRJNA265266	SAMN03159458	host		switchgrass	whole_field
+PRJNA265233	SAMN03159472	host		switchgrass (Panicum virgatum)	whole_field
+PRJNA265246	SAMN03159478	host		switchgrass	whole_field
+PRJNA265275	SAMN03159480	host		switchgrass (Panicum virgatum)	whole_field
+PRJNA265248	SAMN03159500	host		Panicum virgatum	whole_field
+PRJNA265235	SAMN03159501	host		switchgrass	whole_field
+PRJNA265269	SAMN03159513	host		switchgrass (Panicum virgatum)	whole_field
+PRJNA269826	SAMN03436209	host		human	whole_field
+PRJNA279611	SAMN03455930	host		human	whole_field
+PRJNA279619	SAMN03455939	host		human	whole_field
+PRJNA279655	SAMN03455975	host		human	whole_field
+PRJNA279656	SAMN03455976	host		human	whole_field
+PRJNA279671	SAMN03455991	host		human	whole_field
+PRJNA279672	SAMN03455992	host		human	whole_field
+PRJNA284365	SAMN03701676	host		human	whole_field
+PRJNA265270	SAMN06161047	host		switchgrass	whole_field
+PRJNA316321	SAMN07291504	host		human	whole_field
+PRJNA316321	SAMN07291505	host		human	whole_field
+PRJNA316321	SAMN07291506	host		human	whole_field
+PRJNA316321	SAMN07291518	host		human	whole_field
+PRJNA316321	SAMN07291519	host		human	whole_field
+PRJNA316321	SAMN07291523	host		human	whole_field
+PRJNA316321	SAMN07291524	host		human	whole_field
+PRJNA316321	SAMN07291531	host		human	whole_field
+PRJNA316321	SAMN07291547	host		human	whole_field
+PRJNA398365	SAMN07508954	host		human	whole_field
+PRJNA354234	SAMN07843379	host		human	whole_field
+PRJNA432294	SAMN08446277	host		environment	whole_field
+PRJNA432294	SAMN08446291	host		environment	whole_field
+PRJNA432294	SAMN08446296	host		environment	whole_field
+PRJNA445318	SAMN08706769	host		peat soil	whole_field
+PRJNA471737	SAMN09216416	host		Larus spp.	whole_field
+PRJNA489399	SAMN09980271	host		wastewater	whole_field
+PRJNA489399	SAMN09980274	host		wastewater	whole_field
+PRJNA489399	SAMN09980276	host		wastewater	whole_field
+PRJNA489399	SAMN09980279	host		wastewater	whole_field
+PRJNA254477	SAMN09980400	host		beef	whole_field
+PRJNA1029809	SAMN37879555	host		water	whole_field
+PRJNA691968	SAMN24018743	host		shrimp pond	whole_field
+PRJEB71832	SAMEA115100288	host		human	whole_field
+PRJDB14713	SAMD00554050	host		wastewater	whole_field
+PRJNA254477	SAMN36110381	host		beef	whole_field
+PRJNA1029809	SAMN37879549	host		water	whole_field
+PRJNA1003529	SAMN36911246	host		human	whole_field
+PRJEB68301	SAMEA114590666	host		human	whole_field
+PRJEB68301	SAMEA114590668	host		human	whole_field
+PRJNA1001661	SAMN36814833	host		human	whole_field
+PRJNA1003529	SAMN36911249	host		human	whole_field
+PRJEB71341	SAMEA115703382	host		human	whole_field
+PRJEB70870	SAMEA114786356	host		wastewater	whole_field
+PRJNA1029809	SAMN37879553	host		water	whole_field
+PRJEB71341	SAMEA115703377	host		human	whole_field
+PRJNA1067287	SAMN39519132	host		human	whole_field
+PRJNA1088746	SAMN40496051	host		catfish	whole_field
+PRJEB70870	SAMEA114786354	host		wastewater	whole_field
+PRJEB60070	SAMEA112755841	host		human	whole_field
+PRJDB15972	SAMD00623447	host		wastewater	whole_field
+PRJEB71895	SAMEA115110148	host		human	whole_field
+PRJEB71341	SAMEA115703381	host		human	whole_field
+PRJNA107647	SAMN41558476	host		Sus scrofa	whole_field
+PRJEB61660	SAMEA114228259	host		human	whole_field
+PRJEB60446	SAMEA112750646	host		human	whole_field
+PRJNA949453	SAMN33944297	host		Galleria mellonella	whole_field
+PRJNA1003529	SAMN36911244	host		human	whole_field
+PRJEB71832	SAMEA115100315	host		human	whole_field
+PRJNA1134078	SAMN42392496	host		salad and herbs	whole_field
+PRJNA1001661	SAMN36814836	host		human	whole_field
+PRJNA949453	SAMN33944301	host		Galleria mellonella	whole_field
+PRJEB60070	SAMEA112755842	host		human	whole_field
+PRJEB68301	SAMEA114590673	host		human	whole_field
+PRJEB71341	SAMEA115703379	host		human	whole_field
+PRJNA1001661	SAMN36814840	host		human	whole_field
+PRJNA1019652	SAMN37501189	host		human	whole_field
+PRJNA1003529	SAMN36911248	host		human	whole_field
+PRJNA883008	SAMN30957779	host		food-waste compost	whole_field
+PRJEB60446	SAMEA112750613	host		human	whole_field
+PRJNA939354	SAMN33464185	host		soil	whole_field
+PRJNA1003529	SAMN36911247	host		human	whole_field
+PRJNA1001661	SAMN36814832	host		human	whole_field
+PRJNA1037744	SAMN38236203	host		human	whole_field
+PRJNA1029809	SAMN37879556	host		water	whole_field
+PRJNA949453	SAMN33944302	host		Galleria mellonella	whole_field
+PRJNA1019652	SAMN37501195	host		human	whole_field
+PRJEB71341	SAMEA115703385	host		human	whole_field
+PRJNA1101420	SAMN40992291	host		human	whole_field
+PRJNA1001661	SAMN36814839	host		human	whole_field
+PRJNA1019652	SAMN37501188	host		human	whole_field
+PRJEB71341	SAMEA115703384	host		human	whole_field
+PRJEB63064	SAMEA115412593	host		human	whole_field
+PRJEB58617	SAMEA112258688	host		human	whole_field
+PRJNA1003529	SAMN36911250	host		human	whole_field
+PRJDB15972	SAMD00623453	host		wastewater	whole_field
+PRJNA1001661	SAMN36814835	host		human	whole_field
+PRJNA983061	SAMN35719110	host		human	whole_field
+PRJNA1067287	SAMN39519130	host		human	whole_field
+PRJNA1100498	SAMN40970350	host		human	whole_field
+PRJEB71341	SAMEA115703383	host		human	whole_field
+PRJNA983061	SAMN35719109	host		human	whole_field
+PRJNA892272	SAMN31373495	host		wastewater	whole_field
+PRJNA949453	SAMN33944298	host		Galleria mellonella	whole_field
+PRJDB15848	SAMD00607300	host		food market water environment	whole_field
+PRJEB68301	SAMEA114590669	host		human	whole_field
+PRJDB15848	SAMD00607297	host		food market water environment	whole_field
+PRJEB68301	SAMEA114590671	host		human	whole_field
+PRJEB61660	SAMEA114228261	host		human	whole_field
+PRJNA939005	SAMN33453558	host		shoe sole	whole_field
+PRJNA892272	SAMN31373494	host		wastewater	whole_field
+PRJEB68301	SAMEA114590670	host		human	whole_field
+PRJEB39816	SAMEA7175947	host		human	whole_field
+PRJNA1029809	SAMN37879552	host		water	whole_field
+PRJNA1101420	SAMN40992288	host		human	whole_field
+PRJNA107647	SAMN41558490	host		Sus scrofa	whole_field
+PRJEB71832	SAMEA115100311	host		human	whole_field
+PRJNA774508	SAMN36815650	host		wild animal	whole_field
+PRJEB58617	SAMEA112258679	host		human	whole_field
+PRJNA1029809	SAMN37879550	host		water	whole_field
+PRJEB74697	SAMEA115768915	host		human	whole_field
+PRJNA1064853	SAMN39441276	host		human	whole_field
+PRJNA107647	SAMN41558477	host		Sus scrofa	whole_field
+PRJNA761099	SAMN21242948	host		seawater	whole_field
+PRJNA1101420	SAMN40992289	host		human	whole_field
+PRJNA1029809	SAMN37879551	host		water	whole_field
+PRJNA1001661	SAMN36814837	host		human	whole_field
+PRJEB58617	SAMEA112258695	host		human	whole_field
+PRJNA981489	SAMN35676417	host		soil	whole_field
+PRJEB68301	SAMEA114590672	host		human	whole_field
+PRJNA1029998	SAMN37884559	host		veterinary hospital environment	whole_field
+PRJEB71341	SAMEA115703378	host		human	whole_field
+PRJNA1037744	SAMN38236206	host		human	whole_field
+PRJEB68301	SAMEA114590674	host		human	whole_field
+PRJNA1023395	SAMN37654746	host		vermicompost	whole_field
+PRJNA1029809	SAMN37879554	host		water	whole_field
+PRJNA985548	SAMN35798078	host		wastewater	whole_field
+PRJNA949453	SAMN33944299	host		Galleria mellonella	whole_field
+PRJEB68301	SAMEA114590667	host		human	whole_field
+PRJNA1067287	SAMN39519129	host		human	whole_field
+PRJNA1001661	SAMN36814838	host		human	whole_field
+PRJNA887604	SAMN31178596	host		sewage	whole_field
+PRJNA907796	SAMN31997491	host		milk	whole_field
+PRJNA1134078	SAMN42392493	host		salad and herbs	whole_field
+PRJDB15848	SAMD00607302	host		food market water environment	whole_field
+PRJNA107647	SAMN41558488	host		Sus scrofa	whole_field
+PRJNA1101420	SAMN40992287	host		human	whole_field
+PRJNA983061	SAMN35719108	host		human	whole_field
+PRJNA989579	SAMN36174866	host		wastewater	whole_field
+PRJEB71341	SAMEA115703380	host		human	whole_field
+PRJEB71832	SAMEA115100308	host		human	whole_field
+PRJNA691968	SAMN24018739	host		shrimp pond	whole_field
+PRJNA1029998	SAMN37884560	host		veterinary hospital environment	whole_field
+PRJEB61660	SAMEA114228260	host		human	whole_field
+PRJNA949453	SAMN33944300	host		Galleria mellonella	whole_field
+PRJEB70870	SAMEA114786361	host		wastewater	whole_field
+PRJNA1064853	SAMN39441282	host		human	whole_field
+PRJDB14713	SAMD00554056	host		wastewater	whole_field
+PRJNA1037744	SAMN38236204	host		human	whole_field
+PRJEB63064	SAMEA115412594	host		human	whole_field
+PRJEB71895	SAMEA115110147	host		human	whole_field
+PRJNA1134078	SAMN42392490	host		salad and herbs	whole_field
+PRJNA1067287	SAMN39519131	host		human	whole_field
+PRJNA107647	SAMN41558497	host		Sus scrofa	whole_field
+PRJEB70870	SAMEA114786358	host		wastewater	whole_field
+PRJNA1019652	SAMN37501190	host		human	whole_field
+PRJNA107647	SAMN41558499	host		Sus scrofa	whole_field
+PRJNA1101420	SAMN40992292	host		human	whole_field
+PRJEB63064	SAMEA115412595	host		human	whole_field
+PRJEB71832	SAMEA115100314	host		human	whole_field
+PRJEB61934	SAMEA113414202	host		human	whole_field
+PRJEB58617	SAMEA112258693	host		human	whole_field
+PRJNA1019652	SAMN37501194	host		human	whole_field
+PRJNA107647	SAMN41558500	host		Sus scrofa	whole_field
+PRJNA907796	SAMN31997489	host		milk	whole_field
+PRJEB58617	SAMEA112258689	host		human	whole_field
+PRJEB61660	SAMEA114228262	host		human	whole_field
+PRJNA1003529	SAMN36911245	host		human	whole_field
+PRJNA107647	SAMN41558502	host		Sus scrofa	whole_field
+PRJNA1101420	SAMN40992290	host		human	whole_field
+PRJEB70870	SAMEA114786348	host		wastewater	whole_field
+PRJNA1134078	SAMN42392497	host		salad and herbs	whole_field
+PRJEB74697	SAMEA115768914	host		human	whole_field
+PRJEB61660	SAMEA114228263	host		human	whole_field
+PRJNA1001661	SAMN36814834	host		human	whole_field
+PRJNA983061	SAMN35719121	host		human	whole_field
+PRJNA1037744	SAMN38236205	host		human	whole_field
+PRJNA838568	SAMN28449551	host		human	whole_field
+PRJEB50384	SAMEA12561087	host		wastewater	whole_field
+PRJEB74697	SAMEA115768916	host		human	whole_field
+PRJEB70870	SAMEA114786363	host		wastewater	whole_field
+PRJNA107647	SAMN41558495	host		Sus scrofa	whole_field
+PRJDB10890	SAMD00262490	host		chicken	whole_field
+PRJEB2581	SAMEA1031217	host		human	whole_field
+PRJEB19657	SAMEA103972959	host		human	whole_field
+PRJEB19657	SAMEA103972960	host		human	whole_field
+PRJEB19657	SAMEA103972964	host		human	whole_field
+PRJEB19657	SAMEA103972975	host		human	whole_field
+PRJEB19657	SAMEA103972978	host		human	whole_field
+PRJEB21566	SAMEA104147973	host		human	whole_field
+PRJEB22119	SAMEA104283095	host		human	whole_field
+PRJEB54871	SAMEA110665186	host		human	whole_field
+PRJEB54871	SAMEA110665198	host		human	whole_field
+PRJEB54871	SAMEA110665231	host		human	whole_field
+PRJEB54871	SAMEA110665298	host		human	whole_field
+PRJEB54871	SAMEA110665323	host		human	whole_field
+PRJEB2801	SAMEA1569413	host		human	whole_field
+PRJEB8303	SAMEA3217958	host		human	whole_field
+PRJEB8768	SAMEA3310297	host		water	whole_field
+PRJEB8104	SAMEA3594200	host		human	whole_field
+PRJEB12361	SAMEA3725491	host		Nile tilapia (Oreochromis niloticus)	whole_field
+PRJEB12361	SAMEA3725492	host		Nile tilapia (Oreochromis niloticus)	whole_field
+PRJEB12361	SAMEA3725493	host		Nile tilapia (Oreochromis niloticus)	whole_field
+PRJEB12513	SAMEA4043139	host		human	whole_field
+PRJEB12513	SAMEA4043267	host		human	whole_field
+PRJEB15430	SAMEA4470191	host		human	whole_field
+PRJEB26677	SAMEA4672812	host		human	whole_field
+PRJEB26677	SAMEA4672948	host		human	whole_field
+PRJEB28522	SAMEA5043336	host		human	whole_field
+PRJEB28522	SAMEA5043560	host		human	whole_field
+PRJEB28522	SAMEA5043571	host		human	whole_field
+PRJEB28522	SAMEA5043604	host		human	whole_field
+PRJEB28522	SAMEA5043632	host		human	whole_field
+PRJEB30582	SAMEA5206503	host		tree shrew	whole_field
+PRJEB12513	SAMEA5422311	host		human	whole_field
+PRJEB32059	SAMEA5621762	host		human	whole_field
+PRJEB32059	SAMEA5621972	host		human	whole_field
+PRJEB34557	SAMEA5934619	host		water	whole_field
+PRJEB34232	SAMEA5976486	host		human	whole_field
+PRJEB32700	SAMEA6081938	host		horse	whole_field
+PRJEB32700	SAMEA6081939	host		horse	whole_field
+PRJEB32700	SAMEA6081940	host		horse	whole_field
+PRJEB32700	SAMEA6081941	host		horse	whole_field
+PRJEB45009	SAMEA8755900	host		human	whole_field
+PRJNA52145	SAMN00254989	host		human	whole_field
+PRJNA212649	SAMN00672462	host		human	whole_field
+PRJNA212643	SAMN01828457	host		human	whole_field
+PRJNA393050	SAMN07314043	host		environment	whole_field
+PRJNA420100	SAMN08106035	host		human	whole_field
+PRJNA357722	SAMN08367953	host		food	whole_field
+PRJNA357722	SAMN08367955	host		food	whole_field
+PRJNA357722	SAMN08368019	host		food	whole_field
+PRJNA501406	SAMN10361111	host		Caenorhabditis elegans	whole_field
+PRJNA499494	SAMN10361115	host		Caenorhabditis elegans	whole_field
+PRJNA501401	SAMN10361616	host		Caenorhabditis elegans	whole_field
+PRJNA501405	SAMN10361618	host		Caenorhabditis elegans	whole_field
+PRJNA501409	SAMN10361620	host		Caenorhabditis elegans	whole_field
+PRJNA501412	SAMN10361637	host		Caenorhabditis elegans	whole_field
+PRJNA503825	SAMN10375007	host		pig	whole_field
+PRJNA527940	SAMN11164559	host		environment	whole_field
+PRJNA531554	SAMN11381841	host		human	whole_field
+PRJNA534097	SAMN11477417	host		kitchen sponge	whole_field
+PRJNA550349	SAMN12125603	host		microbial fuel cell biofilm	whole_field
+PRJNA553302	SAMN12233571	host		activated sludge	whole_field
+PRJNA553302	SAMN12233572	host		activated sludge	whole_field
+PRJNA604100	SAMN13951920	host		environment	whole_field
+PRJNA604100	SAMN13951925	host		environment	whole_field
+PRJNA316457	SAMN14125545	host		animal	whole_field
+PRJNA316457	SAMN14125681	host		animal	whole_field
+PRJNA609701	SAMN14258342	host		wastewater	whole_field
+PRJNA660495	SAMN15951353	host		soil	whole_field
+PRJNA664939	SAMN16278201	host		wastewater	whole_field
+PRJNA664939	SAMN16278268	host		wastewater	whole_field
+PRJNA664939	SAMN16278278	host		wastewater	whole_field
+PRJNA706398	SAMN18128811	host		wastewater	whole_field
+PRJNA380388	SAMN18746138	host		wastewater	whole_field
+PRJNA799011	SAMN25142430	host		poultry	whole_field
+PRJNA799011	SAMN25142812	host		poultry	whole_field
+PRJNA862318	SAMN29963765	host		wastewater	whole_field
+PRJNA877288	SAMN30696136	host		wastewater	whole_field
+PRJNA930651	SAMN33231751	host		environment	whole_field
+PRJNA930651	SAMN33231752	host		environment	whole_field
+PRJNA930651	SAMN33231767	host		environment	whole_field
+PRJNA961034	SAMN34340405	host		wastewater	whole_field
+PRJNA961034	SAMN34340409	host		wastewater	whole_field
+PRJNA961034	SAMN34340410	host		wastewater	whole_field
+PRJNA961034	SAMN34340411	host		wastewater	whole_field
+PRJEB73531	SAMEA115464668	host		human	whole_field
+PRJEB73531	SAMEA115464669	host		human	whole_field
+PRJEB73531	SAMEA115464671	host		human	whole_field
+PRJEB71714	SAMEA115874540	host		human	whole_field
+PRJNA691968	SAMN24018742	host		shrimp pond	whole_field
+PRJNA691968	SAMN24018772	host		shrimp pond	whole_field
+PRJNA691968	SAMN24018773	host		shrimp pond	whole_field
+PRJNA838568	SAMN28449537	host		human	whole_field
+PRJNA838568	SAMN28449538	host		human	whole_field
+PRJNA838568	SAMN28449541	host		human	whole_field
+PRJNA838568	SAMN28449542	host		human	whole_field
+PRJNA871216	SAMN29983822	host		water	whole_field
+PRJNA871216	SAMN29983824	host		water	whole_field
+PRJNA907796	SAMN31997490	host		milk	whole_field
+PRJNA917297	SAMN32535231	host		chicken	whole_field
+PRJNA1029998	SAMN37884561	host		veterinary hospital environment	whole_field
+PRJNA1134078	SAMN42392498	host		salad and herbs	whole_field

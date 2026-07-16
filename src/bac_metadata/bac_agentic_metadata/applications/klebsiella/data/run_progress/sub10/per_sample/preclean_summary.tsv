@@ -1,0 +1,10 @@
+field	dropped_value	n_cells
+isolation_source	clinical	18
+isolation_source	Laboratory induction	10
+isolation_source	Lab strain	7
+isolation_source	Laboratory isolate	5
+isolation_source	SURVEILLANCE	3
+isolation_source	Lab-derived	1
+isolation_source	Clinical lab	1
+isolation_source	laboratory	1
+isolation_source	Others	1

@@ -1,0 +1,1252 @@
+study_accession	none_found	chosen_pmid	chosen_pmcid	chosen_doi	chosen_found_via	find_confidence	verified	sources_agreeing	coverage_estimate	coverage_fraction	shared_accession	umbrella	data_reuse_only	n_candidates	chosen_title
+PRJNA818087	False	36129301	PMC9602619	10.1128/spectrum.02077-22	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Microevolution of CG23-I Hypervirulent Klebsiella pneumoniae during Recurrent Infections in a Single Patient.
+PRJDB18280	False	39971269		10.1016/j.jgar.2025.02.008	europepmc_title	high		1	9.0	1.0	False	False	False	1	In vitro activity of aztreonam in combination with relebactam against gram-negative pathogens producing various serine and metallo-β-lactamases.
+PRJNA316321	True					high		0			False	False	True	2	
+PRJNA1086631	False	38988700	PMC11234896	10.1093/ismeco/ycae082	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Evolutionary and co-evolutionary phage training approaches enhance bacterial suppression and delay the emergence of phage resistance.
+PRJNA770945	False	35464921	PMC9022032	10.3389/fmicb.2022.868991	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Heteroresistance Is Associated With <i>in vitro</i> Regrowth During Colistin Treatment in Carbapenem-Resistant <i>Klebsiella pneumoniae</i>.
+PRJNA1012333	False	38506533	PMC11019902	10.1128/msystems.01369-23	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Outbreak of NDM-5-producing &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; ST307: an emerging high-risk antimicrobial resistance clone in Shanghai, China.
+PRJNA1000275	True					high		0			False	False	True	1	
+PRJNA624912	True					low		0			False	False	False	0	
+PRJNA744549	False	34880850	PMC8645865	10.3389/fmicb.2021.791574	europepmc_secondary,europepmc_title	high	True	2	18.0	2.0	False	False	False	1	Molecular Surveillance of Carbapenem-Resistant Gram-Negative Bacteria in Liver Transplant Candidates.
+PRJNA916297	True					low		0			False	False	False	0	
+PRJNA717375	True					low		0			False	False	False	0	
+PRJEB45559	False	35445193	PMC9015910	10.1093/jacamr/dlac041	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Colistin-resistant Enterobacterales among veterinary healthcare workers and in the Dutch population.
+PRJNA107647	False	20387120		10.1007/s10439-010-0030-6	europepmc_title,ncbi_bioproject	high		2	9.0	1.0	False	False	False	1	Endothelial gene expression in regions of defined shear exposure in the porcine iliac arteries.
+PRJNA706839	False	34276606	PMC8284424	10.3389/fmicb.2021.674502	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Acquisition of Tigecycline Resistance by Carbapenem-Resistant <i>Klebsiella pneumoniae</i> Confers Collateral Hypersensitivity to Aminoglycosides.
+PRJNA1058963	True					low		0			False	False	False	0	
+PRJEB71341	False	40909926	PMC12405260	10.3389/fmicb.2025.1657680	europepmc_accession,ncbi_bioproject	high	False	2	9.0	1.0	False	False	False	1	Multi-omics investigation reveals unique markers in &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; compared to closely related species.
+PRJNA834640	False	36338046	PMC9627307	10.3389/fmicb.2022.1030490	europepmc_accession	high	True	1	9.0	1.0	False	False	False	1	Dissemination of <i>bla</i> <sub>NDM-5</sub> and <i>mcr-8.1</i> in carbapenem-resistant <i>Klebsiella pneumoniae</i> and <i>Klebsiella quasipneumoniae</i> in an animal breeding area in Eastern China.
+PRJNA961034	False	37164093		10.1016/j.scitotenv.2023.163997	europepmc_title	high		1	9.0	1.0	False	False	False	1	Dissemination of carbapenemase-producing Enterobacterales through wastewater and gulls at a wastewater treatment plant in Sweden.
+PRJEB58069	True					low		0	9.0	1.0	False	False	False	0	
+PRJDB10450	False	33971966	PMC8111917	10.1186/s13756-021-00941-8	europepmc_accession	high	False	1	9.0	1.0	False	False	False	1	Novel chromosomal insertions of ISEcp1-bla<sub>CTX-M-15</sub> and diverse antimicrobial resistance genes in Zambian clinical isolates of Enterobacter cloacae and Escherichia coli.
+PRJNA1001661	False	37923898	PMC10624845	10.1038/s41598-023-46221-w	europepmc_accession	medium	False	1	9.0	1.0	False	False	False	2	Detection and characterization of putative hypervirulent Klebsiella pneumoniae isolates in microbiological diagnostics.
+PRJNA248792	True					low		0			True	False	True	24	
+PRJNA1100205	True					low		0			False	False	False	0	
+PRJNA793828	False	35983589		10.1093/jac/dkac268	ncbi_bioproject	high		1	125.0	13.8889	False	False	False	1	Enterobacterales high-risk clones and plasmids spreading blaESBL/AmpC and blaOXA-48 genes within and between hospitalized dogs and their environment.
+PRJEB68301	False	39194291	PMC11448410	10.1128/spectrum.00254-24	europepmc_accession,europepmc_title	high	True	2	77.0	8.5556	False	False	False	2	Targeted phage hunting to specific &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; clinical isolates is an efficient antibiotic resistance and infection control strategy.
+PRJNA1040118	True					high		0			False	False	False	2	
+PRJNA438300	True					low		0			False	False	False	0	
+PRJNA739637	True					low		0			False	False	False	0	
+PRJNA271601	True					low		0			False	False	False	0	
+PRJNA555823	True					low		0			False	False	False	0	
+PRJEB76944	True					low		0			False	False	False	0	
+PRJNA1029809	True					low		0			False	False	False	0	
+PRJDB11634	True					low		0	8.0	1.0	False	False	False	0	
+PRJNA891137	False	38904378	PMC11265266	10.1128/msystems.00262-24	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Co-occurrence of ST412 &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; isolates with hypermucoviscous and non-mucoviscous phenotypes in a short-term hospitalized patient.
+PRJEB19677	False	34362295	PMC8343889	10.1186/s12866-021-02285-0	europepmc_accession	high	True	1	8.0	1.0	False	False	False	2	Premature neonatal gut microbial community patterns supporting an epithelial TLR-mediated pathway for necrotizing enterocolitis.
+PRJNA297024	True					low		0	8.0	1.0	False	False	False	0	
+PRJNA1128528	False	39365067	PMC11539213	10.1128/aac.00762-24	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Impact of porin deficiency on the synergistic potential of colistin in combination with β-lactam/β-lactamase inhibitors against ESBL- and carbapenemase-producing &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt;.
+PRJNA722151	False	34066420	PMC8148119	10.3390/antibiotics10050536	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Epidemiology of Meropenem/Vaborbactam Resistance in KPC-Producing <i>Klebsiella pneumoniae</i> Causing Bloodstream Infections in Northern Italy, 2018.
+PRJEB51925	False	36416548	PMC9769692	10.1128/spectrum.02511-22	europepmc_accession	medium	True	1	4.0	0.5	True	False	False	4	An Emerging Lineage of Uropathogenic Extended Spectrum β-Lactamase Escherichia coli ST127.
+PRJNA587095	False	32528441	PMC7262952	10.3389/fmicb.2020.01013	europepmc_accession	high	True	1	8.0	1.0	False	False	False	2	Prediction of Antimicrobial Resistance in Gram-Negative Bacteria From Whole-Genome Sequencing Data.
+PRJNA674952	False	34906210	PMC8670247	10.1186/s13104-021-05867-3	europepmc_accession,ncbi_bioproject	high	True	2	8.0	1.0	False	False	False	1	Lipid A-Ara4N as an alternate pathway for (colistin) resistance in Klebsiella pneumonia isolates in Pakistan.
+PRJNA302185	False	32255490	PMC10327870	10.1093/cid/ciaa049	europepmc_accession	high		1	8.0	1.0	False	False	False	1	Multispecies Outbreak of Verona Integron-Encoded Metallo-ß-Lactamase-Producing Multidrug Resistant Bacteria Driven by a Promiscuous Incompatibility Group A/C2 Plasmid.
+PRJNA328506	True					low		0			False	False	False	0	
+PRJEB53512	False	36782220	PMC9926764	10.1186/s13073-023-01159-6	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Genomic analysis of the international high-risk clonal lineage Klebsiella pneumoniae sequence type 395.
+PRJNA693599	True					low		0			False	False	False	0	
+PRJNA707347	False	33846128	PMC8315949	10.1128/aac.02296-20	europepmc_accession	high		1	8.0	1.0	False	False	False	1	Core Antibiotic-Induced Transcriptional Signatures Reflect Susceptibility to All Members of an Antibiotic Class.
+PRJNA648931	False	33253903	PMC7691820	10.1016/j.ijantimicag.2020.106245	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Klebsiella pneumoniae infections in COVID-19 patients: a 2-month retrospective analysis in an Italian hospital.
+PRJNA801490	True					low		0			False	False	False	0	
+PRJNA812595	True					low		0			False	False	False	0	
+PRJNA649713	False	33541879	PMC7862957	10.1128/mra.01379-20	europepmc_accession	high	True	1	27.0	3.375	False	False	False	1	Draft Genome Sequences of 27 Northern Maine Clinical Isolates.
+PRJNA855630	True					low		0			False	False	False	0	
+PRJEB12145	True					low		0			False	False	False	0	
+PRJNA705836	False	35784041	PMC9188031	10.1002/ece3.8974	europepmc_accession,europepmc_title	high	False	2	8.0	1.0	False	False	False	1	Multiresistant Enterobacteriaceae in yellow-legged gull chicks in their first weeks of life.
+PRJNA891092	False	36695452	PMC9817211	10.2807/1560-7917.es.2023.28.1.2200850	europepmc_accession,europepmc_title	high	True	2	8.0	1.0	False	False	False	1	Molecular surveillance of multidrug-resistant Gram-negative bacteria in Ukrainian patients, Germany, March to June 2022.
+PRJNA523732	True					low		0			False	False	False	0	
+PRJNA613777	False	33109078	PMC7590720	10.1186/s12866-020-02007-y	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Diversity of mucoid to non-mucoid switch among carbapenemase-producing Klebsiella pneumoniae.
+PRJNA396838	False	29237003	PMC5890751	10.1093/jac/dkx456	europepmc_accession	high	True	1	8.0	1.0	False	False	False	1	Illumina short-read and MinION long-read WGS to characterize the molecular epidemiology of an NDM-1 Serratia marcescens outbreak in Romania.
+PRJNA506754	False	31699025	PMC6839148	10.1186/s12864-019-6225-9	europepmc_accession,ncbi_bioproject	high	True	2	7.0	1.0	False	False	False	1	Molecular characterization of carbapenem-resistant Klebsiella pneumoniae isolates with focus on antimicrobial resistance.
+PRJNA644880	True					high		0			False	False	True	1	
+PRJNA506070	False	32284589	PMC9194776	10.1038/s41591-020-0825-4	europepmc_accession,europepmc_title	high		2	7.0	1.0	False	False	False	2	Adaptive evolution of virulence and persistence in carbapenem-resistant Klebsiella pneumoniae.
+PRJNA841857	False	35889085	PMC9323973	10.3390/microorganisms10071364	europepmc_accession	high	True	1	7.0	1.0	False	False	False	2	Prevalence and Characterization of Extended-Spectrum β-Lactamase- and Carbapenemase-Producing Enterobacterales from Tunisian Seafood.
+PRJNA942340	True					low		0			False	False	False	0	
+PRJNA508509	True					low		0			False	False	False	0	
+PRJNA656363	True					low		0			False	False	False	0	
+PRJNA640587	False	33154016	PMC7645671	10.1128/mra.01116-20	europepmc_accession	high	False	1	10.0	1.4286	False	False	False	1	Genome Sequencing of Escherichia coli and Klebsiella pneumoniae Isolates That Harbor the FOX-5 β-Lactamase Gene.
+PRJNA523730	True					low		0			False	False	False	0	
+PRJNA595047	False	32401163	PMC8284978	10.1080/22221751.2020.1768805	europepmc_accession	high	True	1	7.0	1.0	False	False	False	2	Co-existence of a novel plasmid-mediated efflux pump with colistin resistance gene <i>mcr</i> in one plasmid confers transferable multidrug resistance in <i>Klebsiella pneumoniae</i>.
+PRJDB9509	False	34817239	PMC8612250	10.1128/msphere.00734-21	ncbi_bioproject	medium	False	1	5.0	0.7143	True	False	False	3	Stepwise Evolution of a Klebsiella pneumoniae Clone within a Host Leading to Increased Multidrug Resistance.
+PRJNA613629	True					low		0			False	False	False	0	
+PRJNA600879	False	32093201	PMC7070950	10.3390/ani10020332	europepmc_accession,europepmc_title	high	True	2	7.0	1.0	False	False	False	1	Broad-Spectrum Cephalosporin-Resistant <i>Klebsiella</i> spp. Isolated from Diseased Horses in Austria.
+PRJNA482675	True					low		0	7.0	1.0	False	False	False	0	
+PRJNA1003529	True					low		0			False	False	False	1	
+PRJNA476828	True					low		0			False	False	False	0	
+PRJNA911203	True					low		0			False	False	False	0	
+PRJNA853564	False	36752778	PMC9997735	10.1099/mgen.0.000931	europepmc_accession	high	True	1	7.0	1.0	False	False	False	1	Ceftazidime-avibactam resistance in <i>Klebsiella pneumoniae</i> sequence type 37: a decade of persistence and concealed evolution.
+PRJNA420753	False	29263067	PMC5826117	10.1128/aac.02101-17	europepmc_accession,europepmc_secondary,ncbi_bioproject	high		3	7.0	1.0	False	False	False	1	Successive Emergence of Ceftazidime-Avibactam Resistance through Distinct Genomic Adaptations in <i>bla</i><sub>KPC-2</sub>-Harboring Klebsiella pneumoniae Sequence Type 307 Isolates.
+PRJNA683049	False	33737357	PMC7975875	10.1128/mra.00073-21	europepmc_accession	medium	True	1	3.0	0.4286	True	False	False	2	Complete Genome Sequences of Three Uropathogenic Klebsiella quasipneumoniae Strains Isolated from Postmenopausal Women with Recurrent Urinary Tract Infection.
+PRJEB39816	True					low		0			False	False	False	0	
+PRJNA962904	True					low		0			False	False	False	0	
+PRJNA1057770	False	39714187	PMC11796411	10.1128/mbio.02957-24	europepmc_accession	medium	True	1	7.0	1.0	False	False	False	1	Phage-mediated virulence loss and antimicrobial susceptibility in carbapenem-resistant &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt;.
+PRJNA873263	False	36232576	PMC9570485	10.3390/ijms231911276	europepmc_accession	high	True	1	7.0	1.0	False	False	False	1	Characterizing Antimicrobial Resistance in Clinically Relevant Bacteria Isolated at the Human/Animal/Environment Interface Using Whole-Genome Sequencing in Austria.
+PRJNA856883	True					low		0			False	False	False	0	
+PRJNA1023396	True					low		0			False	False	False	0	
+PRJNA748260	True					low		0			False	False	False	0	
+PRJEB25904	True					low		0			False	False	False	0	
+PRJNA374958	True					low		0			False	False	False	0	
+PRJNA1072756	False			10.21203/rs.3.rs-7763072/v1	europepmc_accession	high		1			True	False	False	2	Gut translocation of antimicrobial resistant pathogens in patients undergoing haematopoietic stem cell transplantation in India
+PRJNA1069381	True					low		0	6.0	1.0	False	False	False	0	
+PRJNA716436	True					low		0			False	False	False	0	
+PRJNA825843	True					high		0			False	False	False	0	
+PRJEB48690	False	35435751	PMC9241641	10.1128/spectrum.00148-22	europepmc_accession	high	True	1	6.0	1.0	False	False	False	2	Extensively Drug-Resistant Klebsiella pneumoniae Counteracts Fitness and Virulence Costs That Accompanied Ceftazidime-Avibactam Resistance Acquisition.
+PRJNA664939	False	33258596	PMC8463082	10.1021/acs.est.0c03803	europepmc_accession	medium		1	6.0	1.0	False	False	False	1	Contribution of Time, Taxonomy, and Selective Antimicrobials to Antibiotic and Multidrug Resistance in Wastewater Bacteria.
+PRJNA907528	True					low		0			False	False	False	0	
+PRJNA690196	True					low		0			False	False	False	0	
+PRJNA184888	False	23345298	PMC3666789	10.1128/jcm.03237-12	europepmc_accession	high		1	6.0	1.0	False	False	False	2	A genomic day in the life of a clinical microbiology laboratory.
+PRJNA1101420	True					high		0			False	False	False	1	
+PRJNA824073	True					low		0			False	False	False	0	
+PRJEB29745	False	31849911	PMC6896662	10.3389/fmicb.2019.02779	europepmc_accession	medium	True	1	6.0	1.0	False	False	False	2	Multidrug-Resistant and Clinically Relevant Gram-Negative Bacteria Are Present in German Surface Waters.
+PRJNA499091	True					low		0			False	False	False	0	
+PRJNA504930	False	31551966	PMC6735287	10.3389/fmicb.2019.02029	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Ceftazidime/avibactam Improves the Antibacterial Efficacy of Polymyxin B Against Polymyxin B Heteroresistant KPC-2-Producing <i>Klebsiella pneumoniae</i> and Hinders Emergence of Resistant Subpopulation <i>in vitro</i>.
+PRJEB23315	False	29691332	PMC5915730	10.1128/mbio.02303-17	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Clinically Relevant Plasmid-Host Interactions Indicate that Transcriptional and Not Genomic Modifications Ameliorate Fitness Costs of &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; Carbapenemase-Carrying Plasmids.
+PRJEB40388	False	34203731	PMC8232337	10.3390/antibiotics10060718	europepmc_accession,europepmc_title	high	True	2	29.0	4.8333	False	False	False	1	Whole-Genome Sequencing Investigation of a Large Nosocomial Outbreak Caused by ST131 H30Rx KPC-Producing <i>Escherichia coli</i> in Italy.
+PRJNA916215	False	38674671	PMC11052496	10.3390/microorganisms12040729	europepmc_accession	medium	True	1	154.0	25.6667	False	False	False	1	Repeated Occurrence of Mobile Colistin Resistance Gene-Carrying Plasmids in Pathogenic <i>Escherichia coli</i> from German Pig Farms.
+PRJNA561426	True					low		0			False	False	False	0	
+PRJEB26677	False	36065064	PMC9519460	10.1038/s41564-022-01216-7	europepmc_accession	high	False	1	425.0	70.8333	True	False	False	9	Colonization dynamics of extended-spectrum beta-lactamase-producing Enterobacterales in the gut of Malawian adults.
+PRJNA947837	False	37719365	PMC10501869	10.1016/j.apsb.2023.06.003	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Polymyxin resistance caused by large-scale genomic inversion due to IS<i>26</i> intramolecular translocation in <i>Klebsiella pneumoniae</i>.
+PRJNA561052	True					low		0			False	False	False	0	
+PRJNA610191	True					low		0			False	False	False	0	
+PRJNA476187	True					low		0			False	False	False	0	
+PRJEB70870	True					high		0			False	False	False	0	
+PRJDB9461	False	31256940		10.1016/j.diagmicrobio.2019.04.008	ncbi_bioproject	medium		1	6.0	1.0	True	False	False	4	Clinical characteristics of bacteremia caused by hypermucoviscous Klebsiella pneumoniae at a tertiary hospital.
+PRJNA985853	True					low		0			False	False	False	0	
+PRJNA822025	False	37538841	PMC10394836	10.3389/fmicb.2023.1156292	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Phage resistance formation and fitness costs of hypervirulent <i>Klebsiella pneumoniae</i> mediated by K2 capsule-specific phage and the corresponding mechanisms.
+PRJNA342046	False	28104655	PMC5255920	10.1128/genomea.01472-16	ncbi_bioproject	medium	False	1	6.0	1.0	False	False	False	3	First Complete Providencia rettgeri Genome Sequence, the NDM-1-Producing Clinical Strain RB151.
+PRJNA542787	False	31953453	PMC6969056	10.1038/s41598-020-57505-w	europepmc_accession	high	True	1	7.0	1.1667	False	False	False	1	Impact of anticancer chemotherapy on the extension of beta-lactamase spectrum: an example with KPC-type carbapenemase activity towards ceftazidime-avibactam.
+PRJNA312972	True					medium		0			False	False	False	1	
+PRJNA791169	False	36222687	PMC9769677	10.1128/spectrum.02400-22	europepmc_accession	medium	True	1	6.0	1.0	False	False	False	1	Evolution of Virulence, Fitness, and Carbapenem Resistance Transmission in ST23 Hypervirulent Klebsiella pneumoniae with the Capsular Polysaccharide Synthesis Gene <i>wcaJ</i> Inserted via Insertion Sequence Elements.
+PRJEB55525	False	39290515	PMC11405340	10.3389/fmicb.2024.1432240	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Transmission dynamics of ESBL/AmpC and carbapenemase-producing Enterobacterales between companion animals and humans.
+PRJNA1044302	False	38951769	PMC11218385	10.1186/s12866-024-03387-1	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	fENko-Kae01 is a flagellum-specific jumbo phage infecting Klebsiella aerogenes.
+PRJNA992249	True					low		0			False	False	False	0	
+PRJNA1039570	False	39162444	PMC11385959	10.1128/mra.00110-24	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Draft genome sequences of <i>Klebsiella</i> spp. isolated from produce and agricultural water in South Korea.
+PRJEB45084	False	34946161	PMC8704702	10.3390/microorganisms9122560	europepmc_accession,europepmc_secondary,europepmc_title	high	True	3	9.0	1.5	False	False	False	2	Hybrid Assembly Provides Improved Resolution of Plasmids, Antimicrobial Resistance Genes, and Virulence Factors in <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i> Clinical Isolates.
+PRJEB34874	False	31921017	PMC6920100	10.3389/fmicb.2019.02824	europepmc_accession	high	True	1	6.0	1.0	False	False	False	2	Dissemination and Comparison of Genetic Determinants of <i>mcr</i>-Mediated Colistin Resistance in Enterobacteriaceae <i>via</i> Retailed Raw Meat Products.
+PRJNA861272	True					low	False	1	6.0	1.0	True	False	False	5	
+PRJNA949453	False	37711686	PMC10498386	10.3389/fmicb.2023.1208014	europepmc_accession	high	True	1	6.0	1.0	False	False	False	1	Doxycycline PEP can induce doxycycline resistance in <i>Klebsiella pneumoniae</i> in a <i>Galleria mellonella</i> model of PEP.
+PRJEB56148	False	34297981		10.1016/j.jamda.2021.06.030	ncbi_bioproject	high		1	6.0	1.0	False	False	False	1	Molecular Epidemiology and Risk Factors for Extended-Spectrum β-Lactamase-Producing Enterobacterales in Long-Term Care Residents.
+PRJNA1106484	False	41221019	PMC12599533	10.1093/ofid/ofaf622	europepmc_accession	medium		1	5.0	1.0	False	False	False	2	Community-associated Carbapenem-Resistant Organism Case Investigations in New York City.
+PRJEB71832	False	39324817	PMC11539204	10.1128/aac.00985-24	europepmc_accession,ncbi_bioproject	high		2	65.0	13.0	False	False	False	1	Colonization with resistant bacteria in hospital employees: an epidemiological surveillance and typing study.
+PRJEB29928	False	36934086	PMC10024524	10.1038/s41467-023-37200-w	europepmc_accession	high	False	1	5.0	1.0	False	False	False	1	Integrative omics identifies conserved and pathogen-specific responses of sepsis-causing bacteria.
+PRJEB23294	False	35680894	PMC9184624	10.1038/s41467-022-30889-1	europepmc_accession	low	True	1	5.0	1.0	False	False	False	4	Evolutionary action of mutations reveals antimicrobial resistance genes in Escherichia coli.
+PRJNA1058428	False	38376188	PMC10989021	10.1128/aac.01507-23	europepmc_accession	high		1	5.0	1.0	False	False	False	1	A multi-species outbreak of VIM-producing carbapenem-resistant bacteria in a burn unit and subsequent investigation of rapid development of cefiderocol resistance.
+PRJNA1123194	True					low		0			False	False	False	0	
+PRJEB26081	True					low		0			False	False	False	0	
+PRJNA1063361	False	39627871	PMC11616336	10.1186/s13099-024-00667-z	europepmc_accession,ncbi_bioproject	high	True	2	5.0	1.0	False	False	False	1	Efficacy of colistin-based combinations against pandrug-resistant whole-genome-sequenced Klebsiella pneumoniae isolated from hospitalized patients in Egypt: an in vitro/vivo comparative study.
+PRJEB23879	True					low		0			False	False	False	0	
+PRJEB59337	False	37125187		10.3389/fmicb.2023.1154620	europepmc_title	high	True	1	5.0	1.0	False	False	False	2	Highly sensitive quantitative phase microscopy and deep learning aided with whole genome sequencing for rapid detection of infection and antimicrobial resistance.
+PRJDB7330	True					low		0			False	False	False	0	
+PRJEB61660	False	37370278	PMC10294845	10.3390/antibiotics12060959	europepmc_accession	high	True	1	87.0	17.4	False	False	False	1	Screening of <i>Klebsiella pneumoniae</i> Isolates for Carbapenemase and Hypervirulence-Associated Genes by Combining the Eazyplex<sup>®</sup> Superbug CRE and hvKp Assays.
+PRJNA1049776	False	38391571	PMC10885879	10.3390/antibiotics13020185	europepmc_accession	medium	True	1	5.0	1.0	False	False	False	1	Diverse Role of &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;CTX-M&lt;/sub&gt; and Porins in Mediating Ertapenem Resistance among Carbapenem-Resistant Enterobacterales.
+PRJEB41009	False	33820769	PMC8316093	10.1128/aac.00147-21	europepmc_accession	high		1	5.0	1.0	False	False	False	2	Distinguishing <i>bla</i><sub>KPC</sub> Gene-Containing IncF Plasmids from Epidemiologically Related and Unrelated <i>Enterobacteriaceae</i> Based on Short- and Long-Read Sequence Data.
+PRJEB39204	False	35442183	PMC9453065	10.1099/mgen.0.000675	europepmc_accession	high	True	1	55.0	11.0	False	False	False	1	Hospital outbreak of carbapenem-resistant Enterobacterales associated with a &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;OXA-48&lt;/sub&gt; plasmid carried mostly by &lt;i&gt;Escherichia coli&lt;/i&gt; ST399.
+PRJNA1019652	False	38844513	PMC11156905	10.1038/s42003-024-06398-w	europepmc_accession,ncbi_bioproject	high	True	2	5.0	1.0	False	False	False	1	Prevalence of ST1049-KL5 carbapenem-resistant Klebsiella pneumoniae with a bla<sub>KPC-2</sub> and bla<sub>NDM-1</sub> co-carrying hypertransmissible IncM1 plasmid.
+PRJNA1134078	True					low		0			False	False	False	0	
+PRJEB58617	True					low		0			False	False	False	0	
+PRJEB43637	True					low		0			False	False	False	0	
+PRJEB34513	False	32048983	PMC7067211	10.1099/mgen.0.000335	europepmc_accession	high	True	1	10.0	2.0	False	False	False	1	Discordant bioinformatic predictions of antimicrobial resistance from whole-genome sequencing data of bacterial isolates: an inter-laboratory study.
+PRJEB19657	True					low		0			False	False	False	0	
+PRJEB54871	True					low		0			False	False	False	0	
+PRJEB43940	True					low		0			False	False	False	0	
+PRJNA824074	True					low		0			False	False	False	0	
+PRJEB28522	False	36065064	PMC9519460	10.1038/s41564-022-01216-7	europepmc_accession	high	False	1	425.0	85.0	True	False	False	9	Colonization dynamics of extended-spectrum beta-lactamase-producing Enterobacterales in the gut of Malawian adults.
+PRJEB50384	False	36961505	PMC10132066	10.1099/mgen.0.000946	europepmc_accession	high	True	1	5.0	1.0	False	False	False	1	Global scenario of the RmtE pan-aminoglycoside-resistance mechanism: emergence of the &lt;i&gt;rmtE4&lt;/i&gt; gene in South America associated with a hospital-related IncL plasmid.
+PRJNA628576	False	32849463	PMC7422695	10.3389/fmicb.2020.01883	europepmc_accession	high	True	1	5.0	1.0	False	False	False	1	Analytical Performance Validation of Next-Generation Sequencing Based Clinical Microbiology Assays Using a K-mer Analysis Workflow.
+PRJNA1023934	False	39052750	PMC11272070	10.1093/infdis/jiae003	europepmc_accession	high		1	5.0	1.0	False	False	False	1	In Vivo Evolution of a Klebsiella pneumoniae Capsule Defect With wcaJ Mutation Promotes Complement-Mediated Opsonophagocytosis During Recurrent Infection.
+PRJNA636185	True					low		0			False	False	False	0	
+PRJNA565663	False	40401949	PMC12160551	10.1128/mra.00009-25	europepmc_accession	medium	True	1	1.0	0.2	False	False	False	2	Genome sequences of &lt;i&gt;Acinetobacter&lt;/i&gt; phage At2 and its host &lt;i&gt;Acinetobacter tandoii&lt;/i&gt; W4-4-4.
+PRJNA992043	False	37877547	PMC10617348	10.3201/eid2911.230921	europepmc_accession	high	True	1	5.0	1.0	False	False	False	1	Genotypic Evolution of Klebsiella pneumoniae Sequence Type 512 during Ceftazidime/Avibactam, Meropenem/Vaborbactam, and Cefiderocol Treatment, Italy.
+PRJNA588474	False	33635888	PMC7909683	10.1371/journal.pone.0247058	europepmc_accession	medium	True	1	5.0	1.0	False	False	False	1	Polyphasic characterization of carbapenem-resistant Klebsiella pneumoniae clinical isolates suggests vertical transmission of the blaKPC-3 gene.
+PRJNA523427	True					low		0			False	False	False	0	
+PRJNA716285	True					low		0			False	False	False	0	
+PRJNA485367	True					low		0	5.0	1.0	False	False	False	0	
+PRJNA942324	False	38411998	PMC10986569	10.1128/spectrum.03305-23	europepmc_accession	medium	False	1	5.0	1.0	False	False	False	1	In-depth characterization of multidrug-resistant NDM-1 and KPC-3 co-producing &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; bloodstream isolates from Italian hospital patients.
+PRJNA664089	False	34223138	PMC8215431	10.1093/jacamr/dlab079	europepmc_accession,ncbi_bioproject	high	True	2	5.0	1.0	False	False	False	1	Selective digestive decontamination with oral colistin plus gentamicin for persistent bacteraemia caused by non-carbapenemase-producing carbapenem-resistant <i>Klebsiella pneumoniae</i> in a neutropenic patient.
+PRJNA762607	False	35924928	PMC9487465	10.1128/aac.00162-22	europepmc_accession	medium		1			True	False	False	2	Pharmacodynamics of Piperacillin-Tazobactam/Amikacin Combination versus Meropenem against Extended-Spectrum β-Lactamase-Producing Escherichia coli in a Hollow Fiber Infection Model.
+PRJNA941224	True					high		0			False	False	False	1	
+PRJNA853524	True					low		0			False	False	False	0	
+PRJNA838568	False	38543556	PMC10974654	10.3390/microorganisms12030505	europepmc_accession	high	True	1	13.0	2.6	False	False	False	1	Genomic Characterization of Multidrug-Resistant Pathogenic Enteric Bacteria from Healthy Children in Osun State, Nigeria.
+PRJNA593981	True					low		0			False	False	False	0	
+PRJNA489399	False	31617838	PMC6861864	10.1099/mgen.0.000307	europepmc_accession	low	True	1	5.0	1.0	False	False	False	1	Quantitative real-time PCR assay for the rapid identification of the intrinsically multidrug-resistant bacterial pathogen <i>Stenotrophomonas maltophilia</i>.
+PRJNA551327	False	31440476	PMC6694789	10.3389/fcimb.2019.00281	europepmc_accession	high	True	1	9.0	1.8	False	False	False	1	Tracking Carbapenem-Producing <i>Klebsiella pneumoniae</i> Outbreak in an Intensive Care Unit by Whole Genome Sequencing.
+PRJNA802088	False	37428086	PMC10433805	10.1128/aac.00368-23	europepmc_accession	medium	True	1	5.0	1.0	False	False	False	1	Multiplicity of <i>bla</i><sub>KPC</sub> Genes and pKpQIL Plasmid Plasticity in the Development of Ceftazidime-Avibactam and Meropenem Coresistance in Klebsiella pneumoniae Sequence Type 307.
+PRJNA875629	False	36421260	PMC9687000	10.3390/antibiotics11111616	europepmc_accession	high	True	1	5.0	1.0	False	False	False	1	The Genetic Characteristics and Carbapenem Resistance Mechanism of ST307 <i>Klebsiella pneumoniae</i> Coharbouring <i>bla</i><sub>CMY-6</sub>, <i>bla</i><sub>OXA-48</sub>, and a Truncated <i>bla</i><sub>NDM-1</sub>.
+PRJNA882601	True					low		0			False	False	False	0	
+PRJNA715300	True					low		0			False	False	False	0	
+PRJNA776301	True					low		0			False	False	False	0	
+PRJNA613075	False	33935984	PMC8085564	10.3389/fmicb.2021.604031	europepmc_accession,ncbi_bioproject	high	True	2	5.0	1.0	False	False	False	1	Multidrug-Resistant (MDR) <i>Klebsiella variicola</i> Strains Isolated in a Brazilian Hospital Belong to New Clones.
+PRJNA733494	False	35895774	PMC9661483	10.2460/ajvr.21.12.0205	europepmc_accession	high		1	5.0	1.0	False	False	False	1	Evaluation of canine raw food products for the presence of extended-spectrum beta-lactamase- and carbapenemase-producing bacteria of the order Enterobacterales.
+PRJNA296604	True					low		0			False	False	False	0	
+PRJNA491527	True					low		0			False	False	False	0	
+PRJNA691968	True					high		0			False	False	True	1	
+PRJNA657522	False	34225485	PMC8406280	10.1128/mbio.01114-21	europepmc_accession	high	True	1	5.0	1.0	False	False	False	1	Replication Dynamics for Six Gram-Negative Bacterial Species during Bloodstream Infection.
+PRJNA687988	True					low		0			False	False	False	0	
+PRJNA622828	True					low		0			False	False	False	0	
+PRJNA1067287	True					low		0			False	False	False	0	
+PRJDB5117	False	28138943		10.1007/s15010-017-0986-3	ncbi_bioproject	high		1	4.0	1.0	False	False	False	1	Nosocomial transmission of carbapenem-resistant Klebsiella pneumoniae elucidated by single-nucleotide variation analysis: a case investigation.
+PRJNA981541	False	38373647	PMC11055495	10.1016/j.ijid.2024.02.014	europepmc_accession	high		1	4.0	1.0	False	False	False	3	Real-time genomic epidemiologic investigation of a multispecies plasmid-associated hospital outbreak of NDM-5-producing Enterobacterales infections.
+PRJNA980722	False	37855460	PMC10715106	10.1128/spectrum.02179-23	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Clinical significance of &lt;i&gt;Nosocomiicoccus ampullae&lt;/i&gt; isolated from blood cultures.
+PRJNA650119	False	38965152	PMC11224175	10.1186/s13568-024-01737-w	europepmc_accession	medium	True	1	4.0	1.0	False	False	False	3	Complete genome sequence, phenotypic correlation and pangenome analysis of uropathogenic Klebsiella spp.
+PRJNA529243	False	31578306	PMC6795395	10.1172/jci.insight.130848	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Transmission and clearance of potential procarcinogenic bacteria during fecal microbiota transplantation for recurrent Clostridioides difficile.
+PRJEB14532	False	27457073	PMC4960868	10.1186/s13742-016-0137-2	europepmc_accession	high	False	1	4.0	1.0	False	False	False	1	Streaming algorithms for identification of pathogens and antibiotic resistance potential from real-time MinION(TM) sequencing.
+PRJNA493667	True					high		0			False	False	True	1	
+PRJNA982891	False	38193658	PMC10846127	10.1128/spectrum.03065-23	europepmc_accession	high	False	1	4.0	1.0	False	False	False	1	Rapid nanopore sequencing and predictive susceptibility testing of positive blood cultures from intensive care patients with sepsis.
+PRJEB37902	False	32710748	PMC7422900	10.1093/femsec/fiaa147	europepmc_accession,europepmc_title	high	True	2	75.0	18.75	False	False	False	1	Culturable diversity of bacterial endophytes associated with medicinal plants of the Western Ghats, India.
+PRJNA664586	False	36016808	PMC9397405	10.3389/fvets.2022.940912	europepmc_accession	high	True	1	4.0	1.0	False	False	False	2	Genetic characterization of hypervirulent <i>Klebsiella pneumoniae</i> responsible for acute death in captive marmosets.
+PRJNA953359	True					high		0			False	False	False	10	
+PRJNA983061	True					low		0			False	False	False	0	
+PRJNA531517	False	31384648	PMC6661503	10.1016/j.dib.2019.104257	europepmc_accession	high	True	1	8.0	2.0	False	False	False	1	Data on whole-genome sequencing of extended-spectrum beta-lactamases producing <i>Enterobacteriaceae</i> isolates from Malaysia.
+PRJNA564151	True					low		1	4.0	1.0	True	False	False	2	
+PRJNA723854	True					low		0			False	False	False	0	
+PRJEB32700	False	31494305		10.1016/j.jgar.2019.08.007	ncbi_bioproject	high		1	56.0	14.0	False	False	False	1	A link between the newly described colistin resistance gene mcr-9 and clinical Enterobacteriaceae isolates carrying bla<sub>SHV-12</sub> from horses in Sweden.
+PRJNA739632	True					low		0			False	False	False	0	
+PRJNA736994	True					low		0			False	False	False	0	
+PRJNA1037744	True					low		0			False	False	False	0	
+PRJNA1102902	True					low		0			False	False	False	0	
+PRJNA996143	False	38319084	PMC10913460	10.1128/spectrum.04111-23	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	KPC-2 allelic variants in &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; isolates resistant to ceftazidime-avibactam from Argentina: &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;KPC-80&lt;/sub&gt;, &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;KPC-81&lt;/sub&gt;, &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;KPC-96&lt;/sub&gt; and &lt;i&gt;bla&lt;/i&gt;&lt;sub&gt;KPC-97&lt;/sub&gt;.
+PRJNA639351	False	35320327	PMC8942217	10.1371/journal.pone.0265884	europepmc_accession	high	False	1	4.0	1.0	False	False	False	1	Whole genome sequencing of Klebsiella pneumoniae clinical isolates sequence type 627 isolated from Egyptian patients.
+PRJNA952959	True					low		0			False	False	False	0	
+PRJEB8104	False	38515176	PMC10958879	10.1186/s13059-024-03216-8	europepmc_accession	medium	True	1			False	False	False	4	Cataloging the phylogenetic diversity of human bladder bacterial isolates.
+PRJNA445372	False	31954832		10.1016/j.ijantimicag.2020.105903	ncbi_bioproject	high		1	4.0	1.0	False	False	False	2	KPC-2-producing Klebsiella pneumoniae ST147 in a neonatal unit: Clonal isolates with differences in colistin susceptibility attributed to AcrAB-TolC pump.
+PRJNA746265	True					high		0			False	False	True	2	
+PRJEB37779	False	33613476	PMC7886708	10.3389/fmicb.2021.592291	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Plasmid-Borne and Chromosomal ESBL/AmpC Genes in <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i> in Global Food Products.
+PRJNA787449	True					low		0			False	False	False	0	
+PRJEB34028	True					low		0			False	False	False	0	
+PRJNA485133	False	31127290	PMC6640307	10.1093/jac/dkz183	europepmc_title	high		1	4.0	1.0	False	False	False	1	Reduced ceftazidime and ertapenem susceptibility due to production of OXA-2 in Klebsiella pneumoniae ST258.
+PRJEB9824	True					low		0			False	False	False	0	
+PRJNA947927	False	37719365	PMC10501869	10.1016/j.apsb.2023.06.003	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Polymyxin resistance caused by large-scale genomic inversion due to IS<i>26</i> intramolecular translocation in <i>Klebsiella pneumoniae</i>.
+PRJNA1017663	False	38177534	PMC10897476	10.1038/s44321-023-00007-9	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Pyridylpiperazine efflux pump inhibitor boosts in vivo antibiotic efficacy against K. pneumoniae.
+PRJNA1014981	False	38274740	PMC10808480	10.3389/fmicb.2023.1320312	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Machine learning and feature extraction for rapid antimicrobial resistance prediction of <i>Acinetobacter baumannii</i> from whole-genome sequencing data.
+PRJNA511988	True					low		0			False	False	False	2	
+PRJEB34702	True					low		0			False	False	False	0	
+PRJNA493254	False	30323046	PMC6325174	10.1128/aac.01396-18	europepmc_accession	high		1	56.0	14.0	False	False	False	1	OXA-48-Like-Producing Klebsiella pneumoniae in Southern Spain in 2014-2015.
+PRJNA868191	False	36610697		10.1016/j.micpath.2023.105969	ncbi_bioproject	high		1	4.0	1.0	False	False	False	1	Antibiotic resistance and virulence characteristics of four carbapenem-resistant Klebsiella pneumoniae strains coharbouring bla<sub>KPC</sub> and bla<sub>NDM</sub> based on whole genome sequences from a tertiary general teaching hospital in central China between 2019 and 2021.
+PRJEB36565	False	32066506	PMC7026959	10.1186/s13756-020-0696-y	europepmc_accession,ncbi_bioproject	high	False	2	4.0	1.0	False	False	False	1	Flies from a tertiary hospital in Rwanda carry multidrug-resistant Gram-negative pathogens including extended-spectrum beta-lactamase-producing E. coli sequence type 131.
+PRJNA772899	False	37180238	PMC10174314	10.3389/fmicb.2023.1147846	europepmc_accession,ncbi_bioproject	high	True	2	73.0	18.25	False	False	False	1	Plasmid-mediated colistin resistance among human clinical <i>Enterobacterales</i> isolates: national surveillance in the Czech Republic.
+PRJNA745055	False	35042478	PMC8764819	10.1186/s12866-021-02413-w	europepmc_accession	low	True	1	4.0	1.0	False	False	False	11	Distribution, characterization, and antibiotic resistance of hypervirulent Klebsiella pneumoniae isolates in a Chinese population with asymptomatic bacteriuria.
+PRJNA774102	False	35203816	PMC8868282	10.3390/antibiotics11020213	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Massive Spread of OXA-48 Carbapenemase-Producing Enterobacteriaceae in the Environment of a Swiss Companion Animal Clinic.
+PRJEB23208	False	29851962	PMC5978789	10.1371/journal.pone.0198103	europepmc_accession	high	True	1	4.0	1.0	False	False	False	2	High prevalence of MRSA and multi-resistant gram-negative bacteria in refugees admitted to the hospital-But no hint of transmission.
+PRJEB37472	False	32749955	PMC7641421	10.1099/mgen.0.000419	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Community-acquired infection caused by the uncommon hypervirulent <i>Klebsiella pneumoniae</i> ST66-K2 lineage.
+PRJNA408214	True					low		0			False	False	True	1	
+PRJNA790720	False	40475381	PMC12137328	10.3389/fmicb.2025.1543427	europepmc_accession	medium	False	1	4.0	1.0	False	False	False	1	Diversity of mobile genetic elements in carbapenem-resistant Enterobacterales isolated from the intensive care units of a tertiary care hospital in Northeast India.
+PRJDB15848	False	39119043	PMC11306930	10.1093/jacamr/dlae124	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Genomic characterization of carbapenemase-producing Enterobacterales from Dhaka food markets unveils the spread of high-risk antimicrobial-resistant clones and plasmids co-carrying <i>bla</i> <sub>NDM</sub> and <i>mcr-1.1</i>.
+PRJEB7689	True					low		0	4.0	1.0	False	False	False	0	
+PRJNA904531	True					low		0			False	False	False	0	
+PRJEB39709	True					low		0			False	False	False	0	
+PRJEB53460	False	35899275	PMC9314704	10.1093/ofid/ofac324	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Transmission of Antibiotic-Susceptible <i>Escherichia coli</i> Causing Urinary Tract Infections in a Fecal Microbiota Transplantation Recipient: Consequences for Donor Screening?
+PRJEB52194	False	37186228	PMC10035410	10.1002/mbo3.1349	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	High prevalence of bla<sub>CTX-M-15</sub> type extended-spectrum beta-lactamases in Gambian hooded vultures (Necrosyrtes monachus): A threatened species with substantial human interaction.
+PRJDB14068	False	36515531	PMC9888285	10.1128/aem.01712-22	europepmc_accession	medium	True	1			False	False	False	2	Disinfectant Susceptibility of Third-Generation-Cephalosporin/Carbapenem-Resistant Gram-Negative Bacteria Isolated from the Oral Cavity of Residents of Long-Term-Care Facilities.
+PRJEB45009	True					high		0			False	False	True	1	
+PRJEB8302	True					low		0			False	False	False	0	
+PRJEB12361	False	27990135	PMC5130978	10.3389/fmicb.2016.01862	europepmc_accession	high	True	1			False	False	False	2	Predominance of CTX-M-15 among ESBL Producers from Environment and Fish Gut from the Shores of Lake Victoria in Mwanza, Tanzania.
+PRJNA686374	True					low		0			False	False	False	0	
+PRJNA1031676	True					low		0			False	False	False	0	
+PRJEB74697	False	38990012	PMC11304683	10.1128/aac.00663-24	europepmc_accession	high		1	3.0	1.0	False	False	False	1	<i>In vivo</i> selection of carbapenem resistance during persistent <i>Klebsiella pneumoniae</i> sequence type 395 bloodstream infection due to OmpK36 deletion.
+PRJNA432294	True					low		0			False	False	False	0	
+PRJNA687343	True					low		0			False	False	False	0	
+PRJDB17235	False	38674079	PMC11049973	10.3390/ijms25084494	europepmc_accession	high	True	1	67.0	22.3333	False	False	False	1	Molecular Epidemiology of Carbapenem-Resistant <i>Klebsiella aerogenes</i> in Japan.
+PRJNA1086703	False	38601926	PMC11004243	10.3389/fmicb.2024.1332458	europepmc_accession	medium	True	1	3.0	1.0	False	False	False	1	Detection and characterization of eravacycline heteroresistance in clinical bacterial isolates.
+PRJNA553302	True					low		0			False	False	False	0	
+PRJNA1100498	False	39171923	PMC11423586	10.1128/msphere.00423-24	europepmc_accession	high	False	1	3.0	1.0	False	False	False	1	&lt;i&gt;In vivo&lt;/i&gt; evolution to hypermucoviscosity and ceftazidime/avibactam resistance in a liver abscess caused by &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; sequence type 512.
+PRJNA450215	True					low		0			False	False	False	0	
+PRJEB12513	False	29932391	PMC6096937	10.1099/mgen.0.000190	europepmc_accession	medium	True	1	162.0	54.0	False	False	False	7	Genetic analysis of invasive Escherichia coli in Scotland reveals determinants of healthcare-associated versus community-acquired infections.
+PRJNA774508	False	35681810	PMC9179660	10.3390/ani12111347	europepmc_accession	medium	False	1	3.0	1.0	False	False	False	3	Phenotypic and Genetic Characterization of <i>Klebsiella pneumoniae</i> Isolates from Wild Animals in Central Italy.
+PRJNA717003	True					low		0			False	False	False	0	
+PRJNA768347	False	35602062	PMC9121779	10.3389/fmicb.2022.858821	europepmc_accession	high	True	1	15.0	5.0	False	False	False	1	Submarine Outfalls of Treated Wastewater Effluents are Sources of Extensively- and Multidrug-Resistant KPC- and OXA-48-Producing <i>Enterobacteriaceae</i> in Coastal Marine Environment.
+PRJEB6921	True					low		0			False	False	False	0	
+PRJNA793783	False	35638816	PMC9241947	10.1128/spectrum.00403-22	europepmc_accession	high	True	1	3.0	1.0	False	False	False	1	Spread of the <i>bla</i><sub>OXA-48</sub>/IncL Plasmid within and between Dogs in City Parks, France.
+PRJEB30066	True					low		0			False	False	False	0	
+PRJEB73531	False	38843111	PMC11156391	10.1371/journal.ppat.1012235	europepmc_accession,ncbi_bioproject	medium	True	2	3.0	1.0	False	False	False	1	Harvesting and amplifying gene cassettes confers cross-resistance to critically important antibiotics.
+PRJNA930651	True					low		0			False	False	False	0	
+PRJNA917544	False	37417759	PMC10449501	10.1128/msphere.00170-23	europepmc_accession,published_version	high	True	2	3.0	1.0	False	False	False	1	Growth in a biofilm promotes conjugation of a <i>bla</i> <sub>NDM-1</sub>-bearing plasmid between <i>Klebsiella pneumoniae</i> strains.
+PRJNA892272	False	36494741	PMC9734789	10.1186/s13756-022-01194-9	europepmc_accession,ncbi_bioproject	high	True	2	3.0	1.0	False	False	False	1	Wastewater-based surveillance in Italy leading to the first detection of mcr-10-positive Klebsiella quasipneumoniae.
+PRJNA896194	True					high		0			False	False	False	0	
+PRJNA931241	True					low		0			False	False	False	0	
+PRJNA912639	False	37098978	PMC10190287	10.1128/mra.00110-23	europepmc_accession	high	True	1	245.0	81.6667	True	False	False	3	Hybrid Genome Assemblies of 245 Avian and Broiler Barn Environment-Associated Escherichia coli Strains Isolated from Saskatchewan Broiler Farms.
+PRJNA477326	False	30323331	PMC6289251	10.1038/s41591-018-0202-8	europepmc_accession	high		1	3.0	1.0	False	False	False	2	Precision identification of diverse bloodstream pathogens in the gut microbiome.
+PRJEB31941	False	31138611	PMC6652756	10.1128/iai.00211-19	europepmc_accession	high	True	1	3.0	1.0	False	False	False	1	Bacterial Microcompartment-Mediated Ethanolamine Metabolism in Escherichia coli Urinary Tract Infection.
+PRJEB27805	True					low		0	3.0	1.0	False	False	False	0	
+PRJNA635912	False	32726577	PMC7554178	10.1016/j.chom.2020.06.018	europepmc_accession,europepmc_title	high		2	3.0	1.0	False	False	False	1	An Enteric Pathogen Subverts Colonization Resistance by Evading Competition for Amino Acids in the Gut.
+PRJNA910533	False	38086168		10.1016/j.diagmicrobio.2023.116153	ncbi_bioproject	high		1	3.0	1.0	False	False	False	1	Pharmacokinetic/pharmacodynamic evaluation of tigecycline dosing in a hollow fiber infection model against clinical bla-KPC producing Klebsiella Pneumoniae isolates.
+PRJNA907796	True					low		0			False	False	False	0	
+PRJNA906295	False	36939321	PMC10128065	10.1128/mbio.03538-22	europepmc_accession,ncbi_bioproject	high	True	2	3.0	1.0	False	False	False	1	Deep Divergence and Genomic Diversification of Gut Symbionts of Neotropical Stingless Bees.
+PRJNA248593	True					low		0			False	False	False	0	
+PRJEB24657	True					low		0	3.0	1.0	False	False	False	0	
+PRJNA877287	False	36314799	PMC9667764	10.1128/jcm.01012-22	europepmc_accession	high		1	40.0	13.3333	False	False	False	1	Optimized Method for Bacterial Nucleic Acid Extraction from Positive Blood Culture Broth for Whole-Genome Sequencing, Resistance Phenotype Prediction, and Downstream Molecular Applications.
+PRJDB9688	False	33443109	PMC8534291	10.1128/mbio.01954-20	europepmc_accession	high	True	1	3.0	1.0	False	False	False	1	Emergence of the Novel Aminoglycoside Acetyltransferase Variant <i>aac(6')-Ib-D179Y</i> and Acquisition of Colistin Heteroresistance in Carbapenem-Resistant <i>Klebsiella pneumoniae</i> Due to a Disrupting Mutation in the DNA Repair Enzyme MutS.
+PRJNA392853	True					low		0			False	False	False	0	
+PRJNA534306	False	32766684		10.1093/jac/dkaa279	ncbi_bioproject	medium		1	3.0	1.0	False	False	False	1	Arrival of the rare carbapenemase OXA-204 in Canada causing a multispecies outbreak over 3 years.
+PRJNA641131	True					low		0			False	False	False	0	
+PRJNA851446	False	35820535	PMC12160923	10.1016/j.ijantimicag.2022.106635	europepmc_accession,europepmc_title	high		2	3.0	1.0	False	False	False	1	Cefiderocol heteroresistance in Klebsiella pneumoniae is linked to mutations in the siderophore receptor cirA and β-lactamase activities.
+PRJNA860216	False	37022279	PMC10269823	10.1128/spectrum.04584-22	europepmc_accession	high	True	1	5.0	1.6667	False	False	False	1	First Report of OXA-181-Producing <i>Enterobacterales</i> Isolates in Latin America.
+PRJNA269984	True					low		0			False	False	False	3	
+PRJNA636411	True					low		0	3.0	1.0	False	False	False	0	
+PRJNA631981	True					low		0			False	False	False	0	
+PRJNA843571	True					low		0			False	False	False	3	
+PRJNA656584	True					low		0			False	False	False	0	
+PRJNA680857	True					high		0			False	False	True	1	
+PRJEB20997	True					high		0			False	False	True	4	
+PRJNA357722	True					high		0			False	False	True	6	
+PRJNA339728	False	28368366	PMC5488087	10.3390/microorganisms5020016	ncbi_bioproject	high	False	1	3.0	1.0	False	False	False	1	Insights on Klebsiella pneumoniae Biofilms Assembled on Different Surfaces Using Phenotypic and Genotypic Approaches.
+PRJEB13304	False	27297071	PMC4906610	10.1186/s12864-016-2740-0	europepmc_accession	high	True	1	11.0	3.6667	False	False	False	1	Local transmission and global dissemination of New Delhi Metallo-Beta-Lactamase (NDM): a whole genome analysis.
+PRJNA354234	True					high		0			False	False	True	5	
+PRJNA809422	False	35711756	PMC9197264	10.3389/fmicb.2022.879321	europepmc_accession,europepmc_title	high	True	2	3.0	1.0	False	False	False	1	Changes in Higher-Order Chromosomal Structure of <i>Klebsiella pneumoniae</i> Under Simulated Microgravity.
+PRJNA673369	True					low		0			False	False	False	0	
+PRJNA481356	True					low		0			False	False	False	0	
+PRJNA847761	True					low		0			False	False	False	0	
+PRJNA354216	False	29040419	PMC5848316	10.1093/cid/cix885	europepmc_accession	high		1			False	False	False	1	High Rates of Human Fecal Carriage of mcr-1-Positive Multidrug-Resistant Enterobacteriaceae Emerge in China in Association With Successful Plasmid Families.
+PRJNA604100	True					low		0			False	False	False	0	
+PRJNA1099652	True					low		0			False	False	False	0	
+PRJNA482007	True					low		0			False	False	False	0	
+PRJNA615899	True					low		0			True	False	False	5	
+PRJNA1020811	False	38354391		10.1139/cjm-2023-0175	europepmc_title,published_version	high		2	3.0	1.0	False	False	False	2	Do we still need Illumina sequencing data? Evaluating Oxford Nanopore Technologies R10.4.1 flow cells and the Rapid v14 library prep kit for Gram negative bacteria whole genome assemblies.
+PRJNA508495	True					high		0			False	False	True	2	
+PRJNA746575	False	35040981	PMC9383231	10.1093/jac/dkab495	europepmc_accession	high		1	3.0	1.0	False	False	False	1	Spread of hypervirulent multidrug-resistant ST147 Klebsiella pneumoniae in patients with severe COVID-19: an observational study from Italy, 2020-21.
+PRJNA746285	False	34988712	PMC8731190	10.1007/s10096-021-04388-y	europepmc_accession,europepmc_title	high	False	2	3.0	1.0	False	False	False	1	Interplay between Klebsiella pneumoniae producing KPC-31 and KPC-3 under treatment with high dosage meropenem: a case report.
+PRJNA512885	True					low		0			False	False	False	0	
+PRJNA730402	True					low		0			False	False	False	0	
+PRJEB63064	False	37842870	PMC10619465	10.1080/22221751.2023.2271096	europepmc_accession	high	False	1	3.0	1.0	False	False	False	1	Convergent <i>Klebsiella pneumoniae</i> strains belonging to a sequence type 307 outbreak clone combine cefiderocol and carbapenem resistance with hypervirulence.
+PRJNA645311	False	35802735	PMC9269877	10.1371/journal.pone.0270707	europepmc_accession	high	False	1	3.0	1.0	False	False	False	1	Dissemination of carbapenemase-producing Enterobacterales in the community of Rawalpindi, Pakistan.
+PRJNA374677	False	29844109	PMC5974468	10.1128/mbio.00542-18	europepmc_accession,europepmc_secondary	high	True	2			False	False	False	2	Genomic and Geographic Context for the Evolution of High-Risk Carbapenem-Resistant <i>Enterobacter cloacae</i> Complex Clones ST171 and ST78.
+PRJNA186035	False	29906258	PMC6113870	10.1099/mgen.0.000185	europepmc_accession	medium	True	1			True	True	False	25	GenomeTrakr proficiency testing for foodborne pathogen surveillance: an exercise from 2015.
+PRJNA1125279	True					low		0	3.0	1.0	False	False	False	0	
+PRJEB55839	False	36695920	PMC9899198	10.1007/s10096-023-04552-6	europepmc_accession	high	True	1	3.0	1.0	False	False	False	1	Klebsiella pneumoniae carrying multiple alleles of antigen 43-encoding gene of Escherichia coli associated with biofilm formation.
+PRJNA607307	True					low		0			False	False	False	0	
+PRJNA1029998	True					low		0			False	False	False	0	
+PRJNA840888	False	37679664	PMC10483776	10.1186/s12879-023-08579-0	europepmc_accession	medium	False	1	142.0	71.0	False	False	False	1	Unraveling virulence determinants in extended-spectrum beta-lactamase-producing Escherichia coli from East Africa using whole-genome sequencing.
+PRJNA310664	True					low		0			False	False	False	0	
+PRJNA293225	True					high		0			False	False	True	14	
+PRJDB11627	True					low		0			False	False	False	0	
+PRJNA884103	False	37134153	PMC10259202	10.1126/scitranslmed.adg5562	europepmc_accession,ncbi_bioproject	high		2			False	False	False	1	Gut pathogen colonization precedes bloodstream infection in the neonatal intensive care unit.
+PRJEB49171	False	35326769	PMC8944778	10.3390/antibiotics11030305	europepmc_accession	high	True	1	39.0	19.5	False	False	False	1	Molecular Characterization of <i>MCR-1</i> Producing <i>Enterobacterales</i> Isolated in Poultry Farms in the United Arab Emirates.
+PRJEB4506	False	24370932	PMC3977605	10.1093/jac/dkt494	ncbi_bioproject	high	False	1	40.0	20.0	False	False	False	1	Rapid single-colony whole-genome sequencing of bacterial pathogens.
+PRJEB44904	False	34327794		10.1111/1462-2920.15689	ncbi_bioproject	high		1	53.0	26.5	False	False	False	1	From farm to fork: Colistin voluntary withdrawal in Portuguese farms reflected in decreasing occurrence of mcr-1-carrying Enterobacteriaceae from chicken meat.
+PRJNA523425	False	35178041	PMC8846945	10.3389/fmicb.2021.807398	europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Sentinel Surveillance Reveals Emerging Daptomycin-Resistant ST736 <i>Enterococcus faecium</i> and Multiple Mechanisms of Linezolid Resistance in Enterococci in the United States.
+PRJNA614638	True					low		0			False	False	False	0	
+PRJNA516562	True					low		0			False	False	False	0	
+PRJEB33365	True					high		0			False	False	True	2	
+PRJNA230969	False	29242221	PMC5730671	10.1128/genomea.01321-17	europepmc_accession,ncbi_bioproject	medium	True	2	2244.0	1122.0	False	False	False	15	Species-Wide Collection of <i>Escherichia coli</i> Isolates for Examination of Genomic Diversity.
+PRJEB18525	True					low		0			False	False	False	0	
+PRJNA599529	False	34347523	PMC8478445	10.1128/aem.00488-21	europepmc_accession	medium		1	37.0	18.5	False	False	False	2	Extended-Spectrum β-Lactamase-Producing and <i>mcr-1</i>-Positive Escherichia coli from the Gut Microbiota of Healthy Singaporeans.
+PRJNA628849	True					low		0			False	False	False	0	
+PRJNA230968	True					low		0			False	False	False	0	
+PRJEB44350	False	34206177	PMC8305640	10.3390/microorganisms9071345	europepmc_accession,ncbi_bioproject	high	False	2	4.0	2.0	False	False	False	1	Nearly Identical Plasmids Encoding VIM-1 and Mercury Resistance in Enterobacteriaceae from North-Eastern Germany.
+PRJNA944929	False	37103784	PMC10283472	10.2807/1560-7917.es.2023.28.17.2300196	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Within-patient horizontal transfer of pOXA-48 from a hypervirulent <i>Klebsiella pneumoniae</i> SL218 to <i>Serratia marcescens</i> following spread of the <i>K. pneumoniae</i> isolate among hospitalised patients, Denmark, 2021.
+PRJEB44175	False	34806003	PMC8597959	10.1093/jacamr/dlab156	europepmc_accession,europepmc_title	high	True	2	35.0	17.5	False	False	False	3	Genetic analysis of plasmid-encoded <i>mcr-1</i> resistance in Enterobacteriaceae derived from poultry meat in the Netherlands.
+PRJNA300270	False	39680383	PMC11879209	10.1093/jac/dkae454	europepmc_accession	medium	False	1	2.0	1.0	False	False	False	3	Genomic analysis of early ST32 Acinetobacter baumannii strains recovered in US military treatment facilities reveals distinct lineages and links to the origins of the Tn6168 ampC transposon.
+PRJNA837742	False	36036576	PMC9603458	10.1128/spectrum.02473-22	europepmc_accession	medium	True	1			False	False	False	1	Spatiotemporal Investigation of Antibiotic Resistance in the Urban Water Cycle Influenced by Environmental and Anthropogenic Activity.
+PRJNA610429	True					low		0			False	False	False	0	
+PRJEB50707	True					low		0			False	False	False	0	
+PRJNA645027	True					low		0			False	False	False	0	
+PRJNA636827	False	32973725	PMC7466660	10.3389/fmicb.2020.02007	europepmc_accession,europepmc_title,ncbi_bioproject	high	True	3	4.0	2.0	False	False	False	1	Nanopore MinION Sequencing Reveals Possible Transfer of &lt;i&gt;bla&lt;/i&gt; &lt;sub&gt;KPC-2&lt;/sub&gt; Plasmid Across Bacterial Species in Two Healthcare Facilities.
+PRJEB3353	False	23857503	PMC4001082	10.1001/jamainternmed.2013.7734	ncbi_bioproject	high		1	2.0	1.0	False	False	False	3	Rapid bacterial whole-genome sequencing to enhance diagnostic and public health microbiology.
+PRJEB44490	True					low		0			False	False	False	0	
+PRJNA612645	False	32229491	PMC7269499	10.1128/aac.02200-19	europepmc_accession	medium		1	2.0	1.0	False	False	False	1	Proteomic Changes of Klebsiella pneumoniae in Response to Colistin Treatment and <i>crrB</i> Mutation-Mediated Colistin Resistance.
+PRJEB46059	False	34502111	PMC8431375	10.3390/ijms22179196	europepmc_accession,ncbi_bioproject	high	True	2	2.0	1.0	False	False	False	2	Hypervirulent <i>Klebsiella pneumoniae</i> Sequence Type 420 with a Chromosomally Inserted Virulence Plasmid.
+PRJNA623051	True					low		0			False	False	False	0	
+PRJNA503785	True					high		0			False	False	True	4	
+PRJEB33694	False	31527032	PMC6879233	10.1128/aac.01111-19	europepmc_accession	high		1	2.0	1.0	False	False	False	1	Phenotypic, biochemical and genetic analysis of KPC-41, a KPC-3 variant conferring resistance to ceftazidime-avibactam and exhibiting reduced carbapenemase activity.
+PRJNA874344	True					low		0			False	False	False	0	
+PRJEB25425	True					low		0			False	False	False	0	
+PRJNA316457	True					high		0			False	False	True	1	
+PRJNA1051122	False	41156746	PMC12566427	10.3390/microorganisms13102286	europepmc_accession	high	True	1	4.0	2.0	False	False	False	1	Genomic Characterization of Carbapenem-Resistant &lt;i&gt;Klebsiella pneumoniae&lt;/i&gt; ST1440 and &lt;i&gt;Serratia marcescens&lt;/i&gt; Isolates from a COVID-19 ICU Outbreak in Ecuador.
+PRJNA607402	False	32291303	PMC7157821	10.1128/mbio.00603-20	europepmc_accession	high	True	1	2700.0	1350.0	False	False	False	1	Global Trends in Proteome Remodeling of the Outer Membrane Modulate Antimicrobial Permeability in Klebsiella pneumoniae.
+PRJNA627626	False	32429141	PMC7291057	10.3390/v12050544	europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Discovery of Three Toxic Proteins of <i>Klebsiella</i> Phage fHe-Kpn01.
+PRJEB52722	False			10.1101/2022.05.12.491637	europepmc_accession	high	True	1			False	False	False	3	Evaluation of metagenomic, 16S rRNA gene and ultra-plexed PCR-based sequencing approaches for profiling antimicrobial resistance gene and bacterial taxonomic composition of polymicrobial samples
+PRJNA728680	False	37910603	PMC10821315	10.1126/scitranslmed.abo2750	europepmc_accession	high		1	11.0	5.5	False	False	False	12	Fecal microbiota transplantation promotes reduction of antimicrobial resistance by strain replacement.
+PRJNA521445	True					low		0			False	False	False	0	
+PRJEB51459	False	35790590	PMC9255504	10.1007/s10096-022-04470-z	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Brief report: community-acquired Friedlander's pneumonia and pulmonary metastatic Klebsiella pneumoniae infection caused by hypervirulent ST23 in the Netherlands.
+PRJEB53051	False	36296310	PMC9607333	10.3390/microorganisms10102034	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Molecular Epidemiology of <i>mcr-1</i>-Positive <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i> Isolates: Results from Russian Sentinel Surveillance (2013-2018).
+PRJEB24576	False	30298131	PMC6161680	10.3389/fmed.2018.00265	europepmc_accession	high	True	1	3.0	1.5	False	False	False	2	A Fatal Bacteremia Caused by Hypermucousviscous KPC-2 Producing Extensively Drug-Resistant K64-ST11 <i>Klebsiella pneumoniae</i> in Brazil.
+PRJNA647060	True					low		0			False	False	False	0	
+PRJNA646204	True					low		0			False	False	False	0	
+PRJEB58827	False	36830261	PMC9952161	10.3390/antibiotics12020350	europepmc_accession,ncbi_bioproject	high	False	2	34.0	17.0	False	False	False	1	Whole-Genome Sequencing Snapshot of Clinically Relevant Carbapenem-Resistant Gram-Negative Bacteria from Wastewater in Serbia.
+PRJEB42295	True					low		0			False	False	False	0	
+PRJEB21765	True					high		0			False	False	True	1	
+PRJNA871216	False	40207193	PMC11980844	10.1371/journal.pwat.0000181	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Microbial and physicochemical water quality changes within distribution and premise plumbing systems during a chlorine conversion.
+PRJDB9614	False	32929493		10.1093/jac/dkaa387	ncbi_bioproject	high		1	2.0	1.0	False	False	False	1	Genomic features of plasmids coding for KPC-2, NDM-5 or OXA-48 carbapenemases in Enterobacteriaceae from Malawi.
+PRJEB17631	True					low		0			False	False	False	3	
+PRJNA1034027	False	38925648		10.1093/jambio/lxae155	ncbi_bioproject	high		1	2.0	1.0	False	False	False	1	Evaluation of phenotypic and genotypic methods for the identification and characterization of bacterial isolates recovered from catheter-associated urinary tract infections.
+PRJEB34867	False	32568057	PMC7323517	10.3201/eid2607.191490	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Carbapenem Resistance Conferred by OXA-48 in K2-ST86 Hypervirulent Klebsiella pneumoniae, France.
+PRJEB41279	True					low		0	2.0	1.0	False	False	False	0	
+PRJNA749815	False	35467408	PMC9241866	10.1128/spectrum.02624-21	europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Comparison of Two Distinct Subpopulations of Klebsiella pneumoniae ST16 Co-Occurring in a Single Patient.
+PRJNA819844	False	35844192	PMC9359173	10.1080/22221751.2022.2103454	europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Prevalence of hypervirulent and carbapenem-resistant <i>Klebsiella pneumoniae</i> under divergent evolutionary patterns.
+PRJDB14713	True					low		0			False	False	False	0	
+PRJNA749600	False	34653368	PMC8800145	10.1016/j.cels.2021.09.011	europepmc_accession	medium		1			False	False	False	1	Functional attractors in microbial community assembly.
+PRJNA864766	True					low		0			False	False	False	0	
+PRJNA833080	False	41817438	PMC13064125	10.1128/mra.01114-25	europepmc_accession	medium	False	1	109.0	54.5	False	False	False	2	Draft genome sequences of 109 gut bacteria isolated from colonoscopy samples of individuals with and without cystic fibrosis.
+PRJEB50806	True					low		0			False	False	False	0	
+PRJEB8771	False	30840764	PMC6938978	10.1093/cid/ciz174	europepmc_accession	medium	False	1	2.0	1.0	False	False	False	1	A One Health Study of the Genetic Relatedness of Klebsiella pneumoniae and Their Mobile Elements in the East of England.
+PRJNA632581	False	35336083	PMC8949579	10.3390/microorganisms10030507	europepmc_accession	high	True	1	8.0	4.0	False	False	False	1	Whole Genome Sequence Analysis of Multidrug Resistant <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i> Strains in Kuwait.
+PRJNA687492	False	34081101	PMC8358223	10.1093/gbe/evab127	europepmc_accession,europepmc_title	high	False	2	96.0	48.0	False	False	False	1	Genome-Inferred Correspondence between Phylogeny and Metabolic Traits in the Wild Drosophila Gut Microbiome.
+PRJNA684628	True					low		0			False	False	False	0	
+PRJEB60446	True					low		0			False	False	False	0	
+PRJNA719938	False	33499011	PMC7908357	10.3390/ijerph18030937	ncbi_bioproject	high	False	1	2.0	1.0	False	False	False	1	Characterization of Extended-Spectrum Beta-Lactamase-Producing <i>Escherichia coli</i> Isolates from Jurong Lake, Singapore with Whole-Genome-Sequencing.
+PRJNA719112	False	34077733	PMC8283688	10.1016/j.celrep.2021.109196	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	An acquired acyltransferase promotes Klebsiella pneumoniae ST258 respiratory infection.
+PRJNA1064853	False	38589623	PMC11001922	10.1038/s41598-024-58963-2	europepmc_accession	high	False	1	2.0	1.0	False	False	False	1	Automating the Illumina DNA library preparation kit for whole genome sequencing applications on the flowbot ONE liquid handler robot.
+PRJNA593956	True					high		0			False	False	False	10	
+PRJNA593828	True					low		0			False	False	False	0	
+PRJEB32059	True					low		0			False	False	True	4	
+PRJEB36448	True					low		0			False	False	False	0	
+PRJNA545765	True					low		0			False	False	False	0	
+PRJEB61973	False	38862602	PMC11222139	10.1038/s41564-024-01710-0	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Klebsiella oxytoca inhibits Salmonella infection through multiple microbiota-context-dependent mechanisms.
+PRJNA667843	False	33272354	PMC7716400	10.2807/1560-7917.es.2020.25.48.2001779	europepmc_accession,europepmc_title,ncbi_bioproject	high	True	3	2.0	1.0	False	False	False	1	Extremely drug-resistant NDM-9-producing ST147 <i>Klebsiella pneumoniae</i> causing infections in Italy, May 2020.
+PRJNA254477	True					low	False	1	1.0	0.5	True	False	False	3	
+PRJNA799011	False	37156077	PMC10189387	10.1016/j.psj.2023.102712	europepmc_accession	low	True	1			False	False	False	3	Survey of clinical and commensal Escherichia coli from commercial broilers and turkeys, with emphasis on high-risk clones using APECTyper.
+PRJEB60070	False	37107147	PMC10135176	10.3390/antibiotics12040785	europepmc_accession	high	False	1	2.0	1.0	False	False	False	1	In Vitro Activity of Cefiderocol on Multiresistant Bacterial Strains and Genomic Analysis of Two Cefiderocol Resistant Strains.
+PRJNA353060,PRJNA246471	True					low		0			True	False	True	1	
+PRJNA494608	False	32019832	PMC7002114	10.1128/msystems.00620-19	europepmc_accession	medium	True	1			False	False	False	4	Identification of Clostridioides difficile-Inhibiting Gut Commensals Using Culturomics, Phenotyping, and Combinatorial Community Assembly.
+PRJDB15972	True					low		0			False	False	False	0	
+PRJNA246471,PRJNA353060	True					low		0			True	False	True	1	
+PRJNA393721	True					low		0			False	False	False	0	
+PRJNA392935	False	29021151	PMC5703817	10.1128/jcm.01069-17	europepmc_accession	high		1	3.0	1.5	False	False	False	1	Rapid Nanopore Sequencing of Plasmids and Resistance Gene Detection in Clinical Isolates.
+PRJDB9124	True					low		0	2.0	1.0	False	False	False	0	
+PRJEB14648	True					low		0			False	False	False	0	
+PRJNA596289	True					low	False	1	510.0	255.0	False	False	False	5	
+PRJNA793885	False	37988619	PMC10754042	10.1021/acssynbio.3c00414	europepmc_accession	medium		1	2.0	1.0	False	False	False	1	Synthetic Biology Toolbox for Nitrogen-Fixing Soil Microbes.
+PRJEB35623	True					high		0			False	False	False	8	
+PRJNA543860	False	32299877	PMC7163015	10.1128/mra.00170-20	europepmc_accession	high	True	1	11.0	5.5	False	False	False	1	Draft Genome Sequences of 11 Bacterial Strains Isolated from Commercial Corn-Based Poultry Feed.
+PRJNA383436	False	31980604	PMC6981164	10.1038/s41467-019-14139-5	europepmc_accession,europepmc_secondary	medium	False	2	2.0	1.0	False	False	False	2	Integrating multiple genomic technologies to investigate an outbreak of carbapenemase-producing Enterobacter hormaechei.
+PRJDB7066	True					low		0			False	False	False	0	
+PRJNA419722	True					low		0			False	False	False	0	
+PRJEB60429	False	40511474	PMC12164281	10.2807/1560-7917.es.2025.30.23.2400590	europepmc_accession	low	True	1			False	False	False	11	Beyond patient contact: combined short- and long read sequencing reveals continuous occurrence of genomically related carbapenemase-producing Enterobacterales and plasmid mobility in a hospital, Germany, 2018 to 2021.
+PRJNA530794	False	31455657	PMC6712402	10.1128/mbio.01977-19	europepmc_accession	high	True	1	2.0	1.0	False	False	False	10	Comparative Genomics of Antibiotic-Resistant Uropathogens Implicates Three Routes for Recurrence of Urinary Tract Infections.
+PRJNA738811	False	34228551	PMC8370223	10.1128/aac.00890-21	europepmc_accession	medium		1	2.0	1.0	False	False	False	1	KPC-Mediated Resistance to Ceftazidime-Avibactam and Collateral Effects in Klebsiella pneumoniae.
+PRJEB75744	True					low		0			False	False	False	0	
+PRJNA419295	False	29661874	PMC6021667	10.1128/aac.02457-17	europepmc_accession	high		1	2.0	1.0	False	False	False	1	Characterization of Extensively Drug-Resistant or Pandrug-Resistant Sequence Type 147 and 101 OXA-48-Producing Klebsiella pneumoniae Causing Bloodstream Infections in Patients in an Intensive Care Unit.
+PRJNA788123	True					low		0			False	False	False	10	
+PRJNA475291	False	31117026	PMC6589436	10.1128/msystems.00202-19	europepmc_secondary,ncbi_bioproject	high	True	2	2.0	1.0	False	False	False	1	Network Integrative Genomic and Transcriptomic Analysis of Carbapenem-Resistant Klebsiella pneumoniae Strains Identifies Genes for Antibiotic Resistance and Virulence.
+PRJNA687279	True					low		0			False	False	False	0	
+PRJNA549171	True					low		0	2.0	1.0	False	False	False	0	
+PRJDB7545	False	37277351	PMC10241881	10.1038/s41467-023-39029-9	europepmc_accession	high	False	1	2.0	1.0	False	False	False	1	Bacteriophage therapy against pathological Klebsiella pneumoniae ameliorates the course of primary sclerosing cholangitis.
+PRJDB4694	True					high		0			False	False	False	10	
+PRJNA401330	False	30461373	PMC6321870	10.1099/mgen.0.000233	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	The resistomes of six carbapenem-resistant pathogens - a critical genotype-phenotype analysis.
+PRJNA970235	True					low		0			False	False	False	0	
+PRJNA1123890	True					low		0			False	False	False	0	
+PRJNA530580	False	23843485	PMC3754640	10.1128/jcm.00984-13	ncbi_bioproject	medium		1			True	False	False	2	Predictive diagnostics for Escherichia coli infections based on the clonal association of antimicrobial resistance and clinical outcome.
+PRJNA398291	False	29774858	PMC6004858	10.3201/eid2406.171648	europepmc_accession,europepmc_title	high	True	2	170.0	85.0	False	False	False	1	Genomic Epidemiology of Global Carbapenemase-Producing Enterobacter spp., 2008-2014.
+PRJEB71895	False	38750030	PMC11096173	10.1038/s41467-024-48219-y	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	An antiplasmid system drives antibiotic resistance gene integration in carbapenemase-producing Escherichia coli lineages.
+PRJNA564977	False	32192451	PMC7083060	10.1186/s12879-020-04966-z	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Unusual accumulation of a wide array of antimicrobial resistance mechanisms in a patient with cytomegalovirus-associated hemophagocytic lymphohistiocytosis: a case report.
+PRJNA411885	True					low		0			False	False	False	0	
+PRJNA971755	False	40992213	PMC12492035	10.1016/j.ebiom.2025.105944	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Transposition of insertion sequence element from KPC plasmid enhances intracellular survival of Klebsiella pneumoniae.
+PRJNA713498	False	34956131	PMC8692987	10.3389/fmicb.2021.770813	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Whole-Genome Sequencing of Gram-Negative Bacteria Isolated From Bovine Mastitis and Raw Milk: The First Emergence of Colistin <i>mcr</i>-<i>10</i> and Fosfomycin <i>fosA5</i> Resistance Genes in <i>Klebsiella pneumoniae</i> in Middle East.
+PRJEB8721	True					low		0			False	False	True	3	
+PRJNA689691	True					low		0			False	False	False	0	
+PRJNA780904	False	35984997		10.1089/mdr.2021.0466	ncbi_bioproject	high		1	2.0	1.0	False	False	False	1	Emergence of Urease-Negative <i>Klebsiella pneumoniae</i> ST340 Carrying an IncP6 Plasmid-Mediated <i>bla</i><sub>KPC-2</sub> Gene.
+PRJEB75816	False	41588103	PMC12946264	10.1038/s43856-026-01402-2	europepmc_accession	low	True	1	2.0	1.0	False	False	False	1	Genomic characterization and sub-clustering of Escherichia coli clonal complex 38 reveal host associated genetic markers.
+PRJNA1115910	False	39567391	PMC11579175	10.1007/s00248-024-02459-z	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Wild-Type Domestication: Loss of Intrinsic Metabolic Traits Concealed by Culture in Rich Media.
+PRJEB10263	True					low		0			False	False	False	0	
+PRJEB38442	False	35103490	PMC8805638	10.1128/msystems.01019-21	europepmc_accession	high	True	1	2.0	1.0	False	False	False	1	Dissemination Routes of Carbapenem and Pan-Aminoglycoside Resistance Mechanisms in Hospital and Urban Wastewater Canalizations of Ghana.
+PRJNA1103093	False		PMC12937352		europepmc_accession	medium	True	1	2.0	1.0	False	False	False	1	Emergence of Polymyxin Resistance Driven by a PhoQ Mutation in KPC-2-Producing Klebsiella pneumoniae
+PRJNA974066	False	38598612	PMC11634388	10.1126/scitranslmed.adk8222	europepmc_accession	high		1			False	False	False	1	Contribution of the patient microbiome to surgical site infection and antibiotic prophylaxis failure in spine surgery.
+PRJNA1101017	True					low		0			False	False	False	0	
+PRJNA770882	True					low		0			False	False	False	0	
+PRJNA436343	False	30533912	PMC6256504	10.1128/mra.01057-18	europepmc_secondary	high	True	1	2.0	1.0	False	False	False	1	Draft Genome Sequences of Two Carbapenemase-Producing Klebsiella pneumoniae Strains Isolated from Blood Cultures.
+PRJNA234232	True					high		0			False	False	False	10	
+PRJNA234233	True					high		0			False	False	False	10	
+PRJNA234231	True					high		0			False	False	False	10	
+PRJNA234242	True					high		0			False	False	False	10	
+PRJNA234234	True					high		0			False	False	True	10	
+PRJNA234235	True					high		0			False	False	False	10	
+PRJNA234236	True					high		0			False	False	True	10	
+PRJNA234239	True					high		0			False	False	True	10	
+PRJNA234240	True					high		0			False	False	True	10	
+PRJNA234241	True					high		0			False	False	False	10	
+PRJNA234250	True					high		0			False	False	True	10	
+PRJNA234243	True					low		0			False	False	False	10	
+PRJNA234244	True					high		0			False	False	True	10	
+PRJNA234245	True					high		0			False	False	True	10	
+PRJNA234249	True					low		0			False	False	False	10	
+PRJNA234251	True					high		0			False	False	True	10	
+PRJNA234258	True					high		0			False	False	True	10	
+PRJNA234259	True					high		0			False	False	True	10	
+PRJNA234260	True					high		0			False	False	True	10	
+PRJNA234229	True					high		0			False	False	True	10	
+PRJNA212643	True					low		0			False	False	False	0	
+PRJNA212649	True					low		0			False	False	False	0	
+PRJNA234230	True					high		0			False	False	True	10	
+PRJNA265245	True					low		0			False	False	False	0	
+PRJNA234228	True					high		0			False	False	True	10	
+PRJNA265244	True					low		0			False	False	False	0	
+PRJNA234222	True					high		0			False	False	True	10	
+PRJNA564369	True					low		0			False	False	False	0	
+PRJNA265234	True					low		0			False	False	False	0	
+PRJNA265235	True					low		0			False	False	False	0	
+PRJNA265236	True					low		0			False	False	False	0	
+PRJNA265237	True					low		0			False	False	False	0	
+PRJNA265240	True					low		0			False	False	False	0	
+PRJNA265241	True					low		0			False	False	False	0	
+PRJNA265242	True					low		0			False	False	False	0	
+PRJNA265243	True					low		0			False	False	False	0	
+PRJNA265246	True					low		0			False	False	False	0	
+PRJNA234227	True					high		0			False	False	True	10	
+PRJNA265247	True					low		0			False	False	False	0	
+PRJNA265248	True					low		0			False	False	False	0	
+PRJNA234264	True					high		0			False	False	True	10	
+PRJNA234263	True					high		0			False	False	True	10	
+PRJNA234262	True					high		0			False	False	True	10	
+PRJNA234261	True					high		0			False	False	True	10	
+PRJNA234223	True					high		0			False	False	True	10	
+PRJNA234224	True					high		0			False	False	True	10	
+PRJNA234225	True					high		0			False	False	True	10	
+PRJNA234226	True					high		0			False	False	True	10	
+PRJNA634081	True					low		0			False	False	False	0	
+PRJNA201951	True					high		0			False	False	True	10	
+PRJNA555206	True					low		0			False	False	True	2	
+PRJNA587430	True					low		0			False	False	False	0	
+PRJNA587434	True					low		0			False	False	False	0	
+PRJNA553808	True					low		0			False	False	False	0	
+PRJNA553055	False	32021334	PMC6982529	10.2147/idr.s240404	europepmc_secondary	medium	True	1	1.0	1.0	False	False	False	3	Hybrid Genome Assembly and Annotation of a Pandrug-Resistant <i>Klebsiella pneumoniae</i> Strain Using Nanopore and Illumina Sequencing.
+PRJNA265231	True					low		0			False	False	False	0	
+PRJNA545744	True					low		0			False	False	False	0	
+PRJNA201950	True					high		0			False	False	True	10	
+PRJNA531554	True					low		0			False	False	True	2	
+PRJNA531724	True					low		0			False	False	False	0	
+PRJNA201947	True					high		0			False	False	True	10	
+PRJNA201946	True					high		0			False	False	True	10	
+PRJNA201945	True					low		0			False	False	True	10	
+PRJNA534097	True					low		0			False	False	False	0	
+PRJNA542320	False	31700190	PMC7250008	10.1038/s41591-019-0640-y	europepmc_accession,ncbi_bioproject	high		2			False	False	False	2	Preventing dysbiosis of the neonatal mouse intestinal microbiome protects against late-onset sepsis.
+PRJNA201944	True					low		0			False	False	True	10	
+PRJNA543187	True					high		0			False	False	True	1	
+PRJDB9227	False	32571830	PMC7449151	10.1128/aac.00882-20	europepmc_accession	high		1	1.0	1.0	False	False	False	1	First Report of Foodborne Klebsiella pneumoniae Coharboring <i>bla</i><sub>VIM-1</sub>, <i>bla</i><sub>NDM-1</sub>, and <i>mcr-9</i>.
+PRJNA544642	True					low		0			False	False	False	0	
+PRJNA545001	True					low		0			False	False	False	0	
+PRJNA545745	True					low		0			False	False	False	0	
+PRJNA552487	True					low		0			False	False	False	0	
+PRJNA545764	True					high		0			False	False	False	0	
+PRJNA587433	True					low		0			False	False	False	0	
+PRJNA587429	True					low		0			False	False	False	0	
+PRJNA555326	False	31658962	PMC6985746	10.1128/aac.01466-19	europepmc_title,ncbi_bioproject	high		2	3.0	3.0	False	False	False	1	Simultaneous Infection with <i>Enterobacteriaceae</i> and Pseudomonas aeruginosa Harboring Multiple Carbapenemases in a Returning Traveler Colonized with Candida auris.
+PRJNA587424	True					low		0			False	False	False	0	
+PRJNA197002	True					low		0			False	False	False	0	
+PRJNA195754	True					low		0			False	False	False	0	
+PRJNA557206	True					high		0			False	False	True	1	
+PRJNA193169	True					low		1	1.0	1.0	True	False	False	1	
+PRJNA193168	True					low		0			False	False	False	1	
+PRJNA193167	True					low		0			False	False	True	1	
+PRJNA193165	False	24913165	PMC4136011	10.1128/aac.00125-14	ncbi_bioproject	medium		1			False	False	False	1	Population structure of KPC-producing Klebsiella pneumoniae isolates from midwestern U.S. hospitals.
+PRJNA193164	True					low		0			False	False	True	1	
+PRJNA193163	True					low		0			False	False	False	0	
+PRJNA562727	True					low		0			False	False	False	0	
+PRJNA193162	True					low		0			False	False	True	1	
+PRJDB8047	False	31666316	PMC6821933	10.1128/msphere.00736-19	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	IMP-68, a Novel IMP-Type Metallo-β-Lactamase in Imipenem-Susceptible Klebsiella pneumoniae.
+PRJNA198783	False	25232178	PMC4203314	10.1126/scitranslmed.3009845	ncbi_bioproject	high		1			False	False	False	1	Single-molecule sequencing to track plasmid diversity of hospital-associated carbapenemase-producing Enterobacteriaceae.
+PRJNA193161	True					low		0			False	False	False	0	
+PRJNA193160	True					low		0			False	False	False	0	
+PRJNA187326	True					low		0			False	False	False	0	
+PRJNA187325	True					low		1			False	False	False	1	
+PRJNA576510	False	32372050	PMC7368043	10.1038/s41396-020-0666-7	europepmc_accession,europepmc_title,published_version	high	False	3	1.0	1.0	False	False	False	2	Selective carbon sources influence the end products of microbial nitrate respiration.
+PRJDB7087	False	32929164	PMC7490380	10.1038/s41598-020-71693-5	europepmc_accession,published_version	low	True	2			False	False	False	2	Understanding and predicting ciprofloxacin minimum inhibitory concentration in Escherichia coli with machine learning.
+PRJNA577539	False	32499351	PMC7272560	10.1128/mra.00429-20	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of an Extended-Spectrum β-Lactamase-Producing Klebsiella oxytoca Strain Bearing <i>mcr-9</i> from Qatar.
+PRJNA187324	True					low		0			False	False	False	0	
+PRJNA265233	True					low		0			False	False	False	0	
+PRJNA234172	True					low		0			False	False	True	10	
+PRJNA263062	True					low		0			False	False	False	0	
+PRJNA234201	True					high		0			False	False	True	10	
+PRJNA234191	True					high		0			False	False	True	10	
+PRJNA234192	True					high		0			False	False	True	10	
+PRJNA234193	True					high		0			False	False	True	10	
+PRJNA234194	True					high		0			False	False	False	10	
+PRJNA234195	True					high		0			False	False	False	10	
+PRJNA234196	True					high		0			False	False	True	10	
+PRJNA234197	True					high		0			False	False	False	10	
+PRJNA234198	True					high		0			False	False	False	10	
+PRJNA234199	True					high		0			False	False	True	10	
+PRJNA234200	True					high		0			False	False	True	10	
+PRJNA234202	True					high		0			False	False	False	10	
+PRJNA234215	True					high		0			False	False	False	10	
+PRJNA234204	True					high		0			False	False	True	10	
+PRJNA234188	True					high		0			False	False	True	10	
+PRJNA234205	True					high		0			False	False	False	10	
+PRJNA234206	True					high		0			False	False	True	10	
+PRJNA234207	True					high		0			False	False	True	10	
+PRJNA234208	True					high		0			False	False	True	10	
+PRJNA234209	True					high		0			False	False	True	10	
+PRJNA234210	True					low		0			False	False	False	10	
+PRJNA234211	True					high		0			False	False	True	10	
+PRJNA234212	True					high		0			False	False	True	10	
+PRJNA234190	True					high		0			False	False	True	10	
+PRJNA234203	True					high		0			False	False	True	10	
+PRJEB11876	False	27875980	PMC5120500	10.1186/s12864-016-3289-7	europepmc_accession,europepmc_secondary	high	False	2	95.0	95.0	False	False	False	1	Comparative genomics of European avian pathogenic E. Coli (APEC).
+PRJNA265255	True					low		0			False	False	False	0	
+PRJNA323833	False	29233035	PMC5955179	10.1080/21505594.2017.1395129	europepmc_secondary,europepmc_title	high	True	2	1.0	1.0	False	False	False	1	From the wound to the bench: exoproteome interplay between wound-colonizing Staphylococcus aureus strains and co-existing bacteria.
+PRJNA323981	True					low		0			False	False	False	0	
+PRJEB13482	True					low		0			False	False	False	0	
+PRJNA219289	True					high		0			False	False	True	10	
+PRJNA219287	True					high		0			False	False	False	10	
+PRJNA328507	True					low		0			False	False	False	0	
+PRJNA219284	True					high		0			False	False	False	10	
+PRJNA219283	True					high		0			False	False	True	10	
+PRJNA339560	True					low		1	1.0	1.0	False	False	False	1	
+PRJNA219278	True					high		0			False	False	True	10	
+PRJEB12887	True					low		0			False	False	False	0	
+PRJNA219277	True					low		0			False	False	True	10	
+PRJEB26512	False	31969452	PMC7007522	10.1073/pnas.1918951117	europepmc_accession,europepmc_title	high	True	2	34.0	34.0	False	False	False	2	Identifying determinants of bacterial fitness in a model of human gut microbial succession.
+PRJNA343442,PRJNA175243	False	23209233	PMC3510562	10.1128/jb.01897-12	ncbi_bioproject	medium		1	1.0	1.0	True	False	False	2	Genome sequence of OXA-48 carbapenemase-producing Klebsiella pneumoniae KpO3210.
+PRJNA344449	True					low		0			False	False	False	0	
+PRJNA348457	False	29220374	PMC5722313	10.1371/journal.pone.0189438	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	A blaOXA-181-harbouring multi-resistant ST147 Klebsiella pneumoniae isolate from Pakistan that represent an intermediate stage towards pan-drug resistance.
+PRJNA350242	True					low		0			False	False	False	0	
+PRJNA219276	True					high		0			False	False	True	10	
+PRJNA219275	True					low		0			False	False	True	10	
+PRJNA219272	True					high		0			False	False	True	10	
+PRJNA265257	True					low		0			False	False	False	0	
+PRJNA234213	True					low		0			False	False	False	10	
+PRJNA234216	True					high		0			False	False	False	10	
+PRJNA234120	True					low		0			False	False	True	10	
+PRJNA234221	True					high		0			False	False	True	10	
+PRJNA234178	True					low		0			False	False	False	10	
+PRJNA234179	True					high		0			False	False	False	10	
+PRJNA234180	True					high		0			False	False	False	10	
+PRJNA234181	True					low		0			False	False	False	10	
+PRJNA234182	True					high		0			False	False	True	10	
+PRJNA234183	True					high		0			False	False	True	10	
+PRJNA234184	True					high		0			False	False	True	10	
+PRJNA234185	True					high		0			False	False	True	10	
+PRJNA234219	True					high		0			False	False	False	10	
+PRJNA234220	True					high		0			False	False	True	10	
+PRJNA265232	True					low		0			False	False	False	0	
+PRJNA234217	True					low		0			False	False	False	10	
+PRJNA234265	True					low		0			False	False	True	10	
+PRJNA234132	True					high		0			False	False	False	10	
+PRJNA244068	True					low		0			False	False	False	0	
+PRJNA244547	True					low		0			False	False	False	0	
+PRJNA244567	True					high		0			False	False	True	6	
+PRJNA234129	True					high		0			False	False	True	10	
+PRJNA234128	True					high		0			False	False	True	10	
+PRJNA234123	True					high		0			False	False	True	10	
+PRJNA234122	True					high		0			False	False	True	10	
+PRJNA259683	True					low		0			False	False	False	0	
+PRJNA234177	True					high		0			False	False	True	10	
+PRJNA234176	True					high		0			False	False	True	10	
+PRJNA234175	True					high		0			False	False	True	10	
+PRJNA234174	True					high		0			False	False	True	10	
+PRJNA234218	True					low		0			False	False	True	10	
+PRJNA234189	True					high		0			False	False	True	10	
+PRJNA234187	True					high		0			False	False	True	10	
+PRJNA265254	True					low		0			False	False	False	0	
+PRJNA234171	True					high		0			False	False	True	10	
+PRJNA234136	True					high		0			False	False	True	10	
+PRJNA234137	True					high		0			False	False	False	10	
+PRJNA234140	True					low		0			False	False	False	10	
+PRJNA234141	True					low		0			False	False	True	10	
+PRJNA234142	True					high		0			False	False	False	10	
+PRJNA234143	True					high		0			False	False	True	10	
+PRJNA234144	True					high		0			False	False	False	10	
+PRJNA234148	True					high		0			False	False	False	10	
+PRJNA234149	True					high		0			False	False	True	10	
+PRJNA234157	True					high		0			False	False	True	10	
+PRJNA234168	True					high		0			False	False	True	10	
+PRJNA234169	True					low		0			False	False	False	10	
+PRJNA234170	True					high		0			False	False	False	10	
+PRJNA201943	True					low		0			False	False	False	10	
+PRJNA234186	True					high		0			False	False	True	10	
+PRJNA234173	True					low		0			False	False	True	10	
+PRJNA547184	True					low		0			False	False	False	0	
+PRJNA187300	True					low		0			False	False	False	0	
+PRJNA201942	True					low		0			False	False	True	10	
+PRJNA202005	True					high		0			False	False	True	10	
+PRJNA202036	True					low		0			False	False	True	10	
+PRJNA202035	True					high		0			False	False	True	10	
+PRJNA202034	True					low		0			False	False	True	10	
+PRJNA202033	True					high		0			False	False	True	10	
+PRJNA202032	True					high		0			False	False	True	10	
+PRJNA202026	True					low		0			False	False	True	10	
+PRJNA202025	True					low		0			False	False	True	10	
+PRJNA445318	False	30533674	PMC6256697	10.1128/mra.01083-18	europepmc_secondary	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of Dyella sp. Strain C9, Isolated from a Malaysian Tropical Peat Swamp Forest.
+PRJNA202008	True					low		0			False	False	True	10	
+PRJNA202006	True					low		0			False	False	False	10	
+PRJNA201967,PRJNA201954	True					low		0			False	False	False	0	
+PRJNA202012	True					low		0			False	False	True	10	
+PRJNA521038	False	30894438	PMC6535602	10.1128/jcm.01780-18	europepmc_accession	high	True	1	414.0	414.0	False	False	False	3	Comparing Patient Risk Factor-, Sequence Type-, and Resistance Locus Identification-Based Approaches for Predicting Antibiotic Resistance in Escherichia coli Bloodstream Infections.
+PRJNA52135	True					high		0			False	False	False	1	
+PRJNA52137	True					low		0			False	False	False	0	
+PRJNA52139	True					low		0			False	False	False	0	
+PRJNA52141	True					low		0			False	False	False	0	
+PRJNA52143	True					low		0			False	False	False	0	
+PRJNA52145	True					low		0			False	False	False	0	
+PRJNA52149	False	22829535	PMC3483556	10.1101/gr.141515.112	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	Finished bacterial genomes from shotgun sequence data.
+PRJNA52151	True					low		0			False	False	False	0	
+PRJNA52153	True					low		0			False	False	False	0	
+PRJNA431464	True					low		0			False	False	False	0	
+PRJNA202042	True					high		0			False	False	False	10	
+PRJNA202043	True					high		0			False	False	True	10	
+PRJNA202045	True					high		0			False	False	True	10	
+PRJNA202009	True					low		0			False	False	True	10	
+PRJNA202020	True					high		0			False	False	True	10	
+PRJNA449090	False	31948967	PMC6965585	10.1128/mra.01408-19	europepmc_accession,europepmc_secondary	high	True	2	1.0	1.0	False	False	False	1	Complete Genome Sequence of Klebsiella pneumoniae Strain TK421, a Conjugative Hypervirulent Isolate.
+PRJNA201956	True					high		0			False	False	True	10	
+PRJNA428749	True					low		0			False	False	False	0	
+PRJNA40025	True					high		0			False	False	True	1	
+PRJNA40049	True					low		0			False	False	False	0	
+PRJNA407116	True					low		0			False	False	False	0	
+PRJNA203445	False	28183778	PMC5331488	10.1128/genomea.00967-16	europepmc_accession	medium	True	1	306.0	306.0	True	True	False	17	100K Pathogen Genome Project: 306 <i>Listeria</i> Draft Genome Sequences for Food Safety and Public Health.
+PRJEB11503	True					low		0			False	False	False	0	
+PRJNA412918	True					low		0			False	False	False	0	
+PRJNA202895	False	25232178	PMC4203314	10.1126/scitranslmed.3009845	ncbi_bioproject	high		1	1.0	1.0	False	False	False	1	Single-molecule sequencing to track plasmid diversity of hospital-associated carbapenemase-producing Enterobacteriaceae.
+PRJNA202053	True					low		0			False	False	False	10	
+PRJNA414678	False	29301903	PMC5754483	10.1128/genomea.01377-17	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of Singapore <i>Klebsiella pneumoniae</i> subsp. <i>pneumoniae</i> Isolate DS32358_14, Which Contains the Carbapenemase Gene <i>bla</i><sub>VIM-1</sub>.
+PRJNA202052	True					high		0			False	False	True	10	
+PRJNA202048	True					high		0			False	False	True	10	
+PRJNA420100	True					low		0			False	False	False	0	
+PRJNA202047	False	30126962	PMC6201135	10.1128/aac.01281-18	europepmc_accession	medium		1	1.0	1.0	False	False	False	11	Carbapenem Resistance Caused by High-Level Expression of OXA-663 β-Lactamase in an OmpK36-Deficient Klebsiella pneumoniae Clinical Isolate.
+PRJNA202046	True					high		0			False	False	True	10	
+PRJNA202024	True					low		0			False	False	False	10	
+PRJNA429995	True					low		0			False	False	False	0	
+PRJNA521748	False	33532526	PMC7829145	10.1016/j.dib.2021.106746	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Characterization of a new multidrug-resistant Brazilian <i>K. pneumoniae</i> isolate and 172 <i>Klebsiella</i> spp. sequenced strains: Genomic island, multilocus sequence typing and capsule locus dataset.
+PRJNA201968	True					low		0			False	False	False	10	
+PRJNA522830	True					low		0			False	False	False	0	
+PRJNA500331	True					high		0			False	False	False	1	
+PRJNA501405	True					low		0			False	False	False	0	
+PRJNA501406	True					low		0			False	False	False	0	
+PRJNA501409	True					low		0			False	False	False	0	
+PRJNA501412	True					low		0			False	False	False	0	
+PRJNA503173	False	35236251	PMC8942559	10.1080/22221751.2022.2049458	europepmc_accession	low	True	1	1.0	1.0	False	False	False	1	Molecular epidemiology of carbapenem-resistant hypervirulent <i>Klebsiella pneumoniae</i> in China.
+PRJNA503825	True					low		0			False	False	False	0	
+PRJNA201994	True					high		0			False	False	True	10	
+PRJNA201991	True					high		0			False	False	True	10	
+PRJNA505478	True					low		0	1.0	1.0	False	False	False	0	
+PRJNA201990	True					low		0			False	False	True	10	
+PRJNA201989	True					high		0			False	False	True	10	
+PRJNA201987	True					high		0			False	False	True	10	
+PRJNA201985	True					high		0			False	False	True	10	
+PRJNA201984	True					high		0			False	False	True	10	
+PRJNA201981	True					high		0			False	False	True	10	
+PRJNA511518	False	30809206	PMC6379276	10.3389/fmicb.2019.00157	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Multiple Benefits of Plasmid-Mediated Quinolone Resistance Determinants in <i>Klebsiella pneumoniae</i> ST11 High-Risk Clone and Recently Emerging ST307 Clone.
+PRJNA511522	False	30809206	PMC6379276	10.3389/fmicb.2019.00157	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Multiple Benefits of Plasmid-Mediated Quinolone Resistance Determinants in <i>Klebsiella pneumoniae</i> ST11 High-Risk Clone and Recently Emerging ST307 Clone.
+PRJNA511523	False	30809206	PMC6379276	10.3389/fmicb.2019.00157	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Multiple Benefits of Plasmid-Mediated Quinolone Resistance Determinants in <i>Klebsiella pneumoniae</i> ST11 High-Risk Clone and Recently Emerging ST307 Clone.
+PRJNA511524	False	30809206	PMC6379276	10.3389/fmicb.2019.00157	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Multiple Benefits of Plasmid-Mediated Quinolone Resistance Determinants in <i>Klebsiella pneumoniae</i> ST11 High-Risk Clone and Recently Emerging ST307 Clone.
+PRJNA511525	False	30809206	PMC6379276	10.3389/fmicb.2019.00157	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Multiple Benefits of Plasmid-Mediated Quinolone Resistance Determinants in <i>Klebsiella pneumoniae</i> ST11 High-Risk Clone and Recently Emerging ST307 Clone.
+PRJNA320950	False	27401575	PMC4997870	10.1128/aac.01075-16	ncbi_bioproject	high		1	1.0	1.0	False	False	False	1	mcr-1.2, a New mcr Variant Carried on a Transferable Plasmid from a Colistin-Resistant KPC Carbapenemase-Producing Klebsiella pneumoniae Strain of Sequence Type 512.
+PRJNA501401	True					low		0			False	False	False	0	
+PRJNA499494	True					low		0			False	False	False	0	
+PRJNA201966	True					high		0			False	False	True	10	
+PRJNA201999	True					high		0			False	False	True	10	
+PRJNA494961	False	34068663	PMC8151138	10.3390/microorganisms9051022	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Genomics and Virulence of <i>Klebsiella pneumoniae</i> Kpnu95 ST1412 Harboring a Novel Incf Plasmid Encoding <i>Bla</i>ctx-M-15 and <i>Qnrs1</i> Causing Community Urinary Tract Infection.
+PRJNA201965	True					high		0			False	False	True	10	
+PRJNA201964	True					low		0			False	False	True	10	
+PRJNA201963	True					low		0			False	False	False	10	
+PRJNA201962	True					high		0			False	False	False	10	
+PRJNA201961	True					high		0			False	False	False	10	
+PRJNA201960	True					high		0			False	False	True	10	
+PRJNA526408	False	31395633	PMC6687920	10.1128/mra.00552-19	europepmc_accession	high	True	1	1.0	1.0	False	False	False	2	First Whole-Genome Sequence of a Highly Resistant Klebsiella pneumoniae Sequence Type 14 Strain Isolated from Sudan.
+PRJNA201959	True					low		0			False	False	True	10	
+PRJNA527940	True					low		0			False	False	False	0	
+PRJNA201958,PRJNA201967	True					low		0			False	False	False	0	
+PRJNA528367	True					low		0			False	False	False	0	
+PRJNA201957	True					low		0			False	False	True	10	
+PRJNA529261	False	31649166	PMC7603427	10.1126/science.aax6624	europepmc_accession	high		1	1.0	1.0	False	False	False	1	MAIT cells are imprinted by the microbiota in early life and promote tissue repair.
+PRJNA201970	True					low		0			False	False	True	10	
+PRJNA513350	True					low		0			False	False	False	0	
+PRJNA201974	True					low		0			False	False	True	10	
+PRJNA201978	True					high		0			False	False	False	10	
+PRJNA202002	True					high		0			False	False	False	10	
+PRJNA202001	True					high		0			False	False	False	10	
+PRJNA202000	True					low		0			False	False	True	10	
+PRJNA485518	True					low		0			False	False	False	0	
+PRJNA202013	True					high		0			False	False	True	10	
+PRJNA201936	True					low		0			False	False	False	10	
+PRJNA628847	True					low		0			False	False	False	0	
+PRJNA187301	True					low		0			False	False	True	1	
+PRJNA587439	True					low		0			False	False	False	0	
+PRJNA613320	True					low		0			False	False	False	0	
+PRJNA187299	True					low		0			False	False	True	1	
+PRJNA187298	True					low		0			False	False	False	0	
+PRJNA614986	True					low		0			False	False	False	0	
+PRJNA616452	False	32780112	PMC7662176	10.1093/jac/dkaa345	europepmc_accession	medium	True	1	423.0	423.0	False	False	False	1	ResFinder 4.0 for predictions of phenotypes from genotypes.
+PRJNA187297	True					low		0			False	False	False	0	
+PRJNA187296	True					low		0			False	False	False	0	
+PRJNA187295	True					low		1			False	False	False	1	
+PRJNA187294	True					low		0			False	False	False	0	
+PRJNA483246	False	31500105	PMC6780558	10.3390/microorganisms7090326	europepmc_accession	high	True	1	12.0	12.0	False	False	False	1	"Hybrid Resistance and Virulence Plasmids in ""High-Risk"" Clones of <i>Klebsiella pneumoniae</i>, Including Those Carrying <i>bla</i><sub>NDM-5</sub>."
+PRJNA187293	True					low		1			False	False	False	1	
+PRJDB5948	True					low		0			False	False	False	0	
+PRJNA234135	True					high		0			False	False	False	10	
+PRJNA604394	True					high		0			False	False	True	1	
+PRJNA187310	True					high		0			False	False	True	1	
+PRJNA601835	True					low		0			False	False	False	0	
+PRJNA587440	True					low		0			False	False	False	0	
+PRJNA587512	False	36475878	PMC9872595	10.1128/mra.00949-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genomic Sequence for Klebsiella pneumoniae 060517CS3-g, a Bacterium Harboring Multidrug Resistance Genes, Isolated from Retail Ground Chicken Meat.
+PRJNA588411	True					low		0			False	False	False	0	
+PRJNA187323	True					low		1			False	False	False	1	
+PRJNA187302	True					low		0			False	False	False	1	
+PRJNA611005	True					low		0			False	False	False	0	
+PRJNA187303	True					low		1			False	False	False	1	
+PRJNA609701	True					low		0			False	False	False	0	
+PRJNA549563	True					low		0			False	False	False	0	
+PRJNA201935	True					high		0			False	False	False	10	
+PRJNA550349	True					low		0			False	False	False	0	
+PRJNA201934	True					high		0			False	False	True	10	
+PRJNA201933	True					low		0			False	False	True	10	
+PRJNA201932	True					high		0			False	False	False	10	
+PRJNA552311	True					low		0			False	False	False	0	
+PRJNA198784	False	25232178	PMC4203314	10.1126/scitranslmed.3009845	ncbi_bioproject	medium		1	1.0	1.0	True	False	False	1	Single-molecule sequencing to track plasmid diversity of hospital-associated carbapenemase-producing Enterobacteriaceae.
+PRJNA587435	True					low		0			False	False	False	0	
+PRJNA587436	True					low		0			False	False	False	0	
+PRJNA587438	True					low		0			False	False	False	0	
+PRJNA612869	True					low		0			False	False	False	0	
+PRJDB6797	True					low		0			False	False	False	0	
+PRJNA604918	False	32966910		10.1016/j.jgar.2020.08.023	ncbi_bioproject	medium		1	1.0	1.0	False	False	False	1	Coexistence of bla<sub>KPC-2</sub>-IncN and mcr-1-IncX4 plasmids in a ST48 Escherichia coli strain in China.
+PRJNA187309	True					low		0			False	False	True	1	
+PRJNA187308	True					low		0			False	False	False	0	
+PRJNA187307	True					low		0			False	False	False	0	
+PRJNA187306	True					low		1			False	False	False	1	
+PRJNA187305	False	24913165	PMC4136011	10.1128/aac.00125-14	ncbi_bioproject	medium		1			False	False	False	1	Population structure of KPC-producing Klebsiella pneumoniae isolates from midwestern U.S. hospitals.
+PRJNA607902	False	33842574	PMC8032891	10.3389/fvets.2021.631716	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Case Report: Multidrug Resistant <i>Raoultella ornithinolytica</i> in a Septicemic Calf.
+PRJNA187304	True					low		1			False	False	False	1	
+PRJNA187322	True					low		1			False	False	False	1	
+PRJNA589638	False	32675179	PMC7365790	10.1128/mra.00336-20	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequences of Plant-Pathogenic Klebsiella variicola Strains Isolated from Plantain in Haiti.
+PRJNA589639	False	32675179	PMC7365790	10.1128/mra.00336-20	europepmc_accession	high	True	1	2.0	2.0	False	False	False	1	Draft Genome Sequences of Plant-Pathogenic Klebsiella variicola Strains Isolated from Plantain in Haiti.
+PRJNA454281	False	30687506	PMC6327872	10.1136/vetreco-2018-000307	europepmc_accession	high	True	1			False	False	False	1	Prevalence of faecal carriage of extended-spectrum β-lactamase (ESBL)-producing &lt;i&gt;Escherichia coli&lt;/i&gt; in veterinary hospital staff and students.
+PRJNA456219	True					low		0			False	False	False	0	
+PRJNA463112	True					low		0			False	False	False	0	
+PRJNA464397	False	29963640	PMC6020474	10.1128/msystems.00015-18	europepmc_title	high	False	1			False	False	False	2	Identification of Pathogenicity-Associated Loci in Klebsiella pneumoniae from Hospitalized Patients.
+PRJNA470581	True					high		0			False	False	False	0	
+PRJNA471164	False	32436839	PMC7371107	10.1099/mgen.0.000377	europepmc_accession	high	True	1	109.0	109.0	False	False	False	2	Preterm infants harbour diverse &lt;i&gt;Klebsiella&lt;/i&gt; populations, including atypical species that encode and produce an array of antimicrobial resistance- and virulence-associated factors.
+PRJNA471737	True					low		0	5.0	5.0	False	False	False	0	
+PRJNA47211,PRJNA47257,PRJNA47225,PRJNA47209,PRJNA47275,PRJNA47263,PRJNA47223,PRJNA47217,PRJNA47267,PRJNA47259,PRJNA47271,PRJNA47229	True					low		0			True	True	False	0	
+PRJNA472563	False	30420852	PMC6217722	10.3389/fimmu.2018.02377	europepmc_secondary	medium	True	1	1.0	1.0	False	False	False	1	Coinfection With Influenza A Virus and <i>Klebsiella oxytoca</i>: An Underrecognized Impact on Host Resistance and Tolerance to Pulmonary Infections.
+PRJNA202018	True					low		0			False	False	False	10	
+PRJNA474898	False	31296679	PMC6624762	10.1128/mra.00502-19	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genomic Sequence of Multidrug-Resistant Klebsiella pneumoniae B8S35, Isolated from Retail Chicken Skin.
+PRJNA474907	False	35266814	PMC9040815	10.1128/mbio.02949-21	europepmc_accession	medium	True	1	41.0	41.0	False	False	False	3	The CIAMIB: a Large and Metabolically Diverse Collection of Inflammation-Associated Bacteria from the Murine Gut.
+PRJNA202016	True					high		0			False	False	True	10	
+PRJNA202023	True					high		0			False	False	True	10	
+PRJNA477005	False	31001209	PMC6454207	10.3389/fmicb.2019.00542	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Diversity, Virulence, and Antimicrobial Resistance in Isolates From the Newly Emerging <i>Klebsiella pneumoniae</i> ST101 Lineage.
+PRJNA477444	True					low		0			False	False	False	0	
+PRJNA478289	True					low		0			False	False	False	0	
+PRJNA202015	True					low		0			False	False	True	10	
+PRJNA480281	True					low		0			False	False	False	4	
+PRJNA480797	False	30837980	PMC6390000	10.3389/fmicb.2019.00276	europepmc_secondary	medium	True	1	11.0	11.0	False	False	False	1	Plasmid-Mediated Transmission of KPC-2 Carbapenemase in <i>Enterobacteriaceae</i> in Critically Ill Patients.
+PRJNA481972	True					high		0			False	False	False	0	
+PRJNA202014	True					low		0			False	False	False	10	
+PRJNA456216	True					low		0			False	False	False	0	
+PRJNA202017	True					high		0			False	False	True	10	
+PRJNA187321	True					low		0			False	False	False	0	
+PRJNA398365	False	29325009	PMC5848804	10.1093/gigascience/gix132	europepmc_accession,europepmc_title	high	True	2	1.0	1.0	False	False	False	2	Efficient generation of complete sequences of MDR-encoding plasmids by rapid assembly of MinION barcoding sequencing data.
+PRJNA187320	True					low		0			False	False	False	0	
+PRJNA591409	False	32091354	PMC7045839	10.3201/eid2603.191230	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Acquisition of Plasmid with Carbapenem-Resistance Gene bla<sub>KPC2</sub> in Hypervirulent Klebsiella pneumoniae, Singapore.
+PRJNA187319	True					low		0			False	False	False	0	
+PRJNA187318	True					low		0			False	False	False	1	
+PRJNA592166	False	32015041	PMC7179263	10.1128/aac.02435-19	europepmc_accession,ncbi_bioproject	high		2	1.0	1.0	False	False	False	1	A Multispecies Cluster of VIM-1 Carbapenemase-Producing <i>Enterobacterales</i> Linked by a Novel, Highly Conjugative, and Broad-Host-Range IncA Plasmid Forebodes the Reemergence of VIM-1.
+PRJNA593244	True					low		0			False	False	False	0	
+PRJNA593604	False	32653928	PMC7678893	10.1093/jac/dkaa258	europepmc_accession	low	True	1	24.0	24.0	False	False	False	2	Optical maps of plasmids as a proxy for clonal spread of MDR bacteria: a case study of an outbreak in a rural Ethiopian hospital.
+PRJNA187317	True					low		0			False	False	True	1	
+PRJNA594546	False	31847948	PMC6918589	10.2807/1560-7917.es.2019.24.50.1900734	europepmc_accession	high	True	1	17.0	17.0	False	False	False	1	Extensively drug-resistant <i>Klebsiella pneumoniae</i> ST307 outbreak, north-eastern Germany, June to October 2019.
+PRJNA594627	False	32855243	PMC7453279	10.1128/mra.00491-20	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of the Plant Growth-Promoting Rhizobacterium <i>Klebsiella</i> sp. Strain KBG6.2, Imparting Salt Tolerance to Rice.
+PRJNA187316	True					low		0			False	False	False	0	
+PRJNA187315	False	24913165	PMC4136011	10.1128/aac.00125-14	ncbi_bioproject	medium		1			False	False	False	1	Population structure of KPC-producing Klebsiella pneumoniae isolates from midwestern U.S. hospitals.
+PRJNA595838	False	39201558	PMC11354265	10.3390/ijms25168871	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Structural and Mechanistic Insights into a Novel Monooxygenase for Poly(acrylic acid) Biodegradation.
+PRJNA187314	True					low		0			False	False	False	0	
+PRJNA187313	True					low		1			False	False	False	1	
+PRJNA598939	True					low		1	1.0	1.0	True	False	False	5	
+PRJNA187312	True					low		0			False	False	False	1	
+PRJNA600386	False	32409546	PMC7225545	10.1128/mra.00371-20	europepmc_secondary	high	True	1	1.0	1.0	False	False	False	1	Whole-Genome Sequences of Three Plant Growth-Promoting Rhizobacteria Isolated from Solanum tuberosum L. Rhizosphere in Tanzania.
+PRJNA187311	True					low		0			False	False	False	0	
+PRJNA530250	True					high		0			False	False	True	1	
+PRJNA201955	True					low		0			False	False	True	10	
+PRJNA219292	True					high		0			False	False	True	10	
+PRJEB43975	True					low		0			False	False	False	0	
+PRJNA318591	True					low		0			True	False	True	1	
+PRJNA809128	True					low		0			False	False	False	0	
+PRJNA898399	False	38294216	PMC10927678	10.1128/mra.01042-23	europepmc_accession	medium	False	1	2.0	2.0	False	False	False	2	Draft genomes of two phylotype I and II <i>Ralstonia solanacearum</i> species complex (RSSC) isolates causing bacterial wilt in tomato plants from Costa Rica.
+PRJNA801117	False	37938284	PMC9723661	10.1038/s43705-022-00188-3	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Single-cell Raman-activated sorting and cultivation (scRACS-Culture) for assessing and mining in situ phosphate-solubilizing microbes from nature.
+PRJEB61017	True					low		0			False	False	False	0	
+PRJEB60914	False	37607936	PMC10444851	10.1038/s41467-023-40872-z	europepmc_accession,published_version	high	True	2	1.0	1.0	False	False	False	1	Antibiotics promote intestinal growth of carbapenem-resistant Enterobacteriaceae by enriching nutrients and depleting microbial metabolites.
+PRJNA896856	True					low		0			False	False	False	0	
+PRJNA896788	True					low		0			False	False	False	0	
+PRJNA803341	True					low		0			False	False	False	0	
+PRJNA805266	False	35999234	PMC9396611	10.1038/s41598-022-16760-9	europepmc_accession,europepmc_title,published_version	high	True	3	438.0	438.0	False	False	False	2	Harmonisation of in-silico next-generation sequencing based methods for diagnostics and surveillance.
+PRJNA807502	True					low		0			False	False	False	0	
+PRJNA807804	False	35583350	PMC9202383	10.1128/mra.00310-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence for Klebsiella michiganensis B199A, Originally Identified as Enterobacter aerogenes.
+PRJNA894513	True					low		0			False	False	False	0	
+PRJNA791933	True					low		0			False	False	False	0	
+PRJDB15144	True					low		0			False	False	False	0	
+PRJNA811351	True					low		0			False	False	False	0	
+PRJNA811370	True					low		0			False	False	False	0	
+PRJEB59061	False			10.1101/2022.02.08.479540	europepmc_title	high	False	1	1.0	1.0	False	False	False	1	Multi-excitation Raman Spectroscopy Complements Whole Genome Sequencing for Rapid Detection of Bacterial Infection and Resistance in WHO Priority Pathogens
+PRJNA892093	False	36421290	PMC9686504	10.3390/antibiotics11111646	europepmc_accession	high	True	1	51.0	51.0	False	False	False	2	Evaluation of In Vitro Activity of Double-Carbapenem Combinations against KPC-2-, OXA-48- and NDM-Producing <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i>.
+PRJEB62871	False	37563802	PMC10631821	10.1093/jac/dkad253	europepmc_accession,europepmc_title	high	True	2	132.0	132.0	False	False	False	2	Evaluation of the RESIST ACINETO multiplex immunochromatographic assay for detection of OXA-23-like, OXA-40/58-like and NDM carbapenemase production in Acinetobacter baumannii.
+PRJEB38960	True					low		0			False	False	False	1	
+PRJEB19331	False	28392922	PMC5376316	10.1016/j.nmni.2017.02.006	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	2	First report of invasive liver abscess syndrome with endophthalmitis caused by a K2 serotype ST2398 hypervirulent <i>Klebsiella pneumoniae</i> in Germany, 2016.
+PRJNA792094	True					low		0			False	False	False	0	
+PRJNA791929	True					low		0			False	False	False	0	
+PRJEB61934	True					low		0			False	False	False	0	
+PRJNA902659	False	37014211	PMC10190570	10.1128/mra.00047-23	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	2	Complete Genome Sequence of the First Colistin-Resistant Raoultella electrica Strain.
+PRJEB22207	False	31844297	PMC7044117	10.1038/s41564-019-0626-z	europepmc_accession,ncbi_bioproject	high	False	2			True	False	False	3	Rapid MinION profiling of preterm microbiota and antimicrobial-resistant pathogens.
+PRJNA950449	False	37406356	PMC10370857	10.3201/eid2908.230567	europepmc_accession	high	True	1	6.0	6.0	False	False	False	1	Six Extensively Drug-Resistant Bacteria in an Injured Soldier, Ukraine.
+PRJNA676183	True					low		0			False	False	False	1	
+PRJNA663005	False	33841495	PMC8024499	10.3389/fgene.2021.620009	europepmc_accession	high	True	1	1.0	1.0	False	False	False	2	Comprehensive Pathogen Identification, Antibiotic Resistance, and Virulence Genes Prediction Directly From Simulated Blood Samples and Positive Blood Cultures by Nanopore Metagenomic Sequencing.
+PRJNA169453	True					low		0			False	False	False	0	
+PRJNA176122	False	23640195	PMC3642250	10.1128/genomea.00168-13	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	Genome Sequences of Two Klebsiella pneumoniae Isolates from Different Geographical Regions, Argentina (Strain JHCK1) and the United States (Strain VA360).
+PRJNA173233	False	25232178	PMC4203314	10.1126/scitranslmed.3009845	ncbi_bioproject	high		1			False	False	False	1	Single-molecule sequencing to track plasmid diversity of hospital-associated carbapenemase-producing Enterobacteriaceae.
+PRJNA985548	True					low		0			False	False	False	0	
+PRJNA169456	True					high		0			False	False	True	1	
+PRJNA169455	True					low		0			False	False	False	0	
+PRJNA169454	True					high		0			False	False	True	1	
+PRJNA670665	True					low		0			False	False	False	0	
+PRJNA168337	True					low		0			False	False	True	8	
+PRJNA676113	True					low		0			False	False	False	0	
+PRJNA985218	True					low		0			False	False	False	0	
+PRJNA165913	True					low		0			False	True	False	0	
+PRJNA674482	False	33557209	PMC7913926	10.3390/antibiotics10020157	europepmc_accession,ncbi_bioproject	high	True	2	1.0	1.0	False	False	False	1	First Report of an Extensively Drug-Resistant ST23 <i>Klebsiella pneumoniae</i> of Capsular Serotype K1 Co-Producing CTX-M-15, OXA-48 and ArmA in Spain.
+PRJNA164933	True					low		0			False	False	False	0	
+PRJNA161277	True					low		0			False	False	False	0	
+PRJNA1138264	True					low		0			False	False	False	0	
+PRJEB2968	False	24706808	PMC3992628	10.1073/pnas.1322678111	europepmc_secondary,ncbi_bioproject	high		2	195.0	195.0	True	False	False	6	Global dissemination of a multidrug resistant Escherichia coli clone.
+PRJNA1037684	False	39120089	PMC11385724	10.1128/mra.01290-23	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	The complete genomic sequencing of a <i>Klebsiella pneumoniae</i> isolate derived from the blood of a patient suffering from severe neurological problems in Zhengzhou, China.
+PRJNA754822	True					low		0			False	False	False	0	
+PRJEB71714	False	38671498	PMC11055328	10.1186/s12920-024-01882-y	europepmc_accession	high	True	1	138.0	138.0	False	False	False	3	Short reads-based characterization of pathotype diversity and drug resistance among Escherichia coli isolated from patients attending regional referral hospitals in Tanzania.
+PRJNA791937	True					low		0			False	False	False	0	
+PRJNA219293	True					low		0			False	False	True	10	
+PRJEB48936	False	35802342	PMC9879799	10.1007/s15010-022-01879-8	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	First Italian report of a liver abscess and metastatic endogenous endophthalmitis caused by ST-23 hypervirulent Klebsiella pneumoniae in an immunocompetent individual.
+PRJEB46496	False	35296353	PMC8925048	10.1186/s13756-022-01090-2	europepmc_accession	high	False	1			False	False	False	1	Environmental surveillance of ESBL and carbapenemase-producing gram-negative bacteria in a Ghanaian Tertiary Hospital.
+PRJEB4649	True					low		0			False	False	True	2	
+PRJNA853708	True					low		0			False	False	False	3	
+PRJNA855340	True					low		0			False	False	False	0	
+PRJNA877288	False	36314936	PMC9670947	10.1128/mra.01012-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Nearly Complete Genome Sequence of Raoultella ornithinolytica Strain MQB_Silv_108, Carrying an Uncommon Extended-Spectrum-β-Lactamase-like <i>bla</i><sub>BEL</sub> Gene.
+PRJEB41234	False	35019836	PMC8914359	10.1099/mgen.0.000737	europepmc_accession	high	True	1	219.0	219.0	False	False	False	1	Genomic evolution of the globally disseminated multidrug-resistant <i>Klebsiella pneumoniae</i> clonal group 147.
+PRJNA861987	True					low		0			False	False	False	0	
+PRJNA862318	False	37032887	PMC10073600	10.3389/fmicb.2023.1118264	europepmc_accession	high	True	1			False	False	False	1	Characterization of cephalosporin and fluoroquinolone resistant Enterobacterales from Irish farm waste by whole genome sequencing.
+PRJEB21566	True					low		0			False	False	False	0	
+PRJNA872534	True					low		0			False	False	False	0	
+PRJNA883008	True					low		0			False	False	False	0	
+PRJNA791940	True					low		0			False	False	False	0	
+PRJNA841267	False	36049730		10.1016/j.jgar.2022.08.015	ncbi_bioproject	medium	False	1	1.0	1.0	True	False	False	2	New sequence type of an Enterobacter cloacae complex strain with the potential to become a high-risk clone.
+PRJNA825651	False	35744615	PMC9228323	10.3390/microorganisms10061097	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Whole Genome Characterization of the High-Risk Clone ST383 <i>Klebsiella pneumoniae</i> with a Simultaneous Carriage of <i>bla</i><sub>CTX-M-14</sub> on IncL/M Plasmid and <i>bla</i><sub>CTX-M-15</sub> on Convergent IncHI1B/IncFIB Plasmid from Egypt.
+PRJEB55873	False	36290018	PMC9598702	10.3390/antibiotics11101357	europepmc_accession,ncbi_bioproject	high	False	2			False	False	False	1	Multidrug-Resistant High-Risk <i>Escherichia coli</i> and <i>Klebsiella pneumoniae</i> Clonal Lineages Occur in Black-Headed Gulls from Two Conservation Islands in Germany.
+PRJNA818256	False	36123373	PMC9485146	10.1038/s41522-022-00335-7	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Clinically relevant pathogens on surfaces display differences in survival and transcriptomic response in relation to probiotic and traditional cleaning strategies.
+PRJNA818522	True					low		0	1.0	1.0	False	False	False	0	
+PRJNA819549	True					low		0			False	False	False	0	
+PRJNA887375	True					low		0			False	False	False	0	
+PRJEB20135	False	35862803	PMC9426603	10.1128/mbio.00374-22	europepmc_accession	medium	True	1			False	False	False	1	Genetic and Structural Variation in the O-Antigen of Salmonella enterica Serovar Typhimurium Isolates Causing Bloodstream Infections in the Democratic Republic of the Congo.
+PRJEB2215	False	26562418	PMC4642977	10.1371/journal.pntd.0004183	ncbi_bioproject	high	False	1	4.0	4.0	False	False	False	7	Vibrio cholerae Serogroup O139: Isolation from Cholera Patients and Asymptomatic Household Family Members in Bangladesh between 2013 and 2014.
+PRJEB20557	True					low		0			False	False	False	0	
+PRJNA851948	False	37970451	PMC10643474	10.1007/s13205-023-03820-8	europepmc_accession	high		1	1.0	1.0	False	False	False	1	Complete genome sequence analysis of multi-drug resistant <i>Klebsiella pneumoniae</i> THK strain isolated from aquaculture farm in Kerala, India.
+PRJEB22119	False	30101693	PMC6177240	10.1080/21505594.2018.1509666	europepmc_accession	high	True	1	3.0	3.0	False	False	False	1	An ancient family of mobile genomic islands introducing cephalosporinase and carbapenemase genes in Enterobacteriaceae.
+PRJEB21201	True					low		0			False	False	False	0	
+PRJNA882783	True					low		0			False	False	False	0	
+PRJNA791951	True					low		0			False	False	False	0	
+PRJNA791957	True					low		0			False	False	False	0	
+PRJNA791958	True					low		0			False	False	False	0	
+PRJNA792103	True					low		0			False	False	False	0	
+PRJEB38951	True					low		0			False	False	False	0	
+PRJNA792129	True					low		0			False	False	False	0	
+PRJNA792139	True					low		0			False	False	False	0	
+PRJNA792142	True					low		0			False	False	False	0	
+PRJNA793126	True					low		0			False	False	False	0	
+PRJEB6657	True					low		0			False	False	False	0	
+PRJNA795853	True					low		0			False	False	False	0	
+PRJEB66292	True					low		0			False	False	False	0	
+PRJEB6416	True					low		0	1.0	1.0	False	False	False	0	
+PRJNA891646	True					low		0			False	False	False	1	
+PRJNA887604	True					low		0			False	False	False	0	
+PRJNA1037605	True					low		0			False	False	False	0	
+PRJEB55904	False	36296341	PMC9606995	10.3390/microorganisms10102063	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Geno- and Phenotypic Characteristics of a <i>Klebsiella pneumoniae</i> ST20 Isolate with Unusual Colony Morphology.
+PRJNA845367	False	36036605	PMC9583812	10.1128/mra.00654-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of a Multidrug-Resistant and Novel Sequence Type 6130 Klebsiella quasipneumoniae Strain C11S11_BCSIR Isolated from Wastewater of a Tertiary Care Hospital in Chattogram, Bangladesh.
+PRJDB12737	True					low		0			False	False	False	0	
+PRJNA847041	False	36926996	PMC10112055	10.1128/mra.01350-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Complete Genome Sequence of Klebsiella oxytoca Strain AHC-6, Isolated from a Patient during Acute Antibiotic-Associated Hemorrhagic Colitis.
+PRJEB21131	True					low		0			False	False	True	1	
+PRJEB24735	True					low		0			False	False	False	0	
+PRJNA697840	False	34236220	PMC8265220	10.1128/mra.00437-21	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of an NDM-1-Producing Sequence Type 101 (ST101) Klebsiella pneumoniae Strain, Marseille-Q1949.
+PRJNA695302	False	33766899	PMC7996458	10.1128/mra.00119-21	europepmc_title	high	False	1	2.0	2.0	False	False	False	1	Draft Genome Sequences of the Clinical Isolates Kp 23 and KPM 20.
+PRJNA715323	True					low		0			False	False	False	0	
+PRJNA1048475	True					low		0			False	False	False	0	
+PRJEB3184	True					low		0			False	False	False	0	
+PRJNA1073544	False	38934593	PMC11256860	10.1128/mra.00153-24	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Complete genome sequence of multidrug-resistant <i>Raoultella terrigena</i> strain RT01-5M1 isolated from farmed salmon in Canada.
+PRJNA716670	True					low		0			False	False	False	0	
+PRJNA1075815	True					low		0			False	False	False	0	
+PRJNA1077593	False	39162464	PMC11390037	10.1128/mra.00341-24	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Complete genome sequence of the OXA-48-producing <i>Klebsiella pneumoniae</i> strain 11978.
+PRJNA715927	False	34504809	PMC8421773	10.3389/fcimb.2021.722536	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Characterization of Emerging Pathogens Carrying <i>bla</i><sub>KPC-2</sub> Gene in IncP-6 Plasmids Isolated From Urban Sewage in Argentina.
+PRJNA95295	False	19915678	PMC2773011	10.1371/journal.pone.0007832	ncbi_bioproject	high	False	1	6.0	6.0	False	False	False	1	Gene expression profiling in the type 1 diabetes rat diaphragm.
+PRJNA1044623	True					low		0			False	False	False	0	
+PRJNA731002	True					low		0			False	False	False	0	
+PRJNA73191	False	22914622	PMC3521604	10.1126/scitranslmed.3004129	ncbi_bioproject	high		1	1.0	1.0	False	False	False	7	Tracking a hospital outbreak of carbapenem-resistant Klebsiella pneumoniae with whole-genome sequencing.
+PRJNA1107790	True					low		0			False	False	False	0	
+PRJNA1042619	False	38509050	PMC11008213	10.1128/mra.01254-23	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	The complete genomic sequencing of a <i>Klebsiella pneumoniae</i> isolated from a patient suffering from urinary tract infection.
+PRJNA1041718	True					high		0			False	False	False	0	
+PRJNA735573	False	35935210	PMC9354667	10.3389/fmicb.2022.914884	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Genetic and Functional Characterization of a Conjugative KpVP-2-Type Virulence Plasmid From a Clinical <i>Klebsiella pneumoniae</i> Strain.
+PRJNA870883	True					low		0			False	False	False	0	
+PRJEB15430	True					low		0			False	False	False	0	
+PRJNA974969	False	37438338	PMC10338428	10.1038/s41467-023-39416-2	europepmc_accession,europepmc_title	high	False	2			False	False	False	1	Mixed strain pathogen populations accelerate the evolution of antibiotic resistance in patients.
+PRJNA183901	True					low		0	1.0	1.0	False	False	False	0	
+PRJEB2581	False	25383970		10.1038/ng.3145	ncbi_bioproject	high		1			False	False	False	5	Identification of enterotoxigenic Escherichia coli (ETEC) clades with long-term global distribution.
+PRJNA187282	True					low		0			False	False	False	1	
+PRJNA187281	True					low		0			False	False	False	0	
+PRJEB33296	False	31789378	PMC7021014	10.1093/jac/dkz495	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Successful rescue treatment of sepsis due to a pandrug-resistant, NDM-producing Klebsiella pneumoniae using aztreonam powder for nebulizer solution as intravenous therapy in combination with ceftazidime/avibactam.
+PRJNA717148	False	37065147	PMC10098456	10.3389/fmicb.2023.1128905	europepmc_title,ncbi_bioproject	high	False	2	1.0	1.0	False	False	False	1	IncHI1 plasmids mediated the <i>tet</i>(X4) gene spread in <i>Enterobacteriaceae</i> in porcine.
+PRJNA1072026	True					high		0			False	False	False	0	
+PRJNA966930	True					low		0			False	False	False	0	
+PRJNA704902	True					low		0			False	False	False	0	
+PRJNA971580	True					low		0			False	False	False	0	
+PRJNA706398	False	33800539	PMC8066038	10.3390/microorganisms9040698	europepmc_accession	high	False	1	71.0	71.0	False	False	False	1	Clinically Relevant <i>Escherichia</i><i>coli</i> Isolates from Process Waters and Wastewater of Poultry and Pig Slaughterhouses in Germany.
+PRJNA715072	False	34480872	PMC8525911	10.1016/j.chom.2021.08.004	europepmc_accession,europepmc_title	high	True	2	60.0	60.0	True	False	False	3	Aberrant gut-microbiota-immune-brain axis development in premature neonates with brain damage.
+PRJEB30599	False	31890159	PMC6923860	10.1186/s13756-019-0653-9	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	First report of <i>Klebsiella quasipneumoniae</i> harboring <i>bla</i><sub>KPC-2</sub> in Saudi Arabia.
+PRJNA706921	False	39338923	PMC11434950	10.3390/pathogens13090732	europepmc_accession	high	True	1	85.0	85.0	False	False	False	1	Evidence for Horizontal Transmission and Recirculation of Shiga Toxin-Producing &lt;i&gt;Escherichia coli&lt;/i&gt; in the Beef Production Chain in South Africa Using Whole Genome Sequencing.
+PRJNA1100308	False	39183339	PMC11345435	10.1038/s41467-024-51730-x	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Synergistic collaboration between AMPs and non-direct antimicrobial cationic peptides.
+PRJNA1088746	True					low		0			False	False	False	0	
+PRJNA73843	False	22914622	PMC3521604	10.1126/scitranslmed.3004129	ncbi_bioproject	high		1	1.0	1.0	False	False	False	2	Tracking a hospital outbreak of carbapenem-resistant Klebsiella pneumoniae with whole-genome sequencing.
+PRJNA714645	True					low		0			False	False	False	0	
+PRJNA957334	False	38158772	PMC10832586	10.1093/jac/dkad394	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Synergy of polymyxin B and minocycline against KPC-3- and OXA-48-producing Klebsiella pneumoniae in dynamic time-kill experiments: agreement with in silico predictions.
+PRJNA736853	True					low		0			False	False	False	0	
+PRJNA1088653	True					low		0			False	False	False	0	
+PRJEB3215	False	25909750	PMC4409211	10.1371/journal.pntd.0003748	ncbi_bioproject	high	False	1			True	False	False	10	Rapid emergence of multidrug resistant, H58-lineage Salmonella typhi in Blantyre, Malawi.
+PRJNA721588	True					high		0			False	False	False	0	
+PRJEB32402	True					low		0			False	False	False	0	
+PRJDB2238	True					low		0			False	False	False	0	
+PRJNA726340	True					high		0			False	False	False	10	
+PRJNA728250	True					low		0			False	False	False	0	
+PRJNA719009	True					low		0			False	False	False	0	
+PRJNA1066419	True					low		0	1.0	1.0	False	False	False	0	
+PRJNA187280	True					low		0			False	False	False	1	
+PRJNA187279	True					low		0			False	False	False	1	
+PRJNA989579	False	38270434	PMC10868183	10.1128/mra.00727-23	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft genome sequence of multi-drug resistant <i>Klebsiella quasipneumoniae</i> subsp. <i>similipneumoniae</i> isolated from a teaching hospital wastewater in South West, Nigeria.
+PRJEB2794	False	25336729	PMC4354982	10.1093/infdis/jiu574	europepmc_secondary,ncbi_bioproject	high	True	2	1471.0	1471.0	True	False	False	13	Recurrence due to relapse or reinfection with Mycobacterium tuberculosis: a whole-genome sequencing approach in a large, population-based cohort with a high HIV infection prevalence and active follow-up.
+PRJNA641176	True					low		0			False	False	False	0	
+PRJNA187286	True					low		0			False	False	True	1	
+PRJNA187285	False	24913165	PMC4136011	10.1128/aac.00125-14	ncbi_bioproject	medium		1			False	False	False	1	Population structure of KPC-producing Klebsiella pneumoniae isolates from midwestern U.S. hospitals.
+PRJNA642369	True					low		0			False	False	False	0	
+PRJNA176123	False	23640195	PMC3642250	10.1128/genomea.00168-13	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	Genome Sequences of Two Klebsiella pneumoniae Isolates from Different Geographical Regions, Argentina (Strain JHCK1) and the United States (Strain VA360).
+PRJNA660495	True					low		0			False	False	True	1	
+PRJNA699239	False	33859664	PMC8042378	10.3389/fpls.2021.660620	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Integrated Genomic and Greenhouse Assessment of a Novel Plant Growth-Promoting Rhizobacterium for Tomato Plant.
+PRJEB24638	False	36057639	PMC9440931	10.1038/s41467-022-32929-2	europepmc_accession,europepmc_secondary	high	True	2	664.0	664.0	False	False	False	1	The genus Serratia revisited by genomics.
+PRJNA681360	True					low		0			False	False	False	0	
+PRJNA685932	False	34881973	PMC8656381	10.1128/mra.00704-21	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Whole-Genome Sequencing of Klebsiella pneumoniae BASUSDALSc45PDB48, a Unique Strain Capable of Growing in Pesticide-Containing Medium, Isolated from Soil in Bangladesh.
+PRJEB29743	True					high		0			False	False	True	1	
+PRJDB2655	True					low		0			False	False	False	0	
+PRJNA981489	True					low		0			False	False	False	0	
+PRJNA687411	False	35272717	PMC8908617	10.1186/s40168-021-01207-6	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	A mouse model of occult intestinal colonization demonstrating antibiotic-induced outgrowth of carbapenem-resistant Enterobacteriaceae.
+PRJNA688543	True					low		0			False	False	False	0	
+PRJNA689622	False	33574684	PMC7872938	10.2147/idr.s292820	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	6	Co-Production of NDM-1, CTX-M-9 Family and mcr-1 in a <i>Klebsiella pneumoniae</i> ST4564 Strain in China.
+PRJNA678637	False	33430145	PMC7827599	10.3390/microorganisms9010133	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Hypervirulent <i>Klebsiella pneumoniae</i> of Lineage ST66-K2 Caused Tonsillopharyngitis in a German Patient.
+PRJEB30582	False	32084183	PMC7034874	10.1371/journal.pone.0229125	europepmc_accession	high	True	1	36.0	36.0	False	False	False	1	Comparative genomic analysis of Proteus spp. isolated from tree shrews indicated unexpectedly high genetic diversity.
+PRJNA690555	False	33888494	PMC8063637	10.1128/mra.00054-21	europepmc_accession,europepmc_secondary	high	True	2	1.0	1.0	False	False	False	1	Draft Genome Sequence of Persistent Klebsiella grimontii AT013-Mero-001, Isolated from Human Feces.
+PRJNA690982	True					low		0			False	False	False	0	
+PRJNA1122522	True					low		0			False	False	False	0	
+PRJNA187287	False	24913165	PMC4136011	10.1128/aac.00125-14	ncbi_bioproject	medium		1			False	False	False	1	Population structure of KPC-producing Klebsiella pneumoniae isolates from midwestern U.S. hospitals.
+PRJNA641130	True					low		0			False	False	False	0	
+PRJNA183930	True					low		0			False	False	False	0	
+PRJNA187284	True					low		0			False	False	False	1	
+PRJEB28252	True					low		0			False	False	False	0	
+PRJEB2801	False	28348846	PMC5320574	10.1099/mgen.0.000050	europepmc_secondary	high	True	1			False	False	False	7	Repeated local emergence of carbapenem-resistant <i>Acinetobacter baumannii</i> in a single hospital ward.
+PRJEB28327	False	33750782	PMC7943827	10.1038/s41467-021-21749-5	europepmc_accession	medium	True	1			False	False	False	4	Apparent nosocomial adaptation of Enterococcus faecalis predates the modern hospital era.
+PRJNA655367	False	33658985	PMC7917065	10.3389/fmicb.2021.619369	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Mobile Plasmid Mediated Transition From Colistin-Sensitive to Resistant Phenotype in <i>Klebsiella pneumoniae</i>.
+PRJNA655785	True					high		0			False	False	False	0	
+PRJNA181052	True					low		0			False	False	False	0	
+PRJNA986296	True					high		0			False	False	True	2	
+PRJNA181051	True					low		0			False	False	False	0	
+PRJNA181050	True					low		0			False	False	False	0	
+PRJDB5295	True					low		0			False	False	False	0	
+PRJNA187283	True					low		0			False	False	False	0	
+PRJNA660205	True					low		0			False	False	False	0	
+PRJNA994715	False	37902381	PMC10652979	10.1128/mra.00730-23	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft genome sequence of a multidrug-resistant <i>Klebsiella pneumoniae</i> fecal isolate from a cow with clinical mastitis.
+PRJNA187290	True					low		0			False	False	False	0	
+PRJEB27400	True					high		0			False	False	False	0	
+PRJDB10686	False	34165337	PMC8223806	10.1128/mra.00343-21	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Draft Genome Sequence of Klebsiella pneumoniae subsp. <i>pneumoniae</i> CCI2, Isolated from Leaf Soil.
+PRJNA637815	True					high		0			False	False	False	1	
+PRJNA638288	False	33356821	PMC7834077	10.1080/21505594.2020.1867468	europepmc_accession	high	True	1	23.0	23.0	False	False	False	2	Convergence of carbapenem resistance and hypervirulence in a highly-transmissible ST11 clone of <i>K. pneumoniae</i>: An epidemiological, genomic and functional study.
+PRJEB2779	False	23541540	PMC3664974	10.1016/s0140-6736(13)60632-7	europepmc_secondary	medium	True	1	168.0	168.0	True	False	False	11	Whole-genome sequencing to identify transmission of Mycobacterium abscessus between patients with cystic fibrosis: a retrospective cohort study.
+PRJNA187289	True					low		0			False	False	False	0	
+PRJNA187288	True					low		0			False	False	True	1	
+PRJNA886974	True					low		0			False	False	False	0	
+PRJDB13052	False	37432109	PMC10434064	10.1128/spectrum.05239-22	europepmc_accession	high	True	1	261.0	261.0	False	False	False	1	Comprehensive Genomic Characterization of Staphylococcus aureus Isolated from Atopic Dermatitis Patients in Japan: Correlations with Disease Severity, Eruption Type, and Anatomical Site.
+PRJNA885384	True					low		0			False	False	False	0	
+PRJNA265263	True					low		0			False	False	False	0	
+PRJNA312243	False	27833588	PMC5081556	10.3389/fmicb.2016.01649	europepmc_secondary,ncbi_bioproject	high	True	2	4.0	4.0	False	False	False	1	Genome Sequencing of Four Multidrug-Resistant <i>Enterobacter aerogenes</i> Isolates from Hospitalized Patients in Brazil.
+PRJNA279655	False	27270289	PMC4958172	10.1128/aac.00014-16	europepmc_accession	medium		1	1.0	1.0	False	False	False	1	Horizontal Transfer of Carbapenemase-Encoding Plasmids and Comparison with Hospital Epidemiology Data.
+PRJNA279619	False	27353756	PMC4937214	10.1128/mbio.00742-16	ncbi_bioproject	medium	False	1			False	False	False	1	Plasmid Dynamics in KPC-Positive Klebsiella pneumoniae during Long-Term Patient Colonization.
+PRJNA265256	True					low		0			False	False	False	0	
+PRJNA265275	True					low		0			False	False	False	0	
+PRJNA265258	True					low		0			False	False	False	0	
+PRJNA265259	True					low		0			False	False	False	0	
+PRJNA265260	True					low		0			False	False	False	0	
+PRJNA265261	True					low		0			False	False	False	0	
+PRJNA265262	True					low		0			False	False	False	0	
+PRJNA265264	True					low		0			False	False	False	0	
+PRJNA279656	False	27270289	PMC4958172	10.1128/aac.00014-16	europepmc_accession	medium		1	1.0	1.0	False	False	False	1	Horizontal Transfer of Carbapenemase-Encoding Plasmids and Comparison with Hospital Epidemiology Data.
+PRJNA265265	True					low		0			False	False	False	0	
+PRJNA265266	True					low		0			False	False	False	0	
+PRJNA265267	True					low		0			False	False	False	0	
+PRJNA234119	True					high		0			False	False	True	10	
+PRJNA265269	True					low		0			False	False	False	0	
+PRJNA265270	True					low		0			False	False	False	0	
+PRJNA265347	True					low		0			False	False	False	0	
+PRJNA279611	False	27353756	PMC4937214	10.1128/mbio.00742-16	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	Plasmid Dynamics in KPC-Positive Klebsiella pneumoniae during Long-Term Patient Colonization.
+PRJNA234118	True					high		0			False	False	True	10	
+PRJNA269826	True					low		0			False	False	False	0	
+PRJNA310023	False	27833588	PMC5081556	10.3389/fmicb.2016.01649	europepmc_secondary,ncbi_bioproject	high	True	2	4.0	4.0	False	False	False	1	Genome Sequencing of Four Multidrug-Resistant <i>Enterobacter aerogenes</i> Isolates from Hospitalized Patients in Brazil.
+PRJNA219297	True					high		0			False	False	True	10	
+PRJNA219298	True					high		0			False	False	True	10	
+PRJEB14050	False	38996496	PMC11300424	10.1016/s2666-5247(24)00047-8	europepmc_accession	high	True	1			False	True	False	8	Pathogen diversity and antimicrobial resistance transmission of Salmonella enterica serovars Typhi and Paratyphi A in Bangladesh, Nepal, and Malawi: a genomic epidemiological study.
+PRJNA279669	True					low		0			False	False	False	0	
+PRJNA279671	False	27353756	PMC4937214	10.1128/mbio.00742-16	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	Plasmid Dynamics in KPC-Positive Klebsiella pneumoniae during Long-Term Patient Colonization.
+PRJNA279672	False	27353756	PMC4937214	10.1128/mbio.00742-16	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	Plasmid Dynamics in KPC-Positive Klebsiella pneumoniae during Long-Term Patient Colonization.
+PRJNA284365	False	27353756	PMC4937214	10.1128/mbio.00742-16	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	Plasmid Dynamics in KPC-Positive Klebsiella pneumoniae during Long-Term Patient Colonization.
+PRJNA234114	True					high		0			False	False	False	10	
+PRJNA234113	True					high		0			False	False	True	10	
+PRJNA234112	True					high		0			False	False	True	10	
+PRJNA234111	True					high		0			False	False	True	10	
+PRJNA292403	True					low		0			False	False	False	0	
+PRJNA234110	True					high		0			False	False	True	10	
+PRJNA234109	True					high		0			False	False	True	10	
+PRJNA234107	True					high		0			False	False	True	10	
+PRJNA279650	True					low		0			False	False	False	0	
+PRJNA293224	False	30400810	PMC6218967	10.1186/s12864-018-5137-4	europepmc_accession	low	True	1	200.0	200.0	True	False	False	4	Whole genome sequencing analysis of multiple Salmonella serovars provides insights into phylogenetic relatedness, antimicrobial resistance, and virulence markers across humans, food animals and agriculture environmental sources.
+PRJNA233724	True					low		0			False	False	False	0	
+PRJNA296147	True					low		0			False	False	False	0	
+PRJNA233696	True					low		0			False	False	False	0	
+PRJNA223655	True					low		0			False	False	False	0	
+PRJNA219300	True					high		0			False	False	True	10	
+PRJNA219299	True					high		0			False	False	True	10	
+PRJNA303003	True					low		0			False	False	False	0	
+PRJNA269833	True					low		0			False	False	False	0	
+PRJNA269877	True					low		0			False	False	False	0	
+PRJNA269879	True					low		0			False	False	False	0	
+PRJNA379388	False	29976607	PMC6033973	10.1128/genomea.00576-18	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	3	Draft Genome Sequence of Klebsiella pneumoniae Strain ICIS-278_PBV, Isolated from the Feces of a Healthy 59-Year-Old Man from Orenburg, Russia.
+PRJNA315166	False	27833588	PMC5081556	10.3389/fmicb.2016.01649	europepmc_secondary	high	True	1	4.0	4.0	False	False	False	1	Genome Sequencing of Four Multidrug-Resistant <i>Enterobacter aerogenes</i> Isolates from Hospitalized Patients in Brazil.
+PRJNA219259	True					high		0			False	False	True	10	
+PRJNA219255	True					low		0			False	False	False	10	
+PRJNA219254	True					high		0			False	False	True	10	
+PRJNA219253	True					high		0			False	False	True	10	
+PRJNA219252	True					high		0			False	False	True	10	
+PRJNA391323	False	29615503	PMC5885025	10.1128/mbio.00440-18	europepmc_accession	high	True	1	1.0	1.0	True	False	False	5	Genomic Analysis of a Pan-Resistant Isolate of <i>Klebsiella pneumoniae</i>, United States 2016.
+PRJNA391510	True					low		0			False	False	False	0	
+PRJNA391952	True					low		0			False	False	False	0	
+PRJNA219248	True					low		0			False	False	True	10	
+PRJNA393050	True					low		0			False	False	False	0	
+PRJNA219247	True					high		0			False	False	True	10	
+PRJNA218110	False	25103754	PMC4125765	10.1128/genomea.00718-14	ncbi_bioproject	medium	False	1	240.0	240.0	True	False	False	25	Genome Sequences of 228 Shiga Toxin-Producing Escherichia coli Isolates and 12 Isolates Representing Other Diarrheagenic E. coli Pathotypes.
+PRJNA213341	True					low		0			False	False	False	0	
+PRJNA219269	True					high		0			False	False	True	10	
+PRJNA353361	True					high		0			False	False	True	7	
+PRJNA219270	True					low		0			False	False	False	10	
+PRJNA219271	True					low		0			False	False	False	10	
+PRJNA315168	False	27833588	PMC5081556	10.3389/fmicb.2016.01649	europepmc_secondary	high	True	1	4.0	4.0	False	False	False	1	Genome Sequencing of Four Multidrug-Resistant <i>Enterobacter aerogenes</i> Isolates from Hospitalized Patients in Brazil.
+PRJNA219295	True					high		0			False	False	True	10	
+PRJNA219294	True					high		0			False	False	True	10	
+PRJNA219260	True					high		0			False	False	True	10	
+PRJNA376447	True					low		0	1.0	1.0	False	False	False	0	
+PRJNA269915	True					low		0			False	False	False	0	
+PRJNA219261	True					high		0			False	False	True	10	
+PRJNA234117,PRJNA201967	True					low		0			True	False	False	0	
+PRJEB14232	False	29698817		10.1016/j.cmi.2018.04.011	europepmc_title	high		1	134.0	134.0	False	False	False	1	Genomic sequence investigation Streptococcus pyogenes clusters in England (2010-2015).
+PRJNA272089	True					low		0			False	False	False	0	
+PRJNA275974	True					low		0			False	False	False	0	
+PRJNA234116	True					high		0			False	False	False	10	
+PRJEB14213	False	27503652	PMC5038244	10.1128/aac.00804-16	europepmc_accession	high		1	1.0	1.0	False	False	False	1	mcr-1 in Multidrug-Resistant blaKPC-2-Producing Clinical Enterobacteriaceae Isolates in Singapore.
+PRJNA234115	True					high		0			False	False	True	10	
+PRJNA312296	False	27600049	PMC5075093	10.1128/aac.01344-16	europepmc_title	high		1	5.0	5.0	False	False	False	1	Genomic Characterization of Colistin Heteroresistance in Klebsiella pneumoniae during a Nosocomial Outbreak.
+PRJNA219296	True					high		0			False	False	False	10	
+PRJNA314324	False	27402393		10.1016/s1473-3099(16)30021-4	ncbi_bioproject	high		1	1.0	1.0	False	False	False	1	Primary osteomyelitis caused by hypervirulent Klebsiella pneumoniae.
+PRJNA380388	False	29895899	PMC5997705	10.1038/s41598-018-27292-6	europepmc_accession	high	True	1	92.0	92.0	True	False	False	4	High genomic diversity of multi-drug resistant wastewater Escherichia coli.
+PRJNA219268	True					high		0			False	False	True	10	
+PRJNA219267	True					high		0			False	False	True	10	
+PRJNA356818	True					low		0			False	False	False	0	
+PRJNA357339	True					high		0			False	False	False	0	
+PRJNA357350	True					low		0			False	False	False	0	
+PRJNA357543	True					low		0			False	False	False	0	
+PRJNA219266	True					low		0			False	False	True	10	
+PRJNA360179	True					low		0			False	False	False	0	
+PRJNA219265	True					high		0			False	False	True	10	
+PRJNA219262	True					low		0			False	False	True	10	
+PRJNA279657	True					high		0			False	False	True	1	
+PRJNA234108	True					high		0			False	False	True	10	
+PRJEB51164	False	36748454	PMC9973852	10.1099/mgen.0.000910	europepmc_accession,published_version	high	True	2	4.0	4.0	False	False	False	3	Comparison of R9.4.1/Kit10 and R10/Kit12 Oxford Nanopore flowcells and chemistries in bacterial genome reconstruction.
+PRJNA740140	True					low		0			False	False	False	0	
+PRJNA754832	True					low		0			False	False	False	0	
+PRJNA756309	True					low		0			False	False	False	0	
+PRJNA756469	True					low		0			False	False	False	0	
+PRJNA757181	True					low		0			False	False	False	0	
+PRJNA754801	True					low		0			False	False	False	0	
+PRJNA754800	True					low		0			False	False	False	0	
+PRJNA753708	False	35086435	PMC8896207	10.1080/22221751.2022.2036078	europepmc_title	medium	False	1	14.0	14.0	False	False	False	5	Emergence of colistin-resistant hypervirulent <i>Klebsiella pneumoniae</i> (CoR-HvKp) in China.
+PRJNA1023395	False	38700350	PMC11237382	10.1128/mra.01284-23	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Complete genome sequence of carbapenem-resistant pathogenic <i>Klebsiella aerogenes</i> strain CH7 isolated from vermicompost.
+PRJDB10890	True					low		0			False	False	False	10	
+PRJNA739732	True					low		0			False	False	False	0	
+PRJNA1029537	True					low		0			False	False	False	0	
+PRJNA187292	True					low		0			False	False	False	1	
+PRJNA1026593	False	38497646	PMC11008145	10.1128/mra.00071-24	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Draft genome of the <i>Klebsiella pneumoniae</i> 24Kpn33 and complete sequence of its pCOL-1, a plasmid related to the <i>bla</i><sub>KPC-2</sub> acquisition in <i>Pseudomonas aeruginosa</i>.
+PRJNA1023975	False	39435365	PMC11492046	10.1016/j.dib.2024.110973	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	1	Data on the analysis of draft genome sequence of <i>Raoultella ornithinolytica</i> isolate carrying antimicrobial resistance genes, plasmid and CRISPR-Cas system.
+PRJNA948355	False	37510330	PMC10378790	10.3390/genes14071426	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	3	Insight into Antibiotic Synergy Combinations for Eliminating Colistin Heteroresistant <i>Klebsiella pneumoniae</i>.
+PRJEB34174	True					low		0			False	False	False	0	
+PRJEB34232	True					low		0			False	False	False	0	
+PRJNA939354	True					low		0			False	False	False	0	
+PRJNA947381	True					low		0			False	False	False	5	
+PRJNA946148	True					low		0			False	False	False	0	
+PRJEB34557	False	33846529	PMC8041779	10.1038/s42003-021-01949-x	europepmc_accession	high	True	1			False	False	False	1	Population genomics and antimicrobial resistance dynamics of Escherichia coli in wastewater and river environments.
+PRJNA746609	True					low		0			False	False	False	0	
+PRJNA939005	False	39162448	PMC11384749	10.1128/mra.00451-24	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Complete genome sequence of <i>Klebsiella pneumoniae</i> RX.G5M15, a methanol-metabolizing strain recovered from the sole of a shoe.
+PRJEB35084	True					low		0			False	False	False	3	
+PRJNA754831	True					low		0			False	False	False	0	
+PRJNA754827	True					low		0			False	False	False	0	
+PRJEB20782	False	29483109	PMC5923095	10.1128/aac.00076-18	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Resistome Analysis of a Carbapenemase (OXA-48)-Producing and Colistin-Resistant Klebsiella pneumoniae Strain.
+PRJDB11476	True					low		0			False	False	False	0	
+PRJEB40149	False	33266320	PMC7761178	10.3390/microorganisms8121909	europepmc_accession,ncbi_bioproject	medium	False	2	78.0	78.0	True	False	False	2	Antibiotic Sensitivity Screening of <i>Klebsiella</i> spp. and <i>Raoultella</i> spp. Isolated from Marine Bivalve Molluscs Reveal Presence of CTX-M-Producing <i>K. pneumoniae</i>.
+PRJEB20897	False	35790755	PMC9256687	10.1038/s41467-022-31391-4	europepmc_accession	high	True	1	330.0	330.0	False	False	False	2	Vibrio cholerae O139 genomes provide a clue to why it may have failed to usher in the eighth cholera pandemic.
+PRJEB49509	False	35449721	PMC9018397	10.1093/jacamr/dlac038	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Prevalence of carbapenem resistance and its potential association with antimicrobial use in humans and animals in rural communities in Vietnam.
+PRJNA839526	True					low		0			False	False	False	0	
+PRJNA791700	True					low		0			False	False	False	0	
+PRJEB38863	False	33737655	PMC7973416	10.1038/s41598-021-85766-6	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	The influence of antibiotics on transitory resistome during gut colonization with CTX-M-15 and OXA-162 producing Klebsiella pneumoniae ST15.
+PRJEB38602	True					low		0			False	False	False	0	
+PRJEB73590	False	41315421	PMC12722760	10.1038/s41467-025-66400-9	europepmc_accession	high	False	1	446.0	446.0	True	False	False	5	Using metagenomics and whole-genome sequencing to characterize enteric pathogens across various sources in Africa.
+PRJNA754802	True					low		0			False	False	False	0	
+PRJNA754804	True					low		0			False	False	False	0	
+PRJNA754806	True					low		0			False	False	False	0	
+PRJNA754809	True					low		0			False	False	False	0	
+PRJNA754810	True					high		0			False	False	False	0	
+PRJNA754811	True					low		0			False	False	False	0	
+PRJNA754812	True					low		0			False	False	False	0	
+PRJNA754813	True					low		0			False	False	False	0	
+PRJNA754819	True					low		0			False	False	False	0	
+PRJNA870312	True					low		0			False	False	False	0	
+PRJNA754824	True					low		0			False	False	False	0	
+PRJNA1021554	True					low		0			False	False	False	0	
+PRJNA1021015	True					low		0			False	False	False	0	
+PRJNA749581	False	37888586	PMC10610597	10.3390/tropicalmed8100458	europepmc_accession	medium	True	1	4.0	4.0	True	False	False	12	Genomic Analysis of Multidrug-Resistant <i>Escherichia coli</i> Strains Isolated in Tamaulipas, Mexico.
+PRJNA774259	True					low		0			False	False	False	0	
+PRJEB9644	True					high		0			False	False	False	0	
+PRJNA758781	False	35862935	PMC9387283	10.1128/mra.00377-22	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Complete Genome Sequence of Klebsiella sp. CTHL.F3a, a Cellulolytic Strain Isolated from Korean Kimchi.
+PRJNA759343	False	35467363	PMC9119098	10.1128/mra.00171-22	europepmc_accession,ncbi_bioproject	high	True	2	1.0	1.0	False	False	False	1	Complete Genome Sequence of Klebsiella quasipneumoniae MMCC7, Isolated from an Eclectus Parrot (Eclectus roratus).
+PRJNA930879	True					low		0			False	False	False	0	
+PRJNA760944	True					low		0			False	False	False	0	
+PRJNA761099	True					low		0			False	False	False	0	
+PRJNA762203	False	34726753		10.1093/jac/dkab380	ncbi_bioproject	high		1			False	False	False	1	In vivo evolution of carbapenem resistance in hypervirulent Klebsiella pneumoniae in a patient undergoing long-term treatment.
+PRJEB9692	False	27923372	PMC5142283	10.1186/s12879-016-2065-2	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Community-acquired meningitis caused by a CG86 hypervirulent Klebsiella pneumoniae strain: first case report in the Caribbean.
+PRJNA929966	False	37224062	PMC10272865	10.1099/mgen.0.001024	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Long read genome assemblers struggle with small plasmids.
+PRJNA763348	True					low		0			False	False	False	0	
+PRJDB11111	True					low		0			False	False	False	0	
+PRJDB2133	True					low		0			False	False	False	0	
+PRJEB36000	True					low		0	1.0	1.0	False	False	False	0	
+PRJEB9601	False	26890371	PMC4766917	10.3201/eid2203.151466	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Liver Abscess Caused by Infection with Community-Acquired Klebsiella quasipneumoniae subsp. quasipneumoniae.
+PRJDB1836	True					low		0			False	False	False	0	
+PRJEB9173	True					low		0			False	False	False	0	
+PRJEB8768	True					high		0			False	False	False	1	
+PRJEB18589	False	34971560	PMC8763404	10.1016/j.chom.2021.12.003	europepmc_accession	medium	True	1			False	False	False	2	The Mouse Gastrointestinal Bacteria Catalogue enables translation between the mouse and human gut microbiotas via functional mapping.
+PRJNA773853	True					low		0			False	False	False	0	
+PRJNA234134	True					high		0			False	False	True	10	
+PRJNA604671	False	33508483	PMC8012231	10.1016/j.jgar.2021.01.004	europepmc_accession	high		1	1.0	1.0	False	False	False	1	Resistome of a carbapenemase-producing novel ST232 Klebsiella michiganensis isolate from urban hospital effluent in South Africa.
+PRJNA1004534	False	38439546	PMC10936650	10.1080/19490976.2024.2323232	europepmc_accession,europepmc_title	high	True	2	5.0	5.0	False	False	False	1	A metagenomic prospective cohort study on gut microbiome composition and clinical infection in small bowel transplantation.
+PRJNA922098	False	36877262	PMC10105652	10.1007/s10096-023-04582-0	europepmc_accession	high	False	1	1.0	1.0	False	False	False	1	Resistance to ceftazidime-avibactam in a KPC-2-producing Klebsiella pneumoniae caused by the extended-spectrum beta-lactamase VEB-25.
+PRJNA750627	True					low		0			False	False	False	0	
+PRJEB74142	True					low		0			False	False	False	0	
+PRJNA936823	False	37630513	PMC10459514	10.3390/microorganisms11081954	europepmc_accession	high	False	1			False	False	False	2	Whole-Genome Sequencing-Based Screening of MRSA in Patients and Healthcare Workers in Public Hospitals in Benin.
+PRJNA931810	True					low		0			False	False	False	0	
+PRJDB2159	True					low		0			False	False	False	0	
+PRJNA784589	False	35369469	PMC8971848	10.3389/fmicb.2022.830209	europepmc_accession	high	True	1	71.0	71.0	False	False	False	2	Carbapenemase-Producing Extraintestinal Pathogenic <i>Escherichia coli</i> From Argentina: Clonal Diversity and Predominance of Hyperepidemic Clones CC10 and CC131.
+PRJEB8575	False	25798828	PMC4370852	10.1371/journal.pone.0123690	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	The carbapenem inactivation method (CIM), a simple and low-cost alternative for the Carba NP test to assess phenotypic carbapenemase activity in gram-negative rods.
+PRJEB8559	False	26056623	PMC4458127	10.7717/peerj.996	europepmc_accession	high	True	1	9.0	9.0	False	False	False	1	NxRepair: error correction in de novo sequence assembly using Nextera mate pairs.
+PRJEB8303	True					low		0			False	False	False	0	
+PRJNA777034	False	36147219	PMC9041515	10.1089/phage.2021.0011	europepmc_accession	high	True	1	10.0	10.0	False	False	False	1	Isolation and Characterization of Lytic Bacteriophages Targeting Diverse <i>Enterobacter</i> spp. Clinical Isolates.
+PRJNA917297	False	39065231	PMC11279037	10.3390/microorganisms12071463	europepmc_accession	medium	True	1	64.0	64.0	True	False	False	3	Isolation and Characterization of <i>Escherichia coli</i> from Brazilian Broilers.
+PRJEB37610	False	32763372		10.1016/j.ijantimicag.2020.106130	europepmc_accession	high		1	1.0	1.0	False	False	False	1	Detection of a hypermucoviscous Klebsiella pneumoniae co-producing NDM-5 and OXA-48 carbapenemases with sequence type 383, Brescia, Italy.
+PRJNA779558	False	37719365	PMC10501869	10.1016/j.apsb.2023.06.003	europepmc_accession	medium	True	1	1.0	1.0	False	False	False	1	Polymyxin resistance caused by large-scale genomic inversion due to IS<i>26</i> intramolecular translocation in <i>Klebsiella pneumoniae</i>.
+PRJEB38601	False	31286076	PMC6587045	10.1016/j.heliyon.2019.e01829	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	Virulence factors and clinical patterns of multiple-clone hypermucoviscous KPC-2 producing <i>K. pneumoniae</i>.
+PRJNA785542	False	40112546		10.1016/j.scitotenv.2025.179124	ncbi_bioproject	medium		1			False	False	False	1	Spread of antimicrobial-resistant clones of the ESKAPEE group: From the clinical setting to hospital effluent.
+PRJEB36913	False	33490868	PMC7818245	10.1099/acmi.0.000172	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Isolation of the human-associated <i>bla</i> <sub>CTX-M-15</sub>-harbouring <i>Klebsiella pneumoniae</i> ST307 from a tortoise in the UK.
+PRJNA78565	True					low		0			False	False	False	0	
+PRJNA78567	True					low		0			False	False	False	0	
+PRJNA786472	False	34775131		10.1016/j.jgar.2021.09.010	europepmc_title	high		1	1.0	1.0	False	False	False	1	Differences in antimicrobial susceptibility testing complicating management of IMP carbapenemase-producing Enterobacterales infection.
+PRJDB17100	True					low		0			False	False	False	0	
+PRJNA787392	True					low	False	1	388.0	388.0	False	False	False	10	
+PRJNA187291	True					low		0			False	False	False	0	
+PRJNA787923	True					low		0			False	False	False	0	
+PRJNA265268	True					low		0			False	False	False	0	

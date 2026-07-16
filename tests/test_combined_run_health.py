@@ -25,7 +25,7 @@ def test_closed_states_passthrough():
 
 
 def test_accepted_buckets():
-    for rec in ("fetch_supp_table", "needs_linkage", "escalate_big_decision"):
+    for rec in ("fetch_supp_table", "needs_linkage", "escalate_big_decision", "fetch_paper"):
         assert crh.classify(_cell("ACTIONABLE", rec))[0] == "ACCEPTED", rec
     assert crh.classify(_cell("BLOCKED", "needs_linkage"))[0] == "ACCEPTED"
 
