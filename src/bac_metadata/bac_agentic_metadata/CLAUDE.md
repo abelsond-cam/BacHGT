@@ -145,6 +145,23 @@ answering escalations via `escalate --then-apply`, **refresh the grid** (`cli.ru
 the roll-up — `--then-apply` rebuilds `filled_metadata` but not the run_health grid, so a resolved escalation
 reads as stale-ACTIONABLE otherwise.
 
+**Wrap-up / release tooling (built 2026-07-16).** The cohort wrap-up is a set of read-only, deterministic
+generators (no LLM) plus one adjudication refresh:
+- **`evaluation.wrapup_report`** → `data/WRAPUP_REPORT.md` — reconciles Σ per-tranche agent-fills to the master
+  (must be EXACT), papers reviewed, experimental-evolution count, base→filled improvement, accuracy vs manual.
+- **`evaluation.build_per_study_table`** → `data/per_study_accession_table.tsv` — one publishable row per study
+  (paper link, n samples, grades, per-field base→filled). Both write to the data root (`curated/` is gitignored).
+- **Accuracy vs manual** (train/test only — needs curated find/grade gold): `validate_find_papers` /
+  `validate_study_grading` with `--adjudicate` (Opus rules each agent-vs-sheet disagreement) → `summarise_agent_vs_manual`.
+  **Value accuracy** (`validate_backfill_values`, per-field vs the v2 gold) runs on ALL tranches.
+- **Curator sign-off loop:** `evaluation.build_adjudication_review_queue` unions the find+grade adjudication
+  reports and keeps only the residuals the adjudicator did NOT rule for the agent →
+  `diagnostics/adjudication_review_queue.tsv`; the curator walks it with
+  `engine.cli.review_adjudication --interactive` (grade overturns → `gt_corrections.tsv`; find calls rewrite
+  `adj_verdict`), then re-run `summarise_agent_vs_manual` + `wrapup_report` to reflect the sign-off.
+- **Driver knobs added:** `--skip-per-sample` (grade + whole-field only — the cheap sub-10 evolution-flag pass)
+  and `--find-workers` (find is now thread-pooled like grade; defaults to `--grade-workers`).
+
 ## Editing the engine or rubric — gotchas
 
 - **`--carry-forward` is for a band's FIRST run — never for re-running an already-accumulated band.**
