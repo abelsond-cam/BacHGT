@@ -81,6 +81,7 @@ def find_papers(
     caches: StageCaches,
     web_fallback: bool = False,
     limit: int | None = None,
+    workers: int = 1,
 ) -> list[paper_finder.FindResult]:
     """Find the describing paper for each selected study and write ``found_papers.{jsonl,tsv}``.
 
@@ -90,62 +91,86 @@ def find_papers(
     abstention, ``web_fallback`` searches the open web (paid) and re-picks on the subscription. A single
     bad accession is skipped, never fatal; a usage limit stops cleanly with partial results saved.
     """
+    from concurrent.futures import CancelledError, ThreadPoolExecutor, as_completed
+
     caches.ensure()
     sel = select_sizing_rows(sizing_path, accessions=accessions, folds=folds)
     if limit is not None:
         sel = sel.head(limit)
-    print(f"Finding papers for {len(sel)} accessions with {model}", file=sys.stderr)
+    rows = [(i, row) for i, (_, row) in enumerate(sel.iterrows())]
+    total = len(rows)
+    print(f"Finding papers for {total} accessions with {model} (workers={workers})", file=sys.stderr)
 
-    results: list[paper_finder.FindResult] = []
-    skipped: list[str] = []
-    limited = False
-    for i, (_, row) in enumerate(sel.iterrows(), start=1):
+    def _find_one(row):
+        """Discover one study's describing paper (thread-safe: caches are content-addressed per study key)."""
         acc = row["study_accession"]
         taxon_n = int(row["ena_taxon_samples"]) if pd.notna(row["ena_taxon_samples"]) else None
-        print(f"[find {i}/{len(sel)}] {acc} (taxon={taxon_n})", file=sys.stderr)
-        try:
-            study = study_title_and_description(acc, cache_dir=caches.ena)
-            aliases = study_aliases(acc, cache_dir=caches.ena)
-            candidates, channels = paper_finder.gather_candidates(
-                acc, study["study_title"], study["study_description"], aliases=aliases, cache_dir=caches.find
+        study = study_title_and_description(acc, cache_dir=caches.ena)
+        aliases = study_aliases(acc, cache_dir=caches.ena)
+        candidates, channels = paper_finder.gather_candidates(
+            acc, study["study_title"], study["study_description"], aliases=aliases, cache_dir=caches.find
+        )
+        sizing_row = {"ena_taxon_samples": taxon_n, "umbrella_suspected": row.get("umbrella_suspected")}
+        result = paper_finder.find_paper(
+            spec, llm, accession=acc, ena_title=study["study_title"],
+            ena_description=study["study_description"], sizing_row=sizing_row,
+            candidates=candidates, channels=channels, aliases=aliases,
+            model=model, fulltext_cache=caches.fulltext,
+        )
+        if result.none_found and web_fallback:
+            web = websearch.web_search_candidates(
+                acc, study["study_title"], study["study_description"],
+                aliases=aliases, cache_dir=caches.find, model=model,
             )
-            sizing_row = {"ena_taxon_samples": taxon_n, "umbrella_suspected": row.get("umbrella_suspected")}
-            result = paper_finder.find_paper(
-                spec, llm, accession=acc, ena_title=study["study_title"],
-                ena_description=study["study_description"], sizing_row=sizing_row,
-                candidates=candidates, channels=channels, aliases=aliases,
-                model=model, fulltext_cache=caches.fulltext,
-            )
-            if result.none_found and web_fallback:
-                web = websearch.web_search_candidates(
-                    acc, study["study_title"], study["study_description"],
-                    aliases=aliases, cache_dir=caches.find, model=model,
+            if web:
+                merged, merged_channels = paper_finder.merge_web_candidates(
+                    candidates, channels, web, cache_dir=caches.find
                 )
-                if web:
-                    merged, merged_channels = paper_finder.merge_web_candidates(
-                        candidates, channels, web, cache_dir=caches.find
-                    )
-                    result = paper_finder.find_paper(
-                        spec, llm, accession=acc, ena_title=study["study_title"],
-                        ena_description=study["study_description"], sizing_row=sizing_row,
-                        candidates=merged, channels=merged_channels, aliases=aliases,
-                        model=model, fulltext_cache=caches.fulltext,
-                    )
-        except UsageLimitError as exc:
-            print(f"\n[usage limit] {exc}\nFound {len(results)}/{len(sel)} before the window was "
-                  "exhausted. Rerun the same command to resume — cached results return instantly.",
-                  file=sys.stderr)
-            limited = True
-            break
-        except Exception as exc:  # noqa: BLE001 — per-accession isolation; one failure must not kill the batch
-            print(f"  [skip {acc}] {type(exc).__name__}: {exc}", file=sys.stderr)
-            skipped.append(acc)
-            continue
-        results.append(result)
+                result = paper_finder.find_paper(
+                    spec, llm, accession=acc, ena_title=study["study_title"],
+                    ena_description=study["study_description"], sizing_row=sizing_row,
+                    candidates=merged, channels=merged_channels, aliases=aliases,
+                    model=model, fulltext_cache=caches.fulltext,
+                )
+        return result
 
+    slots: list = [None] * total
+    skipped: list[str] = []
+    limited = False
+    completed = 0
+    # Mirror the grade stage: fan the per-accession finds across a thread pool (find is the slow, sequential
+    # leg — a per-study LLM paper-pick), preserve input order via ``slots``, and on a usage limit cancel the
+    # pending queue and stop clean. Incremental ordered write = crash/limit-safe resume (cache fills the rest).
+    with ThreadPoolExecutor(max_workers=max(1, workers)) as ex:
+        futures = {ex.submit(_find_one, row): (i, row["study_accession"]) for i, row in rows}
+        for fut in as_completed(futures):
+            idx, acc = futures[fut]
+            try:
+                result = fut.result()
+            except CancelledError:
+                continue  # pending task cancelled after a usage limit — nothing found for it
+            except UsageLimitError:
+                if not limited:
+                    limited = True
+                    for f in futures:  # stop cleanly: drop everything not already running
+                        f.cancel()
+                continue
+            except Exception as exc:  # noqa: BLE001 — per-accession isolation; one failure must not kill the batch
+                print(f"  [skip {acc}] {type(exc).__name__}: {exc}", file=sys.stderr)
+                skipped.append(acc)
+                continue
+            slots[idx] = result
+            completed += 1
+            print(f"[find {completed}/{total}] {acc}", file=sys.stderr)
+            paper_finder.write_results([s for s in slots if s is not None], out_jsonl, out_tsv)  # incremental, ordered
+
+    results = [s for s in slots if s is not None]
     paper_finder.write_results(results, out_jsonl, out_tsv)
     status = "partial (usage limit)" if limited else "complete"
     print(f"Wrote {out_jsonl} and {out_tsv} ({len(results)} rows, {status})", file=sys.stderr)
+    if limited:
+        print(f"[usage limit] Found {len(results)}/{total} before the window was exhausted. Rerun to resume "
+              "— cached results return instantly.", file=sys.stderr)
     if skipped:
         print(f"Skipped {len(skipped)} (errors): {skipped} — rerun to retry (cache fills the rest).",
               file=sys.stderr)

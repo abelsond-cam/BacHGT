@@ -173,6 +173,10 @@ def main() -> None:
                    help="Concurrent grading workers (default 1 = sequential, light on a shared Claude Pro "
                         "window). Raise it (e.g. 4-8) for a faster run when you are not using the account for "
                         "other work; the grades output is identical regardless of the worker count.")
+    p.add_argument("--find-workers", type=int, default=None,
+                   help="Concurrent paper-finding workers (default: match --grade-workers). find is the slow "
+                        "sequential leg (one LLM paper-pick per study); this fans it across a thread pool the "
+                        "same way grading is. Output is identical regardless of the worker count.")
     p.add_argument("--grade-skip-existing", action="store_true",
                    help="Keep studies already present in study_grades_<tag>.jsonl exactly as graded and grade "
                         "only the rest (usage-saving resume after a ladder/rubric tweak you don't want to "
@@ -359,6 +363,7 @@ def main() -> None:
         stages.find_papers(
             spec=spec, sizing_path=sizing_path, folds=folds, out_jsonl=found_jsonl, out_tsv=found_tsv,
             llm=llm, model=args.model, caches=caches, web_fallback=args.web_fallback, limit=args.limit,
+            workers=(args.find_workers if args.find_workers is not None else args.grade_workers),
         )
 
     # ── Stage 2 — study grading (paper source per --paper-source) ─────────────────────────────────
