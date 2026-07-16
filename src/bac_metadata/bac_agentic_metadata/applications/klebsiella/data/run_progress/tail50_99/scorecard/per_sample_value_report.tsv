@@ -1,0 +1,5 @@
+field	filled	has_gold	correct	accuracy
+country	121	67	67	1.0
+collection_date	253	128	128	1.0
+isolation_source	506	201	67	0.3333333333333333
+host	544	102	81	0.7941176470588235

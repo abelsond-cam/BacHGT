@@ -27,7 +27,7 @@ from bac_metadata.bac_agentic_metadata.engine import backfill
 from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
 
 ENGINE_APPS = Path(__file__).resolve().parents[1] / "applications"
-DEFAULT_TAGS = ("train", "test", "tail100", "tail50_99", "tail25_49", "tail10_24")
+DEFAULT_TAGS = ("train", "test", "tail100", "tail50_99", "tail25_49", "tail10_24", "sub10")
 
 
 def _repo_root() -> Path:

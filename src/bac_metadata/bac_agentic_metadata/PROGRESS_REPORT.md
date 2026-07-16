@@ -290,6 +290,18 @@ ENA-key / PDF-table-undetectable as **accepted-exhausted** — then reports *"ge
 actionable cells remain (listed)."* This makes the manual "all-clear" reasoning a repeatable gate, the way
 `verify_pipeline_triggers` did for silent failures.
 
+*Merge-to-v2 readiness (execute when HPC/CSD3 returns).* The Klebsiella cohort is curated + wrapped up: 7
+tranches → accumulated master, `combined_run_health` GENUINELY CLEAR, and the durable `data/WRAPUP_REPORT.md`
+reconciles every headline figure to its per-tranche source (Σ per-tranche agent-fills == master, EXACT, all
+fields). Agent-vs-manual accuracy (adjudicated, train/test) has the agent **beating** manual curation
+(train +0.108, test +0.037); residual disagreements are in `diagnostics/adjudication_review_queue.tsv` for
+sign-off. **Merge inputs:** `curated/metadata_curated_master.tsv` + its `study_type_excluded` column (78 studies
+/ 1,489 samples flagged for removal) + the canonical-overlay `metadata_curated_master_merged.tsv` (human > agent
+> ENA) + the publishable `curated/per_study_accession_table.tsv`. **Out of scope for the agentic merge:** the
+~398 RefSeq/NCTC assembly genomes (no ENA study/paper — a separate RefSeq-metadata path). **After the merge:**
+the downstream deterministic parse/categorise (§5 item 6) runs over the merged table, then the completeness
+plots regenerate. Gate the actual write into metadata_v2 on CSD3 return.
+
 ## 6. Agentic categorisation sub-engine (replaces hardcoded parse/categorise) + current workstream
 
 **Why.** Running the M.abs master through the Klebsiella `pp/metadata_curation.py` (~860 hardcoded parse/
