@@ -12,6 +12,22 @@ grade_scale: [gradeable, partial, not_gradeable]
 application: m_abs
 species: Mycobacterium abscessus   # ENA records use the reclassified genus 'Mycobacteroides abscessus'
 
+# PIPELINE GATES — the application's tunable curation thresholds (mirrors the Klebsiella `gates` block; the
+# engine reads these via AttributeSpec and falls back to a generic default only when a key is omitted). Ported
+# 2026-07-17 for the M.abs re-run: without this block m_abs silently ran on the engine defaults AND, crucially,
+# on a SINGLE 120k-char grade pass instead of the cost-saving tier ladder. The residual/big-decision floors are
+# the Klebsiella-scale defaults (validated there); revisit if the ~7k-sequence M.abs cohort makes them too
+# loose/tight. David, 2026-07-17.
+gates:
+  completeness_threshold: 0.75         # ENA non-null fraction at/above which a field counts as already complete -> not filled
+  escalation_residual_floor: 50        # min blank samples remaining after per-sample before a field is worth escalating
+  escalation_big_decision_frac: 0.01   # a study at/above this fraction of the WHOLE cohort is an escalation "big decision"
+  # Paper-text budgets the grader climbs, smallest first (~4 chars/token): reads only the FIRST tier and climbs
+  # ONLY when it self-reports the truncated remainder might hold an answer (full_text_would_help). Most studies
+  # resolve at 10k (the abstract), collapsing average per-call tokens; 50k reaches abstract+methods; 250k (~62k
+  # tokens) captures ~p90 of full texts for the rare deep answer. Top tier is also the escalation-triage budget.
+  grade_context_tiers: [10000, 50000, 250000]
+
 # Species we are studying. Project sizing, paper coverage and completeness are computed over records
 # MATCHING this (projects can mix taxa), not over the whole project.
 taxon_of_interest:
@@ -241,15 +257,22 @@ attributes:
             If the study is human clinical, set all hosts to human — UNLESS the samples are environmental
             or animal, in which case host is the environment/animal. (Low priority — nearly all human.)
         collection_date:
+          # DETERMINISTIC SPAN (ported to the current engine, 2026-07-17): since 2026-07-13 the grader only
+          # REPORTS earliest_date + latest_date; the engine computes the month span and applies the thresholds in
+          # the `escalation.collection_date` section (below). David's STRICT 2-year, NEVER-escalate rule
+          # (2026-07-02) is preserved by setting five_year_months == two_year_months == 24 there, which collapses
+          # the escalate band to zero: <=2yr fills the midpoint, >2yr leaves blank, nothing escalates. This prose
+          # therefore no longer tells the grader to compute a midpoint (that would contradict the engine).
           meaning: date (or year) of sample collection
           compare: year                                       # year-level comparison (as Klebsiella)
           column_aliases: [collection_year, Sample_date]
           whole_project_value: |-
-            STRICT 2-year window, no exceptions (David, 2026-07-02). If no specific dates are given but all
-            collection falls within a <= 2-year period, set the midpoint year. If the period spans MORE than
-            2 years, leave blank — do NOT backfill and do NOT escalate. There is no "older/valuable span"
-            leniency: the cohort already has a good spread of true dates, so an imprecise wide-range midpoint
-            would only corrupt fine-grained lineage dating.
+            Report the EARLIEST and LATEST collection dates the evidence gives (earliest_date, latest_date),
+            verbatim as found — a bare year is fine (e.g. earliest 2015, latest 2016). Do NOT compute a midpoint
+            or decide the span; leave proposed_value null and applies_whole_project false. The engine applies the
+            STRICT 2-year rule deterministically (escalation.collection_date): a span <= 2 years fills the period
+            midpoint; a span > 2 years is left BLANK and never escalated (an imprecise wide-range midpoint would
+            corrupt fine-grained lineage dating — David, 2026-07-02).
         cf_status:
           values: [CF, non_CF, unknown]
           meaning: host cystic-fibrosis status — the primary M. abscessus phenotype axis
@@ -318,7 +341,10 @@ attributes:
           - {source_pattern: '^CF\d',                target_field: cf_status, target_value: CF,     mode: fill}
           - {source_pattern: '^(BX|COPD|NCF|NON)\d', target_field: cf_status, target_value: non-CF, mode: fill}
       isolation_source:
-        null_tokens: ["culture or similar", "Laboratory mutation", "MGIT"]  # culture artefacts, not a body/env source
+        # M.abs culture artefacts PLUS the Klebsiella generic/context junk set (ported 2026-07-17): "0"/"unclear"/
+        # "others" are non-values, and "clinical"/"surveillance" name a sampling CONTEXT not a specimen — blanking
+        # them pre-fill lets the per-sample table supply the real source (e.g. sputum vs skin vs water).
+        null_tokens: ["culture or similar", "Laboratory mutation", "MGIT", "0", "unclear", "others", "clinical", "surveillance"]
         null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']
         categories: []
         # Phase D — water/plumbing isolates are environmental; the host categoriser wrongly
@@ -330,6 +356,75 @@ attributes:
         # Post-hoc value canonicalisation to a single binary. Non-CF -> non-CF (case), and the
         # non-informative tokens `?` / `Environmental` -> blank.
         normalise: {'Non-CF': 'non-CF', '?': '', 'Environmental': ''}
+
+# ESCALATION / TRIAGE POLICY for M. abscessus. Mirrors the Klebsiella `escalation` block (identical engine
+# mechanism) but with M.abs clinical priors, NOT Klebsiella's. Authored 2026-07-17 (David): WITHOUT this section
+# m_abs silently inherited the engine's generic default triage prose, which IS Klebsiella's invasive-vs-carriage
+# / blood-dominant rule — wrong for a respiratory-dominant, CF-vs-non-CF species. The engine reads these keys via
+# AttributeSpec + escalation.py, falling back to a generic default only when omitted.
+escalation:
+  # A single value at/above this share of a study's non-blank samples is "dominant" and adopted whole-study.
+  dominant_share: 0.95
+  # Surface wide-mix escalations for manual review rather than auto-skipping them: the M.abs triage is NOT yet
+  # validated against an M.abs ground truth (Klebsiella only set this true after validating its triage on train),
+  # so keep genuine wide mixes visible. Flip to true once the M.abs triage is trusted.
+  auto_skip_wide_mix: false
+  # collection_date span thresholds. STRICT 2-year, NEVER escalate (David, 2026-07-02): five_year_months is set
+  # EQUAL to two_year_months (24) so the escalate band is empty — the engine fills the period midpoint for a span
+  # <= 24 months and leaves everything wider BLANK (never escalated). old_before_year is inert here (no escalate
+  # band to trigger a pre-2010 midpoint) and kept only for schema completeness.
+  collection_date:
+    two_year_months: 24
+    five_year_months: 24
+    old_before_year: 2010
+  # The triage prose the model reads when deciding a declined isolation_source / host / country / cf_status /
+  # smoking_status (collection_date is deterministic; a country region-cluster is deterministic and fed in as
+  # context). Encodes the >=95%-or-homogeneous-category adopt/skip rule with M. abscessus priors: pulmonary vs
+  # extrapulmonary disease, human vs environmental host, region clustering for country, and the CF phenotype axis.
+  triage_guidance: |-
+    Decide whether one clean whole-study value can represent this field. ADOPT a single value when EITHER:
+      (a) ONE value covers about 95% or more of the study's samples — a clear dominant value. If you cannot
+    count exactly, adopt when the evidence makes it LIKELY one value is >=95%.
+      (b) the values are BELOW 95% but are HOMOGENEOUS within one closely-related category — then adopt the
+    DOMINANT single value WITHIN that category:
+        * isolation_source: M. abscessus is overwhelmingly a PULMONARY pathogen. If all specimens are
+    respiratory / lower-airway (sputum, induced sputum, BAL / bronchial wash, endotracheal aspirate) -> adopt
+    the dominant respiratory specimen (usually sputum). Do NOT adopt if respiratory specimens are mixed with
+    EXTRAPULMONARY disease sites (skin / soft-tissue, wound, surgical / disseminated, blood, other sterile
+    sites) — that is a genuine WIDE mix (a different disease presentation and patient population). Environmental
+    sources (water, plumbing / tap, soil) are a SEPARATE category: a study mixing clinical and environmental
+    isolates is a wide mix.
+        * country: all countries lie within ONE geographic region (e.g. all East Asia, all W. Europe) -> adopt
+    the dominant country. (Region clustering is also computed deterministically and given to you below when it
+    applies.)
+        * host: all hosts fall in one group (all human; all one animal group) -> adopt the dominant host. Human
+    clinical -> human; an environmental study (water / plumbing) -> that environment. A study mixing human with
+    environmental (or animal) hosts is a WIDE mix.
+        * cf_status / smoking_status (the M.abs phenotype fields): these are binary categoricals, so only case
+    (a) applies — adopt a single value ONLY when the evidence makes ONE category ~95%+ of the study (e.g. a CF
+    clinic / registry cohort -> CF; a cohort explicitly all bronchiectasis-without-CF / COPD / post-surgical ->
+    non-CF). A genuine CF/non-CF (or smoker/non-smoker) mix is a wide_mix_skip — per-sample extraction handles
+    it; do NOT guess. CRITICAL: never infer cf_status from IMMUNE status — "immunocompetent" / "immunocompromised"
+    is ORTHOGONAL to CF (CF is a CFTR channelopathy, not an immunodeficiency) and is no evidence either way.
+
+    Resolutions:
+    - uniform_propose — case (a): one value is ~95%+ of the study.
+    - tight_cluster_escalate — case (b): homogeneous within a closely-related category, dominant value adopted.
+    - wide_mix_skip — a genuinely WIDE, unrelated mix with no >=95% dominant AND no homogeneous category
+    (e.g. sputum + skin/soft-tissue + disseminated; clinical + environmental water; human + environmental;
+    CF + non-CF; countries across continents). Do not ask — per-sample extraction handles it.
+
+    For uniform_propose or tight_cluster_escalate, set representative_value to that single dominant value. It
+    MUST be a SINGLE, PARSEABLE, CANONICAL value of the field, never a region, a list, or a concatenation:
+        * country: ONE country name (e.g. 'United Kingdom', 'South Korea') — NOT a region/continent and NOT a
+    join. If the countries cluster to one region but no single country is dominant, prefer wide_mix_skip (the
+    engine surfaces the region separately for the curator).
+        * isolation_source: one specimen term (e.g. 'sputum'); host: one host (e.g. 'human'); cf_status: one
+    status (e.g. 'CF' or 'non-CF').
+    Set representative_value null for wide_mix_skip. Use the ENA base distribution provided (counts per value)
+    to apply the 95% test; for values that appear only in the paper, use the paper's own proportions. Give a
+    one-line cluster_theme naming the cluster and why it is homogeneous or wide, plus a verbatim
+    evidence_quote. Judge ONLY from the evidence above; do not guess.
 
 # COHORT FLAGS emitted per accession. Carried from Klebsiella. [keep]
 cohort_flags:
