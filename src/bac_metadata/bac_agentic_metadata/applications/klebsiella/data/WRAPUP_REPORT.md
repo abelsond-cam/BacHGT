@@ -78,10 +78,10 @@ _Read-only, deterministic; every figure traces to a per-tranche artifact._
 
 | item | N | agreement | agent acc | manual acc | improvement |
 |---|---|---|---|---|---|
-| paper-finding | 30 | 0.833 | 0.933 | 0.933 | +0.000 |
+| paper-finding | 30 | 0.833 | 0.900 | 0.933 | -0.033 |
 | amr_study | 37 | 0.838 | 0.971 | 0.914 | +0.057 |
 | study_setting | 42 | 0.905 | 0.976 | 0.929 | +0.048 |
-| TOTAL | 109 | 0.862 | 0.963 | 0.925 | +0.037 |
+| TOTAL | 109 | 0.862 | 0.953 | 0.925 | +0.028 |
 
 _Residual disagreements the adjudicator did not rule for the agent are in `diagnostics/adjudication_review_queue.tsv` for curator sign-off._
 
