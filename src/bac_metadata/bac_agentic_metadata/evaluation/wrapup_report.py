@@ -259,18 +259,22 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
           "optional manual spot-review, not counted as errors._", "",
           "| tranche | overwrites | with v2 gold | matches v2 | top studies (overwrite count) |",
           "|---|--:|--:|--:|---|"]
+    targets = []  # (tag, top-study) for the low-match tranches — computed, not hard-coded
     for t in tags:
         n_over, top = _overwrite_studies(RunPaths(data_dir, t))
         gold = sum(split[t].get(f, {}).get("over_gold", 0) for f in FIELDS)
         corr = sum(split[t].get(f, {}).get("over_correct", 0) for f in FIELDS)
         acc = f"{corr}/{gold} ({corr / gold:.2f})" if gold else "—"
         L.append(f"| {t} | {n_over} | {gold} | {acc} | {', '.join(top) if top else '—'} |")
+        if gold >= 20 and (corr / gold) < 0.5 and top:  # high-gold, low-match ⇒ a genuine vague→specific move
+            targets.append(f"{t} `{top[0].split(' ')[0]}`")
+    tgt = "; ".join(targets) if targets else "the low-`matches v2` rows above"
     L += ["", "_The v2 gold for these four fields is essentially parsed raw ENA (+ coarse study-level "
           "backfill), not an independent per-sample truth, so 'matches v2' measures agreement with ENA: a "
           "high rate means the overwrite was re-derivable from ENA, a **low** rate means the fill genuinely "
-          "moved the value away from a vague ENA term (the intended vague→specific gain) — those rows "
-          "(train `PRJEB63361/58216/36683`, tail50_99 `PRJEB56668`, tail10_24 `PRJEB34353`) are the "
-          "spot-review targets, not errors._", ""]
+          f"moved the value away from a vague ENA term (the intended vague→specific gain). Spot-review targets "
+          f"(high overwrite volume + low match, flagged automatically): {tgt} — these are candidates to review, "
+          "not errors._", ""]
     return "\n".join(L) + "\n"
 
 

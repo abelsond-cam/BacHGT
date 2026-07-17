@@ -123,5 +123,5 @@ _Per-sample is the only stage that can replace a non-blank ENA value, and only t
 | tail10_24 | 31 | 21 | 2/21 (0.10) | PRJEB34353 (19), PRJEB38898 (12) |
 | sub10 | 0 | 0 | — | — |
 
-_The v2 gold for these four fields is essentially parsed raw ENA (+ coarse study-level backfill), not an independent per-sample truth, so 'matches v2' measures agreement with ENA: a high rate means the overwrite was re-derivable from ENA, a **low** rate means the fill genuinely moved the value away from a vague ENA term (the intended vague→specific gain) — those rows (train `PRJEB63361/58216/36683`, tail50_99 `PRJEB56668`, tail10_24 `PRJEB34353`) are the spot-review targets, not errors._
+_The v2 gold for these four fields is essentially parsed raw ENA (+ coarse study-level backfill), not an independent per-sample truth, so 'matches v2' measures agreement with ENA: a high rate means the overwrite was re-derivable from ENA, a **low** rate means the fill genuinely moved the value away from a vague ENA term (the intended vague→specific gain). Spot-review targets (high overwrite volume + low match, flagged automatically): train `PRJEB63361`; tail50_99 `PRJEB56668`; tail10_24 `PRJEB34353` — these are candidates to review, not errors._
 
