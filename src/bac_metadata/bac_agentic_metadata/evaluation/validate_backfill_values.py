@@ -71,13 +71,23 @@ def main() -> None:
     md.append(f"Gold = `{Path(args.truth).name}`, matched against {basis} per field (placeholder-stripped "
               "both sides; case/whitespace-folded; `collection_date` compared at **year** granularity). A "
               "fill is correct if it matches the raw or the parsed gold value.\n")
-    md.append("| field | cells filled | with gold | correct | value-accuracy |")
-    md.append("|---|---|---|---|---|")
+    def _a(x: float) -> str:
+        return f"{x:.2f}" if pd.notna(x) else "—"
+
+    md.append("| field | cells filled | with gold | correct | value-accuracy | blank-fill acc (n) | "
+              "overwrite acc (n) |")
+    md.append("|---|---|---|---|---|---|---|")
     for _, r in res.iterrows():
-        acc = f"{r['accuracy']:.2f}" if pd.notna(r["accuracy"]) else "—"
-        md.append(f"| {r['field']} | {int(r['filled'])} | {int(r['has_gold'])} | {int(r['correct'])} | {acc} |")
+        md.append(
+            f"| {r['field']} | {int(r['filled'])} | {int(r['has_gold'])} | {int(r['correct'])} | "
+            f"{_a(r['accuracy'])} | {_a(r['acc_blank_fill'])} (n={int(r['has_gold_blank'])}) | "
+            f"{_a(r['acc_overwrite'])} (n={int(r['has_gold_overwrite'])}) |")
     md.append("\n- **cells filled** = fills proposed; **with gold** = of those, how many have a value in "
               "metadata_v2 to check; **value-accuracy** = fraction of those that match (raw or parsed).")
+    md.append("- **blank-fill acc** = accuracy on fills of a blank ENA cell (a positive fill — the real "
+              "value-add). **overwrite acc** = accuracy on fills that replaced a real ENA value; these are "
+              "scored against a gold that *is* the raw ENA the fill deliberately replaced, so they read low by "
+              "construction and need spot-review, not equality. `n` = with-gold count in each split.")
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)

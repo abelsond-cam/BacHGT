@@ -1,5 +1,5 @@
-field	filled	has_gold	correct	accuracy
-country	121	67	67	1.0
-collection_date	253	128	128	1.0
-isolation_source	506	201	67	0.3333333333333333
-host	544	102	81	0.7941176470588235
+field	filled	has_gold	correct	accuracy	n_blank_fill	has_gold_blank	correct_blank_fill	acc_blank_fill	n_overwrite	has_gold_overwrite	correct_overwrite	acc_overwrite
+country	121	67	67	1.0	121	67	67	1.0	0	0	0	
+collection_date	253	128	128	1.0	252	128	128	1.0	1	0	0	
+isolation_source	506	201	67	0.3333333333333333	433	128	67	0.5234375	73	73	0	0.0
+host	544	102	81	0.7941176470588235	544	102	81	0.7941176470588235	0	0	0	

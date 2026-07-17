@@ -349,18 +349,34 @@ def value_correctness(
     Returns
     -------
     pandas.DataFrame
-        One row per field: ``filled``, ``has_gold``, ``correct``, ``accuracy``.
+        One row per field: ``filled``, ``has_gold``, ``correct``, ``accuracy``, plus the same triple
+        split by whether the fill landed on a **blank** ENA cell (a positive fill) or **overwrote** a
+        real ENA value (``{n_blank_fill,correct_blank_fill,acc_blank_fill}`` /
+        ``{n_overwrite,correct_overwrite,acc_overwrite}``). The split uses the applied row's
+        ``ena_value``: comparing an overwrite against a gold that *is* the raw ENA value the overwrite
+        deliberately replaced scores it wrong by construction, so the two must be read separately (a
+        pooled ``accuracy`` conflates near-perfect blank-fills with those gated overwrites).
     """
     gold_cols = gold_cols or {f: [f] for f in fields}
     gidx = gold.drop_duplicates(sample_col).set_index(sample_col)
+
+    def _acc(correct: pd.Series, has_gold: pd.Series) -> dict:
+        """Per-cell (correct, has_gold) booleans → {has_gold, correct, accuracy} counts."""
+        n = int(has_gold.sum())
+        c = int((correct & has_gold).sum())
+        return {"has_gold": n, "correct": c, "accuracy": float(c / n) if n else float("nan")}
+
     rows = []
     for f in fields:
         sub = applied[applied["field"] == f]
         cands = gold_cols.get(f, [f])
         cands = [cands] if isinstance(cands, str) else list(cands)
         cands = [c for c in cands if c in gold.columns]
+        base = {"field": f, "filled": int(len(sub)), "has_gold": 0, "correct": 0, "accuracy": float("nan"),
+                "n_blank_fill": 0, "has_gold_blank": 0, "correct_blank_fill": 0, "acc_blank_fill": float("nan"),
+                "n_overwrite": 0, "has_gold_overwrite": 0, "correct_overwrite": 0, "acc_overwrite": float("nan")}
         if not cands or len(sub) == 0:
-            rows.append({"field": f, "filled": len(sub), "has_gold": 0, "correct": 0, "accuracy": float("nan")})
+            rows.append(base)
             continue
         akey = _cmp_key(sub["applied_value"], f)
         has_gold = pd.Series(False, index=sub.index)
@@ -370,14 +386,13 @@ def value_correctness(
             present = gmapped.notna()
             has_gold = has_gold | present
             correct = correct | (present & (akey == _cmp_key(gmapped, f))).fillna(False).astype(bool)
-        n_gold = int(has_gold.sum())
-        rows.append(
-            {
-                "field": f,
-                "filled": int(len(sub)),
-                "has_gold": n_gold,
-                "correct": int(correct.sum()),
-                "accuracy": float(correct.sum() / n_gold) if n_gold else float("nan"),
-            }
-        )
+        # blank-fill vs overwrite: the ena_value the fill landed on (blank ⇒ positive fill; else overwrite)
+        is_over = (strip_placeholders(sub["ena_value"]).notna() if "ena_value" in sub.columns
+                   else pd.Series(False, index=sub.index))
+        blank, over = _acc(correct[~is_over], has_gold[~is_over]), _acc(correct[is_over], has_gold[is_over])
+        rows.append({**base, **_acc(correct, has_gold),
+                     "n_blank_fill": int((~is_over).sum()), "has_gold_blank": blank["has_gold"],
+                     "correct_blank_fill": blank["correct"], "acc_blank_fill": blank["accuracy"],
+                     "n_overwrite": int(is_over.sum()), "has_gold_overwrite": over["has_gold"],
+                     "correct_overwrite": over["correct"], "acc_overwrite": over["accuracy"]})
     return pd.DataFrame(rows)
