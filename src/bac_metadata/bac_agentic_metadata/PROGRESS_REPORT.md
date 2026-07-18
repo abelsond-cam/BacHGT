@@ -408,3 +408,64 @@ test-fold outputs); a pipeline-wide **no-silent-fail coverage audit** (every sel
 every declined-and-incomplete field escalates; every missing paper is on the worklist; every table is
 linked-or-flagged); and archiving the test/val/train caches+grades+queues+papers so reruns stay cheap and
 deterministic. Then re-grade+accumulate train under the new rules and re-freeze `engine/reference_outputs/`.
+
+## 8. Overwrite-integrity fix (m_abs top-20; decided 2026-07-18, PENDING implementation)
+
+**Trigger.** M4 re-run at tag `mabs_top20` — top-20 biggest *M. abscessus* studies, 5,340 samples:
+`run_m_abs.sh --min-study-size 1 --limit 20 --tag mabs_top20 --exclude-splits <NONEXISTENT-PATH> --web-fallback --grade-workers 20 --find-workers 20`.
+The `--exclude-splits <nonexistent>` is **required**: else `data/fold_splits/project_splits.tsv`'s 20 "done"
+studies are excluded and the driver silently runs studies 21–40 instead of the top 20. Run completed,
+`verify_pipeline_triggers` PASSED, curator loop surfaced correctly (`run_progress/mabs_top20/per_sample/supplement_fetch_report.md`).
+A `cf_status` spot-check then exposed **fills overwriting known base values** — the failure §7(ii)'s guard was
+meant to prevent, via two paths it doesn't cover.
+
+**Finding — 306 known base values changed by fills across the 20 studies:**
+
+| field · study | n | transition | verdict | mechanism |
+|---|---|---|---|---|
+| cf_status · PRJEB2779 | 30 (+1 Animal) | Non-CF→CF | **BAD** | run→sample collapse |
+| country · PRJNA778024 | 80 (132 rows) | Canada:Toronto→UK/USA/Australia | **BAD** | `per_sample_two_hop` overwrite |
+| collection_date · PRJNA1119444 | 68 | 2019→2019-12-23 | GOOD (keep) | single-hop `per_sample` refinement |
+
+(cf_status also had 127 `?`→CF — legit blank-fills; `?` is placeholder-null.)
+
+**Two mechanisms §7's guard misses:**
+1. **`per_sample_two_hop` overwrite** — the two-hop join (table row → intermediate key → ENA sample; unreliable)
+   overwrote correct ENA countries. `judge_overwrite_fidelity` either passed it or two_hop bypasses the guard.
+2. **run→sample collapse** — base is per-RUN, `filled_metadata` per-SAMPLE. A sample with run-rows
+   `[Non-CF, blank]` has its blank run filled (CF), and the collapse prefers the CF fill over the sibling run's
+   known Non-CF. NOT the overwrite gate (per_sample cf fills = 0; escalation cf fills all `ena_value`=blank).
+
+**Decided policy (David, 2026-07-18) — "fills never change existing values", with a sure-improvement exception:**
+1. `cf_status` + `smoking_status` **PROTECTED** — never overwritten by any path; blank-fill only + the ≥95% rule.
+2. `per_sample_two_hop` **never overwrites** — fills blanks only, never replaces a non-blank value.
+3. Single-hop `per_sample` overwrite allowed **ONLY as a refinement** (more-precise form of the SAME value,
+   e.g. year→exact date in that year); never a value change.
+4. **run→sample collapse**: a known base value on ANY run-row beats a blank-run fill (fixes cf_status; no decision).
+
+**Implementation checklist (NOT yet done):**
+- [ ] Engine — `per_sample_two_hop` write path (`sample_extractor.py`): blank-only guard.
+- [ ] Engine — exclude `cf_status`/`smoking_status` from every overwrite path (blank-fill only).
+- [ ] Engine — single-hop overwrite: refinement-only check (new value a more-precise form of the old).
+- [ ] Engine — run→sample collapse (`stages.py` `_load_precedence_fills` / the base substitution): non-blank
+      base on any run-row wins over a fill.
+- [ ] **VERIFY Klebsiella byte-for-byte**: `evaluation/run_folds.sh train,val train curated` must still match
+      `engine/reference_outputs/{study_grades,per_sample_applied,backfill_applied}_train.tsv`. If it shifts,
+      **STOP + surface** (means Klebsiella behaviour changed — needs David's OK).
+- [ ] YAML (`applications/m_abs/attributes.yaml`) — make cf_status "widest axis / never overwrite existing" explicit.
+- [ ] Data — remove the stale `PRJEB2779` `cf_status`=CF row from `data/curated/curated_escalations.tsv`
+      (keep host=human, iso=sputum — both clean blank-fill-only). It's 824 CF / 115 Non-CF = 88% (below 95%),
+      so fresh triage correctly leaves it `wide_mix_skip`.
+- [ ] Re-run `mabs_top20` (cache-backed; 11 manual PDFs already in `find_papers/manual_download/`,
+      `PRJNA778024.xlsx` in `sample_lv_attributes/manual_download_supp/`).
+- [ ] Re-verify: blast-radius query → country & cf_status **0 changed**; date refinements retained;
+      PRJEB2779 cf → 824 CF / 115 Non-CF / ~1,204 unknown blank; PRJNA778024 country → Canada;
+      `verify_pipeline_triggers --app m_abs --tags mabs_top20` PASS.
+- [ ] Tests: pin "fills never overwrite known base except a single-hop refinement" (+ two_hop no-overwrite,
+      cf/smoking protected, collapse-known-wins). `uvx ruff check` clean.
+- [ ] Commit explicit paths (shared checkout).
+
+**Blast-radius verification query** (re-usable): load `inputs/base_table.csv` +
+`run_progress/mabs_top20/fill/filled_metadata.tsv`; per field, count samples whose placeholder-stripped known
+base value (any run-row, via `backfill.strip_placeholders`) differs from the filled value. After the fix,
+country/cf → 0; only single-hop date refinements (year→exact, same year) may differ.
