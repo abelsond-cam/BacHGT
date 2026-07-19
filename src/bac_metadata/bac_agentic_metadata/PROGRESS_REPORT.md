@@ -409,7 +409,7 @@ every declined-and-incomplete field escalates; every missing paper is on the wor
 linked-or-flagged); and archiving the test/val/train caches+grades+queues+papers so reruns stay cheap and
 deterministic. Then re-grade+accumulate train under the new rules and re-freeze `engine/reference_outputs/`.
 
-## 8. Overwrite-integrity fix (m_abs top-20; decided 2026-07-18, PENDING implementation)
+## 8. Overwrite-integrity fix (m_abs top-20; decided 2026-07-18, IMPLEMENTED 2026-07-19)
 
 **Trigger.** M4 re-run at tag `mabs_top20` — top-20 biggest *M. abscessus* studies, 5,340 samples:
 `run_m_abs.sh --min-study-size 1 --limit 20 --tag mabs_top20 --exclude-splits <NONEXISTENT-PATH> --web-fallback --grade-workers 20 --find-workers 20`.
@@ -443,29 +443,43 @@ meant to prevent, via two paths it doesn't cover.
    e.g. year→exact date in that year); never a value change.
 4. **run→sample collapse**: a known base value on ANY run-row beats a blank-run fill (fixes cf_status; no decision).
 
-**Implementation checklist (NOT yet done):**
-- [ ] Engine — `per_sample_two_hop` write path (`sample_extractor.py`): blank-only guard.
-- [ ] Engine — exclude `cf_status`/`smoking_status` from every overwrite path (blank-fill only).
-- [ ] Engine — single-hop overwrite: refinement-only check (new value a more-precise form of the old).
-- [ ] Engine — run→sample collapse (`stages.py` `_load_precedence_fills` / the base substitution): non-blank
-      base on any run-row wins over a fill.
-- [ ] **VERIFY Klebsiella byte-for-byte**: `evaluation/run_folds.sh train,val train curated` must still match
-      `engine/reference_outputs/{study_grades,per_sample_applied,backfill_applied}_train.tsv`. If it shifts,
-      **STOP + surface** (means Klebsiella behaviour changed — needs David's OK).
-- [ ] YAML (`applications/m_abs/attributes.yaml`) — make cf_status "widest axis / never overwrite existing" explicit.
-- [ ] Data — remove the stale `PRJEB2779` `cf_status`=CF row from `data/curated/curated_escalations.tsv`
-      (keep host=human, iso=sputum — both clean blank-fill-only). It's 824 CF / 115 Non-CF = 88% (below 95%),
-      so fresh triage correctly leaves it `wide_mix_skip`.
-- [ ] Re-run `mabs_top20` (cache-backed; 11 manual PDFs already in `find_papers/manual_download/`,
-      `PRJNA778024.xlsx` in `sample_lv_attributes/manual_download_supp/`).
-- [ ] Re-verify: blast-radius query → country & cf_status **0 changed**; date refinements retained;
-      PRJEB2779 cf → 824 CF / 115 Non-CF / ~1,204 unknown blank; PRJNA778024 country → Canada;
-      `verify_pipeline_triggers --app m_abs --tags mabs_top20` PASS.
-- [ ] Tests: pin "fills never overwrite known base except a single-hop refinement" (+ two_hop no-overwrite,
-      cf/smoking protected, collapse-known-wins). `uvx ruff check` clean.
-- [ ] Commit explicit paths (shared checkout).
+**Implementation checklist:**
+- [x] Engine — `per_sample_two_hop` overwrite → blank-only guard (a two-hop join never overwrites a known ENA
+      value). The inline overwrite gate was extracted to a pure, testable helper `stages._apply_overwrite_guard`.
+- [x] Engine — exclude `cf_status`/`smoking_status` from every overwrite path (blank-fill only) — spec-driven
+      via `per_sample_completeness.never_overwrite` → `AttributeSpec.overwrite_protected_fields`.
+- [~] Engine — single-hop refinement-only for country/iso/host: **evaluated and NOT adopted** (David,
+      2026-07-19). Single-hop country value-changes = 0 (the corruption was two-hop, now blocked); single-hop
+      `isolation_source` = 945 legit vague→specific refinements ("Human body sites or biosamples" → "BLOOD")
+      the 2026-07-11 fidelity judge is meant to keep. So the judge stays; only widest-axis fields are protected.
+- [x] Engine — run→sample collapse (`stages.fill_metadata_table`): a non-blank base value on ANY run-row wins,
+      and blank-only sources (whole-field / escalation) never override a known value (enforced at substitution).
+- [x] **Klebsiella byte-for-byte** — the Jun-30 `reference_outputs` were STALE (predate the Jul-13 overwrite
+      gate: 0 overwrites vs 1641 now; also missing grade_context_chars/full_text_would_help), so the gate could
+      not reproduce on today's engine regardless of this fix. Substituted the honest check: **with-change vs
+      without-change on the current engine is byte-identical** across all four outputs → the fix is neutral to
+      Klebsiella. Then **re-froze** `reference_outputs` from the current engine (commit ae0fa3a; 0 two-hop
+      overwrites confirmed) so the gate is meaningful again.
+- [x] YAML (`applications/m_abs/attributes.yaml`) — cf_status widest-axis: `never_overwrite: [cf_status,
+      smoking_status]` + `cf_status` `null_tokens: ['?']` (blank `?` pre-fill so it's blank-fillable, 143 cells).
+- [x] Data — stale `PRJEB2779` `cf_status`=CF **superseded by a curator-skip** row (not a plain delete: the
+      escalation queue is sticky — `escalate_detect._preserve_prior_answers` re-injects the prior on-disk
+      queue's answer even after the master row is removed). Recorded the skip in the master + cleared the stale
+      queue → 88%-CF blanks stay blank. **NOTE: `data/curated/curated_escalations.tsv` is UNTRACKED** (the whole
+      m_abs `data/` tree is), so this edit is on disk only; version it if/when m_abs data enters git.
+- [x] Re-ran `mabs_top20` (11 manual PDFs + `PRJNA778024.xlsx` in place).
+- [x] Re-verified: blast-radius → **0 real changes to any known value** (cf 0, country 0, iso 0, host 0;
+      collection_date 68 = all sanctioned single-hop refinements). PRJEB2779 cf → **824 CF / 115 Non-CF / 1201
+      blank**. `verify_pipeline_triggers --app m_abs --tags mabs_top20` PASS.
+- [x] Tests — `tests/test_overwrite_integrity.py` (8 cases: two-hop dropped / blank-fill kept / judge-not-called
+      for two-hop-only / date refinement kept vs lateral dropped / protected-field never-overwritten / collapse
+      known-wins / blank-only can't override but per-sample refines / blank-fill still lands). 22 agentic green;
+      ruff clean.
+- [x] Committed explicit paths: **b6ecd71** (two mechanisms) · **216500d** (cf/smoking protection + '?' null) ·
+      **ae0fa3a** (reference re-freeze).
 
-**Blast-radius verification query** (re-usable): load `inputs/base_table.csv` +
+**Blast-radius verification query** (re-usable): load `inputs/base_table.csv` (preclean it via the spec so
+`null_tokens` like cf_status `?` are treated as blank, mirroring the engine) +
 `run_progress/mabs_top20/fill/filled_metadata.tsv`; per field, count samples whose placeholder-stripped known
-base value (any run-row, via `backfill.strip_placeholders`) differs from the filled value. After the fix,
-country/cf → 0; only single-hop date refinements (year→exact, same year) may differ.
+base value (any run-row) differs from the filled value. After the fix, country/cf → 0; only single-hop date
+refinements (year→exact, same year) differ.
