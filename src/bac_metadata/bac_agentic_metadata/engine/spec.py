@@ -79,6 +79,18 @@ class AttributeSpec:
         return default if v is None else v
 
     @property
+    def overwrite_protected_fields(self) -> tuple[str, ...]:
+        """Per-sample fields a table value may NEVER overwrite — blank-fill only (``per_sample_completeness.never_overwrite``).
+
+        The widest-axis phenotype fields (e.g. ``cf_status`` / ``smoking_status``) where any change to a known
+        value is unacceptable: they are filled only where ENA is blank (subject to the whole-project rule), and
+        no per-sample table value — single- or two-hop — is ever allowed to overwrite a recorded value. Empty
+        for applications that declare none (e.g. Klebsiella), so the guard is a no-op there.
+        """
+        completeness = (self.raw.get("attributes", {}) or {}).get("per_sample_completeness", {}) or {}
+        return tuple(completeness.get("never_overwrite", []) or [])
+
+    @property
     def completeness_threshold(self) -> float:
         """ENA non-null fraction at/above which a field is "already complete" (``gates.completeness_threshold``)."""
         return float(self._gate("completeness_threshold", _DEFAULT_COMPLETENESS_THRESHOLD))

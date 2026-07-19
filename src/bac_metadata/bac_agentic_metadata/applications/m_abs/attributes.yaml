@@ -116,6 +116,11 @@ attributes:
   #    fallback (fill all samples when the cohort is uniform — same model as Klebsiella country/source).
   per_sample_completeness:
     fields: [country, collection_date, isolation_source, host, cf_status, smoking_status]
+    # WIDEST-AXIS fields a per-sample table value may NEVER overwrite — filled only where ENA is BLANK (and
+    # only under the ≥95% whole-project rule). cf_status is the headline phenotype: any change to a recorded
+    # CF/non-CF value is unacceptable (David, 2026-07-18). The engine's overwrite guard drops every overwrite
+    # of these — single- or two-hop — keeping the recorded value; blank-fills still flow.
+    never_overwrite: [cf_status, smoking_status]
     ground_truth: none
     deterministic_normaliser: {}              # no M.abs parsers (Klebsiella-only; engine no-ops when empty)
 
@@ -353,8 +358,12 @@ attributes:
         cross_column:
           - {source_category: [water_environment], target_field: host_category, target_value: environment, mode: set}
       cf_status:
-        # Post-hoc value canonicalisation to a single binary. Non-CF -> non-CF (case), and the
-        # non-informative tokens `?` / `Environmental` -> blank.
+        # `?` is a non-informative unknown, not a value — blank it PRE-fill (like the other fields' null_tokens)
+        # so the fill agent may recover a real CF/non-CF where possible, instead of it sitting as a fake known
+        # value (David, 2026-07-18). Preclean wipes it in-memory before the fill stages; the base on disk stays
+        # verbatim. `normalise` is the post-hoc canonicaliser (Non-CF -> non-CF case; residual `?`/Environmental
+        # -> blank) applied downstream, a belt-and-suspenders net for any token that reaches the master.
+        null_tokens: ['?']
         normalise: {'Non-CF': 'non-CF', '?': '', 'Environmental': ''}
 
 # ESCALATION / TRIAGE POLICY for M. abscessus. Mirrors the Klebsiella `escalation` block (identical engine

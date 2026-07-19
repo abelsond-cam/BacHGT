@@ -95,6 +95,21 @@ def test_single_hop_date_refinement_kept_lateral_change_dropped():
     assert ("s2", "2020") not in kept_vals
 
 
+def test_protected_field_never_overwritten_but_blank_fill_kept():
+    """A widest-axis protected field (cf_status) is never overwritten by any path; blank-fills still land."""
+    fills = [
+        _fill("s1", "cf_status", "Non-CF", "CF", "per_sample"),          # single-hop overwrite -> DROP (protected)
+        _fill("s2", "cf_status", "Non-CF", "CF", "per_sample_two_hop"),  # two-hop overwrite -> DROP
+        _fill("s3", "cf_status", "", "CF", "per_sample"),                # blank-fill -> KEEP
+    ]
+    # _RaisingJudge proves the fidelity judge is never consulted for a protected field (blocked before Layer 2).
+    kept, note = stages._apply_overwrite_guard(fills, ["cf_status"], _RaisingJudge(), None, protected=["cf_status"])
+    kept_vals = {(k["sample_accession"], k["applied_value"]) for k in kept}
+    assert ("s1", "CF") not in kept_vals and ("s2", "CF") not in kept_vals   # both overwrites blocked
+    assert ("s3", "CF") in kept_vals                                          # blank-fill still lands
+    assert "protected" in note
+
+
 # ── Improvement 2 — run→sample collapse (known base wins) ───────────────────────────────────────────────
 
 

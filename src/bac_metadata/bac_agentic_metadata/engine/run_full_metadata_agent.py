@@ -395,6 +395,7 @@ def main() -> None:
             manual_supp_dir=manual_supp_dir, llm=llm, model=args.model, caches=caches, threshold=completeness_threshold,
             ast_drugs=ast_drugs, id_columns=list(spec.sample_identifier_columns) or None,
             manual_papers_dir=manual_papers_dir, category_vocab=category_vocab, paper_links=paper_links,
+            overwrite_protected=spec.overwrite_protected_fields,
         )
 
     # ── Stage 4 — whole-field backfill (coarse fallback for what per-sample left) ──────────────────

@@ -416,17 +416,19 @@ def _is_blank(value) -> bool:
 
 
 def _apply_overwrite_guard(ex_fills: list[dict], fields: Sequence[str], llm,
-                           model: str | None) -> tuple[list[dict], str]:
+                           model: str | None, protected: Sequence[str] = ()) -> tuple[list[dict], str]:
     """Filter one study's per-sample fills so a table value only OVERWRITES a genuine ENA value when robustly better.
 
     A blank-fill (the ENA cell is placeholder-null) is kept whenever the table value parses to a real value.
-    An overwrite of a KNOWN ENA value is gated: a **two-hop** join (table row → intermediate key → ENA sample)
-    is unreliable and may NEVER overwrite — it fills blanks only; ``collection_date`` overwrites only with a
-    strictly more specific date; ``country``/``isolation_source``/``host`` defer to the agentic fidelity judge.
-    Returns ``(kept_fills, note_fragment)`` — the fragment is ``""`` when nothing was filtered.
+    An overwrite of a KNOWN ENA value is gated: a ``protected`` (widest-axis) field like ``cf_status`` is NEVER
+    overwritten by any path; a **two-hop** join (table row → intermediate key → ENA sample) is unreliable and
+    may NEVER overwrite — both fill blanks only; ``collection_date`` overwrites only with a strictly more
+    specific date; ``country``/``isolation_source``/``host`` defer to the agentic fidelity judge. Returns
+    ``(kept_fills, note_fragment)`` — the fragment is ``""`` when nothing was filtered.
     """
     from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
 
+    protected_set = set(protected)
     by_field: dict[str, list] = {}
     for x in ex_fills:
         by_field.setdefault(x.get("field"), []).append(x)
@@ -444,18 +446,24 @@ def _apply_overwrite_guard(ex_fills: list[dict], fields: Sequence[str], llm,
                 kept.append(x)
             else:
                 invalid[field] += 1
-        # Layer 1 — parse-validity for overwrites of a genuine ENA value. A two-hop join is unreliable, so a
-        # two-hop value may only fill a BLANK cell — it NEVER overwrites a known ENA value (the gap §7(ii)
-        # missed: a bad two-hop join replaced correct ENA countries in PRJNA778024). Single-hop overwrites gate.
+        # Layer 1 — parse-validity for overwrites of a genuine ENA value. A protected (widest-axis) field is
+        # never overwritten; a two-hop join is unreliable so a two-hop value may only fill a BLANK cell (the
+        # gap §7(ii) missed: a bad two-hop join replaced correct ENA countries in PRJNA778024). Single-hop
+        # overwrites of the remaining fields gate on betterness below.
         overwrites = []
         two_hop_blocked = 0
+        protected_blocked = 0
         for x in (x for x in xs if not _is_blank(x.get("ena_value"))):
             if not vv.parse_valid(field, x.get("applied_value")):
                 invalid[field] += 1
+            elif field in protected_set:
+                protected_blocked += 1                  # keep ENA — a widest-axis field is never overwritten
             elif x.get("method") == "per_sample_two_hop":
                 two_hop_blocked += 1                    # keep ENA — a two-hop join never overwrites
             else:
                 overwrites.append(x)
+        if protected_blocked:
+            kept_ena.append(f"{field}×{protected_blocked}(protected)")
         if two_hop_blocked:
             kept_ena.append(f"{field}×{two_hop_blocked}(two-hop)")
         if not overwrites:
@@ -503,6 +511,7 @@ def per_sample(
     manual_papers_dir: str | Path | None = None,
     category_vocab: dict[str, str] | None = None,
     paper_links: dict[str, str] | None = None,
+    overwrite_protected: Sequence[str] = (),
 ) -> pd.DataFrame:
     """Per-sample extraction from supplementary tables — the accurate per-isolate source, runs FIRST.
 
@@ -627,7 +636,7 @@ def per_sample(
         # ── OVERWRITE GATE ── a table value overwrites a genuine ENA value only when robustly BETTER, on every
         # field (no free-overwrite bypass); a two-hop join never overwrites (blank-fill only). See
         # :func:`_apply_overwrite_guard` for the full policy; it returns a note fragment for the outcome row.
-        ex_fills, guard_note = _apply_overwrite_guard(ex_fills, fields, llm, model)
+        ex_fills, guard_note = _apply_overwrite_guard(ex_fills, fields, llm, model, protected=overwrite_protected)
         note += guard_note
         fills.extend(ex_fills)
         outcome_rows.append({
