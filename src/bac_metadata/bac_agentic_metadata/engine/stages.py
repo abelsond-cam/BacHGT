@@ -415,6 +415,77 @@ def _is_blank(value) -> bool:
     return key in backfill.PLACEHOLDER_NULLS
 
 
+def _apply_overwrite_guard(ex_fills: list[dict], fields: Sequence[str], llm,
+                           model: str | None) -> tuple[list[dict], str]:
+    """Filter one study's per-sample fills so a table value only OVERWRITES a genuine ENA value when robustly better.
+
+    A blank-fill (the ENA cell is placeholder-null) is kept whenever the table value parses to a real value.
+    An overwrite of a KNOWN ENA value is gated: a **two-hop** join (table row → intermediate key → ENA sample)
+    is unreliable and may NEVER overwrite — it fills blanks only; ``collection_date`` overwrites only with a
+    strictly more specific date; ``country``/``isolation_source``/``host`` defer to the agentic fidelity judge.
+    Returns ``(kept_fills, note_fragment)`` — the fragment is ``""`` when nothing was filtered.
+    """
+    from bac_metadata.bac_agentic_metadata.engine import sample_extractor as sx
+
+    by_field: dict[str, list] = {}
+    for x in ex_fills:
+        by_field.setdefault(x.get("field"), []).append(x)
+    kept: list[dict] = []
+    overwrote: list[str] = []
+    kept_ena: list[str] = []
+    invalid: Counter = Counter()  # values dropped by Layer 1 (never a silent drop — surfaced in the note)
+    for field, xs in by_field.items():
+        if field not in fields:  # ast_* / non-core fields: keep verbatim (guard scoped to the metadata fields)
+            kept.extend(xs)
+            continue
+        # Layer 1 — parse-validity for blank-fills (drop e.g. an "NF" that would fill a blank cell)
+        for x in (x for x in xs if _is_blank(x.get("ena_value"))):
+            if vv.parse_valid(field, x.get("applied_value")):
+                kept.append(x)
+            else:
+                invalid[field] += 1
+        # Layer 1 — parse-validity for overwrites of a genuine ENA value. A two-hop join is unreliable, so a
+        # two-hop value may only fill a BLANK cell — it NEVER overwrites a known ENA value (the gap §7(ii)
+        # missed: a bad two-hop join replaced correct ENA countries in PRJNA778024). Single-hop overwrites gate.
+        overwrites = []
+        two_hop_blocked = 0
+        for x in (x for x in xs if not _is_blank(x.get("ena_value"))):
+            if not vv.parse_valid(field, x.get("applied_value")):
+                invalid[field] += 1
+            elif x.get("method") == "per_sample_two_hop":
+                two_hop_blocked += 1                    # keep ENA — a two-hop join never overwrites
+            else:
+                overwrites.append(x)
+        if two_hop_blocked:
+            kept_ena.append(f"{field}×{two_hop_blocked}(two-hop)")
+        if not overwrites:
+            continue
+        # Layer 2 — betterness (single-hop overwrites only)
+        if field == "collection_date":  # deterministic: overwrite only with a STRICTLY more specific date
+            better = [x for x in overwrites
+                      if vv.parse_date_scalar(x.get("applied_value"))[1] > vv.parse_date_scalar(x.get("ena_value"))[1]]
+            kept.extend(better)
+            if better:
+                overwrote.append(f"{field}×{len(better)}(more-specific)")
+            if len(better) < len(overwrites):
+                kept_ena.append(f"{field}×{len(overwrites) - len(better)}")
+        else:  # country / isolation_source / host — the agentic fidelity judge, always
+            improves, why = sx.judge_overwrite_fidelity(
+                field, [(x.get("ena_value"), x.get("applied_value")) for x in overwrites], llm, model=model)
+            if improves:
+                kept.extend(overwrites)
+                overwrote.append(f"{field}×{len(overwrites)}({why[:32]})")
+            else:
+                kept_ena.append(f"{field}×{len(overwrites)}")
+    note = ""
+    if len(kept) != len(ex_fills):
+        note = (f"; overwrite guard: {len(kept)}/{len(ex_fills)} fills kept"
+                + (f"; overwrote {', '.join(overwrote)}" if overwrote else "")
+                + (f"; kept ENA over table on {', '.join(kept_ena)}" if kept_ena else "")
+                + (f"; dropped {sum(invalid.values())} invalid ({dict(invalid)})" if invalid else ""))
+    return kept, note
+
+
 def per_sample(
     *,
     base: pd.DataFrame,
@@ -553,63 +624,11 @@ def per_sample(
             if sa in base_idx.index and f in base_idx.columns:
                 x["ena_value"] = str(base_idx.at[sa, f])
         ex_fills, note = ex.fills, ex.note
-        # ── OVERWRITE GATE ────────────────────────────────────────────────────────────────────────
-        # A table value may only OVERWRITE a genuine ENA value when it is robustly a BETTER value —
-        # assessed on the parsed value, on every field (gated OR not; there is no free-overwrite bypass).
-        #  Layer 1 (parse-validity): a value must parse to a REAL value for its field to be adopted at all
-        #    (blank-fill or overwrite) — rejects table-null tokens ("NF"/"ND"/…) and non-date collection_dates.
-        #  Layer 2 (betterness, overwrites only): collection_date is deterministic — adopt only a STRICTLY
-        #    more specific date (year→year-month→full); the specimen-tuned judge is wrong for dates. country/
-        #    isolation_source/host defer to the agentic judge_overwrite_fidelity (its prompt fits these).
-        by_field: dict[str, list] = {}
-        for x in ex_fills:
-            by_field.setdefault(x.get("field"), []).append(x)
-        kept: list[dict] = []
-        overwrote: list[str] = []
-        kept_ena: list[str] = []
-        invalid: Counter = Counter()  # values dropped by Layer 1 (never a silent drop — surfaced in the note)
-        for field, xs in by_field.items():
-            if field not in fields:  # ast_* / non-core fields: keep verbatim (guard scoped to the metadata fields)
-                kept.extend(xs)
-                continue
-            # Layer 1 — parse-validity for blank-fills (drop e.g. an "NF" that would fill a blank cell)
-            for x in (x for x in xs if _is_blank(x.get("ena_value"))):
-                if vv.parse_valid(field, x.get("applied_value")):
-                    kept.append(x)
-                else:
-                    invalid[field] += 1
-            # Layer 1 — parse-validity for overwrites of a genuine ENA value
-            overwrites = []
-            for x in (x for x in xs if not _is_blank(x.get("ena_value"))):
-                if vv.parse_valid(field, x.get("applied_value")):
-                    overwrites.append(x)
-                else:
-                    invalid[field] += 1
-            if not overwrites:
-                continue
-            # Layer 2 — betterness
-            if field == "collection_date":  # deterministic: overwrite only with a STRICTLY more specific date
-                better = [x for x in overwrites
-                          if vv.parse_date_scalar(x.get("applied_value"))[1] > vv.parse_date_scalar(x.get("ena_value"))[1]]
-                kept.extend(better)
-                if better:
-                    overwrote.append(f"{field}×{len(better)}(more-specific)")
-                if len(better) < len(overwrites):
-                    kept_ena.append(f"{field}×{len(overwrites) - len(better)}")
-            else:  # country / isolation_source / host — the agentic fidelity judge, always
-                improves, why = sx.judge_overwrite_fidelity(
-                    field, [(x.get("ena_value"), x.get("applied_value")) for x in overwrites], llm, model=model)
-                if improves:
-                    kept.extend(overwrites)
-                    overwrote.append(f"{field}×{len(overwrites)}({why[:32]})")
-                else:
-                    kept_ena.append(f"{field}×{len(overwrites)}")
-        if len(kept) != len(ex_fills):
-            note = (f"{note}; overwrite guard: {len(kept)}/{len(ex_fills)} fills kept"
-                    + (f"; overwrote {', '.join(overwrote)}" if overwrote else "")
-                    + (f"; kept ENA over table on {', '.join(kept_ena)}" if kept_ena else "")
-                    + (f"; dropped {sum(invalid.values())} invalid ({dict(invalid)})" if invalid else ""))
-        ex_fills = kept
+        # ── OVERWRITE GATE ── a table value overwrites a genuine ENA value only when robustly BETTER, on every
+        # field (no free-overwrite bypass); a two-hop join never overwrites (blank-fill only). See
+        # :func:`_apply_overwrite_guard` for the full policy; it returns a note fragment for the outcome row.
+        ex_fills, guard_note = _apply_overwrite_guard(ex_fills, fields, llm, model)
+        note += guard_note
         fills.extend(ex_fills)
         outcome_rows.append({
             "study_accession": ex.study_accession, "pmcid": ex.pmcid, "table": ex.table,
@@ -1174,7 +1193,8 @@ def fill_metadata_table(
     out_path = Path(out_path)
     out_dir = out_path.parent
     out_dir.mkdir(parents=True, exist_ok=True)
-    base = base.drop_duplicates("sample_accession").copy()
+    base_full = base                                          # per-RUN rows (a sample may span several runs)
+    base = base.drop_duplicates("sample_accession").copy()    # one output row per sample
     studies = set(base["study_accession"])
     print(f"Filling metadata table (full width): {len(base)} samples, {len(base.columns)} columns, "
           f"{len(studies)} studies", file=sys.stderr)
@@ -1185,9 +1205,25 @@ def fill_metadata_table(
     prov_rows: list[pd.DataFrame] = []
     summary: list[dict[str, object]] = []
     filled = base.copy()
-    base_idx_value = {f: backfill.strip_placeholders(base.set_index("sample_accession")[f])
-                      if f in base.columns else pd.Series(dtype="string") for f in fields}
+    # A field's known base value is taken from ANY run-row of the sample (non-blank wins). The base is per-RUN
+    # but the output is per-SAMPLE, so without this a blank run could hide — and its whole-field blank-fill
+    # could then clobber — a value a sibling run recorded (the run→sample collapse that overwrote known
+    # cf_status in PRJEB2779).
+    base_idx_value: dict[str, pd.Series] = {}
+    for f in fields:
+        if f in base_full.columns:
+            base_idx_value[f] = (
+                pd.DataFrame({"sample_accession": base_full["sample_accession"].to_numpy(),
+                              "_v": backfill.strip_placeholders(base_full[f]).to_numpy()})
+                .dropna(subset=["_v"]).drop_duplicates("sample_accession")
+                .set_index("sample_accession")["_v"]
+            )
+        else:
+            base_idx_value[f] = pd.Series(dtype="object")
 
+    # Study-wide sources only ever fill blanks; enforce it at substitution so a blank-run fill can never
+    # override a value known on a sibling run. Per-sample fills passed the overwrite guard and may refine.
+    blank_only_sources = {"whole_field", "curator_escalation"}
     for f in fields:
         ff = fills[fills["field"] == f]
         val_map = dict(zip(ff["sample_accession"], ff["applied_value"], strict=False))
@@ -1197,31 +1233,34 @@ def fill_metadata_table(
         samp = filled["sample_accession"]
         fill_val = samp.map(val_map)
         base_val = samp.map(base_real)
-        final_val = fill_val.where(fill_val.notna(), base_val)
+        src = samp.map(src_map)
+        blocked = fill_val.notna() & src.isin(blank_only_sources) & base_val.notna()
+        applied = fill_val.notna() & ~blocked
+        final_val = fill_val.where(applied, base_val)
         filled[f] = final_val
 
-        has_fill = fill_val.notna()
         prov = pd.DataFrame({
-            "study_accession": filled["study_accession"][has_fill].to_numpy(),
-            "sample_accession": samp[has_fill].to_numpy(),
+            "study_accession": filled["study_accession"][applied].to_numpy(),
+            "sample_accession": samp[applied].to_numpy(),
             "field": f,
-            "ena_value": base_val[has_fill].to_numpy(),
-            "filled_value": fill_val[has_fill].to_numpy(),
-            "source": samp[has_fill].map(src_map).to_numpy(),
+            "ena_value": base_val[applied].to_numpy(),
+            "filled_value": fill_val[applied].to_numpy(),
+            "source": samp[applied].map(src_map).to_numpy(),
         })
         prov_rows.append(prov)
 
         n = len(filled)
         base_present = base_val.notna()
         filled_present = final_val.notna()
-        overrides = int((has_fill & base_present).sum())
-        new_fills = int((has_fill & ~base_present).sum())
+        overrides = int((applied & base_present).sum())
+        new_fills = int((applied & ~base_present).sum())
         by_src = prov["source"].value_counts().to_dict()
         summary.append({
             "field": f, "n_samples": n,
             "base_complete": round(float(base_present.mean()), 4),
             "filled_complete": round(float(filled_present.mean()), 4),
-            "agent_fills": int(has_fill.sum()), "new_fills": new_fills, "overrides": overrides,
+            "agent_fills": int(applied.sum()), "new_fills": new_fills, "overrides": overrides,
+            "blocked_over_known": int(blocked.sum()),
             "per_sample": int(by_src.get("per_sample", 0) + by_src.get("per_sample_two_hop", 0)),
             "curator_escalation": int(by_src.get("curator_escalation", 0)),
             "whole_field": int(by_src.get("whole_field", 0)),
@@ -1259,6 +1298,10 @@ def fill_metadata_table(
         md.append(f"| {r['field']} | {r['base_complete']:.3f} | **{r['filled_complete']:.3f}** | "
                   f"{r['agent_fills']} | {r['new_fills']} | {r['overrides']} | {r['per_sample']} | "
                   f"{r['curator_escalation']} | {r['whole_field']} |")
+    total_blocked = int(res["blocked_over_known"].sum()) if "blocked_over_known" in res.columns else 0
+    if total_blocked:
+        md.append(f"\n> Blank-only fills (whole-field / escalation) withheld because the value was already "
+                  f"known on another run of the same sample — the known value was kept: **{total_blocked}**.")
     if study_grade_columns:
         md += ["\n## Study-level grades (broadcast to every sample in the study)\n",
                "| column | graded studies | samples filled | value distribution |", "|---|---|---|---|"]
