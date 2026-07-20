@@ -30,6 +30,18 @@ DATA = "src/bac_metadata/bac_agentic_metadata/applications/m_abs/data"
 BIG_FRAC = 0.01  # a study >= 1% of the cohort is a "big decision" — always reviewed (matches the engine gate)
 
 
+def _canon_cf(v: object) -> str:
+    """Canonicalise a filled cf_status cell for composition counts (case/hyphen-insensitive; ? → blank)."""
+    s = str(v).strip().lower()
+    if s in ("", "?"):
+        return "(blank)"
+    if s == "cf":
+        return "CF"
+    if s in ("non-cf", "non_cf", "noncf"):
+        return "non-CF"
+    return str(v).strip()  # Environmental / Animal / anything else — surfaced verbatim under "other"
+
+
 def _cf_skip_notes() -> dict[str, str]:
     """Curator cf_status skip/answer notes from the (untracked) escalations master, keyed by study."""
     p = Path(DATA) / "curated" / "curated_escalations.tsv"
@@ -69,7 +81,7 @@ def build(tags: list[str]) -> str:
         comp = {}
         if not filled.empty and "cf_status" in filled.columns:
             for acc, g in filled.groupby("study_accession"):
-                v = g["cf_status"].replace("", "(blank)").value_counts()
+                v = g["cf_status"].map(_canon_cf).value_counts()
                 comp[acc] = {k: int(n) for k, n in v.items()}
 
         for acc, cf in grades.items():
@@ -93,9 +105,10 @@ def build(tags: list[str]) -> str:
             else:
                 decision = "known-only (no whole-project fill)"
             c = comp.get(acc, {})
+            other = sum(v for k, v in c.items() if k not in ("CF", "non-CF", "(blank)"))
             big_rows.append({"tag": tag, "study": acc, "n": n,
                              "CF": c.get("CF", 0), "non-CF": c.get("non-CF", 0), "blank": c.get("(blank)", 0),
-                             "decision": decision,
+                             "other": other, "decision": decision,
                              "argument": " ".join((cf.get("evidence_quote") or "").split())})
 
     df = pd.DataFrame(calls)
@@ -118,11 +131,12 @@ def build(tags: list[str]) -> str:
     lines += ["", f"## B. Big studies (>= {BIG_FRAC:.0%} of the cohort) — cf composition + decision, ALWAYS reviewed",
               "", "The large studies drive the phenotype and have caused problems before (PRJEB2779). Check each "
               "cf split + how it was decided, regardless of whether it carried a whole-project call.", "",
-              "| tag | study | n | CF | non-CF | blank | decision | argument |", "|---|---|---|---|---|---|---|---|"]
+              "| tag | study | n | CF | non-CF | blank | other | decision | argument |",
+              "|---|---|---|---|---|---|---|---|---|"]
     if not bdf.empty:
         for _, r in bdf.sort_values("n", ascending=False).iterrows():
             lines.append(f"| {r['tag']} | {r['study']} | {r['n']} | {r['CF']} | {r['non-CF']} | {r['blank']} | "
-                         f"{r['decision']} | {(r['argument'][:180])} |")
+                         f"{r['other']} | {r['decision']} | {(r['argument'][:180])} |")
     else:
         lines += ["", "_(none — filled table not present yet)_"]
     return "\n".join(lines) + "\n"
