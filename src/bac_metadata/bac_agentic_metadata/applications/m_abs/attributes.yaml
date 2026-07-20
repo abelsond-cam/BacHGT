@@ -349,7 +349,7 @@ attributes:
         # M.abs culture artefacts PLUS the Klebsiella generic/context junk set (ported 2026-07-17): "0"/"unclear"/
         # "others" are non-values, and "clinical"/"surveillance" name a sampling CONTEXT not a specimen — blanking
         # them pre-fill lets the per-sample table supply the real source (e.g. sputum vs skin vs water).
-        null_tokens: ["culture or similar", "Laboratory mutation", "MGIT", "0", "unclear", "others", "clinical", "surveillance"]
+        null_tokens: ["culture or similar", "Laboratory mutation", "MGIT", "0", "unclear", "other", "others", "clinical", "surveillance"]
         null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']
         categories: []
         # Phase D — water/plumbing isolates are environmental; the host categoriser wrongly
