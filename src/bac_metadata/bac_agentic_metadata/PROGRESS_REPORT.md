@@ -483,3 +483,53 @@ meant to prevent, via two paths it doesn't cover.
 `run_progress/mabs_top20/fill/filled_metadata.tsv`; per field, count samples whose placeholder-stripped known
 base value (any run-row) differs from the filled value. After the fix, country/cf → 0; only single-hop date
 refinements (year→exact, same year) differ.
+
+## 9. cf_status non-CF-by-absence + review register (m_abs; decided 2026-07-20, IN PROGRESS)
+
+**Trigger.** m_abs recovered only ~39% cf_status. David's domain insight: a paper ALWAYS flags CF when its
+cohort has it, so a study that *describes its patient cohort* (ages, comorbidities, a demographics table) but
+never mentions CF is **non-CF** — even with no non-CF condition named. The old rubric required an EXPLICIT
+CF/non-CF description, so it left these cohorts `unknown` (18 studies unknown across top-20 + batch-2).
+
+**Rule (added to `applications/m_abs/attributes.yaml` cf_status `whole_project_value`; committed? NO — held
+pending validation).** Two ways a value is supported: (1) EXPLICIT (CF clinic/registry/"CF patients", or a
+named non-CF condition, or structured cf_status); (2) **NON-CF BY ABSENCE** — a described human patient cohort
+with NO CF mention → non-CF. Reinforcing signals: older adults (most/median > ~60y), COPD, current/former
+smokers, non-CF bronchiectasis, prior TB, malignancy, transplant. **GUARD:** infer only when the paper actually
+describes its patients; a genomic/environmental/methods paper → unknown. Immune status stays orthogonal (no
+evidence either way).
+
+**Decision (David, 2026-07-20): APPLY the inference now (coverage improves immediately) but FLAG every one for
+review**, across ALL batches (one consistent cf axis). Mechanism: the grader sets `applies_whole_project=true`
++ `proposed_value=non_CF` and STATES THE BASIS in `evidence_quote` (the cohort description + no-CF-mention).
+A **review register** (`evaluation/cf_review_register.py` → `run_progress/<tag>/cf_review_register.md`) has TWO
+sections (David, 2026-07-20 — *be thorough; check explicit big studies too*): **A. every whole-project cf call**
+(non-CF inferences first, with samples-filled + argument — revert weak ones); **B. every big study (≥1% of the
+cohort) ALWAYS reviewed** — its cf composition (CF/non-CF/blank) + how cf was decided (whole-project / curator-
+skip / known-only) + argument, whether or not it carried a whole-project call. §B exists because the large
+studies drive the phenotype and **PRJEB2779 (2,143 samples) has caused problems before** — nothing huge slips
+through unchecked. C1 (`never_overwrite`) still guarantees a KNOWN cf value is never touched — the inference only
+fills blanks. Overrides for wrong calls = grade overturn (remove the whole-project call) / curator-skip → re-fill
+leaves those blanks blank.
+
+**Top-20 validation (2026-07-20, PASSED the rule check):** the register showed the rule working — PRJEB7058
+*non-CF by absence* ("post-surgical SSTI cohort … never mentions CF"), explicit non-CF (PRJDB10566 title, PRJNA734660
+"only two … CF"), explicit CF preserved (PRJNA319839/PRJEB14002/PRJEB44160/PRJEB39129/PRJNA1119444). PRJEB2779
+stays a wide-mix curator-skip (88% CF < 95% → blanks blank; known 824 CF/115 Non-CF preserved). Blast-radius
+confirmation (known cf untouched) was still finishing at checkpoint — re-run `blast_radius.py mabs_top20`.
+
+**Plan / current state (mid-execution — resume here):**
+- [x] Rule written to the yaml (parses; path `attributes.per_sample_completeness.backfill.fields.cf_status`).
+- [~] **Validating on a top-20 re-grade** (`run_m_abs.sh --min-study-size 1 --limit 20 --tag mabs_top20
+      --exclude-splits <NONEXISTENT> --web-fallback --grade-workers 20 --find-workers 20`, reproducible top-20).
+      On resume: run `scratchpad/cf_review_register.py mabs_top20` (do the top-20 inferences carry real cohort
+      arguments?) + `scratchpad/blast_radius.py mabs_top20` (must stay 0 real changes — known cf never touched).
+- [ ] If good: **whole-cohort run** — `run_m_abs.sh --min-study-size 1 --tag mabs_all --exclude-splits
+      <NONEXISTENT> --web-fallback --grade-workers 20 --find-workers 20` (all 133, uses every downloaded paper;
+      avoids the shifting done-registry trap of re-running per-tag). Then register + blast-radius + triggers +
+      surface the batch-3 (studies 41-133) missing-papers worklist.
+- [ ] David reviews `cf_review_register.md`; revert weak inferences; accumulate → m_abs master.
+- **Uncommitted:** `applications/m_abs/attributes.yaml` (the cf rule — commit after validation). The register
+      script lives in scratchpad; formalise into `evaluation/` if kept. `curated_escalations.tsv` +
+      `fold_splits/project_splits.tsv` (done-registry, now 40 studies) remain UNTRACKED (m_abs data tree not in
+      git). Rubric change busts the m_abs grade cache → every m_abs run re-grades (find/per_sample caches hold).

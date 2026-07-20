@@ -306,12 +306,28 @@ attributes:
             whole-fill — leave the blanks for per-sample extraction / escalation. Example: a cohort described
             as 208/210 non-CF (99%) → propose non-CF for all; a genuine 50/50 CF/non-CF split → propose
             nothing. Same whole-project applicability rule (paper coverage) as country/host.
+            Two ways a value is supported:
+            (1) EXPLICIT — a CF clinic / centre / registry / "CF patients" (→ CF), or a named non-CF condition
+            such as bronchiectasis without CF, COPD, post-surgical / skin-soft-tissue / disseminated infection
+            (→ non-CF), or the structured cf_status.
+            (2) NON-CF BY ABSENCE (David, 2026-07-20) — a study that CLINICALLY CHARACTERISES its human patient
+            cohort (patient ages, comorbidities, a demographics / clinical table, "collected from patients with
+            …") but NEVER mentions cystic fibrosis anywhere is non-CF, even with no non-CF condition named. CF is
+            a defining cohort feature a paper ALWAYS states when present, so its complete absence from a
+            DESCRIBED patient cohort is positive non-CF evidence. Reinforcing signals (typical of the non-CF
+            M. abscessus population, opposite the young CF one): older adults (most / median patients well over
+            ~60y), COPD, current / former smokers, non-CF bronchiectasis, prior TB, malignancy, transplant, or
+            other chronic lung disease. Propose non-CF (applies_whole_project true, still subject to the 95% +
+            paper-coverage rules) and — because this is an INFERENCE surfaced for human review — make the
+            evidence_quote STATE THE BASIS: how the cohort is described (the ages / comorbidities you saw) AND
+            that no CF is mentioned. GUARD: infer non-CF by absence ONLY when the paper actually describes its
+            human patients; a purely genomic / environmental / veterinary / methods paper with no patient
+            clinical context is NOT evidence → propose nothing (unknown).
+
             CRITICAL — do NOT infer CF status from IMMUNE status: "immunocompetent" / "immunocompromised" is
-            ORTHOGONAL to CF (CF is a CFTR channelopathy, NOT an immunodeficiency), so it is no evidence of CF
-            or non-CF either way. Only an explicit CF-vs-non-CF description supports a value — a CF clinic /
-            centre / registry / "CF patients" (→ CF), or a named non-CF condition such as bronchiectasis
-            without CF, COPD, post-surgical / skin-soft-tissue / disseminated infection (→ non-CF). "Patients
-            were immunocompetent" alone → propose nothing.
+            ORTHOGONAL to CF (CF is a CFTR channelopathy, NOT an immunodeficiency), so it is no evidence of CF or
+            non-CF either way. "Patients were immunocompetent" alone → propose nothing — immune status is NOT the
+            absence signal above, which requires an actual DESCRIBED patient cohort with no CF mention.
         smoking_status:
           values: [smoker, non_smoker, unknown]
           aspirational: true                                  # likely sparse; paper-derived only
