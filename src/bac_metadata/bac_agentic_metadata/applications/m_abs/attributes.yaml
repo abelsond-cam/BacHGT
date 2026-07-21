@@ -1,8 +1,8 @@
 # Attribute spec — M. abscessus application
 #
 # SINGLE SOURCE OF TRUTH for the M. abscessus curation rubric. David edits this directly.
-# Same engine + grade scale as Klebsiella; the species-specific slots are the CF phenotype, smoking,
-# and the antibiotic-susceptibility (AST) panel. Definitions below are DRAFTS from David's answers
+# Same engine + grade scale as Klebsiella; the species-specific slots are the CF phenotype and the
+# antibiotic-susceptibility (AST) panel. Definitions below are DRAFTS from David's answers
 # (2026-06-25) — refine in place; do not invent grading criteria.
 #
 # DRAFT STATUS / open items flagged inline with `# TODO(david)`.
@@ -112,15 +112,15 @@ attributes:
         it clear; `not_gradeable` when no paper is accessible.
 
   # 3) PER-SAMPLE VARIABLES — the bulk of the task. The four core fields PLUS the M. abscessus phenotype
-  #    fields (cf_status, smoking_status) and the AST panel. All per-sample, each with a whole-study
-  #    fallback (fill all samples when the cohort is uniform — same model as Klebsiella country/source).
+  #    field (cf_status) and the AST panel. All per-sample, each with a whole-study fallback (fill all
+  #    samples when the cohort is uniform — same model as Klebsiella country/source).
   per_sample_completeness:
-    fields: [country, collection_date, isolation_source, host, cf_status, smoking_status]
-    # WIDEST-AXIS fields a per-sample table value may NEVER overwrite — filled only where ENA is BLANK (and
+    fields: [country, collection_date, isolation_source, host, cf_status]
+    # WIDEST-AXIS field a per-sample table value may NEVER overwrite — filled only where ENA is BLANK (and
     # only under the ≥95% whole-project rule). cf_status is the headline phenotype: any change to a recorded
     # CF/non-CF value is unacceptable (David, 2026-07-18). The engine's overwrite guard drops every overwrite
-    # of these — single- or two-hop — keeping the recorded value; blank-fills still flow.
-    never_overwrite: [cf_status, smoking_status]
+    # of it — single- or two-hop — keeping the recorded value; blank-fills still flow.
+    never_overwrite: [cf_status]
     ground_truth: none
     deterministic_normaliser: {}              # no M.abs parsers (Klebsiella-only; engine no-ops when empty)
 
@@ -239,7 +239,7 @@ attributes:
           definition: |-
             When no single value fits the whole field, look for a per-isolate table in the article or its
             supplement giving values keyed to sample accessions we can map back to our data. This is the
-            primary route for AST (per-isolate) and for cf_status/smoking where studies mix categories.
+            primary route for AST (per-isolate) and for cf_status where studies mix categories.
       fields:
         country:
           meaning: country of collection
@@ -255,9 +255,18 @@ attributes:
             If all isolates share one source, set it for all samples. (Low priority — nearly all
             respiratory — but collected anyway.)
         host:
-          meaning: the host organism, or an environmental / animal source
-          value_guide: host organisms (human / Homo sapiens, an animal species) or environmental source
+          meaning: the organism the M. abscessus was infecting or colonising when the sample was taken
+          value_guide: host organisms (human / Homo sapiens, an animal species) or an environmental source
           column_aliases: [host, host_scientific_name]
+          definition: |-
+            The HOST is the organism the M. abscessus was living in or on at the time of sampling — the human
+            patient or animal it was infecting / colonising, or the environmental source (water, plumbing,
+            soil) it was recovered from. It is NOT:
+            - the LABORATORY / institution where the isolate was cultured or sequenced — that is where the TEST
+              was done, not a host → leave host blank.
+            - the SAMPLED ORGANISM'S OWN species name. "Mycobacterium abscessus" / "Mycobacteroides abscessus"
+              (or a subspecies) is the bacterium that was sequenced, never its host → treat as no host (blank).
+            Nearly all M. abscessus samples are human.
           whole_project_value: |-
             If the study is human clinical, set all hosts to human — UNLESS the samples are environmental
             or animal, in which case host is the environment/animal. (Low priority — nearly all human.)
@@ -328,18 +337,6 @@ attributes:
             ORTHOGONAL to CF (CF is a CFTR channelopathy, NOT an immunodeficiency), so it is no evidence of CF or
             non-CF either way. "Patients were immunocompetent" alone → propose nothing — immune status is NOT the
             absence signal above, which requires an actual DESCRIBED patient cohort with no CF mention.
-        smoking_status:
-          values: [smoker, non_smoker, unknown]
-          aspirational: true                                  # likely sparse; paper-derived only
-          meaning: host smoking status
-          value_guide: smoker vs non_smoker (never-smoker); unknown if not stated
-          definition: |-
-            Per-sample smoking status of the host.
-            - smoker: any current OR former smoking — ANY pack-years or a quit-date counts as smoker.
-            - non_smoker: explicitly "never smoked" / "non-smoker".
-            - unknown: not stated.
-          whole_project_value: |-
-            Rarely whole-study; set for all samples only if the paper states the cohort's smoking status.
 
   # AGENTIC CATEGORISATION — data-driven replacement for the hardcoded parse/categorise, scoped to the
   # two messy fields (host, isolation_source). Same block as Klebsiella. null_tokens/null_patterns are
@@ -350,8 +347,12 @@ attributes:
   categorisation:
     fields:
       host:
+        # 'host' is the ORGANISM the bacterium was in/on when sampled — NOT the lab (where the test was done),
+        # and NOT the sample's own species name. Blank both pre-fill so the fill agent can supply a real host,
+        # and so a species-name-as-host ('Mycobacterium/Mycobacteroides abscessus') never survives as a fake
+        # value. null_patterns are case-insensitive; '\bmycobacter' catches both genus spellings (David, 2026-07-21).
         null_tokens: ["not host-associated", "not aplicable"]
-        null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b']
+        null_patterns: ['\blaborator', '\blab\b', '\bin[ -]?vitro\b', '\bmycobacter', '\babscessus\b']
         categories: []
         # Phase D — decode the CF/non-CF signal buried in host strain codes into `cf_status`.
         # mode: fill sets `cf_status` only where it is BLANK; a code implying a value that
@@ -402,9 +403,9 @@ escalation:
     two_year_months: 24
     five_year_months: 24
     old_before_year: 2010
-  # The triage prose the model reads when deciding a declined isolation_source / host / country / cf_status /
-  # smoking_status (collection_date is deterministic; a country region-cluster is deterministic and fed in as
-  # context). Encodes the >=95%-or-homogeneous-category adopt/skip rule with M. abscessus priors: pulmonary vs
+  # The triage prose the model reads when deciding a declined isolation_source / host / country / cf_status
+  # (collection_date is deterministic; a country region-cluster is deterministic and fed in as context).
+  # Encodes the >=95%-or-homogeneous-category adopt/skip rule with M. abscessus priors: pulmonary vs
   # extrapulmonary disease, human vs environmental host, region clustering for country, and the CF phenotype axis.
   triage_guidance: |-
     Decide whether one clean whole-study value can represent this field. ADOPT a single value when EITHER:
@@ -425,12 +426,12 @@ escalation:
         * host: all hosts fall in one group (all human; all one animal group) -> adopt the dominant host. Human
     clinical -> human; an environmental study (water / plumbing) -> that environment. A study mixing human with
     environmental (or animal) hosts is a WIDE mix.
-        * cf_status / smoking_status (the M.abs phenotype fields): these are binary categoricals, so only case
-    (a) applies — adopt a single value ONLY when the evidence makes ONE category ~95%+ of the study (e.g. a CF
-    clinic / registry cohort -> CF; a cohort explicitly all bronchiectasis-without-CF / COPD / post-surgical ->
-    non-CF). A genuine CF/non-CF (or smoker/non-smoker) mix is a wide_mix_skip — per-sample extraction handles
-    it; do NOT guess. CRITICAL: never infer cf_status from IMMUNE status — "immunocompetent" / "immunocompromised"
-    is ORTHOGONAL to CF (CF is a CFTR channelopathy, not an immunodeficiency) and is no evidence either way.
+        * cf_status (the M.abs phenotype field): a binary categorical, so only case (a) applies — adopt a
+    single value ONLY when the evidence makes ONE category ~95%+ of the study (e.g. a CF clinic / registry
+    cohort -> CF; a cohort explicitly all bronchiectasis-without-CF / COPD / post-surgical -> non-CF). A
+    genuine CF/non-CF mix is a wide_mix_skip — per-sample extraction handles it; do NOT guess. CRITICAL:
+    never infer cf_status from IMMUNE status — "immunocompetent" / "immunocompromised" is ORTHOGONAL to CF
+    (CF is a CFTR channelopathy, not an immunodeficiency) and is no evidence either way.
 
     Resolutions:
     - uniform_propose — case (a): one value is ~95%+ of the study.
