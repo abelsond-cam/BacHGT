@@ -480,6 +480,22 @@ def main() -> None:
         print(f"WARN: escalation-conservation gate errored (non-blocking): {type(exc).__name__}: {exc}",
               file=sys.stderr)
 
+    # ── Stage 11 — overwrite-radius gate (always-on, loud WARN, never blocks) ──────────────────────
+    # Proves no fill changed a value ENA already recorded: a change to a `never_overwrite` field is the hard
+    # failure; a fidelity-judge-approved vague→specific overwrite of a non-protected field is reported (allowed),
+    # never failed. Read-only backstop for the overwrite guard, run on every tag / application.
+    try:
+        from bac_metadata.bac_agentic_metadata.engine import overwrite_radius as orad
+        orad_fails = orad.verify_tags(data, spec, [tag])
+        if orad_fails:
+            print(f"\n⛔⛔ WARN: overwrite-radius gate FAILED for tag={tag} ({len(orad_fails)} issue(s)) — a "
+                  "value ENA already recorded was overwritten by a fill:", file=sys.stderr)
+            for f in orad_fails:
+                print(f"   ⛔ {f}", file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001 — the gate is a backstop, never blocks the run
+        print(f"WARN: overwrite-radius gate errored (non-blocking): {type(exc).__name__}: {exc}",
+              file=sys.stderr)
+
     print(f"\n=== DRIVER COMPLETE (tag={tag}) ===", file=sys.stderr)
     print(f"found:      {found_tsv}", file=sys.stderr)
     print(f"grades:     {grades_tsv}", file=sys.stderr)

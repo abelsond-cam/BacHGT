@@ -468,7 +468,7 @@ meant to prevent, via two paths it doesn't cover.
       queue → 88%-CF blanks stay blank. **NOTE: `data/curated/curated_escalations.tsv` is UNTRACKED** (the whole
       m_abs `data/` tree is), so this edit is on disk only; version it if/when m_abs data enters git.
 - [x] Re-ran `mabs_top20` (11 manual PDFs + `PRJNA778024.xlsx` in place).
-- [x] Re-verified: blast-radius → **0 real changes to any known value** (cf 0, country 0, iso 0, host 0;
+- [x] Re-verified: overwrite-radius verification → **0 real changes to any known value** (cf 0, country 0, iso 0, host 0;
       collection_date 68 = all sanctioned single-hop refinements). PRJEB2779 cf → **824 CF / 115 Non-CF / 1201
       blank**. `verify_pipeline_triggers --app m_abs --tags mabs_top20` PASS.
 - [x] Tests — `tests/test_overwrite_integrity.py` (8 cases: two-hop dropped / blank-fill kept / judge-not-called
@@ -515,20 +515,32 @@ leaves those blanks blank.
 **Top-20 validation (2026-07-20, PASSED the rule check):** the register showed the rule working — PRJEB7058
 *non-CF by absence* ("post-surgical SSTI cohort … never mentions CF"), explicit non-CF (PRJDB10566 title, PRJNA734660
 "only two … CF"), explicit CF preserved (PRJNA319839/PRJEB14002/PRJEB44160/PRJEB39129/PRJNA1119444). PRJEB2779
-stays a wide-mix curator-skip (88% CF < 95% → blanks blank; known 824 CF/115 Non-CF preserved). Blast-radius
-confirmation (known cf untouched) was still finishing at checkpoint — re-run `blast_radius.py mabs_top20`.
+stays a wide-mix curator-skip (88% CF < 95% → blanks blank; known 824 CF/115 Non-CF preserved). Overwrite-radius
+verification (known cf untouched) was still finishing at checkpoint — re-run `… evaluation.verify_overwrite_radius --app m_abs --tags mabs_top20`.
 
 **Plan / current state (mid-execution — resume here):**
 - [x] Rule written to the yaml (parses; path `attributes.per_sample_completeness.backfill.fields.cf_status`).
 - [~] **Validating on a top-20 re-grade** (`run_m_abs.sh --min-study-size 1 --limit 20 --tag mabs_top20
       --exclude-splits <NONEXISTENT> --web-fallback --grade-workers 20 --find-workers 20`, reproducible top-20).
-      On resume: run `scratchpad/cf_review_register.py mabs_top20` (do the top-20 inferences carry real cohort
-      arguments?) + `scratchpad/blast_radius.py mabs_top20` (must stay 0 real changes — known cf never touched).
+      On resume: run `… evaluation.cf_review_register mabs_top20` (do the top-20 inferences carry real cohort
+      arguments?) + `… evaluation.verify_overwrite_radius --app m_abs --tags mabs_top20` (must stay 0 protected changes — known cf never touched).
 - [ ] If good: **whole-cohort run** — `run_m_abs.sh --min-study-size 1 --tag mabs_all --exclude-splits
       <NONEXISTENT> --web-fallback --grade-workers 20 --find-workers 20` (all 133, uses every downloaded paper;
-      avoids the shifting done-registry trap of re-running per-tag). Then register + blast-radius + triggers +
+      avoids the shifting done-registry trap of re-running per-tag). Then register + overwrite-radius verification + triggers +
       surface the batch-3 (studies 41-133) missing-papers worklist.
 - [ ] David reviews `cf_review_register.md`; revert weak inferences; accumulate → m_abs master.
+
+**Update (2026-07-22 — this stretch is DONE):** the whole-cohort `mabs_all` run is complete (133 studies /
+6455 samples; cf_status coverage 57.8%). `smoking_status` was dropped from the rubric (0% fill, not useful) and
+`host` defined as *the organism the bacterium was in/on at sampling* — not the lab, not the sample's own species
+name (species-name/lab host values blanked pre-fill); commit `09fd292`. The **overwrite-radius verification** was
+promoted from the scratchpad one-off into the engine (`engine/overwrite_radius.py`) as an **always-on driver
+gate** (Stage 11) with a committed CLI (`evaluation.verify_overwrite_radius`): it hard-fails only on a change to
+a `never_overwrite` field (cf_status) and *reports* fidelity-judge-approved gated overwrites of non-protected
+fields (so it is correct for Klebsiella too). `mabs_all` gates: overwrite-radius 0 protected changes / 68 date
+refinements, `verify_pipeline_triggers` 0 FAIL, all 4 master escalation decisions re-injected + landed.
+**Remaining:** David's interactive escalation walk on `mabs_all` (23 wide-mix decisions), then accumulate →
+the m_abs master.
 - **Uncommitted:** `applications/m_abs/attributes.yaml` (the cf rule — commit after validation). The register
       script lives in scratchpad; formalise into `evaluation/` if kept. `curated_escalations.tsv` +
       `fold_splits/project_splits.tsv` (done-registry, now 40 studies) remain UNTRACKED (m_abs data tree not in
