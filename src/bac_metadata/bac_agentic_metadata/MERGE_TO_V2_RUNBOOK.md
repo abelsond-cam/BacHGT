@@ -41,6 +41,19 @@ Confirm `sr_shadow_for_lra.tsv` reconciliation (README §9) is undisturbed.
 `study_accession`: `study_setting`, `amr_study` (v2 already carries these — README §10), and add the
 `study_type_excluded` removal flag (78 studies / 1,489 samples). Precedence per the overwrite policy below.
 
+## Step 2b — Experimental-evolution lab samples (David, 2026-07-22)
+The 78 experimental-evolution studies / **1,489 samples** (`study_type_excluded=True` in the master) are
+in-vitro-evolved lab strains, not real isolates — they must not sit in any analysis cohort. Handling in v2
+(map to v2 rows by `sample_accession`; the rows STAY in v2, flagged, for the record — not deleted):
+- **Add `evolutionary_lab_sample` (True/False)** — True for the 1,489 (records what was done).
+- **Set `kpsc_final_list=False`** for those rows (removes them from the KPSC cohort). `is_variant_called` is
+  derived from `kpsc_final_list`, so it follows to False on re-derivation.
+- **Check + clear the assembly-quality flags** `is_complete` / `is_hybrid` / `is_reference_genome` for these
+  rows (David: worried about leaving them positive — a lab-evolved strain must not count as a complete/hybrid/
+  reference genome). `is_reference_genome = is_complete ∧ is_hybrid ∧ GCF_`, so clearing complete+hybrid clears
+  reference. **First COUNT** how many of the 1,489 currently carry each flag (needs CSD3 — v2 is not local) and
+  surface it to David before flipping, in case any is a legitimately-closed genome worth keeping.
+
 ## Step 3 — Adjudicated overwrites (gated on sign-off; policy TBD)
 Blank-fill (Step 1) never touches a curated value. To also apply the agent's **proven** improvements:
 - **Study-level (16 candidates):** finish `review_adjudication --interactive` so `david_verdict` is filled in
@@ -70,6 +83,26 @@ python -m bac_metadata.bac_agentic_metadata.evaluation.completeness_by_split \
 → `scorecard/final_completeness_raw_agent_gold.{md,tsv}` (raw → agent → v2 deltas). Expect agent ≥ v2 per field
 (headline already: country +3.6, date +7.9, iso +6.3, host +10.4 pp) with no regression outside the RefSeq
 carve-out. Also `validate_backfill_values` for the blank-fill vs overwrite split.
+
+## Columns touched + how overwrites are checked
+- **Blank-filled** (agent fills only v2-BLANK cells; never overwrites a curated value — human `_parsed` > agent
+  > ENA via `merge_into_canonical`): `country`, `collection_date`, `isolation_source`, `host`.
+- **Study-level overlay** (blank-fill; NO overwrites — the adjudication ruled `manual` on all 16): `study_setting`,
+  `amr_study`.
+- **New / flag columns written:** `evolutionary_lab_sample`; `study_type_excluded`; and the flag flips on
+  evolutionary rows (`kpsc_final_list`, `is_complete`, `is_hybrid`, `is_reference_genome`, `is_variant_called`).
+- **Potentially overwritten** (curated value replaced — the 3,105 per-sample gated fills, ONLY if the policy
+  admits them): `isolation_source` 2,037 · `collection_date` 1,014 · `host` 38 · `country` 16.
+- **Re-derived, not merged** (Step 4 / rebuild): `*_parsed`, `*_category`, `region`, `year_parsed`,
+  `collection_year`.
+- **Untouched** (pass through / re-derived by the cascade): all SR↔LR linkage, Kleborate, Bakta, ISEScan, AST,
+  CheckM2 columns.
+
+**How overwrites are checked — three layers:** (1) blank-fill structurally cannot overwrite (human always wins);
+(2) each of the 3,105 per-sample overwrites was gated at fill time by the fidelity judge (vague→specific only),
+is surfaced in §5c for spot-review, and is scored by `validate_backfill_values` vs the v2 `_parsed`; (3) the
+whole merged v2 is produced as a **separate, reviewed artifact** (architecture A) before it becomes production,
+and the overwrite-radius gate confirms no KNOWN agent-side value changed beyond the sanctioned exceptions.
 
 ## Decisions
 1. **Parse/categorise architecture** — ✅ **RESOLVED (David, 2026-07-22): A** — inject the agent fills at v1 and
