@@ -51,8 +51,24 @@ def _per_study_completeness(frame: pd.DataFrame) -> pd.DataFrame:
     return out.reset_index()
 
 
+def _per_study_counts(frame: pd.DataFrame) -> pd.DataFrame:
+    """Per-study COUNT of non-blank (placeholder-stripped) cells for each field, over the study's samples."""
+    out = pd.DataFrame({"study_accession": sorted(frame["study_accession"].unique())}).set_index("study_accession")
+    for f in FIELDS:
+        if f in frame.columns:
+            present = backfill.strip_placeholders(frame[f]).notna()
+            out[f] = present.groupby(frame["study_accession"]).sum()
+    return out.reset_index()
+
+
 def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
-    """Join paper links + grades + n_samples + base→filled per-study completeness into one table."""
+    """Join paper links + grades + study size + base→filled completeness (fractions + counts + delta) per study.
+
+    Per field, alongside the base/filled non-blank *fractions*, emits the non-blank *counts* (`_base_n` /
+    `_filled_n`) and `_added` = cells the agent filled (filled_n − base_n) — the explicit "addition of data"
+    figure. `ena_total_samples` / `ena_taxon_samples` (the study's total & Klebsiella-taxon ENA records, from
+    the shared sizing table) sit beside `n_samples` (the samples we curated into the master).
+    """
     curated = data_dir / "curated"
     keep = ["study_accession", "sample_accession", *FIELDS]
     base = pd.read_csv(data_dir / "inputs" / "base_table.csv", dtype=str, low_memory=False,
@@ -60,8 +76,20 @@ def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
     master = pd.read_csv(curated / "metadata_curated_master.tsv", sep="\t", dtype=str, low_memory=False,
                          usecols=lambda c: c in keep).fillna("")
     n = master.groupby("study_accession").size().rename("n_samples").reset_index()
+    # total study size = the study's total ENA records (all taxa) + its Klebsiella-taxon records — genuinely
+    # larger than our cohort n_samples. Unioned across the shared sizing (folds + big tail) AND each tranche's
+    # per-selection sizing (the sub-10 tail is sized there), so coverage spans the whole cohort.
+    szcols = ["study_accession", "ena_total_samples", "ena_taxon_samples"]
+    sz_sources = [data_dir / "ena_assessment" / "ena_sizing.tsv",
+                  *(RunPaths(data_dir, t).selection_dir / "ena_sizing.tsv" for t in tags)]
+    frames = [pd.read_csv(p, sep="\t", dtype=str).fillna("") for p in sz_sources if Path(p).exists()]
+    frames = [s[[c for c in szcols if c in s.columns]] for s in frames]
+    total = (pd.concat(frames, ignore_index=True).drop_duplicates("study_accession")
+             if frames else pd.DataFrame(columns=szcols))
     base_c = _per_study_completeness(base).rename(columns={f: f"{f}_base" for f in FIELDS})
     fill_c = _per_study_completeness(master).rename(columns={f: f"{f}_filled" for f in FIELDS})
+    base_n = _per_study_counts(base).rename(columns={f: f"{f}_base_n" for f in FIELDS})
+    fill_n = _per_study_counts(master).rename(columns={f: f"{f}_filled_n" for f in FIELDS})
     grades = pd.read_csv(curated / "curated_grades.tsv", sep="\t", dtype=str).fillna("")
     gcols = {"study_accession": "study_accession", "study_type": "study_type",
              "study_type_excluded": "study_type_excluded", "study_setting__value": "study_setting",
@@ -69,14 +97,20 @@ def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
     g = grades[[c for c in gcols if c in grades.columns]].rename(columns=gcols)
 
     n = n[n["study_accession"].str.strip() != ""]  # drop blank / collection pseudo-studies handled below
-    t = (n.merge(_paper_links(data_dir, tags), on="study_accession", how="left")
+    t = (n.merge(total, on="study_accession", how="left")
+         .merge(_paper_links(data_dir, tags), on="study_accession", how="left")
          .merge(g, on="study_accession", how="left")
-         .merge(base_c, on="study_accession", how="left")
-         .merge(fill_c, on="study_accession", how="left")).fillna("")
-    # order columns: identity → paper → grades → per-field base/filled pairs
-    lead = ["study_accession", "tag", "n_samples", "paper", "paper_title",
+         .merge(base_c, on="study_accession", how="left").merge(fill_c, on="study_accession", how="left")
+         .merge(base_n, on="study_accession", how="left").merge(fill_n, on="study_accession", how="left"))
+    # per-field "cells the agent added" = filled non-blank count − base non-blank count (fills only add → ≥ 0)
+    for f in FIELDS:
+        added = t[f"{f}_filled_n"].fillna(0).astype(int) - t[f"{f}_base_n"].fillna(0).astype(int)
+        t[f"{f}_added"] = added.clip(lower=0)
+    t = t.fillna("")
+    # order columns: identity → paper → grades → per-field (fractions, counts, added)
+    lead = ["study_accession", "tag", "ena_total_samples", "ena_taxon_samples", "n_samples", "paper", "paper_title",
             "study_type", "study_type_excluded", "study_setting", "amr_study"]
-    pairs = [c for f in FIELDS for c in (f"{f}_base", f"{f}_filled")]
+    pairs = [c for f in FIELDS for c in (f"{f}_base", f"{f}_filled", f"{f}_base_n", f"{f}_filled_n", f"{f}_added")]
     return t[[c for c in lead if c in t.columns] + [c for c in pairs if c in t.columns]]
 
 
@@ -94,8 +128,8 @@ def main() -> None:
     out = data_dir / "per_study_accession_table.tsv"  # data root (curated/ is gitignored)
     t.to_csv(out, sep="\t", index=False)
     # a small human-readable head for the .md (manual table — no tabulate dependency)
-    show = ["study_accession", "tag", "n_samples", "study_type_excluded", "amr_study",
-            "country_base", "country_filled", "host_base", "host_filled"]
+    show = ["study_accession", "ena_taxon_samples", "n_samples", "study_type_excluded", "amr_study",
+            "host_base_n", "host_filled_n", "host_added"]
     show = [c for c in show if c in t.columns]
     md = ["# Per-study-accession table (head)", "",
           f"{len(t)} studies. Full table: `per_study_accession_table.tsv`.", "",
