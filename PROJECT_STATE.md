@@ -86,9 +86,12 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     agent > ENA) — but onto the **v1** table (`metadata_final_curated_all_samples_and_columns.tsv`), which lacks
     v2's SR↔LR / typing / AST columns. Agent fills into human-blank cells (PROGRESS_REPORT §4c): country 4,856 /
     date 9,121 / iso 7,218 / host 7,410.
-- **In flight:** WS3 — point `merge_into_canonical` at the real v2 (join on `sample_accession`), re-run v2's
-  hardcoded parse/categorise, scope the adjudicated-overwrite pass.
-- **Next:** the actual combine RUN is **blocked** — needs the v2 table locally or a CSD3 run (see §5).
+- **In flight:** WS3 — scoped in [`bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md`](src/bac_metadata/bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md):
+  `merge_into_canonical` onto the real v2 (join on `sample_accession`) → study-level overlay → adjudicated
+  overwrites → v2 parse/categorise → completeness demo. Overwrite candidates sized: **16 study-level** (await
+  `david_verdict` sign-off) + **3,105 per-sample** (iso 2,037 · date 1,014 · host 38 · country 16).
+- **Next:** CSD3 is SSH-reachable again (2026-07-22) — the run executes there (v2 lives on CSD3). Gated on the
+  adjudication sign-off + the parse/categorise-architecture decision (runbook Decisions; README §16).
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,
