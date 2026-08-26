@@ -133,8 +133,11 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
 ## 6. Decisions of record (dated)
 - **2026-07-22** — This tidy-up round is **Klebsiella-only** (m_abs deferred). Per-study table stays
   Klebsiella-shaped. v2 combine policy = **blank-fill + adjudicated overwrites**. Re-normalisation of added
-  fills = **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (keeps v2 vocab stable). Wrap-up report
-  renamed `Kp_AGENTIC_METADATA_WRAPUP_REPORT.md` + gained a Methods (§0) section. This `PROJECT_STATE.md` created.
+  fills = **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (keeps v2 vocab stable). v2 combine
+  **architecture = A: inject the agent fills at v1 + run `rebuild_v2.sh` as a separate, reviewable step** (NOT
+  in-place — so the merged v2 can be reviewed before it becomes production). Study-level adjudication queue is
+  fully reviewed (16 rows: 14 `manual`, 2 `skip`) → no study-level overwrites to apply. Wrap-up report renamed
+  `Kp_AGENTIC_METADATA_WRAPUP_REPORT.md` + gained a Methods (§0) section. This `PROJECT_STATE.md` created.
 - **2026-07-21/22 (m_abs)** — overwrite-radius promoted to an engine always-on gate (`083fe93`); `smoking_status`
   dropped + `host` defined as organism-at-sampling (`09fd292`); cf non-CF-by-absence rule (`a7efc..` series).
 - **Earlier** — keep the per-sample fidelity judge (vague→specific overwrites allowed); `never_overwrite`

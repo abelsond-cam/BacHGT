@@ -54,12 +54,13 @@ Agent fills are RAW, so v2's `*_parsed` / `*_category` / `region` / `year_parsed
 for every filled cell. Re-normalise with **v2's own** `pp/metadata_curation.py` (`parse_country`/
 `categorise_region`, `parse_collection_date`, `parse_host`/`categorise_host`, `parse_isolation_source`/
 `categorise_isolation_source`, incl. the cross-field host←iso inference) — keeps v2's documented vocabulary
-byte-stable. **Two architectures — David decides (Decisions):**
-- **A. Inject-then-rebuild (recommended):** put the agent fills in at the v1 stage and run the idempotent
+byte-stable. **Architecture — CHOSEN (David, 2026-07-22): A, inject separately.**
+- **A. Inject-then-rebuild (CHOSEN):** put the agent fills in at the v1 stage and run the idempotent
   `pp/rebuild_v2.sh` cascade — it re-derives *all* v2 extra columns (pairing, Kleborate, ISEScan, AST) and
-  re-parses consistently, so nothing is lost. It IS a full v2 rebuild → **contact-David gate (README §16)**.
-- **B. In-place re-parse:** blank-fill the existing v2 (Steps 1–3) and re-run only the parse/categorise
-  functions over the changed cells. Avoids a full rebuild but is surgical and must be validated cell-by-cell.
+  re-parses consistently, so nothing is lost. Do it as a **separate inject step whose output is reviewed**
+  before it becomes the production v2 (not an in-place mutation). It IS a full v2 rebuild → **contact-David gate
+  (README §16)**; run on CSD3, heavy steps via `sbatch`.
+- ~~B. In-place re-parse~~ — rejected: mutating v2 in one pass leaves nothing to review.
 
 ## Step 5 — Demonstrate improvement (already tooled)
 ```bash
@@ -70,13 +71,13 @@ python -m bac_metadata.bac_agentic_metadata.evaluation.completeness_by_split \
 (headline already: country +3.6, date +7.9, iso +6.3, host +10.4 pp) with no regression outside the RefSeq
 carve-out. Also `validate_backfill_values` for the blank-fill vs overwrite split.
 
-## Decisions for David
-1. **Parse/categorise architecture** — A (inject-then-`rebuild_v2.sh`, clean but a full rebuild) vs B (in-place
-   surgical re-parse). Recommended: **A**, gated per README §16.
-2. **Per-sample overwrite policy** — which of the 3,105 gated overwrites qualify to replace a curated v2 value
-   (e.g. only where an independent review confirms the agent's vague→specific move). Blank-fill alone needs no
-   decision.
-3. **Where the run happens** — CSD3 (v2 is there). Heavy steps (rebuild cascade) → `sbatch`, not the login node.
+## Decisions
+1. **Parse/categorise architecture** — ✅ **RESOLVED (David, 2026-07-22): A** — inject the agent fills at v1 and
+   run `rebuild_v2.sh` as a **separate, reviewable** step (not in-place), gated per README §16.
+2. **Per-sample overwrite policy** — OPEN: which of the 3,105 gated overwrites qualify to replace a curated v2
+   value. Note the study-level adjudication queue is fully reviewed (16 rows: 14 `manual`, 2 `skip`) → **no
+   study-level overwrites** to apply; only the per-sample set remains to policy.
+3. **Where the run happens** — CSD3 (v2 is there; SSH restored 2026-07-22). Heavy steps → `sbatch`.
 
 ## Verification (end state)
 Row count 86,398 preserved · all v2-only columns intact · `*_parsed`/`region`/`*_category` populated for
