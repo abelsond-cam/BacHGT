@@ -147,7 +147,7 @@ reads as stale-ACTIONABLE otherwise.
 
 **Wrap-up / release tooling (built 2026-07-16).** The cohort wrap-up is a set of read-only, deterministic
 generators (no LLM) plus one adjudication refresh:
-- **`evaluation.wrapup_report`** → `data/WRAPUP_REPORT.md` — reconciles Σ per-tranche agent-fills to the master
+- **`evaluation.wrapup_report`** → `data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md` — reconciles Σ per-tranche agent-fills to the master
   (must be EXACT), papers reviewed, experimental-evolution count, §4 completeness **raw ENA → agent → v2 gold**
   per split (from `completeness_by_split`; agent must match-or-beat v2), §5a accuracy vs manual, §5b per-sample
   **blank-fill** correctness, §5c **gated-overwrite** spot-review. **Do not read the value reports as a single

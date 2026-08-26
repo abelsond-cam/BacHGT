@@ -7,6 +7,9 @@ conventions: root [CLAUDE.md](CLAUDE.md). Supersedes the retired
 [`~/.claude/PROGRAM_PLAN_2026-05-30.md`](../../.claude/PROGRAM_PLAN_2026-05-30.md)
 (still-live ARIBA / reverse-IS detail carried forward below).
 
+> **State/status/numbers now live in [`PROJECT_STATE.md`](PROJECT_STATE.md)** — the single authority (read it
+> first). This file holds forward-looking plans/tasks; where the two disagree, `PROJECT_STATE.md` wins.
+
 Recorded 2026-06-12. Items are not yet started unless noted.
 
 ---

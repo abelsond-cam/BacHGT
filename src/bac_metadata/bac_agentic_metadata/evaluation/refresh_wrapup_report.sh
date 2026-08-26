@@ -3,11 +3,11 @@
 #
 # Read-only w.r.t. the pipeline (no curation re-run, no LLM) — it recomputes the three report
 # inputs from the existing per-tranche artifacts + the v2 gold, so every figure in
-# data/WRAPUP_REPORT.md is reproducible from one command:
+# data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md is reproducible from one command:
 #   1. completeness_by_split      → scorecard/final_completeness_raw_agent_gold.{md,tsv}   (§4)
 #   2. validate_backfill_values   → run_progress/<tag>/scorecard/per_sample_value_report.* (§5b/§5c;
 #      carries the blank-fill vs gated-overwrite split)
-#   3. wrapup_report              → data/WRAPUP_REPORT.md
+#   3. wrapup_report              → data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md
 #
 # Requires the v2 gold (metadata_v2). Override GOLD to point at a local copy when HPC is down.
 #
@@ -37,4 +37,4 @@ done
 
 echo "### 3/3 wrapup_report ###"
 uv run python -m $M.wrapup_report
-echo "=== WRAPUP_REPORT.md refreshed ==="
+echo "=== Kp_AGENTIC_METADATA_WRAPUP_REPORT.md refreshed ==="

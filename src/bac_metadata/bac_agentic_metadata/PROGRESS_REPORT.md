@@ -5,6 +5,11 @@ design, the human-in-the-loop steps, the Klebsiella application (its pathway, it
 curation, and the accumulated whole-set result), and the forward plan. Written to be shareable with
 collaborators.*
 
+> **State/status/numbers of record live in [`PROJECT_STATE.md`](../../../PROJECT_STATE.md)** (repo root) — the
+> single authority. This report holds the mechanics + argument; where a number here and PROJECT_STATE disagree,
+> PROJECT_STATE wins. The reviewable results deliverable is
+> [`Kp_AGENTIC_METADATA_WRAPUP_REPORT.md`](applications/klebsiella/data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md).
+
 > *Maintainer note: this is a **state-and-plan** document, not a changelog (`git log` is the changelog).
 > Keep it lean — describe the current state and the plan; do not accumulate per-commit "update" entries.
 > Engine/runtime specifics (how to run, backends, the byte-for-byte reference gate, editing gotchas) live in
@@ -291,10 +296,11 @@ actionable cells remain (listed)."* This makes the manual "all-clear" reasoning 
 `verify_pipeline_triggers` did for silent failures.
 
 *Merge-to-v2 readiness (execute when HPC/CSD3 returns).* The Klebsiella cohort is curated + wrapped up: 7
-tranches → accumulated master, `combined_run_health` GENUINELY CLEAR, and the durable `data/WRAPUP_REPORT.md`
+tranches → accumulated master, `combined_run_health` GENUINELY CLEAR, and the durable
+`data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md`
 reconciles every headline figure to its per-tranche source (Σ per-tranche agent-fills == master, EXACT, all
 fields). Agent-vs-manual accuracy (adjudicated, train/test) has the agent **beating** manual curation
-(train +0.108, test +0.037); residual disagreements are in `diagnostics/adjudication_review_queue.tsv` for
+(train +0.108, test +0.028); residual disagreements are in `diagnostics/adjudication_review_queue.tsv` for
 sign-off. **Merge inputs:** `curated/metadata_curated_master.tsv` + its `study_type_excluded` column (78 studies
 / 1,489 samples flagged for removal) + the canonical-overlay `metadata_curated_master_merged.tsv` (human > agent
 > ENA) + the publishable `curated/per_study_accession_table.tsv`. **Out of scope for the agentic merge:** the
