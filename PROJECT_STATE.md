@@ -109,9 +109,17 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     cohort; real match happens against v2 on CSD3); `is_kpsc` left alone (taxonomic). 4 unit tests
     (`tests/test_inject_agentic_into_v1.py`). Note: iso/host "replaced unparsed raw ENA" (3,464 / 259) are
     agent beating an un-curated raw ENA bare value — still within human > agent > ENA, surfaced in the report.
-  - **B3–B4 pending:** B3 `apply_gated_overwrites` + post-kleborate evolutionary-delist hook (clears the
-    CSD3-only quality flags for the LRA-bearing evo rows) · B4 runbook/PROJECT_STATE update for the CSD3
-    orchestration.
+  - **B3 DONE (2026-08-27):** the two gated writes. `combine/apply_gated_overwrites.py` — applies David's
+    approved overwrite subset over existing canonical values (bare value + `<field>_agent_overwrote` flag),
+    then re-parses the changed rows (shared `reparse_rows`). **Integration-tested** on the injected v1 with a
+    26-row approved set: `Switzerland→Australia` wrote the value AND re-derived `region W. Europe→Oceania`;
+    0 derived-col changes off-radius; 5 approved samples correctly reported unmatched (not in v1). And
+    `combine/delist_evolutionary.py` — the post-Kleborate re-clamp (the additive kpsc rule re-admits LRA-bearing
+    evo rows, `merge_kleborate…:377–393`): forces `kpsc_final_list`/`lra_final_list`/`is_variant_called=False`
+    + **counts-then-clears** `is_complete`/`is_hybrid`/`is_reference_genome` (dry-run default, surfaced before
+    flipping), leaves `is_kpsc` (taxonomic — per runbook 2b; the plan text's is_kpsc clamp is deliberately NOT
+    done — **confirm with David**). 7 unit tests (`tests/test_combine_gated_writes.py`).
+  - **B4 pending:** runbook + PROJECT_STATE update for the CSD3 two-step orchestration order.
   Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
   (iso 2,037 · date 1,014 · host 38 · country 16).
 - **Next:** CSD3 is SSH-reachable again (2026-07-22) — the run executes there (v2 lives on CSD3). Gated on the

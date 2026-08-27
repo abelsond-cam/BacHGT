@@ -92,13 +92,14 @@ def _filled_mask(merged: pd.DataFrame) -> pd.Series:
     return pd.concat(cols, axis=1).any(axis=1)
 
 
-def reparse_filled_rows(merged: pd.DataFrame) -> tuple[pd.DataFrame, int]:
-    """Re-derive the normalised columns for the agent-filled rows only, using v1's own parse/categorise.
+def reparse_rows(df: pd.DataFrame, mask: pd.Series) -> tuple[pd.DataFrame, int]:
+    """Re-derive the normalised columns for the ``mask`` rows only, using v1's own parse/categorise pipeline.
 
-    The parse/categorise functions are row-independent regex/lookup, so running them on the filled-row subframe
+    The parse/categorise functions are row-independent regex/lookup, so running them on the masked subframe
     reproduces exactly what the full pipeline would give those rows, while leaving every other row's derived
-    columns byte-identical to v1. Order = ``metadata_curation.main`` (host→country→region→iso→reconcile→date).
-    Only columns v1 already carries (:data:`ALL_DERIVED`) are spliced back.
+    columns byte-identical. Order = ``metadata_curation.main`` (host→country→region→iso→reconcile→date), the
+    pipeline that produced v1's derived columns. Only columns v1 already carries (:data:`ALL_DERIVED`) are
+    spliced back. Shared by the blank-fill (B2) and the gated-overwrite apply (B3) — both change a bare value.
     """
     from bac_metadata.pp.metadata_curation import (
         categorise_region,
@@ -108,11 +109,10 @@ def reparse_filled_rows(merged: pd.DataFrame) -> tuple[pd.DataFrame, int]:
         parse_isolation_source,
         reconcile_host_and_isolation_source,
     )
-    mask = _filled_mask(merged)
-    idx = merged.index[mask]
+    idx = df.index[mask]
     if not len(idx):
-        return merged, 0
-    sub = merged.loc[idx].reset_index(drop=True).copy()
+        return df, 0
+    sub = df.loc[idx].reset_index(drop=True).copy()
     with contextlib.redirect_stdout(io.StringIO()):  # the parsers are chatty even at verbose=False
         sub = parse_host(sub, verbose=False)  # NOTE: also rewrites bare country/iso/dev_stage on host hints
         sub = parse_country(sub, verbose=False)
@@ -122,8 +122,13 @@ def reparse_filled_rows(merged: pd.DataFrame) -> tuple[pd.DataFrame, int]:
         sub = parse_collection_date(sub, verbose=False)  # collection_date_parsed + year_parsed (+ collection_year)
     for col in ALL_DERIVED:
         if col in sub.columns:
-            merged.loc[idx, col] = sub[col].to_numpy()
-    return merged, int(len(idx))
+            df.loc[idx, col] = sub[col].to_numpy()
+    return df, int(len(idx))
+
+
+def reparse_filled_rows(merged: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Re-derive the normalised columns for exactly the agent-filled rows (B2 blank-fill blast radius)."""
+    return reparse_rows(merged, _filled_mask(merged))
 
 
 def handle_evolutionary(merged: pd.DataFrame, master: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
