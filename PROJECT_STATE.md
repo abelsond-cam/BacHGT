@@ -1,7 +1,8 @@
 # PROJECT_STATE.md — BacHGT
 
 **Last verified: 2026-08-27 @ `dev`** · scope: the metadata layers (agentic-metadata engine + Klebsiella
-application; metadata_v2), incl. combine-build B1 (`v2_overwrite_candidates` reconciled EXACT to §5c). Every
+application; metadata_v2). The agentic→v2 combine is **LIVE in production** (architecture B, promoted
+2026-08-27; production v2 = 86,398 × 558, verified on the live file; pre-agentic v2 archived). Every
 number below names the artifact it was read from; a number without a path is a quotation, not a fact. Where this
 file and any other doc/memory disagree, **this file wins**.
 
@@ -77,10 +78,12 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
 
 ### Layer B — metadata_v2 (the canonical table) + the agentic→v2 combine
 - **Status:** v2 is the authoritative curated table (built by `pp/build_metadata_v2.py` + `rebuild_v2.sh`).
-  The agentic→v2 combine is **DESIGNED + prototyped against the v1 table only; NOT yet done against v2**.
+  The agentic→v2 combine is **DONE — the agentic fills + approved overwrites + evolutionary de-list are LIVE in
+  production v2 (2026-08-27, architecture B)**; see the In-flight/executed block below.
 - **Numbers of record:**
-  - v2 = `metadata_v2_all_samples_and_columns.tsv` — **86,398 rows × 505 cols** (`METADATA_v2_README.md` line 3),
-    row key **`Sample`** (LR-assembly accession when a long read exists, else SR BioSample); SR↔LR link via
+  - v2 = `metadata_v2_all_samples_and_columns.tsv` — **86,398 rows × 558 cols** (post-agentic, verified on the
+    live file 2026-08-27; was 505 pre-agentic per `METADATA_v2_README.md` line 3 — README needs refresh), row
+    key **`Sample`** (LR-assembly accession when a long read exists, else SR BioSample); SR↔LR link via
     **`sr_biosample`**. **HPC-only** path: `…/rds/.../david/final/metadata_v2_all_samples_and_columns.tsv` —
     **not on the local OneDrive mirror** (verified 2026-07-22).
   - Canonical merge already produced = `…/curated/metadata_curated_master_merged.tsv` = **90,903 rows** (human >
@@ -126,10 +129,13 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     Remaining is the **gated CSD3 run** (README §16), which David runs.
   Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
   (iso 2,037 · date 1,014 · host 38 · country 16).
-- **EXECUTED — candidate v2 built + verified on CSD3 (2026-08-27, architecture B).** David chose architecture B
-  (inject directly onto the current v2, preserving all v2-only columns) over the pool-re-deriving full rebuild.
-  Ran inject → apply approved overwrites → delist (`--keep-quality-flags`) on CSD3. **Candidate (NOT yet
-  production):** `…/rds/…/david/final/agentic_combine_20260827/metadata_v2_agentic_candidate.tsv`.
+- **✅ PROMOTED TO PRODUCTION (2026-08-27, architecture B).** David chose architecture B (inject directly onto
+  the current v2, preserving all v2-only columns) over the pool-re-deriving full rebuild, then approved
+  promotion. Ran inject → apply approved overwrites → delist (`--keep-quality-flags`) on CSD3, verified, and
+  **swapped the candidate into production**: `…/david/final/metadata_v2_all_samples_and_columns.tsv` is now the
+  agentic v2 (**86,398 rows × 558 cols** = 549 + 9 provenance). The pre-agentic v2 is archived at
+  `…/david/final/archive/metadata_v2_all_samples_and_columns.tsv.20260827T165822.bak` (301,273,052 bytes,
+  size-verified). Build artefact retained: `…/david/final/agentic_combine_20260827/`.
   **Verification vs the original v2 (`verify_candidate.py`):** 86,398 rows preserved; **0 off-target columns
   changed** (all 549 v2-only Kleborate/ISEScan/AST/linkage columns byte-identical); 9 new provenance columns
   (4× `_agent_filled`, 4× `_agent_overwrote`, `evolutionary_lab_sample`); completeness country 91.3→96.3 / date
@@ -137,10 +143,12 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
   written (3,013 approved, 91 samples not in v2); evolutionary 1,055 rows de-listed (cohort flags→False,
   quality flags KEPT per David, `is_kpsc` untouched). Spot-check: `SAMN20064863` `Switzerland→Australia`,
   region `W. Europe→Oceania`.
-- **Next:** David reviews the candidate; on approval, **promote it to production v2** (replace
-  `metadata_v2_all_samples_and_columns.tsv`, backing up the original — README §16). Decisions RESOLVED:
-  architecture B; overwrite candidates approved (incl. country); `is_kpsc` left True; closed evolutionary
-  genomes keep their quality flags (10 samples, 4 studies).
+- **Next:** (1) **`METADATA_v2_README.md` needs a refresh** — it documents 505 cols; production is now 558
+  (the 9 agentic provenance columns + the `evolutionary_lab_sample`/agentic-fill semantics need a column-group
+  entry). (2) Optional cleanup of the ~900 MB intermediates in `…/agentic_combine_20260827/` (keep the
+  candidate + numbers; the `v2_injected*.tsv` intermediates can go). Decisions RESOLVED: architecture B;
+  overwrite candidates approved (incl. country); `is_kpsc` left True; closed evolutionary genomes keep their
+  quality flags (10 samples, 4 studies).
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,

@@ -1,7 +1,10 @@
 # Runbook — combine the agentic Klebsiella metadata into metadata_v2
 
-**Status: EXECUTED via architecture B — candidate v2 built + verified on CSD3 (2026-08-27); awaiting David's
-review before promotion to production.** State authority: [`PROJECT_STATE.md`](../../../PROJECT_STATE.md)
+**Status: ✅ DONE — promoted to production via architecture B (2026-08-27).** The agentic fills + approved
+overwrites + evolutionary de-list are LIVE in `…/david/final/metadata_v2_all_samples_and_columns.tsv`
+(86,398 × 558); the pre-agentic v2 is archived at
+`…/david/final/archive/metadata_v2_all_samples_and_columns.tsv.20260827T165822.bak`. State authority:
+[`PROJECT_STATE.md`](../../../PROJECT_STATE.md)
 Layer B. Policy decisions of record: combine = **blank-fill + adjudicated overwrites**; re-normalisation =
 **v2's hardcoded `pp/metadata_curation.py` parse/categorise**; this round is **Klebsiella-only**.
 
