@@ -1,11 +1,20 @@
 # `metadata_v2` — README
 
-*Snapshot: 2026-06-03 · `metadata_v2_all_samples_and_columns.tsv` · 86,398 rows × 505 columns*
+*Snapshot: 2026-08-27 (agentic-enriched; base v2 2026-06-03) · `metadata_v2_all_samples_and_columns.tsv` ·
+86,398 rows × 558 columns*
 
-*(505 columns span: ENA Portal metadata, NCBI Datasets assembly info, Kleborate v3.2.4 typing
+*(558 columns span: ENA Portal metadata, NCBI Datasets assembly info, Kleborate v3.2.4 typing
 (species/MLST/virulence/AMR/Kaptive/wzi), ISEScan IS-family counts, CheckM2 QC, Bakta annotation
-stats, parsed/categorised clinical metadata, file-path pointers, cohort flags, and
-`EBI_*_AST` binary truth values for 22 antibiotics (BacPredict step 9).)*
+stats, parsed/categorised clinical metadata, file-path pointers, cohort flags,
+`EBI_*_AST` binary truth values for 22 antibiotics (BacPredict step 9), and the 9 agentic re-curation
+provenance columns added 2026-08-27 — see §10.)*
+
+> **⚡ 2026-08-27 — agentic clinical re-curation is LIVE in v2.** The four clinical fields were blank-filled +
+> selectively overwritten from an LLM-agent re-curation of the source papers, and 1,489 experimental-evolution
+> lab samples were de-listed from the cohort. This added 9 provenance columns (505 → 558) and raised clinical
+> completeness (country 91→96 %, collection_date 82→90 %, isolation_source 73→78 %, host 80→92 %). Full
+> mechanics + provenance flags: **§10**. The pre-agentic v2 is archived at
+> `…/david/final/archive/metadata_v2_all_samples_and_columns.tsv.20260827T165822.bak`.
 
 Authoritative description of the Klebsiella **metadata_v2** table for BacHGT, BacPredict, and
 external collaborators. Read this before consuming the table — it explains how rows are keyed,
@@ -411,6 +420,34 @@ The four primary fields curated for research, processed in
 
 Each goes through (1) **parse** (regex + lookup tables for spelling, language, synonyms — e.g.
 *Homo sapiens* → `"human"`) and then (2) **categorise**.
+
+### Agentic re-curation (added 2026-08-27) — provenance columns
+
+The four clinical fields were enriched by an LLM-agent re-curation of the source papers
+(`bac_agentic_metadata`), combined into v2 on 2026-08-27 (architecture B — injected directly onto v2,
+preserving every other column byte-identical). Precedence is **human-curated (`_parsed`) > agent > ENA**, so no
+previously-curated value was overwritten by a blank-fill. Three operations, each with a provenance flag:
+
+- **Blank-fill** — the agent value fills a cell that was blank (or held only a raw-but-unparsed ENA value).
+  Flag: **`<field>_agent_filled`** (True/False), one per field. Counts: country 4,375 · collection_date 6,974 ·
+  isolation_source 7,868 · host 10,482. Raised completeness to country 96.3 / date 90.1 / iso 77.7 / host 92.1 %.
+- **Gated overwrite** — an *approved* agent value replaced an existing ENA value (vague→specific, e.g.
+  `"clinical material"`→`"BLOOD"`, or a same-year `collection_date` refinement, or a paper-corrected country).
+  Flag: **`<field>_agent_overwrote`** (True/False). 2,922 rows written (David-reviewed;
+  `data/v2_overwrite_candidates.{tsv,md}` in the repo is the reviewed candidate list).
+- **Evolutionary de-list** — **`evolutionary_lab_sample`** (True/False): True for 1,489 experimental-evolution
+  lab samples (1,055 present in v2). These are removed from the analysis cohort
+  (`kpsc_final_list`/`lra_final_list`/`is_variant_called` set False) but **`is_kpsc` is kept True** (they are
+  genuinely KPSC, used for the evolutionary analysis), and the 10 that are closed reference genomes **keep**
+  their `is_complete`/`is_hybrid`/`is_reference_genome` flags.
+
+For blank-filled/overwritten rows the derived columns below (`*_parsed`, `*_category`, `region`,
+`collection_year`) were re-generated with `metadata_curation.py`'s own parse/categorise functions, so v2's
+vocabulary stays consistent. Full mechanics: [`PROJECT_STATE.md`](../../PROJECT_STATE.md) Layer B +
+[`bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md`](bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md).
+
+> ⚠️ **The category-distribution tables in this section are the pre-agentic 2026-06-03 snapshot** and now
+> understate coverage by the ~30k agentic fills above — recompute from the live table before quoting them.
 
 ### Parsed columns (cleaned canonical strings)
 

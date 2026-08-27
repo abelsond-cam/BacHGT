@@ -143,12 +143,14 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
   written (3,013 approved, 91 samples not in v2); evolutionary 1,055 rows de-listed (cohort flags→False,
   quality flags KEPT per David, `is_kpsc` untouched). Spot-check: `SAMN20064863` `Switzerland→Australia`,
   region `W. Europe→Oceania`.
-- **Next:** (1) **`METADATA_v2_README.md` needs a refresh** — it documents 505 cols; production is now 558
-  (the 9 agentic provenance columns + the `evolutionary_lab_sample`/agentic-fill semantics need a column-group
-  entry). (2) Optional cleanup of the ~900 MB intermediates in `…/agentic_combine_20260827/` (keep the
-  candidate + numbers; the `v2_injected*.tsv` intermediates can go). Decisions RESOLVED: architecture B;
-  overwrite candidates approved (incl. country); `is_kpsc` left True; closed evolutionary genomes keep their
-  quality flags (10 samples, 4 studies).
+- **Follow-ups DONE (2026-08-27):** (1) `METADATA_v2_README.md` refreshed — 505→558, snapshot note, and a new
+  §10 "Agentic re-curation" subsection documenting the 9 provenance columns + the pre-agentic-distribution
+  caveat. (2) CSD3 intermediates cleaned — deleted `v2_injected{,_overwritten}.tsv` (~583 MB); kept the
+  candidate, numbers report, approved-overwrites list, and verify script in `…/agentic_combine_20260827/`.
+  Decisions RESOLVED: architecture B; overwrite candidates approved (incl. country); `is_kpsc` left True; closed
+  evolutionary genomes keep their quality flags (10 samples, 4 studies).
+- **Open (not blocking):** the §10 category-distribution tables in `METADATA_v2_README.md` are the pre-agentic
+  snapshot (flagged inline) — recompute from the live table when convenient.
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,
