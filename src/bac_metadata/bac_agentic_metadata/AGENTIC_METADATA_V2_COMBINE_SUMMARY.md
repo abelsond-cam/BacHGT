@@ -132,10 +132,14 @@ artefact (candidate + numbers + verification script) is retained at `…/david/f
 
 ## 8. Follow-ups
 
-- **Uncategorised category tail** — the agent introduced some raw paper values that `metadata_curation.py`'s
-  categorise rules don't yet map, so they pass through as small ad-hoc buckets (`region`: *Saint Kitts and
-  Nevis* 77, *Middle East* 11; `host_category`: *Galleria mellonella* 24; `isolation_source_category`: ~40
-  abbreviations — *UTI* 55, *CRBSI* 37, *SPUT* 23, *HAP/VAP* 24, …). Extending the categorise rule-lists would
-  fold these into the canonical buckets. The bare `*_parsed` value is always the faithful paper term.
+- **Category tail — DONE (2026-08-27).** The agent introduced raw paper values the categorise rules didn't map
+  (region *Saint Kitts and Nevis*/*Middle East*; host *Galleria*/*C. elegans*/*hospital sink*/…; ~40 iso
+  abbreviations *UTI*/*SPUT*/*CRBSI*/*HAP-VAP*/…). Fixed both ways: the `metadata_curation.py` categorise
+  rule-lists were extended (future rebuilds), and a targeted `combine/recategorise_agentic_tail.py` remapped the
+  already-landed cells (region 88, host 63, iso 403 — only those cells changed). **Small residual left**
+  (ambiguous/cross-field, ~110 samples): host *Feed* (1); iso host-in-source mis-files (domestic animals 17,
+  wild animals 14, poultry 5, wild birds 2, bovine 3, equine 2) + ambiguous codes (MB 10, TASP 9, SS 4, BA 2,
+  CATH 2, CHEST 1, one hospital case); the lab-culture family (94) now sits in `lab, hospital or facility
+  (unhelpful)`.
 - **`METADATA_v2_README.md`** refreshed to 558 columns with manual→agentic before/after tables (done).
 - **M. abscessus** agentic application remains deferred (a later round).

@@ -466,13 +466,14 @@ visible per bucket.
 ### Category columns (categorical buckets) — manual v2 → agentic v2
 
 Counts below are **manual v2** (the pre-agentic table archived 2026-08-27) → **agentic v2** (live). The blank
-rows shrink as the agentic fills land. ⚠️ **Uncategorised tail:** the agentic fills introduced some raw
-paper values that `metadata_curation.py`'s categorise rules don't yet map, so they pass through into the
-category column as small ad-hoc buckets — `region`: *Saint Kitts and Nevis* (77), *Middle East* (11);
-`host_category`: *Galleria mellonella* (24); `isolation_source_category`: ~40 abbreviations (*UTI* 55, *CRBSI*
-37, *SPUT* 23, *HAP/VAP* 24, *WUND* 6, *cIAI* 9, …). These are **excluded from the canonical-bucket tables
-below** and are a known follow-up (extend the categorise rule-lists). The bare `*_parsed` value is always the
-faithful paper term.
+rows shrink as the agentic fills land. The categorise rule-lists were **extended 2026-08-27** to fold the
+agentic paper-abbreviation tail (UTI→urine, SPUT/HAP-VAP→lower respiratory, CRBSI→blood, cIAI/cholangitis→
+invasive gut, Galleria/C.elegans→insect, Saint Kitts→Central & S. America, …) into the canonical buckets, so
+the "agentic v2" counts below are complete. **Small residual left uncategorised** (deliberately —
+ambiguous/cross-field): `host_category` *Feed* (1); `isolation_source_category` — host terms mis-filed as an
+iso source (*domestic animals* 17, *wild animals* 14, *poultry livestock* 5, *wild birds* 2, *bovine* 3,
+*equine* 2) and ambiguous study codes (*MB* 10, *TASP* 9, *SS* 4, *BA* 2, *CATH* 2, *CHEST* 1, one hospital
+case). The bare `*_parsed` value is always the faithful paper term.
 
 #### `region` (WHO/geographic regions)
 
@@ -482,8 +483,8 @@ faithful paper term.
 | N. America | 18,964 | 19,513 |
 | E. Asia | 14,981 | 15,463 |
 | Africa | 7,041 | 7,598 |
-| M. East, Central Asia | 4,960 | 5,120 |
-| Central & S. America | 2,773 | 3,065 |
+| M. East, Central Asia | 4,960 | 5,131 |
+| Central & S. America | 2,773 | 3,142 |
 | Oceania | 2,880 | 3,025 |
 | E. Europe | 2,365 | 2,478 |
 | (blank) | 7,534 | 3,159 |
@@ -497,34 +498,35 @@ faithful paper term.
 | grazing livestock & horses | 1,319 | 1,413 |
 | poultry livestock | 588 | 693 |
 | domestic animals | 553 | 591 |
-| clinical environment or surface | 381 | 568 |
+| clinical environment or surface | 381 | 592 |
 | vegetable, plant or soil | 455 | 553 |
 | meat products | 384 | 400 |
-| wild animals | 293 | 291 |
-| insect | 157 | 157 |
-| wild birds | 45 | 44 |
+| wild animals | 293 | 295 |
+| insect | 157 | 187 |
+| wild birds | 45 | 49 |
 | (blank) | 14,557 | 5,521 |
 
 #### `isolation_source_category`
 
 | Category | manual v2 | agentic v2 |
 |---|--:|--:|
-| blood | 13,164 | 14,805 |
-| faeces & rectal swabs | 12,545 | 13,735 |
-| urine | 12,922 | 13,354 |
-| lower respiratory, endotracheal | 6,785 | 7,092 |
-| wound & pus, abscess, surgical drain, body tissue, bone, biopsy | 3,124 | 3,284 |
+| blood | 13,164 | 14,852 |
+| faeces & rectal swabs | 12,545 | 13,737 |
+| urine | 12,922 | 13,438 |
+| lower respiratory, endotracheal | 6,785 | 7,140 |
+| wound & pus, abscess, surgical drain, body tissue, bone, biopsy | 3,124 | 3,322 |
 | wastewater & water | 2,093 | 2,922 |
-| invasive gut & organs | 1,155 | 1,211 |
-| body fluid (ascites / peritoneal / pleural) | 631 | 655 |
-| clinical environment or surface | 381 | 568 |
+| invasive gut & organs | 1,155 | 1,230 |
+| body fluid (ascites / peritoneal / pleural) | 631 | 656 |
+| clinical environment or surface | 381 | 572 |
 | vegetable, plant or soil | 455 | 553 |
-| urinary catheter | 435 | 447 |
+| urinary catheter | 435 | 453 |
 | upper airway | 420 | 442 |
 | meat products | 384 | 400 |
-| skin swabs (skin, groin, vaginal, genital, eye, ear) | 296 | 311 |
+| skin swabs (skin, groin, vaginal, genital, eye, ear) | 296 | 315 |
 | insect | 157 | 157 |
-| (blank) | 31,357 | 25,987 |
+| lab, hospital or facility (unhelpful) | — | 94 |
+| (blank) | 31,357 | 26,043 |
 
 ### Category composition notes
 

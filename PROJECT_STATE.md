@@ -153,11 +153,11 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
   — the collaborator-facing one-pager (method, scale reviewed, accuracy vs manual, what landed in v2, cohort
   impact, provenance, decisions). `METADATA_v2_README.md` §10 now carries manual→agentic before/after tables
   (completeness + region/host/iso distributions) and the cohort-flag before/after.
-- **Open (not blocking):** the agentic fills introduced a small **uncategorised category tail** — raw paper
-  values `metadata_curation.py`'s categorise rules don't yet map (`region` *Saint Kitts and Nevis* 77, *Middle
-  East* 11; `host_category` *Galleria mellonella* 24; `isolation_source_category` ~40 abbreviations, UTI 55 /
-  CRBSI 37 / SPUT 23 / HAP-VAP 24 / …). Extending the categorise rule-lists folds them into the canonical
-  buckets; the bare `*_parsed` value is always the faithful paper term.
+- **Category tail — RESOLVED (2026-08-27).** Extended the `metadata_curation.py` categorise rule-lists (future
+  rebuilds) + a targeted `combine/recategorise_agentic_tail.py` remap of the landed cells (region 88 / host 63 /
+  iso 403 cells; only those changed; re-promoted, pre-remap agentic v2 archived at `…20260827T173241.bak`).
+  Small residual left deliberately (~110 samples, ambiguous codes + host-in-iso mis-files); lab-culture family
+  (94) → the `unhelpful` bucket. README §10 "agentic v2" tables carry the final post-remap counts.
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,
