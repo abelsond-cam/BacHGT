@@ -98,9 +98,20 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     study PRJNA744003 — concrete→concrete, ENA submitting-lab-country error); **4 date year-changes + 3
     unparseable** flagged; 29 benign `shortened` (`Blood_Blood`→`Blood`); 90 inert `no_change`. `classify()`
     unit-tested (`tests/test_report_v2_overwrites.py`, 4 tests).
-  - **B2–B4 pending:** B2 `combine/inject_agentic_into_v1.py` (blank-fill + re-parse + evolutionary handling,
-    tested on the v1 mirror) · B3 `apply_gated_overwrites` + post-kleborate evolutionary-delist hook · B4
-    runbook/PROJECT_STATE update for the CSD3 orchestration.
+  - **B2 DONE (2026-08-27):** `combine/inject_agentic_into_v1.py` — step-(i) blank-fill onto v1 (via engine
+    `merge_into_canonical`, human `_parsed` > agent > ENA) + re-normalise the filled rows with v1's own
+    `pp/metadata_curation` parse/categorise (v1 `main` order) + evolutionary handling. **Verified on the v1
+    mirror:** row count preserved (90,903); blank-fills country 6,835 / date 9,020 / iso 9,863 / host 12,942
+    (completeness 87.8→95.3 / 78.9→88.9 / 69.8→76.9 / 77.2→91.2 %); **re-parse blast radius = the 22,433
+    filled rows only** (derived cols byte-identical on every other row — checked); **no curated (`_parsed`
+    non-blank) bare value overwritten** (checked); evolutionary 1,489 master → **1,055 present in v1** (1,071
+    rows, `kpsc_final_list=False`) = 1,045 SR-only + 26 LRA-bearing, **434 absent from v1** (v1 ⊂ master
+    cohort; real match happens against v2 on CSD3); `is_kpsc` left alone (taxonomic). 4 unit tests
+    (`tests/test_inject_agentic_into_v1.py`). Note: iso/host "replaced unparsed raw ENA" (3,464 / 259) are
+    agent beating an un-curated raw ENA bare value — still within human > agent > ENA, surfaced in the report.
+  - **B3–B4 pending:** B3 `apply_gated_overwrites` + post-kleborate evolutionary-delist hook (clears the
+    CSD3-only quality flags for the LRA-bearing evo rows) · B4 runbook/PROJECT_STATE update for the CSD3
+    orchestration.
   Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
   (iso 2,037 · date 1,014 · host 38 · country 16).
 - **Next:** CSD3 is SSH-reachable again (2026-07-22) — the run executes there (v2 lives on CSD3). Gated on the
@@ -132,6 +143,7 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
 | `scorecard/final_completeness_raw_agent_gold.tsv` | `evaluation/completeness_by_split.py` (needs v2 gold) | wrap-up §4 | master or gold change |
 | `per_study_accession_table.tsv` | `evaluation/build_per_study_table.py` | humans (publishable) | master change |
 | `v2_overwrite_candidates.{tsv,md}` | `evaluation/report_v2_overwrites.py` | David (step-iii sign-off), `combine.apply_gated_overwrites` (B3) | per-tranche `per_sample_applied` change |
+| injected v1 (step i; local test / CSD3 inject) | `combine/inject_agentic_into_v1.py` (needs v1 + master) | `rebuild_v2.sh` cascade (CSD3) | master change or v1 re-issue |
 | `curated/metadata_curated_master_merged.tsv` | `engine/accumulate.py::merge_into_canonical --canonical` | (pending v2 combine) | master or canonical change |
 | `metadata_v2_all_samples_and_columns.tsv` | `pp/build_metadata_v2.py` + `rebuild_v2.sh` | downstream analyses | `rebuild_v2.sh` |
 
