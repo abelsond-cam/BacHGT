@@ -149,8 +149,15 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
   candidate, numbers report, approved-overwrites list, and verify script in `…/agentic_combine_20260827/`.
   Decisions RESOLVED: architecture B; overwrite candidates approved (incl. country); `is_kpsc` left True; closed
   evolutionary genomes keep their quality flags (10 samples, 4 studies).
-- **Open (not blocking):** the §10 category-distribution tables in `METADATA_v2_README.md` are the pre-agentic
-  snapshot (flagged inline) — recompute from the live table when convenient.
+- **Achievements summary:** [`bac_agentic_metadata/AGENTIC_METADATA_V2_COMBINE_SUMMARY.md`](src/bac_metadata/bac_agentic_metadata/AGENTIC_METADATA_V2_COMBINE_SUMMARY.md)
+  — the collaborator-facing one-pager (method, scale reviewed, accuracy vs manual, what landed in v2, cohort
+  impact, provenance, decisions). `METADATA_v2_README.md` §10 now carries manual→agentic before/after tables
+  (completeness + region/host/iso distributions) and the cohort-flag before/after.
+- **Open (not blocking):** the agentic fills introduced a small **uncategorised category tail** — raw paper
+  values `metadata_curation.py`'s categorise rules don't yet map (`region` *Saint Kitts and Nevis* 77, *Middle
+  East* 11; `host_category` *Galleria mellonella* 24; `isolation_source_category` ~40 abbreviations, UTI 55 /
+  CRBSI 37 / SPUT 23 / HAP-VAP 24 / …). Extending the categorise rule-lists folds them into the canonical
+  buckets; the bare `*_parsed` value is always the faithful paper term.
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,

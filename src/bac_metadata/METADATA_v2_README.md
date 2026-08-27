@@ -446,67 +446,85 @@ For blank-filled/overwritten rows the derived columns below (`*_parsed`, `*_cate
 vocabulary stays consistent. Full mechanics: [`PROJECT_STATE.md`](../../PROJECT_STATE.md) Layer B +
 [`bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md`](bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md).
 
-> ⚠️ **The category-distribution tables in this section are the pre-agentic 2026-06-03 snapshot** and now
-> understate coverage by the ~30k agentic fills above — recompute from the live table before quoting them.
+The completeness + category-distribution tables below are given **manual v2 → agentic v2** so the enrichment is
+visible per bucket.
 
 ### Parsed columns (cleaned canonical strings)
 
 `country_parsed` · `host_parsed` · `isolation_source_parsed` · `collection_date_parsed` ·
 `collection_year`.
 
-### Category columns (categorical buckets)
+### Completeness: manual v2 → agentic v2 (non-blank %)
+
+| field | manual v2 | agentic v2 | Δ |
+|---|--:|--:|--:|
+| country | 91.3 | 96.3 | +5.0 |
+| collection_date | 82.0 | 90.1 | +8.1 |
+| isolation_source | 72.6 | 77.7 | +5.1 |
+| host | 80.3 | 92.1 | +11.8 |
+
+### Category columns (categorical buckets) — manual v2 → agentic v2
+
+Counts below are **manual v2** (the pre-agentic table archived 2026-08-27) → **agentic v2** (live). The blank
+rows shrink as the agentic fills land. ⚠️ **Uncategorised tail:** the agentic fills introduced some raw
+paper values that `metadata_curation.py`'s categorise rules don't yet map, so they pass through into the
+category column as small ad-hoc buckets — `region`: *Saint Kitts and Nevis* (77), *Middle East* (11);
+`host_category`: *Galleria mellonella* (24); `isolation_source_category`: ~40 abbreviations (*UTI* 55, *CRBSI*
+37, *SPUT* 23, *HAP/VAP* 24, *WUND* 6, *cIAI* 9, …). These are **excluded from the canonical-bucket tables
+below** and are a known follow-up (extend the categorise rule-lists). The bare `*_parsed` value is always the
+faithful paper term.
 
 #### `region` (WHO/geographic regions)
 
-| Region | Rows |
-|---|---:|
-| W. Europe | 25,287 |
-| N. America | 19,177 |
-| E. Asia | 15,119 |
-| Africa | 7,062 |
-| M. East, Central Asia | 4,967 |
-| Oceania | 3,018 |
-| Central & S. America | 2,787 |
-| E. Europe | 2,451 |
-| (NaN) | 6,650 |
+| Region | manual v2 | agentic v2 |
+|---|--:|--:|
+| W. Europe | 24,900 | 26,889 |
+| N. America | 18,964 | 19,513 |
+| E. Asia | 14,981 | 15,463 |
+| Africa | 7,041 | 7,598 |
+| M. East, Central Asia | 4,960 | 5,120 |
+| Central & S. America | 2,773 | 3,065 |
+| Oceania | 2,880 | 3,025 |
+| E. Europe | 2,365 | 2,478 |
+| (blank) | 7,534 | 3,159 |
 
 #### `host_category`
 
-| Category | Rows |
-|---|---:|
-| human | 66,351 |
-| wastewater & water | 2,129 |
-| grazing livestock & horses | 1,350 |
-| poultry livestock | 598 |
-| domestic animals | 558 |
-| vegetable, plant or soil | 466 |
-| clinical environment or surface | 409 |
-| meat products | 405 |
-| wild animals | 307 |
-| insect | 157 |
-| wild birds | 46 |
-| (NaN) | 13,742 |
+| Category | manual v2 | agentic v2 |
+|---|--:|--:|
+| human | 65,573 | 73,181 |
+| wastewater & water | 2,093 | 2,922 |
+| grazing livestock & horses | 1,319 | 1,413 |
+| poultry livestock | 588 | 693 |
+| domestic animals | 553 | 591 |
+| clinical environment or surface | 381 | 568 |
+| vegetable, plant or soil | 455 | 553 |
+| meat products | 384 | 400 |
+| wild animals | 293 | 291 |
+| insect | 157 | 157 |
+| wild birds | 45 | 44 |
+| (blank) | 14,557 | 5,521 |
 
 #### `isolation_source_category`
 
-| Category | Rows |
-|---|---:|
-| blood | 13,339 |
-| urine | 13,100 |
-| faeces & rectal swabs | 12,702 |
-| lower respiratory, endotracheal | 6,821 |
-| wound & pus, abscess, surgical drain, body tissue, bone, biopsy | 3,175 |
-| wastewater & water | 2,129 |
-| invasive gut & organs | 1,160 |
-| body fluid (ascites / peritoneal / pleural) | 636 |
-| vegetable, plant or soil | 466 |
-| urinary catheter | 438 |
-| upper airway | 423 |
-| clinical environment or surface | 409 |
-| meat products | 405 |
-| skin swabs (skin, groin, vaginal, genital, eye, ear) | 303 |
-| insect | 157 |
-| (NaN) | 30,760
+| Category | manual v2 | agentic v2 |
+|---|--:|--:|
+| blood | 13,164 | 14,805 |
+| faeces & rectal swabs | 12,545 | 13,735 |
+| urine | 12,922 | 13,354 |
+| lower respiratory, endotracheal | 6,785 | 7,092 |
+| wound & pus, abscess, surgical drain, body tissue, bone, biopsy | 3,124 | 3,284 |
+| wastewater & water | 2,093 | 2,922 |
+| invasive gut & organs | 1,155 | 1,211 |
+| body fluid (ascites / peritoneal / pleural) | 631 | 655 |
+| clinical environment or surface | 381 | 568 |
+| vegetable, plant or soil | 455 | 553 |
+| urinary catheter | 435 | 447 |
+| upper airway | 420 | 442 |
+| meat products | 384 | 400 |
+| skin swabs (skin, groin, vaginal, genital, eye, ear) | 296 | 311 |
+| insect | 157 | 157 |
+| (blank) | 31,357 | 25,987 |
 
 ### Category composition notes
 
