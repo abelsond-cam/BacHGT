@@ -172,12 +172,13 @@ def _nonblank_frac(series: pd.Series) -> float:
 
 def numbers_report(v1_orig: pd.DataFrame, merged: pd.DataFrame, evo: dict, n_reparsed: int) -> str:
     """Assemble the step-(i) numbers report: blank-fills per field, re-parse blast radius, evolutionary split."""
-    L = ["# Combine step (i) — inject agentic blank-fills into v1 (numbers report)", "",
-         "_Local test against the v1 mirror. The real inject runs on CSD3 (architecture A → `rebuild_v2.sh`)._",
-         "", f"**Row count:** v1 {len(v1_orig):,} → injected {len(merged):,} "
+    L = ["# Combine step (i) — inject agentic blank-fills into the canonical table (numbers report)", "",
+         "_Blank-fill + re-parse of the filled rows + evolutionary handling. Architecture A injects onto v1 (then "
+         "`rebuild_v2.sh`); architecture B injects directly onto the current v2._",
+         "", f"**Row count:** canonical {len(v1_orig):,} → injected {len(merged):,} "
          f"({'✅ preserved' if len(v1_orig) == len(merged) else '❌ CHANGED'}).", "",
          "## Blank-fills per field (human `_parsed` > agent > ENA)", "",
-         "| field | agent fills | into truly-blank bare | replaced unparsed raw ENA | v1 non-blank % → injected % |",
+         "| field | agent fills | into truly-blank bare | replaced unparsed raw ENA | base non-blank % → injected % |",
          "|---|--:|--:|--:|--:|"]
     v1_bare = {f: backfill.strip_placeholders(v1_orig[f]) for f in CLINICAL_FIELDS}
     for f in CLINICAL_FIELDS:
@@ -191,19 +192,19 @@ def numbers_report(v1_orig: pd.DataFrame, merged: pd.DataFrame, evo: dict, n_rep
                  f"{_nonblank_frac(v1_orig[f]) * 100:.1f} → {_nonblank_frac(merged[f]) * 100:.1f} |")
     L += ["", "_`replaced unparsed raw ENA` = the bare cell held a raw ENA value that never parsed "
           "(`_parsed` blank), so the agent value wins per human > agent > ENA — still not a curated overwrite._",
-          "", "## Re-normalisation (v2's hardcoded parse/categorise; v1 `main` order)", "",
-          f"- Rows re-parsed: **{n_reparsed:,}** (exactly the agent-filled rows — every other row keeps v1's "
-          "derived columns byte-identical).",
-          f"- Derived columns refreshed: {', '.join(ALL_DERIVED)}.",
-          "- `collection_year` is intentionally not written here — `rebuild_v2` derives it from `year_parsed`.",
+          "", "## Re-normalisation (v2's hardcoded parse/categorise; `main` order)", "",
+          f"- Rows re-parsed: **{n_reparsed:,}** (exactly the agent-filled rows — every other row keeps the "
+          "canonical table's derived columns byte-identical).",
+          f"- Derived columns refreshed: {', '.join(c for c in ALL_DERIVED if c in merged.columns)}.",
+          "- The year column follows the target: v1 carries `year_parsed`; v2 carries `collection_year`.",
           "", "## Experimental-evolution lab samples (Step 2b)", "",
           "| quantity | n |", "|---|--:|",
           f"| master evolutionary samples (`study_type_excluded=True`) | {evo['master_evo_samples']:,} |",
-          f"| v1 rows flagged `evolutionary_lab_sample=True` (+ `kpsc_final_list=False`) | {evo['rows_flagged']:,} |",
-          f"| ├ SR-only (v1 de-list sticks) | {evo['sr_only_rows']:,} |",
-          f"| └ LRA-bearing (`related_lr_accession` set → B3 post-Kleborate delist on CSD3) | {evo['lra_bearing_rows']:,} |",
-          "", "_Quality flags (`is_complete`/`is_hybrid`/`is_reference_genome`/`is_variant_called`) are CSD3-only "
-          "— B3 counts and clears them there._", ""]
+          f"| rows flagged `evolutionary_lab_sample=True` (+ `kpsc_final_list=False`) | {evo['rows_flagged']:,} |",
+          f"| ├ SR-only (de-list sticks) | {evo['sr_only_rows']:,} |",
+          f"| └ LRA-bearing (a full rebuild's Kleborate cascade would re-admit → delist re-clamps) | {evo['lra_bearing_rows']:,} |",
+          "", "_The assembly-quality flags (`is_complete`/`is_hybrid`/`is_reference_genome`/`is_variant_called`) "
+          "are cleared by `delist_evolutionary` (present on v2; absent on v1 where they are re-derived)._", ""]
     return "\n".join(L) + "\n"
 
 

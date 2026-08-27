@@ -85,6 +85,17 @@ def test_delist_apply_clamps_cohort_and_quality_but_not_is_kpsc() -> None:
     assert out.loc[out["sample_accession"] == "n1", "kpsc_final_list"].tolist() == ["True"]  # non-evo untouched
 
 
+def test_delist_keep_quality_flags_clamps_cohort_only() -> None:
+    """--keep-quality-flags removes evo rows from the cohort but LEAVES the assembly-quality flags True."""
+    out, stats = delist_evolutionary(_evo_v2(), apply=True, keep_quality_flags=True)
+    evo = out["evolutionary_lab_sample"] == "True"
+    for col in ("kpsc_final_list", "lra_final_list", "is_variant_called"):
+        assert (out.loc[evo, col] == "False").all(), col  # cohort cleared
+    assert out.loc[out["sample_accession"] == "e1", "is_complete"].tolist() == ["True"]  # quality KEPT
+    assert out.loc[out["sample_accession"] == "n1", "is_hybrid"].tolist() == ["True"]  # non-evo untouched
+    assert stats["keep_quality_flags"] is True
+
+
 def test_delist_reports_absent_v2_only_columns() -> None:
     """Against a v1-like frame the v2-only flags are absent — reported, not an error."""
     v1_like = pd.DataFrame({"sample_accession": ["e1"], "evolutionary_lab_sample": ["True"],

@@ -44,17 +44,22 @@ def _truthy(series: pd.Series) -> pd.Series:
     return series.astype(str).str.strip().str.lower().isin({"true", "1", "yes", "t"})
 
 
-def delist_evolutionary(v2: pd.DataFrame, *, apply: bool = False) -> tuple[pd.DataFrame, dict]:
+def delist_evolutionary(v2: pd.DataFrame, *, apply: bool = False,
+                        keep_quality_flags: bool = False) -> tuple[pd.DataFrame, dict]:
     """Count (and, if ``apply``, clear) the cohort + quality flags on evolutionary rows. ``is_kpsc`` untouched.
 
     Returns ``(frame, stats)``. With ``apply=False`` the frame is returned unchanged and ``stats`` reports what
-    WOULD change (count-first surfacing); with ``apply=True`` the clamps are written.
+    WOULD change (count-first surfacing); with ``apply=True`` the clamps are written. ``keep_quality_flags``
+    (David, 2026-08-27) removes the rows from the cohort (``kpsc_final_list``/``lra_final_list``/
+    ``is_variant_called=False``) but LEAVES ``is_complete``/``is_hybrid``/``is_reference_genome`` — the closed
+    evolutionary genomes stay findable as closed assemblies.
     """
     if EVO_FLAG not in v2.columns:
         sys.exit(f"{EVO_FLAG} column missing — run combine.inject_agentic_into_v1 (B2) at the v1 stage first")
     out = v2.copy()
     evo = _truthy(out[EVO_FLAG])
-    stats: dict = {"evo_rows": int(evo.sum()), "applied": apply, "cohort_flags": {}, "quality_flags": {}}
+    stats: dict = {"evo_rows": int(evo.sum()), "applied": apply, "keep_quality_flags": keep_quality_flags,
+                   "cohort_flags": {}, "quality_flags": {}}
     for col in COHORT_FLAGS:
         if col in out.columns:
             stats["cohort_flags"][col] = {"true_pre": int((evo & _truthy(out[col])).sum())}
@@ -65,7 +70,8 @@ def delist_evolutionary(v2: pd.DataFrame, *, apply: bool = False) -> tuple[pd.Da
     if missing:
         stats["absent_columns"] = missing  # expected when run against v1 locally (these are v2-only)
     if apply:
-        for col in (*COHORT_FLAGS, *QUALITY_FLAGS):
+        clamp = COHORT_FLAGS if keep_quality_flags else (*COHORT_FLAGS, *QUALITY_FLAGS)
+        for col in clamp:
             if col in out.columns:
                 out.loc[evo, col] = "False"
         # is_kpsc deliberately NOT touched (taxonomic).
@@ -75,12 +81,16 @@ def delist_evolutionary(v2: pd.DataFrame, *, apply: bool = False) -> tuple[pd.Da
 def _report(stats: dict) -> str:
     """Human-readable count-first summary."""
     verb = "CLEARED" if stats["applied"] else "would clear (dry-run)"
+    keep = stats.get("keep_quality_flags", False)
     lines = [f"[delist] evolutionary_lab_sample rows: {stats['evo_rows']:,}  ({verb})"]
     for col, s in stats["cohort_flags"].items():
         lines.append(f"    cohort  {col}: {s['true_pre']} currently True → False")
     for col, n in stats["quality_flags"].items():
-        flag = "  ⚠ REVIEW: closed genomes?" if n else ""
-        lines.append(f"    quality {col}: {n} currently True → False{flag}")
+        if keep:
+            lines.append(f"    quality {col}: {n} True — KEPT (David 2026-08-27: closed genomes stay findable)")
+        else:
+            flag = "  ⚠ REVIEW: closed genomes?" if n else ""
+            lines.append(f"    quality {col}: {n} currently True → False{flag}")
     if stats.get("absent_columns"):
         lines.append(f"    (absent here, v2-only): {', '.join(stats['absent_columns'])}")
     lines.append("    is_kpsc: left unchanged (taxonomic)")
@@ -92,10 +102,13 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Post-Kleborate evolutionary-sample delist (combine step 2b).")
     p.add_argument("--v2", required=True, help="the rebuilt v2 table (post rebuild_v2.sh)")
     p.add_argument("--apply", action="store_true", help="write the clamps (default: dry-run, count only)")
+    p.add_argument("--keep-quality-flags", action="store_true",
+                   help="clamp only cohort flags; LEAVE is_complete/is_hybrid/is_reference_genome (closed "
+                        "evolutionary genomes stay findable — David 2026-08-27)")
     p.add_argument("--out", default=None, help="output path when --apply (default: overwrite --v2)")
     args = p.parse_args()
     v2 = load_table(Path(args.v2))
-    out, stats = delist_evolutionary(v2, apply=args.apply)
+    out, stats = delist_evolutionary(v2, apply=args.apply, keep_quality_flags=args.keep_quality_flags)
     print(_report(stats), file=sys.stderr)
     if args.apply:
         dest = Path(args.out) if args.out else Path(args.v2)
