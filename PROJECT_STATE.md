@@ -126,10 +126,21 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     Remaining is the **gated CSD3 run** (README §16), which David runs.
   Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
   (iso 2,037 · date 1,014 · host 38 · country 16).
-- **Next:** the **gated CSD3 run** (David runs; README §16). Order in `MERGE_TO_V2_RUNBOOK.md`: inject (B2) →
-  `rebuild_v2.sh` → delist (B3b) → completeness demo → apply the approved overwrite subset (B3a) → re-demo.
-  David approved the overwrite candidates on 2026-08-27; open item = confirm the `is_kpsc` decision (runbook
-  Decisions §3).
+- **EXECUTED — candidate v2 built + verified on CSD3 (2026-08-27, architecture B).** David chose architecture B
+  (inject directly onto the current v2, preserving all v2-only columns) over the pool-re-deriving full rebuild.
+  Ran inject → apply approved overwrites → delist (`--keep-quality-flags`) on CSD3. **Candidate (NOT yet
+  production):** `…/rds/…/david/final/agentic_combine_20260827/metadata_v2_agentic_candidate.tsv`.
+  **Verification vs the original v2 (`verify_candidate.py`):** 86,398 rows preserved; **0 off-target columns
+  changed** (all 549 v2-only Kleborate/ISEScan/AST/linkage columns byte-identical); 9 new provenance columns
+  (4× `_agent_filled`, 4× `_agent_overwrote`, `evolutionary_lab_sample`); completeness country 91.3→96.3 / date
+  82.0→90.1 / iso 72.6→77.7 / host 80.3→92.1 %; blank-fills 4,375/6,974/7,868/10,482; overwrites 2,922 rows
+  written (3,013 approved, 91 samples not in v2); evolutionary 1,055 rows de-listed (cohort flags→False,
+  quality flags KEPT per David, `is_kpsc` untouched). Spot-check: `SAMN20064863` `Switzerland→Australia`,
+  region `W. Europe→Oceania`.
+- **Next:** David reviews the candidate; on approval, **promote it to production v2** (replace
+  `metadata_v2_all_samples_and_columns.tsv`, backing up the original — README §16). Decisions RESOLVED:
+  architecture B; overwrite candidates approved (incl. country); `is_kpsc` left True; closed evolutionary
+  genomes keep their quality flags (10 samples, 4 studies).
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,

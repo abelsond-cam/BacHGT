@@ -1,10 +1,18 @@
 # Runbook — combine the agentic Klebsiella metadata into metadata_v2
 
-**Status: tooling BUILT + verified locally (B1–B3, 2026-08-27); the CSD3 run is NOT yet executed.** State
-authority: [`PROJECT_STATE.md`](../../../PROJECT_STATE.md) Layer B. Policy decisions of record (2026-07-22):
-combine = **blank-fill + adjudicated overwrites**; re-normalisation = **v2's hardcoded `pp/metadata_curation.py`
-parse/categorise**; architecture = **A (inject at v1 + `rebuild_v2.sh`, separate + reviewable)**; this round is
-**Klebsiella-only**. David approved the overwrite candidates — including the country changes — on 2026-08-27.
+**Status: EXECUTED via architecture B — candidate v2 built + verified on CSD3 (2026-08-27); awaiting David's
+review before promotion to production.** State authority: [`PROJECT_STATE.md`](../../../PROJECT_STATE.md)
+Layer B. Policy decisions of record: combine = **blank-fill + adjudicated overwrites**; re-normalisation =
+**v2's hardcoded `pp/metadata_curation.py` parse/categorise**; this round is **Klebsiella-only**.
+
+> **⚡ WHAT WAS ACTUALLY RUN (2026-08-27): architecture B, not A.** David chose to inject the agent fills
+> directly onto the **current v2** — preserving all 549 v2-only columns byte-identical — rather than the
+> full pool-re-deriving rebuild (A), which was found to re-derive Kleborate/ISEScan/AST from the *current*
+> pools (a larger, less-controlled blast radius). The candidate is
+> `…/rds/…/david/final/agentic_combine_20260827/metadata_v2_agentic_candidate.tsv`; **production v2 is
+> untouched**. Verified: 86,398 rows, 0 off-target column changes, completeness +5.0/+8.1/+5.1/+11.8 pp,
+> 1,055 evolutionary rows de-listed (quality flags kept). Architecture A (below) remains the documented path
+> for a future full rebuild.
 
 > ⚠️ **Gate before any write into production metadata_v2** (`METADATA_v2_README.md` §16 = contact David before a
 > rebuild). The inject → `rebuild_v2.sh` IS a full v2 rebuild. Run the two-step order below; treat the rebuild as
@@ -108,9 +116,9 @@ protected value changed beyond the sanctioned exceptions.
 2. **Per-sample overwrites** — ✅ David approved the candidates (incl. the 16 `Switzerland→…` country changes,
    PRJNA744003) on 2026-08-27. The exact approved subset (a filtered copy of `v2_overwrite_candidates.tsv`) is
    what step 5 applies. Study-level: adjudication fully reviewed (16 rows: 14 `manual`, 2 `skip`) → **none**.
-3. **`is_kpsc` on evolutionary rows** — ⚠ OPEN: the runbook Step 2b + B2 leave `is_kpsc` alone (taxonomic — a
-   lab-evolved K. pneumoniae is still KPSC; only cohort membership is removed). The earlier plan text mentioned
-   clamping `is_kpsc=False` too; `delist_evolutionary` deliberately does NOT. **Confirm with David.**
+3. **`is_kpsc` on evolutionary rows** — ✅ **RESOLVED (David, 2026-08-27): leave `is_kpsc=True`**, set only
+   `kpsc_final_list=False`. They ARE KPSC (used for the evolutionary analysis), just removed from the main
+   cohort. This is exactly what `delist_evolutionary` does.
 4. **Where it runs** — CSD3 (v2 is there). Heavy steps → `sbatch`.
 
 ## Verification (end state)
