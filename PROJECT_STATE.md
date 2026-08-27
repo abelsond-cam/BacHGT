@@ -119,11 +119,17 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     + **counts-then-clears** `is_complete`/`is_hybrid`/`is_reference_genome` (dry-run default, surfaced before
     flipping), leaves `is_kpsc` (taxonomic — per runbook 2b; the plan text's is_kpsc clamp is deliberately NOT
     done — **confirm with David**). 7 unit tests (`tests/test_combine_gated_writes.py`).
-  - **B4 pending:** runbook + PROJECT_STATE update for the CSD3 two-step orchestration order.
+  - **B4 DONE (2026-08-27):** `MERGE_TO_V2_RUNBOOK.md` rewritten around the built B1–B3 tooling with the exact
+    CSD3 run order (inject → rebuild_v2.sh → delist → completeness demo → [David's review] → apply approved
+    overwrites → re-demo), the `--metadata-v1` staging note, and the `is_kpsc` open decision.
+  - **The two-step combine tooling (B1–B4) is BUILT, unit-tested (17 tests), and verified on the v1 mirror.**
+    Remaining is the **gated CSD3 run** (README §16), which David runs.
   Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
   (iso 2,037 · date 1,014 · host 38 · country 16).
-- **Next:** CSD3 is SSH-reachable again (2026-07-22) — the run executes there (v2 lives on CSD3). Gated on the
-  adjudication sign-off + the parse/categorise-architecture decision (runbook Decisions; README §16).
+- **Next:** the **gated CSD3 run** (David runs; README §16). Order in `MERGE_TO_V2_RUNBOOK.md`: inject (B2) →
+  `rebuild_v2.sh` → delist (B3b) → completeness demo → apply the approved overwrite subset (B3a) → re-demo.
+  David approved the overwrite candidates on 2026-08-27; open item = confirm the `is_kpsc` decision (runbook
+  Decisions §3).
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
   **v2's hardcoded `pp/metadata_curation.py` parse/categorise** (decisions of record §6). (2) **Open
   reconciliation:** the RefSeq/NCTC carve-out is **3,513 RefSeq + 97 NCTC samples** in the completeness scorecard,

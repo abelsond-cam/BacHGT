@@ -1,118 +1,119 @@
 # Runbook — combine the agentic Klebsiella metadata into metadata_v2
 
-**Status: scoped, ready to run on CSD3 (where v2 lives). Not yet executed.** State authority:
-[`PROJECT_STATE.md`](../../../PROJECT_STATE.md) Layer B. Policy decisions of record (2026-07-22): combine =
-**blank-fill + adjudicated overwrites**; re-normalisation = **v2's hardcoded `pp/metadata_curation.py`
-parse/categorise**; this round is **Klebsiella-only**.
+**Status: tooling BUILT + verified locally (B1–B3, 2026-08-27); the CSD3 run is NOT yet executed.** State
+authority: [`PROJECT_STATE.md`](../../../PROJECT_STATE.md) Layer B. Policy decisions of record (2026-07-22):
+combine = **blank-fill + adjudicated overwrites**; re-normalisation = **v2's hardcoded `pp/metadata_curation.py`
+parse/categorise**; architecture = **A (inject at v1 + `rebuild_v2.sh`, separate + reviewable)**; this round is
+**Klebsiella-only**. David approved the overwrite candidates — including the country changes — on 2026-08-27.
 
-> ⚠️ **Gates before any write into production metadata_v2** (`METADATA_v2_README.md` §16 = contact David before
-> a rebuild): (1) the study-level **adjudication sign-off** must be complete (`david_verdict` filled in
-> `diagnostics/adjudication_review_queue.tsv`, 16 rows); (2) the per-sample overwrite policy must be chosen
-> (see Decisions). Run the prototype/demo steps first; treat the parse/categorise rebuild as the careful step.
+> ⚠️ **Gate before any write into production metadata_v2** (`METADATA_v2_README.md` §16 = contact David before a
+> rebuild). The inject → `rebuild_v2.sh` IS a full v2 rebuild. Run the two-step order below; treat the rebuild as
+> the careful step; heavy steps via `sbatch`.
+
+## The two-step design (David, 2026-08-26)
+1. **Step (i) — blank-fill first**, a reviewable v2 pass with all the numbers. Blank-fills are safe (they only
+   populate empty cells) and need no sign-off.
+2. **Step (ii) — surface the overwrites** as a reviewable artefact (the only writes that replace an existing
+   value). **Done + reviewed.**
+3. **Step (iii) — apply the approved overwrites** only after David's check.
+
+## Built tooling (all committed, ruff clean, unit-tested; verified on the local v1 mirror)
+- **B1 `evaluation/report_v2_overwrites.py`** → `data/v2_overwrite_candidates.{tsv,md}` — step (ii). Every
+  per-sample overwrite (ENA value non-blank) with `ENA old → agent new` + evidence + paper link, classified
+  (date same-year refinement vs year-changed/unparsed; categorical vs no-change; neutral `shortened`).
+  **Reconciles EXACT to wrap-up §5c: 3,105 candidates** (iso 2,037 · date 1,014 · host 38 · country 16), 3,015
+  genuine changes. **This is the artefact David reviewed.**
+- **B2 `combine/inject_agentic_into_v1.py`** → injected v1 + `_numbers.md` — step (i). Blank-fill (via engine
+  `merge_into_canonical`, human `_parsed` > agent > ENA) + re-parse of the filled rows only (v1's own
+  parse/categorise, `main` order) + evolutionary handling (`evolutionary_lab_sample`, `kpsc_final_list=False`,
+  SR-only vs LRA-bearing split). Verified: row count preserved, blast radius = filled rows only, no curated
+  value overwritten.
+- **B3a `combine/apply_gated_overwrites.py`** → step (iii). Applies David's approved subset over existing values
+  (`<field>_agent_overwrote` flag) + re-parses the changed rows. Refuses non-clinical fields; reports unmatched.
+- **B3b `combine/delist_evolutionary.py`** → the post-Kleborate re-clamp. Dry-run by default; `--apply` forces
+  `kpsc_final_list`/`lra_final_list`/`is_variant_called=False` and counts-then-clears
+  `is_complete`/`is_hybrid`/`is_reference_genome` on `evolutionary_lab_sample` rows; leaves `is_kpsc` (taxonomic).
 
 ## Inputs & the v2 target
 - Agent master (regenerable, gitignored): `…/klebsiella/data/curated/metadata_curated_master.tsv`
   (96,291 samples / 1,912 studies) + its `study_type_excluded` removal flag (78 studies / 1,489 samples).
-- The reference v1 overlay already built: `…/curated/metadata_curated_master_merged.tsv` (90,903 rows,
-  human > agent > ENA) — proves the mechanism; it is **not** v2.
+- v1 canonical (the base of v2; on the OneDrive mirror, 444 cols, 90,903 rows):
+  `…/project_k/data/final/metadata/metadata_final_curated_all_samples_and_columns.tsv`.
 - **v2 target (CSD3):** `/home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv`
-  (86,398 rows × 505 cols; row key `Sample`; SR↔LR via `sr_biosample`).
-- On CSD3, ensure the master is present first (it is gitignored, so regenerate if the checkout lacks it):
+  (86,398 rows × 505 cols; row key `Sample`; SR↔LR via `sr_biosample`). **HPC-only — not on the mirror.**
+- On CSD3, ensure the master is present first (gitignored — regenerate if the checkout lacks it):
   `python -m …engine.cli.accumulate --tags train,test,tail100,tail50_99,tail25_49,tail10_24,sub10`.
 
-## Step 1 — Blank-fill onto v2 (safe; the prototype)
-Reuse `engine.accumulate.merge_into_canonical` (joins on `sample_accession`, human `_parsed` > agent > ENA,
-writes the agent's raw value into the bare field column, flags each with `<field>_agent_filled`):
-
+## CSD3 run order (architecture A; heavy steps → `sbatch`; README §16 gate before starting)
 ```bash
-python -m bac_metadata.bac_agentic_metadata.engine.cli.accumulate \
-  --tags train,test,tail100,tail50_99,tail25_49,tail10_24,sub10 \
-  --canonical /home/dca36/rds/rds-floto-bacterial-4k08a2yyQLw/david/final/metadata_v2_all_samples_and_columns.tsv \
-  --gold-suffix _parsed
+# 0. master present? else accumulate (above). Point BACHGT_PROJECT_K_ROOT at the project_k tree.
+
+# 1. STEP (i) — inject blank-fills + re-parse filled rows + evolutionary handling, at the v1 stage.
+python -m bac_metadata.bac_agentic_metadata.combine.inject_agentic_into_v1 \
+    --out <work>/metadata_v1_injected.tsv
+#    → review <work>/metadata_v1_injected_numbers.md (blank-fills per field, evolutionary SR-only/LRA split).
+
+# 2. REBUILD — run the idempotent cascade on the injected v1 (re-derives ALL v2-only columns: pairing,
+#    Kleborate, ISEScan, AST). rebuild_v2.sh step 1 is build_metadata_v2, which reads --metadata-v1
+#    (default DEFAULT_METADATA_V1 = DATA_ROOT/david/final/metadata_final_curated_all_samples_and_columns.tsv)
+#    and does NOT re-parse bulk rows — it copies v1's *_parsed columns through (v2 = meta.copy()). So the
+#    injected v1 MUST be the --metadata-v1 input. rebuild_v2.sh does not forward that arg, so either:
+#      (a) stage the injected file at DEFAULT_METADATA_V1 (back up the original first), then run rebuild_v2.sh; OR
+#      (b) run build_metadata_v2 --metadata-v1 <injected> manually, then the remaining rebuild_v2.sh steps.
+#    Decide the staging with David.  (heavy → sbatch; README §16 gate)
+bash src/bac_metadata/pp/rebuild_v2.sh
+
+# 3. STEP 2b — post-Kleborate evolutionary delist (the additive kpsc rule re-admits LRA-bearing evo rows).
+python -m bac_metadata.bac_agentic_metadata.combine.delist_evolutionary --v2 <rebuilt_v2.tsv>          # dry-run: SURFACE the quality-flag counts
+python -m bac_metadata.bac_agentic_metadata.combine.delist_evolutionary --v2 <rebuilt_v2.tsv> --apply   # after reviewing the counts
+
+# 4. DEMONSTRATE — completeness raw ENA → agent → v2, no regression outside the RefSeq carve-out.
+python -m bac_metadata.bac_agentic_metadata.evaluation.completeness_by_split --truth <rebuilt_v2.tsv>
+
+# 5. STEP (iii) — apply the approved overwrites (David reviewed v2_overwrite_candidates.md → an approved subset).
+python -m bac_metadata.bac_agentic_metadata.combine.apply_gated_overwrites \
+    --canonical <rebuilt_v2.tsv> --approved <approved_overwrites.tsv> --out <v2_final.tsv>
+# 6. RE-DEMONSTRATE completeness on <v2_final.tsv>.
 ```
-**Verify:** output row count == 86,398 (unchanged); the linkage/typing/AST columns (`sr_biosample`,
-`lra_gca`/`lra_gcf`, `sr_*`/`lr_*`, `IS_*`, `*_AST`) are byte-identical to the input v2 (diff the column set +
-a checksum of those columns); `<field>_agent_filled` flags present; agent fills land only where the v2
-`_parsed` cell was blank AND a `sample_accession` matched (orphan-LR rows, ~2,581, and RefSeq/NCTC untouched).
-Confirm `sr_shadow_for_lra.tsv` reconciliation (README §9) is undisturbed.
-
-## Step 2 — Study-level overlay + removal flag
-`merge_into_canonical` overlays only the four per-sample fields. Separately overlay, keyed by
-`study_accession`: `study_setting`, `amr_study` (v2 already carries these — README §10), and add the
-`study_type_excluded` removal flag (78 studies / 1,489 samples). Precedence per the overwrite policy below.
-
-## Step 2b — Experimental-evolution lab samples (David, 2026-07-22)
-The 78 experimental-evolution studies / **1,489 samples** (`study_type_excluded=True` in the master) are
-in-vitro-evolved lab strains, not real isolates — they must not sit in any analysis cohort. Handling in v2
-(map to v2 rows by `sample_accession`; the rows STAY in v2, flagged, for the record — not deleted):
-- **Add `evolutionary_lab_sample` (True/False)** — True for the 1,489 (records what was done).
-- **Set `kpsc_final_list=False`** for those rows (removes them from the KPSC cohort). `is_variant_called` is
-  derived from `kpsc_final_list`, so it follows to False on re-derivation.
-- **Check + clear the assembly-quality flags** `is_complete` / `is_hybrid` / `is_reference_genome` for these
-  rows (David: worried about leaving them positive — a lab-evolved strain must not count as a complete/hybrid/
-  reference genome). `is_reference_genome = is_complete ∧ is_hybrid ∧ GCF_`, so clearing complete+hybrid clears
-  reference. **First COUNT** how many of the 1,489 currently carry each flag (needs CSD3 — v2 is not local) and
-  surface it to David before flipping, in case any is a legitimately-closed genome worth keeping.
-
-## Step 3 — Adjudicated overwrites (gated on sign-off; policy TBD)
-Blank-fill (Step 1) never touches a curated value. To also apply the agent's **proven** improvements:
-- **Study-level (16 candidates):** finish `review_adjudication --interactive` so `david_verdict` is filled in
-  `diagnostics/adjudication_review_queue.tsv`; apply only the rows David ruled for the agent.
-- **Per-sample (3,105 candidates:** isolation_source 2,037 · collection_date 1,014 · host 38 · country 16 —
-  the gated vague→specific overwrites from §5c of the wrap-up). These need a per-cell review policy (Decisions)
-  before any are applied over a curated v2 value.
-
-## Step 4 — Re-run v2's parse/categorise (the careful step; README §16)
-Agent fills are RAW, so v2's `*_parsed` / `*_category` / `region` / `year_parsed` / `collection_year` are stale
-for every filled cell. Re-normalise with **v2's own** `pp/metadata_curation.py` (`parse_country`/
-`categorise_region`, `parse_collection_date`, `parse_host`/`categorise_host`, `parse_isolation_source`/
-`categorise_isolation_source`, incl. the cross-field host←iso inference) — keeps v2's documented vocabulary
-byte-stable. **Architecture — CHOSEN (David, 2026-07-22): A, inject separately.**
-- **A. Inject-then-rebuild (CHOSEN):** put the agent fills in at the v1 stage and run the idempotent
-  `pp/rebuild_v2.sh` cascade — it re-derives *all* v2 extra columns (pairing, Kleborate, ISEScan, AST) and
-  re-parses consistently, so nothing is lost. Do it as a **separate inject step whose output is reviewed**
-  before it becomes the production v2 (not an in-place mutation). It IS a full v2 rebuild → **contact-David gate
-  (README §16)**; run on CSD3, heavy steps via `sbatch`.
-- ~~B. In-place re-parse~~ — rejected: mutating v2 in one pass leaves nothing to review.
-
-## Step 5 — Demonstrate improvement (already tooled)
-```bash
-python -m bac_metadata.bac_agentic_metadata.evaluation.completeness_by_split \
-  --truth /home/dca36/rds/.../david/final/metadata_v2_all_samples_and_columns.tsv
-```
-→ `scorecard/final_completeness_raw_agent_gold.{md,tsv}` (raw → agent → v2 deltas). Expect agent ≥ v2 per field
-(headline already: country +3.6, date +7.9, iso +6.3, host +10.4 pp) with no regression outside the RefSeq
-carve-out. Also `validate_backfill_values` for the blank-fill vs overwrite split.
+> **Note on ordering:** `apply_gated_overwrites` writes + re-parses in place on the rebuilt v2, so step 5 does
+> not need a second full `rebuild_v2.sh`. If David prefers the overwrites to also flow through the cascade,
+> apply them at the v1 stage (step 1's output) instead and re-run the rebuild — decide with David.
 
 ## Columns touched + how overwrites are checked
-- **Blank-filled** (agent fills only v2-BLANK cells; never overwrites a curated value — human `_parsed` > agent
-  > ENA via `merge_into_canonical`): `country`, `collection_date`, `isolation_source`, `host`.
+- **Blank-filled** (agent fills only v2-BLANK cells; never a curated value — human `_parsed` > agent > ENA):
+  `country`, `collection_date`, `isolation_source`, `host`. (Where the bare cell held a raw-but-unparsed ENA
+  value, the agent value wins per human > agent > ENA — surfaced in the B2 numbers report, still not a curated
+  overwrite.)
 - **Study-level overlay** (blank-fill; NO overwrites — the adjudication ruled `manual` on all 16): `study_setting`,
   `amr_study`.
-- **New / flag columns written:** `evolutionary_lab_sample`; `study_type_excluded`; and the flag flips on
-  evolutionary rows (`kpsc_final_list`, `is_complete`, `is_hybrid`, `is_reference_genome`, `is_variant_called`).
-- **Potentially overwritten** (curated value replaced — the 3,105 per-sample gated fills, ONLY if the policy
-  admits them): `isolation_source` 2,037 · `collection_date` 1,014 · `host` 38 · `country` 16.
-- **Re-derived, not merged** (Step 4 / rebuild): `*_parsed`, `*_category`, `region`, `year_parsed`,
-  `collection_year`.
+- **New / flag columns written:** `evolutionary_lab_sample`; `<field>_agent_filled`; `<field>_agent_overwrote`;
+  and the flag flips on evolutionary rows (`kpsc_final_list`, `lra_final_list`, `is_variant_called`,
+  `is_complete`, `is_hybrid`, `is_reference_genome`).
+- **Potentially overwritten** (curated value replaced — the per-sample gated fills, ONLY the subset David
+  approved): `isolation_source` 2,037 · `collection_date` 1,014 · `host` 38 · `country` 16 (3,105 candidates;
+  3,015 genuine). See `data/v2_overwrite_candidates.{tsv,md}`.
+- **Re-derived, not merged** (parse/categorise on changed rows + rebuild cascade): `*_parsed`, `*_category`,
+  `region`, `year_parsed`, `collection_year`.
 - **Untouched** (pass through / re-derived by the cascade): all SR↔LR linkage, Kleborate, Bakta, ISEScan, AST,
   CheckM2 columns.
 
-**How overwrites are checked — three layers:** (1) blank-fill structurally cannot overwrite (human always wins);
-(2) each of the 3,105 per-sample overwrites was gated at fill time by the fidelity judge (vague→specific only),
-is surfaced in §5c for spot-review, and is scored by `validate_backfill_values` vs the v2 `_parsed`; (3) the
-whole merged v2 is produced as a **separate, reviewed artifact** (architecture A) before it becomes production,
-and the overwrite-radius gate confirms no KNOWN agent-side value changed beyond the sanctioned exceptions.
+**How overwrites are checked — three layers:** (1) blank-fill structurally cannot overwrite a curated value
+(human always wins — verified: 0 curated bare cells changed); (2) each candidate is surfaced in the B1 artefact
+with evidence + paper for David's sign-off, and `apply_gated_overwrites` writes ONLY the approved subset with a
+`_agent_overwrote` provenance flag; (3) the overwrite-radius gate (`engine/overwrite_radius.py`) confirms no
+protected value changed beyond the sanctioned exceptions.
 
 ## Decisions
-1. **Parse/categorise architecture** — ✅ **RESOLVED (David, 2026-07-22): A** — inject the agent fills at v1 and
-   run `rebuild_v2.sh` as a **separate, reviewable** step (not in-place), gated per README §16.
-2. **Per-sample overwrite policy** — OPEN: which of the 3,105 gated overwrites qualify to replace a curated v2
-   value. Note the study-level adjudication queue is fully reviewed (16 rows: 14 `manual`, 2 `skip`) → **no
-   study-level overwrites** to apply; only the per-sample set remains to policy.
-3. **Where the run happens** — CSD3 (v2 is there; SSH restored 2026-07-22). Heavy steps → `sbatch`.
+1. **Parse/categorise architecture** — ✅ **A** (inject at v1 + `rebuild_v2.sh`, separate + reviewable).
+2. **Per-sample overwrites** — ✅ David approved the candidates (incl. the 16 `Switzerland→…` country changes,
+   PRJNA744003) on 2026-08-27. The exact approved subset (a filtered copy of `v2_overwrite_candidates.tsv`) is
+   what step 5 applies. Study-level: adjudication fully reviewed (16 rows: 14 `manual`, 2 `skip`) → **none**.
+3. **`is_kpsc` on evolutionary rows** — ⚠ OPEN: the runbook Step 2b + B2 leave `is_kpsc` alone (taxonomic — a
+   lab-evolved K. pneumoniae is still KPSC; only cohort membership is removed). The earlier plan text mentioned
+   clamping `is_kpsc=False` too; `delist_evolutionary` deliberately does NOT. **Confirm with David.**
+4. **Where it runs** — CSD3 (v2 is there). Heavy steps → `sbatch`.
 
 ## Verification (end state)
-Row count 86,398 preserved · all v2-only columns intact · `*_parsed`/`region`/`*_category` populated for
-agent-filled cells · completeness agent ≥ v2 (no regression outside RefSeq) · escalation-conservation +
-overwrite-radius still green on the agent side.
+Row count 86,398 preserved · all v2-only columns intact · `*_parsed`/`region`/`*_category`/`collection_year`
+populated for changed cells · completeness agent ≥ v2 (no regression outside RefSeq) · `evolutionary_lab_sample`
+rows out of the cohort with quality flags cleared · escalation-conservation + overwrite-radius green.
