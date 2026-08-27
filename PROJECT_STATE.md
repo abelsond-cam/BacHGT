@@ -1,8 +1,9 @@
 # PROJECT_STATE.md — BacHGT
 
-**Last verified: 2026-07-22 @ `083fe93`** · scope: the metadata layers (agentic-metadata engine + Klebsiella
-application; metadata_v2). Every number below names the artifact it was read from; a number without a path is a
-quotation, not a fact. Where this file and any other doc/memory disagree, **this file wins**.
+**Last verified: 2026-08-27 @ `dev`** · scope: the metadata layers (agentic-metadata engine + Klebsiella
+application; metadata_v2), incl. combine-build B1 (`v2_overwrite_candidates` reconciled EXACT to §5c). Every
+number below names the artifact it was read from; a number without a path is a quotation, not a fact. Where this
+file and any other doc/memory disagree, **this file wins**.
 
 ## 0. How to use — who owns which fact
 - **This file is the single authority on current state, status, numbers, and next-steps.** Read it first.
@@ -86,10 +87,22 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
     agent > ENA) — but onto the **v1** table (`metadata_final_curated_all_samples_and_columns.tsv`), which lacks
     v2's SR↔LR / typing / AST columns. Agent fills into human-blank cells (PROGRESS_REPORT §4c): country 4,856 /
     date 9,121 / iso 7,218 / host 7,410.
-- **In flight:** WS3 — scoped in [`bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md`](src/bac_metadata/bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md):
-  `merge_into_canonical` onto the real v2 (join on `sample_accession`) → study-level overlay → adjudicated
-  overwrites → v2 parse/categorise → completeness demo. Overwrite candidates sized: **16 study-level** (await
-  `david_verdict` sign-off) + **3,105 per-sample** (iso 2,037 · date 1,014 · host 38 · country 16).
+- **In flight:** the **two-step combine build** (David, 2026-08-26: "blank-fill first reviewable pass + numbers"
+  → "surface examples + a reviewable artefact" → "apply overwrites after checking with me"). Scoped in
+  [`bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md`](src/bac_metadata/bac_agentic_metadata/MERGE_TO_V2_RUNBOOK.md);
+  build phases B1–B4.
+  - **B1 DONE (2026-08-27):** `evaluation/report_v2_overwrites.py` → `data/v2_overwrite_candidates.{tsv,md}`
+    — the reviewable step-(ii) artefact, built locally from committed repo data. **Reconciles EXACT to §5c:
+    3,105 candidates** (iso 2,037 · date 1,014 · host 38 · country 16), of which **3,015 genuinely change** the
+    value. Review-critical rows surfaced: all **16 country** overwrites are `Switzerland→{Myanmar,USA,…}` (one
+    study PRJNA744003 — concrete→concrete, ENA submitting-lab-country error); **4 date year-changes + 3
+    unparseable** flagged; 29 benign `shortened` (`Blood_Blood`→`Blood`); 90 inert `no_change`. `classify()`
+    unit-tested (`tests/test_report_v2_overwrites.py`, 4 tests).
+  - **B2–B4 pending:** B2 `combine/inject_agentic_into_v1.py` (blank-fill + re-parse + evolutionary handling,
+    tested on the v1 mirror) · B3 `apply_gated_overwrites` + post-kleborate evolutionary-delist hook · B4
+    runbook/PROJECT_STATE update for the CSD3 orchestration.
+  Candidate sizing of record: **16 study-level** (await `david_verdict` sign-off) + **3,105 per-sample**
+  (iso 2,037 · date 1,014 · host 38 · country 16).
 - **Next:** CSD3 is SSH-reachable again (2026-07-22) — the run executes there (v2 lives on CSD3). Gated on the
   adjudication sign-off + the parse/categorise-architecture decision (runbook Decisions; README §16).
 - **Caveats / OPEN:** (1) combine policy decided = **blank-fill + adjudicated overwrites**; normalisation =
@@ -118,6 +131,7 @@ src/bac_panaroo · bac_ariba · bac_data · bac_isescan · bac_complete_genomes 
 | `Kp_AGENTIC_METADATA_WRAPUP_REPORT.md` | `evaluation/wrapup_report.py` (via `refresh_wrapup_report.sh`) | humans (review) | master or scorecard change |
 | `scorecard/final_completeness_raw_agent_gold.tsv` | `evaluation/completeness_by_split.py` (needs v2 gold) | wrap-up §4 | master or gold change |
 | `per_study_accession_table.tsv` | `evaluation/build_per_study_table.py` | humans (publishable) | master change |
+| `v2_overwrite_candidates.{tsv,md}` | `evaluation/report_v2_overwrites.py` | David (step-iii sign-off), `combine.apply_gated_overwrites` (B3) | per-tranche `per_sample_applied` change |
 | `curated/metadata_curated_master_merged.tsv` | `engine/accumulate.py::merge_into_canonical --canonical` | (pending v2 combine) | master or canonical change |
 | `metadata_v2_all_samples_and_columns.tsv` | `pp/build_metadata_v2.py` + `rebuild_v2.sh` | downstream analyses | `rebuild_v2.sh` |
 
