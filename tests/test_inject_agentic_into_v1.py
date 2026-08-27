@@ -44,6 +44,19 @@ def test_handle_evolutionary_flags_delists_and_splits_sr_vs_lra() -> None:
     assert stats == {"master_evo_samples": 2, "rows_flagged": 2, "lra_bearing_rows": 1, "sr_only_rows": 1}
 
 
+def test_handle_evolutionary_lra_split_falls_back_to_sample_prefix_on_v2() -> None:
+    """On a v2-shaped table (no related_lr_accession), LRA-bearing = a GCA_/GCF_ `Sample`."""
+    merged = pd.DataFrame({
+        "sample_accession": ["s1", "s2", "s3"],
+        "Sample":           ["GCA_1", "SAMN9", "GCF_2"],  # s1, s3 are LRA rows; s2 is SR-only
+        "kpsc_final_list":  ["True", "True", "True"],
+    })
+    master = pd.DataFrame({"sample_accession": ["s1", "s2", "s3"],
+                           "study_type_excluded": ["True", "True", "True"]})
+    _, stats = handle_evolutionary(merged, master)
+    assert stats == {"master_evo_samples": 3, "rows_flagged": 3, "lra_bearing_rows": 2, "sr_only_rows": 1}
+
+
 def test_handle_evolutionary_ignores_blank_sample_accessions() -> None:
     """A blank sample_accession in the master evolutionary set must not match blank rows in the table."""
     merged = pd.DataFrame({

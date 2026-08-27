@@ -39,11 +39,13 @@ from bac_metadata.bac_agentic_metadata.engine import accumulate, backfill
 
 #: The four per-sample clinical fields blank-filled + re-normalised.
 CLINICAL_FIELDS = ("country", "collection_date", "isolation_source", "host")
-#: Derived columns to refresh per field — ONLY those v1 already carries. ``collection_year`` is derived
-#: downstream by rebuild_v2 (v1 has ``year_parsed``, which rebuild renames), so it is intentionally not written.
+#: Candidate derived columns to refresh per field. The re-parse splices back only those the TARGET table
+#: actually carries, so this adapts to both canonical shapes: v1 has ``year_parsed`` (rebuild_v2 later renames
+#: it to ``collection_year``); v2 already carries ``collection_year`` and drops ``year_parsed``. Listing both
+#: lets one code path serve architecture A (inject at v1) and B (inject directly onto v2).
 DERIVED_COLUMNS = {
     "country": ["country_parsed", "region"],
-    "collection_date": ["collection_date_parsed", "year_parsed"],
+    "collection_date": ["collection_date_parsed", "year_parsed", "collection_year"],
     "isolation_source": ["isolation_source_parsed", "isolation_source_category"],
     "host": ["host_parsed", "host_category"],
 }
@@ -121,7 +123,7 @@ def reparse_rows(df: pd.DataFrame, mask: pd.Series) -> tuple[pd.DataFrame, int]:
         sub = reconcile_host_and_isolation_source(sub, verbose=False)  # host←iso NA-fill inference
         sub = parse_collection_date(sub, verbose=False)  # collection_date_parsed + year_parsed (+ collection_year)
     for col in ALL_DERIVED:
-        if col in sub.columns:
+        if col in sub.columns and col in df.columns:  # splice only columns the TARGET table carries (v1 vs v2)
             df.loc[idx, col] = sub[col].to_numpy()
     return df, int(len(idx))
 
@@ -145,8 +147,15 @@ def handle_evolutionary(merged: pd.DataFrame, master: pd.DataFrame) -> tuple[pd.
     merged["evolutionary_lab_sample"] = evo_mask.map({True: "True", False: "False"})
     if "kpsc_final_list" in merged.columns:
         merged.loc[evo_mask, "kpsc_final_list"] = "False"
-    lra_bearing = evo_mask & backfill.strip_placeholders(merged["related_lr_accession"]).notna() \
-        if "related_lr_accession" in merged.columns else pd.Series(False, index=merged.index)
+    # LRA-bearing = the row has a linked long-read assembly (which the Kleborate cascade could re-admit).
+    # v1 records this in `related_lr_accession`; v2 has no such column but its LRA rows key on a GCA_/GCF_
+    # `Sample` (merge_kleborate…:354). Use whichever the target carries.
+    if "related_lr_accession" in merged.columns:
+        lra_bearing = evo_mask & backfill.strip_placeholders(merged["related_lr_accession"]).notna()
+    elif "Sample" in merged.columns:
+        lra_bearing = evo_mask & merged["Sample"].astype(str).str.startswith(("GCA_", "GCF_"))
+    else:
+        lra_bearing = pd.Series(False, index=merged.index)
     stats = {
         "master_evo_samples": len(evo_samples),
         "rows_flagged": int(evo_mask.sum()),
@@ -215,7 +224,10 @@ def main() -> None:
     p = argparse.ArgumentParser(description="Inject agentic blank-fills into v1 + re-parse + flag evolutionary.")
     p.add_argument("--app", default="klebsiella")
     p.add_argument("--data-dir", default=None, help="agentic data dir (default applications/<app>/data)")
-    p.add_argument("--v1", default=None, help="v1 table path (default $BACHGT_PROJECT_K_ROOT/data/final/metadata/…)")
+    p.add_argument("--v1", default=None,
+                   help="canonical table to inject onto — v1 (default $BACHGT_PROJECT_K_ROOT/data/final/…) for "
+                        "architecture A, or the current v2 for architecture B (the tool adapts the derived-column "
+                        "splice + the LRA split to whichever the table carries)")
     p.add_argument("--out", required=True, help="where to write the injected v1 table")
     args = p.parse_args()
     here = Path(__file__).resolve().parent.parent
