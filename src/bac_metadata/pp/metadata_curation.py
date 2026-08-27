@@ -645,6 +645,9 @@ def categorise_region(df, verbose=True):
             ),
             "replace": "Oceania",
         },
+        # --- agentic re-curation tail (2026-08-27): countries/regions the agent introduced not covered above ---
+        {"search": "Saint Kitts|Nevis|Kitts", "replace": "Central & S. America"},
+        {"search": "Middle East", "replace": "M. East, Central Asia"},
     ]
 
     df, _ = search_and_replace(
@@ -1436,6 +1439,12 @@ def categorise_host(df, verbose=True):
         {"search": "insect|cricket|fly|worm|wasp|bee|spider|snail|cockroach|butterfly|mosquito", "replace": "insect"},
         {"search": "banana|salad|lettuce|carrot|brassica|sweet potato|onion|beet|bean|pepper|parsley|cucumber|eggplant|tannia|radish|dioscorea|ginger|helianthus|soil|banana|tree|plant|Plantain|Mulberry", "replace": "vegetable, plant or soil"},
         {"search": "meat|food|egg|fish|milk|Milk|dairy", "replace": "meat products"},
+        # --- agentic re-curation tail (2026-08-27): host organisms the agent introduced (Latin names /
+        # model organisms / environmental surfaces) that the rules above don't cover. ---
+        {"search": "Galleria|mellonella|Caenorhabditis|elegans", "replace": "insect"},
+        {"search": "Necrosyrtes|Larus|vulture", "replace": "wild birds"},
+        {"search": "Phoca|Fish|carp|seal", "replace": "wild animals"},
+        {"search": "sink|Space Station|Closet", "replace": "clinical environment or surface"},
         {"search": "not available|Not available|Laboratory Derived|Laboratory|Lab|laboratory|Biofilm|biofilm|germ", "replace": pd.NA},
     ]
 
@@ -2374,6 +2383,22 @@ def categorise_isolation_source(df, verbose=True):
             "search": "lab culture",
             "replace": "lab, hospital or facility (unhelpful)",
         },
+        # --- agentic re-curation tail (2026-08-27): paper abbreviations / body-site codes the agent
+        # introduced that the rules above don't cover. Appended last so they only catch the passthrough. ---
+        {"search": "UTI|URN", "replace": "urine"},
+        {"search": "UCATH", "replace": "urinary catheter"},
+        {"search": "SPUT|SPUTIN|HAP|VAP", "replace": "lower respiratory, endotracheal"},
+        {"search": "CRBSI|CRBISI|BLUD|C LINE", "replace": "blood"},
+        {"search": "cIAI|CHOLANGITIS|CHOLANGITIE|Cholangitis", "replace": "invasive gut & organs"},
+        {"search": "EMPYEMA", "replace": "body fluid (ascites / peritoneal / pleural)"},
+        {"search": ("SSTI|WUND|WS|Eschar|Fragment|SEPTIC ARTHRITI|RT TRUNK|THIGH R|RIGHT THIGH|LT LOWER LIMB"),
+         "replace": "wound & pus, abscess, surgical drain, body tissue, bone, biopsy"},
+        {"search": "SCROTAL|Super", "replace": "skin swabs (skin, groin, vaginal, genital, eye, ear)"},
+        {"search": "Swab Retal|bovine rumen", "replace": "faeces & rectal swabs"},
+        {"search": "International Space Station|Closet Equipment", "replace": "clinical environment or surface"},
+        {"search": "microbiological culture|Bacterial culture|Biofilm culture|new culture swab|culture|lab",
+         "replace": "lab, hospital or facility (unhelpful)"},
+        {"search": "NO SOURCE", "replace": pd.NA},
     ]
 
     df, _ = search_and_replace(
