@@ -236,6 +236,27 @@ recomputed and discarded each run (the smaller, <100-sample uncurated studies ar
 
 ## 5. Forward plan
 
+> **m_abs REDO — status 2026-08-28 (checkpoint cadence; full plan + tracker in the approved redo plan).**
+> Bringing *M. abscessus* to the finished state Klebsiella reached, run in gated checkpoints
+> (CP‑1 rubric · CP‑2 run · CP‑3 manual work · CP‑4 wrap). **CP‑1 DONE:**
+> - **M0** (`4736bb6`) — ported the six Klebsiella rubric-prose refinements into
+>   `applications/m_abs/attributes.yaml` (whole_project_rule reconciled so cf_status keeps its own stricter
+>   95%-of-known rule; study_level `sizing_first` + `grading_basis`; study_type routine-culture guard; country
+>   funding/affiliation guard; isolation_source be-specific/lab-is-not-a-source prose). **Finalised the AST
+>   *detection* grades** (`reports_AST` / `per_sample_AST`) on a 7-drug backbone (`ast_panel.ast_backbone_drugs`);
+>   **per-drug paper extraction DEFERRED** — the panel is parked under `ast_panel.drugs_deferred` so the engine
+>   reads no `drugs:` key and mines no per-isolate AST this round ("scope, don't extract"). Editing graded prose
+>   intentionally busts the m_abs grade cache → full re-grade at CP‑2.
+> - **M1** (`37845b3`) — made the eval/summary tooling (`wrapup_report` / `build_per_study_table` /
+>   `completeness_by_split`) **generic & spec-driven** via a non-graded `report:` block on each spec +
+>   `evaluation/report_config.py` (fields/display/study-level columns/size bands/species all spec-driven; gold
+>   **optional**; `--app`). **Kp output byte-identical** (verified on the real Kp artifacts) and the Kp grade
+>   prompt + schema unchanged (the `report:` block does not bust the grade cache). 10 new unit tests; ruff clean.
+> - **Next = CP‑2:** David re-runs the driver (no `--carry-forward`) → regenerate the missing-papers worklist +
+>   re-grade under the new rubric; attach fetched PDFs; `verify_pipeline_triggers`; then a new read-only
+>   `ast_availability_report` (which papers report AST for the 7 backbone drugs, and how many). Item 2 below is
+>   the **superseded** first-pass description, kept for its per-sample-anchor guidance.
+
 The benchmarked folds + the whole >100-sample tail are done and accumulated (§4b, §4c). Active work, in order:
 
 1. **Collection-date rule for the downstream cohort.** Bring the `attributes.yaml` wording into line with the
