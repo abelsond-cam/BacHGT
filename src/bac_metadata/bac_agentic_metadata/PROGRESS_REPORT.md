@@ -252,10 +252,27 @@ recomputed and discarded each run (the smaller, <100-sample uncurated studies ar
 >   `evaluation/report_config.py` (fields/display/study-level columns/size bands/species all spec-driven; gold
 >   **optional**; `--app`). **Kp output byte-identical** (verified on the real Kp artifacts) and the Kp grade
 >   prompt + schema unchanged (the `report:` block does not bust the grade cache). 10 new unit tests; ruff clean.
-> - **Next = CP‑2:** David re-runs the driver (no `--carry-forward`) → regenerate the missing-papers worklist +
->   re-grade under the new rubric; attach fetched PDFs; `verify_pipeline_triggers`; then a new read-only
->   `ast_availability_report` (which papers report AST for the 7 backbone drugs, and how many). Item 2 below is
->   the **superseded** first-pass description, kept for its per-sample-anchor guidance.
+> **CP‑2 DONE** (outputs `509fbef`; AST tool `289d1ec`):
+> - **Corrected the plan's premise** — `mabs_all` is the **93 residual (smallest) studies**, not the whole
+>   cohort; the 40 biggest sat in `mabs_top20`+`mabs_21_40` (marked `done` in `fold_splits/project_splits.tsv`,
+>   ~95% of samples) on **old-rubric** July grades. Re-graded the **whole cohort per-tag** under the new rubric
+>   by replaying each tranche's saved `selection/` (splits mode): top20 + 21_40 + mabs_all =
+>   **133 studies / 6,455 samples**.
+> - **Gate** (`verify_pipeline_triggers`): mabs_top20 + mabs_21_40 **PASS**; mabs_all's **INV3 conservation FAIL
+>   verified benign** — the per-tag gate re-checks the cohort-wide escalation set against one sub-cohort tag, so
+>   the escalations for top20 studies read as "absent" from mabs_all's 93-study final (traced: the flagged
+>   samples belong to PRJNA778024/PRJNA882917 in top20 and are cf_status-filled there). Resolves at M3 accumulate.
+> - **Completeness base ENA → agent** (all 5 fields gain): country 77→85 · collection_date 70→74 ·
+>   isolation_source 62→87 · host 76→97 · **cf_status 24→53 %**. cf_status 3,434 vs the July master's 4,713 = the
+>   **12 cf_status escalations pending the M3 walk** (9 in top20, 3 in 21_40), **not loss**.
+> - **AST scoping** (new read-only `evaluation/ast_availability_report.py`, spec-driven, no per-drug parse):
+>   **39 studies report AST, 27 retrievable/possible, 10 retrievable**; amikacin/clarithromycin lead. Per-drug
+>   *paper* go/no-go is David's — deferred, non-blocking (collaborator-table AST still lands at M4).
+> - m_abs data tree now **git-tracked** (Kp-equivalent set; `curated/.gitignore` mirrors Kp).
+> - **Next = CP‑3:** David walks the regenerated escalation queues per tag (`escalate --interactive`) → apply →
+>   `accumulate --tags mabs_top20,mabs_21_40,mabs_all` → whole-cohort master + conservation verify (clears the
+>   benign per-tag INV3); then M4 collaborator-table integration. Item 2 below is the **superseded** first-pass
+>   description, kept for its per-sample-anchor guidance.
 
 The benchmarked folds + the whole >100-sample tail are done and accumulated (§4b, §4c). Active work, in order:
 
