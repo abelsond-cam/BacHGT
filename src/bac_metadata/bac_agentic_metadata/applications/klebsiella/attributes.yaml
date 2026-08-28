@@ -419,3 +419,25 @@ cohort_flags:
       Fires when one or more papers describing the cohort were found, but the detailed full text
       cannot be accessed because it is paywalled (no open full text). Flags the accession for
       manual retrieval of the paper.
+
+# REPORT / PRESENTATION CONFIG — consumed ONLY by the read-only evaluation/summary tools (wrapup_report /
+# build_per_study_table / completeness_by_split) to keep them app-agnostic. NON-GRADED: this block is not
+# rendered into the grading prompt, so editing it never busts the grade cache (verified: the rendered rubric is
+# byte-identical with and without it). The values below mirror the tools' former Klebsiella hardcodes, so the
+# reports reproduce byte-for-byte after the generalisation. See evaluation/report_config.py for the accessors.
+report:
+  species_label: Klebsiella
+  wrapup_title: "Klebsiella agentic metadata — wrap-up report"
+  wrapup_out: Kp_AGENTIC_METADATA_WRAPUP_REPORT.md
+  methods_file: report_methods.md                # applications/klebsiella/report_methods.md (verbatim §0 prose)
+  completeness_title: "Klebsiella agentic curation — completeness by split (agent vs manual gold)"
+  display_fields: [host, country, collection_date, isolation_source]
+  study_level_columns: [study_setting, amr_study]
+  fold_splits: [train, test, val]
+  synthetic_collections: [NCTC_collection, Refseq_collection]
+  size_bands:
+    - {label: tail100, lo: 100, hi: null}
+    - {label: tail50_99, lo: 50, hi: 99}
+    - {label: tail25_49, lo: 25, hi: 49}
+    - {label: tail10_24, lo: 10, hi: 24}
+    - {label: "other_uncovered(<10)", lo: 1, hi: 9}

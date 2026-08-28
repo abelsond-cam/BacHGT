@@ -564,3 +564,19 @@ cohort_flags:
     definition: |-
       Fires when one or more papers describing the cohort were found, but the detailed full text cannot be
       accessed because it is paywalled (no open full text). Flags the accession for manual retrieval.
+
+# REPORT / PRESENTATION CONFIG — consumed ONLY by the read-only evaluation/summary tools (wrapup_report /
+# build_per_study_table / completeness_by_split), to keep them app-agnostic. NON-GRADED: not rendered into the
+# grading prompt, so it never busts the grade cache. m_abs has NO manual gold and a single whole-cohort run
+# (tag mabs_all), so no size_bands / synthetic_collections are declared → completeness_by_split degrades to
+# raw → agent, and the wrap-up §5 (accuracy vs manual) is replaced by a "no manual gold" note. cf_status (the
+# headline phenotype) leads the field display order. methods_file is added in M5 with the m_abs methods prose
+# (until then the wrap-up emits a generic methods stub). See evaluation/report_config.py for the accessors.
+report:
+  species_label: M. abscessus
+  wrapup_title: "M. abscessus agentic metadata — wrap-up report"
+  wrapup_out: Mabs_AGENTIC_METADATA_WRAPUP_REPORT.md
+  completeness_title_goldless: "M. abscessus agentic curation — completeness by split (raw → agent)"
+  display_fields: [cf_status, country, collection_date, isolation_source, host]
+  study_level_columns: [reports_AST, per_sample_AST]
+  fold_splits: [mabs_all]

@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from bac_metadata.bac_agentic_metadata.evaluation import wrapup_report as w
 
+_FIELDS = ("country", "collection_date", "isolation_source", "host")  # parse_summary is now app-agnostic (spec-driven)
+
 _SUMMARY = """# Filled metadata table — train (tag `train`)
 
 Studies: **109**; samples: **6756**.
@@ -28,7 +30,7 @@ Studies: **109**; samples: **6756**.
 def test_parse_summary_maps_fields_and_strips_bold(tmp_path):
     p = tmp_path / "filled_metadata_summary.md"
     p.write_text(_SUMMARY)
-    got = w.parse_summary(p)
+    got = w.parse_summary(p, _FIELDS)
     assert set(got) == {"country", "host"}                      # the study-level rows are ignored
     assert got["country"]["base"] == 0.620 and got["country"]["filled"] == 0.934  # bold stripped
     assert got["country"]["agent"] == 10740 and got["host"]["agent"] == 16510
@@ -36,11 +38,12 @@ def test_parse_summary_maps_fields_and_strips_bold(tmp_path):
 
 
 def test_parse_summary_missing_file_is_empty(tmp_path):
-    assert w.parse_summary(tmp_path / "nope.md") == {}
+    assert w.parse_summary(tmp_path / "nope.md", _FIELDS) == {}
 
 
 def test_reconciliation_sum_matches(tmp_path):
     # two tranches whose agent-fills sum to a master total → the report's Δ must be 0
-    a = tmp_path / "a.md"; a.write_text(_SUMMARY.replace("10740", "100").replace("16510", "200"))
-    got = w.parse_summary(a)
+    a = tmp_path / "a.md"
+    a.write_text(_SUMMARY.replace("10740", "100").replace("16510", "200"))
+    got = w.parse_summary(a, _FIELDS)
     assert got["country"]["agent"] == 100 and got["host"]["agent"] == 200

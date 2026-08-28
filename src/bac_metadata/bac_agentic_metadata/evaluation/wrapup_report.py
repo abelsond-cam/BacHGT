@@ -1,21 +1,18 @@
-r"""Consolidated Klebsiella wrap-up report — every headline figure reconciled to its per-tranche source.
+r"""Consolidated agentic-metadata wrap-up report — every headline figure reconciled to its per-tranche source.
 
-Read-only, deterministic, no LLM. Reconciles per-tranche fill summaries against the accumulated master (the
-numbers have "fallen down too many times", so Σ per-tranche agent-fills MUST equal the master to the cell), then
-reports: papers reviewed · experimental-evolution studies (count + tranche breakdown + samples) · §4 per-sample
-completeness **raw ENA → agent → v2 gold** on the same-sample cohort (from ``completeness_by_split`` — proves the
-agent matches-or-beats v2 coverage, so nothing was dropped in accumulation) · §5a agent-vs-manual accuracy
-(paper-finding + grading, train/test) · §5b per-sample **blank-fill** correctness vs v2 gold (the value-add) · §5c
-the gated **overwrites** of existing ENA values, surfaced for spot-review (scored against the parsed-ENA gold they
-replace, so low by construction — never folded into an accuracy). Opens with a **Methods** section (§0) so the
-report stands alone as a reviewable/publishable reference. Writes ``data/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md``.
+Read-only, deterministic, no LLM, **app-agnostic** (driven by the application's ``attributes.yaml`` via
+``report_config``). Reconciles per-tranche fill summaries against the accumulated master (Σ per-tranche
+agent-fills MUST equal the master to the cell), then reports: papers reviewed · experimental-evolution studies
+· §4 per-sample completeness **raw ENA → agent [→ v2 gold]** per split (from ``completeness_by_split``) · and,
+**when a manual gold exists**, §5a agent-vs-manual accuracy, §5b per-sample blank-fill correctness, §5c gated
+overwrites. Opens with a **Methods** section (§0) taken verbatim from the app's ``report.methods_file`` so the
+report stands alone. Writes ``<data-dir>/<report.wrapup_out>``.
 
-Prereqs (regenerate first): ``evaluation.completeness_by_split`` (writes the §4 scorecard TSV) and
-``evaluation.validate_backfill_values`` per tranche (writes the §5b/§5c per_sample value reports with the
-blank-fill/overwrite split columns).
+Applications without a manual gold (e.g. *M. abscessus*) degrade gracefully: §4 shows raw→agent only and §5 is
+replaced by a short "no manual gold" note.
 
-    uv run python -m bac_metadata.bac_agentic_metadata.evaluation.wrapup_report \
-        --tags train,test,tail100,tail50_99,tail25_49,tail10_24,sub10
+    uv run python -m …evaluation.wrapup_report                                  # klebsiella (gold)
+    uv run python -m …evaluation.wrapup_report --app m_abs --tags mabs_all      # m_abs (goldless)
 """
 
 from __future__ import annotations
@@ -27,19 +24,20 @@ from pathlib import Path
 import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
+from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
+from bac_metadata.bac_agentic_metadata.evaluation import report_config as rc
 
-FIELDS = ("country", "collection_date", "isolation_source", "host")
 _SUMMARY_COLS = ("base", "filled", "agent", "new", "overrides", "per_sample", "escalation", "whole_field")
 
 
-def parse_summary(path: Path) -> dict[str, dict[str, float]]:
+def parse_summary(path: Path, fields: tuple[str, ...]) -> dict[str, dict[str, float]]:
     """Parse a ``filled_metadata_summary.md`` per-field table → {field: {base, filled, agent, …}}."""
     out: dict[str, dict[str, float]] = {}
     if not path.exists():
         return out
     for line in path.read_text().splitlines():
         cells = [c.strip().replace("**", "") for c in line.strip().split("|")[1:-1]]
-        if len(cells) >= 9 and cells[0] in FIELDS:
+        if len(cells) >= 9 and cells[0] in fields:
             try:
                 vals = [float(c) for c in cells[1:9]]
             except ValueError:
@@ -80,9 +78,9 @@ def _evo(rp: RunPaths) -> tuple[int, int]:
 def _value_split(rp: RunPaths) -> dict[str, dict[str, float]]:
     """Read the per_sample value report → {field: {blank_n, blank_acc, over_n, over_gold, over_correct}}.
 
-    ``blank_*`` = accuracy of fills of a **blank** ENA cell (the positive value-add, scored where v2 has a
-    value); ``over_*`` = the gated overwrites of a real ENA value (scored against the parsed-ENA gold, so
-    low by construction — surfaced separately in §5c, not folded into an accuracy).
+    ``blank_*`` = accuracy of fills of a **blank** ENA cell (the value-add, scored where the gold has a value);
+    ``over_*`` = the gated overwrites of a real ENA value (scored against the parsed-ENA gold, low by
+    construction — surfaced separately in §5c). Empty when the report is absent (a goldless application).
     """
     path = rp.scorecard_dir / "per_sample_value_report.tsv"
     if not path.exists():
@@ -102,7 +100,7 @@ def _value_split(rp: RunPaths) -> dict[str, dict[str, float]]:
 
 
 def _completeness(data_dir: Path) -> pd.DataFrame | None:
-    """Read the per-split raw/agent/v2 completeness scorecard (from completeness_by_split), or None."""
+    """Read the per-split raw/agent[/gold] completeness scorecard (from completeness_by_split), or None."""
     path = data_dir / "scorecard" / "final_completeness_raw_agent_gold.tsv"
     return pd.read_csv(path, sep="\t") if path.exists() else None
 
@@ -133,75 +131,42 @@ def _pct(x: float) -> str:
     return f"{x:.3f}" if x == x else "—"  # NaN → em-dash
 
 
-def _methods_section() -> list[str]:
-    """Static Methods & provenance prose (templated, so the report regenerates deterministically)."""
+def _read_methods(methods_path: Path | None, spec: AttributeSpec) -> list[str]:
+    r"""The §0 Methods lines: verbatim from the app's ``report.methods_file`` if present, else a generic stub.
+
+    The per-app methods prose is presentation, not computation, so it lives in a file
+    (``applications/<app>/<report.methods_file>``) rather than the code — keeping the generator app-agnostic and
+    reproducing the file byte-for-byte (``file.split("\n")`` inverts the ``"\n".join(...)`` that wrote it).
+    """
+    if methods_path is not None and methods_path.exists():
+        return methods_path.read_text().split("\n")
+    species = rc.species_label(spec)
     return [
         "## 0. Methods & provenance", "",
-        "**What this is.** An LLM-agent re-curation of ENA study metadata for the *Klebsiella pneumoniae* "
-        "species complex, producing per isolate the four ENA completeness fields (country, collection_date, "
-        "isolation_source, host) plus study-level judgements (study_type, study_setting, amr_study), "
-        "accumulated across size-band tranches into one master table. The engine is species-agnostic and "
-        "data-driven by a rubric (`applications/klebsiella/attributes.yaml`); grading definitions are the "
-        "curator's, not invented by the model.", "",
-        "**Cohort & row key.** The working base table `data/inputs/base_table.csv` (96,291 samples; 90,117 "
-        "match the Klebsiella taxon) is keyed `study_accession` + `sample_accession` (one row per SR "
-        "biosample). Studies are processed biggest-first across seven tranches (train, test, tail100, "
-        "tail50_99, tail25_49, tail10_24, sub10). RefSeq/NCTC assembly genomes carry no ENA study/paper and "
-        "are out of scope (a separate path).", "",
-        "**Pipeline (one stage per step; `engine/run_full_metadata_agent.py`).** "
-        "*find* — discover the describing paper (EuropePMC/NCBI + web fallback + hand-downloaded PDFs); "
-        "*grade* — an LLM grades each study against the paper on a tiered context budget; "
-        "*per-sample* — extract per-isolate values from in-paper / supplementary tables, anchored to samples "
-        "**by value** (never by column name); "
-        "*backfill* — apply a single whole-project value where a study is uniform (the ≥95%-majority rule); "
-        "*escalation* — surface tight near-misses for a human decision (wide mixes go to per-sample); "
-        "*fill* — assemble the production `filled_metadata` table.", "",
-        "**Human-in-the-loop.** Curators attach paywalled PDFs (`attach_papers`), add per-isolate "
-        "supplementary tables (`local_supplements`), and answer the escalation queue "
-        "(`escalate --interactive`); committed answers are sticky (re-injected from the versioned "
-        "`curated_escalations.tsv` master). Study-level find/grade disagreements are adjudicated and signed "
-        "off (`review_adjudication`).", "",
-        "**Overwrite policy.** Fills only populate BLANK cells, with two sanctioned exceptions: a same-year "
-        "`collection_date` refinement, and a single-hop vague→specific replacement passed by the fidelity "
-        "judge. A `never_overwrite` field is never changed. In the canonical merge onto human curation the "
-        "precedence is **human-curated > agent > ENA**.", "",
-        "**Always-on gates.** Every run is checked by the escalation-conservation gate (no curator answer "
-        "lost across detect→apply→master→fill), the overwrite-radius gate (no recorded value changed beyond "
-        "the sanctioned exceptions), and `verify_pipeline_triggers` (every stage fired; no silent zero-fill); "
-        "`run_health` grades every (study×field) FILLED/ACTIONABLE/BLOCKED/EXHAUSTED.", "",
-        "**How each figure below is derived.**", "",
-        "- **§1 Reconciliation** — Σ per-tranche agent fills (`run_progress/<tag>/fill/"
-        "filled_metadata_summary.md`) vs the accumulated master (`curated/metadata_curated_master_summary.md`); "
-        "must match to the cell.",
-        "- **§2 Papers** — `run_progress/<tag>/find/found_papers.tsv` (studies reviewed, papers found) + "
-        "`grade/study_grades.tsv` (`is_full_text`, `fulltext_source==local_pdf`). *Studies reviewed* counts "
-        "every study whose candidate papers were assessed; *papers found* counts those with a resolved paper.",
-        "- **§3 Experimental-evolution** — `study_type_excluded==True` in the master "
-        "(`curated/metadata_curated_master.tsv`): studies excluded from the analysis cohort.",
-        "- **§4 Completeness** — `evaluation/completeness_by_split.py`: presence (placeholder-stripped) of raw "
-        "ENA (`base_table.csv`) vs agent (master) vs the v2 gold's `*_parsed` columns, on the master∩gold "
-        "cohort → `scorecard/final_completeness_raw_agent_gold.{md,tsv}`.",
-        "- **§5a Accuracy** — `validate_find_papers` / `validate_study_grading` with adjudication → "
-        "`run_progress/<tag>/scorecard/agent_vs_manual.tsv` (train/test only — the gold folds).",
-        "- **§5b/§5c Value correctness** — `evaluation/validate_backfill_values.py`, splitting blank-fills "
-        "(scored vs the v2 gold) from gated overwrites (scored vs the parsed-ENA they replace → low by "
-        "construction, surfaced for spot-review).", "",
+        f"An LLM-agent re-curation of ENA study metadata for *{species}*, producing per isolate the "
+        f"completeness fields ({', '.join(rc.fields(spec))}) plus study-level judgements, accumulated across "
+        "tranches into one master table. The engine is species-agnostic and data-driven by a rubric "
+        f"(`applications/{spec.application}/attributes.yaml`); grading definitions are the curator's, not "
+        "invented by the model.", "",
     ]
 
 
-def build_report(data_dir: Path, tags: list[str]) -> str:
+def build_report(data_dir: Path, tags: list[str], spec: AttributeSpec, methods_path: Path | None = None) -> str:
     """Assemble the full wrap-up markdown from the per-tranche artifacts + accumulated master."""
-    per = {t: parse_summary(RunPaths(data_dir, t).filled_metadata_summary) for t in tags}
-    master = parse_summary(data_dir / "curated" / "metadata_curated_master_summary.md")
-    L: list[str] = ["# Klebsiella agentic metadata — wrap-up report", "",
+    fields = rc.fields(spec)
+    species = rc.species_label(spec)
+    per = {t: parse_summary(RunPaths(data_dir, t).filled_metadata_summary, fields) for t in tags}
+    master = parse_summary(data_dir / "curated" / "metadata_curated_master_summary.md", fields)
+    title = spec.report.get("wrapup_title") or f"{species} agentic metadata — wrap-up report"
+    L: list[str] = [f"# {title}", "",
                     "_Read-only, deterministic; every figure traces to a per-tranche artifact._", ""]
-    L += _methods_section()
+    L += _read_methods(methods_path, spec)
 
     # ── 1. Reconciliation ────────────────────────────────────────────────────────────────────────────
     L += ["## 1. Reconciliation — per-tranche fills vs the accumulated master", "",
           "| field | " + " | ".join(tags) + " | Σ tranches | master | Δ |", "|---|" + "---|" * (len(tags) + 3)]
     recon_ok = True
-    for f in FIELDS:
+    for f in fields:
         sigma = sum(int(per[t].get(f, {}).get("agent", 0)) for t in tags)
         m = int(master.get(f, {}).get("agent", 0))
         recon_ok &= (sigma == m)
@@ -236,13 +201,15 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
     L += ["", f"**{evo_total} studies / {evo_samples} samples** now carry `study_type_excluded=True` for "
           "downstream removal.", ""]
 
-    # ── 4. Completeness: raw ENA → agent → v2 gold, on the same-sample cohort ─────────────────────────
+    # ── 4. Completeness: raw ENA → agent [→ v2 gold], on the same-sample cohort ───────────────────────
     comp = _completeness(data_dir)
-    L += ["## 4. Per-sample completeness — raw ENA → agent → v2 gold", ""]
+    gold_available = comp is not None and f"{fields[0]}_diff" in comp.columns
     if comp is None:
-        L += ["_`scorecard/final_completeness_raw_agent_gold.tsv` missing — regenerate with "
-              "`python -m …evaluation.completeness_by_split --truth <v2 gold>`._", ""]
-    else:
+        L += ["## 4. Per-sample completeness", "",
+              "_`scorecard/final_completeness_raw_agent_gold.tsv` missing — regenerate with "
+              "`python -m …evaluation.completeness_by_split [--truth <gold>]`._", ""]
+    elif gold_available:
+        L += ["## 4. Per-sample completeness — raw ENA → agent → v2 gold", ""]
         cidx = comp.set_index("split")
         n_cohort = int(cidx.loc["TOTAL_excl_Refseq", "n"]) if "TOTAL_excl_Refseq" in cidx.index else 0
         L += ["_On the master∩gold cohort (samples in **both** the agent master and the v2 gold), "
@@ -252,32 +219,61 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
               "| field | raw ENA % | agent % | v2 gold % | agent − raw (fill Δ) | agent − v2 |",
               "|---|--:|--:|--:|--:|--:|"]
         row = cidx.loc["TOTAL_excl_Refseq"] if "TOTAL_excl_Refseq" in cidx.index else None
-        for f in FIELDS:
+        for f in fields:
             if row is None:
                 continue
             raw, ag, man, diff = (float(row[f"{f}_raw"]), float(row[f"{f}_agent"]),
                                   float(row[f"{f}_manual"]), float(row[f"{f}_diff"]))
             L.append(f"| {f} | {raw:.1f} | {ag:.1f} | {man:.1f} | {ag - raw:+.1f} | {diff:+.1f} |")
         L += ["", "### 4b. Agent − v2 gold by split (percentage points; ≥ 0 = match-or-beat v2)", "",
-              "| split | n | " + " | ".join(FIELDS) + " |", "|---|--:|" + "--:|" * len(FIELDS)]
+              "| split | n | " + " | ".join(fields) + " |", "|---|--:|" + "--:|" * len(fields)]
         for sp in cidx.index:
             if sp in ("TOTAL", "TOTAL_excl_Refseq"):
                 continue
             r = cidx.loc[sp]
-            cells = " | ".join(f"{float(r[f'{f}_diff']):+.1f}" for f in FIELDS)
+            cells = " | ".join(f"{float(r[f'{f}_diff']):+.1f}" for f in fields)
             L.append(f"| {sp} | {int(r['n']):,} | {cells} |")
         tr = cidx.loc["TOTAL_excl_Refseq"]
         L.append(f"| **TOTAL_excl_Refseq** | **{int(tr['n']):,}** | "
-                 + " | ".join(f"**{float(tr[f'{f}_diff']):+.1f}**" for f in FIELDS) + " |")
+                 + " | ".join(f"**{float(tr[f'{f}_diff']):+.1f}**" for f in fields) + " |")
         L += ["", "_Agent matches-or-beats v2 on the cohort (proving nothing major was dropped in "
               "accumulation) and adds most on the uncurated tail bands. The one negative, "
               "`Refseq_collection` (RefSeq genomes empty in the ENA base, agent-skipped by design, carried "
               "by v2), is a benchmark-scope carve-out — see `scorecard/final_completeness_raw_agent_gold.md`._"]
+    else:  # goldless — raw → agent only
+        L += ["## 4. Per-sample completeness — raw ENA → agent", ""]
+        cidx = comp.set_index("split")
+        n_cohort = int(cidx.loc["TOTAL", "n"]) if "TOTAL" in cidx.index else 0
+        L += [f"_On the {n_cohort:,}-sample agent master (no manual gold for this application), "
+              "placeholder-stripped uniformly._", "",
+              "### 4a. Cohort — raw ENA % → agent % (agent − raw = the fill Δ)", "",
+              "| field | raw ENA % | agent % | agent − raw |", "|---|--:|--:|--:|"]
+        row = cidx.loc["TOTAL"] if "TOTAL" in cidx.index else None
+        for f in fields:
+            if row is None:
+                continue
+            raw, ag = float(row[f"{f}_raw"]), float(row[f"{f}_agent"])
+            L.append(f"| {f} | {raw:.1f} | {ag:.1f} | {ag - raw:+.1f} |")
+        L += ["", "### 4b. Agent completeness by split (%)", "",
+              "| split | n | " + " | ".join(fields) + " |", "|---|--:|" + "--:|" * len(fields)]
+        for sp in cidx.index:
+            if sp == "TOTAL":
+                continue
+            r = cidx.loc[sp]
+            cells = " | ".join(f"{float(r[f'{f}_agent']):.1f}" for f in fields)
+            L.append(f"| {sp} | {int(r['n']):,} | {cells} |")
 
-    # ── 5. Accuracy vs manual ────────────────────────────────────────────────────────────────────────
+    # ── 5. Accuracy vs manual — only when a manual gold exists ─────────────────────────────────────────
+    if not gold_available:
+        L += ["", "## 5. Accuracy vs manual curation", "",
+              "_No manual gold for this application — accuracy vs manual is not applicable this round. The "
+              "collaborator-table integration (a separate step) supplies the reference values where they "
+              "exist; completeness above is the raw → agent value-add._", ""]
+        return "\n".join(L) + "\n"
+
     L += ["", "## 5. Accuracy vs manual curation", "",
           "### 5a. Paper-finding + grading (adjudicated; gold folds only)", ""]
-    for t in ("train", "test"):
+    for t in rc.fold_splits(spec):
         if t not in tags:
             continue
         acc = _accuracy(RunPaths(data_dir, t))
@@ -291,14 +287,14 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
     L += ["_Residual disagreements the adjudicator did not rule for the agent are in "
           "`diagnostics/adjudication_review_queue.tsv` for curator sign-off._", ""]
 
-    # ── 5b. Per-sample BLANK-FILL correctness (the value-add) vs the v2 gold ───────────────────────────
+    # ── 5b. Per-sample BLANK-FILL correctness (the value-add) vs the gold ───────────────────────────────
     split = {t: _value_split(RunPaths(data_dir, t)) for t in tags}
     L += ["### 5b. Per-sample fill correctness — blank-fills vs the v2 gold", "",
           "_Accuracy on fills of a **blank** ENA cell (the positive value-add), scored only where v2 "
           "carries a value. `n` = with-gold blank fills. Overwrites of existing ENA values are held out "
           "to §5c (they are scored against the very ENA they replace, so they read low by construction)._",
           "", "| field | " + " | ".join(tags) + " |", "|---|" + "---|" * len(tags)]
-    for f in FIELDS:
+    for f in fields:
         cells = []
         for t in tags:
             s = split[t].get(f)
@@ -320,14 +316,15 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
     targets = []  # (tag, top-study) for the low-match tranches — computed, not hard-coded
     for t in tags:
         n_over, top = _overwrite_studies(RunPaths(data_dir, t))
-        gold = sum(split[t].get(f, {}).get("over_gold", 0) for f in FIELDS)
-        corr = sum(split[t].get(f, {}).get("over_correct", 0) for f in FIELDS)
+        gold = sum(split[t].get(f, {}).get("over_gold", 0) for f in fields)
+        corr = sum(split[t].get(f, {}).get("over_correct", 0) for f in fields)
         acc = f"{corr}/{gold} ({corr / gold:.2f})" if gold else "—"
         L.append(f"| {t} | {n_over} | {gold} | {acc} | {', '.join(top) if top else '—'} |")
         if gold >= 20 and (corr / gold) < 0.5 and top:  # high-gold, low-match ⇒ a genuine vague→specific move
             targets.append(f"{t} `{top[0].split(' ')[0]}`")
     tgt = "; ".join(targets) if targets else "the low-`matches v2` rows above"
-    L += ["", "_The v2 gold for these four fields is essentially parsed raw ENA (+ coarse study-level "
+    nfields = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven"}.get(len(fields), str(len(fields)))
+    L += ["", f"_The v2 gold for these {nfields} fields is essentially parsed raw ENA (+ coarse study-level "
           "backfill), not an independent per-sample truth, so 'matches v2' measures agreement with ENA: a "
           "high rate means the overwrite was re-derivable from ENA, a **low** rate means the fill genuinely "
           f"moved the value away from a vague ENA term (the intended vague→specific gain). Spot-review targets "
@@ -338,18 +335,23 @@ def build_report(data_dir: Path, tags: list[str]) -> str:
 
 def main() -> None:
     """Generate the consolidated wrap-up report."""
-    p = argparse.ArgumentParser(description="Consolidated Klebsiella agentic-metadata wrap-up report.")
+    p = argparse.ArgumentParser(description="Consolidated agentic-metadata wrap-up report (app-agnostic).")
     p.add_argument("--app", default="klebsiella")
     p.add_argument("--data-dir", default=None)
+    p.add_argument("--spec", default=None, help="attributes.yaml (default: applications/<app>/attributes.yaml).")
     p.add_argument("--tags", default="train,test,tail100,tail50_99,tail25_49,tail10_24,sub10")
-    p.add_argument("--out", default=None,
-                   help="Output path (default <data-dir>/Kp_AGENTIC_METADATA_WRAPUP_REPORT.md).")
+    p.add_argument("--out", default=None, help="Output path (default <data-dir>/<report.wrapup_out>).")
     args = p.parse_args()
     here = Path(__file__).resolve().parent.parent
-    data_dir = Path(args.data_dir) if args.data_dir else here / "applications" / args.app / "data"
+    app_dir = here / "applications" / args.app
+    data_dir = Path(args.data_dir) if args.data_dir else app_dir / "data"
+    spec = AttributeSpec.from_yaml(args.spec if args.spec else app_dir / "attributes.yaml")
     tags = [t.strip() for t in args.tags.split(",") if t.strip()]
-    md = build_report(data_dir, tags)
-    out = Path(args.out) if args.out else data_dir / "Kp_AGENTIC_METADATA_WRAPUP_REPORT.md"
+    methods_file = spec.report.get("methods_file")
+    methods_path = (app_dir / methods_file) if methods_file else None
+    md = build_report(data_dir, tags, spec, methods_path)
+    out_name = spec.report.get("wrapup_out") or f"{args.app}_AGENTIC_METADATA_WRAPUP_REPORT.md"
+    out = Path(args.out) if args.out else data_dir / out_name
     out.write_text(md)
     print(f"[wrapup] wrote {out}", file=sys.stderr)
 

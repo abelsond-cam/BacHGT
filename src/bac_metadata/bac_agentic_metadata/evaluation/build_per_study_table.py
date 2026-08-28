@@ -1,12 +1,15 @@
 r"""Publication-facing per-study-accession table — one consolidated row per study of what the engine achieved.
 
-Read-only, deterministic. For every curated study: the describing paper link, the number of curated *Klebsiella*
-samples, the study-wide grades (``amr_study`` / ``study_setting`` / ``study_type`` + the exclusion flag), and the
-**pre- and post-fill completeness of each per-sample field** (base ENA vs the accumulated master, placeholder-
-stripped to match the summaries). Joins the same artifacts the wrap-up report reads. Writes
-``data/curated/per_study_accession_table.{tsv,md}`` (PROGRESS_REPORT §5 item 3).
+Read-only, deterministic, **app-agnostic** (driven by the application's ``attributes.yaml`` via
+``report_config``). For every curated study: the describing paper link, the number of curated taxon samples,
+the study-wide grades (the spec's ``report.study_level_columns`` + ``study_type`` + the exclusion flag), and
+the **pre- and post-fill completeness of each per-sample field** (base ENA vs the accumulated master,
+placeholder-stripped to match the summaries). Joins the same artifacts the wrap-up report reads. Writes
+``<data-dir>/per_study_accession_table.{tsv,md}``.
 
-    uv run python -m bac_metadata.bac_agentic_metadata.evaluation.build_per_study_table
+    uv run python -m bac_metadata.bac_agentic_metadata.evaluation.build_per_study_table            # klebsiella
+    uv run python -m bac_metadata.bac_agentic_metadata.evaluation.build_per_study_table \
+        --app m_abs --tags mabs_all
 """
 
 from __future__ import annotations
@@ -19,8 +22,8 @@ import pandas as pd
 
 from bac_metadata.bac_agentic_metadata.engine import backfill
 from bac_metadata.bac_agentic_metadata.engine.run_layout import RunPaths
-
-FIELDS = ("country", "collection_date", "isolation_source", "host")
+from bac_metadata.bac_agentic_metadata.engine.spec import AttributeSpec
+from bac_metadata.bac_agentic_metadata.evaluation import report_config as rc
 
 
 def _paper_links(data_dir: Path, tags: list[str]) -> pd.DataFrame:
@@ -41,44 +44,47 @@ def _paper_links(data_dir: Path, tags: list[str]) -> pd.DataFrame:
         columns=["study_accession", "tag", "paper", "paper_title"])
 
 
-def _per_study_completeness(frame: pd.DataFrame) -> pd.DataFrame:
+def _per_study_completeness(frame: pd.DataFrame, fields: tuple[str, ...]) -> pd.DataFrame:
     """Per-study fraction non-blank (placeholder-stripped) for each field, over the study's samples."""
     out = pd.DataFrame({"study_accession": sorted(frame["study_accession"].unique())}).set_index("study_accession")
-    for f in FIELDS:
+    for f in fields:
         if f in frame.columns:
             present = backfill.strip_placeholders(frame[f]).notna()
             out[f] = present.groupby(frame["study_accession"]).mean()
     return out.reset_index()
 
 
-def _per_study_counts(frame: pd.DataFrame) -> pd.DataFrame:
+def _per_study_counts(frame: pd.DataFrame, fields: tuple[str, ...]) -> pd.DataFrame:
     """Per-study COUNT of non-blank (placeholder-stripped) cells for each field, over the study's samples."""
     out = pd.DataFrame({"study_accession": sorted(frame["study_accession"].unique())}).set_index("study_accession")
-    for f in FIELDS:
+    for f in fields:
         if f in frame.columns:
             present = backfill.strip_placeholders(frame[f]).notna()
             out[f] = present.groupby(frame["study_accession"]).sum()
     return out.reset_index()
 
 
-def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
+def build_table(data_dir: Path, tags: list[str], spec: AttributeSpec) -> pd.DataFrame:
     """Join paper links + grades + study size + base→filled completeness (fractions + counts + delta) per study.
 
     Per field, alongside the base/filled non-blank *fractions*, emits the non-blank *counts* (`_base_n` /
     `_filled_n`) and `_added` = cells the agent filled (filled_n − base_n) — the explicit "addition of data"
-    figure. `ena_total_samples` / `ena_taxon_samples` (the study's total & Klebsiella-taxon ENA records, from
-    the shared sizing table) sit beside `n_samples` (the samples we curated into the master).
+    figure. `ena_total_samples` / `ena_taxon_samples` (the study's total & taxon ENA records, from the shared
+    sizing table) sit beside `n_samples` (the samples we curated into the master). Fields and study-level
+    columns are spec-driven (``report_config``), so the table adapts to each application.
     """
+    fields = rc.fields(spec)
+    slc = rc.study_level_columns(spec)
     curated = data_dir / "curated"
-    keep = ["study_accession", "sample_accession", *FIELDS]
+    keep = ["study_accession", "sample_accession", *fields]
     base = pd.read_csv(data_dir / "inputs" / "base_table.csv", dtype=str, low_memory=False,
                        keep_default_na=False, usecols=lambda c: c in keep).fillna("")
     master = pd.read_csv(curated / "metadata_curated_master.tsv", sep="\t", dtype=str, low_memory=False,
                          usecols=lambda c: c in keep).fillna("")
     n = master.groupby("study_accession").size().rename("n_samples").reset_index()
-    # total study size = the study's total ENA records (all taxa) + its Klebsiella-taxon records — genuinely
-    # larger than our cohort n_samples. Unioned across the shared sizing (folds + big tail) AND each tranche's
-    # per-selection sizing (the sub-10 tail is sized there), so coverage spans the whole cohort.
+    # total study size = the study's total ENA records (all taxa) + its taxon records — genuinely larger than
+    # our cohort n_samples. Unioned across the shared sizing (folds + big tail) AND each tranche's per-selection
+    # sizing (the sub-10 tail is sized there), so coverage spans the whole cohort.
     szcols = ["study_accession", "ena_total_samples", "ena_taxon_samples"]
     sz_sources = [data_dir / "ena_assessment" / "ena_sizing.tsv",
                   *(RunPaths(data_dir, t).selection_dir / "ena_sizing.tsv" for t in tags)]
@@ -86,14 +92,17 @@ def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
     frames = [s[[c for c in szcols if c in s.columns]] for s in frames]
     total = (pd.concat(frames, ignore_index=True).drop_duplicates("study_accession")
              if frames else pd.DataFrame(columns=szcols))
-    base_c = _per_study_completeness(base).rename(columns={f: f"{f}_base" for f in FIELDS})
-    fill_c = _per_study_completeness(master).rename(columns={f: f"{f}_filled" for f in FIELDS})
-    base_n = _per_study_counts(base).rename(columns={f: f"{f}_base_n" for f in FIELDS})
-    fill_n = _per_study_counts(master).rename(columns={f: f"{f}_filled_n" for f in FIELDS})
+    base_c = _per_study_completeness(base, fields).rename(columns={f: f"{f}_base" for f in fields})
+    fill_c = _per_study_completeness(master, fields).rename(columns={f: f"{f}_filled" for f in fields})
+    base_n = _per_study_counts(base, fields).rename(columns={f: f"{f}_base_n" for f in fields})
+    fill_n = _per_study_counts(master, fields).rename(columns={f: f"{f}_filled_n" for f in fields})
     grades = pd.read_csv(curated / "curated_grades.tsv", sep="\t", dtype=str).fillna("")
+    # study-level grade columns: study_type + the exclusion flag are always shown; the graded judgements are
+    # whatever the spec's report block surfaces (Kp: study_setting/amr_study; m_abs: reports_AST/per_sample_AST),
+    # each stored as `<attr>__value` in curated_grades.
     gcols = {"study_accession": "study_accession", "study_type": "study_type",
-             "study_type_excluded": "study_type_excluded", "study_setting__value": "study_setting",
-             "amr_study__value": "amr_study"}
+             "study_type_excluded": "study_type_excluded"}
+    gcols.update({f"{c}__value": c for c in slc})
     g = grades[[c for c in gcols if c in grades.columns]].rename(columns=gcols)
 
     n = n[n["study_accession"].str.strip() != ""]  # drop blank / collection pseudo-studies handled below
@@ -103,33 +112,38 @@ def build_table(data_dir: Path, tags: list[str]) -> pd.DataFrame:
          .merge(base_c, on="study_accession", how="left").merge(fill_c, on="study_accession", how="left")
          .merge(base_n, on="study_accession", how="left").merge(fill_n, on="study_accession", how="left"))
     # per-field "cells the agent added" = filled non-blank count − base non-blank count (fills only add → ≥ 0)
-    for f in FIELDS:
+    for f in fields:
         added = t[f"{f}_filled_n"].fillna(0).astype(int) - t[f"{f}_base_n"].fillna(0).astype(int)
         t[f"{f}_added"] = added.clip(lower=0)
     t = t.fillna("")
     # order columns: identity → paper → grades → per-field (fractions, counts, added)
-    lead = ["study_accession", "tag", "ena_total_samples", "ena_taxon_samples", "n_samples", "paper", "paper_title",
-            "study_type", "study_type_excluded", "study_setting", "amr_study"]
-    pairs = [c for f in FIELDS for c in (f"{f}_base", f"{f}_filled", f"{f}_base_n", f"{f}_filled_n", f"{f}_added")]
+    lead = ["study_accession", "tag", "ena_total_samples", "ena_taxon_samples", "n_samples", "paper",
+            "paper_title", "study_type", "study_type_excluded", *slc]
+    pairs = [c for f in fields for c in (f"{f}_base", f"{f}_filled", f"{f}_base_n", f"{f}_filled_n", f"{f}_added")]
     return t[[c for c in lead if c in t.columns] + [c for c in pairs if c in t.columns]]
 
 
 def main() -> None:
     """Build the publishable per-study-accession table."""
-    p = argparse.ArgumentParser(description="Publishable per-study-accession summary table.")
+    p = argparse.ArgumentParser(description="Publishable per-study-accession summary table (app-agnostic).")
     p.add_argument("--app", default="klebsiella")
     p.add_argument("--data-dir", default=None)
+    p.add_argument("--spec", default=None, help="attributes.yaml (default: applications/<app>/attributes.yaml).")
     p.add_argument("--tags", default="train,test,tail100,tail50_99,tail25_49,tail10_24,sub10")
     args = p.parse_args()
     here = Path(__file__).resolve().parent.parent
-    data_dir = Path(args.data_dir) if args.data_dir else here / "applications" / args.app / "data"
+    app_dir = here / "applications" / args.app
+    data_dir = Path(args.data_dir) if args.data_dir else app_dir / "data"
+    spec = AttributeSpec.from_yaml(args.spec if args.spec else app_dir / "attributes.yaml")
     tags = [t.strip() for t in args.tags.split(",") if t.strip()]
-    t = build_table(data_dir, tags)
+    t = build_table(data_dir, tags, spec)
     out = data_dir / "per_study_accession_table.tsv"  # data root (curated/ is gitignored)
     t.to_csv(out, sep="\t", index=False)
     # a small human-readable head for the .md (manual table — no tabulate dependency)
-    show = ["study_accession", "ena_taxon_samples", "n_samples", "study_type_excluded", "amr_study",
-            "host_base_n", "host_filled_n", "host_added"]
+    slc = rc.study_level_columns(spec)
+    d0 = rc.display_fields(spec)[0]
+    show = ["study_accession", "ena_taxon_samples", "n_samples", "study_type_excluded",
+            *([slc[-1]] if slc else []), f"{d0}_base_n", f"{d0}_filled_n", f"{d0}_added"]
     show = [c for c in show if c in t.columns]
     md = ["# Per-study-accession table (head)", "",
           f"{len(t)} studies. Full table: `per_study_accession_table.tsv`.", "",

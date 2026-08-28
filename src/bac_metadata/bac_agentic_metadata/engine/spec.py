@@ -130,6 +130,21 @@ class AttributeSpec:
         """Auto-resolve ``wide_mix_skip`` escalations as skips instead of surfacing them (``escalation.auto_skip_wide_mix``)."""
         return bool((self.raw.get("escalation", {}) or {}).get("auto_skip_wide_mix", False))
 
+    @property
+    def report(self) -> dict:
+        """Presentation/reporting config (top-level ``report:`` block); ``{}`` if absent.
+
+        NON-GRADED: this block is not rendered into the grading prompt (the grade cache is content-addressed on
+        the rendered rubric), so adding or editing it never triggers a re-grade. It is consumed only by the
+        read-only evaluation/summary tools (``wrapup_report`` / ``build_per_study_table`` /
+        ``completeness_by_split``) to keep them app-agnostic — the species label, field display order, which
+        study-level columns to surface, the completeness size bands, and the per-app methods prose all live
+        here rather than being hardcoded in the tools. Absent → the tools fall back to spec-derived defaults
+        (e.g. display order = :attr:`completeness_fields`), so an application that declares no ``report:`` still
+        produces a sensible report.
+        """
+        return dict(self.raw.get("report", {}) or {})
+
     @classmethod
     def from_yaml(cls, path: str | Path) -> AttributeSpec:
         """Parse an ``attributes.yaml`` file into an :class:`AttributeSpec`.
