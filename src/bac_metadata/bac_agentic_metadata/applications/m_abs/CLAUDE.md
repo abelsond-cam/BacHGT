@@ -1,44 +1,75 @@
 # CLAUDE.md — m_abs application
 
-The *M. abscessus* **application site** of the agentic-metadata engine — the first
-non-KPSC cohort, ~7,000 sequences. The engine, architecture, attribute-spec model, ground
-truth and staged build now live one level up; **read those first**:
+The *M. abscessus* **application site** of the agentic-metadata engine — the first non-KPSC cohort
+(whole-cohort run tag `mabs_all`; see [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) for
+current study/sample counts and status). The engine, architecture, attribute-spec model and staged
+build live one level up; **read those first**:
 
 - [`../../CLAUDE.md`](../../CLAUDE.md) — engine orientation.
 - [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) — the single living doc: engine, pipeline,
-  architecture + attribute-spec model, the Klebsiella curation this generalises, results, and the forward plan.
+  attribute-spec model, the Klebsiella application this generalises, results, and forward plan. **State
+  of record lives here** — not in this file.
 
 Wider guidance: [`../../../CLAUDE.md`](../../../CLAUDE.md) (bac_metadata),
-[`../../../../../CLAUDE.md`](../../../../../CLAUDE.md) (monorepo),
-`~/.claude/CLAUDE.md` (global). Tracked as item 1 in
-[`../../../../../ToDo.md`](../../../../../ToDo.md).
+[`../../../../../CLAUDE.md`](../../../../../CLAUDE.md) (monorepo), `~/.claude/CLAUDE.md` (global).
+Tracked as item 1 in [`../../../../../ToDo.md`](../../../../../ToDo.md).
 
-## Plan
+## Plan & state
 
-The full, current M. abscessus build plan lives in [`PROJECT_PLAN.md`](PROJECT_PLAN.md) (phases M0–M5,
-confirmed decisions, the AST panel, risks). **Status: PAUSED** until the Klebsiella application is *finished*
-(David: too complex to run both while still fixing/testing) — the reproduction gate that blocked it is now
-cleared (see [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) §9–10). The Klebsiella finishing plan
-(§10) is done, so M.abs is **now active** for a re-run. M2 (input pre-scan) is done; M3 (`attributes.yaml`) is
-aligned to the current engine (2026-07-17, commit `423f242`): the six post-2026-07-07 Klebsiella rubric changes
-were ported and the key escalation/date/null-token policy decided with David — `gates` block + grade ladder
-`[10k,50k,250k]`; `escalation` block with an **m_abs-specific** triage (pulmonary vs extrapulmonary, human vs
-environmental, CF axis — NOT Klebsiella's blood/carriage priors); **strict 2-yr / never-escalate** dates
-(`collection_date {24,24,2010}`); `auto_skip_wide_mix: false`; expanded isolation_source null_tokens. **Next =
-M4 launch**, first-pass scope **~20 largest studies** (rubric change busts the grading cache → fresh grades).
+The current work is the **m_abs redo** — bringing m_abs to the finished state Klebsiella reached
+(improved rubric, clean re-grade, escalation walk, collaborator-table integration, summary + Artifact),
+run phase-by-phase against a checkpoint cadence (CP‑1 rubric · CP‑2 run · CP‑3 manual work · CP‑4 wrap).
+**Status of record: [`../../PROGRESS_REPORT.md`](../../PROGRESS_REPORT.md) + [`ToDo.md`](../../../../../ToDo.md)** —
+this file does not carry live state. [`PROJECT_PLAN.md`](PROJECT_PLAN.md) is the *earlier* (Jul 2026) build
+plan, superseded by the redo plan; kept only as dated history.
+
+Everything m_abs is **local** (no CSD3). Grading definitions are David's — draft, then he signs off.
 
 ## This application
 
-- **Source data:** `ATB_metadata_Mabs_2025_release.xlsx` (in this folder).
-- **Rubric:** [`attributes.yaml`](attributes.yaml) — the M.abs attribute spec. The gates / escalation / date /
-  null-token policy is decided (2026-07-17, see Plan above). Still carrying `TODO(david)` drafts: the study-level
-  AST definitions (`reports_AST`, `per_sample_AST`) and the `ast_panel` drug list — refine those before trusting
-  AST output.
-- **Headline target:** `host_disease` = **CF vs non-CF** (the species phenotype slot,
-  absent from the structured data), plus aspirational `host_smoking_status`, and the four
-  core completeness fields (country, collection_date, isolation_source, host).
-- **Ground truth:** none curated yet — David hand-grades a seed set before the LLM grading
-  is trusted; until then validation rides on the held-out Klebsiella gold standard.
+- **Source data:** `ATB_metadata_Mabs_2025_release.xlsx` (the ENA/ATB metadata for the cohort).
+- **Collaborator table (M4):** `all_isol2single_isol2cimr2clnc.xlsx` — a lane-keyed clinical table
+  (cf_status, location/year, subspecies, a 7-drug AST panel, phenotype, FEV1/outcome, BAPS/treegubbins)
+  integrated in the M4 combine (blank-fill + adjudicated overwrites + all other columns attached lane-keyed).
+- **Rubric:** [`attributes.yaml`](attributes.yaml) — the M.abs attribute spec (David edits directly). It
+  reuses the shared engine + grade scale; the species-specific slots are the **CF phenotype (`cf_status`)**
+  and the **AST** work. Curation targets the five per-sample completeness fields
+  (country, collection_date, isolation_source, host, **cf_status**).
+- **Ground truth:** none curated for M.abs — validation rides on the held-out Klebsiella gold; David
+  hand-checks a seed set before trusting M.abs grading.
 
-> **Do not invent grading criteria.** Ask David for the grading definitions and any
-> hand-graded M.abs seed set before building Stage 2.
+## Rubric decisions of record (in `attributes.yaml`)
+
+- **cf_status is the headline phenotype** — `never_overwrite: [cf_status]` (blank-fills only; a recorded
+  CF/non-CF value is never changed). Its whole-project rule is the stricter one (95% of samples with a
+  *known* status + non-CF-by-absence + immune-status guard), NOT the generic categorical rule.
+- **AST = scope, don't extract (David, 2026-08-28).** Detection grades `reports_AST` / `per_sample_AST`
+  are FINALISED; the **7-drug backbone** (`ast_panel.ast_backbone_drugs`:
+  cefoxitin, amikacin, tigecycline, clarithromycin, linezolid, imipenem, tobramycin) is the reference set
+  for all AST work. **Per-drug PAPER extraction is DEFERRED** — the full panel is parked under
+  `ast_panel.drugs_deferred`, so the engine reads no `drugs:` key and does not mine per-isolate AST this
+  round (rename it back to `drugs:` to re-enable). The in-hand collaborator-table AST still lands via M4.
+- **Six Klebsiella rubric-prose refinements ported (2026-08-28):** whole_project_rule, study_level
+  sizing_first + grading_basis, the study_type "routine lab culturing is NOT experimental_evolution" guard,
+  the country funding/affiliation guard, and the isolation_source be-SPECIFIC / lab-is-not-a-source prose.
+- **m_abs-specific policy (unchanged):** the `gates` block + grade ladder `[10k,50k,250k]`; the m_abs
+  `escalation` triage (pulmonary vs extrapulmonary, human vs environmental, CF axis — NOT Klebsiella's
+  blood/carriage priors); **strict 2-yr / never-escalate** dates (`collection_date {24,24,2010}`);
+  `auto_skip_wide_mix: false`; host-not-species/host-not-lab; `sample_identifier_columns` (incl.
+  strain / lane / library_name — needed for per-isolate table anchoring).
+
+## Running
+
+Use the thin driver wrapper (injects the m_abs app paths — don't call the engine driver directly):
+
+```bash
+bash applications/m_abs/run_m_abs.sh <driver args>   # e.g. --min-study-size 1 --tag mabs_all --web-fallback
+```
+
+Editing any graded prose in `attributes.yaml` busts the content-addressed grade cache → a **full re-grade**
+(intended). Re-run a already-accumulated band **without** `--carry-forward`. Curator loop is the shared
+engine CLI (`engine.cli.attach_papers` → `escalate --interactive|--apply` → `run_health`); the exact redo
+command sequence + who-runs-what is in the redo plan.
+
+> **Do not invent grading criteria.** Grading definitions are David's — draft changes as a reviewable diff
+> and get sign-off before running (a rubric edit forces a re-grade of the whole cohort).
