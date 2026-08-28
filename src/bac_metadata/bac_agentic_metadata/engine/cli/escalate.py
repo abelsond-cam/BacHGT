@@ -4,9 +4,11 @@ Species-agnostic. The pipeline driver (``engine.run_full_metadata_agent``) *dete
 pass, writing ``<data-dir>/study_lv_attributes/escalation/decisions_needed_<tag>.tsv`` (empty answer
 columns) and re-applying any answers already filled. This CLI is the attended half of that loop:
 
-* ``--interactive`` — walk the *pending* decisions at the prompt (Enter accepts the suggested value, ``s``
-  records a curator skip, Ctrl-C stops). Already-resolved rows (answered, or a reject/skip note) are
-  preserved untouched, so a partially-answered queue resumes safely. Writes answers back into the queue.
+* ``--interactive`` — walk the *pending* decisions at the prompt. Enter accepts the suggested value; where
+  there is no suggestion (``(none)``) Enter records that as an explicit resolved "none" decision (so an
+  "accept everything" walk resolves rows instead of silently leaving them pending); ``s`` records a curator
+  skip; Ctrl-C stops. Already-resolved rows (answered, or a reject/skip note) are preserved untouched, so a
+  partially-answered queue resumes safely. Writes answers back into the queue.
 * ``--apply`` — read the filled queue and apply the answers as whole-field fills through the engine backfill
   path (:func:`engine.stages.escalate_apply`), writing ``escalation_applied_<tag>.tsv``
   (``method="curator_escalation"``), then rebuild the final table over the full fold and run the conservation
@@ -66,7 +68,8 @@ def _interactive(frame: pd.DataFrame, output: Path) -> None:
         print("All escalations already resolved — nothing to walk.", file=sys.stderr)
         frame.to_csv(output, sep="\t", index=False)  # persist any auto-skip notes applied before the walk
         return
-    print(f"\n{len(pending)} decision(s) — Enter accepts the suggested value, 's' skips, Ctrl-C stops.\n")
+    print(f"\n{len(pending)} decision(s) — Enter accepts the suggested value (or records 'none' where there is "
+          f"none), 's' skips, Ctrl-C stops.\n")
     for pos, (idx, r) in enumerate(pending.iterrows(), start=1):
         print("=" * 90)
         print(f"[{pos}/{len(pending)}] {r['study_accession']} · {r['field']} · gap {r['gap_samples']} samples "
@@ -79,19 +82,27 @@ def _interactive(frame: pd.DataFrame, output: Path) -> None:
                   f"confirm a country or accept the region)")
         print(f"  SUGGESTED    : {r['suggested_value'] or '(none)'}")
         try:
-            ans = input("  your value [Enter=suggested, s=skip]: ").strip()
+            ans = input("  your value [Enter=accept suggested/'none', s=skip, or type a value]: ").strip()
         except EOFError:
             print("\n(no interactive input available — stopping)", file=sys.stderr)
             break
-        if ans.lower() == "s":
-            # A skip is a DECISION ("no single whole-field value applies"), not "undecided" — record it so
-            # run-health treats the cell as resolved (curator-rejected), never a perpetual pending ACTIONABLE.
-            frame.at[idx, "answer_note"] = "curator skip: no single whole-field value (genuinely wide / undeterminable)"
+        suggested = str(r["suggested_value"]).strip()
+        if ans.lower() == "s" or (not ans and not suggested):
+            # A skip — or an Enter that ACCEPTS the proposed '(none)' — is a DECISION ("no single whole-field
+            # value applies"), never "undecided": recorded so run-health/accumulate treat the cell as
+            # curator-resolved, not a perpetual pending ACTIONABLE. Enter on a blank suggestion previously left
+            # the row silently pending — the bug that let a whole "accept everything" walk record nothing.
+            frame.at[idx, "answer_note"] = (
+                "curator skip: no single whole-field value (genuinely wide / undeterminable)"
+                if ans.lower() == "s"
+                else "curator skip: accepted proposed 'none' via Enter (no whole-field value)")
             continue
-        frame.at[idx, "answer"] = ans or r["suggested_value"]
+        frame.at[idx, "answer"] = ans or suggested
     frame.to_csv(output, sep="\t", index=False)
-    filled = int((frame["answer"].astype(str).str.strip() != "").sum())
-    print(f"\nWrote {output.name}: {filled}/{len(frame)} answered.", file=sys.stderr)
+    answered = int((frame["answer"].astype(str).str.strip() != "").sum())
+    resolved = int(frame.apply(_resolved, axis=1).sum())
+    print(f"\nWrote {output.name}: {answered} answered, {resolved - answered} recorded as skip/'none', "
+          f"{len(frame) - resolved} still pending.", file=sys.stderr)
 
 
 def main() -> None:
