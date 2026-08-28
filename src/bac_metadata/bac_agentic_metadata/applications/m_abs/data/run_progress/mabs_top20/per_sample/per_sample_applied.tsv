@@ -1,0 +1,936 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJDB10333	SAMD00244567	isolation_source		Respiratory	per_sample	mmc1.docx:Mab14033-1
+PRJDB10333	SAMD00244568	isolation_source		Respiratory	per_sample	mmc1.docx:Mab18036
+PRJDB10333	SAMD00244569	isolation_source		Respiratory	per_sample	mmc1.docx:MabF6
+PRJDB10333	SAMD00244570	isolation_source		Respiratory	per_sample	mmc1.docx:MabJATA1
+PRJDB10333	SAMD00244571	isolation_source		Respiratory	per_sample	mmc1.docx:MabK14
+PRJDB10333	SAMD00244572	isolation_source		Respiratory	per_sample	mmc1.docx:MabK16
+PRJDB10333	SAMD00244573	isolation_source		Respiratory	per_sample	mmc1.docx:MabK30
+PRJDB10333	SAMD00244574	isolation_source		Respiratory	per_sample	mmc1.docx:MabK34
+PRJDB10333	SAMD00244575	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC1
+PRJDB10333	SAMD00244576	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC10
+PRJDB10333	SAMD00244577	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC100
+PRJDB10333	SAMD00244578	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC101
+PRJDB10333	SAMD00244579	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC102
+PRJDB10333	SAMD00244580	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC103
+PRJDB10333	SAMD00244581	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC104
+PRJDB10333	SAMD00244582	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC105
+PRJDB10333	SAMD00244583	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC106
+PRJDB10333	SAMD00244584	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC107
+PRJDB10333	SAMD00244585	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC108
+PRJDB10333	SAMD00244586	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC109
+PRJDB10333	SAMD00244587	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC11
+PRJDB10333	SAMD00244588	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC110
+PRJDB10333	SAMD00244589	isolation_source		Blood	per_sample	mmc1.docx:MabLRC112
+PRJDB10333	SAMD00244590	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC113
+PRJDB10333	SAMD00244591	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC114
+PRJDB10333	SAMD00244592	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC115
+PRJDB10333	SAMD00244593	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC116
+PRJDB10333	SAMD00244594	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC117
+PRJDB10333	SAMD00244595	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC118
+PRJDB10333	SAMD00244596	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC119
+PRJDB10333	SAMD00244597	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC12
+PRJDB10333	SAMD00244598	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC120
+PRJDB10333	SAMD00244599	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC121
+PRJDB10333	SAMD00244600	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC122
+PRJDB10333	SAMD00244601	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC123
+PRJDB10333	SAMD00244602	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC124
+PRJDB10333	SAMD00244603	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC125
+PRJDB10333	SAMD00244604	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC126
+PRJDB10333	SAMD00244605	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC127
+PRJDB10333	SAMD00244606	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC128
+PRJDB10333	SAMD00244607	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC13
+PRJDB10333	SAMD00244608	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC130
+PRJDB10333	SAMD00244609	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC131
+PRJDB10333	SAMD00244610	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC132
+PRJDB10333	SAMD00244611	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC133
+PRJDB10333	SAMD00244612	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC134
+PRJDB10333	SAMD00244613	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC135
+PRJDB10333	SAMD00244614	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC136
+PRJDB10333	SAMD00244615	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC137
+PRJDB10333	SAMD00244616	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC138
+PRJDB10333	SAMD00244617	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC139
+PRJDB10333	SAMD00244618	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC14
+PRJDB10333	SAMD00244619	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC140
+PRJDB10333	SAMD00244620	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC142
+PRJDB10333	SAMD00244621	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC143
+PRJDB10333	SAMD00244622	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC144
+PRJDB10333	SAMD00244623	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC145
+PRJDB10333	SAMD00244624	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC146
+PRJDB10333	SAMD00244625	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC148
+PRJDB10333	SAMD00244626	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC149
+PRJDB10333	SAMD00244627	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC152
+PRJDB10333	SAMD00244628	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC153
+PRJDB10333	SAMD00244629	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC2
+PRJDB10333	SAMD00244630	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC26
+PRJDB10333	SAMD00244631	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC27
+PRJDB10333	SAMD00244632	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC28
+PRJDB10333	SAMD00244633	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC3
+PRJDB10333	SAMD00244634	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC30
+PRJDB10333	SAMD00244635	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC31
+PRJDB10333	SAMD00244636	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC32
+PRJDB10333	SAMD00244637	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC33
+PRJDB10333	SAMD00244638	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC34
+PRJDB10333	SAMD00244639	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC35
+PRJDB10333	SAMD00244640	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC36
+PRJDB10333	SAMD00244641	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC37
+PRJDB10333	SAMD00244642	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC38
+PRJDB10333	SAMD00244643	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC39
+PRJDB10333	SAMD00244644	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC40
+PRJDB10333	SAMD00244645	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC41
+PRJDB10333	SAMD00244646	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC42
+PRJDB10333	SAMD00244647	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC43
+PRJDB10333	SAMD00244648	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC44
+PRJDB10333	SAMD00244649	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC46
+PRJDB10333	SAMD00244650	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC47
+PRJDB10333	SAMD00244651	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC48
+PRJDB10333	SAMD00244652	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC5
+PRJDB10333	SAMD00244653	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC50
+PRJDB10333	SAMD00244654	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC51
+PRJDB10333	SAMD00244655	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC52
+PRJDB10333	SAMD00244656	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC53
+PRJDB10333	SAMD00244657	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC54
+PRJDB10333	SAMD00244658	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC55
+PRJDB10333	SAMD00244659	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC56
+PRJDB10333	SAMD00244660	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC57
+PRJDB10333	SAMD00244661	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC58
+PRJDB10333	SAMD00244662	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC6
+PRJDB10333	SAMD00244663	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC60
+PRJDB10333	SAMD00244664	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC62
+PRJDB10333	SAMD00244665	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC63
+PRJDB10333	SAMD00244666	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC64
+PRJDB10333	SAMD00244667	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC65
+PRJDB10333	SAMD00244668	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC66
+PRJDB10333	SAMD00244669	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC67
+PRJDB10333	SAMD00244670	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC68
+PRJDB10333	SAMD00244671	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC69
+PRJDB10333	SAMD00244672	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC7
+PRJDB10333	SAMD00244673	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC70
+PRJDB10333	SAMD00244674	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC71
+PRJDB10333	SAMD00244675	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC72
+PRJDB10333	SAMD00244676	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC73
+PRJDB10333	SAMD00244677	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC74
+PRJDB10333	SAMD00244678	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC75
+PRJDB10333	SAMD00244679	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC76
+PRJDB10333	SAMD00244680	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC77
+PRJDB10333	SAMD00244681	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC78
+PRJDB10333	SAMD00244682	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC79
+PRJDB10333	SAMD00244683	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC8
+PRJDB10333	SAMD00244684	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC80
+PRJDB10333	SAMD00244685	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRC82
+PRJDB10333	SAMD00244686	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC83
+PRJDB10333	SAMD00244687	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC86
+PRJDB10333	SAMD00244688	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC87
+PRJDB10333	SAMD00244689	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC88
+PRJDB10333	SAMD00244690	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC89
+PRJDB10333	SAMD00244691	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC9
+PRJDB10333	SAMD00244692	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC90
+PRJDB10333	SAMD00244693	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC91
+PRJDB10333	SAMD00244694	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC92
+PRJDB10333	SAMD00244695	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC93
+PRJDB10333	SAMD00244696	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC94
+PRJDB10333	SAMD00244697	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC95
+PRJDB10333	SAMD00244698	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC96
+PRJDB10333	SAMD00244699	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC98
+PRJDB10333	SAMD00244700	isolation_source		Respiratory	per_sample	mmc1.docx:MabLRC99
+PRJDB10333	SAMD00244701	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA1
+PRJDB10333	SAMD00244702	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA10
+PRJDB10333	SAMD00244703	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA11
+PRJDB10333	SAMD00244704	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA12
+PRJDB10333	SAMD00244705	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA13
+PRJDB10333	SAMD00244706	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA14
+PRJDB10333	SAMD00244707	isolation_source		Skin lesion	per_sample	mmc1.docx:MabLRCA2
+PRJDB10333	SAMD00244708	isolation_source		Environment	per_sample	mmc1.docx:MabLRCB1
+PRJDB10333	SAMD00244709	isolation_source		Respiratory	per_sample	mmc1.docx:MabMT10
+PRJDB10333	SAMD00244710	isolation_source		Respiratory	per_sample	mmc1.docx:MabMT11
+PRJDB10333	SAMD00244711	isolation_source		Respiratory	per_sample	mmc1.docx:MabMT19
+PRJDB10333	SAMD00244712	isolation_source		Respiratory	per_sample	mmc1.docx:MabMT37
+PRJDB10333	SAMD00244713	isolation_source		Respiratory	per_sample	mmc1.docx:MabNG
+PRJDB10333	SAMD00244714	isolation_source		Respiratory	per_sample	mmc1.docx:MabYNKW
+PRJDB10566	SAMD00246910	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_041
+PRJDB10566	SAMD00246911	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_042
+PRJDB10566	SAMD00246912	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_043
+PRJDB10566	SAMD00246913	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_044
+PRJDB10566	SAMD00246914	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_045
+PRJDB10566	SAMD00246915	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_046
+PRJDB10566	SAMD00246916	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_047
+PRJDB10566	SAMD00246917	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_048
+PRJDB10566	SAMD00246918	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_049
+PRJDB10566	SAMD00246919	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_050
+PRJDB10566	SAMD00246920	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_051
+PRJDB10566	SAMD00246921	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_052
+PRJDB10566	SAMD00246922	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_053
+PRJDB10566	SAMD00246923	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_054
+PRJDB10566	SAMD00246924	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_055
+PRJDB10566	SAMD00246925	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_056
+PRJDB10566	SAMD00246926	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_057
+PRJDB10566	SAMD00246927	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_058
+PRJDB10566	SAMD00246928	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_059
+PRJDB10566	SAMD00246929	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_060
+PRJDB10566	SAMD00246930	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_061
+PRJDB10566	SAMD00246931	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_062
+PRJDB10566	SAMD00246932	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_063
+PRJDB10566	SAMD00246933	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_064
+PRJDB10566	SAMD00246934	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_065
+PRJDB10566	SAMD00246970	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_102
+PRJDB10566	SAMD00246971	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_103
+PRJDB10566	SAMD00246972	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_104
+PRJDB10566	SAMD00246973	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_105
+PRJDB10566	SAMD00246974	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_106
+PRJDB10566	SAMD00246975	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_107
+PRJDB10566	SAMD00246976	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_108
+PRJDB10566	SAMD00246977	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_109
+PRJDB10566	SAMD00246978	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_110
+PRJDB10566	SAMD00246979	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_111
+PRJDB10566	SAMD00246980	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_112
+PRJDB10566	SAMD00246981	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_113
+PRJDB10566	SAMD00246982	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_114
+PRJDB10566	SAMD00246983	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_115
+PRJDB10566	SAMD00246984	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_116
+PRJDB10566	SAMD00246985	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_117
+PRJDB10566	SAMD00246986	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_118
+PRJDB10566	SAMD00246988	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_120
+PRJDB10566	SAMD00246989	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_121
+PRJDB10566	SAMD00246990	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_122
+PRJDB10566	SAMD00246991	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_123
+PRJDB10566	SAMD00246992	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_124
+PRJDB10566	SAMD00246993	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_125
+PRJDB10566	SAMD00246994	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_126
+PRJDB10566	SAMD00246995	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_127
+PRJDB10566	SAMD00246996	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_128
+PRJDB10566	SAMD00246997	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_129
+PRJDB10566	SAMD00246998	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_130
+PRJDB10566	SAMD00246999	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_131
+PRJDB10566	SAMD00247000	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_132
+PRJDB10566	SAMD00247001	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_133
+PRJDB10566	SAMD00247002	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_134
+PRJDB10566	SAMD00247003	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_135
+PRJDB10566	SAMD00247004	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_136
+PRJDB10566	SAMD00247005	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_137
+PRJDB10566	SAMD00247006	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_138
+PRJDB10566	SAMD00247007	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_139
+PRJDB10566	SAMD00247008	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_140
+PRJDB10566	SAMD00247009	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_141
+PRJDB10566	SAMD00247010	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_142
+PRJDB10566	SAMD00247011	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_143
+PRJDB10566	SAMD00247012	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_144
+PRJDB10566	SAMD00247013	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_145
+PRJDB10566	SAMD00247014	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_146
+PRJDB10566	SAMD00247015	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_147
+PRJDB10566	SAMD00247016	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_148
+PRJDB10566	SAMD00247017	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_149
+PRJDB10566	SAMD00247018	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_150
+PRJDB10566	SAMD00247019	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_151
+PRJDB10566	SAMD00247020	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_152
+PRJDB10566	SAMD00247021	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_153
+PRJDB10566	SAMD00247022	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_154
+PRJDB10566	SAMD00247023	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_155
+PRJDB10566	SAMD00247024	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_156
+PRJDB10566	SAMD00247025	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_157
+PRJDB10566	SAMD00247026	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_158
+PRJDB10566	SAMD00247027	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_159
+PRJDB10566	SAMD00247028	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_160
+PRJDB10566	SAMD00247029	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_161
+PRJDB10566	SAMD00247030	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_162
+PRJDB10566	SAMD00247031	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_163
+PRJDB10566	SAMD00247032	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_164
+PRJDB10566	SAMD00247033	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_165
+PRJDB10566	SAMD00247034	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_166
+PRJDB10566	SAMD00247035	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_167
+PRJDB10566	SAMD00247036	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_168
+PRJDB10566	SAMD00247037	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_169
+PRJDB10566	SAMD00247038	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_170
+PRJDB10566	SAMD00247039	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_171
+PRJDB10566	SAMD00247040	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_172
+PRJDB10566	SAMD00247041	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_173
+PRJDB10566	SAMD00247042	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_174
+PRJDB10566	SAMD00247043	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:JPN_175
+PRJDB10566	SAMD00247044	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_176
+PRJDB10566	SAMD00247045	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_177
+PRJDB10566	SAMD00247047	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_179
+PRJDB10566	SAMD00247048	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_180
+PRJDB10566	SAMD00247049	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_181
+PRJDB10566	SAMD00247050	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_182
+PRJDB10566	SAMD00247051	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_183
+PRJDB10566	SAMD00247052	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_184
+PRJDB10566	SAMD00247053	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_186
+PRJDB10566	SAMD00247054	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:JPN_187
+PRJDB10566	SAMD00247055	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_188
+PRJDB10566	SAMD00247056	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_189
+PRJDB10566	SAMD00247057	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_190
+PRJDB10566	SAMD00247058	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:JPN_191
+PRJDB10566	SAMD00247059	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:JPN_193
+PRJDB10566	SAMD00247060	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:JPN_194
+PRJDB10566	SAMD00247061	collection_date		2012	per_sample	spectrum.00571-22-s002.xlsx:JPN_195
+PRJDB10566	SAMD00247062	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_001
+PRJDB10566	SAMD00247063	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_002
+PRJDB10566	SAMD00247064	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_004
+PRJDB10566	SAMD00247065	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_005
+PRJDB10566	SAMD00247066	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_008
+PRJDB10566	SAMD00247067	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_009
+PRJDB10566	SAMD00247068	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_010
+PRJDB10566	SAMD00247069	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_011
+PRJDB10566	SAMD00247070	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_015
+PRJDB10566	SAMD00247071	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_016
+PRJDB10566	SAMD00247072	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_017
+PRJDB10566	SAMD00247073	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_018
+PRJDB10566	SAMD00247074	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_019
+PRJDB10566	SAMD00247075	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_020
+PRJDB10566	SAMD00247076	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_021
+PRJDB10566	SAMD00247077	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_022
+PRJDB10566	SAMD00247078	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_023
+PRJDB10566	SAMD00247079	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_024
+PRJDB10566	SAMD00247080	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_025
+PRJDB10566	SAMD00247081	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_026
+PRJDB10566	SAMD00247082	collection_date		2013	per_sample	spectrum.00571-22-s002.xlsx:TWN_028
+PRJDB10566	SAMD00247083	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_029
+PRJDB10566	SAMD00247084	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_030
+PRJDB10566	SAMD00247085	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_031
+PRJDB10566	SAMD00247086	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_032
+PRJDB10566	SAMD00247087	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_034
+PRJDB10566	SAMD00247088	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_036
+PRJDB10566	SAMD00247089	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_037
+PRJDB10566	SAMD00247090	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_038
+PRJDB10566	SAMD00247091	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_039
+PRJDB10566	SAMD00247092	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_040
+PRJDB10566	SAMD00247093	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_041
+PRJDB10566	SAMD00247094	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_042
+PRJDB10566	SAMD00247095	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_043
+PRJDB10566	SAMD00247096	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_044
+PRJDB10566	SAMD00247097	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_045
+PRJDB10566	SAMD00247098	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_046
+PRJDB10566	SAMD00247099	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_048
+PRJDB10566	SAMD00247100	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_050
+PRJDB10566	SAMD00247101	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_051
+PRJDB10566	SAMD00247102	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_052
+PRJDB10566	SAMD00247103	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_053
+PRJDB10566	SAMD00247104	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_054
+PRJDB10566	SAMD00247105	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_055
+PRJDB10566	SAMD00247106	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_056
+PRJDB10566	SAMD00247107	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_057
+PRJDB10566	SAMD00247108	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_058
+PRJDB10566	SAMD00247109	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_059
+PRJDB10566	SAMD00247110	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_061
+PRJDB10566	SAMD00247111	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_062
+PRJDB10566	SAMD00247112	collection_date		2014	per_sample	spectrum.00571-22-s002.xlsx:TWN_065
+PRJDB10566	SAMD00247113	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_066
+PRJDB10566	SAMD00247114	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_067
+PRJDB10566	SAMD00247115	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_068
+PRJDB10566	SAMD00247116	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_069
+PRJDB10566	SAMD00247117	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_071
+PRJDB10566	SAMD00247118	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_074
+PRJDB10566	SAMD00247119	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_075
+PRJDB10566	SAMD00247120	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_077
+PRJDB10566	SAMD00247121	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_078
+PRJDB10566	SAMD00247122	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_079
+PRJDB10566	SAMD00247123	collection_date		2015	per_sample	spectrum.00571-22-s002.xlsx:TWN_080
+PRJDB10566	SAMD00247124	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_081
+PRJDB10566	SAMD00247125	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_083
+PRJDB10566	SAMD00247126	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_085
+PRJDB10566	SAMD00247127	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_086
+PRJDB10566	SAMD00247128	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_087
+PRJDB10566	SAMD00247129	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_089
+PRJDB10566	SAMD00247130	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_090
+PRJDB10566	SAMD00247131	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_091
+PRJDB10566	SAMD00247132	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_092
+PRJDB10566	SAMD00247133	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_095
+PRJDB10566	SAMD00247134	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_096
+PRJDB10566	SAMD00247135	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_097
+PRJDB10566	SAMD00247136	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_098
+PRJDB10566	SAMD00247137	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_099
+PRJDB10566	SAMD00247138	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_100
+PRJDB10566	SAMD00247139	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_101
+PRJDB10566	SAMD00247140	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_102
+PRJDB10566	SAMD00247141	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_103
+PRJDB10566	SAMD00247142	collection_date		2016	per_sample	spectrum.00571-22-s002.xlsx:TWN_104
+PRJDB10566	SAMD00247143	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_105
+PRJDB10566	SAMD00247144	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_106
+PRJDB10566	SAMD00247146	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_108
+PRJDB10566	SAMD00247147	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_109
+PRJDB10566	SAMD00247148	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_110
+PRJDB10566	SAMD00247149	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_111
+PRJDB10566	SAMD00247150	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_112
+PRJDB10566	SAMD00247151	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_113
+PRJDB10566	SAMD00247152	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_114
+PRJDB10566	SAMD00247153	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_115
+PRJDB10566	SAMD00247154	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_116
+PRJDB10566	SAMD00247155	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_117
+PRJDB10566	SAMD00247156	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_118
+PRJDB10566	SAMD00247157	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_119
+PRJDB10566	SAMD00247158	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_120
+PRJDB10566	SAMD00247159	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_121
+PRJDB10566	SAMD00247160	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_122
+PRJDB10566	SAMD00247161	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_123
+PRJDB10566	SAMD00247162	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_124
+PRJDB10566	SAMD00247163	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_125
+PRJDB10566	SAMD00247164	collection_date		2017	per_sample	spectrum.00571-22-s002.xlsx:TWN_126
+PRJDB10566	SAMD00246910	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_041
+PRJDB10566	SAMD00246911	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_042
+PRJDB10566	SAMD00246912	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_043
+PRJDB10566	SAMD00246913	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_044
+PRJDB10566	SAMD00246914	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_045
+PRJDB10566	SAMD00246915	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_046
+PRJDB10566	SAMD00246916	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_047
+PRJDB10566	SAMD00246917	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_048
+PRJDB10566	SAMD00246918	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_049
+PRJDB10566	SAMD00246919	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_050
+PRJDB10566	SAMD00246920	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_051
+PRJDB10566	SAMD00246921	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_052
+PRJDB10566	SAMD00246922	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_053
+PRJDB10566	SAMD00246923	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_054
+PRJDB10566	SAMD00246924	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_055
+PRJDB10566	SAMD00246925	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_056
+PRJDB10566	SAMD00246926	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_057
+PRJDB10566	SAMD00246927	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_058
+PRJDB10566	SAMD00246928	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_059
+PRJDB10566	SAMD00246929	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_060
+PRJDB10566	SAMD00246930	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_061
+PRJDB10566	SAMD00246931	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_062
+PRJDB10566	SAMD00246932	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_063
+PRJDB10566	SAMD00246933	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_064
+PRJDB10566	SAMD00246934	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_065
+PRJDB10566	SAMD00246970	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_102
+PRJDB10566	SAMD00246971	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_103
+PRJDB10566	SAMD00246972	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_104
+PRJDB10566	SAMD00246973	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_105
+PRJDB10566	SAMD00246974	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_106
+PRJDB10566	SAMD00246975	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_107
+PRJDB10566	SAMD00246976	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_108
+PRJDB10566	SAMD00246977	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_109
+PRJDB10566	SAMD00246978	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_110
+PRJDB10566	SAMD00246979	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_111
+PRJDB10566	SAMD00246980	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_112
+PRJDB10566	SAMD00246981	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_113
+PRJDB10566	SAMD00246982	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_114
+PRJDB10566	SAMD00246983	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_115
+PRJDB10566	SAMD00246984	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_116
+PRJDB10566	SAMD00246985	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_117
+PRJDB10566	SAMD00246986	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_118
+PRJDB10566	SAMD00246988	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_120
+PRJDB10566	SAMD00246989	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_121
+PRJDB10566	SAMD00246990	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_122
+PRJDB10566	SAMD00246991	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_123
+PRJDB10566	SAMD00246992	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_124
+PRJDB10566	SAMD00246993	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_125
+PRJDB10566	SAMD00246994	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_126
+PRJDB10566	SAMD00246995	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_127
+PRJDB10566	SAMD00246996	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_128
+PRJDB10566	SAMD00246997	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_129
+PRJDB10566	SAMD00246998	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_130
+PRJDB10566	SAMD00246999	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_131
+PRJDB10566	SAMD00247000	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_132
+PRJDB10566	SAMD00247001	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_133
+PRJDB10566	SAMD00247002	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_134
+PRJDB10566	SAMD00247003	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_135
+PRJDB10566	SAMD00247004	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_136
+PRJDB10566	SAMD00247005	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_137
+PRJDB10566	SAMD00247006	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_138
+PRJDB10566	SAMD00247007	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_139
+PRJDB10566	SAMD00247008	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_140
+PRJDB10566	SAMD00247009	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_141
+PRJDB10566	SAMD00247010	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_142
+PRJDB10566	SAMD00247011	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_143
+PRJDB10566	SAMD00247012	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_144
+PRJDB10566	SAMD00247013	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_145
+PRJDB10566	SAMD00247014	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_146
+PRJDB10566	SAMD00247015	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_147
+PRJDB10566	SAMD00247016	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_148
+PRJDB10566	SAMD00247017	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_149
+PRJDB10566	SAMD00247018	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_150
+PRJDB10566	SAMD00247019	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_151
+PRJDB10566	SAMD00247020	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_152
+PRJDB10566	SAMD00247021	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_153
+PRJDB10566	SAMD00247022	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_154
+PRJDB10566	SAMD00247023	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_155
+PRJDB10566	SAMD00247024	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_156
+PRJDB10566	SAMD00247025	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_157
+PRJDB10566	SAMD00247026	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_158
+PRJDB10566	SAMD00247027	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_159
+PRJDB10566	SAMD00247028	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_160
+PRJDB10566	SAMD00247029	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_161
+PRJDB10566	SAMD00247030	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_162
+PRJDB10566	SAMD00247031	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_163
+PRJDB10566	SAMD00247032	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_164
+PRJDB10566	SAMD00247033	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_165
+PRJDB10566	SAMD00247034	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_166
+PRJDB10566	SAMD00247035	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_167
+PRJDB10566	SAMD00247036	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_168
+PRJDB10566	SAMD00247037	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_169
+PRJDB10566	SAMD00247038	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_170
+PRJDB10566	SAMD00247039	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_171
+PRJDB10566	SAMD00247040	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_172
+PRJDB10566	SAMD00247041	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_173
+PRJDB10566	SAMD00247042	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_174
+PRJDB10566	SAMD00247043	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_175
+PRJDB10566	SAMD00247044	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_176
+PRJDB10566	SAMD00247045	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_177
+PRJDB10566	SAMD00247047	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_179
+PRJDB10566	SAMD00247048	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_180
+PRJDB10566	SAMD00247049	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_181
+PRJDB10566	SAMD00247050	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_182
+PRJDB10566	SAMD00247051	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_183
+PRJDB10566	SAMD00247052	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_184
+PRJDB10566	SAMD00247053	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_186
+PRJDB10566	SAMD00247054	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_187
+PRJDB10566	SAMD00247055	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_188
+PRJDB10566	SAMD00247056	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_189
+PRJDB10566	SAMD00247057	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_190
+PRJDB10566	SAMD00247058	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_191
+PRJDB10566	SAMD00247059	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_193
+PRJDB10566	SAMD00247060	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_194
+PRJDB10566	SAMD00247061	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:JPN_195
+PRJDB10566	SAMD00247062	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_001
+PRJDB10566	SAMD00247063	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_002
+PRJDB10566	SAMD00247064	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_004
+PRJDB10566	SAMD00247065	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_005
+PRJDB10566	SAMD00247066	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_008
+PRJDB10566	SAMD00247067	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_009
+PRJDB10566	SAMD00247068	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_010
+PRJDB10566	SAMD00247069	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_011
+PRJDB10566	SAMD00247070	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_015
+PRJDB10566	SAMD00247071	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_016
+PRJDB10566	SAMD00247072	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_017
+PRJDB10566	SAMD00247073	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_018
+PRJDB10566	SAMD00247074	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_019
+PRJDB10566	SAMD00247075	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_020
+PRJDB10566	SAMD00247076	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_021
+PRJDB10566	SAMD00247077	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_022
+PRJDB10566	SAMD00247078	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_023
+PRJDB10566	SAMD00247079	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_024
+PRJDB10566	SAMD00247080	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_025
+PRJDB10566	SAMD00247081	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_026
+PRJDB10566	SAMD00247082	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_028
+PRJDB10566	SAMD00247083	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_029
+PRJDB10566	SAMD00247084	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_030
+PRJDB10566	SAMD00247085	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_031
+PRJDB10566	SAMD00247086	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_032
+PRJDB10566	SAMD00247087	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_034
+PRJDB10566	SAMD00247088	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_036
+PRJDB10566	SAMD00247089	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_037
+PRJDB10566	SAMD00247090	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_038
+PRJDB10566	SAMD00247091	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_039
+PRJDB10566	SAMD00247092	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_040
+PRJDB10566	SAMD00247093	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_041
+PRJDB10566	SAMD00247094	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_042
+PRJDB10566	SAMD00247095	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_043
+PRJDB10566	SAMD00247096	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_044
+PRJDB10566	SAMD00247097	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_045
+PRJDB10566	SAMD00247098	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_046
+PRJDB10566	SAMD00247099	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_048
+PRJDB10566	SAMD00247100	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_050
+PRJDB10566	SAMD00247101	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_051
+PRJDB10566	SAMD00247102	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_052
+PRJDB10566	SAMD00247103	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_053
+PRJDB10566	SAMD00247104	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_054
+PRJDB10566	SAMD00247105	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_055
+PRJDB10566	SAMD00247106	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_056
+PRJDB10566	SAMD00247107	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_057
+PRJDB10566	SAMD00247108	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_058
+PRJDB10566	SAMD00247109	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_059
+PRJDB10566	SAMD00247110	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_061
+PRJDB10566	SAMD00247111	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_062
+PRJDB10566	SAMD00247112	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_065
+PRJDB10566	SAMD00247113	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_066
+PRJDB10566	SAMD00247114	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_067
+PRJDB10566	SAMD00247115	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_068
+PRJDB10566	SAMD00247116	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_069
+PRJDB10566	SAMD00247117	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_071
+PRJDB10566	SAMD00247118	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_074
+PRJDB10566	SAMD00247119	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_075
+PRJDB10566	SAMD00247120	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_077
+PRJDB10566	SAMD00247121	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_078
+PRJDB10566	SAMD00247122	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_079
+PRJDB10566	SAMD00247123	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_080
+PRJDB10566	SAMD00247124	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_081
+PRJDB10566	SAMD00247125	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_083
+PRJDB10566	SAMD00247126	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_085
+PRJDB10566	SAMD00247127	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_086
+PRJDB10566	SAMD00247128	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_087
+PRJDB10566	SAMD00247129	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_089
+PRJDB10566	SAMD00247130	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_090
+PRJDB10566	SAMD00247131	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_091
+PRJDB10566	SAMD00247132	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_092
+PRJDB10566	SAMD00247133	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_095
+PRJDB10566	SAMD00247134	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_096
+PRJDB10566	SAMD00247135	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_097
+PRJDB10566	SAMD00247136	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_098
+PRJDB10566	SAMD00247137	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_099
+PRJDB10566	SAMD00247138	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_100
+PRJDB10566	SAMD00247139	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_101
+PRJDB10566	SAMD00247140	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_102
+PRJDB10566	SAMD00247141	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_103
+PRJDB10566	SAMD00247142	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_104
+PRJDB10566	SAMD00247143	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_105
+PRJDB10566	SAMD00247144	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_106
+PRJDB10566	SAMD00247146	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_108
+PRJDB10566	SAMD00247147	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_109
+PRJDB10566	SAMD00247148	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_110
+PRJDB10566	SAMD00247149	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_111
+PRJDB10566	SAMD00247150	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_112
+PRJDB10566	SAMD00247151	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_113
+PRJDB10566	SAMD00247152	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_114
+PRJDB10566	SAMD00247153	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_115
+PRJDB10566	SAMD00247154	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_116
+PRJDB10566	SAMD00247155	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_117
+PRJDB10566	SAMD00247156	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_118
+PRJDB10566	SAMD00247157	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_119
+PRJDB10566	SAMD00247158	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_120
+PRJDB10566	SAMD00247159	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_121
+PRJDB10566	SAMD00247160	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_122
+PRJDB10566	SAMD00247161	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_123
+PRJDB10566	SAMD00247162	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_124
+PRJDB10566	SAMD00247163	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_125
+PRJDB10566	SAMD00247164	isolation_source		Respiratory system	per_sample	spectrum.00571-22-s002.xlsx:TWN_126
+PRJDB10566	SAMD00246910	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_041
+PRJDB10566	SAMD00246911	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_042
+PRJDB10566	SAMD00246912	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_043
+PRJDB10566	SAMD00246913	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_044
+PRJDB10566	SAMD00246914	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_045
+PRJDB10566	SAMD00246915	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_046
+PRJDB10566	SAMD00246916	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_047
+PRJDB10566	SAMD00246917	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_048
+PRJDB10566	SAMD00246918	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_049
+PRJDB10566	SAMD00246919	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_050
+PRJDB10566	SAMD00246920	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_051
+PRJDB10566	SAMD00246921	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_052
+PRJDB10566	SAMD00246922	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_053
+PRJDB10566	SAMD00246923	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_054
+PRJDB10566	SAMD00246924	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_055
+PRJDB10566	SAMD00246925	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_056
+PRJDB10566	SAMD00246926	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_057
+PRJDB10566	SAMD00246927	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_058
+PRJDB10566	SAMD00246928	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_059
+PRJDB10566	SAMD00246929	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_060
+PRJDB10566	SAMD00246930	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_061
+PRJDB10566	SAMD00246931	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_062
+PRJDB10566	SAMD00246932	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_063
+PRJDB10566	SAMD00246933	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_064
+PRJDB10566	SAMD00246934	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_065
+PRJDB10566	SAMD00246970	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_102
+PRJDB10566	SAMD00246971	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_103
+PRJDB10566	SAMD00246972	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_104
+PRJDB10566	SAMD00246973	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_105
+PRJDB10566	SAMD00246974	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_106
+PRJDB10566	SAMD00246975	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_107
+PRJDB10566	SAMD00246976	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_108
+PRJDB10566	SAMD00246977	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_109
+PRJDB10566	SAMD00246978	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_110
+PRJDB10566	SAMD00246979	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_111
+PRJDB10566	SAMD00246980	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_112
+PRJDB10566	SAMD00246981	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_113
+PRJDB10566	SAMD00246982	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_114
+PRJDB10566	SAMD00246983	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_115
+PRJDB10566	SAMD00246984	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_116
+PRJDB10566	SAMD00246985	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_117
+PRJDB10566	SAMD00246986	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_118
+PRJDB10566	SAMD00246988	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_120
+PRJDB10566	SAMD00246989	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_121
+PRJDB10566	SAMD00246990	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_122
+PRJDB10566	SAMD00246991	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_123
+PRJDB10566	SAMD00246992	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_124
+PRJDB10566	SAMD00246993	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_125
+PRJDB10566	SAMD00246994	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_126
+PRJDB10566	SAMD00246995	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_127
+PRJDB10566	SAMD00246996	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_128
+PRJDB10566	SAMD00246997	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_129
+PRJDB10566	SAMD00246998	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_130
+PRJDB10566	SAMD00246999	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_131
+PRJDB10566	SAMD00247000	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_132
+PRJDB10566	SAMD00247001	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_133
+PRJDB10566	SAMD00247002	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_134
+PRJDB10566	SAMD00247003	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_135
+PRJDB10566	SAMD00247004	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_136
+PRJDB10566	SAMD00247005	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_137
+PRJDB10566	SAMD00247006	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_138
+PRJDB10566	SAMD00247007	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_139
+PRJDB10566	SAMD00247008	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_140
+PRJDB10566	SAMD00247009	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_141
+PRJDB10566	SAMD00247010	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_142
+PRJDB10566	SAMD00247011	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_143
+PRJDB10566	SAMD00247012	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_144
+PRJDB10566	SAMD00247013	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_145
+PRJDB10566	SAMD00247014	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_146
+PRJDB10566	SAMD00247015	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_147
+PRJDB10566	SAMD00247016	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_148
+PRJDB10566	SAMD00247017	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_149
+PRJDB10566	SAMD00247018	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_150
+PRJDB10566	SAMD00247019	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_151
+PRJDB10566	SAMD00247020	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_152
+PRJDB10566	SAMD00247021	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_153
+PRJDB10566	SAMD00247022	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_154
+PRJDB10566	SAMD00247023	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_155
+PRJDB10566	SAMD00247024	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_156
+PRJDB10566	SAMD00247025	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_157
+PRJDB10566	SAMD00247026	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_158
+PRJDB10566	SAMD00247027	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_159
+PRJDB10566	SAMD00247028	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_160
+PRJDB10566	SAMD00247029	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_161
+PRJDB10566	SAMD00247030	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_162
+PRJDB10566	SAMD00247031	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_163
+PRJDB10566	SAMD00247032	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_164
+PRJDB10566	SAMD00247033	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_165
+PRJDB10566	SAMD00247034	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_166
+PRJDB10566	SAMD00247035	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_167
+PRJDB10566	SAMD00247036	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_168
+PRJDB10566	SAMD00247037	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_169
+PRJDB10566	SAMD00247038	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_170
+PRJDB10566	SAMD00247039	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_171
+PRJDB10566	SAMD00247040	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_172
+PRJDB10566	SAMD00247041	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_173
+PRJDB10566	SAMD00247042	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_174
+PRJDB10566	SAMD00247043	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_175
+PRJDB10566	SAMD00247044	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_176
+PRJDB10566	SAMD00247045	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_177
+PRJDB10566	SAMD00247047	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_179
+PRJDB10566	SAMD00247048	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_180
+PRJDB10566	SAMD00247049	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_181
+PRJDB10566	SAMD00247050	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_182
+PRJDB10566	SAMD00247051	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_183
+PRJDB10566	SAMD00247052	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_184
+PRJDB10566	SAMD00247053	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_186
+PRJDB10566	SAMD00247054	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_187
+PRJDB10566	SAMD00247055	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_188
+PRJDB10566	SAMD00247056	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_189
+PRJDB10566	SAMD00247057	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_190
+PRJDB10566	SAMD00247058	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_191
+PRJDB10566	SAMD00247059	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_193
+PRJDB10566	SAMD00247060	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_194
+PRJDB10566	SAMD00247061	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:JPN_195
+PRJDB10566	SAMD00247062	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_001
+PRJDB10566	SAMD00247063	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_002
+PRJDB10566	SAMD00247064	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_004
+PRJDB10566	SAMD00247065	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_005
+PRJDB10566	SAMD00247066	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_008
+PRJDB10566	SAMD00247067	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_009
+PRJDB10566	SAMD00247068	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_010
+PRJDB10566	SAMD00247069	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_011
+PRJDB10566	SAMD00247070	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_015
+PRJDB10566	SAMD00247071	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_016
+PRJDB10566	SAMD00247072	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_017
+PRJDB10566	SAMD00247073	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_018
+PRJDB10566	SAMD00247074	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_019
+PRJDB10566	SAMD00247075	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_020
+PRJDB10566	SAMD00247076	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_021
+PRJDB10566	SAMD00247077	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_022
+PRJDB10566	SAMD00247078	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_023
+PRJDB10566	SAMD00247079	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_024
+PRJDB10566	SAMD00247080	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_025
+PRJDB10566	SAMD00247081	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_026
+PRJDB10566	SAMD00247082	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_028
+PRJDB10566	SAMD00247083	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_029
+PRJDB10566	SAMD00247084	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_030
+PRJDB10566	SAMD00247085	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_031
+PRJDB10566	SAMD00247086	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_032
+PRJDB10566	SAMD00247087	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_034
+PRJDB10566	SAMD00247088	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_036
+PRJDB10566	SAMD00247089	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_037
+PRJDB10566	SAMD00247090	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_038
+PRJDB10566	SAMD00247091	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_039
+PRJDB10566	SAMD00247092	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_040
+PRJDB10566	SAMD00247093	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_041
+PRJDB10566	SAMD00247094	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_042
+PRJDB10566	SAMD00247095	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_043
+PRJDB10566	SAMD00247096	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_044
+PRJDB10566	SAMD00247097	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_045
+PRJDB10566	SAMD00247098	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_046
+PRJDB10566	SAMD00247099	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_048
+PRJDB10566	SAMD00247100	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_050
+PRJDB10566	SAMD00247101	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_051
+PRJDB10566	SAMD00247102	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_052
+PRJDB10566	SAMD00247103	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_053
+PRJDB10566	SAMD00247104	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_054
+PRJDB10566	SAMD00247105	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_055
+PRJDB10566	SAMD00247106	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_056
+PRJDB10566	SAMD00247107	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_057
+PRJDB10566	SAMD00247108	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_058
+PRJDB10566	SAMD00247109	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_059
+PRJDB10566	SAMD00247110	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_061
+PRJDB10566	SAMD00247111	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_062
+PRJDB10566	SAMD00247112	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_065
+PRJDB10566	SAMD00247113	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_066
+PRJDB10566	SAMD00247114	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_067
+PRJDB10566	SAMD00247115	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_068
+PRJDB10566	SAMD00247116	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_069
+PRJDB10566	SAMD00247117	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_071
+PRJDB10566	SAMD00247118	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_074
+PRJDB10566	SAMD00247119	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_075
+PRJDB10566	SAMD00247120	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_077
+PRJDB10566	SAMD00247121	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_078
+PRJDB10566	SAMD00247122	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_079
+PRJDB10566	SAMD00247123	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_080
+PRJDB10566	SAMD00247124	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_081
+PRJDB10566	SAMD00247125	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_083
+PRJDB10566	SAMD00247126	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_085
+PRJDB10566	SAMD00247127	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_086
+PRJDB10566	SAMD00247128	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_087
+PRJDB10566	SAMD00247129	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_089
+PRJDB10566	SAMD00247130	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_090
+PRJDB10566	SAMD00247131	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_091
+PRJDB10566	SAMD00247132	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_092
+PRJDB10566	SAMD00247133	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_095
+PRJDB10566	SAMD00247134	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_096
+PRJDB10566	SAMD00247135	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_097
+PRJDB10566	SAMD00247136	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_098
+PRJDB10566	SAMD00247137	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_099
+PRJDB10566	SAMD00247138	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_100
+PRJDB10566	SAMD00247139	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_101
+PRJDB10566	SAMD00247140	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_102
+PRJDB10566	SAMD00247141	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_103
+PRJDB10566	SAMD00247142	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_104
+PRJDB10566	SAMD00247143	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_105
+PRJDB10566	SAMD00247144	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_106
+PRJDB10566	SAMD00247146	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_108
+PRJDB10566	SAMD00247147	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_109
+PRJDB10566	SAMD00247148	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_110
+PRJDB10566	SAMD00247149	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_111
+PRJDB10566	SAMD00247150	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_112
+PRJDB10566	SAMD00247151	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_113
+PRJDB10566	SAMD00247152	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_114
+PRJDB10566	SAMD00247153	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_115
+PRJDB10566	SAMD00247154	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_116
+PRJDB10566	SAMD00247155	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_117
+PRJDB10566	SAMD00247156	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_118
+PRJDB10566	SAMD00247157	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_119
+PRJDB10566	SAMD00247158	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_120
+PRJDB10566	SAMD00247159	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_121
+PRJDB10566	SAMD00247160	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_122
+PRJDB10566	SAMD00247161	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_123
+PRJDB10566	SAMD00247162	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_124
+PRJDB10566	SAMD00247163	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_125
+PRJDB10566	SAMD00247164	cf_status		non-CF	per_sample	spectrum.00571-22-s002.xlsx:TWN_126
+PRJNA1119444	SAMN41656380	collection_date	2019	2019-12-23 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656380
+PRJNA1119444	SAMN41656381	collection_date	2019	2019-08-13 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656381
+PRJNA1119444	SAMN41656382	collection_date	2020	2020-10-09 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656382
+PRJNA1119444	SAMN41656383	collection_date	2022	2022-01-28 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656383
+PRJNA1119444	SAMN41656384	collection_date	2019	2019-06-25 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656384
+PRJNA1119444	SAMN41656385	collection_date	2019	2019-03-14 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656385
+PRJNA1119444	SAMN41656386	collection_date	2019	2019-11-26 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656386
+PRJNA1119444	SAMN41656387	collection_date	2020	2020-02-27 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656387
+PRJNA1119444	SAMN41656388	collection_date	2019	2019-10-08 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656388
+PRJNA1119444	SAMN41656389	collection_date	2020	2020-07-02 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656389
+PRJNA1119444	SAMN41656390	collection_date	2019	2019-08-15 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656390
+PRJNA1119444	SAMN41656391	collection_date	2019	2019-10-28 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656391
+PRJNA1119444	SAMN41656392	collection_date	2021	2021-03-08 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656392
+PRJNA1119444	SAMN41656393	collection_date	2018	2018-06-07 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656393
+PRJNA1119444	SAMN41656394	collection_date	2019	2019-01-18 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656394
+PRJNA1119444	SAMN41656395	collection_date	2019	2019-04-19 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656395
+PRJNA1119444	SAMN41656396	collection_date	2019	2019-07-16 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656396
+PRJNA1119444	SAMN41656397	collection_date	2017	2017-05-19 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656397
+PRJNA1119444	SAMN41656398	collection_date	2019	2019-12-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656398
+PRJNA1119444	SAMN41656399	collection_date	2019	2019-04-26 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656399
+PRJNA1119444	SAMN41656400	collection_date	2019	2019-10-03 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656400
+PRJNA1119444	SAMN41656401	collection_date	2021	2021-04-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656401
+PRJNA1119444	SAMN41656402	collection_date	2021	2021-07-22 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656402
+PRJNA1119444	SAMN41656403	collection_date	2019	2019-01-07 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656403
+PRJNA1119444	SAMN41656404	collection_date	2019	2019-03-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656404
+PRJNA1119444	SAMN41656405	collection_date	2020	2020-06-09 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656405
+PRJNA1119444	SAMN41656406	collection_date	2019	2019-06-18 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656406
+PRJNA1119444	SAMN41656407	collection_date	2019	2019-10-08 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656407
+PRJNA1119444	SAMN41656408	collection_date	2022	2022-03-18 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656408
+PRJNA1119444	SAMN41656409	collection_date	2021	2021-09-13 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656409
+PRJNA1119444	SAMN41656410	collection_date	2019	2019-01-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656410
+PRJNA1119444	SAMN41656411	collection_date	2019	2019-05-31 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656411
+PRJNA1119444	SAMN41656412	collection_date	2019	2019-07-16 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656412
+PRJNA1119444	SAMN41656413	collection_date	2019	2019-11-18 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656413
+PRJNA1119444	SAMN41656414	collection_date	2020	2020-01-30 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656414
+PRJNA1119444	SAMN41656415	collection_date	2020	2020-06-02 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656415
+PRJNA1119444	SAMN41656416	collection_date	2021	2021-05-24 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656416
+PRJNA1119444	SAMN41656417	collection_date	2021	2021-05-24 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656417
+PRJNA1119444	SAMN41656418	collection_date	2021	2021-08-06 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656418
+PRJNA1119444	SAMN41656419	collection_date	2021	2021-08-06 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656419
+PRJNA1119444	SAMN41656420	collection_date	2021	2021-10-05 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656420
+PRJNA1119444	SAMN41656421	collection_date	2021	2021-10-05 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656421
+PRJNA1119444	SAMN41656422	collection_date	2019	2019-10-30 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656422
+PRJNA1119444	SAMN41656423	collection_date	2019	2019-09-17 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656423
+PRJNA1119444	SAMN41656424	collection_date	2019	2019-12-23 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656424
+PRJNA1119444	SAMN41656425	collection_date	2020	2020-02-14 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656425
+PRJNA1119444	SAMN41656426	collection_date	2020	2020-05-12 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656426
+PRJNA1119444	SAMN41656427	collection_date	2019	2019-03-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656427
+PRJNA1119444	SAMN41656428	collection_date	2019	2019-03-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656428
+PRJNA1119444	SAMN41656429	collection_date	2019	2019-11-08 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656429
+PRJNA1119444	SAMN41656430	collection_date	2021	2021-09-17 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656430
+PRJNA1119444	SAMN41656431	collection_date	2021	2021-09-17 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656431
+PRJNA1119444	SAMN41656432	collection_date	2020	2020-12-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656432
+PRJNA1119444	SAMN41656433	collection_date	2019	2019-06-27 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656433
+PRJNA1119444	SAMN41656434	collection_date	2019	2019-06-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656434
+PRJNA1119444	SAMN41656435	collection_date	2019	2019-08-06 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656435
+PRJNA1119444	SAMN41656436	collection_date	2019	2019-11-07 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656436
+PRJNA1119444	SAMN41656437	collection_date	2019	2019-04-04 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656437
+PRJNA1119444	SAMN41656438	collection_date	2019	2019-07-18 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656438
+PRJNA1119444	SAMN41656439	collection_date	2019	2019-10-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656439
+PRJNA1119444	SAMN41656440	collection_date	2019	2019-12-17 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656440
+PRJNA1119444	SAMN41656441	collection_date	2019	2019-12-17 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656441
+PRJNA1119444	SAMN41656442	collection_date	2020	2020-06-29 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656442
+PRJNA1119444	SAMN41656443	collection_date	2019	2019-02-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656443
+PRJNA1119444	SAMN41656444	collection_date	2019	2019-02-11 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656444
+PRJNA1119444	SAMN41656445	collection_date	2019	2019-06-25 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656445
+PRJNA1119444	SAMN41656446	collection_date	2019	2019-09-10 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656446
+PRJNA1119444	SAMN41656447	collection_date	2019	2019-10-31 00:00:00	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656447
+PRJNA1119444	SAMN41656380	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656380
+PRJNA1119444	SAMN41656381	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656381
+PRJNA1119444	SAMN41656382	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656382
+PRJNA1119444	SAMN41656383	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656383
+PRJNA1119444	SAMN41656384	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656384
+PRJNA1119444	SAMN41656385	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656385
+PRJNA1119444	SAMN41656386	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656386
+PRJNA1119444	SAMN41656387	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656387
+PRJNA1119444	SAMN41656388	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656388
+PRJNA1119444	SAMN41656389	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656389
+PRJNA1119444	SAMN41656390	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656390
+PRJNA1119444	SAMN41656391	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656391
+PRJNA1119444	SAMN41656392	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656392
+PRJNA1119444	SAMN41656393	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656393
+PRJNA1119444	SAMN41656394	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656394
+PRJNA1119444	SAMN41656395	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656395
+PRJNA1119444	SAMN41656396	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656396
+PRJNA1119444	SAMN41656397	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656397
+PRJNA1119444	SAMN41656398	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656398
+PRJNA1119444	SAMN41656399	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656399
+PRJNA1119444	SAMN41656400	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656400
+PRJNA1119444	SAMN41656401	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656401
+PRJNA1119444	SAMN41656402	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656402
+PRJNA1119444	SAMN41656403	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656403
+PRJNA1119444	SAMN41656404	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656404
+PRJNA1119444	SAMN41656405	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656405
+PRJNA1119444	SAMN41656406	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656406
+PRJNA1119444	SAMN41656407	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656407
+PRJNA1119444	SAMN41656408	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656408
+PRJNA1119444	SAMN41656409	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656409
+PRJNA1119444	SAMN41656410	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656410
+PRJNA1119444	SAMN41656411	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656411
+PRJNA1119444	SAMN41656412	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656412
+PRJNA1119444	SAMN41656413	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656413
+PRJNA1119444	SAMN41656414	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656414
+PRJNA1119444	SAMN41656415	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656415
+PRJNA1119444	SAMN41656416	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656416
+PRJNA1119444	SAMN41656417	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656417
+PRJNA1119444	SAMN41656418	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656418
+PRJNA1119444	SAMN41656419	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656419
+PRJNA1119444	SAMN41656420	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656420
+PRJNA1119444	SAMN41656421	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656421
+PRJNA1119444	SAMN41656422	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656422
+PRJNA1119444	SAMN41656423	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656423
+PRJNA1119444	SAMN41656424	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656424
+PRJNA1119444	SAMN41656425	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656425
+PRJNA1119444	SAMN41656426	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656426
+PRJNA1119444	SAMN41656427	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656427
+PRJNA1119444	SAMN41656428	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656428
+PRJNA1119444	SAMN41656429	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656429
+PRJNA1119444	SAMN41656430	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656430
+PRJNA1119444	SAMN41656431	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656431
+PRJNA1119444	SAMN41656432	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656432
+PRJNA1119444	SAMN41656433	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656433
+PRJNA1119444	SAMN41656434	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656434
+PRJNA1119444	SAMN41656435	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656435
+PRJNA1119444	SAMN41656436	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656436
+PRJNA1119444	SAMN41656437	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656437
+PRJNA1119444	SAMN41656438	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656438
+PRJNA1119444	SAMN41656439	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656439
+PRJNA1119444	SAMN41656440	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656440
+PRJNA1119444	SAMN41656441	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656441
+PRJNA1119444	SAMN41656442	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656442
+PRJNA1119444	SAMN41656443	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656443
+PRJNA1119444	SAMN41656444	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656444
+PRJNA1119444	SAMN41656445	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656445
+PRJNA1119444	SAMN41656446	cf_status		yes	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656446
+PRJNA1119444	SAMN41656447	cf_status		no	per_sample	spectrum.01330-24-s0002.xlsx:SAMN41656447

@@ -1,0 +1,35 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJNA523365	SAMN11101007	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0024_1
+PRJNA523365	SAMN11100987	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0002_1
+PRJNA523365	SAMN11100987	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0002_1
+PRJNA523365	SAMN11101006	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1
+PRJNA523365	SAMN11101007	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0024_1
+PRJNA523365	SAMN11101006	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1
+PRJNA523365	SAMN11101006	cf_status		non-CF	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1
+PRJNA523365	SAMN11101007	collection_date		2009	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0024_1 (rescued '9')
+PRJNA523365	SAMN11100987	collection_date		2012	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0002_1 (rescued '12')
+PRJNA523365	SAMN11100987	collection_date		2013	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0002_1 (rescued '13')
+PRJNA523365	SAMN11101006	collection_date		2013	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1 (rescued '13')
+PRJNA523365	SAMN11101007	collection_date		2014	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0024_1 (rescued '14')
+PRJNA523365	SAMN11101006	collection_date		2014	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1 (rescued '14')
+PRJNA523365	SAMN11101006	collection_date		2015	per_sample	41467_2021_25484_MOESM1_ESM.pdf:JHN_AB_0023_1 (rescued '15')
+PRJNA832057	SAMN27861825	isolation_source		pus	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0001
+PRJNA832057	SAMN27861817	isolation_source		hydrothorax	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0018
+PRJNA832057	SAMN27861788	isolation_source		hydrothorax	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0054
+PRJNA832057	SAMN27861780	isolation_source		hydrothorax	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0060
+PRJNA832057	SAMN27861766	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190517T0140 (rescued 'T')
+PRJNA832057	SAMN27861824	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0004 (rescued 'T')
+PRJNA832057	SAMN27861823	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0008 (rescued 'T')
+PRJNA832057	SAMN27861822	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0009 (rescued 'T')
+PRJNA832057	SAMN27861821	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0013 (rescued 'T')
+PRJNA832057	SAMN27861819	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0015 (rescued 'T')
+PRJNA832057	SAMN27861818	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0016 (rescued 'T')
+PRJNA832057	SAMN27861815	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0020 (rescued 'T')
+PRJNA832057	SAMN27861814	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0021 (rescued 'T')
+PRJNA832057	SAMN27861812	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0030 (rescued 'T')
+PRJNA832057	SAMN27861800	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0047 (rescued 'T')
+PRJNA832057	SAMN27861798	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0049 (rescued 'T')
+PRJNA832057	SAMN27861790	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0053 (rescued 'T')
+PRJNA832057	SAMN27861782	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0057 (rescued 'T')
+PRJNA832057	SAMN27861775	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0067 (rescued 'T')
+PRJNA832057	SAMN27861772	cf_status		bronchiectasis	per_sample	spectrum.00118-22-s0001.xlsx:UM190527T0070 (rescued 'T')

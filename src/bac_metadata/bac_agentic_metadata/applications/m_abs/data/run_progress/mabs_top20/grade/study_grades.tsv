@@ -1,0 +1,21 @@
+study_accession	study_type	study_type_excluded	paper_records_in_taxon	paper_coverage_for_taxon	needs_manual_download	fulltext_source	is_full_text	grade_context_chars	full_text_would_help	model	reports_AST__value	reports_AST__grade	per_sample_AST__value	per_sample_AST__grade	backfill_country__value	backfill_country__whole_project	backfill_isolation_source__value	backfill_isolation_source__whole_project	backfill_host__value	backfill_host__whole_project	backfill_collection_date__value	backfill_collection_date__whole_project	backfill_cf_status__value	backfill_cf_status__whole_project
+PRJEB2779	observational	False	1080	0.504	False	pdf	True	40898	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False	sputum	False	human	False		False	CF	False
+PRJNA319839	observational	False	558	0.9015	False	pdf	True	42679	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True	sputum	True	human	True		False	CF	True
+PRJNA1036625	observational	False	208	0.9498	False	europepmc_fulltext	True	33053	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Canada	True	respiratory specimen	False	Homo sapiens	True		False		False
+PRJDB10566	observational	False	220	1.0138	False	europepmc_fulltext	True	32421	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False	respiratory specimen	True	human	True		False	non-CF	True
+PRJNA734660	observational	False	210	1.0345	False	europepmc_fulltext	True	29024	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Singapore	True	respiratory	False	human	True		False	non-CF	True
+PRJEB7058	observational	False	188	0.9947	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Brazil	True	skin/soft tissue	True	Homo sapiens	True		False	non-CF	True
+PRJNA1165220	observational	False	122	0.6703	False	pdf	True	22025	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	USA	True		False	human	True		False		False
+PRJNA778024	observational	False	159	0.9086	False	europepmc_fulltext	True	33838	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Canada	True	sputum	True	human	True		False	CF	True
+PRJNA882917	observational	False	175	1.0	False	pdf	True	46400	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	USA	True	sputum	False	human	True		False	CF	True
+PRJEB14002	observational	False	168	1.037	False	europepmc_fulltext	True	34982	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	United Kingdom	True	sputum	True	Homo sapiens	True		False	CF	True
+PRJNA989271	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Australia	True		False	human	True		False		False
+PRJDB10333	observational	False	148	1.0	False	europepmc_fulltext	True	38310	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Japan	True	respiratory	False	human	True		False		False
+PRJEB31559	observational	False	145	1.0	False	europepmc_fulltext	True	30723	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False	lung	True	human	True		False		False
+PRJEB44160	observational	False	154	1.2623	False	europepmc_fulltext	True	27328	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Germany	True	sputum	False	human	True		False	CF	False
+PRJNA401515	observational	False	157	1.3305	False	europepmc_fulltext	True	33931	False	claude-sonnet-4-6	False	gradeable	none	gradeable	United Kingdom	True		False	human	True	2015-10-10	True		False
+PRJEB39129	observational	False	88	1.0233	False	europepmc_fulltext	True	39317	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Germany	True	sputum	False	Homo sapiens	True		False	CF	True
+PRJNA420644	observational	False	203	2.3882	False	pdf	True	39702	False	claude-sonnet-4-6	True	gradeable	none	gradeable	United Kingdom	True		False	Homo sapiens	True		False		False
+PRJNA1119444	observational	False	68	1.0	False	europepmc_fulltext	True	32645	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True	sputum	True	Homo sapiens	True		False	CF	True
+PRJEB37730	observational	False	70	1.0448	False	pdf	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Ireland	True	pulmonary	False	human	True		False		False
+PRJNA941035	observational	False	64	1.0	False	pdf	True	50000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Australia	True	respiratory specimen	False	human	False		False		False

@@ -1,0 +1,7 @@
+# Accumulation outputs are large and fully regenerable (rebuild via
+#   uv run python -m bac_metadata.bac_agentic_metadata.engine.cli.accumulate ...).
+# Only curated_escalations.tsv is kept under version control — it is the precious,
+# non-regenerable human curator input (answered/skipped escalation decisions).
+*
+!.gitignore
+!curated_escalations.tsv

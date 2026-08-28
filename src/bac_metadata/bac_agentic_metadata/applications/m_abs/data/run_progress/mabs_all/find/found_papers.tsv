@@ -1,0 +1,94 @@
+study_accession	none_found	chosen_pmid	chosen_pmcid	chosen_doi	chosen_found_via	find_confidence	verified	sources_agreeing	coverage_estimate	coverage_fraction	shared_accession	umbrella	data_reuse_only	n_candidates	chosen_title
+PRJNA840944	False	36658396	PMC9992005	10.1038/s41564-022-01307-5	europepmc_accession	medium		1	24.0	1.0	False	False	False	2	Biotin-dependent cell envelope remodelling is required for Mycobacterium abscessus survival in lung infection.
+PRJNA542112	False	31872853	PMC7938859	10.1093/cid/ciz1120	europepmc_accession	low	True	1	52.0	2.1667	True	True	False	2	Bloodstream Infections With a Novel Nontuberculous Mycobacterium Involving 52 Outpatient Oncology Clinic Patients-Arkansas, 2018.
+PRJNA1236821	False			10.1016/j.chest.2026.04.011	web_search	high		1	21.0	1.0	False	False	False	1	Phylogenomic and Clinical Perspectives of an East Asia-Specific Cluster of Mycobacterium massiliense
+PRJNA734909	False	34705540	PMC8769749	10.1128/jcm.01547-21	europepmc_accession	high	True	1	26.0	1.3684	False	False	False	1	Genomic Analysis of a Hospital-Associated Outbreak of Mycobacterium abscessus: Implications on Transmission.
+PRJNA1209868	False	40167421	PMC12057340	10.1128/aac.01744-24	europepmc_accession	high	True	1	19.0	1.0	False	False	False	1	Novel mutations in the &lt;i&gt;marR&lt;/i&gt; gene (&lt;i&gt;MAB_2648c&lt;/i&gt;) modify nitroxoline activity in &lt;i&gt;Mycobacterium abscessus&lt;/i&gt;.
+PRJNA439313	False	30853372		10.1016/j.jcf.2019.02.011	europepmc_title	high		1	17.0	1.0	False	False	False	1	Investigating transmission of Mycobacterium abscessus amongst children in an Australian cystic fibrosis centre.
+PRJNA734948	True					high		0			False	False	True	1	
+PRJEB64488	True					low		0			False	False	False	0	
+PRJNA1215975	True					low		0			False	False	False	0	
+PRJNA656566	True					high		0			False	False	False	1	
+PRJNA698640	True					low		0			False	False	False	2	
+PRJNA297030	True					low		0			False	False	False	0	
+PRJNA268101	False	25631807	PMC4365189	10.1128/jcm.03073-14	web_search	high	False	1	154.0	17.1111	False	False	False	3	Mycobacterial DNA extraction for whole-genome sequencing from early positive liquid (MGIT) cultures.
+PRJEB19845	True					high		0			False	False	False	1	
+PRJNA996741	True					high		0			False	False	False	1	
+PRJNA867543	True					low		0			False	False	False	0	
+PRJNA823663	False	36386679	PMC9642804	10.3389/fmicb.2022.949328	europepmc_accession,europepmc_title	high	True	2	6.0	1.0	False	False	False	1	Host DNA depletion can increase the sensitivity of <i>Mycobacterium</i> spp. detection through shotgun metagenomics in sputum.
+PRJNA231221	False	31346170	PMC6658474	10.1038/s41467-019-11306-6	europepmc_title,ncbi_bioproject	high	False	2			True	True	False	25	FDA-ARGOS is a database with public quality-controlled reference genomes for diagnostic use and regulatory science.
+PRJEB1520	False	23696800	PMC3655965	10.1371/journal.pone.0063237	europepmc_title	high	False	1	178.0	35.6	False	False	False	1	Molecular longitudinal tracking of Mycobacterium abscessus spp. during chronic infection of the human lung.
+PRJNA698643	True					low		0			False	False	False	0	
+PRJNA1177655	False	40723985	PMC12291787	10.3390/antibiotics14070682	europepmc_accession	high	True	1	175.0	35.0	False	False	False	1	In Vitro Susceptibility to Imipenem/Relebactam and Comparators in a Multicentre Collection of &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; Complex Isolates.
+PRJNA1169404	False			10.26502/fjhs.350	web_search	high		1	14.0	3.5	False	False	False	2	Phenotypic and Genomic Characterization of Rapidly Growing Non-Tuberculous Mycobacteria Isolated from Surgical Site Infections in a Tertiary Care Hospital of Dhaka
+PRJNA1221978	False			10.1093/ofid/ofaf695.1605	web_search	medium	False	1	4.0	1.0	False	False	False	1	The Use of Whole Genome Sequencing and a Novel Bioinformatic Pipeline for Mycobacterium abscessus Molecular Epidemiology
+PRJNA1040155	True					high		0			False	False	False	1	
+PRJNA672126	False	34264116	PMC8280865	10.1128/mra.00361-21	europepmc_accession	high	True	1	4.0	1.0	False	False	False	1	Whole-Genome Sequences of Mycobacterium abscessus subsp. <i>massiliense</i> Isolates from Brazil.
+PRJEB74244	False	41084085	PMC12516842	10.1186/s13073-025-01549-y	europepmc_accession	medium	True	1	50.0	16.6667	True	False	False	1	Genomic characterisation of recurrent Mycobacterium avium isolates from chronically infected patients reveals patterns of within-host evolution.
+PRJNA1169681	True					low		0			False	False	False	0	
+PRJNA347845	False	30908517	PMC6433289	10.1371/journal.pone.0214274	europepmc_accession	high	True	1	34.0	17.0	False	False	False	1	Variation among human, veterinary and environmental Mycobacterium chelonae-abscessus complex isolates observed using core genome phylogenomic analysis, targeted gene comparison, and anti-microbial susceptibility patterns.
+PRJNA716753	False	34358029	PMC8308675	10.3390/pathogens10070879	europepmc_accession	high	False	1	101.0	50.5	False	False	False	1	Whole-Genome Sequencing Analysis to Identify Infection with Multiple Species of Nontuberculous Mycobacteria.
+PRJNA1215977	True					low		0			False	False	False	0	
+PRJNA1133902	False	39431893	PMC11619318	10.1128/spectrum.01935-24	europepmc_accession	high	True	1	1786.0	893.0	False	False	False	1	Global prevalence of &lt;i&gt;Mycobacterium massiliense&lt;/i&gt; strains with recombinant &lt;i&gt;rpoB&lt;/i&gt; genes (Rec-Mas) horizontally transferred from &lt;i&gt;Mycobacterium abscessus&lt;/i&gt;: two major types, dominant circulating clone 7 and MLST ST46 sequence type.
+PRJNA1136428	True					low		0	2.0	1.0	False	False	False	0	
+PRJNA756101	False	34637487	PMC8535176	10.1371/journal.ppat.1009965	europepmc_accession	high	False	1	2.0	1.0	False	False	False	1	Efficacy of epetraborole against Mycobacterium abscessus is increased with norvaline.
+PRJEB50291	False	35587637	PMC9241853	10.1128/spectrum.00310-22	europepmc_accession,europepmc_title,ncbi_bioproject	high	True	3	28.0	14.0	False	False	False	2	Successful Direct Whole Genome Sequencing and Revivification of Freeze-Dried Nontuberculous Mycobacteria after More than Half a Century of Storage.
+PRJNA323571	False	28533767	PMC5420552	10.3389/fmicb.2017.00789	europepmc_accession,europepmc_secondary	medium	True	2	26.0	13.0	False	False	False	1	Characterization of <i>Mycobacterium chelonae</i>-Like Strains by Comparative Genomics.
+PRJEB38893	False	36802272		10.1089/mdr.2022.0068	web_search	high		1	2.0	1.0	False	False	False	1	Mutations in Genes Encoding 23S rRNA and FadD32 May be Associated with Linezolid Resistance in <i>Mycobacteroides abscessus</i>.
+PRJNA191785	True					low		0			False	False	False	0	
+PRJNA203567	True					low		0			False	False	False	0	
+PRJNA65137	False	24565502	PMC3944860	10.3201/eid2003.131106	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA566387	False	32294173	PMC7778363	10.1093/jac/dkaa110	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Inhaled tigecycline is effective against Mycobacterium abscessus in vitro and in vivo.
+PRJNA203565	True					low		0			False	False	True	1	
+PRJNA203566	True					low	False	1	16.0	16.0	False	False	False	1	
+PRJNA203569	False				web_search	medium		1	16.0	16.0	False	False	False	3	Using whole exome sequencing and bacterial pathogen sequencing to investigate the genetic basis of pulmonary non-tuberculous mycobacterial infections
+PRJNA65143	True					low		0			False	False	False	0	
+PRJNA203570	True					high		0			False	False	True	1	
+PRJNA203571	True					high		0			False	False	False	1	
+PRJNA65171	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1	1.0	1.0	False	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA203572	True					low		0			False	False	True	1	
+PRJNA191787	True					low		0			False	False	False	0	
+PRJNA65139	True					low		0			False	False	False	0	
+PRJNA65147	True					high		0			False	False	False	5	
+PRJNA65145	True					low		0			False	False	False	5	
+PRJNA65149	True					low		0			False	False	False	0	
+PRJNA65151	False	24565502	PMC3944860	10.3201/eid2003.131106	ncbi_bioproject	medium	False	1	1.0	1.0	False	False	False	1	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA65153	True					low		0			False	False	False	4	
+PRJNA65155	True					high		0			False	False	False	4	
+PRJNA65157	True					low		0			False	False	False	0	
+PRJNA65159	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1			False	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65161	True					low	False	1			False	False	False	2	
+PRJNA65163	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1	1.0	1.0	False	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65165	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1			False	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA203564	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1	16.0	16.0	False	False	False	2	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65169	True					low	False	1	168.0	168.0	False	False	False	3	
+PRJNA191786	False	26021923	PMC4447908	10.1128/genomea.00536-15	web_search	medium	False	1	1.0	1.0	True	False	False	1	Draft Genome Sequence of Mycobacterium chelonae Type Strain ATCC 35752.
+PRJDB2362	True					low		0			False	False	False	0	
+PRJNA184888	False	23345298	PMC3666789	10.1128/jcm.03237-12	europepmc_accession	high	True	1			False	False	False	2	A genomic day in the life of a clinical microbiology laboratory.
+PRJNA1238535	True					low		0			False	False	False	0	
+PRJNA65199	False	24565502	PMC3944860	10.3201/eid2003.131106	ncbi_bioproject	medium	False	1			False	False	False	2	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA65213	True					low	False	1			False	False	False	2	
+PRJNA65195	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1	1.0	1.0	True	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65215	False	22965080	PMC3457237	10.1128/jb.01200-12	ncbi_bioproject	high	False	1	1.0	1.0	False	False	False	2	Genomic insights into the emerging human pathogen Mycobacterium massiliense.
+PRJNA65197	True					high		0			False	False	False	1	
+PRJNA65211	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1	1.0	1.0	True	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65209	True					high		0			False	False	False	0	
+PRJNA65203	True					high		0			False	False	False	1	
+PRJNA65207	True					low		0			False	False	False	0	
+PRJNA65205	True					high		0			False	False	False	1	
+PRJDB14511	True					low		0			False	False	False	0	
+PRJNA1019825	True					high		0			False	False	False	1	
+PRJDB7717	False	31287781	PMC6691804	10.1080/22221751.2019.1637702	europepmc_accession,ncbi_bioproject	medium	False	2	63.0	63.0	False	False	False	3	Comprehensive subspecies identification of 175 nontuberculous mycobacteria species based on 7547 genomic profiles.
+PRJNA65191	False			10.1038/srep04061	web_search	medium	False	1			False	False	False	1	Genomic reconnaissance of clinical isolates of emerging human pathogen Mycobacterium abscessus reveals high evolutionary potential
+PRJNA1013065	False	38651855	PMC11620514	10.1128/aac.01456-23	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Altered serine metabolism promotes drug tolerance in &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; via a WhiB7-mediated adaptive stress response.
+PRJEB85433	True					low		0			False	False	False	11	
+PRJEB33804	True					low		0			False	False	False	0	
+PRJDB2099	True					high		0			False	False	False	1	
+PRJNA857686	False	36795668	PMC9934365	10.1371/journal.pone.0277575	europepmc_accession,web_search	low	True	2			False	False	False	2	GAMBIT (Genomic Approximation Method for Bacterial Identification and Tracking): A methodology to rapidly leverage whole genome sequencing of bacterial isolates for clinical identification.
+PRJNA865308	False	38165935	PMC10786304	10.1073/pnas.2314101120	europepmc_accession	high	True	1	1.0	1.0	False	False	False	1	Development of 2nd generation aminomethyl spectinomycins that overcome native efflux in <i>Mycobacterium</i> abscessus.
+PRJNA65193	True					low	False	1			False	False	False	2	
+PRJNA191789	True					low		0			False	False	False	0	
+PRJNA65187	True					low		0			False	False	False	0	
+PRJNA191788	True					low		0			False	False	False	0	
+PRJNA401495	True					low		0			False	False	False	0	
+PRJNA65167	False	25056330	PMC4187745	10.1128/jcm.01144-14	web_search	medium	False	1			False	False	False	1	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.

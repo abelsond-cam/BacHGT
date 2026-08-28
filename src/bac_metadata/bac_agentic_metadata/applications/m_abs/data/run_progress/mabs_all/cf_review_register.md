@@ -1,0 +1,66 @@
+# cf_status review register
+
+## A. Whole-project cf calls (applied to blank cells; known values never overwritten)
+
+**non-CF first** — scrutinise the *non-CF-by-absence* inference: the argument must describe the patient cohort (ages/comorbidities) AND note no CF mention. Flag any weak argument to revert.
+
+| tag | study | proposed | blanks filled | argument (agent's basis) |
+|---|---|---|---|---|
+| mabs_all | PRJDB10566 | **non-CF** | 217 | we sequenced the genome of 220 MABC clinical isolates obtained from non-CF patients before treatment in four hospitals in three East Asian locations |
+| mabs_all | PRJNA734660 | **non-CF** | 203 | Only two isolates were from patients with cystic fibrosis. |
+| mabs_all | PRJDB10333 | **non-CF** | 148 | MABC causes a range of clinical infections including chronic pulmonary disease even in immunocompetent persons, as well as postsurgical or traumatic infections and skin and soft tissue infections. [CF is never mentioned anywhere in the paper; 147 clinical isolates from 20 Japanes |
+| mabs_all | PRJDB13427 | **non-CF** | 51 | 52 patients who were ventilator dependent and without CF with progressive neurodegenerative diseases; median age was 64 years, 50 patients (96%) required tube feeding, and the median duration of long-term care hospitalization exceeded 3,000 days |
+| mabs_all | PRJDB17850 | **non-CF** | 48 | We isolated M. abscessus subsp. massiliense from the respiratory secretions of 52 patients who were ventilator dependent and without CF with progressive neurodegenerative diseases in the long-term care wards of a single hospital in Japan |
+| mabs_all | PRJNA1123827 | **non-CF** | 43 | Molecular epidemiologic investigation of Mycobacterium abscessus among Non-Cystic Fibrosis patients |
+| mabs_all | PRJNA832057 | **non-CF** | 41 | CF is extremely rare in Chinese populations, suggesting that MABC infections in China are mostly limited to non-CF patients... this is the first large-scale comparative genomic study of MABC strains isolated from patients with non-CF pulmonary infection in China. Patient ages ran |
+| mabs_all | PRJDB15290 | **non-CF** | 33 | Members of the Mycobacteroides (Mycobacterium) abscessus cause various infectious diseases in humans that are spreading worldwide, including infections of the lungs, lymph nodes, skin, soft tissue, and bone. [33 patients at Juntendo University Hospital, Japan; infection types are |
+| mabs_all | PRJEB57933 | **non-CF** | 29 | The 30 MABC isolates enrolled in the present study were retrieved from 23 patients...with a median age of 69 ± 16...our results, together with previous studies, demonstrate the presence of these clones in non-CF patients |
+| mabs_all | PRJDB12235 | **non-CF** | 25 | Potential Cross-Transmission of Mycobacterium abscessus among Non-Cystic Fibrosis Patients at a Tertiary Hospital in Japan. |
+| mabs_all | PRJNA1236821 | **non-CF** | 21 | Isolates were obtained from patients with MAM pulmonary disease at Seoul National University Hospital... patients with ST120 strain infections had a higher prevalence of cavitary disease (23/50 [46%])... the proportion of microbiological cure was lower in patients with ST120 infe |
+| mabs_all | PRJNA734909 | **non-CF** | 19 | Table 1 patient underlying conditions include: Lung transplant, Esophageal perforation, Heart transplant, RVAD/heart transplant, Tricuspid valve replacement, LVAD, COPD GPA, PEG tube placement, Bronchiectasis. Cystic fibrosis is referenced only for other studies: 'one large genom |
+| mabs_all | PRJNA1169404 | **non-CF** | 4 | RGM was isolated from the pus and wound swab of surgical site infection — the entire patient cohort has surgical site infections; cystic fibrosis is not mentioned anywhere in the EBI title or study description, and SSI is a classic non-CF presentation. Non-CF inferred by absence: |
+| mabs_all | PRJNA1221978 | **non-CF** | 4 | Mycobacterium abscessus soft tissue infections associated with lipolytic agents subcutaneous injection... skin infection outbreak associated with mesotherapy procedures in Quebec. No mention of cystic fibrosis anywhere in the paper or EBI description; patients are described as pr |
+| mabs_all | PRJNA1133902 | **non-CF** | 2 | there were no ST46 isolates from CF patients in Asia... the ST46 Rec-mas type must be classified as a novel DCC of the sub. massiliense, which is responsible for dissemination between non-CF Asian patients |
+| mabs_all | PRJNA184888 | **non-CF** | 1 | 130 samples were collected from 116 patient cultures [at The Methodist Hospital general clinical microbiology lab]; cystic fibrosis is never mentioned anywhere in the paper |
+| mabs_all | PRJDB14511 | **non-CF** | 1 | a young woman without specific immunodeficiency or risk factors who presented with otitis media and mastoiditis; cystic fibrosis is not mentioned anywhere in the study title or description, and otitis media/mastoiditis is a non-CF M. abscessus clinical presentation |
+| mabs_all | PRJEB7058 | **non-CF** | 0 | The majority of infections occurred after video-assisted surgeries where the equipment had been disinfected using 2 % glutaraldehyde solution... The Brazilian lineage was found to be closely related to a recently described DCC that includes isolates from two cystic fibrosis centr |
+| mabs_all | PRJNA319839 | **CF** | 423 | 558 M. abscessus isolates from 266 patients with CF attending 48 CF Care Centers in 28 U.S. states as part of a nationwide surveillance program |
+| mabs_all | PRJNA882917 | **CF** | 175 | The patient was on azithromycin therapy for CF at earlier time points (MAB_18_01 through MAB_18_05)...Furthermore, CF patients exhibit polymicrobial lung infections [42], and cross-species interactions such as horizontal gene transfer or competition may occur. [Study funded by Cy |
+| mabs_all | PRJEB14002 | **CF** | 162 | Whole-genome sequencing to identify transmission of Mycobacterium abscessus between patients with cystic fibrosis: a retrospective cohort study... our study indicates that acquisition of M abscessus subsp massiliense by cystic fibrosis patients is frequently through cross-infecti |
+| mabs_all | PRJEB44160 | **CF** | 122 | whole-genome data were obtained for 154 M. abscessus isolates from 123 German CF patients in 14 centers [primary cohort]; EBI study title: 'WGS of M. abscessus strains from german CF patients'; ENA count of 122 samples aligns with primary CF patient isolates, indicating the depos |
+| mabs_all | PRJEB39129 | **CF** | 86 | More than 30 species of nontuberculous mycobacteria (NTM) are known to cause infections in humans, mostly in persons with immunodeficiency or underlying diseases such as Cystic Fibrosis (CF)... 88 isolates from the 11 patients infected with MABS were further investigated. |
+| mabs_all | PRJNA1119444 | **CF** | 68 | To investigate the genetic differenced of DCC1 isolate we collected isolates from 26 MAB-positive pwCF over a three-year period from a previous uninvestigated population of MAB colonized individuals at the CF@tlanta Cystic Fibrosis centers |
+| mabs_all | PRJEB28875 | **CF** | 32 | Children with cystic fibrosis (CF) can develop severe life-threatening infections of Mycobacterium abscessus... The 2 patients in this study (Patient 1 and Patient 2) were from other CF centers |
+| mabs_all | PRJEB6776 | **CF** | 27 | Twenty Patients With Cystic Fibrosis From Whom Mycobacterium abscessus Was Isolated [Table 1 header]; all 20 patients have CFTR genotype data; paper title: 'a cohort of pediatric cystic fibrosis patients' |
+| mabs_all | PRJEB64488 | **CF** | 15 | Spatial diversity in pathogen virulence gene expression and subclonal composition across the lung ... Overlay host spatial transcriptomics of lung tissues from cystic fibrosis ... FFPE tissue blocks collected from CF explanted lungs |
+| mabs_all | PRJEB1520 | **CF** | 5 | we determined the whole genome sequence of 6 sequential isolates of M. bolletii obtained from a single patient (Patient 1) ... CF status: CF (Table 1, Patient 1). Of the 12 patients, 10 suffered from cystic fibrosis. |
+| mabs_all | PRJNA65151 | **CF** | 1 | an outbreak of respiratory infection with M. abscessus subsp. massiliense at a cystic fibrosis center in Seattle, Washington, USA |
+| mabs_all | PRJNA439313 | **CF** | 0 | 6.7% (22/328) of CF patients had M. abscessus isolated from respiratory specimens |
+
+30 whole-project calls (18 non-CF, 12 CF).
+
+## B. Big studies (>= 1% of the cohort) — cf composition + decision, ALWAYS reviewed
+
+The large studies drive the phenotype and have caused problems before (PRJEB2779). Check each cf split + how it was decided, regardless of whether it carried a whole-project call.
+
+| tag | study | n | CF | non-CF | blank | other | decision | argument |
+|---|---|---|---|---|---|---|---|---|
+| mabs_all | PRJEB2779 | 2143 | 824 | 115 | 1201 | 3 | curator-skip (answer=''; curator skip: 88% CF (<95% whole-project rule) — genuinely wide, leave cf blank) | we undertook population-level, multinational, whole genome sequencing of M. abscessus isolates from infected CF patients...isolates obtained from UK CF clinics and their associated |
+| mabs_all | PRJNA319839 | 619 | 619 | 0 | 0 | 0 | whole-project CF | 558 M. abscessus isolates from 266 patients with CF attending 48 CF Care Centers in 28 U.S. states as part of a nationwide surveillance program |
+| mabs_all | PRJNA1036625 | 219 | 0 | 0 | 219 | 0 | known-only (no whole-project fill) | With respect to CF status, 48.6% (n = 34/70) had CF... Cystic fibrosis: Yes 34 (48.6%), No 36 (51.4%) |
+| mabs_all | PRJDB10566 | 217 | 0 | 217 | 0 | 0 | whole-project non-CF | we sequenced the genome of 220 MABC clinical isolates obtained from non-CF patients before treatment in four hospitals in three East Asian locations |
+| mabs_all | PRJNA734660 | 203 | 0 | 203 | 0 | 0 | whole-project non-CF | Only two isolates were from patients with cystic fibrosis. |
+| mabs_all | PRJEB7058 | 189 | 0 | 189 | 0 | 0 | whole-project non-CF | The majority of infections occurred after video-assisted surgeries where the equipment had been disinfected using 2 % glutaraldehyde solution... The Brazilian lineage was found to  |
+| mabs_all | PRJNA1165220 | 182 | 0 | 0 | 182 | 0 | known-only (no whole-project fill) | The NTM species Mycobacterium abscessus causes chronic pulmonary, soft-tissue, and disseminated infections... submitted for antimicrobial susceptibility testing as part of routine  |
+| mabs_all | PRJNA882917 | 175 | 175 | 0 | 0 | 0 | whole-project CF | The patient was on azithromycin therapy for CF at earlier time points (MAB_18_01 through MAB_18_05)...Furthermore, CF patients exhibit polymicrobial lung infections [42], and cross |
+| mabs_all | PRJNA778024 | 175 | 175 | 0 | 0 | 0 | known-only (no whole-project fill) | isolates obtained from sputum specimens of 27 adult patients with CF receiving routine clinical care at St. Michael's Hospital, Toronto... We included a convenience sample of isola |
+| mabs_all | PRJEB14002 | 162 | 162 | 0 | 0 | 0 | whole-project CF | Whole-genome sequencing to identify transmission of Mycobacterium abscessus between patients with cystic fibrosis: a retrospective cohort study... our study indicates that acquisit |
+| mabs_all | PRJNA989271 | 153 | 0 | 0 | 153 | 0 | known-only (no whole-project fill) | Molecular Epidemiology of Mycobacterium abscessus complex in Cystic Fibrosis and Non-Cystic Fibrosis patients in New South Wales |
+| mabs_all | PRJDB10333 | 148 | 0 | 148 | 0 | 0 | whole-project non-CF | MABC causes a range of clinical infections including chronic pulmonary disease even in immunocompetent persons, as well as postsurgical or traumatic infections and skin and soft ti |
+| mabs_all | PRJEB31559 | 145 | 111 | 31 | 3 | 0 | known-only (no whole-project fill) | Table 1 shows 41/62 patients with Cystic fibrosis as underlying condition (bcn_hcl_002, bcn_hvh_030–040, and 30 of 32 GOSH patients) alongside 21/62 with non-CF conditions (Bronchi |
+| mabs_all | PRJEB44160 | 122 | 122 | 0 | 0 | 0 | whole-project CF | whole-genome data were obtained for 154 M. abscessus isolates from 123 German CF patients in 14 centers [primary cohort]; EBI study title: 'WGS of M. abscessus strains from german  |
+| mabs_all | PRJNA401515 | 118 | 0 | 0 | 118 | 0 | known-only (no whole-project fill) |  |
+| mabs_all | PRJEB39129 | 86 | 86 | 0 | 0 | 0 | whole-project CF | More than 30 species of nontuberculous mycobacteria (NTM) are known to cause infections in humans, mostly in persons with immunodeficiency or underlying diseases such as Cystic Fib |
+| mabs_all | PRJNA420644 | 85 | 0 | 0 | 85 | 0 | known-only (no whole-project fill) | M. abscessus poses a significant problem, particularly in patients with cystic fibrosis (CF)... no prior selection according to the site of isolation or whether M. abscessus comple |
+| mabs_all | PRJNA1119444 | 68 | 68 | 0 | 0 | 0 | whole-project CF | To investigate the genetic differenced of DCC1 isolate we collected isolates from 26 MAB-positive pwCF over a three-year period from a previous uninvestigated population of MAB col |
+| mabs_all | PRJEB37730 | 67 | 49 | 15 | 3 | 0 | known-only (no whole-project fill) | The MABC isolates comprised 54 isolates from 27 CF patients and 18 isolates from 10 non-CF patients |

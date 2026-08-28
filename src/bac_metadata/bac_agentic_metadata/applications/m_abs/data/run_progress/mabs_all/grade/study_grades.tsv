@@ -1,0 +1,94 @@
+study_accession	study_type	study_type_excluded	paper_records_in_taxon	paper_coverage_for_taxon	needs_manual_download	fulltext_source	is_full_text	grade_context_chars	full_text_would_help	model	reports_AST__value	reports_AST__grade	per_sample_AST__value	per_sample_AST__grade	backfill_country__value	backfill_country__whole_project	backfill_isolation_source__value	backfill_isolation_source__whole_project	backfill_host__value	backfill_host__whole_project	backfill_collection_date__value	backfill_collection_date__whole_project	backfill_cf_status__value	backfill_cf_status__whole_project
+PRJNA840944	experimental_evolution	True			True	abstract	False	1247	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA542112	observational	False	0	0.0	False	pdf	True	10000	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA1236821	observational	False	21	1.0	True	abstract	False	2307	False	claude-sonnet-4-6		not_gradeable		not_gradeable	South Korea	True		False	human	True		False	non-CF	True
+PRJNA734909	observational	False	19	1.0	False	pdf	True	44612	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	False		False	non-CF	True
+PRJNA1209868	experimental_evolution	True	18	0.9474	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable		False		False		False		False		False
+PRJNA439313	observational	False	17	1.0	True	abstract	False	1237	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Australia	True	respiratory specimen	True	human	True		False	CF	True
+PRJNA734948	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJEB64488	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False	CF	True
+PRJNA1215975	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Argentina	True		False	human	True	2023-07-02	True		False
+PRJNA656566	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Canada	True		False	human	True		False		False
+PRJNA698640	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA297030	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	USA	True	sternal wound	False	human	False	2014-12-31	True	non-CF	False
+PRJNA268101	observational	False			False	europepmc_fulltext	True	24663	False	claude-sonnet-4-6	False	gradeable	none	gradeable	United Kingdom	True		False	human	True		False		False
+PRJEB19845	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA996741	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA867543	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA823663	other	False	6	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Netherlands	True		False		False		False		False
+PRJNA231221	observational	False	5	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False		False	human	False		False		False
+PRJEB1520	observational	False	6	1.2	False	europepmc_fulltext	True	27812	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	United Kingdom	True		False	human	True		False	CF	True
+PRJNA698643	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA1177655	observational	False	5	1.0	False	europepmc_fulltext	True	38819	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	Spain	True	sputum	False	human	True	2022-06-15	True		False
+PRJNA1169404	observational	False			True	none	False	0	False	claude-sonnet-4-6	True	gradeable		not_gradeable	Bangladesh	True	pus / wound swab (surgical site infection)	False	human	True		False	non-CF	True
+PRJNA1221978	observational	False	4	1.0	False	europepmc_fulltext	True	5472	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Canada	True	skin/soft tissue	True	human	True		False	non-CF	True
+PRJNA1040155	experimental_evolution	True			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA672126	observational	False	4	1.0	False	europepmc_fulltext	True	4832	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	Brazil	True		False	human	False		False		False
+PRJEB74244	observational	False	0	0.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Ireland	True		False	human	True		False		False
+PRJNA1169681	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA347845	observational	False	2	1.0	False	europepmc_fulltext	True	50000	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	USA	True		False		False		False		False
+PRJNA716753	observational	False	2	1.0	False	europepmc_fulltext	True	30479	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Thailand	True		False	human	True		False	non-CF	True
+PRJNA1215977	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	Argentina	True		False	human	True	2025-07-02	True		False
+PRJNA1133902	observational	False	2	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	South Korea	True		False	human	True		False	non-CF	True
+PRJNA1136428	other	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA756101	experimental_evolution	True	2	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable		False		False		False		False		False
+PRJEB50291	observational	False	2	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Denmark	True		False	human	True		False		False
+PRJNA323571	observational	False	2	1.0	False	europepmc_fulltext	True	33909	False	claude-sonnet-4-6	True	gradeable	possible	gradeable		False		False		False		False		False
+PRJEB38893	experimental_evolution	True	2	1.0	True	abstract	False	1570	False	claude-sonnet-4-6	True	gradeable	possible	gradeable		False		False		False		False		False
+PRJNA191785	other	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA203567	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA65137	observational	False	1	1.0	False	europepmc_fulltext	True	26632	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA566387	other	False	2	2.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable		False		False	human	True		False		False
+PRJNA203565	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA203566	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA203569	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA65143	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA203570	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA203571	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA65171	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	True		False	human	True	2010-07-02	True		False
+PRJNA203572	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJNA191787	other	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65139	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65147	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65145	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65149	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65151	observational	False	1	1.0	False	europepmc_fulltext	True	26632	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	True		False	CF	True
+PRJNA65153	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65155	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65157	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65159	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	True		False	human	True	2002-07-02	True		False
+PRJNA65161	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65163	observational	False			False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	USA	True		False	human	True		False		False
+PRJNA65165	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA203564	observational	False	11	11.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	USA	True	sputum	False	human	True		False		False
+PRJNA65169	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA191786	observational	False	0	0.0	False	europepmc_fulltext	True	4073	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJDB2362	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA184888	observational	False	2	2.0	False	pdf	True	25450	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True	bronchial washing	False	human	True	2012-07-01	True		False
+PRJNA1238535	experimental_evolution	True			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65199	observational	False	1	1.0	False	europepmc_fulltext	True	26632	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA65213	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65195	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA65215	observational	False	1	1.0	False	pdf	True	5256	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False		False		False		False		False
+PRJNA65197	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65211	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	True		False	human	True	2010-07-02	True		False
+PRJNA65209	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65203	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65207	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65205	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJDB14511	observational	False	1	1.0	True	none	False	0	False	claude-sonnet-4-6	True	gradeable		not_gradeable		False	ear / mastoid drainage	True	human	True		False	non-CF	True
+PRJNA1019825	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJDB7717	observational	False	1	1.0	False	europepmc_fulltext	True	33941	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False		False		False		False		False
+PRJNA65191	observational	False	40	40.0	False	europepmc_fulltext	True	39563	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA1013065	experimental_evolution	True	1	1.0	False	pdf	True	10000	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable		False		False		False		False		False
+PRJEB85433	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJEB33804	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJDB2099	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA857686	observational	False			False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True		False	human	True		False		False
+PRJNA865308	experimental_evolution	True	1	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	none	gradeable		False		False		False		False		False
+PRJNA65193	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA191789	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65187	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA191788	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA401495	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJNA65167	observational	False	1	1.0	False	pdf	True	49782	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	USA	True		False	human	True		False		False

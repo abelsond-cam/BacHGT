@@ -1,0 +1,2 @@
+study_accession	gap_samples	gap_fields	fulltext_source	paywalled	per_sample_fills	mech_reason	supp_present	has_per_sample_table	table_fields	accession_keyed	table_reference	action	evidence_quote	pmcid	doi	save_as
+PRJNA1209868	57	cf_status,host,isolation_source	europepmc_fulltext	False	0	no_supp	False	no		no		SKIP	Table 1: Mutations in MAB_2648c (marR) identified from M. abscessus mutants with reduced nitroxoline susceptibility by whole-genome sequencing	PMC12057340	10.1128/aac.01744-24	PRJNA1209868.xlsx

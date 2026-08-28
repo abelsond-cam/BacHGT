@@ -1,0 +1,644 @@
+study_accession	sample_accession	field	ena_value	applied_value	method	evidence
+PRJDB17850	SAMD00763320	country		Japan	whole_field	
+PRJDB17850	SAMD00763322	country		Japan	whole_field	
+PRJDB17850	SAMD00763323	country		Japan	whole_field	
+PRJDB17850	SAMD00763326	country		Japan	whole_field	
+PRJDB17850	SAMD00763330	country		Japan	whole_field	
+PRJDB17850	SAMD00763331	country		Japan	whole_field	
+PRJDB17850	SAMD00763338	country		Japan	whole_field	
+PRJDB17850	SAMD00763339	country		Japan	whole_field	
+PRJDB17850	SAMD00763340	country		Japan	whole_field	
+PRJDB17850	SAMD00763345	country		Japan	whole_field	
+PRJDB17850	SAMD00763347	country		Japan	whole_field	
+PRJDB17850	SAMD00763348	country		Japan	whole_field	
+PRJDB17850	SAMD00763352	country		Japan	whole_field	
+PRJDB17850	SAMD00763354	country		Japan	whole_field	
+PRJDB17850	SAMD00763365	country		Japan	whole_field	
+PRJDB17850	SAMD00763366	country		Japan	whole_field	
+PRJDB17850	SAMD00763324	country		Japan	whole_field	
+PRJDB17850	SAMD00763328	country		Japan	whole_field	
+PRJDB17850	SAMD00763329	country		Japan	whole_field	
+PRJDB17850	SAMD00763332	country		Japan	whole_field	
+PRJDB17850	SAMD00763333	country		Japan	whole_field	
+PRJDB17850	SAMD00763334	country		Japan	whole_field	
+PRJDB17850	SAMD00763337	country		Japan	whole_field	
+PRJDB17850	SAMD00763343	country		Japan	whole_field	
+PRJDB17850	SAMD00763344	country		Japan	whole_field	
+PRJDB17850	SAMD00763357	country		Japan	whole_field	
+PRJDB17850	SAMD00763358	country		Japan	whole_field	
+PRJDB17850	SAMD00763360	country		Japan	whole_field	
+PRJDB17850	SAMD00763361	country		Japan	whole_field	
+PRJDB17850	SAMD00763362	country		Japan	whole_field	
+PRJDB17850	SAMD00763364	country		Japan	whole_field	
+PRJDB17850	SAMD00763367	country		Japan	whole_field	
+PRJDB17850	SAMD00763318	country		Japan	whole_field	
+PRJDB17850	SAMD00763319	country		Japan	whole_field	
+PRJDB17850	SAMD00763321	country		Japan	whole_field	
+PRJDB17850	SAMD00763325	country		Japan	whole_field	
+PRJDB17850	SAMD00763327	country		Japan	whole_field	
+PRJDB17850	SAMD00763335	country		Japan	whole_field	
+PRJDB17850	SAMD00763336	country		Japan	whole_field	
+PRJDB17850	SAMD00763341	country		Japan	whole_field	
+PRJDB17850	SAMD00763342	country		Japan	whole_field	
+PRJDB17850	SAMD00763346	country		Japan	whole_field	
+PRJDB17850	SAMD00763349	country		Japan	whole_field	
+PRJDB17850	SAMD00763353	country		Japan	whole_field	
+PRJDB17850	SAMD00763355	country		Japan	whole_field	
+PRJDB17850	SAMD00763356	country		Japan	whole_field	
+PRJDB17850	SAMD00763359	country		Japan	whole_field	
+PRJDB17850	SAMD00763363	country		Japan	whole_field	
+PRJEB6776	SAMEA2649854	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649859	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649860	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649861	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649865	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649868	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649871	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649872	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649874	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649875	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649876	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649878	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649855	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649857	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649869	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649873	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649877	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649852	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649853	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649856	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649858	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649862	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649863	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649864	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649866	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649867	country		United Kingdom	whole_field	
+PRJEB6776	SAMEA2649870	country		United Kingdom	whole_field	
+PRJDB12235	SAMD00402130	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402132	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402140	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402148	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402149	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402131	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402133	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402134	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402135	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402138	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402139	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402141	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402145	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402152	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402153	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402129	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402136	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402137	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402142	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402143	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402144	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402146	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402147	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402150	isolation_source		sputum	whole_field	
+PRJDB12235	SAMD00402151	isolation_source		sputum	whole_field	
+PRJDB13427	SAMD00466905	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466906	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466908	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466914	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466917	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466920	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466928	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466940	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466942	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466946	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466952	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466909	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466953	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466911	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466957	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466912	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466913	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466919	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466921	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466922	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466924	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466925	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466927	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466933	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466938	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466941	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466947	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466950	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466954	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466955	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466956	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466907	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466910	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466915	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466918	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466923	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466926	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466930	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466931	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466932	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466934	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466935	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466936	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466937	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466939	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466943	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466944	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466945	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466948	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466949	isolation_source		tracheal aspirate	whole_field	
+PRJDB13427	SAMD00466951	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763320	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763322	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763323	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763326	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763330	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763331	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763338	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763339	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763340	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763345	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763347	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763348	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763352	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763354	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763365	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763366	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763324	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763328	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763329	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763332	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763333	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763334	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763337	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763343	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763344	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763357	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763358	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763360	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763361	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763362	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763364	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763367	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763318	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763319	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763321	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763325	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763327	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763335	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763336	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763341	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763342	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763346	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763349	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763353	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763355	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763356	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763359	isolation_source		tracheal aspirate	whole_field	
+PRJDB17850	SAMD00763363	isolation_source		tracheal aspirate	whole_field	
+PRJNA1051626	SAMN38917442	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917444	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917423	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917424	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917425	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917432	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917433	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917435	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917437	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917439	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917443	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917445	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917428	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917429	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917431	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917436	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917446	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146263	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146261	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917438	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917440	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917441	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917426	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917427	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917430	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917434	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN38917447	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146266	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146264	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146265	isolation_source		pulmonary specimen	whole_field	
+PRJNA1051626	SAMN41146262	isolation_source		pulmonary specimen	whole_field	
+PRJDB17850	SAMD00763320	host		human	whole_field	
+PRJDB17850	SAMD00763322	host		human	whole_field	
+PRJDB17850	SAMD00763323	host		human	whole_field	
+PRJDB17850	SAMD00763326	host		human	whole_field	
+PRJDB17850	SAMD00763330	host		human	whole_field	
+PRJDB17850	SAMD00763331	host		human	whole_field	
+PRJDB17850	SAMD00763338	host		human	whole_field	
+PRJDB17850	SAMD00763339	host		human	whole_field	
+PRJDB17850	SAMD00763340	host		human	whole_field	
+PRJDB17850	SAMD00763345	host		human	whole_field	
+PRJDB17850	SAMD00763347	host		human	whole_field	
+PRJDB17850	SAMD00763348	host		human	whole_field	
+PRJDB17850	SAMD00763352	host		human	whole_field	
+PRJDB17850	SAMD00763354	host		human	whole_field	
+PRJDB17850	SAMD00763365	host		human	whole_field	
+PRJDB17850	SAMD00763366	host		human	whole_field	
+PRJDB17850	SAMD00763324	host		human	whole_field	
+PRJDB17850	SAMD00763328	host		human	whole_field	
+PRJDB17850	SAMD00763329	host		human	whole_field	
+PRJDB17850	SAMD00763332	host		human	whole_field	
+PRJDB17850	SAMD00763333	host		human	whole_field	
+PRJDB17850	SAMD00763334	host		human	whole_field	
+PRJDB17850	SAMD00763337	host		human	whole_field	
+PRJDB17850	SAMD00763343	host		human	whole_field	
+PRJDB17850	SAMD00763344	host		human	whole_field	
+PRJDB17850	SAMD00763357	host		human	whole_field	
+PRJDB17850	SAMD00763358	host		human	whole_field	
+PRJDB17850	SAMD00763360	host		human	whole_field	
+PRJDB17850	SAMD00763361	host		human	whole_field	
+PRJDB17850	SAMD00763362	host		human	whole_field	
+PRJDB17850	SAMD00763364	host		human	whole_field	
+PRJDB17850	SAMD00763367	host		human	whole_field	
+PRJDB17850	SAMD00763318	host		human	whole_field	
+PRJDB17850	SAMD00763319	host		human	whole_field	
+PRJDB17850	SAMD00763321	host		human	whole_field	
+PRJDB17850	SAMD00763325	host		human	whole_field	
+PRJDB17850	SAMD00763327	host		human	whole_field	
+PRJDB17850	SAMD00763335	host		human	whole_field	
+PRJDB17850	SAMD00763336	host		human	whole_field	
+PRJDB17850	SAMD00763341	host		human	whole_field	
+PRJDB17850	SAMD00763342	host		human	whole_field	
+PRJDB17850	SAMD00763346	host		human	whole_field	
+PRJDB17850	SAMD00763349	host		human	whole_field	
+PRJDB17850	SAMD00763353	host		human	whole_field	
+PRJDB17850	SAMD00763355	host		human	whole_field	
+PRJDB17850	SAMD00763356	host		human	whole_field	
+PRJDB17850	SAMD00763359	host		human	whole_field	
+PRJDB17850	SAMD00763363	host		human	whole_field	
+PRJEB57933	SAMEA112180989	host		human	whole_field	
+PRJEB57933	SAMEA112180987	host		human	whole_field	
+PRJEB57933	SAMEA112180988	host		human	whole_field	
+PRJEB57933	SAMEA112180990	host		human	whole_field	
+PRJEB57933	SAMEA112180986	host		human	whole_field	
+PRJEB57933	SAMEA114400484	host		human	whole_field	
+PRJEB57933	SAMEA114400499	host		human	whole_field	
+PRJEB57933	SAMEA114400494	host		human	whole_field	
+PRJEB57933	SAMEA114400502	host		human	whole_field	
+PRJEB57933	SAMEA114400495	host		human	whole_field	
+PRJEB57933	SAMEA114400486	host		human	whole_field	
+PRJEB57933	SAMEA114400503	host		human	whole_field	
+PRJEB57933	SAMEA114400496	host		human	whole_field	
+PRJEB57933	SAMEA114400489	host		human	whole_field	
+PRJEB57933	SAMEA114400504	host		human	whole_field	
+PRJEB57933	SAMEA114400482	host		human	whole_field	
+PRJEB57933	SAMEA114400506	host		human	whole_field	
+PRJEB57933	SAMEA114400491	host		human	whole_field	
+PRJEB57933	SAMEA114400483	host		human	whole_field	
+PRJEB57933	SAMEA114400500	host		human	whole_field	
+PRJEB57933	SAMEA114400485	host		human	whole_field	
+PRJEB57933	SAMEA114400487	host		human	whole_field	
+PRJEB57933	SAMEA114400492	host		human	whole_field	
+PRJEB57933	SAMEA114400488	host		human	whole_field	
+PRJEB57933	SAMEA114400498	host		human	whole_field	
+PRJEB57933	SAMEA114400493	host		human	whole_field	
+PRJEB57933	SAMEA114400505	host		human	whole_field	
+PRJEB57933	SAMEA114400497	host		human	whole_field	
+PRJEB57933	SAMEA114400501	host		human	whole_field	
+PRJEB6776	SAMEA2649854	host		human	whole_field	
+PRJEB6776	SAMEA2649859	host		human	whole_field	
+PRJEB6776	SAMEA2649860	host		human	whole_field	
+PRJEB6776	SAMEA2649861	host		human	whole_field	
+PRJEB6776	SAMEA2649865	host		human	whole_field	
+PRJEB6776	SAMEA2649868	host		human	whole_field	
+PRJEB6776	SAMEA2649871	host		human	whole_field	
+PRJEB6776	SAMEA2649872	host		human	whole_field	
+PRJEB6776	SAMEA2649874	host		human	whole_field	
+PRJEB6776	SAMEA2649875	host		human	whole_field	
+PRJEB6776	SAMEA2649876	host		human	whole_field	
+PRJEB6776	SAMEA2649878	host		human	whole_field	
+PRJEB6776	SAMEA2649855	host		human	whole_field	
+PRJEB6776	SAMEA2649857	host		human	whole_field	
+PRJEB6776	SAMEA2649869	host		human	whole_field	
+PRJEB6776	SAMEA2649873	host		human	whole_field	
+PRJEB6776	SAMEA2649877	host		human	whole_field	
+PRJEB6776	SAMEA2649852	host		human	whole_field	
+PRJEB6776	SAMEA2649853	host		human	whole_field	
+PRJEB6776	SAMEA2649856	host		human	whole_field	
+PRJEB6776	SAMEA2649858	host		human	whole_field	
+PRJEB6776	SAMEA2649862	host		human	whole_field	
+PRJEB6776	SAMEA2649863	host		human	whole_field	
+PRJEB6776	SAMEA2649864	host		human	whole_field	
+PRJEB6776	SAMEA2649866	host		human	whole_field	
+PRJEB6776	SAMEA2649867	host		human	whole_field	
+PRJEB6776	SAMEA2649870	host		human	whole_field	
+PRJNA353361	SAMN10532919	host		human	whole_field	
+PRJNA353361	SAMN10532922	host		human	whole_field	
+PRJNA353361	SAMN10532926	host		human	whole_field	
+PRJNA353361	SAMN10532900	host		human	whole_field	
+PRJNA353361	SAMN10532904	host		human	whole_field	
+PRJNA353361	SAMN10532917	host		human	whole_field	
+PRJNA353361	SAMN10532914	host		human	whole_field	
+PRJNA353361	SAMN10532909	host		human	whole_field	
+PRJNA353361	SAMN10532928	host		human	whole_field	
+PRJNA353361	SAMN10532921	host		human	whole_field	
+PRJNA353361	SAMN10532923	host		human	whole_field	
+PRJNA353361	SAMN10532925	host		human	whole_field	
+PRJNA353361	SAMN10532908	host		human	whole_field	
+PRJNA353361	SAMN10532903	host		human	whole_field	
+PRJNA353361	SAMN10532905	host		human	whole_field	
+PRJNA353361	SAMN10532906	host		human	whole_field	
+PRJNA353361	SAMN10532913	host		human	whole_field	
+PRJNA353361	SAMN10532915	host		human	whole_field	
+PRJNA353361	SAMN10532911	host		human	whole_field	
+PRJNA353361	SAMN10532920	host		human	whole_field	
+PRJNA353361	SAMN10532924	host		human	whole_field	
+PRJNA353361	SAMN10532907	host		human	whole_field	
+PRJNA353361	SAMN10532899	host		human	whole_field	
+PRJNA353361	SAMN10532901	host		human	whole_field	
+PRJNA353361	SAMN10532902	host		human	whole_field	
+PRJNA353361	SAMN10532918	host		human	whole_field	
+PRJNA353361	SAMN10532916	host		human	whole_field	
+PRJNA353361	SAMN10532910	host		human	whole_field	
+PRJNA353361	SAMN10532912	host		human	whole_field	
+PRJDB12235	SAMD00402130	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402132	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402140	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402148	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402149	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402131	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402133	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402134	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402135	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402138	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402139	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402141	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402145	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402152	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402153	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402129	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402136	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402137	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402142	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402143	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402144	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402146	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402147	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402150	cf_status		non-CF	whole_field	
+PRJDB12235	SAMD00402151	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466905	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466906	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466908	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466914	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466917	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466920	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466928	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466940	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466942	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466946	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466952	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466909	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466953	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466911	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466957	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466912	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466913	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466919	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466921	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466922	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466924	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466925	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466927	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466933	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466938	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466941	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466947	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466950	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466954	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466955	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466956	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466907	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466910	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466915	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466918	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466923	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466926	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466930	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466931	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466932	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466934	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466935	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466936	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466937	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466939	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466943	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466944	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466945	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466948	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466949	cf_status		non-CF	whole_field	
+PRJDB13427	SAMD00466951	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763320	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763322	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763323	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763326	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763330	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763331	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763338	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763339	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763340	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763345	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763347	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763348	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763352	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763354	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763365	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763366	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763324	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763328	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763329	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763332	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763333	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763334	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763337	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763343	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763344	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763357	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763358	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763360	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763361	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763362	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763364	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763367	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763318	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763319	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763321	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763325	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763327	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763335	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763336	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763341	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763342	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763346	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763349	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763353	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763355	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763356	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763359	cf_status		non-CF	whole_field	
+PRJDB17850	SAMD00763363	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA112180989	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA112180987	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA112180988	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA112180990	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA112180986	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400484	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400499	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400494	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400502	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400495	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400486	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400503	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400496	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400489	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400504	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400482	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400506	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400491	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400483	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400500	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400485	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400487	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400492	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400488	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400498	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400493	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400505	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400497	cf_status		non-CF	whole_field	
+PRJEB57933	SAMEA114400501	cf_status		non-CF	whole_field	
+PRJEB28875	SAMEA4949199	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949200	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949203	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949204	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949206	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949210	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949211	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949213	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949215	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949217	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949218	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949220	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949222	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949224	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949227	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949228	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949201	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949202	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949205	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949208	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949209	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949214	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949216	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949221	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949226	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949207	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949212	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949219	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949223	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949225	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949229	cf_status		CF	whole_field	
+PRJEB28875	SAMEA4949230	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649854	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649859	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649860	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649861	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649865	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649868	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649871	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649872	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649874	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649875	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649876	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649878	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649855	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649857	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649869	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649873	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649877	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649852	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649853	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649856	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649858	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649862	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649863	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649864	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649866	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649867	cf_status		CF	whole_field	
+PRJEB6776	SAMEA2649870	cf_status		CF	whole_field	
+PRJNA832057	SAMN27861817	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861809	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861805	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861803	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861801	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861788	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861780	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861776	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861774	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861767	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861820	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861811	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861808	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861804	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861784	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861771	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861769	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861768	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861825	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861813	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861807	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861806	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861796	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861773	cf_status		non-CF	whole_field	
+PRJNA832057	SAMN27861770	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827855	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827856	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827819	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827821	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827825	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827826	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827827	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827832	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827859	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827836	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827840	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827860	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827848	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827853	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827858	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827828	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827831	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827834	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827835	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827841	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827842	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827843	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827844	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827847	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827850	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827852	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827861	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827854	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827857	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827818	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827820	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827822	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827823	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827824	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827830	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827833	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827837	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827838	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827839	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827845	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827846	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827849	cf_status		non-CF	whole_field	
+PRJNA1123827	SAMN41827851	cf_status		non-CF	whole_field	

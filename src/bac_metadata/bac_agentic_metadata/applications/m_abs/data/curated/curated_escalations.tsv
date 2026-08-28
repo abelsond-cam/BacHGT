@@ -1,0 +1,5 @@
+study_accession	field	answer	answer_note	tag
+PRJDB10333	cf_status		curator skip: no single whole-field value (genuinely wide / undeterminable)	mabs_11_20
+PRJEB2779	cf_status		curator skip: 88% CF (<95% whole-project rule) — genuinely wide, leave cf blank	mabs_top20
+PRJEB2779	host	human		explore10
+PRJEB2779	isolation_source	sputum		explore10

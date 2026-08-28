@@ -1,0 +1,21 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJDB12235	PMC9241747		abstained	0	0	none	no joinable table
+PRJDB13427	PMC10433864		abstained	0	0	none	no joinable table
+PRJDB15290	PMC11099050		abstained	0	0	none	no joinable table
+PRJDB17850	PMC10433864		abstained	0	0	none	no joinable table
+PRJEB28875	PMC6821159		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['ciz069_suppl_supplementary_material.xlsx', 'ciz069_suppl_supplementary_material.xlsx']
+PRJEB36331			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB57933	PMC10606986		abstained	0	0	none	no joinable table
+PRJEB61124	PMC10979023		abstained	0	0	none	no joinable table
+PRJEB6776	PMC4357290		abstained	0	0	none	no joinable table
+PRJEB9515	PMC6325232		abstained	0	0	none	no joinable table
+PRJNA1051626	PMC11619595	spectrum.01056-24-s0001.xlsx	abstained	0	0	high	joinable tables are accession-manifest only (no field columns); no bridge to field tables ['spectrum.01056-24-s0002.xlsx', 'spectrum.01056-24-s0002.xlsx']
+PRJNA1080355			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1123827			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1211657	PMC4982176		abstained	0	0	none	no joinable table
+PRJNA315990	PMC5034138		abstained	0	0	none	no joinable table
+PRJNA353361			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA523365	PMC8390669	41467_2021_25484_MOESM1_ESM.pdf	direct	3	14	medium	mapped 3 samples, 28 cell-fills; rescued ['collection_date=vocab', 'host=vocab']; overwrite guard: 14/28 fills kept; kept ENA over table on country×7, host×7
+PRJNA691364	PMC8319421		abstained	0	0	none	no joinable table
+PRJNA718117	PMC10499228		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf', 'pone.0291072.s001.pdf']
+PRJNA832057	PMC9430165	spectrum.00118-22-s0001.xlsx	direct	41	20	medium	mapped 41 samples, 96 cell-fills; rescued ['cf_status=vocab', 'host=vocab']; overwrite guard: 20/96 fills kept; kept ENA over table on collection_date×40, isolation_source×36

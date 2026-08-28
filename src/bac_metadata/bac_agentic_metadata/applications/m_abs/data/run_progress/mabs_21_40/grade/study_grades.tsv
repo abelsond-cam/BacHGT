@@ -1,0 +1,21 @@
+study_accession	study_type	study_type_excluded	paper_records_in_taxon	paper_coverage_for_taxon	needs_manual_download	fulltext_source	is_full_text	grade_context_chars	full_text_would_help	model	reports_AST__value	reports_AST__grade	per_sample_AST__value	per_sample_AST__grade	backfill_country__value	backfill_country__whole_project	backfill_isolation_source__value	backfill_isolation_source__whole_project	backfill_host__value	backfill_host__whole_project	backfill_collection_date__value	backfill_collection_date__whole_project	backfill_cf_status__value	backfill_cf_status__whole_project
+PRJEB36331	experimental_evolution	True			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False		False		False		False
+PRJDB13427	observational	False	52	1.0196	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Japan	True	tracheal aspirate	True	human	True		False	non-CF	True
+PRJEB61124	observational	False	53	1.06	False	europepmc_fulltext	True	45285	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Spain	True	sputum	True	human	True		False		False
+PRJDB17850	observational	False	52	1.0833	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	Japan	True	tracheal aspirate	True	human	True		False	non-CF	True
+PRJEB9515	observational	False	203	4.5111	False	pdf	True	39702	False	claude-sonnet-4-6	True	gradeable	none	gradeable	United Kingdom	True		False	human	True		False		False
+PRJNA718117	observational	False	1	0.0227	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6		not_gradeable		not_gradeable	USA	False	water/plumbing	False		False		False		False
+PRJNA1211657	observational	False	15	0.3488	False	europepmc_fulltext	True	27535	False	claude-sonnet-4-6	True	gradeable	none	gradeable	USA	False	surgical wound	False	human	False	2013-12-31	True	non-CF	False
+PRJNA1123827	observational	False			True	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable	China	True		False	Homo sapiens	True		False	non-CF	True
+PRJNA832057	observational	False	69	1.6829	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	China	True	sputum	False	human	True		False	non-CF	True
+PRJNA315990	observational	False	16	0.4103	False	europepmc_fulltext	True	5351	False	claude-sonnet-4-6	False	gradeable	none	gradeable		False		False	human	False		False		False
+PRJNA691364	observational	False	34	1.0	False	europepmc_fulltext	True	31062	False	claude-sonnet-4-6	False	gradeable	none	gradeable	USA	True	respiratory	False	human	True		False		False
+PRJDB15290	observational	False	33	1.0	False	europepmc_fulltext	True	30818	False	claude-sonnet-4-6	True	gradeable	none	gradeable	Japan	True		False	human	True		False		False
+PRJNA1080355	experimental_evolution	True	32	1.0	False	local_pdf	True	10000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable		False		False		False		False		False
+PRJEB28875	observational	False	32	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	United Kingdom	True		False	Homo sapiens	True	2015-07-02	True	CF	True
+PRJNA523365	observational	False	31	1.0	False	europepmc_fulltext	True	49523	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable	USA	True		False	human	True		False		False
+PRJNA1051626	observational	False	31	1.0	False	europepmc_fulltext	True	30599	False	claude-sonnet-4-6	True	gradeable	retrievable	gradeable		False	pulmonary specimen	True	human	True		False		False
+PRJEB57933	observational	False	29	1.0	False	europepmc_fulltext	True	33339	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Portugal	True		False	human	True		False	non-CF	True
+PRJNA353361	observational	False			False	none	False	0	False	claude-sonnet-4-6		not_gradeable		not_gradeable		False		False	human	True		False		False
+PRJEB6776	observational	False	27	1.0	False	europepmc_fulltext	True	10000	False	claude-sonnet-4-6	False	gradeable	none	gradeable	United Kingdom	True	sputum	False	human	True		False	CF	True
+PRJDB12235	observational	False	25	1.0	False	europepmc_fulltext	True	28333	False	claude-sonnet-4-6	True	gradeable	possible	gradeable	Japan	True	sputum	True	human	True		False	non-CF	True

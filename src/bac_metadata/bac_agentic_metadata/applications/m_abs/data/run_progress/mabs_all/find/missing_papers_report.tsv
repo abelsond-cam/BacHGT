@@ -1,0 +1,57 @@
+study_accession	has_paper	date_gap	source_gap	gap_samples	ena_taxon_samples	fulltext_status	best_url	doi	pmid	pmcid	paper_link	title	save_as
+PRJNA840944	True	0	0	0	24	abstract	https://doi.org/10.1038/s41564-022-01307-5	10.1038/s41564-022-01307-5	36658396	PMC9992005		Biotin-dependent cell envelope remodelling is required for Mycobacterium abscessus survival in lung infection.	PRJNA840944.pdf
+PRJNA1236821	True	0	0	0	21	abstract	https://doi.org/10.1016/j.chest.2026.04.011	10.1016/j.chest.2026.04.011				Phylogenomic and Clinical Perspectives of an East Asia-Specific Cluster of Mycobacterium massiliense	PRJNA1236821.pdf
+PRJNA439313	True	0	0	0	17	abstract	https://doi.org/10.1016/j.jcf.2019.02.011	10.1016/j.jcf.2019.02.011	30853372			Investigating transmission of Mycobacterium abscessus amongst children in an Australian cystic fibrosis centre.	PRJNA439313.pdf
+PRJNA1169404	True	0	0	0	4	none	https://doi.org/10.26502/fjhs.350	10.26502/fjhs.350				Phenotypic and Genomic Characterization of Rapidly Growing Non-Tuberculous Mycobacteria Isolated from Surgical Site Infections in a Tertiary Care Hospital of Dhaka	PRJNA1169404.pdf
+PRJEB38893	True	0	0	0	2	abstract	https://doi.org/10.1089/mdr.2022.0068	10.1089/mdr.2022.0068	36802272			Mutations in Genes Encoding 23S rRNA and FadD32 May be Associated with Linezolid Resistance in <i>Mycobacteroides abscessus</i>.	PRJEB38893.pdf
+PRJNA734948	False	0	0	0	15	none							PRJNA734948.pdf
+PRJEB64488	False	0	0	0	15	none							PRJEB64488.pdf
+PRJNA1215975	False	0	0	0	11	none							PRJNA1215975.pdf
+PRJNA656566	False	0	0	0	11	none							PRJNA656566.pdf
+PRJNA698640	False	0	0	0	11	none							PRJNA698640.pdf
+PRJNA297030	False	0	0	0	10	none							PRJNA297030.pdf
+PRJEB19845	False	0	0	0	7	none							PRJEB19845.pdf
+PRJNA996741	False	0	0	0	6	none							PRJNA996741.pdf
+PRJNA867543	False	0	0	0	6	none							PRJNA867543.pdf
+PRJNA698643	False	0	0	0	5	none							PRJNA698643.pdf
+PRJNA1040155	False	0	0	0	4	none							PRJNA1040155.pdf
+PRJNA1169681	False	0	0	0	3	none							PRJNA1169681.pdf
+PRJNA1215977	False	0	0	0	2	none							PRJNA1215977.pdf
+PRJNA1136428	False	0	0	0	2	none							PRJNA1136428.pdf
+PRJNA191785	False	0	0	0	1	none							PRJNA191785.pdf
+PRJNA203567	False	0	0	0	1	none							PRJNA203567.pdf
+PRJNA203565	False	0	0	0	1	none							PRJNA203565.pdf
+PRJNA203566	False	0	0	0	1	none							PRJNA203566.pdf
+PRJNA203569	False	0	0	0	1	none						Using whole exome sequencing and bacterial pathogen sequencing to investigate the genetic basis of pulmonary non-tuberculous mycobacterial infections	PRJNA203569.pdf
+PRJNA65143	False	0	0	0	1	none							PRJNA65143.pdf
+PRJNA203570	False	0	0	0	1	none							PRJNA203570.pdf
+PRJNA203571	False	0	0	0	1	none							PRJNA203571.pdf
+PRJNA203572	False	0	0	0	1	none							PRJNA203572.pdf
+PRJNA191787	False	0	0	0	1	none							PRJNA191787.pdf
+PRJNA65139	False	0	0	0	1	none							PRJNA65139.pdf
+PRJNA65147	False	0	0	0	1	none							PRJNA65147.pdf
+PRJNA65145	False	0	0	0	1	none							PRJNA65145.pdf
+PRJNA65149	False	0	0	0	1	none							PRJNA65149.pdf
+PRJNA65153	False	0	0	0	1	none							PRJNA65153.pdf
+PRJNA65155	False	0	0	0	1	none							PRJNA65155.pdf
+PRJNA65157	False	0	0	0	1	none							PRJNA65157.pdf
+PRJNA65161	False	0	0	0	1	none							PRJNA65161.pdf
+PRJNA65169	False	0	0	0	1	none							PRJNA65169.pdf
+PRJDB2362	False	0	0	0	1	none							PRJDB2362.pdf
+PRJNA1238535	False	0	0	0	1	none							PRJNA1238535.pdf
+PRJNA65213	False	0	0	0	1	none							PRJNA65213.pdf
+PRJNA65197	False	0	0	0	1	none							PRJNA65197.pdf
+PRJNA65209	False	0	0	0	1	none							PRJNA65209.pdf
+PRJNA65203	False	0	0	0	1	none							PRJNA65203.pdf
+PRJNA65207	False	0	0	0	1	none							PRJNA65207.pdf
+PRJNA65205	False	0	0	0	1	none							PRJNA65205.pdf
+PRJDB14511	False	0	0	0	1	none							PRJDB14511.pdf
+PRJNA1019825	False	0	0	0	1	none							PRJNA1019825.pdf
+PRJEB85433	False	0	0	0	1	none							PRJEB85433.pdf
+PRJEB33804	False	0	0	0	1	none							PRJEB33804.pdf
+PRJDB2099	False	0	0	0	1	none							PRJDB2099.pdf
+PRJNA65193	False	0	0	0	1	none							PRJNA65193.pdf
+PRJNA191789	False	0	0	0	1	none							PRJNA191789.pdf
+PRJNA65187	False	0	0	0	1	none							PRJNA65187.pdf
+PRJNA191788	False	0	0	0	1	none							PRJNA191788.pdf
+PRJNA401495	False	0	0	0	1	none							PRJNA401495.pdf

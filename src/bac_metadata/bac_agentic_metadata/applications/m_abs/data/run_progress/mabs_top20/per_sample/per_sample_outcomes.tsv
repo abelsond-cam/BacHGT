@@ -1,0 +1,18 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJDB10333	PMC7910664	mmc1.docx	direct	148	148	high	mapped 148 samples, 296 cell-fills; rescued ['host=vocab']; overwrite guard: 148/296 fills kept; kept ENA over table on host×148
+PRJDB10566	PMC9248903	spectrum.00571-22-s002.xlsx	direct	217	651	high	mapped 217 samples, 1085 cell-fills; rescued ['host=vocab']; overwrite guard: 651/1085 fills kept; kept ENA over table on country×217, host×217
+PRJEB14002	PMC3664974		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mmc1.pdf', 'mmc1.pdf', 'mmc1.pdf', 'mmc1.pdf', 'mmc1.pdf', 'mmc1.pdf']
+PRJEB2779	PMC5142603		abstained	0	0	none	no joinable table
+PRJEB39129	PMC8526041		abstained	0	0	none	no joinable table
+PRJEB44160	PMC9431180		abstained	0	0	none	no joinable table
+PRJNA1036625	PMC11841644		abstained	0	0	none	no joinable table
+PRJNA1119444	PMC11537035	spectrum.01330-24-s0002.xlsx	direct	68	136	high	mapped 68 samples, 204 cell-fills; overwrite guard: 136/204 fills kept; overwrote collection_date×68(more-specific); kept ENA over table on isolation_source×68
+PRJNA1165220	PMC12128065		abstained	0	0	none	no joinable table
+PRJNA319839	PMC8641822		abstained	0	0	none	no joinable table
+PRJNA401515	PMC5786738		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['JCM.01480-17_zjm999095810s1.pdf', 'JCM.01480-17_zjm999095810s1.pdf', 'JCM.01480-17_zjm999095810s1.pdf']
+PRJNA420644	PMC6325232		abstained	0	0	none	no joinable table
+PRJNA734660	PMC8743566		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['mgen-7-0708-s001.xlsx', 'mgen-7-0708-s001.xlsx']
+PRJNA778024	PMC9514693	41598_2022_19666_MOESM3_ESM.xlsx+41598_2022_19666_MOESM1_ESM.xlsx	abstained	80	0	high	two-hop: 80 samples via 80 shared IDs, 264 cell-fills; overwrite guard: 0/264 fills kept; kept ENA over table on country×132(two-hop), collection_date×100(two-hop); dropped 32 invalid ({'collection_date': 32})
+PRJNA882917	PMC10420398		abstained	0	0	none	no joinable table
+PRJNA941035	PMC12091025		abstained	0	0	none	no joinable table
+PRJNA989271			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers

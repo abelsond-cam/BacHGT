@@ -1,0 +1,93 @@
+study_accession	pmcid	table	method	n_samples	n_fills	confidence	note
+PRJDB14511			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJDB2099			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJDB2362			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJDB7717	PMC6691804		abstained	0	0	none	no joinable table
+PRJEB1520	PMC3655965		abstained	0	0	none	no joinable table
+PRJEB19845			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB33804			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB38893			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB50291	PMC9241853		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.00310-22-s001.pdf', 'spectrum.00310-22-s002.xlsx', 'spectrum.00310-22-s002.xlsx', 'spectrum.00310-22-s002.xlsx']
+PRJEB64488			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJEB74244	PMC12516842		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13073_2025_1549_MOESM1_ESM.xlsx', '13073_2025_1549_MOESM1_ESM.xlsx', '13073_2025_1549_MOESM1_ESM.xlsx']
+PRJEB85433			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1013065	PMC11620514		abstained	0	0	none	no joinable table
+PRJNA1019825			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1040155			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1133902	PMC11619318		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['spectrum.01935-24-s0002.xlsx', 'spectrum.01935-24-s0002.xlsx']
+PRJNA1136428			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1169404			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1169681			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1177655	PMC12291787		abstained	0	0	none	no joinable table
+PRJNA1209868	PMC12057340		abstained	0	0	none	no joinable table
+PRJNA1215975			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1215977			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1221978	PMC12791528		abstained	0	0	none	no joinable table
+PRJNA1236821			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA1238535			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA184888	PMC3666789		abstained	0	0	none	no joinable table
+PRJNA191785			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA191786	PMC4447908		abstained	0	0	none	no joinable table
+PRJNA191787			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA191788			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA191789			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203564	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA203565			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203566			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203567			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203569			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203570			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203571			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA203572			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA231221	PMC6658474		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['41467_2019_11306_MOESM8_ESM.xlsx', '41467_2019_11306_MOESM9_ESM.xlsx', '41467_2019_11306_MOESM6_ESM.xlsx', '41467_2019_11306_MOESM4_ESM.xlsx', '41467_2019_11306_MOESM5_ESM.xlsx', '41467_2019_11306_MOESM2_ESM.xlsx', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM13_ESM.pdf', '41467_2019_11306_MOESM1_ESM.pdf', '41467_2019_11306_MOESM1_ESM.pdf', '41467_2019_11306_MOESM1_ESM.pdf', '41467_2019_11306_MOESM1_ESM.pdf', '41467_2019_11306_MOESM7_ESM.xlsx']
+PRJNA268101	PMC4365189		abstained	0	0	none	no joinable table
+PRJNA297030			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA323571	PMC5420552		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Table7.XLSX', 'Table5.DOCX', 'Table2.DOCX', 'Table3.xlsx', 'Table4.XLSX', 'Table8.XLSX', 'Table6.XLSX']
+PRJNA347845	PMC6433289		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pone.0214274.s010.xlsx', 'pone.0214274.s011.xlsx', 'pone.0214274.s012.xlsx']
+PRJNA401495			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA542112	PMC7938859		abstained	0	0	none	no joinable table
+PRJNA566387	PMC7778363		abstained	0	0	none	no joinable table
+PRJNA65137	PMC3944860		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13-1106-Techapp-s1.xlsx']
+PRJNA65139			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65143			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65145			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65147			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65149			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65151	PMC3944860		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13-1106-Techapp-s1.xlsx']
+PRJNA65153			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65155			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65157			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65159	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65161			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65163	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65165	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65167	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65169			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65171	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65187			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65191	PMC3920477		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['srep04061-s1.pdf', 'srep04061-s1.pdf', 'srep04061-s1.pdf', 'srep04061-s1.pdf', 'srep04061-s1.pdf']
+PRJNA65193			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65195	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65197			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65199	PMC3944860		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['13-1106-Techapp-s1.xlsx']
+PRJNA65203			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65205			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65207			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65209			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65211	PMC4187745		abstained	0	0	none	no joinable table
+PRJNA65213			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA65215	PMC3457237		abstained	0	0	none	no joinable table
+PRJNA656566			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA672126	PMC8280865		abstained	0	0	none	no joinable table
+PRJNA698640			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA698643			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA716753	PMC8308675		abstained	0	0	none	no joinable table
+PRJNA734909	PMC8769749		abstained	0	0	none	no joinable table
+PRJNA734948			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA756101	PMC8535176		abstained	0	0	none	no joinable table
+PRJNA823663	PMC9642804		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['Data_Sheet_1.docx']
+PRJNA840944	PMC9992005		abstained	0	0	none	no joinable table
+PRJNA857686	PMC9934365		abstained	0	0	none	no joinable table
+PRJNA865308	PMC10786304		abstained	0	0	none	no joinable table; field-bearing tables present but unanchored: ['pnas.2314101120.sapp.pdf']
+PRJNA867543			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers
+PRJNA996741			NO_PMCID	0	0	none	no PMCID and no manual/committed supp table — cannot fetch supplementary; see missing-papers

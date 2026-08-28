@@ -1,0 +1,134 @@
+study_accession	tag	reports_AST	reports_AST_grade	per_sample_AST	per_sample_AST_grade	n_backbone_fulltext	backbone_fulltext	backbone_evidence_quote	text_source	paper	paper_title
+PRJEB2779	mabs_top20	false	gradeable	none	gradeable	0		amikacin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC5142603/	Emergence and spread of a human-transmissible multidrug-resistant nontuberculous mycobacterium.
+PRJNA319839	mabs_top20	false	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC8641822/	Population Genomics of <i>Mycobacterium abscessus</i> from U.S. Cystic Fibrosis Care Centers.
+PRJNA1036625	mabs_top20	false	gradeable	none	gradeable	1	clarithromycin		fulltext:PMC11841644	https://pmc.ncbi.nlm.nih.gov/articles/PMC11841644/	Genomic Epidemiology of Mycobacterium abscessus on the Island of Montréal Is Not Suggestive of Health Care-Associated Person-to-Person Transmission.
+PRJDB10566	mabs_top20	false	gradeable	none	gradeable	0			fulltext:PMC9248903	https://pmc.ncbi.nlm.nih.gov/articles/PMC9248903/	Molecular Epidemiological Characteristics of Mycobacterium abscessus Complex Derived from Non-Cystic Fibrosis Patients in Japan and Taiwan.
+PRJNA734660	mabs_top20	true	gradeable	possible	gradeable	7	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	fulltext:PMC8743566	https://pmc.ncbi.nlm.nih.gov/articles/PMC8743566/	Molecular epidemiology and phylogenomic analysis of <i>Mycobacterium abscessus</i> clinical isolates in an Asian population.
+PRJEB7058	mabs_top20	false	gradeable	none	gradeable	0			fulltext:PMC5562415	https://pmc.ncbi.nlm.nih.gov/articles/PMC5562415/	Genomic epidemiology of a national outbreak of post-surgical <i>Mycobacterium abscessus</i> wound infections in Brazil.
+PRJNA1165220	mabs_top20	true	gradeable	possible	gradeable	0		clarithromycin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC12128065/	Genomic Analysis of Global Mycobacterium abscessus Isolates Reveals Ongoing Evolution of Drug Resistance-Associated Genes.
+PRJNA778024	mabs_top20	false	gradeable	none	gradeable	0			fulltext:PMC9514693	https://pmc.ncbi.nlm.nih.gov/articles/PMC9514693/	Genomic epidemiology of Mycobacterium abscessus in a Canadian cystic fibrosis centre.
+PRJNA882917	mabs_top20	true	gradeable	possible	gradeable	0		amikacin; clarithromycin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC10420398/	Genomic Analyses of Longitudinal Mycobacterium abscessus Isolates in a Multicenter Cohort Reveal Parallel Signatures of In-Host Adaptation.
+PRJEB14002	mabs_top20	true	gradeable	possible	gradeable	3	amikacin; clarithromycin; tobramycin	amikacin; clarithromycin	fulltext:PMC3664974	https://pmc.ncbi.nlm.nih.gov/articles/PMC3664974/	Whole-genome sequencing to identify transmission of Mycobacterium abscessus between patients with cystic fibrosis: a retrospective cohort study.
+PRJNA989271	mabs_top20		not_gradeable		not_gradeable	0			none		
+PRJDB10333	mabs_top20	true	gradeable	possible	gradeable	2	amikacin; clarithromycin	clarithromycin	fulltext:PMC7910664	https://pmc.ncbi.nlm.nih.gov/articles/PMC7910664/	A novel DNA chromatography method to discriminate Mycobacterium abscessus subspecies and macrolide susceptibility.
+PRJEB31559	mabs_top20	false	gradeable	none	gradeable	1	amikacin	amikacin	fulltext:PMC7156781	https://pmc.ncbi.nlm.nih.gov/articles/PMC7156781/	Cross-transmission Is Not the Source of New Mycobacterium abscessus Infections in a Multicenter Cohort of Cystic Fibrosis Patients.
+PRJEB44160	mabs_top20	false	gradeable	none	gradeable	0			fulltext:PMC9431180	https://pmc.ncbi.nlm.nih.gov/articles/PMC9431180/	Molecular Epidemiology of Mycobacterium abscessus Isolates Recovered from German Cystic Fibrosis Patients.
+PRJNA401515	mabs_top20	false	gradeable	none	gradeable	0			fulltext:PMC5786738	https://pmc.ncbi.nlm.nih.gov/articles/PMC5786738/	Evaluation of Whole-Genome Sequencing for Mycobacterial Species Identification and Drug Susceptibility Testing in a Clinical Setting: a Large-Scale Prospective Assessment of Performance against Line Probe Assays and Phenotyping.
+PRJEB39129	mabs_top20	true	gradeable	possible	gradeable	5	cefoxitin; amikacin; clarithromycin; linezolid; imipenem	cefoxitin; amikacin; linezolid; imipenem	fulltext:PMC8526041	https://pmc.ncbi.nlm.nih.gov/articles/PMC8526041/	Genetic diversification of persistent <i>Mycobacterium abscessus</i> within cystic fibrosis patients.
+PRJNA420644	mabs_top20	true	gradeable	none	gradeable	0		clarithromycin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC6325232/	Whole-Genome Sequencing for Predicting Clarithromycin Resistance in <i>Mycobacterium abscessus</i>.
+PRJNA1119444	mabs_top20	false	gradeable	none	gradeable	3	cefoxitin; amikacin; clarithromycin		fulltext:PMC11537035	https://pmc.ncbi.nlm.nih.gov/articles/PMC11537035/	Phenylacetic acid metabolic genes are associated with <i>Mycobacteroides abscessus</i> dominant circulating clone 1.
+PRJEB37730	mabs_top20	false	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC7315040/	Genomic Analysis of Mycobacterium abscessus Complex Isolates Collected in Ireland between 2006 and 2017.
+PRJNA941035	mabs_top20	true	gradeable	possible	gradeable	0		clarithromycin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC12091025/	Infection by Clonally Related &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; Isolates: The Role of Drinking Water.
+PRJEB36331	mabs_21_40		not_gradeable		not_gradeable	0			none		
+PRJDB13427	mabs_21_40	false	gradeable	none	gradeable	0			fulltext:PMC10433864	https://pmc.ncbi.nlm.nih.gov/articles/PMC10433864/	Massive and Lengthy Clonal Nosocomial Expansion of Mycobacterium abscessus subsp. <i>massiliense</i> among Patients Who Are Ventilator Dependent without Cystic Fibrosis.
+PRJEB61124	mabs_21_40	false	gradeable	none	gradeable	7	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin		fulltext:PMC10979023	https://pmc.ncbi.nlm.nih.gov/articles/PMC10979023/	Microevolution, reinfection and highly complex genomic diversity in patients with sequential isolates of Mycobacterium abscessus.
+PRJDB17850	mabs_21_40	false	gradeable	none	gradeable	0			fulltext:PMC10433864	https://pmc.ncbi.nlm.nih.gov/articles/PMC10433864/	Massive and Lengthy Clonal Nosocomial Expansion of Mycobacterium abscessus subsp. <i>massiliense</i> among Patients Who Are Ventilator Dependent without Cystic Fibrosis.
+PRJEB9515	mabs_21_40	true	gradeable	none	gradeable	0		clarithromycin	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC6325232/	Whole-Genome Sequencing for Predicting Clarithromycin Resistance in <i>Mycobacterium abscessus</i>.
+PRJNA718117	mabs_21_40		not_gradeable		not_gradeable	0			fulltext:PMC10499228	https://pmc.ncbi.nlm.nih.gov/articles/PMC10499228/	Complete genome assembly of Hawai'i environmental nontuberculous mycobacteria reveals unexpected co-isolation with methylobacteria.
+PRJNA1211657	mabs_21_40	true	gradeable	none	gradeable	0			fulltext:PMC4982176	https://pmc.ncbi.nlm.nih.gov/articles/PMC4982176/	Multistate US Outbreak of Rapidly Growing Mycobacterial Infections Associated with Medical Tourism to the Dominican Republic, 2013-2014(1).
+PRJNA1123827	mabs_21_40		not_gradeable		not_gradeable	0			none		
+PRJNA832057	mabs_21_40	true	gradeable	possible	gradeable	7	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	fulltext:PMC9430165	https://pmc.ncbi.nlm.nih.gov/articles/PMC9430165/	Genomic Analysis of Mycobacterium abscessus Complex Isolates from Patients with Pulmonary Infection in China.
+PRJNA315990	mabs_21_40	false	gradeable	none	gradeable	0			fulltext:PMC5034138	https://pmc.ncbi.nlm.nih.gov/articles/PMC5034138/	Complete Genome Sequences of 17 Rapidly Growing Nontuberculous Mycobacterial Strains.
+PRJNA691364	mabs_21_40	false	gradeable	none	gradeable	2	amikacin; clarithromycin	amikacin; clarithromycin	fulltext:PMC8319421	https://pmc.ncbi.nlm.nih.gov/articles/PMC8319421/	Genomic characterization of sporadic isolates of the dominant clone of Mycobacterium abscessus subspecies massiliense.
+PRJDB15290	mabs_21_40	true	gradeable	none	gradeable	3	amikacin; clarithromycin; imipenem	amikacin; clarithromycin; imipenem	fulltext:PMC11099050	https://pmc.ncbi.nlm.nih.gov/articles/PMC11099050/	Identification of Mycobacterium abscessus using the peaks of ribosomal protein L29, L30 and hemophore-related protein by MALDI-MS proteotyping.
+PRJNA1080355	mabs_21_40	true	gradeable	possible	gradeable	0		clarithromycin	quote_only	https://pubmed.ncbi.nlm.nih.gov/38810940/	Noncanonical mutations in ribosome nascent peptide exit tunnel confer clarithromycin resistance in Mycobacterium abscessus complex.
+PRJEB28875	mabs_21_40	true	gradeable	possible	gradeable	5	cefoxitin; amikacin; clarithromycin; linezolid; tobramycin	cefoxitin; amikacin; clarithromycin; linezolid; tobramycin	fulltext:PMC6821159	https://pmc.ncbi.nlm.nih.gov/articles/PMC6821159/	Children With Cystic Fibrosis Are Infected With Multiple Subpopulations of Mycobacterium abscessus With Different Antimicrobial Resistance Profiles.
+PRJNA523365	mabs_21_40	true	gradeable	retrievable	gradeable	4	cefoxitin; amikacin; clarithromycin; imipenem	amikacin; clarithromycin	fulltext:PMC8390669	https://pmc.ncbi.nlm.nih.gov/articles/PMC8390669/	Global phylogenomic analyses of Mycobacterium abscessus provide context for non cystic fibrosis infections and the evolution of antibiotic resistance.
+PRJNA1051626	mabs_21_40	true	gradeable	retrievable	gradeable	3	amikacin; clarithromycin; linezolid	amikacin; clarithromycin; linezolid	fulltext:PMC11619595	https://pmc.ncbi.nlm.nih.gov/articles/PMC11619595/	High rate of macrolide resistance and closely genetically related &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; complex strains identified among both cystic fibrosis and non-cystic fibrosis patients within two countries.
+PRJEB57933	mabs_21_40	true	gradeable	possible	gradeable	6	cefoxitin; amikacin; clarithromycin; linezolid; imipenem; tobramycin	cefoxitin; amikacin; clarithromycin; linezolid	fulltext:PMC10606986	https://pmc.ncbi.nlm.nih.gov/articles/PMC10606986/	Genome-Scale Characterization of <i>Mycobacterium abscessus</i> Complex Isolates from Portugal.
+PRJNA353361	mabs_21_40		not_gradeable		not_gradeable	0			none		
+PRJEB6776	mabs_21_40	false	gradeable	none	gradeable	0			fulltext:PMC4357290	https://pmc.ncbi.nlm.nih.gov/articles/PMC4357290/	Whole-genome sequencing and epidemiological analysis do not provide evidence for cross-transmission of mycobacterium abscessus in a cohort of pediatric cystic fibrosis patients.
+PRJDB12235	mabs_21_40	true	gradeable	possible	gradeable	2	amikacin; clarithromycin	amikacin; clarithromycin	fulltext:PMC9241747	https://pmc.ncbi.nlm.nih.gov/articles/PMC9241747/	Potential Cross-Transmission of Mycobacterium abscessus among Non-Cystic Fibrosis Patients at a Tertiary Hospital in Japan.
+PRJNA840944	mabs_all		not_gradeable		not_gradeable	0			none	https://pmc.ncbi.nlm.nih.gov/articles/PMC9992005/	Biotin-dependent cell envelope remodelling is required for Mycobacterium abscessus survival in lung infection.
+PRJNA542112	mabs_all		not_gradeable		not_gradeable	0			none	https://pmc.ncbi.nlm.nih.gov/articles/PMC7938859/	Bloodstream Infections With a Novel Nontuberculous Mycobacterium Involving 52 Outpatient Oncology Clinic Patients-Arkansas, 2018.
+PRJNA1236821	mabs_all		not_gradeable		not_gradeable	0			none	https://doi.org/10.1016/j.chest.2026.04.011	Phylogenomic and Clinical Perspectives of an East Asia-Specific Cluster of Mycobacterium massiliense
+PRJNA734909	mabs_all	false	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC8769749/	Genomic Analysis of a Hospital-Associated Outbreak of Mycobacterium abscessus: Implications on Transmission.
+PRJNA1209868	mabs_all	true	gradeable	possible	gradeable	3	amikacin; clarithromycin; linezolid	amikacin; clarithromycin	fulltext:PMC12057340	https://pmc.ncbi.nlm.nih.gov/articles/PMC12057340/	Novel mutations in the &lt;i&gt;marR&lt;/i&gt; gene (&lt;i&gt;MAB_2648c&lt;/i&gt;) modify nitroxoline activity in &lt;i&gt;Mycobacterium abscessus&lt;/i&gt;.
+PRJNA439313	mabs_all		not_gradeable		not_gradeable	0			none	https://pubmed.ncbi.nlm.nih.gov/30853372/	Investigating transmission of Mycobacterium abscessus amongst children in an Australian cystic fibrosis centre.
+PRJNA734948	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJEB64488	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA1215975	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA656566	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA698640	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA297030	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA268101	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC4365189	https://pmc.ncbi.nlm.nih.gov/articles/PMC4365189/	Mycobacterial DNA extraction for whole-genome sequencing from early positive liquid (MGIT) cultures.
+PRJEB19845	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA996741	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA867543	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA823663	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC9642804	https://pmc.ncbi.nlm.nih.gov/articles/PMC9642804/	Host DNA depletion can increase the sensitivity of <i>Mycobacterium</i> spp. detection through shotgun metagenomics in sputum.
+PRJNA231221	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC6658474	https://pmc.ncbi.nlm.nih.gov/articles/PMC6658474/	FDA-ARGOS is a database with public quality-controlled reference genomes for diagnostic use and regulatory science.
+PRJEB1520	mabs_all	true	gradeable	possible	gradeable	7	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem; tobramycin	fulltext:PMC3655965	https://pmc.ncbi.nlm.nih.gov/articles/PMC3655965/	Molecular longitudinal tracking of Mycobacterium abscessus spp. during chronic infection of the human lung.
+PRJNA698643	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA1177655	mabs_all	true	gradeable	retrievable	gradeable	6	cefoxitin; amikacin; tigecycline; clarithromycin; linezolid; imipenem	amikacin; tigecycline; clarithromycin; linezolid; imipenem	fulltext:PMC12291787	https://pmc.ncbi.nlm.nih.gov/articles/PMC12291787/	In Vitro Susceptibility to Imipenem/Relebactam and Comparators in a Multicentre Collection of &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; Complex Isolates.
+PRJNA1169404	mabs_all	true	gradeable		not_gradeable	0		amikacin; clarithromycin; linezolid	quote_only	https://doi.org/10.26502/fjhs.350	Phenotypic and Genomic Characterization of Rapidly Growing Non-Tuberculous Mycobacteria Isolated from Surgical Site Infections in a Tertiary Care Hospital of Dhaka
+PRJNA1221978	mabs_all	false	gradeable	none	gradeable	0			quote_only	https://doi.org/10.1093/ofid/ofaf695.1605	The Use of Whole Genome Sequencing and a Novel Bioinformatic Pipeline for Mycobacterium abscessus Molecular Epidemiology
+PRJNA1040155	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA672126	mabs_all	true	gradeable	retrievable	gradeable	5	cefoxitin; amikacin; clarithromycin; linezolid; tobramycin	cefoxitin; amikacin; clarithromycin; linezolid; tobramycin	fulltext:PMC8280865	https://pmc.ncbi.nlm.nih.gov/articles/PMC8280865/	Whole-Genome Sequences of Mycobacterium abscessus subsp. <i>massiliense</i> Isolates from Brazil.
+PRJEB74244	mabs_all		not_gradeable		not_gradeable	0			fulltext:PMC12516842	https://pmc.ncbi.nlm.nih.gov/articles/PMC12516842/	Genomic characterisation of recurrent Mycobacterium avium isolates from chronically infected patients reveals patterns of within-host evolution.
+PRJNA1169681	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA347845	mabs_all	true	gradeable	retrievable	gradeable	6	cefoxitin; amikacin; clarithromycin; linezolid; imipenem; tobramycin	clarithromycin	fulltext:PMC6433289	https://pmc.ncbi.nlm.nih.gov/articles/PMC6433289/	Variation among human, veterinary and environmental Mycobacterium chelonae-abscessus complex isolates observed using core genome phylogenomic analysis, targeted gene comparison, and anti-microbial susceptibility patterns.
+PRJNA716753	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC8308675	https://pmc.ncbi.nlm.nih.gov/articles/PMC8308675/	Whole-Genome Sequencing Analysis to Identify Infection with Multiple Species of Nontuberculous Mycobacteria.
+PRJNA1215977	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA1133902	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC11619318	https://pmc.ncbi.nlm.nih.gov/articles/PMC11619318/	Global prevalence of &lt;i&gt;Mycobacterium massiliense&lt;/i&gt; strains with recombinant &lt;i&gt;rpoB&lt;/i&gt; genes (Rec-Mas) horizontally transferred from &lt;i&gt;Mycobacterium abscessus&lt;/i&gt;: two major types, dominant circulating clone 7 and MLST ST46 sequence type.
+PRJNA1136428	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA756101	mabs_all	true	gradeable	possible	gradeable	5	cefoxitin; amikacin; tigecycline; clarithromycin; imipenem		fulltext:PMC8535176	https://pmc.ncbi.nlm.nih.gov/articles/PMC8535176/	Efficacy of epetraborole against Mycobacterium abscessus is increased with norvaline.
+PRJEB50291	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC9241853	https://pmc.ncbi.nlm.nih.gov/articles/PMC9241853/	Successful Direct Whole Genome Sequencing and Revivification of Freeze-Dried Nontuberculous Mycobacteria after More than Half a Century of Storage.
+PRJNA323571	mabs_all	true	gradeable	possible	gradeable	4	cefoxitin; amikacin; clarithromycin; tobramycin	cefoxitin; amikacin; clarithromycin; tobramycin	fulltext:PMC5420552	https://pmc.ncbi.nlm.nih.gov/articles/PMC5420552/	Characterization of <i>Mycobacterium chelonae</i>-Like Strains by Comparative Genomics.
+PRJEB38893	mabs_all	true	gradeable	possible	gradeable	0		linezolid	quote_only	https://pubmed.ncbi.nlm.nih.gov/36802272/	Mutations in Genes Encoding 23S rRNA and FadD32 May be Associated with Linezolid Resistance in <i>Mycobacteroides abscessus</i>.
+PRJNA191785	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA203567	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65137	mabs_all	false	gradeable	none	gradeable	2	amikacin; clarithromycin		fulltext:PMC3944860	https://pmc.ncbi.nlm.nih.gov/articles/PMC3944860/	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA566387	mabs_all	true	gradeable	retrievable	gradeable	4	amikacin; tigecycline; linezolid; imipenem	tigecycline	fulltext:PMC7778363	https://pmc.ncbi.nlm.nih.gov/articles/PMC7778363/	Inhaled tigecycline is effective against Mycobacterium abscessus in vitro and in vivo.
+PRJNA203565	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA203566	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA203569	mabs_all		not_gradeable		not_gradeable	0			none		Using whole exome sequencing and bacterial pathogen sequencing to investigate the genetic basis of pulmonary non-tuberculous mycobacterial infections
+PRJNA65143	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA203570	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA203571	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65171	mabs_all	true	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA203572	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA191787	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65139	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65147	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65145	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65149	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65151	mabs_all	false	gradeable	none	gradeable	2	amikacin; clarithromycin		fulltext:PMC3944860	https://pmc.ncbi.nlm.nih.gov/articles/PMC3944860/	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA65153	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65155	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65157	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65159	mabs_all	true	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65161	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65163	mabs_all	true	gradeable	retrievable	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65165	mabs_all	true	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA203564	mabs_all	true	gradeable	retrievable	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65169	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA191786	mabs_all		not_gradeable		not_gradeable	0			fulltext:PMC4447908	https://pmc.ncbi.nlm.nih.gov/articles/PMC4447908/	Draft Genome Sequence of Mycobacterium chelonae Type Strain ATCC 35752.
+PRJDB2362	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA184888	mabs_all	false	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC3666789/	A genomic day in the life of a clinical microbiology laboratory.
+PRJNA1238535	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65199	mabs_all	false	gradeable	none	gradeable	2	amikacin; clarithromycin		fulltext:PMC3944860	https://pmc.ncbi.nlm.nih.gov/articles/PMC3944860/	High-level relatedness among Mycobacterium abscessus subsp. massiliense strains from widely separated outbreaks.
+PRJNA65213	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65195	mabs_all	true	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65215	mabs_all	false	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC3457237/	Genomic insights into the emerging human pathogen Mycobacterium massiliense.
+PRJNA65197	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65211	mabs_all	true	gradeable	none	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
+PRJNA65209	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65203	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65207	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65205	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJDB14511	mabs_all	true	gradeable		not_gradeable	0			quote_only		
+PRJNA1019825	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJDB7717	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC6691804	https://pmc.ncbi.nlm.nih.gov/articles/PMC6691804/	Comprehensive subspecies identification of 175 nontuberculous mycobacteria species based on 7547 genomic profiles.
+PRJNA65191	mabs_all	false	gradeable	none	gradeable	0			quote_only	https://doi.org/10.1038/srep04061	Genomic reconnaissance of clinical isolates of emerging human pathogen Mycobacterium abscessus reveals high evolutionary potential
+PRJNA1013065	mabs_all	true	gradeable	retrievable	gradeable	0		cefoxitin; amikacin; imipenem	quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC11620514/	Altered serine metabolism promotes drug tolerance in &lt;i&gt;Mycobacterium abscessus&lt;/i&gt; via a WhiB7-mediated adaptive stress response.
+PRJEB85433	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJEB33804	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJDB2099	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA857686	mabs_all	false	gradeable	none	gradeable	0			fulltext:PMC9934365	https://pmc.ncbi.nlm.nih.gov/articles/PMC9934365/	GAMBIT (Genomic Approximation Method for Bacterial Identification and Tracking): A methodology to rapidly leverage whole genome sequencing of bacterial isolates for clinical identification.
+PRJNA865308	mabs_all	true	gradeable	none	gradeable	4	cefoxitin; amikacin; clarithromycin; linezolid		fulltext:PMC10786304	https://pmc.ncbi.nlm.nih.gov/articles/PMC10786304/	Development of 2nd generation aminomethyl spectinomycins that overcome native efflux in <i>Mycobacterium</i> abscessus.
+PRJNA65193	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA191789	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65187	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA191788	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA401495	mabs_all		not_gradeable		not_gradeable	0			none		
+PRJNA65167	mabs_all	true	gradeable	retrievable	gradeable	0			quote_only	https://pmc.ncbi.nlm.nih.gov/articles/PMC4187745/	Genome sequencing of Mycobacterium abscessus isolates from patients in the united states and comparisons to globally diverse clinical strains.
