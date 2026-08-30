@@ -4,4 +4,4 @@ OK	grade		93 studies graded == batch selection
 OK	per_sample		92 outcomes: 0 with fills; 0-fill reasons {'NO_PMCID': 54, 'no_supp': 26, 'unanchored': 12} (all loud)
 OK	backfill		54 covered → 291 whole-field fills applied
 OK	fill		348 rows; no field shrank (country 0.819→0.859, collection_date 0.684→0.695, isolation_source 0.454→0.468, host 0.632→0.767, cf_status 0.049→0.262)
-FAIL	conservation		1 invariant failure(s): [mabs_all] INV3 fill: 2131 escalation fill(s) blank/absent in final
+OK	conservation		answer → apply → final invariants hold

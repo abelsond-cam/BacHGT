@@ -94,6 +94,6 @@ Queue `run_progress/mabs_top20/escalation/decisions_needed.tsv`: **18 generated 
 
 `verify_escalation_conservation.py` traced every curator decision through apply → master → final and found none lost:
 
-- **INV1 apply** — 2 answered decision(s) → 2 applied (study×field), 1781 per-sample fills. 0 unapplied.
-- **INV2 master-preserve** — curated_escalations disk 4 rows (no HEAD baseline); 0 committed decisions dropped.
-- **INV3 fill** — 1781 escalation fill(s) → 1781 non-blank in filled_metadata_mabs_top20. 0 lost to a blank final cell.
+- **INV1 apply** — 3 answered decision(s) → 3 applied (study×field), 1903 per-sample fills. 0 unapplied.
+- **INV2 master-preserve** — curated_escalations disk 28 ⊇ HEAD 4 rows; 0 committed decisions dropped.
+- **INV3 fill** — 1903 escalation fill(s) → 1903 non-blank in filled_metadata_mabs_top20. 0 lost to a blank final cell.

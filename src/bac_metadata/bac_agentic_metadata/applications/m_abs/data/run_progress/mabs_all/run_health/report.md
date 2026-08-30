@@ -81,3 +81,13 @@ Queue `run_progress/mabs_all/escalation/decisions_needed.tsv`: **0 generated · 
 
 # → ⛔ CURATOR ACTION OUTSTANDING — 3 paper(s) to add, 0 escalation(s) to answer
 
+---
+
+<!-- ESCALATION-CONSERVATION -->
+## ✅ Escalation conservation VERIFIED — links 3–5 confirmed
+
+`verify_escalation_conservation.py` traced every curator decision through apply → master → final and found none lost:
+
+- **INV1 apply** — 0 answered decision(s) → 0 applied (study×field), 0 per-sample fills. 0 unapplied.
+- **INV2 master-preserve** — curated_escalations disk 28 ⊇ HEAD 4 rows; 0 committed decisions dropped.
+- **INV3 fill** — 0 escalation fill(s) → 0 non-blank in filled_metadata_mabs_all. 0 lost to a blank final cell.
