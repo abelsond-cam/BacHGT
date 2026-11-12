@@ -98,4 +98,7 @@ else
     step "Step 9/9: merge_predicted_and_ebi_ast_into_metadata_v2  (SKIPPED via --skip-predicted-ast)"
 fi
 
+step "Step 10: merge_qc_pass_into_metadata_v2  (qc_pass for every species: KPSC final list + the non-KPSC QC sheet)"
+uv run python -m bac_metadata.pp.merge_qc_pass_into_metadata_v2
+
 step "DONE"
